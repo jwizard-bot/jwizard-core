@@ -8,6 +8,7 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+
 public class TrackScheduler extends AudioEventAdapter {
 
     public final AudioPlayer audioPlayer;

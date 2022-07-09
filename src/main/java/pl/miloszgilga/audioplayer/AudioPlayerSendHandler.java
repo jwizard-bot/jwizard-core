@@ -1,23 +1,22 @@
 package pl.miloszgilga.audioplayer;
 
+import org.jetbrains.annotations.Nullable;
+import net.dv8tion.jda.api.audio.AudioSendHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.playback.MutableAudioFrame;
-import net.dv8tion.jda.api.audio.AudioSendHandler;
-import org.jetbrains.annotations.Nullable;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
+
 public class AudioPlayerSendHandler implements AudioSendHandler {
 
     private final AudioPlayer audioPlayer;
-    private final ByteBuffer buffer;
-    private final MutableAudioFrame audioFrame;
+    private final ByteBuffer buffer = ByteBuffer.allocate(1024);
+    private final MutableAudioFrame audioFrame = new MutableAudioFrame();
 
     public AudioPlayerSendHandler(AudioPlayer audioPlayer) {
         this.audioPlayer = audioPlayer;
-        buffer = ByteBuffer.allocate(1024);
-        audioFrame = new MutableAudioFrame();
         audioFrame.setBuffer(buffer);
     }
 
