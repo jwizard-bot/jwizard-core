@@ -1,2 +1,2 @@
-## JDA Discrod Bot
+## JDA Discord Bot
 Something will be here... soon :)
