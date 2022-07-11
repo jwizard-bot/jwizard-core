@@ -22,7 +22,7 @@ public class PlayerManager {
     private final Map<Long, MusicManager> musicManagerMap = new HashMap<>();
     private final AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
 
-    public PlayerManager() {
+    private PlayerManager() {
         AudioSourceManagers.registerRemoteSources(audioPlayerManager);
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
     }
@@ -53,7 +53,7 @@ public class PlayerManager {
             }
             @Override
             public void noMatches() {
-
+                textChannel.sendMessage("Nie znaleziono piosenki").queue();
             }
             @Override
             public void loadFailed(FriendlyException e) {
@@ -62,7 +62,7 @@ public class PlayerManager {
         });
     }
 
-    public static PlayerManager getInstance() {
+    public static PlayerManager getSingletonInstance() {
         if (PLAYER_MANAGER == null) {
             PLAYER_MANAGER = new PlayerManager();
         }
