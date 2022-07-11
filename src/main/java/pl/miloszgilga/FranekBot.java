@@ -5,33 +5,33 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
-import ca.tristan.jdacommands.JDACommands;
 import io.github.cdimascio.dotenv.Dotenv;
-
 import javax.security.auth.login.LoginException;
 
-import pl.miloszgilga.executers.MuteUserExecutor;
-import pl.miloszgilga.executers.AudioCommandExecuter;
+import static pl.miloszgilga.AvailableCommands.HELP;
+
+import pl.miloszgilga.executors.AudioPlayCommandExecutor;
+import pl.miloszgilga.executors.AudioSkippedCommandExecutor;
 
 
 public class FranekBot {
 
     private static final String BOT_ID = Dotenv.load().get("BOT_ID");
+    public static final String DEV_GUILD = Dotenv.load().get("DEV_GUILD");
+    public static final String PROD_GUILD = Dotenv.load().get("PROD_GUILD");
 
-    private static final String DEF_PREFIX = "~";
-    private static final String BOT_STATUS = DEF_PREFIX + "help";
+    public static final String DEF_PREFIX = "$";
 
     public static void main(String[] args) throws LoginException {
-        JDACommands jdaCommands = new JDACommands(DEF_PREFIX);
-        jdaCommands.registerCommand(new AudioCommandExecuter());
-        jdaCommands.registerCommand(new MuteUserExecutor());
-
         JDABuilder
                 .createDefault(BOT_ID)
                 .enableCache(CacheFlag.VOICE_STATE)
-                .setActivity(Activity.listening(BOT_STATUS))
+                .setActivity(Activity.listening(DEF_PREFIX + HELP.getCommandName()))
                 .setStatus(OnlineStatus.ONLINE)
-                .addEventListeners(jdaCommands)
+                .addEventListeners(
+                        new AudioPlayCommandExecutor(),
+                        new AudioSkippedCommandExecutor()
+                )
                 .build();
     }
 }
