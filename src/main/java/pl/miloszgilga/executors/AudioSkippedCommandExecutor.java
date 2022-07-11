@@ -44,7 +44,7 @@ public class AudioSkippedCommandExecutor extends ListenerAdapter {
     private final Queue<String> usersAlreadyVoted = new PriorityQueue<>();
 
     @Override
-    @Description("command: <[prefix]$skip>")
+    @Description("command: <[prefix]skip>")
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         final List<String> allArgs = interceptor.validateRequestWithCommandType(event, MUSIC_SKIP);
         if (!allArgs.isEmpty()) {
