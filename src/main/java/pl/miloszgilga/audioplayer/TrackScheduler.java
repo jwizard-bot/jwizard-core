@@ -12,11 +12,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class TrackScheduler extends AudioEventAdapter {
 
     public final AudioPlayer audioPlayer;
-    public final BlockingQueue<AudioTrack> queue;
+    public final BlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
 
     public TrackScheduler(AudioPlayer audioPlayer) {
         this.audioPlayer = audioPlayer;
-        this.queue = new LinkedBlockingQueue<>();
     }
 
     public void queue(AudioTrack track) {
