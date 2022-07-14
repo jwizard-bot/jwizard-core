@@ -49,15 +49,15 @@ public class AudioSkippedCommandExecutor extends ListenerAdapter {
         final List<String> allArgs = interceptor.validateRequestWithCommandType(event, MUSIC_SKIP);
         if (!allArgs.isEmpty()) {
             try {
-                String messageAuthorId = event.getAuthor().getId();
-                VoiceChannel findVoiceChannelWithBot = findVoiceChannelWithBotAndUser(event);
+                final String messageAuthorId = event.getAuthor().getId();
+                final VoiceChannel findVoiceChannelWithBot = findVoiceChannelWithBotAndUser(event);
 
                 int allChannelMembers = findVoiceChannelWithBot.getMembers().size() - 1;
-                int requireVotesToSkipSong = allChannelMembers == 1 ? 1 : allChannelMembers / 2;
+                final int requireVotesToSkipSong = allChannelMembers == 1 ? 1 : allChannelMembers / 2;
 
                 if (!usersAlreadyVoted.contains(messageAuthorId)) {
                     usersAlreadyVoted.add(messageAuthorId);
-                    var votingProgress = new EmbedMessage("POMINIĘCIE PIOSENKI", String.format(
+                    final var votingProgress = new EmbedMessage("POMINIĘCIE PIOSENKI", String.format(
                             "Status głosowania: **%s**/**%s**, (wymagane głosów: **%s**)",
                             usersAlreadyVoted.size(), allChannelMembers, requireVotesToSkipSong),
                             EmbedMessageColor.GREEN
@@ -65,8 +65,8 @@ public class AudioSkippedCommandExecutor extends ListenerAdapter {
                     event.getTextChannel().sendMessageEmbeds(votingProgress.buildMessage()).queue();
                     if (usersAlreadyVoted.size() == allChannelMembers) {
                         usersAlreadyVoted.clear();
-                        playerManager.getMusicManager(event.getGuild()).scheduler.nextTrack();
-                        var votingEnded = new EmbedMessage("PIOSENKA POMINIĘTA", "", EmbedMessageColor.GREEN);
+                        playerManager.getMusicManager(event.getGuild()).getScheduler().nextTrack();
+                        final var votingEnded = new EmbedMessage("PIOSENKA POMINIĘTA", "", EmbedMessageColor.GREEN);
                         event.getTextChannel().sendMessageEmbeds(votingEnded.buildMessage()).queue();
                     }
                 } else {
@@ -79,12 +79,12 @@ public class AudioSkippedCommandExecutor extends ListenerAdapter {
     }
 
     private VoiceChannel findVoiceChannelWithBotAndUser(MessageReceivedEvent event) {
-        String guildId = event.getGuild().getId();
+        final String guildId = event.getGuild().getId();
         return Objects.requireNonNull(event.getJDA().getGuildById(guildId))
                 .getVoiceChannels().stream()
                 .filter(channel -> {
-                    Member senderUserMember = event.getGuild().getMember(event.getAuthor());
-                    Member botMember = event.getGuild().getMember(event.getJDA().getSelfUser());
+                    final Member senderUserMember = event.getGuild().getMember(event.getAuthor());
+                    final Member botMember = event.getGuild().getMember(event.getJDA().getSelfUser());
                     return channel.getMembers().contains(senderUserMember) && channel.getMembers().contains(botMember);
                 })
                 .findFirst().orElseThrow(() -> {

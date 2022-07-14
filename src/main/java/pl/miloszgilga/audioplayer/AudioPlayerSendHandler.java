@@ -27,13 +27,13 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
 
-public class AudioPlayerSendHandler implements AudioSendHandler {
+class AudioPlayerSendHandler implements AudioSendHandler {
 
     private final AudioPlayer audioPlayer;
     private final ByteBuffer buffer = ByteBuffer.allocate(1024);
     private final MutableAudioFrame audioFrame = new MutableAudioFrame();
 
-    public AudioPlayerSendHandler(AudioPlayer audioPlayer) {
+    AudioPlayerSendHandler(AudioPlayer audioPlayer) {
         this.audioPlayer = audioPlayer;
         audioFrame.setBuffer(buffer);
     }

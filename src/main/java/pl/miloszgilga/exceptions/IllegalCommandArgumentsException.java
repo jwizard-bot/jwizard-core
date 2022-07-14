@@ -31,7 +31,7 @@ public class IllegalCommandArgumentsException extends JdaIllegalChatStateExcepti
 
     public IllegalCommandArgumentsException(MessageReceivedEvent event, String commandSyntax) {
         super(event);
-        var embedMessage = new EmbedMessage("ERROR!", "Nieprawidłowe argumenty komendy", EmbedMessageColor.RED, List.of(
+        final var embedMessage = new EmbedMessage("ERROR!", "Nieprawidłowe argumenty komendy", EmbedMessageColor.RED, List.of(
                 new MessageEmbedField("Komendy należy używać zgodne ze składnią: ", commandSyntax, false)
         ));
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();

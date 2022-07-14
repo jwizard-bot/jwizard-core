@@ -24,8 +24,8 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 
 public class MusicManager {
 
-    public final AudioPlayer audioPlayer;
-    public final TrackScheduler scheduler;
+    private final AudioPlayer audioPlayer;
+    private final TrackScheduler scheduler;
     private final AudioPlayerSendHandler sendHandler;
 
     public MusicManager(AudioPlayerManager manager) {
@@ -37,5 +37,13 @@ public class MusicManager {
 
     public AudioPlayerSendHandler getSendHandler() {
         return sendHandler;
+    }
+
+    public TrackScheduler getScheduler() {
+        return scheduler;
+    }
+
+    public AudioPlayer getAudioPlayer() {
+        return audioPlayer;
     }
 }

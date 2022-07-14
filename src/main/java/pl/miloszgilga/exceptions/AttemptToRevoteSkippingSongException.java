@@ -28,8 +28,8 @@ public class AttemptToRevoteSkippingSongException extends JdaIllegalChatStateExc
 
     public AttemptToRevoteSkippingSongException(MessageReceivedEvent event) {
         super(event);
-        var embedMessage = new EmbedMessage("UWAGA!", String.format(
-                "Hej **%s** W głosowaniu na pominięcie piosenki możesz wziąć udział tylko raz.", event.getAuthor().getName()),
+        final var embedMessage = new EmbedMessage("UWAGA!", String.format(
+                "Hej **%s**! W głosowaniu na pominięcie piosenki możesz wziąć udział tylko raz.", event.getAuthor().getName()),
                 EmbedMessageColor.ORANGE
         );
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();

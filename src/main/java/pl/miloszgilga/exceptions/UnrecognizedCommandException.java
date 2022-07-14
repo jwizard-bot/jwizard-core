@@ -32,7 +32,7 @@ public class UnrecognizedCommandException extends JdaIllegalChatStateException {
 
     public UnrecognizedCommandException(MessageReceivedEvent event) {
         super(event);
-        var embedMessage = new EmbedMessage("ERROR!", "Nieznana komenda", EmbedMessageColor.RED, List.of(
+        final var embedMessage = new EmbedMessage("ERROR!", "Nieznana komenda", EmbedMessageColor.RED, List.of(
                 new MessageEmbedField("Komendy należy używać zgodne ze składnią: ",
                         String.format("`%s<nazwa komendy> [...argumenty]`", DEF_PREFIX), false),
                 new MessageEmbedField("Aby uzyskać pełną listę komend wpisz: ",

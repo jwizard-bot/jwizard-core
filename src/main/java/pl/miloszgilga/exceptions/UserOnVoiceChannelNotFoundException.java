@@ -28,7 +28,7 @@ public class UserOnVoiceChannelNotFoundException extends JdaIllegalChatStateExce
 
     public UserOnVoiceChannelNotFoundException(MessageReceivedEvent event, String description) {
         super(event);
-        var embedMessage = new EmbedMessage("UWAGA!", description, EmbedMessageColor.ORANGE);
+        final var embedMessage = new EmbedMessage("UWAGA!", description, EmbedMessageColor.ORANGE);
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
     }
 
