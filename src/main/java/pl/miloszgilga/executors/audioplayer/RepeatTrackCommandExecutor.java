@@ -25,12 +25,17 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
 import pl.miloszgilga.messages.EmbedMessage;
-import static pl.miloszgilga.FranekBot.config;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.messages.EmbedMessageColor;
 import pl.miloszgilga.audioplayer.TrackScheduler;
 import pl.miloszgilga.exceptions.EmptyAudioQueueException;
+import pl.miloszgilga.exceptions.UserOnVoiceChannelNotFoundException;
+import pl.miloszgilga.exceptions.UnableAccessToInvokeCommandException;
 
+import static pl.miloszgilga.FranekBot.config;
+import static pl.miloszgilga.Command.MUSIC_LOOP;
+import static pl.miloszgilga.executors.audioplayer.PauseTrackCommandExecutor.checkIfActionEventInvokeBySender;
+import static pl.miloszgilga.executors.audioplayer.VoteSkipTrackCommandExecutor.findVoiceChannelWithBotAndUser;
 
 
 public class RepeatTrackCommandExecutor extends Command {
@@ -46,10 +51,13 @@ public class RepeatTrackCommandExecutor extends Command {
     @Description("command: <[prefix]loop>")
     protected void execute(CommandEvent event) {
         try {
-            final TrackScheduler trackScheduler = playerManager.getMusicManager(event.getGuild()).getScheduler();
+            final TrackScheduler trackScheduler = playerManager.getMusicManager(event).getScheduler();
             if (trackScheduler.getAudioPlayer().getPlayingTrack() == null) {
                 throw new EmptyAudioQueueException(event);
             }
+
+            findVoiceChannelWithBotAndUser(event);
+            checkIfActionEventInvokeBySender(event);
             trackScheduler.setRepeating(!trackScheduler.isRepeating());
 
             final AudioTrackInfo info = trackScheduler.getAudioPlayer().getPlayingTrack().getInfo();
@@ -67,7 +75,8 @@ public class RepeatTrackCommandExecutor extends Command {
                     EmbedMessageColor.GREEN);
             event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
 
-        } catch (EmptyAudioQueueException ex) {
+        } catch (UserOnVoiceChannelNotFoundException | UnableAccessToInvokeCommandException |
+                 EmptyAudioQueueException ex) {
             System.out.println(ex.getMessage());
         }
     }
