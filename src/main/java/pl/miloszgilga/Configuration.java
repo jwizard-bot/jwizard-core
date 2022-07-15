@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2022 by MILOSZ GILGA <https://miloszgilga.pl>
  *
- * File name: Utils.java
- * Last modified: 12/07/2022, 00:24
+ * File name: Configuration.java
+ * Last modified: 14/07/2022, 23:41
  * Project name: franek-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -18,18 +18,11 @@
 
 package pl.miloszgilga;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import lombok.Data;
 
-
-public class Utils {
-
-    public static boolean isUrl(String url) {
-        try {
-            new URI(url);
-            return true;
-        } catch (URISyntaxException e) {
-            return false;
-        }
-    }
+@Data
+public class Configuration {
+    private String token;
+    private String applicationId;
+    private String defPrefix;
 }

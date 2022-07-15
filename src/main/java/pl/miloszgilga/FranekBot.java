@@ -24,21 +24,31 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import javax.security.auth.login.LoginException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static pl.miloszgilga.AvailableCommands.HELP;
-import pl.miloszgilga.executors.AudioPlayCommandExecutor;
-import pl.miloszgilga.executors.AudioSkippedCommandExecutor;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import pl.miloszgilga.executors.*;
+import static pl.miloszgilga.Command.HELP_ME;
+import pl.miloszgilga.interceptors.MismatchCommandInterceptor;
 
 
 public class FranekBot {
 
-    private static final String BOT_ID = Dotenv.load().get("BOT_ID");
-    public static final String DEV_GUILD = Dotenv.load().get("DEV_GUILD");
-    public static final String PROD_GUILD = Dotenv.load().get("PROD_GUILD");
+    public static Configuration config;
+    private static final String FILENAME = "config.json";
 
-    public static final String DEF_PREFIX = "$";
+    private static void loadConfiguration() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String filePath = "src/main/resources/config/" + FILENAME;
+        config = objectMapper.readValue(new String(Files.readAllBytes(Paths.get(filePath))), Configuration.class);
+    }
+
+    public static void main(String[] args) throws LoginException, IOException {
+        loadConfiguration();
 
         CommandClientBuilder builder = new CommandClientBuilder();
         builder.setPrefix(config.getDefPrefix());
@@ -54,9 +64,9 @@ public class FranekBot {
         );
 
         JDABuilder
-                .createDefault(BOT_ID)
+                .createDefault(config.getToken())
                 .enableCache(CacheFlag.VOICE_STATE)
-                .setActivity(Activity.listening(DEF_PREFIX + HELP.getCommandName()))
+                .setActivity(Activity.listening(config.getDefPrefix() + HELP_ME.getCommandName()))
                 .setStatus(OnlineStatus.ONLINE)
                 .addEventListeners(
                         builder.build(),
