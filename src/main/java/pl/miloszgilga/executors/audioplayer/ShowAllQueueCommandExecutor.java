@@ -33,6 +33,11 @@ import java.util.concurrent.TimeUnit;
 
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.messages.EmbedMessageColor;
+import pl.miloszgilga.audioplayer.QueueTrackExtendedInfo;
+import pl.miloszgilga.exceptions.EmptyAudioQueueException;
+import pl.miloszgilga.exceptions.IllegalCommandArgumentsException;
+
+import static pl.miloszgilga.FranekBot.config;
 import static pl.miloszgilga.Command.MUSIC_QUEUE;
 
 
@@ -54,17 +59,38 @@ public class ShowAllQueueCommandExecutor extends Command {
                 throw new EmptyAudioQueueException(event);
             }
             showQueueElementsInEmbedMessage(event, queue);
-        } catch (EmptyAudioQueueException ex) {
+        } catch (EmptyAudioQueueException | IllegalCommandArgumentsException ex) {
             System.out.println(ex.getMessage());
         }
     }
 
-    static void showQueueElementsInEmbedMessage(CommandEvent event, Queue<AudioTrack> queue) {
-        int position = 0;
-        final long maxQueueMilis = queue.stream().mapToLong(AudioTrack::getDuration).sum();
+    static void showQueueElementsInEmbedMessage(CommandEvent event, Queue<QueueTrackExtendedInfo> queue) {
+        final List<AudioTrack> flattedQueue = queue.stream()
+                .map(QueueTrackExtendedInfo::getAudioTrack).collect(Collectors.toList());
+        final long maxQueueMilis = flattedQueue.stream().mapToLong(AudioTrack::getDuration).sum();
+
+        int countOfPages = (int)Math.ceil((double)flattedQueue.size() / config.getQueuePaginationMaxElmsOnPage());
+        int pagePosition = 1;
+
+        try {
+            if (!event.getArgs().equals("")) {
+                pagePosition = Integer.parseInt(event.getArgs());
+            }
+            if (pagePosition > countOfPages) {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException ex) {
+            throw new IllegalCommandArgumentsException(event, String.format(
+                    "`%s%s [nr strony (opcjonalny)]`", config.getDefPrefix(), MUSIC_QUEUE.getCommandName()));
+        }
+
+        final int indexFrom = (pagePosition - 1) * config.getQueuePaginationMaxElmsOnPage();
+        final int indexTo = Math.min(indexFrom + config.getQueuePaginationMaxElmsOnPage(), flattedQueue.size());
+        final List<AudioTrack> singlePageQueue = flattedQueue.subList(indexFrom, indexTo);
 
         final var embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("KOLEJKA");
+        embedBuilder.setColor(Color.decode(EmbedMessageColor.GREEN.getColor()));
+        embedBuilder.setTitle(String.format("KOLEJKA (Strona %s z %s)", pagePosition, countOfPages));
         embedBuilder.setDescription(String.format("Ilość piosenek w kolejce: **%s**, Czas trwania: **%s**",
                 queue.size(), convertMilisToDateFormat(maxQueueMilis)));
         for (int i = 0; i < singlePageQueue.size(); i++) {
@@ -75,10 +101,13 @@ public class ShowAllQueueCommandExecutor extends Command {
                             indexFrom + i + 1, convertMilisToDateFormat(track.getDuration())),
                     false);
         }
+        embedBuilder.setFooter("Aby przejść na kolejną stronę użyj komendy z argumentami.");
         event.getTextChannel().sendMessageEmbeds(embedBuilder.build()).queue();
     }
 
-    private static String convertMilisToDateFormat(long milis) {
-        return (new SimpleDateFormat("mm:ss")).format(new Date(milis));
+    public static String convertMilisToDateFormat(long millis) {
+        return String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+                TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+                TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
     }
 }
