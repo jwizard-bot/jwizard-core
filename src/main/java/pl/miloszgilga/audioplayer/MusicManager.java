@@ -18,6 +18,7 @@
 
 package pl.miloszgilga.audioplayer;
 
+import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 
@@ -28,9 +29,9 @@ public class MusicManager {
     private final TrackScheduler scheduler;
     private final AudioPlayerSendHandler sendHandler;
 
-    public MusicManager(AudioPlayerManager manager) {
+    public MusicManager(AudioPlayerManager manager, CommandEvent event) {
         audioPlayer = manager.createPlayer();
-        scheduler = new TrackScheduler(audioPlayer);
+        scheduler = new TrackScheduler(audioPlayer, event);
         audioPlayer.addListener(scheduler);
         sendHandler = new AudioPlayerSendHandler(audioPlayer);
     }

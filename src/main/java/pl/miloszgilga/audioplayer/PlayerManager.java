@@ -39,10 +39,10 @@ public class PlayerManager {
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
     }
 
-    public MusicManager getMusicManager(Guild guild) {
-        return musicManagerMap.computeIfAbsent(guild.getIdLong(), guildId -> {
-            final MusicManager musicManager = new MusicManager(audioPlayerManager);
-            guild.getAudioManager().setSendingHandler(musicManager.getSendHandler());
+    public MusicManager getMusicManager(CommandEvent event) {
+        return musicManagerMap.computeIfAbsent(event.getGuild().getIdLong(), guildId -> {
+            final MusicManager musicManager = new MusicManager(audioPlayerManager, event);
+            event.getGuild().getAudioManager().setSendingHandler(musicManager.getSendHandler());
             return musicManager;
         });
     }
