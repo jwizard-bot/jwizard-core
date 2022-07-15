@@ -31,8 +31,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import pl.miloszgilga.executors.*;
 import static pl.miloszgilga.Command.HELP_ME;
+
+import pl.miloszgilga.executors.audioplayer.*;
 import pl.miloszgilga.interceptors.MismatchCommandInterceptor;
 
 
@@ -55,12 +56,12 @@ public class FranekBot {
         builder.setOwnerId(config.getApplicationId());
         builder.setHelpWord(HELP_ME.getCommandName());
         builder.addCommands(
-                new AudioPlayCommandExecutor(),
-                new AudioSkippedCommandExecutor(),
-                new AudioRepeatLoopCommandExecutor(),
-                new AudioShowAllQueueCommandExecutor(),
-                new AudioQueueShuffleCommandExecutor(),
-                new AudioMoveBotToVoiceChannelCommandExecutor()
+                new PlayCommandExecutor(),
+                new SkippedCommandExecutor(),
+                new RepeatLoopCommandExecutor(),
+                new ShowAllQueueCommandExecutor(),
+                new QueueShuffleCommandExecutor(),
+                new MoveBotToVoiceChannelCommandExecutor()
         );
 
         JDABuilder

@@ -2,7 +2,7 @@
  * Copyright (c) 2022 by MILOSZ GILGA <https://miloszgilga.pl>
  *
  * File name: AudioSkippedCommandExecutor.java
- * Last modified: 12/07/2022, 00:19
+ * Last modified: 15/07/2022, 02:30
  * Project name: franek-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga.executors;
+package pl.miloszgilga.executors.audioplayer;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -34,13 +34,13 @@ import pl.miloszgilga.exceptions.UserOnVoiceChannelNotFoundException;
 import pl.miloszgilga.exceptions.AttemptToRevoteSkippingSongException;
 
 
-public class AudioSkippedCommandExecutor extends Command {
+public class SkippedCommandExecutor extends Command {
 
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
     private final Queue<String> usersAlreadyVoted = new PriorityQueue<>();
 
-    public AudioSkippedCommandExecutor() {
+    public SkippedCommandExecutor() {
         name = MUSIC_SKIP.getCommandName();
         help = MUSIC_SKIP.getCommandDescription();
     }

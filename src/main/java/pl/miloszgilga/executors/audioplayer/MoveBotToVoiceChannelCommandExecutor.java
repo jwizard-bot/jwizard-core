@@ -2,7 +2,7 @@
  * Copyright (c) 2022 by MILOSZ GILGA <https://miloszgilga.pl>
  *
  * File name: AudioMoveBotToVoiceChannelCommandExecutor.java
- * Last modified: 14/07/2022, 21:53
+ * Last modified: 15/07/2022, 02:29
  * Project name: franek-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga.executors;
+package pl.miloszgilga.executors.audioplayer;
 
 import jdk.jfr.Description;
 import net.dv8tion.jda.api.Permission;
@@ -40,12 +40,12 @@ import pl.miloszgilga.exceptions.UserOnVoiceChannelNotFoundException;
 import pl.miloszgilga.exceptions.UnableAccessToInvokeCommandException;
 
 
-public class AudioMoveBotToVoiceChannelCommandExecutor extends Command {
+public class MoveBotToVoiceChannelCommandExecutor extends Command {
 
     private List<VoiceChannel> voiceChannels = new ArrayList<>();
     private Member senderUserMember;
 
-    public AudioMoveBotToVoiceChannelCommandExecutor() {
+    public MoveBotToVoiceChannelCommandExecutor() {
         name = MUSIC_JOIN.getCommandName();
         help = MUSIC_JOIN.getCommandDescription();
     }

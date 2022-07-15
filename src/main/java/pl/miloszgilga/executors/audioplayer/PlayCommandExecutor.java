@@ -2,7 +2,7 @@
  * Copyright (c) 2022 by MILOSZ GILGA <https://miloszgilga.pl>
  *
  * File name: AudioPlayCommandExecutor.java
- * Last modified: 11/07/2022, 23:35
+ * Last modified: 15/07/2022, 02:58
  * Project name: franek-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga.executors;
+package pl.miloszgilga.executors.audioplayer;
 
 import jdk.jfr.Description;
 import net.dv8tion.jda.api.entities.Member;
@@ -38,11 +38,11 @@ import pl.miloszgilga.exceptions.IllegalCommandArgumentsException;
 import pl.miloszgilga.exceptions.UserOnVoiceChannelNotFoundException;
 
 
-public class AudioPlayCommandExecutor extends Command {
+public class PlayCommandExecutor extends Command {
 
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
-    public AudioPlayCommandExecutor() {
+    public PlayCommandExecutor() {
         name = MUSIC_PLAY.getCommandName();
         help = MUSIC_PLAY.getCommandDescription();
     }

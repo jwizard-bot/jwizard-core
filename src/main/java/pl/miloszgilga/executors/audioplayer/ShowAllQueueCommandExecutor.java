@@ -2,7 +2,7 @@
  * Copyright (c) 2022 by MILOSZ GILGA <https://miloszgilga.pl>
  *
  * File name: AudioShowAllQueueCommandExecutor.java
- * Last modified: 14/07/2022, 18:36
+ * Last modified: 15/07/2022, 02:30
  * Project name: franek-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga.executors;
+package pl.miloszgilga.executors.audioplayer;
 
 import jdk.jfr.Description;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -35,11 +35,11 @@ import static pl.miloszgilga.Command.MUSIC_QUEUE;
 import pl.miloszgilga.exceptions.EmptyAudioQueueException;
 
 
-public class AudioShowAllQueueCommandExecutor extends Command {
+public class ShowAllQueueCommandExecutor extends Command {
 
     private static final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
-    public AudioShowAllQueueCommandExecutor() {
+    public ShowAllQueueCommandExecutor() {
         name = MUSIC_QUEUE.getCommandName();
         help = MUSIC_QUEUE.getCommandDescription();
     }

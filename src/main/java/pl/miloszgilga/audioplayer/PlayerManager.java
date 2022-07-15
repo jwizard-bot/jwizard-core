@@ -58,14 +58,14 @@ public class PlayerManager {
         audioPlayerManager.loadItemOrdered(musicManager, trackURL, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
-                musicManager.scheduler.queue(audioTrack);
+                musicManager.getScheduler().queue(audioTrack);
                 textChannel.sendMessage("Adding to queue new track").append(audioTrack.getInfo().title).queue();
             }
             @Override
             public void playlistLoaded(AudioPlaylist audioPlaylist) {
                 final List<AudioTrack> trackList = audioPlaylist.getTracks();
                 if (!trackList.isEmpty()) {
-                    musicManager.scheduler.queue(trackList.get(0));
+                    musicManager.getScheduler().queue(trackList.get(0));
                     textChannel.sendMessage("Adding to queue").append(trackList.get(0).getInfo().title).queue();
                 }
             }

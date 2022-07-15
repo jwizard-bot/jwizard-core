@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2022 by MILOSZ GILGA <https://miloszgilga.pl>
  *
- * File name: AudioQueueShufleCommandExecutor.java
- * Last modified: 15/07/2022, 00:35
+ * File name: AudioQueueShuffleCommandExecutor.java
+ * Last modified: 15/07/2022, 02:29
  * Project name: franek-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga.executors;
+package pl.miloszgilga.executors.audioplayer;
 
 import jdk.jfr.Description;
 import com.jagrosh.jdautilities.command.Command;
@@ -30,14 +30,14 @@ import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.messages.EmbedMessageColor;
 import static pl.miloszgilga.Command.MUSIC_SHUFFLE;
 import pl.miloszgilga.exceptions.EmptyAudioQueueException;
-import static pl.miloszgilga.executors.AudioShowAllQueueCommandExecutor.showQueueElementsInEmbedMessage;
+import static pl.miloszgilga.executors.audioplayer.ShowAllQueueCommandExecutor.showQueueElementsInEmbedMessage;
 
 
-public class AudioQueueShuffleCommandExecutor extends Command {
+public class QueueShuffleCommandExecutor extends Command {
 
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
-    public AudioQueueShuffleCommandExecutor() {
+    public QueueShuffleCommandExecutor() {
         name = MUSIC_SHUFFLE.getCommandName();
         help = MUSIC_SHUFFLE.getCommandDescription();
     }

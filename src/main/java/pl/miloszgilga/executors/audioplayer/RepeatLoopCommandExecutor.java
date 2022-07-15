@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2022 by MILOSZ GILGA <https://miloszgilga.pl>
  *
- * File name: AudioRepeatInfiniteLoopCommandExecutor.java
- * Last modified: 14/07/2022, 21:04
+ * File name: AudioRepeatLoopCommandExecutor.java
+ * Last modified: 15/07/2022, 02:30
  * Project name: franek-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga.executors;
+package pl.miloszgilga.executors.audioplayer;
 
 import jdk.jfr.Description;
 import com.jagrosh.jdautilities.command.Command;
@@ -34,11 +34,11 @@ import pl.miloszgilga.audioplayer.TrackScheduler;
 import pl.miloszgilga.exceptions.EmptyAudioQueueException;
 
 
-public class AudioRepeatLoopCommandExecutor extends Command {
+public class RepeatLoopCommandExecutor extends Command {
 
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
-    public AudioRepeatLoopCommandExecutor() {
+    public RepeatLoopCommandExecutor() {
         name = MUSIC_LOOP.getCommandName();
         help = MUSIC_LOOP.getCommandDescription();
     }
