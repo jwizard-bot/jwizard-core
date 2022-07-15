@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2022 by MILOSZ GILGA <https://miloszgilga.pl>
  *
- * File name: SendMessageInterceptor.java
- * Last modified: 11/07/2022, 21:29
+ * File name: MismatchCommandInterceptor.java
+ * Last modified: 15/07/2022, 02:35
  * Project name: franek-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -18,50 +18,37 @@
 
 package pl.miloszgilga.interceptors;
 
+import org.jetbrains.annotations.NotNull;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.List;
 import java.util.Arrays;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import pl.miloszgilga.AvailableCommands;
+import static pl.miloszgilga.FranekBot.config;
+import static pl.miloszgilga.Command.getAllCommands;
 import pl.miloszgilga.exceptions.UnrecognizedCommandException;
-import static pl.miloszgilga.FranekBot.DEF_PREFIX;
-import static pl.miloszgilga.AvailableCommands.getAllCommands;
 
 
-public class SendMessageInterceptor {
+public class MismatchCommandInterceptor extends ListenerAdapter {
 
     private final List<String> allCommands = getAllCommands();
-    private static SendMessageInterceptor instance;
 
-    private SendMessageInterceptor() { }
-
-    public List<String> validateRequestWithCommandType(MessageReceivedEvent event, AvailableCommands command) {
+    @Override
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         try {
-            if (!event.getAuthor().isBot() && event.getMessage().getContentRaw().contains(DEF_PREFIX)) {
+            if (!event.getAuthor().isBot() && event.getMessage().getContentRaw().contains(config.getDefPrefix())) {
                 List<String> prefixAndArgs = Arrays.stream(event.getMessage().getContentRaw().split(" "))
                         .collect(Collectors.toList());
 
-                String commandName = prefixAndArgs.get(0).replace(DEF_PREFIX, "");
+                String commandName = prefixAndArgs.get(0).replace(config.getDefPrefix(), "");
                 if (allCommands.stream().noneMatch(el -> el.equals(commandName))) {
                     throw new UnrecognizedCommandException(event);
-                }
-                if (command.getCommandName().equals(commandName)) {
-                    return prefixAndArgs;
                 }
             }
         } catch (UnrecognizedCommandException ex) {
             System.out.println(ex.getMessage());
         }
-        return new ArrayList<>();
-    }
-
-    public static SendMessageInterceptor getSingletonInstance() {
-        if (instance == null) {
-            instance = new SendMessageInterceptor();
-        }
-        return instance;
     }
 }
