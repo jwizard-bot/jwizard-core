@@ -45,7 +45,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     private boolean repeating = false;
     private boolean alreadyDisplayed = false;
-    private Thread counttingToLeaveTheChannel;
+    private Thread countingToLeaveTheChannel;
 
     public TrackScheduler(AudioPlayer audioPlayer, CommandEvent event) {
         this.audioPlayer = audioPlayer;
@@ -64,6 +64,23 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+        if (audioPlayer.getPlayingTrack() == null && queue.isEmpty() && !repeating) {
+            final var embedMessage = new EmbedMessage("", "Koniec kolejki odtwarzania.", EmbedMessageColor.RED);
+            event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
+            countingToLeaveTheChannel = new Thread(() -> {
+                try {
+                    Thread.sleep(1000 * 60 * config.getMaxInactivityTimeMinutes());
+                    final var leavingMessage = new EmbedMessage("", String.format(
+                            "W związku z brakiem aktywności przez %s minut opuszczam kanał głosowy. Z fartem.",
+                            config.getMaxInactivityTimeMinutes()), EmbedMessageColor.RED
+                    );
+                    event.getTextChannel().sendMessageEmbeds(leavingMessage.buildMessage()).queue();
+                    event.getJDA().getDirectAudioController().disconnect(event.getGuild());
+                } catch (InterruptedException ignored) { }
+            });
+            countingToLeaveTheChannel.start();
+            return;
+        }
         if (endReason.mayStartNext) {
             if (repeating) {
                 audioPlayer.startTrack(track.makeClone(), false);
