@@ -18,8 +18,13 @@
 
 package pl.miloszgilga.audioplayer;
 
+import lombok.Getter;
+import com.jagrosh.jdautilities.command.CommandEvent;
+
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 
@@ -34,12 +39,17 @@ import static pl.miloszgilga.FranekBot.config;
 @Getter
 public class TrackScheduler extends AudioEventAdapter {
 
-    private boolean repeating = false;
+    private final CommandEvent event;
     private final AudioPlayer audioPlayer;
     private final Queue<QueueTrackExtendedInfo> queue = new LinkedList<>();
 
-    public TrackScheduler(AudioPlayer audioPlayer) {
+    private boolean repeating = false;
+    private boolean alreadyDisplayed = false;
+    private Thread counttingToLeaveTheChannel;
+
+    public TrackScheduler(AudioPlayer audioPlayer, CommandEvent event) {
         this.audioPlayer = audioPlayer;
+        this.event = event;
     }
 
     public void queue(QueueTrackExtendedInfo queueTrackExtendedInfo) {
@@ -63,11 +73,30 @@ public class TrackScheduler extends AudioEventAdapter {
         }
     }
 
+    @Override
+    public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
+        final var embedMessage = new EmbedMessage("ERROR!",
+                "Napotkałem nieznany błąd przy próbie odtworzenia piosenki/playlisty. Spróbuj ponownie.",
+                EmbedMessageColor.RED
+        );
+        event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
+    }
+
     public void setRepeating(boolean repeating) {
         this.repeating = repeating;
+        if (!repeating) {
+            alreadyDisplayed = false;
+        }
     }
 
     public void queueShuffle() {
         Collections.shuffle((List<?>) queue);
+    }
+
+    public String queueTrackPositionBaseId() {
+        if (queue.size() == 1) {
+            return "Następna";
+        }
+        return Integer.toString(queue.size());
     }
 }
