@@ -18,7 +18,9 @@
 
 package pl.miloszgilga.executors.audioplayer;
 
+import net.dv8tion.jda.api.entities.Member;
 import com.jagrosh.jdautilities.command.Command;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import java.util.*;
@@ -29,7 +31,9 @@ import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.exceptions.EmptyAudioQueueException;
 import pl.miloszgilga.exceptions.UserOnVoiceChannelNotFoundException;
 import pl.miloszgilga.exceptions.AttemptToRevoteSkippingSongException;
+import pl.miloszgilga.executors.executorhandlers.VoteCommandExecutingHandler;
 
+import static pl.miloszgilga.Command.MUSIC_VOTE_SKIP;
 
 
 public class VoteSkipTrackCommandExecutor extends Command {
@@ -45,30 +49,23 @@ public class VoteSkipTrackCommandExecutor extends Command {
     @Description("command: <[prefix]voteskip>")
     protected void execute(CommandEvent event) {
         try {
-            final String messageAuthorId = event.getAuthor().getId();
-            final VoiceChannel findVoiceChannelWithBot = findVoiceChannelWithBotAndUser(event);
-
-            int allChannelMembers = findVoiceChannelWithBot.getMembers().size() - 1;
-            final int requireVotesToSkipSong = allChannelMembers == 1 ? 1 : allChannelMembers / 2;
-
-            if (!usersAlreadyVoted.contains(messageAuthorId)) {
-                usersAlreadyVoted.add(messageAuthorId);
-                final var votingProgress = new EmbedMessage("POMINIĘCIE PIOSENKI", String.format(
-                        "Status głosowania: **%s**/**%s**, (wymagane głosów: **%s**)",
-                        usersAlreadyVoted.size(), allChannelMembers, requireVotesToSkipSong),
-                        EmbedMessageColor.GREEN
-                );
-                event.getTextChannel().sendMessageEmbeds(votingProgress.buildMessage()).queue();
-                if (usersAlreadyVoted.size() == allChannelMembers) {
-                    usersAlreadyVoted.clear();
-                    playerManager.getMusicManager(event.getGuild()).getScheduler().nextTrack();
-                    final var votingEnded = new EmbedMessage("PIOSENKA POMINIĘTA", "", EmbedMessageColor.GREEN);
-                    event.getTextChannel().sendMessageEmbeds(votingEnded.buildMessage()).queue();
-                }
-            } else {
-                throw new AttemptToRevoteSkippingSongException(event);
+            final MusicManager musicManager = playerManager.getMusicManager(event);
+            final VoiceChannel voiceChannelWithBot = findVoiceChannelWithBotAndUser(event);
+            if (musicManager.getAudioPlayer().getPlayingTrack() == null) {
+                throw new EmptyAudioQueueException(event);
             }
-        } catch (UserOnVoiceChannelNotFoundException | AttemptToRevoteSkippingSongException ex) {
+
+            final var voteHandler = new VoteCommandExecutingHandler(event, voiceChannelWithBot,
+                    "piosenka pominięta", "pominięcie piosenki", "piosenka niepominięta");
+            if (voteHandler.voteCommandExecutor()) {
+                if (musicManager.getScheduler().getQueue().isEmpty()) {
+                    musicManager.getAudioPlayer().stopTrack();
+                } else {
+                    musicManager.getScheduler().nextTrack();
+                }
+            }
+        } catch (EmptyAudioQueueException | UserOnVoiceChannelNotFoundException |
+                 AttemptToRevoteSkippingSongException ex) {
             System.out.println(ex.getMessage());
         }
     }

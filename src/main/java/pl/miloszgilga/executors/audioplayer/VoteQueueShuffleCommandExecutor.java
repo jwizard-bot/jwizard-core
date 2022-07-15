@@ -20,6 +20,7 @@ package pl.miloszgilga.executors.audioplayer;
 
 import jdk.jfr.Description;
 import com.jagrosh.jdautilities.command.Command;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import java.util.Queue;
@@ -27,7 +28,11 @@ import java.util.Queue;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.audioplayer.QueueTrackExtendedInfo;
 import pl.miloszgilga.exceptions.EmptyAudioQueueException;
+import pl.miloszgilga.executors.executorhandlers.VoteCommandExecutingHandler;
+
+import static pl.miloszgilga.Command.MUSIC_VOTE_SHUFFLE;
 import static pl.miloszgilga.executors.audioplayer.ShowAllQueueCommandExecutor.showQueueElementsInEmbedMessage;
+import static pl.miloszgilga.executors.audioplayer.VoteSkipTrackCommandExecutor.findVoiceChannelWithBotAndUser;
 
 
 public class VoteQueueShuffleCommandExecutor extends Command {
@@ -43,15 +48,19 @@ public class VoteQueueShuffleCommandExecutor extends Command {
     @Description("command: <[prefix]voteshuffle>")
     protected void execute(CommandEvent event) {
         try {
-            final Queue<AudioTrack> queue = playerManager.getMusicManager(event.getGuild()).getScheduler().getQueue();
+            final Queue<QueueTrackExtendedInfo> queue = playerManager.getMusicManager(event).getScheduler().getQueue();
             if (queue.isEmpty()) {
                 throw new EmptyAudioQueueException(event);
             }
-            playerManager.getMusicManager(event.getGuild()).getScheduler().queueShuffle();
-            final var embedMessage = new EmbedMessage("INFO", "Piosenki w kolejce zostały przemieszane.",
-                    EmbedMessageColor.GREEN);
-            event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
-            showQueueElementsInEmbedMessage(event, queue);
+
+            final VoiceChannel voiceChannelWithBot = findVoiceChannelWithBotAndUser(event);
+            final var voteHandler = new VoteCommandExecutingHandler(event, voiceChannelWithBot,
+                    "kolejka przetasowana", "przetasowanie kolejki", "kolejka nieprzetasowana");
+
+            if (voteHandler.voteCommandExecutor()) {
+                playerManager.getMusicManager(event).getScheduler().queueShuffle();
+                showQueueElementsInEmbedMessage(event, queue);
+            }
         } catch (EmptyAudioQueueException ex) {
             System.out.println(ex.getMessage());
         }
