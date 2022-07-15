@@ -30,11 +30,16 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public enum Command {
     MUSIC_PLAY("play", "odtworzenie piosenki i dodanie do kolejki (jeśli jakaś jest w danej chwili odtwarzana)"),
-    MUSIC_SKIP("skip", "pominięcie aktualnie odtwarzanej piosenki z kolejki i odtworzenie nowej poprzez głosowanie"),
-    MUSIC_QUEUE("queue", "wyświelenie wszystkich piosenek w kolejce"),
+    MUSIC_PAUSE("pause", "wstrzymanie odtwarzania aktualnie odtwarzanej piosenki"),
+    MUSIC_RESUME("resume", "kontyuacja odtwarzania piosenki od momentu wstrzymania"),
     MUSIC_LOOP("loop", "zapętlenie aktualnie odtwarzanej piosenki"),
+    MUSIC_VOLUME("volume", "zmiana głośności odtwarzacza w skali 0 - 150% (domyślna głośność odtwarzacza to 100%)"),
+    MUSIC_SKIP("skip", "umożliwia autorowi piosenki pominięcie jej (aktualnie odtwarzanej) i przejście do następnej"),
     MUSIC_JOIN("join", "przeniesienie bota na kanał, na którym znajduje się użytkownik"),
-    MUSIC_SHUFFLE("shuffle", "przetasowanie kolejki z piosenkami"),
+    MUSIC_QUEUE("queue", "wyświelenie wszystkich piosenek w kolejce"),
+    MUSIC_VOTE_SKIP("voteskip", "pominięcie aktualnie odtwarzanej piosenki z kolejki i odtworzenie nowej poprzez głosowanie"),
+    MUSIC_VOTE_SHUFFLE("voteshuffle", "przetasowanie kolejki z piosenkami poprzez głosowanie"),
+    MUSIC_VOTE_QUEUE_CLEAR("voteclqueue", "wyczyszczenie całej kolejki z piosenkami (nie usuwa aktualnie odtwarzającej) poprzez głosowanie"),
     HELP("help", "wyświelnie wszystkich komend bota"),
     HELP_ME("helpme", "wyświetlenie wszystkich komend bota w wiadomości prywatnej");
 
