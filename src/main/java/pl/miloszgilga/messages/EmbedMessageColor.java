@@ -18,18 +18,16 @@
 
 package pl.miloszgilga.messages;
 
+import lombok.Getter;
+import lombok.AllArgsConstructor;
+
+
+@Getter
+@AllArgsConstructor
 public enum EmbedMessageColor {
     GREEN("#19d166"),
     RED("#d11919"),
     ORANGE("#ffa805");
 
     private final String color;
-
-    EmbedMessageColor(String color) {
-        this.color = color;
-    }
-
-    public String getColor() {
-        return color;
-    }
 }

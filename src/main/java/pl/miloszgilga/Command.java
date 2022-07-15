@@ -18,6 +18,7 @@
 
 package pl.miloszgilga;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 
 
 @Getter
+@AllArgsConstructor
 public enum Command {
     MUSIC_PLAY("play", "odtworzenie piosenki i dodanie do kolejki (jeśli jakaś jest w danej chwili odtwarzana)"),
     MUSIC_SKIP("skip", "pominięcie aktualnie odtwarzanej piosenki z kolejki i odtworzenie nowej poprzez głosowanie"),
@@ -38,11 +40,6 @@ public enum Command {
 
     private final String commandName;
     private final String commandDescription;
-
-    Command(String commandName, String commandDescription) {
-        this.commandName = commandName;
-        this.commandDescription = commandDescription;
-    }
 
     public static List<String> getAllCommands() {
         return Arrays

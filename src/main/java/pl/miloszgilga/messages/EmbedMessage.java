@@ -18,6 +18,7 @@
 
 package pl.miloszgilga.messages;
 
+import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 
+@AllArgsConstructor
 public class EmbedMessage {
 
     private final EmbedBuilder builder = new EmbedBuilder();
@@ -34,13 +36,6 @@ public class EmbedMessage {
     private final String description;
     private final EmbedMessageColor color;
     private List<MessageEmbedField> fields = new ArrayList<>();
-
-    public EmbedMessage(String title, String description, EmbedMessageColor color, List<MessageEmbedField> fields) {
-        this.title = title;
-        this.description = description;
-        this.color = color;
-        this.fields = fields;
-    }
 
     public EmbedMessage(String title, String description, EmbedMessageColor color) {
         this.title = title;
