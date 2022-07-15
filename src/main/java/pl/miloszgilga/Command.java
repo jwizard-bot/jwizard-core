@@ -18,29 +18,35 @@
 
 package pl.miloszgilga;
 
+import lombok.Getter;
+
 import java.util.List;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 
-public enum AvailableCommands {
-    MUSIC_PLAY("play"),
-    MUSIC_SKIP("skip"),
-    HELP("help");
+@Getter
+public enum Command {
+    MUSIC_PLAY("play", "odtworzenie piosenki i dodanie do kolejki (jeśli jakaś jest w danej chwili odtwarzana)"),
+    MUSIC_SKIP("skip", "pominięcie aktualnie odtwarzanej piosenki z kolejki i odtworzenie nowej poprzez głosowanie"),
+    MUSIC_QUEUE("queue", "wyświelenie wszystkich piosenek w kolejce"),
+    MUSIC_LOOP("loop", "zapętlenie aktualnie odtwarzanej piosenki"),
+    MUSIC_JOIN("join", "przeniesienie bota na kanał, na którym znajduje się użytkownik"),
+    MUSIC_SHUFFLE("shuffle", "przetasowanie kolejki z piosenkami"),
+    HELP("help", "wyświelnie wszystkich komend bota"),
+    HELP_ME("helpme", "wyświetlenie wszystkich komend bota w wiadomości prywatnej");
 
     private final String commandName;
+    private final String commandDescription;
 
-    AvailableCommands(String commandName) {
+    Command(String commandName, String commandDescription) {
         this.commandName = commandName;
-    }
-
-    public String getCommandName() {
-        return commandName;
+        this.commandDescription = commandDescription;
     }
 
     public static List<String> getAllCommands() {
         return Arrays
-                .stream(AvailableCommands.values()).map(AvailableCommands::getCommandName)
+                .stream(Command.values()).map(Command::getCommandName)
                 .collect(Collectors.toList());
     }
 }
