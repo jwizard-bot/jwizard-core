@@ -77,7 +77,8 @@ public class FranekBot {
                 .setStatus(OnlineStatus.ONLINE)
                 .addEventListeners(
                         builder.build(),
-                        new MismatchCommandInterceptor()
+                        new MismatchCommandInterceptor(),
+                        new ServerBotDeafenInterceptor()
                 )
                 .build();
     }
