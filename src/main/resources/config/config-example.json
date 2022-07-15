@@ -1,5 +1,8 @@
 {
     "token": "",
     "applicationId": "",
-    "defPrefix": ""
+    "defPrefix": "",
+    "queuePaginationMaxElmsOnPage": 20,
+    "maxInactivityTimeMinutes": 5,
+    "maxVotingElapseTimeMinutes": 2
 }

@@ -25,4 +25,7 @@ public class Configuration {
     private String token;
     private String applicationId;
     private String defPrefix;
+    private byte queuePaginationMaxElmsOnPage;
+    private byte maxInactivityTimeMinutes;
+    private byte maxVotingElapseTimeMinutes;
 }
