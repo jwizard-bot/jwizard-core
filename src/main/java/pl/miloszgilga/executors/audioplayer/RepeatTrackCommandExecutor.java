@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2022 by MILOSZ GILGA <https://miloszgilga.pl>
  *
- * File name: AudioQueueShuffleCommandExecutor.java
- * Last modified: 15/07/2022, 02:29
+ * File name: AudioRepeatLoopCommandExecutor.java
+ * Last modified: 15/07/2022, 02:30
  * Project name: franek-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -21,40 +21,52 @@ package pl.miloszgilga.executors.audioplayer;
 import jdk.jfr.Description;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
-import java.util.Queue;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
 import pl.miloszgilga.messages.EmbedMessage;
+import static pl.miloszgilga.FranekBot.config;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.messages.EmbedMessageColor;
-import static pl.miloszgilga.Command.MUSIC_SHUFFLE;
+import pl.miloszgilga.audioplayer.TrackScheduler;
 import pl.miloszgilga.exceptions.EmptyAudioQueueException;
-import static pl.miloszgilga.executors.audioplayer.ShowAllQueueCommandExecutor.showQueueElementsInEmbedMessage;
 
 
-public class QueueShuffleCommandExecutor extends Command {
+
+public class RepeatTrackCommandExecutor extends Command {
 
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
-    public QueueShuffleCommandExecutor() {
-        name = MUSIC_SHUFFLE.getCommandName();
-        help = MUSIC_SHUFFLE.getCommandDescription();
+    public RepeatTrackCommandExecutor() {
+        name = MUSIC_LOOP.getCommandName();
+        help = MUSIC_LOOP.getCommandDescription();
     }
 
     @Override
-    @Description("command: <[prefix]shuffle>")
+    @Description("command: <[prefix]loop>")
     protected void execute(CommandEvent event) {
         try {
-            final Queue<AudioTrack> queue = playerManager.getMusicManager(event.getGuild()).getScheduler().getQueue();
-            if (queue.isEmpty()) {
+            final TrackScheduler trackScheduler = playerManager.getMusicManager(event.getGuild()).getScheduler();
+            if (trackScheduler.getAudioPlayer().getPlayingTrack() == null) {
                 throw new EmptyAudioQueueException(event);
             }
-            playerManager.getMusicManager(event.getGuild()).getScheduler().queueShuffle();
-            final var embedMessage = new EmbedMessage("INFO", "Piosenki w kolejce zostały przemieszane.",
+            trackScheduler.setRepeating(!trackScheduler.isRepeating());
+
+            final AudioTrackInfo info = trackScheduler.getAudioPlayer().getPlayingTrack().getInfo();
+            String embedMessageDescription = "usunięta z";
+            String embedMessageRemoveLoop = "";
+            if (trackScheduler.isRepeating()) {
+                embedMessageDescription = "umieszczona w";
+                embedMessageRemoveLoop = String.format("Aby usunąć piosenkę z pętli, wpisz ponownie komendę `%s%s`.",
+                        config.getDefPrefix(), MUSIC_LOOP.getCommandName());
+            }
+
+            final var embedMessage = new EmbedMessage("", String.format(
+                    "Piosenka **%s: %s** została %s nieskończonej pętli. %s",
+                    info.author, info.title, embedMessageDescription, embedMessageRemoveLoop),
                     EmbedMessageColor.GREEN);
             event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
-            showQueueElementsInEmbedMessage(event, queue);
+
         } catch (EmptyAudioQueueException ex) {
             System.out.println(ex.getMessage());
         }

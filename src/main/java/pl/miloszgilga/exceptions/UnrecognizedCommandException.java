@@ -23,9 +23,10 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import java.util.List;
 
 import pl.miloszgilga.messages.EmbedMessage;
-import static pl.miloszgilga.FranekBot.config;
 import pl.miloszgilga.messages.EmbedMessageColor;
 import pl.miloszgilga.messages.MessageEmbedField;
+
+import static pl.miloszgilga.FranekBot.config;
 
 
 public class UnrecognizedCommandException extends RuntimeException {

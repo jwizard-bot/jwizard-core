@@ -30,19 +30,20 @@ import java.util.Objects;
 import java.util.Optional;
 import java.net.URISyntaxException;
 
-import static pl.miloszgilga.FranekBot.config;
-import static pl.miloszgilga.Command.MUSIC_PLAY;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.exceptions.MusicBotIsInUseException;
 import pl.miloszgilga.exceptions.IllegalCommandArgumentsException;
 import pl.miloszgilga.exceptions.UserOnVoiceChannelNotFoundException;
 
+import static pl.miloszgilga.FranekBot.config;
+import static pl.miloszgilga.Command.MUSIC_PLAY;
 
-public class PlayCommandExecutor extends Command {
+
+public class PlayTrackCommandExecutor extends Command {
 
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
-    public PlayCommandExecutor() {
+    public PlayTrackCommandExecutor() {
         name = MUSIC_PLAY.getCommandName();
         help = MUSIC_PLAY.getCommandDescription();
     }
@@ -67,13 +68,13 @@ public class PlayCommandExecutor extends Command {
             audioManager.openAudioConnection(memberChannel);
 
             String withoutPrefix = event.getArgs();
-            if (!isUrl(withoutPrefix) && event.getArgs().split(" ").length > 1) {
+            boolean ifValidUri = isUrl(withoutPrefix);
+            if (!ifValidUri && event.getArgs().split(" ").length > 1) {
                 withoutPrefix = "ytsearch: " + withoutPrefix + " audio";
             } else {
                 withoutPrefix = withoutPrefix.replaceAll(" ", "");
             }
-            playerManager.loadAndPlay(event.getTextChannel(), withoutPrefix);
-
+            playerManager.loadAndPlay(event, withoutPrefix, ifValidUri);
         } catch (UserOnVoiceChannelNotFoundException | MusicBotIsInUseException | IllegalCommandArgumentsException ex) {
             System.out.println(ex.getMessage());
         }
@@ -81,10 +82,10 @@ public class PlayCommandExecutor extends Command {
 
     private void checkIfBotIsCurrentyUsedOnAnotherChannel(CommandEvent event) {
         final String guildId = event.getGuild().getId();
-        Optional<VoiceChannel> findBotOnVoiceChannel = Objects.requireNonNull(event.getJDA().getGuildById(guildId))
+        final Optional<VoiceChannel> findBotOnVoiceChannel = Objects.requireNonNull(event.getJDA().getGuildById(guildId))
                 .getVoiceChannels().stream().filter(channel -> {
-                    Member botMember = event.getGuild().getMember(event.getJDA().getSelfUser());
-                    Member senderUserMember = event.getGuild().getMember(event.getAuthor());
+                    final Member botMember = event.getGuild().getMember(event.getJDA().getSelfUser());
+                    final Member senderUserMember = event.getGuild().getMember(event.getAuthor());
                     return channel.getMembers().contains(botMember) && !channel.getMembers().contains(senderUserMember);
                 })
                 .findFirst();

@@ -21,8 +21,9 @@ package pl.miloszgilga.exceptions;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import pl.miloszgilga.messages.EmbedMessage;
-import static pl.miloszgilga.Command.MUSIC_JOIN;
 import pl.miloszgilga.messages.EmbedMessageColor;
+
+import static pl.miloszgilga.Command.MUSIC_JOIN;
 
 
 public class MusicBotIsInUseException extends JdaIllegalChatStateException {

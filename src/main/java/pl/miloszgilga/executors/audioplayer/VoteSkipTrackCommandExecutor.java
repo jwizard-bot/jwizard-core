@@ -20,33 +20,29 @@ package pl.miloszgilga.executors.audioplayer;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.VoiceChannel;
 
 import java.util.*;
 import jdk.jfr.Description;
 
-import pl.miloszgilga.messages.EmbedMessage;
+import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.audioplayer.PlayerManager;
-import static pl.miloszgilga.Command.MUSIC_SKIP;
-import pl.miloszgilga.messages.EmbedMessageColor;
+import pl.miloszgilga.exceptions.EmptyAudioQueueException;
 import pl.miloszgilga.exceptions.UserOnVoiceChannelNotFoundException;
 import pl.miloszgilga.exceptions.AttemptToRevoteSkippingSongException;
 
 
-public class SkippedCommandExecutor extends Command {
+
+public class VoteSkipTrackCommandExecutor extends Command {
 
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
-    private final Queue<String> usersAlreadyVoted = new PriorityQueue<>();
-
-    public SkippedCommandExecutor() {
-        name = MUSIC_SKIP.getCommandName();
-        help = MUSIC_SKIP.getCommandDescription();
+    public VoteSkipTrackCommandExecutor() {
+        name = MUSIC_VOTE_SKIP.getCommandName();
+        help = MUSIC_VOTE_SKIP.getCommandDescription();
     }
 
     @Override
-    @Description("command: <[prefix]skip>")
+    @Description("command: <[prefix]voteskip>")
     protected void execute(CommandEvent event) {
         try {
             final String messageAuthorId = event.getAuthor().getId();
@@ -77,7 +73,7 @@ public class SkippedCommandExecutor extends Command {
         }
     }
 
-    private VoiceChannel findVoiceChannelWithBotAndUser(CommandEvent event) {
+    static VoiceChannel findVoiceChannelWithBotAndUser(CommandEvent event) {
         final String guildId = event.getGuild().getId();
         return Objects.requireNonNull(event.getJDA().getGuildById(guildId))
                 .getVoiceChannels().stream()
@@ -87,8 +83,8 @@ public class SkippedCommandExecutor extends Command {
                     return channel.getMembers().contains(senderUserMember) && channel.getMembers().contains(botMember);
                 })
                 .findFirst().orElseThrow(() -> {
-                    throw new UserOnVoiceChannelNotFoundException(event, "Aby móc uczestniczyć w głosowaniu na " +
-                            "pominięcie piosenki, musisz przebywać na kanale głosowym wraz z botem.");
+                    throw new UserOnVoiceChannelNotFoundException(event, "Aby mieć możliwość użycia komendy, " +
+                            "musisz przebywać na kanale głosowym wraz z botem.");
                 });
     }
 }

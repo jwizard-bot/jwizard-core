@@ -22,17 +22,18 @@ import jdk.jfr.Description;
 import net.dv8tion.jda.api.EmbedBuilder;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import java.awt.*;
-import java.util.Date;
+import java.util.List;
 import java.util.Queue;
-import java.text.SimpleDateFormat;
+import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
 
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.messages.EmbedMessageColor;
 import static pl.miloszgilga.Command.MUSIC_QUEUE;
-import pl.miloszgilga.exceptions.EmptyAudioQueueException;
 
 
 public class ShowAllQueueCommandExecutor extends Command {
@@ -48,7 +49,7 @@ public class ShowAllQueueCommandExecutor extends Command {
     @Description("command: <[prefix]queue>")
     protected void execute(CommandEvent event) {
         try {
-            final Queue<AudioTrack> queue = playerManager.getMusicManager(event.getGuild()).getScheduler().getQueue();
+            final Queue<QueueTrackExtendedInfo> queue = playerManager.getMusicManager(event).getScheduler().getQueue();
             if (queue.isEmpty()) {
                 throw new EmptyAudioQueueException(event);
             }
@@ -66,12 +67,12 @@ public class ShowAllQueueCommandExecutor extends Command {
         embedBuilder.setTitle("KOLEJKA");
         embedBuilder.setDescription(String.format("Ilość piosenek w kolejce: **%s**, Czas trwania: **%s**",
                 queue.size(), convertMilisToDateFormat(maxQueueMilis)));
-        embedBuilder.setColor(Color.decode(EmbedMessageColor.GREEN.getColor()));
-        for (AudioTrack track : queue) {
+        for (int i = 0; i < singlePageQueue.size(); i++) {
+            AudioTrack track = singlePageQueue.get(i);
             embedBuilder.addField(
-                    String.format("%s - %s", track.getInfo().author, track.getInfo().title),
+                    String.format("%s: %s", track.getInfo().author, track.getInfo().title),
                     String.format("Pozycja: %s, Czas trwania: %s",
-                            ++position, convertMilisToDateFormat(track.getDuration())),
+                            indexFrom + i + 1, convertMilisToDateFormat(track.getDuration())),
                     false);
         }
         event.getTextChannel().sendMessageEmbeds(embedBuilder.build()).queue();

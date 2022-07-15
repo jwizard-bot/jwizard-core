@@ -24,8 +24,6 @@ import net.dv8tion.jda.api.entities.Member;
 import com.jagrosh.jdautilities.command.Command;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import static net.dv8tion.jda.api.Permission.ADMINISTRATOR;
-import static net.dv8tion.jda.api.Permission.VOICE_MOVE_OTHERS;
 
 import java.util.List;
 import java.util.EnumSet;
@@ -33,11 +31,14 @@ import java.util.Objects;
 import java.util.ArrayList;
 
 import pl.miloszgilga.messages.EmbedMessage;
-import static pl.miloszgilga.Command.MUSIC_JOIN;
 import pl.miloszgilga.messages.EmbedMessageColor;
 import pl.miloszgilga.exceptions.MusicBotNotActiveException;
 import pl.miloszgilga.exceptions.UserOnVoiceChannelNotFoundException;
 import pl.miloszgilga.exceptions.UnableAccessToInvokeCommandException;
+
+import static pl.miloszgilga.Command.MUSIC_JOIN;
+import static net.dv8tion.jda.api.Permission.ADMINISTRATOR;
+import static net.dv8tion.jda.api.Permission.VOICE_MOVE_OTHERS;
 
 
 public class MoveBotToVoiceChannelCommandExecutor extends Command {

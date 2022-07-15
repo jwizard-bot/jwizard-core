@@ -18,8 +18,8 @@
 
 package pl.miloszgilga;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.AllArgsConstructor;
 
 import java.util.List;
 import java.util.Arrays;

@@ -23,12 +23,12 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 
-import lombok.Getter;
+import java.util.*;
 
-import java.util.List;
-import java.util.Queue;
-import java.util.LinkedList;
-import java.util.Collections;
+import pl.miloszgilga.messages.EmbedMessage;
+import pl.miloszgilga.messages.EmbedMessageColor;
+
+import static pl.miloszgilga.FranekBot.config;
 
 
 @Getter
@@ -36,15 +36,15 @@ public class TrackScheduler extends AudioEventAdapter {
 
     private boolean repeating = false;
     private final AudioPlayer audioPlayer;
-    private final Queue<AudioTrack> queue = new LinkedList<>();
+    private final Queue<QueueTrackExtendedInfo> queue = new LinkedList<>();
 
     public TrackScheduler(AudioPlayer audioPlayer) {
         this.audioPlayer = audioPlayer;
     }
 
-    public void queue(AudioTrack track) {
-        if (!audioPlayer.startTrack(track, true)) {
-            queue.offer(track);
+    public void queue(QueueTrackExtendedInfo queueTrackExtendedInfo) {
+        if (!audioPlayer.startTrack(queueTrackExtendedInfo.getAudioTrack(), true)) {
+            queue.offer(queueTrackExtendedInfo);
         }
     }
 

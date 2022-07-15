@@ -31,10 +31,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static pl.miloszgilga.Command.HELP_ME;
-
 import pl.miloszgilga.executors.audioplayer.*;
 import pl.miloszgilga.interceptors.MismatchCommandInterceptor;
+import pl.miloszgilga.interceptors.ServerBotDeafenInterceptor;
+
+import static pl.miloszgilga.Command.HELP_ME;
 
 
 public class FranekBot {
@@ -56,11 +57,16 @@ public class FranekBot {
         builder.setOwnerId(config.getApplicationId());
         builder.setHelpWord(HELP_ME.getCommandName());
         builder.addCommands(
-                new PlayCommandExecutor(),
-                new SkippedCommandExecutor(),
-                new RepeatLoopCommandExecutor(),
+                new PlayTrackCommandExecutor(),
+                new SkipTrackCommandExecutor(),
+                new PauseTrackCommandExecutor(),
+                new ResumeTrackCommandExecutor(),
+                new RepeatTrackCommandExecutor(),
                 new ShowAllQueueCommandExecutor(),
-                new QueueShuffleCommandExecutor(),
+                new VoteSkipTrackCommandExecutor(),
+                new SetTrackVolumeCommandExecutor(),
+                new VoteQueueClearCommandExecutor(),
+                new VoteQueueShuffleCommandExecutor(),
                 new MoveBotToVoiceChannelCommandExecutor()
         );
 

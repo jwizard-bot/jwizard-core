@@ -23,10 +23,11 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import java.util.List;
 
 import pl.miloszgilga.messages.EmbedMessage;
-import static pl.miloszgilga.FranekBot.config;
-import static pl.miloszgilga.Command.MUSIC_PLAY;
 import pl.miloszgilga.messages.EmbedMessageColor;
 import pl.miloszgilga.messages.MessageEmbedField;
+
+import static pl.miloszgilga.FranekBot.config;
+import static pl.miloszgilga.Command.MUSIC_PLAY;
 
 
 public class EmptyAudioQueueException extends JdaIllegalChatStateException {

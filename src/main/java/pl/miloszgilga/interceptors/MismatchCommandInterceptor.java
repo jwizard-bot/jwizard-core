@@ -26,9 +26,10 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import pl.miloszgilga.exceptions.UnrecognizedCommandException;
+
 import static pl.miloszgilga.FranekBot.config;
 import static pl.miloszgilga.Command.getAllCommands;
-import pl.miloszgilga.exceptions.UnrecognizedCommandException;
 
 
 public class MismatchCommandInterceptor extends ListenerAdapter {
