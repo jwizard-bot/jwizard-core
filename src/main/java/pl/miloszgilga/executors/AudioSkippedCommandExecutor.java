@@ -18,67 +18,66 @@
 
 package pl.miloszgilga.executors;
 
+import com.jagrosh.jdautilities.command.Command;
+import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.*;
 import jdk.jfr.Description;
-import org.jetbrains.annotations.NotNull;
 
 import pl.miloszgilga.messages.EmbedMessage;
 import pl.miloszgilga.audioplayer.PlayerManager;
+import static pl.miloszgilga.Command.MUSIC_SKIP;
 import pl.miloszgilga.messages.EmbedMessageColor;
-import pl.miloszgilga.interceptors.SendMessageInterceptor;
-import static pl.miloszgilga.AvailableCommands.MUSIC_SKIP;
 import pl.miloszgilga.exceptions.UserOnVoiceChannelNotFoundException;
 import pl.miloszgilga.exceptions.AttemptToRevoteSkippingSongException;
 
 
-public class AudioSkippedCommandExecutor extends ListenerAdapter {
+public class AudioSkippedCommandExecutor extends Command {
 
-    private final SendMessageInterceptor interceptor = SendMessageInterceptor.getSingletonInstance();
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
     private final Queue<String> usersAlreadyVoted = new PriorityQueue<>();
 
+    public AudioSkippedCommandExecutor() {
+        name = MUSIC_SKIP.getCommandName();
+        help = MUSIC_SKIP.getCommandDescription();
+    }
+
     @Override
     @Description("command: <[prefix]skip>")
-    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        final List<String> allArgs = interceptor.validateRequestWithCommandType(event, MUSIC_SKIP);
-        if (!allArgs.isEmpty()) {
-            try {
-                final String messageAuthorId = event.getAuthor().getId();
-                final VoiceChannel findVoiceChannelWithBot = findVoiceChannelWithBotAndUser(event);
+    protected void execute(CommandEvent event) {
+        try {
+            final String messageAuthorId = event.getAuthor().getId();
+            final VoiceChannel findVoiceChannelWithBot = findVoiceChannelWithBotAndUser(event);
 
-                int allChannelMembers = findVoiceChannelWithBot.getMembers().size() - 1;
-                final int requireVotesToSkipSong = allChannelMembers == 1 ? 1 : allChannelMembers / 2;
+            int allChannelMembers = findVoiceChannelWithBot.getMembers().size() - 1;
+            final int requireVotesToSkipSong = allChannelMembers == 1 ? 1 : allChannelMembers / 2;
 
-                if (!usersAlreadyVoted.contains(messageAuthorId)) {
-                    usersAlreadyVoted.add(messageAuthorId);
-                    final var votingProgress = new EmbedMessage("POMINIĘCIE PIOSENKI", String.format(
-                            "Status głosowania: **%s**/**%s**, (wymagane głosów: **%s**)",
-                            usersAlreadyVoted.size(), allChannelMembers, requireVotesToSkipSong),
-                            EmbedMessageColor.GREEN
-                    );
-                    event.getTextChannel().sendMessageEmbeds(votingProgress.buildMessage()).queue();
-                    if (usersAlreadyVoted.size() == allChannelMembers) {
-                        usersAlreadyVoted.clear();
-                        playerManager.getMusicManager(event.getGuild()).getScheduler().nextTrack();
-                        final var votingEnded = new EmbedMessage("PIOSENKA POMINIĘTA", "", EmbedMessageColor.GREEN);
-                        event.getTextChannel().sendMessageEmbeds(votingEnded.buildMessage()).queue();
-                    }
-                } else {
-                    throw new AttemptToRevoteSkippingSongException(event);
+            if (!usersAlreadyVoted.contains(messageAuthorId)) {
+                usersAlreadyVoted.add(messageAuthorId);
+                final var votingProgress = new EmbedMessage("POMINIĘCIE PIOSENKI", String.format(
+                        "Status głosowania: **%s**/**%s**, (wymagane głosów: **%s**)",
+                        usersAlreadyVoted.size(), allChannelMembers, requireVotesToSkipSong),
+                        EmbedMessageColor.GREEN
+                );
+                event.getTextChannel().sendMessageEmbeds(votingProgress.buildMessage()).queue();
+                if (usersAlreadyVoted.size() == allChannelMembers) {
+                    usersAlreadyVoted.clear();
+                    playerManager.getMusicManager(event.getGuild()).getScheduler().nextTrack();
+                    final var votingEnded = new EmbedMessage("PIOSENKA POMINIĘTA", "", EmbedMessageColor.GREEN);
+                    event.getTextChannel().sendMessageEmbeds(votingEnded.buildMessage()).queue();
                 }
-            } catch (UserOnVoiceChannelNotFoundException | AttemptToRevoteSkippingSongException ex) {
-                System.out.println(ex.getMessage());
+            } else {
+                throw new AttemptToRevoteSkippingSongException(event);
             }
+        } catch (UserOnVoiceChannelNotFoundException | AttemptToRevoteSkippingSongException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
-    private VoiceChannel findVoiceChannelWithBotAndUser(MessageReceivedEvent event) {
+    private VoiceChannel findVoiceChannelWithBotAndUser(CommandEvent event) {
         final String guildId = event.getGuild().getId();
         return Objects.requireNonNull(event.getJDA().getGuildById(guildId))
                 .getVoiceChannels().stream()
