@@ -22,6 +22,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import com.jagrosh.jdautilities.command.CommandClientBuilder;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import javax.security.auth.login.LoginException;
@@ -39,15 +40,27 @@ public class FranekBot {
 
     public static final String DEF_PREFIX = "$";
 
-    public static void main(String[] args) throws LoginException {
+        CommandClientBuilder builder = new CommandClientBuilder();
+        builder.setPrefix(config.getDefPrefix());
+        builder.setOwnerId(config.getApplicationId());
+        builder.setHelpWord(HELP_ME.getCommandName());
+        builder.addCommands(
+                new AudioPlayCommandExecutor(),
+                new AudioSkippedCommandExecutor(),
+                new AudioRepeatLoopCommandExecutor(),
+                new AudioShowAllQueueCommandExecutor(),
+                new AudioQueueShuffleCommandExecutor(),
+                new AudioMoveBotToVoiceChannelCommandExecutor()
+        );
+
         JDABuilder
                 .createDefault(BOT_ID)
                 .enableCache(CacheFlag.VOICE_STATE)
                 .setActivity(Activity.listening(DEF_PREFIX + HELP.getCommandName()))
                 .setStatus(OnlineStatus.ONLINE)
                 .addEventListeners(
-                        new AudioPlayCommandExecutor(),
-                        new AudioSkippedCommandExecutor()
+                        builder.build(),
+                        new MismatchCommandInterceptor()
                 )
                 .build();
     }

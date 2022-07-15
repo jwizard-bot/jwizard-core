@@ -18,7 +18,7 @@
 
 package pl.miloszgilga.exceptions;
 
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import com.jagrosh.jdautilities.command.CommandEvent;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ import pl.miloszgilga.messages.MessageEmbedField;
 
 public class IllegalCommandArgumentsException extends JdaIllegalChatStateException {
 
-    public IllegalCommandArgumentsException(MessageReceivedEvent event, String commandSyntax) {
+    public IllegalCommandArgumentsException(CommandEvent event, String commandSyntax) {
         super(event);
         final var embedMessage = new EmbedMessage("ERROR!", "Nieprawidłowe argumenty komendy", EmbedMessageColor.RED, List.of(
                 new MessageEmbedField("Komendy należy używać zgodne ze składnią: ", commandSyntax, false)

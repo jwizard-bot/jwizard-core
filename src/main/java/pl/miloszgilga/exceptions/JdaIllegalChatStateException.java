@@ -18,18 +18,18 @@
 
 package pl.miloszgilga.exceptions;
 
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import com.jagrosh.jdautilities.command.CommandEvent;
 
 
 public class JdaIllegalChatStateException extends RuntimeException {
 
-    private final MessageReceivedEvent event;
+    private final CommandEvent event;
 
-    public JdaIllegalChatStateException(MessageReceivedEvent event) {
+    public JdaIllegalChatStateException(CommandEvent event) {
         this.event = event;
     }
 
-    public MessageReceivedEvent getEvent() {
+    public CommandEvent getEvent() {
         return event;
     }
 }

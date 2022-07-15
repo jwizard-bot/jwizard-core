@@ -18,7 +18,7 @@
 
 package pl.miloszgilga.exceptions;
 
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import com.jagrosh.jdautilities.command.CommandEvent;
 
 import pl.miloszgilga.messages.EmbedMessage;
 import pl.miloszgilga.messages.EmbedMessageColor;
@@ -26,7 +26,7 @@ import pl.miloszgilga.messages.EmbedMessageColor;
 
 public class UserOnVoiceChannelNotFoundException extends JdaIllegalChatStateException {
 
-    public UserOnVoiceChannelNotFoundException(MessageReceivedEvent event, String description) {
+    public UserOnVoiceChannelNotFoundException(CommandEvent event, String description) {
         super(event);
         final var embedMessage = new EmbedMessage("UWAGA!", description, EmbedMessageColor.ORANGE);
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();

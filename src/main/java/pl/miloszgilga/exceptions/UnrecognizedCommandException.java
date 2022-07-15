@@ -23,26 +23,28 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import java.util.List;
 
 import pl.miloszgilga.messages.EmbedMessage;
+import static pl.miloszgilga.FranekBot.config;
 import pl.miloszgilga.messages.EmbedMessageColor;
 import pl.miloszgilga.messages.MessageEmbedField;
-import static pl.miloszgilga.FranekBot.DEF_PREFIX;
 
 
-public class UnrecognizedCommandException extends JdaIllegalChatStateException {
+public class UnrecognizedCommandException extends RuntimeException {
+
+    private final MessageReceivedEvent event;
 
     public UnrecognizedCommandException(MessageReceivedEvent event) {
-        super(event);
+        this.event = event;
         final var embedMessage = new EmbedMessage("ERROR!", "Nieznana komenda", EmbedMessageColor.RED, List.of(
                 new MessageEmbedField("Komendy należy używać zgodne ze składnią: ",
-                        String.format("`%s<nazwa komendy> [...argumenty]`", DEF_PREFIX), false),
+                        String.format("`%s<nazwa komendy> [...argumenty]`", config.getDefPrefix()), false),
                 new MessageEmbedField("Aby uzyskać pełną listę komend wpisz: ",
-                        String.format("`%shelp`", DEF_PREFIX), false)
+                        String.format("`%shelp`", config.getDefPrefix()), false)
         ));
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
     }
 
     @Override
     public String getMessage() {
-        return "Nierozpoznana komenda" + getEvent().getAuthor();
+        return "Nierozpoznana komenda" + event.getAuthor();
     }
 }
