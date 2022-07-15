@@ -33,7 +33,7 @@ import java.net.URISyntaxException;
 import static pl.miloszgilga.FranekBot.config;
 import static pl.miloszgilga.Command.MUSIC_PLAY;
 import pl.miloszgilga.audioplayer.PlayerManager;
-import pl.miloszgilga.exceptions.MusicBotIsUseException;
+import pl.miloszgilga.exceptions.MusicBotIsInUseException;
 import pl.miloszgilga.exceptions.IllegalCommandArgumentsException;
 import pl.miloszgilga.exceptions.UserOnVoiceChannelNotFoundException;
 
@@ -74,7 +74,7 @@ public class AudioPlayCommandExecutor extends Command {
             }
             playerManager.loadAndPlay(event.getTextChannel(), withoutPrefix);
 
-        } catch (UserOnVoiceChannelNotFoundException | MusicBotIsUseException | IllegalCommandArgumentsException ex) {
+        } catch (UserOnVoiceChannelNotFoundException | MusicBotIsInUseException | IllegalCommandArgumentsException ex) {
             System.out.println(ex.getMessage());
         }
     }
@@ -89,7 +89,7 @@ public class AudioPlayCommandExecutor extends Command {
                 })
                 .findFirst();
         if (findBotOnVoiceChannel.isPresent()) {
-            throw new MusicBotIsUseException(event);
+            throw new MusicBotIsInUseException(event);
         }
     }
 
