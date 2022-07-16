@@ -21,6 +21,8 @@ package pl.miloszgilga;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 
@@ -72,6 +74,8 @@ public class FranekBot {
 
         JDABuilder
                 .createDefault(config.getToken())
+                .setMemberCachePolicy(MemberCachePolicy.ONLINE)
+                .setChunkingFilter(ChunkingFilter.ALL)
                 .enableCache(CacheFlag.VOICE_STATE)
                 .setActivity(Activity.listening(config.getDefPrefix() + HELP_ME.getCommandName()))
                 .setStatus(OnlineStatus.ONLINE)
