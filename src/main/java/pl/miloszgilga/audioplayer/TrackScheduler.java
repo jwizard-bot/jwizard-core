@@ -59,7 +59,51 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public void nextTrack() {
-        audioPlayer.startTrack(queue.poll(), false);
+        QueueTrackExtendedInfo queueTrackExtendedInfo = queue.poll();
+        if (queueTrackExtendedInfo != null) {
+            audioPlayer.startTrack(queueTrackExtendedInfo.getAudioTrack(), false);
+        }
+    }
+
+    @Override
+    public void onPlayerPause(AudioPlayer player) {
+        final AudioTrackInfo info = audioPlayer.getPlayingTrack().getInfo();
+        if (!audioPlayer.isPaused()) {
+            return;
+        }
+        final var embedMessage = new EmbedMessage("", String.format(
+                "Zatrzymałem odtwarzanie piosenki: **%s**.", info.title), EmbedMessageColor.GREEN);
+        event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
+    }
+
+    @Override
+    public void onPlayerResume(AudioPlayer player) {
+        final AudioTrackInfo info = audioPlayer.getPlayingTrack().getInfo();
+        if (audioPlayer.isPaused()) {
+            return;
+        }
+        final var embedMessage = new EmbedMessage("", String.format(
+                "Ponawiam odtwarzanie piosenki: **%s**.", info.title), EmbedMessageColor.GREEN);
+        event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
+    }
+
+    @Override
+    public void onTrackStart(AudioPlayer player, AudioTrack track) {
+        if (countingToLeaveTheChannel != null) {
+            countingToLeaveTheChannel.interrupt();
+        }
+        if (!alreadyDisplayed) {
+            final AudioTrackInfo info = audioPlayer.getPlayingTrack().getInfo();
+            final var embedMessage = new EmbedMessage("", String.format(
+                    "Rozpoczynam odtwarzanie piosenki: **%s**. " +
+                    (queue.isEmpty() ? "Kolejka jest pusta." : String.format(
+                            "Ilość pozostałych piosenek w kolejce: **%s**.", queue.size())), info.title),
+                    EmbedMessageColor.GREEN);
+            if (repeating) {
+                alreadyDisplayed = true;
+            }
+            event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
+        }
     }
 
     @Override
