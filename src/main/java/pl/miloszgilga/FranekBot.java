@@ -29,9 +29,9 @@ import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import javax.security.auth.login.LoginException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.InputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.FileNotFoundException;
 
 import pl.miloszgilga.executors.audioplayer.*;
 import pl.miloszgilga.interceptors.MismatchCommandInterceptor;
@@ -43,12 +43,14 @@ import static pl.miloszgilga.Command.HELP_ME;
 public class FranekBot {
 
     public static Configuration config;
-    private static final String FILENAME = "config.json";
+    private static final InputStream FILE = FranekBot.class.getResourceAsStream("/config/config.json");
 
     private static void loadConfiguration() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        String filePath = "src/main/resources/config/" + FILENAME;
-        config = objectMapper.readValue(new String(Files.readAllBytes(Paths.get(filePath))), Configuration.class);
+        if (FILE == null) {
+            throw new FileNotFoundException("Plik konfiguracyjny nie istnieje!");
+        }
+        config = objectMapper.readValue(new String(FILE.readAllBytes()), Configuration.class);
     }
 
     public static void main(String[] args) throws LoginException, IOException {
