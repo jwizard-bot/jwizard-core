@@ -96,7 +96,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>pl.miloszgilga.FranekBot</mainClass>
+                            <mainClass>pl.miloszgilga.franekbotapp.FranekBot</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
