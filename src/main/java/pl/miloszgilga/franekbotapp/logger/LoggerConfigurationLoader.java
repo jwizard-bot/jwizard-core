@@ -19,10 +19,12 @@
 package pl.miloszgilga.franekbotapp.logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.InputStream;
+import java.io.FileNotFoundException;
+
 import pl.miloszgilga.franekbotapp.FranekBot;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 class LoggerConfigurationLoader {
 
