@@ -39,7 +39,7 @@ import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
 import pl.miloszgilga.franekbotapp.exceptions.IllegalCommandArgumentsException;
 
 import static pl.miloszgilga.franekbotapp.FranekBot.config;
-import static pl.miloszgilga.franekbotapp.Command.MUSIC_QUEUE;
+import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_QUEUE;
 
 
 public class ShowAllQueueCommandExecutor extends Command {

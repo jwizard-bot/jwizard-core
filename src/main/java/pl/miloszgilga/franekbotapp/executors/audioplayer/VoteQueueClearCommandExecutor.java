@@ -32,7 +32,7 @@ import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
 import pl.miloszgilga.franekbotapp.exceptions.UnableAccessToInvokeCommandException;
 import pl.miloszgilga.franekbotapp.executors.executorhandlers.VoteCommandExecutingHandler;
 
-import static pl.miloszgilga.franekbotapp.Command.MUSIC_VOTE_QUEUE_CLEAR;
+import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_VOTE_QUEUE_CLEAR;
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.VoteSkipTrackCommandExecutor.findVoiceChannelWithBotAndUser;
 
 

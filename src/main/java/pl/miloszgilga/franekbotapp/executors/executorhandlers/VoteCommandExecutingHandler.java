@@ -92,7 +92,8 @@ public class VoteCommandExecutingHandler {
                 Thread.sleep(1000 * config.getMaxVotingElapseTimeMinutes());
                 if (!isSuccessVoted) {
                     usersAlreadyVoted.clear();
-                    final var leavingMessage = new EmbedMessage("PIOSENKA NIEPOMINIĘTA", "", EmbedMessageColor.RED);
+                    final var leavingMessage = new EmbedMessage("GŁOSOWANIE ZAKOŃCZONE NIEPOWODZENIEM", "",
+                            EmbedMessageColor.RED);
                     event.getTextChannel().sendMessageEmbeds(leavingMessage.buildMessage()).queue();
                 }
             } catch (InterruptedException ignored) { }

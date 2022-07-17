@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
-public enum Command {
+public enum BotCommand {
     MUSIC_PLAY("play", "odtworzenie piosenki i dodanie do kolejki (jeśli jakaś jest w danej chwili odtwarzana)"),
     MUSIC_PAUSE("pause", "wstrzymanie odtwarzania aktualnie odtwarzanej piosenki"),
     MUSIC_RESUME("resume", "kontyuacja odtwarzania piosenki od momentu wstrzymania"),
@@ -48,7 +48,7 @@ public enum Command {
 
     public static List<String> getAllCommands() {
         return Arrays
-                .stream(Command.values()).map(Command::getCommandName)
+                .stream(BotCommand.values()).map(BotCommand::getCommandName)
                 .collect(Collectors.toList());
     }
 }

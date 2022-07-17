@@ -31,7 +31,7 @@ import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
 import pl.miloszgilga.franekbotapp.executors.executorhandlers.VoteCommandExecutingHandler;
 import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 
-import static pl.miloszgilga.franekbotapp.Command.MUSIC_VOTE_SHUFFLE;
+import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_VOTE_SHUFFLE;
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.ShowAllQueueCommandExecutor.showQueueElementsInEmbedMessage;
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.VoteSkipTrackCommandExecutor.findVoiceChannelWithBotAndUser;
 

@@ -23,7 +23,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
 
-import static pl.miloszgilga.franekbotapp.Command.MUSIC_JOIN;
+import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_JOIN;
 
 
 public class MusicBotIsInUseException extends JdaIllegalChatStateException {

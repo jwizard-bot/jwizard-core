@@ -33,7 +33,7 @@ import pl.miloszgilga.franekbotapp.exceptions.IllegalCommandArgumentsException;
 import pl.miloszgilga.franekbotapp.exceptions.UnableAccessToInvokeCommandException;
 
 import static pl.miloszgilga.franekbotapp.FranekBot.config;
-import static pl.miloszgilga.franekbotapp.Command.MUSIC_VOLUME;
+import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_VOLUME;
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.PauseTrackCommandExecutor.checkIfActionEventInvokeBySender;
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.VoteSkipTrackCommandExecutor.findVoiceChannelWithBotAndUser;
 

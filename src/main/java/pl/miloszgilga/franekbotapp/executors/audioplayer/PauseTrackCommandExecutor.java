@@ -30,7 +30,7 @@ import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
 import pl.miloszgilga.franekbotapp.exceptions.UnableAccessToInvokeCommandException;
 
 import static net.dv8tion.jda.api.Permission.ADMINISTRATOR;
-import static pl.miloszgilga.franekbotapp.Command.MUSIC_PAUSE;
+import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_PAUSE;
 
 
 public class PauseTrackCommandExecutor extends Command {

@@ -38,7 +38,7 @@ import pl.miloszgilga.franekbotapp.exceptions.UserOnVoiceChannelNotFoundExceptio
 import pl.miloszgilga.franekbotapp.exceptions.UnableAccessToInvokeCommandException;
 
 import static net.dv8tion.jda.api.Permission.ADMINISTRATOR;
-import static pl.miloszgilga.franekbotapp.Command.MUSIC_JOIN;
+import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_JOIN;
 import static net.dv8tion.jda.api.Permission.VOICE_MOVE_OTHERS;
 
 

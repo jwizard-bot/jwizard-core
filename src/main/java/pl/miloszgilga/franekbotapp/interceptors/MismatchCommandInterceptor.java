@@ -30,7 +30,7 @@ import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 import pl.miloszgilga.franekbotapp.exceptions.UnrecognizedCommandException;
 
 import static pl.miloszgilga.franekbotapp.FranekBot.config;
-import static pl.miloszgilga.franekbotapp.Command.getAllCommands;
+import static pl.miloszgilga.franekbotapp.BotCommand.getAllCommands;
 
 
 public class MismatchCommandInterceptor extends ListenerAdapter {

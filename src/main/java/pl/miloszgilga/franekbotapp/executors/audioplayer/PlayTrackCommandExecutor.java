@@ -37,7 +37,7 @@ import pl.miloszgilga.franekbotapp.exceptions.IllegalCommandArgumentsException;
 import pl.miloszgilga.franekbotapp.exceptions.UserOnVoiceChannelNotFoundException;
 
 import static pl.miloszgilga.franekbotapp.FranekBot.config;
-import static pl.miloszgilga.franekbotapp.Command.MUSIC_PLAY;
+import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_PLAY;
 
 
 public class PlayTrackCommandExecutor extends Command {

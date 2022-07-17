@@ -26,8 +26,8 @@ import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
 import pl.miloszgilga.franekbotapp.messages.MessageEmbedField;
 
-import static pl.miloszgilga.franekbotapp.Command.HELP;
-import static pl.miloszgilga.franekbotapp.Command.HELP_ME;
+import static pl.miloszgilga.franekbotapp.BotCommand.HELP;
+import static pl.miloszgilga.franekbotapp.BotCommand.HELP_ME;
 import static pl.miloszgilga.franekbotapp.FranekBot.config;
 
 

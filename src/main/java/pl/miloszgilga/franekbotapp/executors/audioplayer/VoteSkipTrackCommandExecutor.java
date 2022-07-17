@@ -34,7 +34,7 @@ import pl.miloszgilga.franekbotapp.exceptions.UserOnVoiceChannelNotFoundExceptio
 import pl.miloszgilga.franekbotapp.exceptions.AttemptToRevoteSkippingSongException;
 import pl.miloszgilga.franekbotapp.executors.executorhandlers.VoteCommandExecutingHandler;
 
-import static pl.miloszgilga.franekbotapp.Command.MUSIC_VOTE_SKIP;
+import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_VOTE_SKIP;
 
 
 public class VoteSkipTrackCommandExecutor extends Command {
