@@ -51,4 +51,8 @@ public enum BotCommand {
                 .stream(BotCommand.values()).map(BotCommand::getCommandName)
                 .collect(Collectors.toList());
     }
+
+    public static List<BotCommand> getAllCommandsAsEnumValues() {
+        return Arrays.stream(BotCommand.values()).collect(Collectors.toList());
+    }
 }

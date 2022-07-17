@@ -23,6 +23,7 @@ import lombok.Data;
 @Data
 public class Configuration {
     private boolean showFancyTitle;
+    private String botVersion;
     private String token;
     private String applicationId;
     private String defPrefix;

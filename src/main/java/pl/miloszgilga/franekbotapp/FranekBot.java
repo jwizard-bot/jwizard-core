@@ -35,7 +35,7 @@ import pl.miloszgilga.franekbotapp.executors.audioplayer.*;
 import pl.miloszgilga.franekbotapp.interceptors.MismatchCommandInterceptor;
 import pl.miloszgilga.franekbotapp.interceptors.ServerBotDeafenInterceptor;
 
-import static pl.miloszgilga.franekbotapp.Command.HELP_ME;
+import static pl.miloszgilga.franekbotapp.BotCommand.HELP_ME;
 
 
 public class FranekBot {
@@ -56,7 +56,8 @@ public class FranekBot {
         loadConfiguration();
 
         if (config.isShowFancyTitle()) generator.generateFancyTitle();
-        System.out.println("FranekBot by Miłosz Gilga (https://github.com/Milosz08/JDA_Discord_Bot), wersja v1.0\n");
+        System.out.printf("FranekBot by Miłosz Gilga (https://github.com/Milosz08/JDA_Discord_Bot), wersja v%s\n%n",
+                config.getBotVersion());
 
         CommandClientBuilder builder = new CommandClientBuilder();
         builder.setPrefix(config.getDefPrefix());

@@ -52,4 +52,8 @@ public class EmbedMessage {
         fields.forEach(field -> builder.addField(field.getName(), field.getDescription(), field.isIfInline()));
         return builder.build();
     }
+
+    public EmbedBuilder getBuilder() {
+        return builder;
+    }
 }
