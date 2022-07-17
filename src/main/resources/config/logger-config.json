@@ -1,0 +1,8 @@
+{
+    "loggerEnabled": true,
+    "loggerSensitivity": [
+        "INFO", "WARN", "ERROR"
+    ],
+    "enableLoggedToStandardOutput": true,
+    "enableLoggedToFileOutput": true
+}
