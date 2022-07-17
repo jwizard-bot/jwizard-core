@@ -39,9 +39,7 @@ class LoggerConfigurationLoader {
     private void loadConfiguration() {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            if (FILE == null) {
-                throw new FileNotFoundException("Plik konfiguracyjny loggera nie istnieje!");
-            }
+            if (FILE == null) throw new FileNotFoundException("Plik konfiguracyjny loggera nie istnieje!");
             loggerConfig = objectMapper.readValue(new String(FILE.readAllBytes()), LoggerConfiguration.class);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
