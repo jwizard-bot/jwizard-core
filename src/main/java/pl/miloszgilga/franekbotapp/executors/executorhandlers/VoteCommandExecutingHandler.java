@@ -22,9 +22,7 @@ import lombok.Getter;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
-import java.util.Queue;
-import java.util.Locale;
-import java.util.PriorityQueue;
+import java.util.*;
 
 import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
@@ -48,6 +46,7 @@ public class VoteCommandExecutingHandler {
     private boolean isSuccessVoted = false;
     private final VoiceChannel voiceChannel;
     private final Queue<String> usersAlreadyVoted = new PriorityQueue<>();
+    private final List<String> usersVoted = new ArrayList<>();
 
     public VoteCommandExecutingHandler(CommandEvent event, VoiceChannel voiceChannel, String votePassEmbedTitle,
                                        String voteTakesEmbedTitle, String voteFailureEmbedTitle) {
@@ -62,12 +61,12 @@ public class VoteCommandExecutingHandler {
 
     public boolean voteCommandExecutor() {
         Thread countingUntilVoteElapsed = countingUntilVoteElapsed();
-        if (!countingUntilVoteElapsed.isInterrupted()) {
-            countingUntilVoteElapsed.interrupt();
-        }
+        if (!countingUntilVoteElapsed.isInterrupted()) countingUntilVoteElapsed.interrupt();
+        if (usersAlreadyVoted.isEmpty()) usersVoted.clear();
 
         if (!usersAlreadyVoted.contains(event.getAuthor().getId())) {
             usersAlreadyVoted.add(event.getAuthor().getId());
+            usersVoted.add(event.getAuthor().getAsTag());
             countingUntilVoteElapsed.start();
             final var takesEmbed = new EmbedMessage(voteTakesEmbedTitle, String.format(
                     "Status głosowania: **%s**/**%s**, (wymagane głosów: **%s**)",
@@ -98,5 +97,9 @@ public class VoteCommandExecutingHandler {
                 }
             } catch (InterruptedException ignored) { }
         });
+    }
+
+    public String allVotedUsers() {
+        return "[" + String.join(",", usersVoted) + "]";
     }
 }
