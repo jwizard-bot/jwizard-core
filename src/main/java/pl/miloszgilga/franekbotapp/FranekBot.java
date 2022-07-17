@@ -72,6 +72,7 @@ public class FranekBot {
                 new ShowAllQueueCommandExecutor(),
                 new VoteSkipTrackCommandExecutor(),
                 new SetTrackVolumeCommandExecutor(),
+                new ShowServerInfoCommandExecutor(),
                 new VoteQueueClearCommandExecutor(),
                 new VoteQueueShuffleCommandExecutor(),
                 new MoveBotToVoiceChannelCommandExecutor()
