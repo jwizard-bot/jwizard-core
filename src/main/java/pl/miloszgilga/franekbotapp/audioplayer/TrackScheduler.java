@@ -60,17 +60,10 @@ public class TrackScheduler extends AudioEventAdapter {
         queue.offer(queueTrackExtendedInfo);
     }
 
-    public void nextTrack(boolean byUserInvoked) {
+    public void nextTrack() {
         final QueueTrackExtendedInfo queueTrackExtendedInfo = queue.poll();
-
         if (queueTrackExtendedInfo == null) return;
         audioPlayer.startTrack(queueTrackExtendedInfo.getAudioTrack(), false);
-
-        if (!byUserInvoked) return;
-        final String trackTitle = queueTrackExtendedInfo.getAudioTrack().getInfo().title;
-        final String senderUserTag = queueTrackExtendedInfo.getSenderUser().getUser().getAsTag();
-        logger.info(String.format("Piosenka '%s' została usunięta z kolejki przez '%s'", trackTitle, senderUserTag),
-                event.getGuild());
     }
 
     @Override
@@ -141,7 +134,7 @@ public class TrackScheduler extends AudioEventAdapter {
             if (repeating) {
                 audioPlayer.startTrack(track.makeClone(), false);
             } else {
-                nextTrack(false);
+                nextTrack();
             }
         }
     }

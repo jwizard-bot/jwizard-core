@@ -63,16 +63,16 @@ public class SkipTrackCommandExecutor extends Command {
             final var embedMessage = new EmbedMessage("", "Pominięto piosenkę.",
                     EmbedMessageColor.GREEN);
             event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
+            playerManager.getMusicManager(event).getScheduler().setRepeating(false);
 
+            final AudioTrackInfo audioTrackInfo = playerManager.getMusicManager(event).getAudioPlayer()
+                    .getPlayingTrack().getInfo();
+            logger.info(String.format("Odtwarzanie piosenki '%s' zostało pominięte przez dodającego '%s'",
+                    audioTrackInfo.title, event.getAuthor().getAsTag()), event.getGuild());
             if (queue.isEmpty()) {
-                final AudioTrackInfo audioTrackInfo = playerManager.getMusicManager(event).getAudioPlayer()
-                        .getPlayingTrack().getInfo();
-
                 playerManager.getMusicManager(event).getAudioPlayer().stopTrack();
-                logger.info(String.format("Odtwarzanie piosenki '%s' zostało pominięte przez dodającego '%s'",
-                        audioTrackInfo.title, event.getAuthor().getAsTag()), event.getGuild());
             } else {
-                playerManager.getMusicManager(event).getScheduler().nextTrack(true);
+                playerManager.getMusicManager(event).getScheduler().nextTrack();
             }
         } catch (EmptyAudioQueueException | UnableAccessToInvokeCommandException ex) {
             logger.warn(ex.getMessage(), event.getGuild());

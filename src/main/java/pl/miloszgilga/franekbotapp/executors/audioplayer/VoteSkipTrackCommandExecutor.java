@@ -60,13 +60,15 @@ public class VoteSkipTrackCommandExecutor extends Command {
             final var voteHandler = new VoteCommandExecutingHandler(event, voiceChannelWithBot,
                     "piosenka pominięta", "pominięcie piosenki", "piosenka niepominięta");
             if (voteHandler.voteCommandExecutor()) {
+                playerManager.getMusicManager(event).getScheduler().setRepeating(false);
+                logger.info(String.format("Piosenka '%s' w wyniku głosowania użytkowników '%s' została pominięta",
+                        playerManager.getMusicManager(event).getAudioPlayer().getPlayingTrack().getInfo().title,
+                        voteHandler.allVotedUsers()), event.getGuild());
                 if (musicManager.getScheduler().getQueue().isEmpty()) {
                     musicManager.getAudioPlayer().stopTrack();
                 } else {
-                    musicManager.getScheduler().nextTrack(true);
+                    musicManager.getScheduler().nextTrack();
                 }
-                logger.info(String.format("Piosenka w wyniku głosowania użytkowników '%s' została pominięta",
-                        voteHandler.allVotedUsers()), event.getGuild());
             }
         } catch (EmptyAudioQueueException | UserOnVoiceChannelNotFoundException |
                  AttemptToRevoteSkippingSongException ex) {
