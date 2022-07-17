@@ -35,6 +35,7 @@ public class MusicBotNotActiveException extends JdaIllegalChatStateException {
 
     @Override
     public String getMessage() {
-        return "Bot nie znajduje się na żadnym kanale głosowym" + getEvent().getAuthor();
+        return String.format("Próba przeniesienia bota muzycznego na inny kanał, gdy ten jest nieaktywny przez '%s'",
+                getEvent().getAuthor().getAsTag());
     }
 }

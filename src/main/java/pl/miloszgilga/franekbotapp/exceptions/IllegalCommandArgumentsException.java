@@ -22,6 +22,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 
 import java.util.List;
 
+import pl.miloszgilga.franekbotapp.Command;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
 import pl.miloszgilga.franekbotapp.messages.MessageEmbedField;
@@ -29,8 +30,11 @@ import pl.miloszgilga.franekbotapp.messages.MessageEmbedField;
 
 public class IllegalCommandArgumentsException extends JdaIllegalChatStateException {
 
-    public IllegalCommandArgumentsException(CommandEvent event, String commandSyntax) {
+    private final Command command;
+
+    public IllegalCommandArgumentsException(CommandEvent event, Command command, String commandSyntax) {
         super(event);
+        this.command = command;
         final var embedMessage = new EmbedMessage("ERROR!", "Nieprawidłowe argumenty komendy.", EmbedMessageColor.RED, List.of(
                 new MessageEmbedField("Komendy należy używać zgodne ze składnią: ", commandSyntax, false)
         ));
@@ -39,6 +43,7 @@ public class IllegalCommandArgumentsException extends JdaIllegalChatStateExcepti
 
     @Override
     public String getMessage() {
-        return "Błędne argumenty komendy" + getEvent().getAuthor();
+        return String.format("Komenda '%s' wywołana z błędnymi argumentami '%s' przez '%s'",
+                command.getCommandName(), getEvent().getArgs(), getEvent().getAuthor().getAsTag());
     }
 }

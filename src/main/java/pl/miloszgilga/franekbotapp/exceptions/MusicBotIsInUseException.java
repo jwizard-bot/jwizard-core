@@ -41,6 +41,7 @@ public class MusicBotIsInUseException extends JdaIllegalChatStateException {
 
     @Override
     public String getMessage() {
-        return "Bot muzyczny jest używany na innym kanale głosowym" + getEvent().getAuthor();
+        return String.format("Próba wywłaszczenia bota muzycznego przez '%s' na inny kanał głosowy",
+                getEvent().getAuthor().getAsTag());
     }
 }

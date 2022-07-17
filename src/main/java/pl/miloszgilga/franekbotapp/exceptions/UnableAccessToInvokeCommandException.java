@@ -42,6 +42,7 @@ public class UnableAccessToInvokeCommandException extends JdaIllegalChatStateExc
 
     @Override
     public String getMessage() {
-        return "Nieautoryzowany dostęp" + getEvent().getAuthor();
+        return String.format("Nieautoryzowany dostęp do komendy wywłaszczony przez '%s'",
+                getEvent().getAuthor().getAsTag());
     }
 }

@@ -46,6 +46,6 @@ public class UnrecognizedCommandException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return "Nierozpoznana komenda" + event.getAuthor();
+        return String.format("Próba odwołania się do nieistniejącej komendy przez '%s'", event.getAuthor().getAsTag());
     }
 }

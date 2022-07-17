@@ -34,6 +34,7 @@ public class UserOnVoiceChannelNotFoundException extends JdaIllegalChatStateExce
 
     @Override
     public String getMessage() {
-        return "Użytkownik nie znajduje się na kanale głosowym" + getEvent().getAuthor();
+        return String.format("Próba wykonania komendy bota muzycznego przez '%s' nieznajdującego się na kanale głosowym",
+                getEvent().getAuthor().getAsTag());
     }
 }

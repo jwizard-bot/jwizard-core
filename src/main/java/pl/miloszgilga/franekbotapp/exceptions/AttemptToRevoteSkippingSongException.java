@@ -37,6 +37,6 @@ public class AttemptToRevoteSkippingSongException extends JdaIllegalChatStateExc
 
     @Override
     public String getMessage() {
-        return "Próba ponownego zagłosowania" + getEvent().getAuthor();
+        return String.format("Próba ponownego zagłosowania przez '%s'", getEvent().getAuthor().getAsTag());
     }
 }

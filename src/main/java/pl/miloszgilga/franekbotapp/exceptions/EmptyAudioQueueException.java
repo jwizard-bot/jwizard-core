@@ -45,6 +45,7 @@ public class EmptyAudioQueueException extends JdaIllegalChatStateException {
 
     @Override
     public String getMessage() {
-        return "Kolejka piosenek jest pusta" + getEvent().getAuthor();
+        return String.format("Próba odpowołania się do metody nieobsługującej pustej kolejki przez '%s'",
+                getEvent().getAuthor().getAsTag());
     }
 }
