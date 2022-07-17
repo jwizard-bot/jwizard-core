@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 
 import pl.miloszgilga.franekbotapp.executors.audioplayer.*;
+import pl.miloszgilga.franekbotapp.executors.misc.ShowServerInfoCommandExecutor;
 import pl.miloszgilga.franekbotapp.interceptors.MismatchCommandInterceptor;
 import pl.miloszgilga.franekbotapp.interceptors.ServerBotDeafenInterceptor;
 
