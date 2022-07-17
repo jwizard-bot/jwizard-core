@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 import pl.miloszgilga.franekbotapp.exceptions.UnrecognizedCommandException;
 
 import static pl.miloszgilga.franekbotapp.FranekBot.config;
@@ -34,6 +35,7 @@ import static pl.miloszgilga.franekbotapp.Command.getAllCommands;
 
 public class MismatchCommandInterceptor extends ListenerAdapter {
 
+    private final LoggerFactory logger = new LoggerFactory(MismatchCommandInterceptor.class);
     private final List<String> allCommands = getAllCommands();
 
     @Override
@@ -49,7 +51,7 @@ public class MismatchCommandInterceptor extends ListenerAdapter {
                 }
             }
         } catch (UnrecognizedCommandException ex) {
-            System.out.println(ex.getMessage());
+            logger.error(ex.getMessage(), event.getGuild());
         }
     }
 }
