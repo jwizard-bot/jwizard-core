@@ -56,7 +56,7 @@ public class FranekBot {
         loadConfiguration();
 
         if (config.isShowFancyTitle()) generator.generateFancyTitle();
-        System.out.println("\nFranekBot by Miłosz Gilga (https://github.com/Milosz08/JDA_Discord_Bot), wersja v1.0\n");
+        System.out.println("FranekBot by Miłosz Gilga (https://github.com/Milosz08/JDA_Discord_Bot), wersja v1.0\n");
 
         CommandClientBuilder builder = new CommandClientBuilder();
         builder.setPrefix(config.getDefPrefix());

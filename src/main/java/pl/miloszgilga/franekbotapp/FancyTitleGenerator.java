@@ -35,6 +35,7 @@ class FancyTitleGenerator {
         System.out.println("$$ |   $$ |     $$  __$$ |$$ |  $$ |$$   ____|$$  _$$<        $$ |  $$ |$$ |  $$ | $$ |$$\\ ");
         System.out.println("$$ |   $$ |     \\$$$$$$$ |$$ |  $$ |\\$$$$$$$\\ $$ | \\$$\\       $$$$$$$  |\\$$$$$$  | \\$$$$  |");
         System.out.println("\\__|   \\__|      \\_______|\\__|  \\__| \\_______|\\__|  \\__|      \\_______/  \\______/   \\____/");
+        System.out.println();
     }
 
     public static FancyTitleGenerator getSingleton() {
