@@ -31,6 +31,7 @@ import java.util.Queue;
 import java.util.stream.Collectors;
 import java.util.concurrent.TimeUnit;
 
+import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
 import pl.miloszgilga.franekbotapp.audioplayer.QueueTrackExtendedInfo;
@@ -43,6 +44,7 @@ import static pl.miloszgilga.franekbotapp.Command.MUSIC_QUEUE;
 
 public class ShowAllQueueCommandExecutor extends Command {
 
+    private final LoggerFactory logger = new LoggerFactory(ShowAllQueueCommandExecutor.class);
     private static final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
     public ShowAllQueueCommandExecutor() {
@@ -60,7 +62,7 @@ public class ShowAllQueueCommandExecutor extends Command {
             }
             showQueueElementsInEmbedMessage(event, queue);
         } catch (EmptyAudioQueueException | IllegalCommandArgumentsException ex) {
-            System.out.println(ex.getMessage());
+            logger.warn(ex.getMessage(), event.getGuild());
         }
     }
 
@@ -80,7 +82,7 @@ public class ShowAllQueueCommandExecutor extends Command {
                 throw new NumberFormatException();
             }
         } catch (NumberFormatException ex) {
-            throw new IllegalCommandArgumentsException(event, String.format(
+            throw new IllegalCommandArgumentsException(event, MUSIC_QUEUE, String.format(
                     "`%s%s [nr strony (opcjonalny)]`", config.getDefPrefix(), MUSIC_QUEUE.getCommandName()));
         }
 

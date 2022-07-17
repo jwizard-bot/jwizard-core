@@ -23,6 +23,7 @@ import net.dv8tion.jda.api.entities.Member;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 import pl.miloszgilga.franekbotapp.audioplayer.MusicManager;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
@@ -34,6 +35,7 @@ import static pl.miloszgilga.franekbotapp.Command.MUSIC_PAUSE;
 
 public class PauseTrackCommandExecutor extends Command {
 
+    private final LoggerFactory logger = new LoggerFactory(PauseTrackCommandExecutor.class);
     private static final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
     public PauseTrackCommandExecutor() {
@@ -48,7 +50,7 @@ public class PauseTrackCommandExecutor extends Command {
             checkIfActionEventInvokeBySender(event);
             playerManager.getMusicManager(event).getAudioPlayer().setPaused(true);
         } catch (EmptyAudioQueueException | UnableAccessToInvokeCommandException ex) {
-            System.out.println(ex.getMessage());
+            logger.warn(ex.getMessage(), event.getGuild());
         }
     }
 

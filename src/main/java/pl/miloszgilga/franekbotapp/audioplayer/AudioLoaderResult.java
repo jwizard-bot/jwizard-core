@@ -16,7 +16,7 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga.audioplayer;
+package pl.miloszgilga.franekbotapp.audioplayer;
 
 import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -41,6 +41,8 @@ import static pl.miloszgilga.franekbotapp.executors.audioplayer.ShowAllQueueComm
 @AllArgsConstructor
 class AudioLoaderResult implements AudioLoadResultHandler {
 
+    private final LoggerFactory logger = new LoggerFactory(AudioLoaderResult.class);
+
     private final CommandEvent event;
     private final boolean ifValidUri;
     private final MusicManager musicManager;
@@ -52,6 +54,8 @@ class AudioLoaderResult implements AudioLoadResultHandler {
         musicManager.getScheduler().queue(new QueueTrackExtendedInfo(senderUser, audioTrack));
         if (!musicManager.getScheduler().getQueue().isEmpty()) {
             onSingleTrackLoadedSendEmbedMessage(audioTrack);
+            logger.info(String.format("Użytkownik '%s' dodał nową piosenkę do kolejki '%s'",
+                    event.getAuthor().getAsTag(), audioTrack.getInfo().title), event.getGuild());
         }
     }
 
@@ -68,11 +72,15 @@ class AudioLoaderResult implements AudioLoadResultHandler {
                 audioPlaylist.getTracks().get(i).setUserData(senderUser);
                 musicManager.getScheduler().queue(new QueueTrackExtendedInfo(senderUser, trackList.get(i)));
             }
+            logger.info(String.format("Użytkownik '%s' dodał nową playlistę do kolejki składającą się z '%s' piosenek",
+                    event.getAuthor().getAsTag(), audioPlaylist.getTracks().size()), event.getGuild());
         } else {
             audioPlaylist.getTracks().get(0).setUserData(senderUser);
             musicManager.getScheduler().queue(new QueueTrackExtendedInfo(senderUser, audioPlaylist.getTracks().get(0)));
             if (!musicManager.getScheduler().getQueue().isEmpty()) {
                 onSingleTrackLoadedSendEmbedMessage(audioPlaylist.getTracks().get(0));
+                logger.info(String.format("Użytkownik '%s' dodał nową piosenkę do kolejki '%s'",
+                        event.getAuthor().getAsTag(), audioPlaylist.getTracks().get(0).getInfo().title), event.getGuild());
             }
         }
     }
@@ -83,6 +91,8 @@ class AudioLoaderResult implements AudioLoadResultHandler {
                 EmbedMessageColor.RED
         );
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
+        logger.error(String.format("Nie znaleziono piosenki z wprowadzonej przez '%s' podaną nazwą '%s'",
+                event.getAuthor().getAsTag(), event.getArgs()), event.getGuild());
     }
 
     @Override
@@ -92,6 +102,8 @@ class AudioLoaderResult implements AudioLoadResultHandler {
                 EmbedMessageColor.RED
         );
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
+        logger.error(String.format("Wystąpił nieznany błąd podczas dodawania piosenki/playlisty przez '%s'",
+                event.getAuthor().getAsTag()), event.getGuild());
     }
 
     private void onSingleTrackLoadedSendEmbedMessage(AudioTrack track) {

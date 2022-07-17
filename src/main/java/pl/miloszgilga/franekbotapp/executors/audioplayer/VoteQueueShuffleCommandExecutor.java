@@ -29,6 +29,7 @@ import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.audioplayer.QueueTrackExtendedInfo;
 import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
 import pl.miloszgilga.franekbotapp.executors.executorhandlers.VoteCommandExecutingHandler;
+import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 
 import static pl.miloszgilga.franekbotapp.Command.MUSIC_VOTE_SHUFFLE;
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.ShowAllQueueCommandExecutor.showQueueElementsInEmbedMessage;
@@ -37,6 +38,7 @@ import static pl.miloszgilga.franekbotapp.executors.audioplayer.VoteSkipTrackCom
 
 public class VoteQueueShuffleCommandExecutor extends Command {
 
+    private final LoggerFactory logger = new LoggerFactory(VoteQueueShuffleCommandExecutor.class);
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
     public VoteQueueShuffleCommandExecutor() {
@@ -60,9 +62,11 @@ public class VoteQueueShuffleCommandExecutor extends Command {
             if (voteHandler.voteCommandExecutor()) {
                 playerManager.getMusicManager(event).getScheduler().queueShuffle();
                 showQueueElementsInEmbedMessage(event, queue);
+                logger.info(String.format("Kolejka piosenek w wyniku głosowania użytkowników '%s' została przetasowana",
+                        voteHandler.allVotedUsers()), event.getGuild());
             }
         } catch (EmptyAudioQueueException ex) {
-            System.out.println(ex.getMessage());
+            logger.warn(ex.getMessage(), event.getGuild());
         }
     }
 }

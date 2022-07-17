@@ -23,6 +23,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 
+import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
 import pl.miloszgilga.franekbotapp.audioplayer.MusicManager;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
@@ -39,6 +40,7 @@ import static pl.miloszgilga.franekbotapp.executors.audioplayer.VoteSkipTrackCom
 
 public class SetTrackVolumeCommandExecutor extends Command {
 
+    private final LoggerFactory logger = new LoggerFactory(SetTrackVolumeCommandExecutor.class);
     private static final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
     public SetTrackVolumeCommandExecutor() {
@@ -57,7 +59,7 @@ public class SetTrackVolumeCommandExecutor extends Command {
                     throw new IllegalArgumentException();
                 }
             } catch (IllegalArgumentException ex) {
-                throw new IllegalCommandArgumentsException(event, String.format(
+                throw new IllegalCommandArgumentsException(event, MUSIC_VOLUME, String.format(
                         "`%s [poziom głośności 0-150]`", config.getDefPrefix() + MUSIC_VOLUME.getCommandName()));
             }
 
@@ -73,13 +75,16 @@ public class SetTrackVolumeCommandExecutor extends Command {
             int previousVolume = audioPlayer.getVolume();
             audioPlayer.setVolume(volumeLevel);
 
-            final var embedMessage = new EmbedMessage("", "Zmiana głośności odtwarzacza z **" +
-                    previousVolume + "%** na **" + audioPlayer.getVolume() + "%**", EmbedMessageColor.GREEN
-            );
+            final var embedMessage = new EmbedMessage("", String.format(
+                    "Zmiana głośności odtwarzacza z **%s%%** na **%s%%**.", previousVolume, audioPlayer.getVolume()
+            ), EmbedMessageColor.GREEN);
             event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
 
+            logger.info(String.format("Zmiana głośności odtwarzacza z '%s%%' na '%s%%' przez '%s'",
+                    previousVolume, audioPlayer.getVolume(), event.getAuthor().getAsTag()), event.getGuild());
+
         } catch (EmptyAudioQueueException | IllegalCommandArgumentsException | UnableAccessToInvokeCommandException ex) {
-            System.out.println(ex.getMessage());
+            logger.warn(ex.getMessage(), event.getGuild());
         }
     }
 }

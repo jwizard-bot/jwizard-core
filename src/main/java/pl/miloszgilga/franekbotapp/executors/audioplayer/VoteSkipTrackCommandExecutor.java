@@ -26,6 +26,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import java.util.*;
 import jdk.jfr.Description;
 
+import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 import pl.miloszgilga.franekbotapp.audioplayer.MusicManager;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
@@ -38,6 +39,7 @@ import static pl.miloszgilga.franekbotapp.Command.MUSIC_VOTE_SKIP;
 
 public class VoteSkipTrackCommandExecutor extends Command {
 
+    private final LoggerFactory logger = new LoggerFactory(VoteSkipTrackCommandExecutor.class);
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
     public VoteSkipTrackCommandExecutor() {
@@ -61,12 +63,14 @@ public class VoteSkipTrackCommandExecutor extends Command {
                 if (musicManager.getScheduler().getQueue().isEmpty()) {
                     musicManager.getAudioPlayer().stopTrack();
                 } else {
-                    musicManager.getScheduler().nextTrack();
+                    musicManager.getScheduler().nextTrack(true);
                 }
+                logger.info(String.format("Piosenka w wyniku głosowania użytkowników '%s' została pominięta",
+                        voteHandler.allVotedUsers()), event.getGuild());
             }
         } catch (EmptyAudioQueueException | UserOnVoiceChannelNotFoundException |
                  AttemptToRevoteSkippingSongException ex) {
-            System.out.println(ex.getMessage());
+            logger.warn(ex.getMessage(), event.getGuild());
         }
     }
 

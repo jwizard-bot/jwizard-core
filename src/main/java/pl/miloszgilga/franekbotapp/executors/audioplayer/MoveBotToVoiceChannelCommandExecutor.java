@@ -30,6 +30,7 @@ import java.util.EnumSet;
 import java.util.Objects;
 import java.util.ArrayList;
 
+import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
 import pl.miloszgilga.franekbotapp.exceptions.MusicBotNotActiveException;
@@ -42,6 +43,8 @@ import static net.dv8tion.jda.api.Permission.VOICE_MOVE_OTHERS;
 
 
 public class MoveBotToVoiceChannelCommandExecutor extends Command {
+
+    private final LoggerFactory logger = new LoggerFactory(MoveBotToVoiceChannelCommandExecutor.class);
 
     private List<VoiceChannel> voiceChannels = new ArrayList<>();
     private Member senderUserMember;
@@ -76,9 +79,8 @@ public class MoveBotToVoiceChannelCommandExecutor extends Command {
             }
 
             VoiceChannel voiceChannel = findVoiceChannelWhereUserIs(event);
-            if (botChannel.equals(voiceChannel)) {
-                return;
-            }
+            if (botChannel.equals(voiceChannel)) return;
+
             event.getGuild().moveVoiceMember(botMember, voiceChannel).complete();
 
             final var embedMessage = new EmbedMessage("INFO", String.format(
@@ -86,9 +88,12 @@ public class MoveBotToVoiceChannelCommandExecutor extends Command {
                     EmbedMessageColor.GREEN);
             event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
 
+            logger.info(String.format("Przeniesienie bota muzycznego na kanał '%s' przez '%s'", voiceChannel.getName(),
+                    event.getAuthor().getAsTag()), event.getGuild());
+
         } catch (UnableAccessToInvokeCommandException | UserOnVoiceChannelNotFoundException |
                  MusicBotNotActiveException ex) {
-            System.out.println(ex.getMessage());
+            logger.warn(ex.getMessage(), event.getGuild());
         }
     }
 

@@ -24,8 +24,9 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 
 import java.util.Queue;
 
-import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
+import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.audioplayer.QueueTrackExtendedInfo;
 import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
 import pl.miloszgilga.franekbotapp.exceptions.UnableAccessToInvokeCommandException;
@@ -37,6 +38,7 @@ import static pl.miloszgilga.franekbotapp.executors.audioplayer.VoteSkipTrackCom
 
 public class VoteQueueClearCommandExecutor extends Command {
 
+    private final LoggerFactory logger = new LoggerFactory(VoteQueueClearCommandExecutor.class);
     private static final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
     public VoteQueueClearCommandExecutor() {
@@ -59,9 +61,11 @@ public class VoteQueueClearCommandExecutor extends Command {
 
             if (voteHandler.voteCommandExecutor()) {
                 queue.clear();
+                logger.info(String.format("Kolejka piosenek w wyniku głosowania użytkowników '%s' została wyczyszczona",
+                        voteHandler.allVotedUsers()), event.getGuild());
             }
         } catch (UnableAccessToInvokeCommandException | EmptyAudioQueueException ex) {
-            System.out.println(ex.getMessage());
+            logger.warn(ex.getMessage(), event.getGuild());
         }
     }
 }

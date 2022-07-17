@@ -24,6 +24,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
+import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
@@ -40,6 +41,7 @@ import static pl.miloszgilga.franekbotapp.executors.audioplayer.VoteSkipTrackCom
 
 public class RepeatTrackCommandExecutor extends Command {
 
+    private final LoggerFactory logger = new LoggerFactory(RepeatTrackCommandExecutor.class);
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
     public RepeatTrackCommandExecutor() {
@@ -75,9 +77,12 @@ public class RepeatTrackCommandExecutor extends Command {
                     EmbedMessageColor.GREEN);
             event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
 
+            logger.info(String.format("Piosenka '%s' została %s nieskończonej pętli przez '%s'",
+                    info.title, embedMessageDescription, event.getAuthor().getAsTag()), event.getGuild());
+
         } catch (UserOnVoiceChannelNotFoundException | UnableAccessToInvokeCommandException |
                  EmptyAudioQueueException ex) {
-            System.out.println(ex.getMessage());
+            logger.warn(ex.getMessage(), event.getGuild());
         }
     }
 }

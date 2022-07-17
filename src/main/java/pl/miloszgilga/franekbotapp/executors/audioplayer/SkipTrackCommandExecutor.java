@@ -21,9 +21,11 @@ package pl.miloszgilga.franekbotapp.executors.audioplayer;
 import jdk.jfr.Description;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
 import java.util.Queue;
 
+import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
@@ -38,6 +40,7 @@ import static pl.miloszgilga.franekbotapp.executors.audioplayer.VoteSkipTrackCom
 
 public class SkipTrackCommandExecutor extends Command {
 
+    private final LoggerFactory logger = new LoggerFactory(SkipTrackCommandExecutor.class);
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
     public SkipTrackCommandExecutor() {
@@ -62,12 +65,17 @@ public class SkipTrackCommandExecutor extends Command {
             event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
 
             if (queue.isEmpty()) {
+                final AudioTrackInfo audioTrackInfo = playerManager.getMusicManager(event).getAudioPlayer()
+                        .getPlayingTrack().getInfo();
+
                 playerManager.getMusicManager(event).getAudioPlayer().stopTrack();
+                logger.info(String.format("Odtwarzanie piosenki '%s' zostało pominięte przez dodającego '%s'",
+                        audioTrackInfo.title, event.getAuthor().getAsTag()), event.getGuild());
             } else {
-                playerManager.getMusicManager(event).getScheduler().nextTrack();
+                playerManager.getMusicManager(event).getScheduler().nextTrack(true);
             }
         } catch (EmptyAudioQueueException | UnableAccessToInvokeCommandException ex) {
-            System.out.println(ex.getMessage());
+            logger.warn(ex.getMessage(), event.getGuild());
         }
     }
 }

@@ -40,6 +40,8 @@ import static pl.miloszgilga.franekbotapp.FranekBot.config;
 @Getter
 public class TrackScheduler extends AudioEventAdapter {
 
+    private final LoggerFactory logger = new LoggerFactory(TrackScheduler.class);
+
     private final CommandEvent event;
     private final AudioPlayer audioPlayer;
     private final Queue<QueueTrackExtendedInfo> queue = new LinkedList<>();
@@ -48,63 +50,69 @@ public class TrackScheduler extends AudioEventAdapter {
     private boolean alreadyDisplayed = false;
     private Thread countingToLeaveTheChannel;
 
-    public TrackScheduler(AudioPlayer audioPlayer, CommandEvent event) {
+    TrackScheduler(AudioPlayer audioPlayer, CommandEvent event) {
         this.audioPlayer = audioPlayer;
         this.event = event;
     }
 
-    public void queue(QueueTrackExtendedInfo queueTrackExtendedInfo) {
-        if (!audioPlayer.startTrack(queueTrackExtendedInfo.getAudioTrack(), true)) {
-            queue.offer(queueTrackExtendedInfo);
-        }
+    void queue(QueueTrackExtendedInfo queueTrackExtendedInfo) {
+        if (audioPlayer.startTrack(queueTrackExtendedInfo.getAudioTrack(), true)) return;
+        queue.offer(queueTrackExtendedInfo);
     }
 
-    public void nextTrack() {
-        QueueTrackExtendedInfo queueTrackExtendedInfo = queue.poll();
-        if (queueTrackExtendedInfo != null) {
-            audioPlayer.startTrack(queueTrackExtendedInfo.getAudioTrack(), false);
-        }
+    public void nextTrack(boolean byUserInvoked) {
+        final QueueTrackExtendedInfo queueTrackExtendedInfo = queue.poll();
+
+        if (queueTrackExtendedInfo == null) return;
+        audioPlayer.startTrack(queueTrackExtendedInfo.getAudioTrack(), false);
+
+        if (!byUserInvoked) return;
+        final String trackTitle = queueTrackExtendedInfo.getAudioTrack().getInfo().title;
+        final String senderUserTag = queueTrackExtendedInfo.getSenderUser().getUser().getAsTag();
+        logger.info(String.format("Piosenka '%s' została usunięta z kolejki przez '%s'", trackTitle, senderUserTag),
+                event.getGuild());
     }
 
     @Override
     public void onPlayerPause(AudioPlayer player) {
         final AudioTrackInfo info = audioPlayer.getPlayingTrack().getInfo();
-        if (!audioPlayer.isPaused()) {
-            return;
-        }
+        if (!audioPlayer.isPaused()) return;
+
         final var embedMessage = new EmbedMessage("", String.format(
                 "Zatrzymałem odtwarzanie piosenki: **%s**.", info.title), EmbedMessageColor.GREEN);
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
+
+        logger.info(String.format("Odtwarzanie piosenki '%s' zostało wstrzymane przez '%s'",
+                info.title, event.getAuthor().getAsTag()), event.getGuild());
     }
 
     @Override
     public void onPlayerResume(AudioPlayer player) {
         final AudioTrackInfo info = audioPlayer.getPlayingTrack().getInfo();
-        if (audioPlayer.isPaused()) {
-            return;
-        }
+        if (audioPlayer.isPaused()) return;
+
         final var embedMessage = new EmbedMessage("", String.format(
                 "Ponawiam odtwarzanie piosenki: **%s**.", info.title), EmbedMessageColor.GREEN);
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
+
+        logger.info(String.format("Odtwarzanie piosenki '%s' zostało ponowione przez '%s'",
+                info.title, event.getAuthor().getAsTag()), event.getGuild());
     }
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
-        if (countingToLeaveTheChannel != null) {
-            countingToLeaveTheChannel.interrupt();
-        }
-        if (!alreadyDisplayed) {
-            final AudioTrackInfo info = audioPlayer.getPlayingTrack().getInfo();
-            final var embedMessage = new EmbedMessage("", String.format(
-                    "Rozpoczynam odtwarzanie piosenki: **%s**. " +
-                    (queue.isEmpty() ? "Kolejka jest pusta." : String.format(
-                            "Ilość pozostałych piosenek w kolejce: **%s**.", queue.size())), info.title),
-                    EmbedMessageColor.GREEN);
-            if (repeating) {
-                alreadyDisplayed = true;
-            }
-            event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
-        }
+        if (countingToLeaveTheChannel != null) countingToLeaveTheChannel.interrupt();
+        if (alreadyDisplayed) return;
+
+        final AudioTrackInfo info = audioPlayer.getPlayingTrack().getInfo();
+        final var embedMessage = new EmbedMessage("", String.format("Rozpoczynam odtwarzanie piosenki: **%s**.",
+                info.title), EmbedMessageColor.GREEN);
+        event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
+
+        if (repeating) alreadyDisplayed = true;
+
+        logger.info(String.format("Automatyczne odtwarzanie piosenki '%s' dodanej przez '%s'",
+                info.title, event.getAuthor().getAsTag()), event.getGuild());
     }
 
     @Override
@@ -121,6 +129,9 @@ public class TrackScheduler extends AudioEventAdapter {
                     );
                     event.getTextChannel().sendMessageEmbeds(leavingMessage.buildMessage()).queue();
                     event.getJDA().getDirectAudioController().disconnect(event.getGuild());
+                    logger.warn(String.format(
+                            "Automatyczne opuszczenie kanału głosowego przez bota po %s minutach nieaktywności",
+                            config.getMaxInactivityTimeMinutes()), event.getGuild());
                 } catch (InterruptedException ignored) { }
             });
             countingToLeaveTheChannel.start();
@@ -130,7 +141,7 @@ public class TrackScheduler extends AudioEventAdapter {
             if (repeating) {
                 audioPlayer.startTrack(track.makeClone(), false);
             } else {
-                nextTrack();
+                nextTrack(false);
             }
         }
     }
@@ -142,6 +153,9 @@ public class TrackScheduler extends AudioEventAdapter {
                 EmbedMessageColor.RED
         );
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
+
+        logger.error(String.format("Wystąpił nieznany błąd podczas dodawania piosenki/playlisty przez '%s'",
+                event.getAuthor().getAsTag()), event.getGuild());
     }
 
     public void setRepeating(boolean repeating) {

@@ -30,6 +30,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.net.URISyntaxException;
 
+import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.exceptions.MusicBotIsInUseException;
 import pl.miloszgilga.franekbotapp.exceptions.IllegalCommandArgumentsException;
@@ -41,6 +42,7 @@ import static pl.miloszgilga.franekbotapp.Command.MUSIC_PLAY;
 
 public class PlayTrackCommandExecutor extends Command {
 
+    private final LoggerFactory logger = new LoggerFactory(PlayTrackCommandExecutor.class);
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
     public PlayTrackCommandExecutor() {
@@ -53,7 +55,7 @@ public class PlayTrackCommandExecutor extends Command {
     protected void execute(CommandEvent event) {
         try {
             if (event.getArgs().split(" ").length < 1) {
-                throw new IllegalCommandArgumentsException(event, String.format(
+                throw new IllegalCommandArgumentsException(event, MUSIC_PLAY, String.format(
                         "`%s [link lub nazwa piosenki]`", config.getDefPrefix() + MUSIC_PLAY.getCommandName()));
             }
 
@@ -76,7 +78,7 @@ public class PlayTrackCommandExecutor extends Command {
             }
             playerManager.loadAndPlay(event, withoutPrefix, ifValidUri);
         } catch (UserOnVoiceChannelNotFoundException | MusicBotIsInUseException | IllegalCommandArgumentsException ex) {
-            System.out.println(ex.getMessage());
+            logger.warn(ex.getMessage(), event.getGuild());
         }
     }
 
