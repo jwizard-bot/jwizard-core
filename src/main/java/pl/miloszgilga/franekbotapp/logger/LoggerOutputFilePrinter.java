@@ -39,7 +39,6 @@ public class LoggerOutputFilePrinter implements ILoggerOutputPrinter {
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("ddMM");
 
     @Override
-    @SuppressWarnings("UnusedReturnValue")
     public void loggerOutputPrinter(String message, LoggerRank rank, Guild guild, Class<?> authorClazz) {
         Date date = new Date();
         PrintWriter out;
