@@ -27,7 +27,7 @@ $ git clone https://github.com/Milosz08/JDA_Discord_Bot
     "maxVotingElapseTimeMinutes": 2 // max time in which to conduct the vote (if less than 0, no maximum time)
 }
 ```
-* Set the appropriate logger parameters
+* Set the appropriate logger parameters in `logger-config.json`
 ```js
 {
     "loggerEnabled": true, // enable/disable logger
