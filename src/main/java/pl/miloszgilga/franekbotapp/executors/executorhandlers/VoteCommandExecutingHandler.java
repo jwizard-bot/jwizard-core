@@ -61,13 +61,15 @@ public class VoteCommandExecutingHandler {
 
     public boolean voteCommandExecutor() {
         Thread countingUntilVoteElapsed = countingUntilVoteElapsed();
-        if (!countingUntilVoteElapsed.isInterrupted()) countingUntilVoteElapsed.interrupt();
+        if (!countingUntilVoteElapsed.isInterrupted() && config.getMaxVotingElapseTimeMinutes() >= 0) {
+            countingUntilVoteElapsed.interrupt();
+        }
         if (usersAlreadyVoted.isEmpty()) usersVoted.clear();
 
         if (!usersAlreadyVoted.contains(event.getAuthor().getId())) {
             usersAlreadyVoted.add(event.getAuthor().getId());
             usersVoted.add(event.getAuthor().getAsTag());
-            countingUntilVoteElapsed.start();
+            if (config.getMaxVotingElapseTimeMinutes() >= 0) countingUntilVoteElapsed.start();
             final var takesEmbed = new EmbedMessage(voteTakesEmbedTitle, String.format(
                     "Status głosowania: **%s**/**%s**, (wymagane głosów: **%s**)",
                     usersAlreadyVoted.size(), allChannelMembers, requireVotesToPass), EmbedMessageColor.GREEN

@@ -113,6 +113,7 @@ public class TrackScheduler extends AudioEventAdapter {
         if (audioPlayer.getPlayingTrack() == null && queue.isEmpty() && !repeating) {
             final var embedMessage = new EmbedMessage("", "Koniec kolejki odtwarzania.", EmbedMessageColor.RED);
             event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
+            if (config.getMaxInactivityTimeMinutes() < 0) return;
             countingToLeaveTheChannel = new Thread(() -> {
                 try {
                     Thread.sleep(1000 * 60 * config.getMaxInactivityTimeMinutes());
