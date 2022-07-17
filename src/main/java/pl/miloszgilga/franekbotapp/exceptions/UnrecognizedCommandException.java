@@ -26,6 +26,8 @@ import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
 import pl.miloszgilga.franekbotapp.messages.MessageEmbedField;
 
+import static pl.miloszgilga.franekbotapp.Command.HELP;
+import static pl.miloszgilga.franekbotapp.Command.HELP_ME;
 import static pl.miloszgilga.franekbotapp.FranekBot.config;
 
 
@@ -39,7 +41,8 @@ public class UnrecognizedCommandException extends RuntimeException {
                 new MessageEmbedField("Komendy należy używać zgodne ze składnią: ",
                         String.format("`%s<nazwa komendy> [...argumenty]`", config.getDefPrefix()), false),
                 new MessageEmbedField("Aby uzyskać pełną listę komend wpisz: ",
-                        String.format("`%shelp`", config.getDefPrefix()), false)
+                        String.format("`%s%s` lub `%s%s`", config.getDefPrefix(), HELP.getCommandName(),
+                                config.getDefPrefix(), HELP_ME.getCommandName()), false)
         ));
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
     }
