@@ -40,8 +40,9 @@ import static pl.miloszgilga.franekbotapp.Command.HELP_ME;
 
 public class FranekBot {
 
-    public static Configuration config;
     private static final InputStream FILE = FranekBot.class.getResourceAsStream("/config/config.json");
+    private static final FancyTitleGenerator generator = FancyTitleGenerator.getSingleton();
+    public static Configuration config;
 
     private static void loadConfiguration() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -53,6 +54,9 @@ public class FranekBot {
 
     public static void main(String[] args) throws LoginException, IOException {
         loadConfiguration();
+
+        if (config.isShowFancyTitle()) generator.generateFancyTitle();
+        System.out.println("\nFranekBot by Miłosz Gilga (https://github.com/Milosz08/JDA_Discord_Bot), wersja v1.0\n");
 
         CommandClientBuilder builder = new CommandClientBuilder();
         builder.setPrefix(config.getDefPrefix());
