@@ -21,6 +21,7 @@ package pl.miloszgilga.franekbotapp.executors.misc;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+import jdk.jfr.Description;
 import pl.miloszgilga.franekbotapp.BotCommand;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
@@ -42,6 +43,7 @@ public class ShowServerInfoCommandExecutor extends Command {
     }
 
     @Override
+    @Description("command: <[prefix]help>")
     protected void execute(CommandEvent event) {
         List<MessageEmbedField> allCommandFields = BotCommand.getAllCommandsAsEnumValues().stream()
                 .map(command -> {
