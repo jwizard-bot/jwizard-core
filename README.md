@@ -31,7 +31,7 @@ $ git clone https://github.com/Milosz08/JDA_Discord_Bot
 ```js
 {
     "loggerEnabled": true, // enable/disable logger
-    "loggerSensitivity": [ // saving information based on table parameters
+    "loggerSensitivity": [ // saving information based on array parameters
         "INFO", "WARN", "ERROR"
     ],
     "enableLoggedToStandardOutput": true, // enable/disable logging values in console
