@@ -32,8 +32,8 @@ import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
 import pl.miloszgilga.franekbotapp.exceptions.IllegalCommandArgumentsException;
 import pl.miloszgilga.franekbotapp.exceptions.UnableAccessToInvokeCommandException;
 
-import static pl.miloszgilga.franekbotapp.FranekBot.config;
 import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_VOLUME;
+import static pl.miloszgilga.franekbotapp.ConfigurationLoader.config;
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.PauseTrackCommandExecutor.checkIfActionEventInvokeBySender;
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.VoteSkipTrackCommandExecutor.findVoiceChannelWithBotAndUser;
 

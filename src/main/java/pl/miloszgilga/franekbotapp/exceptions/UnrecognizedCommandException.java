@@ -28,7 +28,7 @@ import pl.miloszgilga.franekbotapp.messages.MessageEmbedField;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.HELP;
 import static pl.miloszgilga.franekbotapp.BotCommand.HELP_ME;
-import static pl.miloszgilga.franekbotapp.FranekBot.config;
+import static pl.miloszgilga.franekbotapp.ConfigurationLoader.config;
 
 
 public class UnrecognizedCommandException extends RuntimeException {

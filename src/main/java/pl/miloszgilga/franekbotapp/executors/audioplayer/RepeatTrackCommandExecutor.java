@@ -33,8 +33,8 @@ import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
 import pl.miloszgilga.franekbotapp.exceptions.UserOnVoiceChannelNotFoundException;
 import pl.miloszgilga.franekbotapp.exceptions.UnableAccessToInvokeCommandException;
 
-import static pl.miloszgilga.franekbotapp.FranekBot.config;
 import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_LOOP;
+import static pl.miloszgilga.franekbotapp.ConfigurationLoader.config;
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.PauseTrackCommandExecutor.checkIfActionEventInvokeBySender;
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.VoteSkipTrackCommandExecutor.findVoiceChannelWithBotAndUser;
 

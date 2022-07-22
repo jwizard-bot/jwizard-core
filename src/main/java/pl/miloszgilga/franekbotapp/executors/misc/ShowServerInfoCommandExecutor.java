@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.HELP;
 import static pl.miloszgilga.franekbotapp.BotCommand.HELP_ME;
-import static pl.miloszgilga.franekbotapp.FranekBot.config;
+import static pl.miloszgilga.franekbotapp.ConfigurationLoader.config;
 
 
 public class ShowServerInfoCommandExecutor extends Command {

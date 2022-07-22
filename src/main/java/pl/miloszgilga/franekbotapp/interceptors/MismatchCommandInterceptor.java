@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
 import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 import pl.miloszgilga.franekbotapp.exceptions.UnrecognizedCommandException;
 
-import static pl.miloszgilga.franekbotapp.FranekBot.config;
 import static pl.miloszgilga.franekbotapp.BotCommand.getAllCommands;
+import static pl.miloszgilga.franekbotapp.ConfigurationLoader.config;
 
 
 public class MismatchCommandInterceptor extends ListenerAdapter {

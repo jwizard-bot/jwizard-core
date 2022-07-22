@@ -24,12 +24,8 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 
-import javax.security.auth.login.LoginException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.InputStream;
 import java.io.IOException;
-import java.io.FileNotFoundException;
+import javax.security.auth.login.LoginException;
 
 import pl.miloszgilga.franekbotapp.executors.audioplayer.*;
 import pl.miloszgilga.franekbotapp.executors.misc.ShowServerInfoCommandExecutor;
@@ -37,28 +33,20 @@ import pl.miloszgilga.franekbotapp.interceptors.MismatchCommandInterceptor;
 import pl.miloszgilga.franekbotapp.interceptors.ServerBotDeafenInterceptor;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.HELP_ME;
+import static pl.miloszgilga.franekbotapp.ConfigurationLoader.config;
+import static pl.miloszgilga.franekbotapp.ConfigurationLoader.checkIfItsDevelopmentVersion;
 
 
 public class FranekBot {
 
-    private static final InputStream FILE = FranekBot.class.getResourceAsStream("/config/config.json");
     private static final FancyTitleGenerator generator = FancyTitleGenerator.getSingleton();
-    public static Configuration config;
-
-    private static void loadConfiguration() throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        if (FILE == null) {
-            throw new FileNotFoundException("Plik konfiguracyjny nie istnieje!");
-        }
-        config = objectMapper.readValue(new String(FILE.readAllBytes()), Configuration.class);
-    }
 
     public static void main(String[] args) throws LoginException, IOException {
-        loadConfiguration();
+        checkIfItsDevelopmentVersion(args);
 
-        if (config.isShowFancyTitle()) generator.generateFancyTitle();
-        System.out.printf("FranekBot by Miłosz Gilga (https://github.com/Milosz08/JDA_Discord_Bot), wersja v%s\n%n",
+        System.out.printf("FranekBot by Miłosz Gilga (https://github.com/Milosz08/JDA_Discord_Bot), wersja v%s%n",
                 config.getBotVersion());
+        if (config.isShowFancyTitle()) generator.generateFancyTitle();
 
         CommandClientBuilder builder = new CommandClientBuilder();
         builder.setPrefix(config.getDefPrefix());

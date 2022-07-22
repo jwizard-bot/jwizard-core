@@ -26,8 +26,8 @@ import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
 import pl.miloszgilga.franekbotapp.messages.MessageEmbedField;
 
-import static pl.miloszgilga.franekbotapp.FranekBot.config;
 import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_PLAY;
+import static pl.miloszgilga.franekbotapp.ConfigurationLoader.config;
 
 
 public class EmptyAudioQueueException extends JdaIllegalChatStateException {

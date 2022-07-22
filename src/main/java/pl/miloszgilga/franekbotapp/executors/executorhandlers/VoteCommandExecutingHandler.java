@@ -29,7 +29,7 @@ import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
 import pl.miloszgilga.franekbotapp.exceptions.AttemptToRevoteSkippingSongException;
 
-import static pl.miloszgilga.franekbotapp.FranekBot.config;
+import static pl.miloszgilga.franekbotapp.ConfigurationLoader.config;
 
 
 @Getter

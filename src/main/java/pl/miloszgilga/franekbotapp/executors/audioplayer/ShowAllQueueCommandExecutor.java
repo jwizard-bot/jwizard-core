@@ -38,8 +38,8 @@ import pl.miloszgilga.franekbotapp.audioplayer.QueueTrackExtendedInfo;
 import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
 import pl.miloszgilga.franekbotapp.exceptions.IllegalCommandArgumentsException;
 
-import static pl.miloszgilga.franekbotapp.FranekBot.config;
 import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_QUEUE;
+import static pl.miloszgilga.franekbotapp.ConfigurationLoader.config;
 
 
 public class ShowAllQueueCommandExecutor extends Command {

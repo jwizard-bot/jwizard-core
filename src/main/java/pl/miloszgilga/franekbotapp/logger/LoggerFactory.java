@@ -28,13 +28,14 @@ import java.nio.charset.StandardCharsets;
 import net.dv8tion.jda.api.entities.Guild;
 
 import static pl.miloszgilga.franekbotapp.logger.LoggerRank.*;
+import static pl.miloszgilga.franekbotapp.ConfigurationLoader.config;
 
 
 public class LoggerFactory {
 
     private final LoggerOutputConsolePrinter loggerOutputConsolePrinter = new LoggerOutputConsolePrinter();
     private final LoggerOutputFilePrinter loggerOutputFilePrinter = new LoggerOutputFilePrinter();
-    private final LoggerConfigurationLoader config = LoggerConfigurationLoader.getSingleton();
+    private final LoggerConfigurationLoader logConfig = LoggerConfigurationLoader.getSingleton();
 
     Class<?> loggingAuthorClazz;
 
@@ -56,12 +57,12 @@ public class LoggerFactory {
     }
 
     private void loggerPrintableInvoker(String message, LoggerRank loggerRank, Guild guild) {
-        LoggerConfiguration configuration = config.getLoggerConfig();
+        LoggerConfiguration configuration = logConfig.getLoggerConfig();
         if (configuration.isLoggerEnabled() && configuration.getLoggerSensitivity().contains(ERROR)) {
-            if (config.getLoggerConfig().isEnableLoggedToStandardOutput()) {
+            if (logConfig.getLoggerConfig().isEnableLoggedToStandardOutput()) {
                 loggerOutputConsolePrinter.loggerOutputPrinter(message, loggerRank, guild, loggingAuthorClazz);
             }
-            if (config.getLoggerConfig().isEnableLoggedToFileOutput()) {
+            if (logConfig.getLoggerConfig().isEnableLoggedToFileOutput()) {
                 loggerOutputFilePrinter.loggerOutputPrinter(message, loggerRank, guild, loggingAuthorClazz);
             }
         }
@@ -69,7 +70,7 @@ public class LoggerFactory {
 
     private void createFolderInstance() {
         try {
-            if (config.getLoggerConfig().isEnableLoggedToFileOutput()) {
+            if (logConfig.getLoggerConfig().isEnableLoggedToFileOutput()) {
                 if (Files.exists(Paths.get(getLogsFolderPath()))) return;
                 if (!new File(getLogsFolderPath()).mkdir()) throw new IOException();
             }
@@ -79,9 +80,10 @@ public class LoggerFactory {
     }
 
     static String getLogsFolderPath() {
+        final String folderName = config.isDevelopmentMode() ? "dev-logs" : "prod-logs";
         URL url = LoggerFactory.class.getProtectionDomain().getCodeSource().getLocation();
         String jarPath = URLDecoder.decode(url.getFile(), StandardCharsets.UTF_8);
-        return new File(jarPath).getParentFile().getPath() + getFileSeparator() + "logs" + getFileSeparator();
+        return new File(jarPath).getParentFile().getPath() + getFileSeparator() + folderName + getFileSeparator();
     }
 
     static String getFileSeparator() {
