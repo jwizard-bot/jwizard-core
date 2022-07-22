@@ -66,10 +66,12 @@ public class LoggerOutputFilePrinter implements ILoggerOutputPrinter {
                 out = new PrintWriter(fullLogFilePath);
             }
 
-            out.append("[").append(formatter.format(date)).append("]\t");
-            out.append("[").append(rank.getRank().toUpperCase(Locale.ROOT)).append("]\t");
-            out.append("[").append(authorClazz.getSimpleName()).append("]\t");
-            out.append("[Serwer: ").append(guild.getName()).append("]\t : ").append(message).append("\n");
+            out.format("[" + formatter.format(date) + "]\t");
+            out.format("%-20s", "[" + rank.getRank().toUpperCase(Locale.ROOT) + "]");
+            out.format("%-50s", "[" + authorClazz.getSimpleName() + "]");
+            out.format("%-35s", "[Serwer: " + guild.getName() + "]");
+            out.print(" : " + message + "\n");
+
             out.close();
         } catch (Exception ex) {
             System.out.println(ex.getMessage());

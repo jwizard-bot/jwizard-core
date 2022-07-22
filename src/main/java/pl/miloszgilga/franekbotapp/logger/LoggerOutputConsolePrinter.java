@@ -39,9 +39,9 @@ public class LoggerOutputConsolePrinter implements ILoggerOutputPrinter {
     public void loggerOutputPrinter(String message, LoggerRank rank, Guild guild, Class<?> authorClazz) {
         Date date = new Date();
         System.out.print("[" + formatter.format(date) + "]\t");
-        System.out.print(chooseColor(rank) + "[" + rank.getRank().toUpperCase(Locale.ROOT) + "]" + ANSI_RESET + "\t");
-        System.out.print(ANSI_CYAN + "[" + authorClazz.getSimpleName() + "]\t" + ANSI_RESET);
-        System.out.print("[Serwer: " + guild.getName() + "]\t");
+        System.out.format("%-20s", chooseColor(rank) + "[" + rank.getRank().toUpperCase(Locale.ROOT) + "]" + ANSI_RESET);
+        System.out.format("%-50s", ANSI_CYAN + "[" + authorClazz.getSimpleName() + "]" + ANSI_RESET);
+        System.out.format("%-35s", "[Serwer: " + guild.getName() + "]");
         System.out.print(" : " + message + "\n");
     }
 
