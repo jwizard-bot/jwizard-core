@@ -1,4 +1,8 @@
 # Franek Bot
+[![Generic badge](https://img.shields.io/badge/Made%20in-Java%20SE%2011-1abc9c.svg)](https://www.java.com/en/)&nbsp;&nbsp;
+[![Generic badge](https://img.shields.io/badge/Build%20with-Maven-green.svg)](https://maven.apache.org/)&nbsp;&nbsp;
+[![Generic badge](https://img.shields.io/badge/Packaging-Fat%20jar-brown.svg)](https://maven.apache.org/)&nbsp;&nbsp;
+<br><br>
 A multi-functional music bot (likely to be enhanced with additional features over time) that allows you to play, pause, repeat and queue songs on the popular VoIP Discord platform. Written entirely using Java SE 11. The bot also includes a proprietary log system I wrote (with the ability to log to a file and standard output). Configuration of the system is done in the `logger-config.json` configuration file.
 
 ## Dependencies
