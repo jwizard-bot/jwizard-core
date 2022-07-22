@@ -1,0 +1,11 @@
+{
+    "showFancyTitle": true,
+    "botVersion": "1.0",
+    "developmentMode": false,
+    "token": "xxxxxx",
+    "applicationId": "xxxxxx",
+    "defPrefix": "$",
+    "queuePaginationMaxElmsOnPage": 20,
+    "maxInactivityTimeMinutes": 5,
+    "maxVotingElapseTimeMinutes": 2
+}

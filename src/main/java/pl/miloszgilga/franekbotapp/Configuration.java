@@ -24,6 +24,7 @@ import lombok.Data;
 public class Configuration {
     private boolean showFancyTitle;
     private String botVersion;
+    private boolean developmentMode;
     private String token;
     private String applicationId;
     private String defPrefix;
