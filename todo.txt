@@ -1,0 +1,2 @@
+do implementacji:
+- gdy wszyscy opuszczą kanał głosowy, bot automatycznie wychodzi
