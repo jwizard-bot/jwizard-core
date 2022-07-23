@@ -3,7 +3,7 @@
 [![Generic badge](https://img.shields.io/badge/Build%20with-Maven-green.svg)](https://maven.apache.org/)&nbsp;&nbsp;
 [![Generic badge](https://img.shields.io/badge/Packaging-Fat%20jar-brown.svg)](https://maven.apache.org/)&nbsp;&nbsp;
 <br><br>
-A multi-functional music bot (likely to be enhanced with additional features over time) that allows you to play, pause, repeat and queue songs on the popular VoIP Discord platform. Written entirely using Java SE 11. The bot also includes a proprietary log system I wrote (with the ability to log to a file and standard output). Configuration of the system is done in the `logger-config.json` configuration file.
+A multi-functional music bot (likely to be enhanced with additional features over time) that allows you to play, pause, repeat and queue songs on the popular VoIP Discord platform. Written entirely using Java SE 11. The bot also includes a proprietary log system I wrote (with the ability to log to a file and standard output).
 
 ## Dependencies
 - [Discord JDA](https://github.com/DV8FromTheWorld/JDA)
@@ -25,26 +25,33 @@ With this configuration, it is possible to run the production version on the ser
 * Change file name from `example-prod-config.json`/`example-dev-config.json` to `prod-config.json`/`dev-config.json` and fill with the appropriate values:
 ```js
 {
+    "botVersion": "1.0-SNAPSHOT", // version of bot
     "showFancyTitle": true, // showing ASCII letters title, when application starting
-    "botVersion": "1.0", // version of bot
     "developmentMode": true, // in prod-config.json file must be false, in dev-config.json must be true
-    "token": "xxxxxx", // discord bot token (for find more, goto https://discord.com/developers/)
-    "applicationId": "xxxxxx", // discord application identifier (for find more, goto https://discord.com/developers/)
-    "defPrefix": "$", // default bot prefix, which used to invoke all commands
-    "queuePaginationMaxElmsOnPage": 20, // max elements in embed message on single page
-    "maxInactivityTimeMinutes": 5, // max inactivity time, after bot leaving voice channel (if less than 0, not leave)
-    "maxVotingElapseTimeMinutes": 2 // max time in which to conduct the vote (if less than 0, no maximum time)
-}
-```
-* Set the appropriate logger parameters in `logger-config.json`
-```js
-{
-    "loggerEnabled": true, // enable/disable logger
-    "loggerSensitivity": [ // saving information based on array parameters
-        "INFO", "WARN", "ERROR"
-    ],
-    "enableLoggedToStandardOutput": true, // enable/disable logging values in console
-    "enableLoggedToFileOutput": true // enable/disable save logs into .log files
+    "authorization": {
+        "token": "xxxx", // discord bot token (for find more, goto https://discord.com/developers/)
+        "applicationId": "xxxx" // discord application identifier (for find more, goto https://discord.com/developers/)
+    },
+    "executors": {
+        "defPrefix": "?", // default bot prefix, which used to invoke all commands
+        "queuePaginationMaxElmsOnPage": 20 // max elements in embed message on single page
+    },
+    "sequencers": {
+        "maxInactivityTimeMinutes": 5, // max inactivity time, after bot leaving voice channel (if less than 0, not leave)
+        "maxInactivityTimeAfterPauseTrackMinutes": 10, // max inactivity time (also empty channel) after bot leave
+        "maxVotingElapseTimeMinutes": 2 // max time in which to conduct the vote (if less than 0, no maximum time)
+    },
+    "miscellaneous": {
+        "logger": {
+            "loggerEnabled": true, // enable/disable logger
+            "loggerOutputFolderName": "dev-logs", // logger output directory
+            "loggerSensitivity": [ // saving information based on array parameters
+                "INFO", "WARN", "ERROR", "DEBUG"
+            ],
+            "enableLoggedToStandardOutput": true, // enable/disable logging values in console
+            "enableLoggedToFileOutput": true // enable/disable save logs into .log files
+        }
+    }
 }
 ```
 > NOTE: By default, the application saves logs in the `/target` directory, while in the production (.jar) version this will be the folder in which the application will be launched.
