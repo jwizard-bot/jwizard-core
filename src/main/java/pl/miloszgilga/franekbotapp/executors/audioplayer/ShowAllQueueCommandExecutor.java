@@ -39,7 +39,7 @@ import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
 import pl.miloszgilga.franekbotapp.exceptions.IllegalCommandArgumentsException;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_QUEUE;
-import static pl.miloszgilga.franekbotapp.ConfigurationLoader.config;
+import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 
 
 public class ShowAllQueueCommandExecutor extends Command {
@@ -83,7 +83,7 @@ public class ShowAllQueueCommandExecutor extends Command {
             }
         } catch (NumberFormatException ex) {
             throw new IllegalCommandArgumentsException(event, MUSIC_QUEUE, String.format(
-                    "`%s%s [nr strony (opcjonalny)]`", config.getDefPrefix(), MUSIC_QUEUE.getCommandName()));
+                    "`%s%s [nr strony (opcjonalny)]`", config.getPrefix(), MUSIC_QUEUE.getCommandName()));
         }
 
         final int indexFrom = (pagePosition - 1) * config.getQueuePaginationMaxElmsOnPage();

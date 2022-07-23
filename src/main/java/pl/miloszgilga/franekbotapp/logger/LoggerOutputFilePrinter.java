@@ -31,6 +31,8 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 
+import pl.miloszgilga.franekbotapp.configuration.LoggerRank;
+
 
 public class LoggerOutputFilePrinter implements ILoggerOutputPrinter {
 

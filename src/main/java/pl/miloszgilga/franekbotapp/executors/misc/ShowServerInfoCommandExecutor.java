@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.HELP;
 import static pl.miloszgilga.franekbotapp.BotCommand.HELP_ME;
-import static pl.miloszgilga.franekbotapp.ConfigurationLoader.config;
+import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 
 
 public class ShowServerInfoCommandExecutor extends Command {
@@ -47,7 +47,7 @@ public class ShowServerInfoCommandExecutor extends Command {
     protected void execute(CommandEvent event) {
         List<MessageEmbedField> allCommandFields = BotCommand.getAllCommandsAsEnumValues().stream()
                 .map(command -> {
-                    final String prefixName = String.format("`%s%s`", config.getDefPrefix(), command.getCommandName());
+                    final String prefixName = String.format("`%s%s`", config.getPrefix(), command.getCommandName());
                     return new MessageEmbedField(prefixName, command.getCommandDescription(), false);
                 })
                 .collect(Collectors.toList());
@@ -56,7 +56,7 @@ public class ShowServerInfoCommandExecutor extends Command {
                 "Wielofunkcyjny bot muzyczny + w przyszłości dodatkowe funkcje. Napisany w całości w JAVIE " +
                 "przy użyciu wrappera JDA, Lavaplayer oraz biblioteki JacksonJSON. Poniżej znajdziesz listę " +
                 "wszystkich dostępnych komend. Listę taką możesz również przywołać w wiadomości prywatnej" +
-                "wykorzystując komendę `%s%s`.", config.getDefPrefix(), HELP_ME.getCommandName()),
+                "wykorzystując komendę `%s%s`.", config.getPrefix(), HELP_ME.getCommandName()),
                 EmbedMessageColor.ORANGE,
                 allCommandFields
         );

@@ -30,7 +30,7 @@ import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 import pl.miloszgilga.franekbotapp.exceptions.UnrecognizedCommandException;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.getAllCommands;
-import static pl.miloszgilga.franekbotapp.ConfigurationLoader.config;
+import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 
 
 public class MismatchCommandInterceptor extends ListenerAdapter {
@@ -41,11 +41,11 @@ public class MismatchCommandInterceptor extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         try {
-            if (!event.getAuthor().isBot() && event.getMessage().getContentRaw().contains(config.getDefPrefix())) {
+            if (!event.getAuthor().isBot() && event.getMessage().getContentRaw().contains(config.getPrefix())) {
                 List<String> prefixAndArgs = Arrays.stream(event.getMessage().getContentRaw().split(" "))
                         .collect(Collectors.toList());
 
-                String commandName = prefixAndArgs.get(0).replace(config.getDefPrefix(), "");
+                String commandName = prefixAndArgs.get(0).replace(config.getPrefix(), "");
                 if (allCommands.stream().noneMatch(el -> el.equals(commandName))) {
                     throw new UnrecognizedCommandException(event);
                 }

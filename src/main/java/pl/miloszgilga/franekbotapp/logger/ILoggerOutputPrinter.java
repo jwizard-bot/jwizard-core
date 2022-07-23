@@ -18,8 +18,10 @@
 
 package pl.miloszgilga.franekbotapp.logger;
 
-
 import net.dv8tion.jda.api.entities.Guild;
+
+import pl.miloszgilga.franekbotapp.configuration.LoggerRank;
+
 
 interface ILoggerOutputPrinter {
     void loggerOutputPrinter(String message, LoggerRank rank, Guild guild, Class<?> authorClazz);

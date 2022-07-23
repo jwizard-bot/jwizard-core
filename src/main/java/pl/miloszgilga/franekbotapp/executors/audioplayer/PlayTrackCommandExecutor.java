@@ -37,7 +37,7 @@ import pl.miloszgilga.franekbotapp.exceptions.IllegalCommandArgumentsException;
 import pl.miloszgilga.franekbotapp.exceptions.UserOnVoiceChannelNotFoundException;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_PLAY;
-import static pl.miloszgilga.franekbotapp.ConfigurationLoader.config;
+import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 
 
 public class PlayTrackCommandExecutor extends Command {
@@ -56,7 +56,7 @@ public class PlayTrackCommandExecutor extends Command {
         try {
             if (event.getArgs().split(" ").length < 1) {
                 throw new IllegalCommandArgumentsException(event, MUSIC_PLAY, String.format(
-                        "`%s [link lub nazwa piosenki]`", config.getDefPrefix() + MUSIC_PLAY.getCommandName()));
+                        "`%s [link lub nazwa piosenki]`", config.getPrefix() + MUSIC_PLAY.getCommandName()));
             }
 
             checkIfBotIsCurrentyUsedOnAnotherChannel(event);

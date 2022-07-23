@@ -27,7 +27,7 @@ import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
 import pl.miloszgilga.franekbotapp.messages.MessageEmbedField;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_PLAY;
-import static pl.miloszgilga.franekbotapp.ConfigurationLoader.config;
+import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 
 
 public class EmptyAudioQueueException extends JdaIllegalChatStateException {
@@ -37,7 +37,7 @@ public class EmptyAudioQueueException extends JdaIllegalChatStateException {
         final var embedMessage = new EmbedMessage("UWAGA!", "Kolejka piosenek jest pusta.", EmbedMessageColor.ORANGE,
                 List.of(new MessageEmbedField(
                         "Aby dodać nową piosenkę użyj komendy",
-                        String.format("`%s%s [link lub nazwa piosenki]`", config.getDefPrefix(), MUSIC_PLAY.getCommandName()),
+                        String.format("`%s%s [link lub nazwa piosenki]`", config.getPrefix(), MUSIC_PLAY.getCommandName()),
                         false))
         );
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();

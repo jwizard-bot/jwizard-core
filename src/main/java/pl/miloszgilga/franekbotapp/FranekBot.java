@@ -33,8 +33,8 @@ import pl.miloszgilga.franekbotapp.interceptors.MismatchCommandInterceptor;
 import pl.miloszgilga.franekbotapp.interceptors.ServerBotDeafenInterceptor;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.HELP_ME;
-import static pl.miloszgilga.franekbotapp.ConfigurationLoader.config;
-import static pl.miloszgilga.franekbotapp.ConfigurationLoader.checkIfItsDevelopmentVersion;
+import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
+import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.checkIfItsDevelopmentVersion;
 
 
 public class FranekBot {
@@ -48,9 +48,12 @@ public class FranekBot {
                 config.getBotVersion());
         if (config.isShowFancyTitle()) generator.generateFancyTitle();
 
+        final String BOT_ID = config.getAuthorization().getApplicationId();
+        final String BOT_TOKEN = config.getAuthorization().getToken();
+
         CommandClientBuilder builder = new CommandClientBuilder();
-        builder.setPrefix(config.getDefPrefix());
-        builder.setOwnerId(config.getApplicationId());
+        builder.setPrefix(config.getPrefix());
+        builder.setOwnerId(BOT_ID);
         builder.setHelpWord(HELP_ME.getCommandName());
         builder.addCommands(
                 new PlayTrackCommandExecutor(),
@@ -68,9 +71,9 @@ public class FranekBot {
         );
 
         JDABuilder
-                .createDefault(config.getToken())
+                .createDefault(BOT_TOKEN)
                 .enableCache(CacheFlag.VOICE_STATE)
-                .setActivity(Activity.listening(config.getDefPrefix() + HELP_ME.getCommandName()))
+                .setActivity(Activity.listening(config.getPrefix() + HELP_ME.getCommandName()))
                 .setStatus(OnlineStatus.ONLINE)
                 .addEventListeners(
                         builder.build(),

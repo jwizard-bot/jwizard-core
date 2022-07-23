@@ -34,7 +34,7 @@ import pl.miloszgilga.franekbotapp.exceptions.UserOnVoiceChannelNotFoundExceptio
 import pl.miloszgilga.franekbotapp.exceptions.UnableAccessToInvokeCommandException;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_LOOP;
-import static pl.miloszgilga.franekbotapp.ConfigurationLoader.config;
+import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.PauseTrackCommandExecutor.checkIfActionEventInvokeBySender;
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.VoteSkipTrackCommandExecutor.findVoiceChannelWithBotAndUser;
 
@@ -68,7 +68,7 @@ public class RepeatTrackCommandExecutor extends Command {
             if (trackScheduler.isRepeating()) {
                 embedMessageDescription = "umieszczona w";
                 embedMessageRemoveLoop = String.format("Aby usunąć piosenkę z pętli, wpisz ponownie komendę `%s%s`.",
-                        config.getDefPrefix(), MUSIC_LOOP.getCommandName());
+                        config.getPrefix(), MUSIC_LOOP.getCommandName());
             }
 
             final var embedMessage = new EmbedMessage("", String.format(

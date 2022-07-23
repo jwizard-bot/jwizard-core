@@ -27,15 +27,18 @@ import java.nio.charset.StandardCharsets;
 
 import net.dv8tion.jda.api.entities.Guild;
 
-import static pl.miloszgilga.franekbotapp.logger.LoggerRank.*;
-import static pl.miloszgilga.franekbotapp.ConfigurationLoader.config;
+import pl.miloszgilga.franekbotapp.configuration.LoggerRank;
+import pl.miloszgilga.franekbotapp.configuration.LoggerConfiguration;
+
+import static pl.miloszgilga.franekbotapp.configuration.LoggerRank.*;
+import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 
 
 public class LoggerFactory {
 
     private final LoggerOutputConsolePrinter loggerOutputConsolePrinter = new LoggerOutputConsolePrinter();
     private final LoggerOutputFilePrinter loggerOutputFilePrinter = new LoggerOutputFilePrinter();
-    private final LoggerConfigurationLoader logConfig = LoggerConfigurationLoader.getSingleton();
+    private static final LoggerConfiguration loggerConfig = config.getMiscellaneous().getLogger();
 
     Class<?> loggingAuthorClazz;
 
@@ -57,12 +60,11 @@ public class LoggerFactory {
     }
 
     private void loggerPrintableInvoker(String message, LoggerRank loggerRank, Guild guild) {
-        LoggerConfiguration configuration = logConfig.getLoggerConfig();
-        if (configuration.isLoggerEnabled() && configuration.getLoggerSensitivity().contains(ERROR)) {
-            if (logConfig.getLoggerConfig().isEnableLoggedToStandardOutput()) {
+        if (loggerConfig.isLoggerEnabled() && loggerConfig.getLoggerSensitivity().contains(ERROR)) {
+            if (loggerConfig.isEnableLoggedToStandardOutput()) {
                 loggerOutputConsolePrinter.loggerOutputPrinter(message, loggerRank, guild, loggingAuthorClazz);
             }
-            if (logConfig.getLoggerConfig().isEnableLoggedToFileOutput()) {
+            if (loggerConfig.isEnableLoggedToFileOutput()) {
                 loggerOutputFilePrinter.loggerOutputPrinter(message, loggerRank, guild, loggingAuthorClazz);
             }
         }
@@ -70,7 +72,7 @@ public class LoggerFactory {
 
     private void createFolderInstance() {
         try {
-            if (logConfig.getLoggerConfig().isEnableLoggedToFileOutput()) {
+            if (loggerConfig.isEnableLoggedToFileOutput()) {
                 if (Files.exists(Paths.get(getLogsFolderPath()))) return;
                 if (!new File(getLogsFolderPath()).mkdir()) throw new IOException();
             }
@@ -80,10 +82,14 @@ public class LoggerFactory {
     }
 
     static String getLogsFolderPath() {
-        final String folderName = config.isDevelopmentMode() ? "dev-logs" : "prod-logs";
+        if (loggerConfig.getLoggerOutputFolderName().equals("")) {
+            throw new IllegalArgumentException("Nazwa folderu wyjściowego loggera nie może być pusta");
+        }
         URL url = LoggerFactory.class.getProtectionDomain().getCodeSource().getLocation();
         String jarPath = URLDecoder.decode(url.getFile(), StandardCharsets.UTF_8);
-        return new File(jarPath).getParentFile().getPath() + getFileSeparator() + folderName + getFileSeparator();
+        return new File(jarPath)
+                .getParentFile()
+                .getPath() + getFileSeparator() + loggerConfig.getLoggerOutputFolderName() + getFileSeparator();
     }
 
     static String getFileSeparator() {

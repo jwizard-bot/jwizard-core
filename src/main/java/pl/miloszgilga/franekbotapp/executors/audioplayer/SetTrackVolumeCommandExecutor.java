@@ -33,7 +33,7 @@ import pl.miloszgilga.franekbotapp.exceptions.IllegalCommandArgumentsException;
 import pl.miloszgilga.franekbotapp.exceptions.UnableAccessToInvokeCommandException;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_VOLUME;
-import static pl.miloszgilga.franekbotapp.ConfigurationLoader.config;
+import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.PauseTrackCommandExecutor.checkIfActionEventInvokeBySender;
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.VoteSkipTrackCommandExecutor.findVoiceChannelWithBotAndUser;
 
@@ -60,7 +60,7 @@ public class SetTrackVolumeCommandExecutor extends Command {
                 }
             } catch (IllegalArgumentException ex) {
                 throw new IllegalCommandArgumentsException(event, MUSIC_VOLUME, String.format(
-                        "`%s [poziom głośności 0-150]`", config.getDefPrefix() + MUSIC_VOLUME.getCommandName()));
+                        "`%s [poziom głośności 0-150]`", config.getPrefix() + MUSIC_VOLUME.getCommandName()));
             }
 
             final MusicManager musicManager = playerManager.getMusicManager(event);
