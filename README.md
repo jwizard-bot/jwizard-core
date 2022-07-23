@@ -19,7 +19,7 @@ To install the program on your computer use the command (or use the built-in GIT
 $ git clone https://github.com/Milosz08/JDA_Discord_Bot
 ```
 ### Prepare and run
-The application was split into a production start-up and a development start-up. There are different configuration files for the two versions. For the development version it is dev-config.json and for the production version it is prod-config.json, respectively.
+The application was split into a production start-up and a development start-up. There are different configuration files for the two versions. For the development version it is `dev-config.json` and for the production version it is `prod-config.json`.
 With this configuration, it is possible to run the production version on the server at the same time (continuity of service), and the development version on the computer, where new functionalities can be added and tested.
 > NOTE: The production and development versions are actually separate instances of discord bots. Two separate applications must be created for them to work properly.
 * Change file name from `example-prod-config.json`/`example-dev-config.json` to `prod-config.json`/`dev-config.json` and fill with the appropriate values:
@@ -48,7 +48,7 @@ With this configuration, it is possible to run the production version on the ser
 }
 ```
 > NOTE: By default, the application saves logs in the `/target` directory, while in the production (.jar) version this will be the folder in which the application will be launched.
-* To run the application in the development mode, use the --dev switch. Running the application without any arguments will load the production version configuration file.
+* To run the application in the development mode, use the `--dev` switch. Running the application without any arguments will load the production version configuration file.
 ```
 $ java --dev FranekBot
 ```
