@@ -2,7 +2,7 @@
  * Copyright (c) 2022 by MILOSZ GILGA <https://miloszgilga.pl>
  *
  * File name: LoggerConfiguration.java
- * Last modified: 16/07/2022, 18:38
+ * Last modified: 16/07/2022, 20:03
  * Project name: franek-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -16,15 +16,17 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga.franekbotapp.logger;
+package pl.miloszgilga.franekbotapp.configuration;
 
 import lombok.Data;
+
 import java.util.List;
 
 
 @Data
-class LoggerConfiguration {
+public class LoggerConfiguration {
     private boolean loggerEnabled;
+    private String loggerOutputFolderName;
     private List<LoggerRank> loggerSensitivity;
     private boolean enableLoggedToStandardOutput;
     private boolean enableLoggedToFileOutput;

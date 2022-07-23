@@ -1,11 +1,29 @@
 {
+    "botVersion": "1.0-SNAPSHOT",
     "showFancyTitle": true,
-    "botVersion": "1.0",
-    "developmentMode": true,
-    "token": "xxxxxx",
-    "applicationId": "xxxxxx",
-    "defPrefix": "?",
-    "queuePaginationMaxElmsOnPage": 20,
-    "maxInactivityTimeMinutes": 5,
-    "maxVotingElapseTimeMinutes": 2
+    "developmentMode": false,
+    "authorization": {
+        "token": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "applicationId": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    "executors": {
+        "defPrefix": "?",
+        "queuePaginationMaxElmsOnPage": 20
+    },
+    "sequencers": {
+        "maxInactivityTimeMinutes": 5,
+        "maxInactivityTimeAfterPauseTrackMinutes": 10,
+        "maxVotingElapseTimeMinutes": 2
+    },
+    "miscellaneous": {
+        "logger": {
+            "loggerEnabled": true,
+            "loggerOutputFolderName": "dev-logs",
+            "loggerSensitivity": [
+                "INFO", "WARN", "ERROR", "DEBUG"
+            ],
+            "enableLoggedToStandardOutput": true,
+            "enableLoggedToFileOutput": true
+        }
+    }
 }

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2022 by MILOSZ GILGA <https://miloszgilga.pl>
  *
- * File name: LoggerRanks.java
- * Last modified: 16/07/2022, 19:17
+ * File name: MessageSendersConfiguration.java
+ * Last modified: 23/07/2022, 18:00
  * Project name: franek-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -16,20 +16,13 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga.franekbotapp.logger;
+package pl.miloszgilga.franekbotapp.configuration;
 
-import lombok.Getter;
+import lombok.Data;
 
 
-@Getter
-public enum LoggerRank {
-    INFO("INFO"),
-    WARN("WARN"),
-    ERROR("ERROR");
-
-    private final String rank;
-
-    LoggerRank(String rank) {
-        this.rank = rank;
-    }
+@Data
+public class CommandExecutorsConfiguration {
+    private String defPrefix;
+    private byte queuePaginationMaxElmsOnPage;
 }

@@ -2,7 +2,7 @@
  * Copyright (c) 2022 by MILOSZ GILGA <https://miloszgilga.pl>
  *
  * File name: ConfigurationLoader.java
- * Last modified: 22/07/2022, 21:40
+ * Last modified: 22/07/2022, 21:56
  * Project name: franek-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga.franekbotapp;
+package pl.miloszgilga.franekbotapp.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -42,7 +42,7 @@ public class ConfigurationLoader {
         config = objectMapper.readValue(new String(configFile.readAllBytes()), Configuration.class);
     }
 
-    static void checkIfItsDevelopmentVersion(String[] args) throws IOException {
+    public static void checkIfItsDevelopmentVersion(String[] args) throws IOException {
         if (args.length == 0) {
             loadConfiguration(PROD_CONFIG_FILE);
             System.out.format("Aplikacja uruchamiana jest w wersji PRODUKCYJNEJ. Zawartość " +

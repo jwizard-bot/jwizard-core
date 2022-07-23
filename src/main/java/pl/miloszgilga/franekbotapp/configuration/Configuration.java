@@ -2,7 +2,7 @@
  * Copyright (c) 2022 by MILOSZ GILGA <https://miloszgilga.pl>
  *
  * File name: Configuration.java
- * Last modified: 16/07/2022, 01:42
+ * Last modified: 22/07/2022, 22:09
  * Project name: franek-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -16,19 +16,34 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga.franekbotapp;
+package pl.miloszgilga.franekbotapp.configuration;
 
 import lombok.Data;
+
 
 @Data
 public class Configuration {
     private boolean showFancyTitle;
     private String botVersion;
     private boolean developmentMode;
-    private String token;
-    private String applicationId;
-    private String defPrefix;
-    private byte queuePaginationMaxElmsOnPage;
-    private byte maxInactivityTimeMinutes;
-    private byte maxVotingElapseTimeMinutes;
+    private AuthorizationConfiguration authorization;
+    private CommandExecutorsConfiguration executors;
+    private SequencersConfiguration sequencers;
+    private MiscellaneousConfiguration miscellaneous;
+
+    public String getPrefix() {
+        return executors.getDefPrefix();
+    }
+
+    public byte getMaxVotingElapseTimeMinutes() {
+        return sequencers.getMaxVotingElapseTimeMinutes();
+    }
+
+    public byte getQueuePaginationMaxElmsOnPage() {
+        return executors.getQueuePaginationMaxElmsOnPage();
+    }
+
+    public byte getMaxInactivityTimeMinutes() {
+        return sequencers.getMaxInactivityTimeMinutes();
+    }
 }
