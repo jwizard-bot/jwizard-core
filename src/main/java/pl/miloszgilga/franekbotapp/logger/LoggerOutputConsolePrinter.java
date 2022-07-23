@@ -24,6 +24,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.text.SimpleDateFormat;
 
+import pl.miloszgilga.franekbotapp.configuration.LoggerRank;
+
 
 public class LoggerOutputConsolePrinter implements ILoggerOutputPrinter {
 
@@ -33,6 +35,7 @@ public class LoggerOutputConsolePrinter implements ILoggerOutputPrinter {
     private static final String ANSI_GREEN = "\033[0;32m";
     private static final String ANSI_YELLOW = "\033[0;33m";
     private static final String ANSI_RED = "\033[0;31m";
+    private static final String ANSI_PURPLE = "\033[0;35m";
     private static final String ANSI_CYAN = "\033[0;36m";
 
     @Override
@@ -50,6 +53,7 @@ public class LoggerOutputConsolePrinter implements ILoggerOutputPrinter {
             case INFO: return ANSI_GREEN;
             case WARN: return ANSI_YELLOW;
             case ERROR: return ANSI_RED;
+            case DEBUG: return ANSI_PURPLE;
         }
         return ANSI_RESET;
     }
