@@ -1,7 +1,7 @@
 {
     "botVersion": "1.0-SNAPSHOT",
     "showFancyTitle": true,
-    "developmentMode": false,
+    "developmentMode": true,
     "authorization": {
         "token": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
         "applicationId": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
