@@ -3,8 +3,8 @@
     "showFancyTitle": true,
     "developmentMode": false,
     "authorization": {
-        "token": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-        "applicationId": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        "token": "xxxx",
+        "applicationId": "xxxx"
     },
     "executors": {
         "defPrefix": "$",
