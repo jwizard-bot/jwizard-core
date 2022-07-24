@@ -19,6 +19,7 @@
 package pl.miloszgilga.franekbotapp.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 
 import java.io.InputStream;
 import java.io.IOException;
@@ -40,12 +41,14 @@ public class ConfigurationLoader {
             throw new FileNotFoundException(String.format("Plik konfiguracyjny %s nie istnieje!", configJSON));
         }
         config = objectMapper.readValue(new String(configFile.readAllBytes()), Configuration.class);
+        final LoggerFactory logger = new LoggerFactory(ConfigurationLoader.class);
+        logger.debug(String.format("Konfiguracja z pliku '%s' załadowana pomyślnie", configJSON), null);
     }
 
     public static void checkIfItsDevelopmentVersion(String[] args) throws IOException {
         if (args.length == 0) {
             loadConfiguration(PROD_CONFIG_FILE);
-            System.out.format("Aplikacja uruchamiana jest w wersji PRODUKCYJNEJ. Zawartość " +
+            System.out.format("%nAplikacja uruchamiana jest w wersji PRODUKCYJNEJ. Zawartość " +
                     "konfiguracyjna pobierana jest z pliku %s.%n", PROD_CONFIG_FILE);
             return;
         }
@@ -53,7 +56,7 @@ public class ConfigurationLoader {
             throw new IllegalArgumentException(String.format("Poprawny argument wejściowy to %s", DEV_INPUT_ARG));
         }
         loadConfiguration(DEV_CONFIG_FILE);
-        System.out.format("Aplikacja uruchamiana jest w wersji DEWELOPERSKIEJ. Zawartość " +
+        System.out.format("%nAplikacja uruchamiana jest w wersji DEWELOPERSKIEJ. Zawartość " +
                 "konfiguracyjna pobierana jest z pliku %s.%n", DEV_CONFIG_FILE);
     }
 }
