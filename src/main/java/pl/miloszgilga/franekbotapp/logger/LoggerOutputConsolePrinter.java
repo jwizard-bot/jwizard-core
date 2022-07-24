@@ -31,30 +31,13 @@ public class LoggerOutputConsolePrinter implements ILoggerOutputPrinter {
 
     private final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-    private static final String ANSI_RESET = "\u001B[0m";
-    private static final String ANSI_GREEN = "\033[0;32m";
-    private static final String ANSI_YELLOW = "\033[0;33m";
-    private static final String ANSI_RED = "\033[0;31m";
-    private static final String ANSI_PURPLE = "\033[0;35m";
-    private static final String ANSI_CYAN = "\033[0;36m";
-
     @Override
     public void loggerOutputPrinter(String message, LoggerRank rank, Guild guild, Class<?> authorClazz) {
         Date date = new Date();
-        System.out.print("[" + formatter.format(date) + "]\t");
-        System.out.format("%-20s", chooseColor(rank) + "[" + rank.getRank().toUpperCase(Locale.ROOT) + "]" + ANSI_RESET);
-        System.out.format("%-50s", ANSI_CYAN + "[" + authorClazz.getSimpleName() + "]" + ANSI_RESET);
-        System.out.format("%-35s", "[Serwer: " + guild.getName() + "]");
-        System.out.print(" : " + message + "\n");
-    }
-
-    private String chooseColor(LoggerRank rank) {
-        switch (rank) {
-            case INFO: return ANSI_GREEN;
-            case WARN: return ANSI_YELLOW;
-            case ERROR: return ANSI_RED;
-            case DEBUG: return ANSI_PURPLE;
-        }
-        return ANSI_RESET;
+        System.out.print("[" + formatter.format(date) + "] ");
+        System.out.format("[%-5s] ", rank.getRank().toUpperCase(Locale.ROOT));
+        System.out.format("[%s] ", authorClazz.getSimpleName());
+        System.out.format("[%s] ", "Serwer: " + (guild != null ? guild.getName() : "-"));
+        System.out.print(": " + message + "\n");
     }
 }

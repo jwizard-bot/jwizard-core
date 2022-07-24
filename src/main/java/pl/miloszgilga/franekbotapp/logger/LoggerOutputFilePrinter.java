@@ -42,6 +42,8 @@ public class LoggerOutputFilePrinter implements ILoggerOutputPrinter {
 
     @Override
     public void loggerOutputPrinter(String message, LoggerRank rank, Guild guild, Class<?> authorClazz) {
+        if (guild == null) return;
+
         Date date = new Date();
         PrintWriter out;
         try {
@@ -68,11 +70,11 @@ public class LoggerOutputFilePrinter implements ILoggerOutputPrinter {
                 out = new PrintWriter(fullLogFilePath);
             }
 
-            out.format("[" + formatter.format(date) + "]\t");
-            out.format("%-20s", "[" + rank.getRank().toUpperCase(Locale.ROOT) + "]");
-            out.format("%-50s", "[" + authorClazz.getSimpleName() + "]");
-            out.format("%-35s", "[Serwer: " + guild.getName() + "]");
-            out.print(" : " + message + "\n");
+            out.format("[" + formatter.format(date) + "] ");
+            out.format("[%-5s] ", rank.getRank().toUpperCase(Locale.ROOT));
+            out.format("[%s] ", authorClazz.getSimpleName());
+            out.format("[%s] ", "Serwer: " + guild.getName());
+            out.print(": " + message + "\n");
 
             out.close();
         } catch (Exception ex) {
