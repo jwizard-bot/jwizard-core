@@ -34,6 +34,7 @@ import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
 import pl.miloszgilga.franekbotapp.executorhandlers.ExecutorTimer;
 
+import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_RESUME;
 import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 
 
@@ -114,14 +115,22 @@ public class TrackScheduler extends AudioEventAdapter {
         if (alreadyDisplayed) return;
 
         final AudioTrackInfo info = audioPlayer.getPlayingTrack().getInfo();
-        final var embedMessage = new EmbedMessage("", String.format("Rozpoczynam odtwarzanie piosenki: **%s**.",
-                info.title), EmbedMessageColor.GREEN);
+        final EmbedMessage embedMessage;
+        if (audioPlayer.isPaused()) {
+            embedMessage = new EmbedMessage("", String.format(
+                    "Piosenka: **%s** została dodana do kolejki, lecz nie jest odtwarzana z uwagi na zatrzymany " +
+                            "odtwarzacz. Aby uruchomić odtwarzanie piosenki, wpisz `%s`.",
+                    info.title, config.getPrefix() + MUSIC_RESUME.getCommandName()
+            ), EmbedMessageColor.GREEN);
+        } else {
+            embedMessage = new EmbedMessage("", String.format("Rozpoczynam odtwarzanie piosenki: **%s**.",
+                    info.title), EmbedMessageColor.GREEN);
+            logger.info(String.format("Automatyczne odtwarzanie piosenki '%s' dodanej przez '%s'",
+                    info.title, event.getUser().getAsTag()), event.getGuild());
+        }
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
 
         if (repeating) alreadyDisplayed = true;
-
-        logger.info(String.format("Automatyczne odtwarzanie piosenki '%s' dodanej przez '%s'",
-                info.title, event.getUser().getAsTag()), event.getGuild());
     }
 
     @Override
