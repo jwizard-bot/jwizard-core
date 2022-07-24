@@ -39,7 +39,7 @@ public class PlayerManager {
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
     }
 
-    public MusicManager getMusicManager(CommandEvent event) {
+    public MusicManager getMusicManager(EventWrapper event) {
         return musicManagerMap.computeIfAbsent(event.getGuild().getIdLong(), guildId -> {
             final MusicManager musicManager = new MusicManager(audioPlayerManager, event);
             event.getGuild().getAudioManager().setSendingHandler(musicManager.getSendHandler());
@@ -47,7 +47,7 @@ public class PlayerManager {
         });
     }
 
-    public void loadAndPlay(CommandEvent event, String trackURL, boolean ifValidUri) {
+    public void loadAndPlay(EventWrapper event, String trackURL, boolean ifValidUri) {
         final MusicManager musicManager = getMusicManager(event);
         audioPlayerManager.loadItemOrdered(musicManager, trackURL, new AudioLoaderResult(event, ifValidUri, musicManager));
     }
