@@ -30,10 +30,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 
+import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 import pl.miloszgilga.franekbotapp.audioplayer.EventWrapper;
 import pl.miloszgilga.franekbotapp.audioplayer.MusicManager;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
-import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 
 import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 
