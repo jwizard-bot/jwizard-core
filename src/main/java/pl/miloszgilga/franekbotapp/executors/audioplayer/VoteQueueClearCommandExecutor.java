@@ -30,7 +30,7 @@ import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.audioplayer.QueueTrackExtendedInfo;
 import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
 import pl.miloszgilga.franekbotapp.exceptions.UnableAccessToInvokeCommandException;
-import pl.miloszgilga.franekbotapp.executors.executorhandlers.VoteCommandExecutingHandler;
+import pl.miloszgilga.franekbotapp.executorhandlers.VoteCommandExecutorHandler;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_VOTE_QUEUE_CLEAR;
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.VoteSkipTrackCommandExecutor.findVoiceChannelWithBotAndUser;
@@ -56,7 +56,7 @@ public class VoteQueueClearCommandExecutor extends Command {
             }
 
             final VoiceChannel voiceChannelWithBot = findVoiceChannelWithBotAndUser(event);
-            final var voteHandler = new VoteCommandExecutingHandler(event, voiceChannelWithBot,
+            final var voteHandler = new VoteCommandExecutorHandler(event, voiceChannelWithBot,
                     "kolejka wyczyszczona", "wyczyszczenie kolejki", "kolejka niewyczyszczona");
 
             if (voteHandler.voteCommandExecutor()) {

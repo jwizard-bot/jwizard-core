@@ -32,7 +32,7 @@ import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
 import pl.miloszgilga.franekbotapp.exceptions.UserOnVoiceChannelNotFoundException;
 import pl.miloszgilga.franekbotapp.exceptions.AttemptToRevoteSkippingSongException;
-import pl.miloszgilga.franekbotapp.executors.executorhandlers.VoteCommandExecutingHandler;
+import pl.miloszgilga.franekbotapp.executorhandlers.VoteCommandExecutorHandler;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_VOTE_SKIP;
 
@@ -57,7 +57,7 @@ public class VoteSkipTrackCommandExecutor extends Command {
                 throw new EmptyAudioQueueException(event);
             }
 
-            final var voteHandler = new VoteCommandExecutingHandler(event, voiceChannelWithBot,
+            final var voteHandler = new VoteCommandExecutorHandler(event, voiceChannelWithBot,
                     "piosenka pominięta", "pominięcie piosenki", "piosenka niepominięta");
             if (voteHandler.voteCommandExecutor()) {
                 playerManager.getMusicManager(event).getScheduler().setRepeating(false);

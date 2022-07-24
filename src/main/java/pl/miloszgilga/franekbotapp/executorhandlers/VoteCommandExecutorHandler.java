@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2022 by MILOSZ GILGA <https://miloszgilga.pl>
  *
- * File name: VoteCommandExecutingHandler.java
- * Last modified: 15/07/2022, 23:46
+ * File name: VoteCommandExecutorHandler.java
+ * Last modified: 24/07/2022, 17:45
  * Project name: franek-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga.franekbotapp.executors.executorhandlers;
+package pl.miloszgilga.franekbotapp.executorhandlers;
 
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.VoiceChannel;
@@ -33,7 +33,7 @@ import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.conf
 
 
 @Getter
-public class VoteCommandExecutingHandler {
+public class VoteCommandExecutorHandler {
 
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
@@ -48,8 +48,8 @@ public class VoteCommandExecutingHandler {
     private final Queue<String> usersAlreadyVoted = new PriorityQueue<>();
     private final List<String> usersVoted = new ArrayList<>();
 
-    public VoteCommandExecutingHandler(CommandEvent event, VoiceChannel voiceChannel, String votePassEmbedTitle,
-                                       String voteTakesEmbedTitle, String voteFailureEmbedTitle) {
+    public VoteCommandExecutorHandler(CommandEvent event, VoiceChannel voiceChannel, String votePassEmbedTitle,
+                                      String voteTakesEmbedTitle, String voteFailureEmbedTitle) {
         this.event = event;
         this.voiceChannel = voiceChannel;
         this.votePassEmbedTitle = votePassEmbedTitle.toUpperCase(Locale.ROOT);

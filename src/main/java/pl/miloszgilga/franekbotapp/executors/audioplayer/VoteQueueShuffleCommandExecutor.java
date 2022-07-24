@@ -28,7 +28,7 @@ import java.util.Queue;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.audioplayer.QueueTrackExtendedInfo;
 import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
-import pl.miloszgilga.franekbotapp.executors.executorhandlers.VoteCommandExecutingHandler;
+import pl.miloszgilga.franekbotapp.executorhandlers.VoteCommandExecutorHandler;
 import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_VOTE_SHUFFLE;
@@ -56,7 +56,7 @@ public class VoteQueueShuffleCommandExecutor extends Command {
             }
 
             final VoiceChannel voiceChannelWithBot = findVoiceChannelWithBotAndUser(event);
-            final var voteHandler = new VoteCommandExecutingHandler(event, voiceChannelWithBot,
+            final var voteHandler = new VoteCommandExecutorHandler(event, voiceChannelWithBot,
                     "kolejka przetasowana", "przetasowanie kolejki", "kolejka nieprzetasowana");
 
             if (voteHandler.voteCommandExecutor()) {
