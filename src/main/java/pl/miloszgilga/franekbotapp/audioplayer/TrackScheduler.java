@@ -128,17 +128,19 @@ public class TrackScheduler extends AudioEventAdapter {
             final var embedMessage = new EmbedMessage("", "Koniec kolejki odtwarzania.", EmbedMessageColor.RED);
             event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
             if (config.getMaxInactivityTimeMinutes() < 0) return;
-            executorTimer = new ExecutorTimer(config.getMaxInactivityTimeMinutes(), () -> {
-                final var leavingMessage = new EmbedMessage("", String.format(
-                        "W związku z brakiem aktywności przez %s minut opuszczam kanał głosowy. Z fartem.",
-                        config.getMaxInactivityTimeMinutes()), EmbedMessageColor.RED
-                );
-                event.getTextChannel().sendMessageEmbeds(leavingMessage.buildMessage()).queue();
-                event.getJda().getDirectAudioController().disconnect(event.getGuild());
-                logger.warn(String.format(
-                        "Automatyczne opuszczenie kanału głosowego przez bota po %s minutach nieaktywności",
-                        config.getMaxInactivityTimeMinutes()), event.getGuild());
-            });
+            if (executorTimer == null) {
+                executorTimer = new ExecutorTimer(config.getMaxInactivityTimeMinutes(), () -> {
+                    final var leavingMessage = new EmbedMessage("", String.format(
+                            "W związku z brakiem aktywności przez %s minut opuszczam kanał głosowy. Z fartem.",
+                            config.getMaxInactivityTimeMinutes()), EmbedMessageColor.RED
+                    );
+                    event.getTextChannel().sendMessageEmbeds(leavingMessage.buildMessage()).queue();
+                    event.getJda().getDirectAudioController().disconnect(event.getGuild());
+                    logger.warn(String.format(
+                            "Automatyczne opuszczenie kanału głosowego przez bota po %s minutach nieaktywności",
+                            config.getMaxInactivityTimeMinutes()), event.getGuild());
+                });
+            }
             executorTimer.execute();
             return;
         }
