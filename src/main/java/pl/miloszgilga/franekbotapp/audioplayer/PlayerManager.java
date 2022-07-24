@@ -18,8 +18,7 @@
 
 package pl.miloszgilga.franekbotapp.audioplayer;
 
-import com.jagrosh.jdautilities.command.CommandEvent;
-
+import org.apache.http.client.config.RequestConfig;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -30,6 +29,8 @@ import java.util.HashMap;
 
 public class PlayerManager {
 
+    private final int CONNECTION_REFUSED = 10000;
+
     private static PlayerManager playerManager;
     private final Map<Long, MusicManager> musicManagerMap = new HashMap<>();
     private final AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
@@ -37,6 +38,8 @@ public class PlayerManager {
     private PlayerManager() {
         AudioSourceManagers.registerRemoteSources(audioPlayerManager);
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
+        audioPlayerManager.setHttpRequestConfigurator((config) ->
+                RequestConfig.copy(config).setConnectTimeout(CONNECTION_REFUSED).build());
     }
 
     public MusicManager getMusicManager(EventWrapper event) {
