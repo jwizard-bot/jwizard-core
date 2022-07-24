@@ -76,10 +76,10 @@ public class FranekBot {
 
     private static Command[] reflectAllCommandExecutors() {
         final LoggerFactory logger = new LoggerFactory(FranekBot.class);
-        Reflections reflections = new Reflections(EXECUTORS_PACKAGE);
+        final Reflections reflections = new Reflections(EXECUTORS_PACKAGE);
 
-        Set<Class<? extends Command>> executorsClazz = reflections.getSubTypesOf(Command.class);
-        Set<Command> executors = new HashSet<>();
+        final Set<Class<? extends Command>> executorsClazz = reflections.getSubTypesOf(Command.class);
+        final Set<Command> executors = new HashSet<>();
         executorsClazz.forEach(clazz -> {
             try {
                 executors.add(clazz.getDeclaredConstructor().newInstance());
