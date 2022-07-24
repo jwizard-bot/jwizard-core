@@ -18,19 +18,22 @@
 
 package pl.miloszgilga.franekbotapp;
 
+import org.reflections.Reflections;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import com.jagrosh.jdautilities.command.Command;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 
+import java.util.Set;
+import java.util.HashSet;
 import java.io.IOException;
 import javax.security.auth.login.LoginException;
 
-import pl.miloszgilga.franekbotapp.executors.audioplayer.*;
-import pl.miloszgilga.franekbotapp.executors.misc.ShowServerInfoCommandExecutor;
 import pl.miloszgilga.franekbotapp.interceptors.MismatchCommandInterceptor;
 import pl.miloszgilga.franekbotapp.interceptors.ServerBotDeafenInterceptor;
+import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.HELP_ME;
 import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
@@ -40,6 +43,7 @@ import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.chec
 public class FranekBot {
 
     private static final FancyTitleGenerator generator = FancyTitleGenerator.getSingleton();
+    private static final String EXECUTORS_PACKAGE = "pl.miloszgilga.franekbotapp.executors";
 
     public static void main(String[] args) throws LoginException, IOException {
         checkIfItsDevelopmentVersion(args);
@@ -55,20 +59,7 @@ public class FranekBot {
         builder.setPrefix(config.getPrefix());
         builder.setOwnerId(BOT_ID);
         builder.setHelpWord(HELP_ME.getCommandName());
-        builder.addCommands(
-                new PlayTrackCommandExecutor(),
-                new SkipTrackCommandExecutor(),
-                new PauseTrackCommandExecutor(),
-                new ResumeTrackCommandExecutor(),
-                new RepeatTrackCommandExecutor(),
-                new ShowAllQueueCommandExecutor(),
-                new VoteSkipTrackCommandExecutor(),
-                new SetTrackVolumeCommandExecutor(),
-                new ShowServerInfoCommandExecutor(),
-                new VoteQueueClearCommandExecutor(),
-                new VoteQueueShuffleCommandExecutor(),
-                new MoveBotToVoiceChannelCommandExecutor()
-        );
+        builder.addCommands(reflectAllCommandExecutors());
 
         JDABuilder
                 .createDefault(BOT_TOKEN)
@@ -81,5 +72,25 @@ public class FranekBot {
                         new ServerBotDeafenInterceptor()
                 )
                 .build();
+    }
+
+    private static Command[] reflectAllCommandExecutors() {
+        final LoggerFactory logger = new LoggerFactory(FranekBot.class);
+        Reflections reflections = new Reflections(EXECUTORS_PACKAGE);
+
+        Set<Class<? extends Command>> executorsClazz = reflections.getSubTypesOf(Command.class);
+        Set<Command> executors = new HashSet<>();
+        executorsClazz.forEach(clazz -> {
+            try {
+                executors.add(clazz.getDeclaredConstructor().newInstance());
+                logger.debug(String.format("Egzekutor '%s' załadowany pomyślnie poprzez mechanizm refleksji",
+                        clazz.getSimpleName()), null);
+            } catch (Exception ignored) {
+                logger.error(String.format("Wystąpił problem z załadowaniem egzekutora '%s' poprzez mechanizm refleksji",
+                        clazz.getSimpleName()), null);
+            }
+        });
+
+        return executors.toArray(Command[]::new);
     }
 }
