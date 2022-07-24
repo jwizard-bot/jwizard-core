@@ -26,14 +26,13 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 import pl.miloszgilga.franekbotapp.audioplayer.EventWrapper;
 import pl.miloszgilga.franekbotapp.audioplayer.MusicManager;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
+import pl.miloszgilga.franekbotapp.executorhandlers.ExecutorTimer;
 
 import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 
@@ -44,18 +43,14 @@ public class ServerBotVoiceChannelListener extends ListenerAdapter {
     private final LoggerFactory logger = new LoggerFactory(ServerBotVoiceChannelListener.class);
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
-    private final Timer timer = new Timer();
-    private TimerTask timerTask;
+    private ExecutorTimer executorTimer;
 
     @Override
     public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event) {
         Optional<Member> botMember = event.getChannelJoined().getMembers().stream()
                 .filter(member -> member.getUser().isBot()).findFirst();
         botMember.ifPresent(member -> member.deafen(true).complete());
-        if (timerTask == null) return;
-
-        timerTask.cancel();
-        timer.cancel();
+        if (executorTimer != null) executorTimer.interrupt();
     }
 
     @Override
@@ -66,9 +61,8 @@ public class ServerBotVoiceChannelListener extends ListenerAdapter {
                 .filter(member -> !member.getUser().isBot())
                 .collect(Collectors.toList());
         if (allChannelMembersWithoutBot.isEmpty() && event.getChannelLeft().getMembers().contains(botMember)) {
-            timerTask = new TimerTask() {
-                @Override
-                public void run() {
+            if (executorTimer == null) {
+                executorTimer = new ExecutorTimer(ELAPSE_TIME, () -> {
                     final MusicManager musicManager = playerManager.getMusicManager(eventWrapper);
                     event.getJDA().getDirectAudioController().disconnect(event.getGuild());
                     musicManager.getAudioPlayer().stopTrack();
@@ -77,9 +71,9 @@ public class ServerBotVoiceChannelListener extends ListenerAdapter {
                             "Opuszczenie kanału głosowego '%s' w wyniku braku aktywnych użytkowników przez '%s' minut",
                             event.getChannelLeft().getName(), ELAPSE_TIME
                     ), null);
-                }
-            };
-            timer.schedule(timerTask, ELAPSE_TIME * 60 * 1000);
+                });
+            }
+            executorTimer.execute();
         }
     }
 }
