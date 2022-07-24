@@ -19,7 +19,6 @@
 package pl.miloszgilga.franekbotapp.audioplayer;
 
 import lombok.Getter;
-import com.jagrosh.jdautilities.command.CommandEvent;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
@@ -44,6 +43,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     private final EventWrapper event;
     private final AudioPlayer audioPlayer;
+    private AudioTrack pausedTrack;
     private final Queue<QueueTrackExtendedInfo> queue = new LinkedList<>();
 
     private boolean repeating = false;
@@ -68,8 +68,10 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onPlayerPause(AudioPlayer player) {
+        if (audioPlayer.getPlayingTrack() == null) return;
+
         final AudioTrackInfo info = audioPlayer.getPlayingTrack().getInfo();
-        if (!audioPlayer.isPaused()) return;
+        pausedTrack = audioPlayer.getPlayingTrack();
 
         final var embedMessage = new EmbedMessage("", String.format(
                 "Zatrzymałem odtwarzanie piosenki: **%s**.", info.title), EmbedMessageColor.GREEN);
@@ -81,8 +83,10 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onPlayerResume(AudioPlayer player) {
+        if (pausedTrack == null) return;
+
         final AudioTrackInfo info = audioPlayer.getPlayingTrack().getInfo();
-        if (audioPlayer.isPaused()) return;
+        pausedTrack = null;
 
         final var embedMessage = new EmbedMessage("", String.format(
                 "Ponawiam odtwarzanie piosenki: **%s**.", info.title), EmbedMessageColor.GREEN);

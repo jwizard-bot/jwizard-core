@@ -24,6 +24,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
+import pl.miloszgilga.franekbotapp.audioplayer.EventWrapper;
 import pl.miloszgilga.franekbotapp.audioplayer.MusicManager;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
@@ -48,14 +49,19 @@ public class PauseTrackCommandExecutor extends Command {
     protected void execute(CommandEvent event) {
         try {
             checkIfActionEventInvokeBySender(event);
-            playerManager.getMusicManager(event).getAudioPlayer().setPaused(true);
+            final MusicManager musicManager = playerManager.getMusicManager(new EventWrapper(event));
+            if (musicManager.getAudioPlayer().getPlayingTrack() == null) return;
+
+            musicManager.getAudioPlayer().setPaused(true);
         } catch (EmptyAudioQueueException | UnableAccessToInvokeCommandException ex) {
             logger.warn(ex.getMessage(), event.getGuild());
         }
     }
 
     static void checkIfActionEventInvokeBySender(CommandEvent event) {
-        final MusicManager musicManager = playerManager.getMusicManager(event);
+        final MusicManager musicManager = playerManager.getMusicManager(new EventWrapper(event));
+        if (musicManager.getAudioPlayer().getPlayingTrack() == null) return;
+
         final Member senderUserMember = event.getGuild().getMember(event.getAuthor());
         final Member songAddedMember = ((Member)musicManager.getAudioPlayer().getPlayingTrack().getUserData());
         if (musicManager.getAudioPlayer().getPlayingTrack() == null) {
