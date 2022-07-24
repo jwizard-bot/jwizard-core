@@ -32,7 +32,7 @@ import java.io.IOException;
 import javax.security.auth.login.LoginException;
 
 import pl.miloszgilga.franekbotapp.interceptors.MismatchCommandInterceptor;
-import pl.miloszgilga.franekbotapp.interceptors.ServerBotDeafenInterceptor;
+import pl.miloszgilga.franekbotapp.interceptors.ServerBotVoiceChannelListener;
 import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.HELP_ME;
@@ -69,7 +69,7 @@ public class FranekBot {
                 .addEventListeners(
                         builder.build(),
                         new MismatchCommandInterceptor(),
-                        new ServerBotDeafenInterceptor()
+                        new ServerBotVoiceChannelListener()
                 )
                 .build();
     }
