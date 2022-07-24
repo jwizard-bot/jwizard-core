@@ -3,7 +3,7 @@
     <appender name="MAIN" class="org.apache.log4j.ConsoleAppender">
         <param name="Target" value="System.out"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="[%d{dd/MM/yyyy HH:mm:ss}] [%-5p] [%c{1}] [Server: -] : %m%n"/>
+            <param name="ConversionPattern" value="[%d{dd/MM/yyyy HH:mm:ss}] [%-5p] [%c{1}] [Serwer: -] : %m%n"/>
         </layout>
     </appender>
     <root>
