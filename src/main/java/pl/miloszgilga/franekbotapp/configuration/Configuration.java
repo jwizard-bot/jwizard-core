@@ -46,4 +46,8 @@ public class Configuration {
     public byte getMaxInactivityTimeMinutes() {
         return sequencers.getMaxInactivityTimeMinutes();
     }
+
+    public byte getMaxInactivityTimeAfterPauseTrackMinutes() {
+        return sequencers.getMaxInactivityTimeAfterPauseTrackMinutes();
+    }
 }
