@@ -73,7 +73,7 @@ public class LoggerOutputFilePrinter implements ILoggerOutputPrinter {
             out.format("[" + formatter.format(date) + "] ");
             out.format("[%-5s] ", rank.getRank().toUpperCase(Locale.ROOT));
             out.format("[%s] ", authorClazz.getSimpleName());
-            out.format("[%s] ", "Serwer: " + guild.getName());
+            out.format("[Serwer: %s] ", guild.getName());
             out.print(": " + message + "\n");
 
             out.close();
