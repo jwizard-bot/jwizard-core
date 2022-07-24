@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 import java.util.concurrent.TimeUnit;
 
 import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
+import pl.miloszgilga.franekbotapp.audioplayer.EventWrapper;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
 import pl.miloszgilga.franekbotapp.audioplayer.QueueTrackExtendedInfo;
@@ -56,7 +57,8 @@ public class ShowAllQueueCommandExecutor extends Command {
     @Description("command: <[prefix]queue>")
     protected void execute(CommandEvent event) {
         try {
-            final Queue<QueueTrackExtendedInfo> queue = playerManager.getMusicManager(event).getScheduler().getQueue();
+            final Queue<QueueTrackExtendedInfo> queue = playerManager.getMusicManager(new EventWrapper(event))
+                    .getScheduler().getQueue();
             if (queue.isEmpty()) {
                 throw new EmptyAudioQueueException(event);
             }

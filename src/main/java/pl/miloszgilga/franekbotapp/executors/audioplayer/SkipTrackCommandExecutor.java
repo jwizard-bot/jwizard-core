@@ -27,6 +27,7 @@ import java.util.Queue;
 
 import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
+import pl.miloszgilga.franekbotapp.audioplayer.EventWrapper;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
 import pl.miloszgilga.franekbotapp.audioplayer.QueueTrackExtendedInfo;
@@ -52,8 +53,9 @@ public class SkipTrackCommandExecutor extends Command {
     @Description("command: <[prefix]skip>")
     protected void execute(CommandEvent event) {
         try {
-            final Queue<QueueTrackExtendedInfo> queue = playerManager.getMusicManager(event).getScheduler().getQueue();
-            if (playerManager.getMusicManager(event).getAudioPlayer().getPlayingTrack() == null) {
+            final var eventWrapper = new EventWrapper(event);
+            final Queue<QueueTrackExtendedInfo> queue = playerManager.getMusicManager(eventWrapper).getScheduler().getQueue();
+            if (playerManager.getMusicManager(eventWrapper).getAudioPlayer().getPlayingTrack() == null) {
                 throw new EmptyAudioQueueException(event);
             }
 
@@ -63,16 +65,16 @@ public class SkipTrackCommandExecutor extends Command {
             final var embedMessage = new EmbedMessage("", "Pominięto piosenkę.",
                     EmbedMessageColor.GREEN);
             event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
-            playerManager.getMusicManager(event).getScheduler().setRepeating(false);
+            playerManager.getMusicManager(eventWrapper).getScheduler().setRepeating(false);
 
-            final AudioTrackInfo audioTrackInfo = playerManager.getMusicManager(event).getAudioPlayer()
+            final AudioTrackInfo audioTrackInfo = playerManager.getMusicManager(eventWrapper).getAudioPlayer()
                     .getPlayingTrack().getInfo();
             logger.info(String.format("Odtwarzanie piosenki '%s' zostało pominięte przez dodającego '%s'",
                     audioTrackInfo.title, event.getAuthor().getAsTag()), event.getGuild());
             if (queue.isEmpty()) {
-                playerManager.getMusicManager(event).getAudioPlayer().stopTrack();
+                playerManager.getMusicManager(eventWrapper).getAudioPlayer().stopTrack();
             } else {
-                playerManager.getMusicManager(event).getScheduler().nextTrack();
+                playerManager.getMusicManager(eventWrapper).getScheduler().nextTrack();
             }
         } catch (EmptyAudioQueueException | UnableAccessToInvokeCommandException ex) {
             logger.warn(ex.getMessage(), event.getGuild());

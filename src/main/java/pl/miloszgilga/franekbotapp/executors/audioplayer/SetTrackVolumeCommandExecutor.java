@@ -25,6 +25,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 
 import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
+import pl.miloszgilga.franekbotapp.audioplayer.EventWrapper;
 import pl.miloszgilga.franekbotapp.audioplayer.MusicManager;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
@@ -63,8 +64,9 @@ public class SetTrackVolumeCommandExecutor extends Command {
                         "`%s [poziom głośności 0-150]`", config.getPrefix() + MUSIC_VOLUME.getCommandName()));
             }
 
-            final MusicManager musicManager = playerManager.getMusicManager(event);
-            final AudioPlayer audioPlayer = playerManager.getMusicManager(event).getAudioPlayer();
+            final var eventWrapper = new EventWrapper(event);
+            final MusicManager musicManager = playerManager.getMusicManager(eventWrapper);
+            final AudioPlayer audioPlayer = playerManager.getMusicManager(eventWrapper).getAudioPlayer();
             if (musicManager.getAudioPlayer().getPlayingTrack() == null) {
                 throw new EmptyAudioQueueException(event);
             }

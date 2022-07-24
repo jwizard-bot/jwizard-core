@@ -21,7 +21,6 @@ package pl.miloszgilga.franekbotapp.audioplayer;
 import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import com.jagrosh.jdautilities.command.CommandEvent;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
@@ -43,26 +42,26 @@ class AudioLoaderResult implements AudioLoadResultHandler {
 
     private final LoggerFactory logger = new LoggerFactory(AudioLoaderResult.class);
 
-    private final CommandEvent event;
+    private final EventWrapper event;
     private final boolean ifValidUri;
     private final MusicManager musicManager;
 
     @Override
     public void trackLoaded(AudioTrack audioTrack) {
-        final Member senderUser = event.getGuild().getMember(event.getAuthor());
+        final Member senderUser = event.getGuild().getMember(event.getUser());
         audioTrack.setUserData(senderUser);
         musicManager.getScheduler().queue(new QueueTrackExtendedInfo(senderUser, audioTrack));
         if (!musicManager.getScheduler().getQueue().isEmpty()) {
             onSingleTrackLoadedSendEmbedMessage(audioTrack);
             logger.info(String.format("Użytkownik '%s' dodał nową piosenkę do kolejki '%s'",
-                    event.getAuthor().getAsTag(), audioTrack.getInfo().title), event.getGuild());
+                    event.getUser().getAsTag(), audioTrack.getInfo().title), event.getGuild());
         }
     }
 
     @Override
     public void playlistLoaded(AudioPlaylist audioPlaylist) {
         final List<AudioTrack> trackList = audioPlaylist.getTracks();
-        final Member senderUser = event.getGuild().getMember(event.getAuthor());
+        final Member senderUser = event.getGuild().getMember(event.getUser());
         if (trackList.isEmpty()) {
             return;
         }
@@ -73,14 +72,14 @@ class AudioLoaderResult implements AudioLoadResultHandler {
                 musicManager.getScheduler().queue(new QueueTrackExtendedInfo(senderUser, trackList.get(i)));
             }
             logger.info(String.format("Użytkownik '%s' dodał nową playlistę do kolejki składającą się z '%s' piosenek",
-                    event.getAuthor().getAsTag(), audioPlaylist.getTracks().size()), event.getGuild());
+                    event.getUser().getAsTag(), audioPlaylist.getTracks().size()), event.getGuild());
         } else {
             audioPlaylist.getTracks().get(0).setUserData(senderUser);
             musicManager.getScheduler().queue(new QueueTrackExtendedInfo(senderUser, audioPlaylist.getTracks().get(0)));
             if (!musicManager.getScheduler().getQueue().isEmpty()) {
                 onSingleTrackLoadedSendEmbedMessage(audioPlaylist.getTracks().get(0));
                 logger.info(String.format("Użytkownik '%s' dodał nową piosenkę do kolejki '%s'",
-                        event.getAuthor().getAsTag(), audioPlaylist.getTracks().get(0).getInfo().title), event.getGuild());
+                        event.getUser().getAsTag(), audioPlaylist.getTracks().get(0).getInfo().title), event.getGuild());
             }
         }
     }
@@ -92,7 +91,7 @@ class AudioLoaderResult implements AudioLoadResultHandler {
         );
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
         logger.error(String.format("Nie znaleziono piosenki z wprowadzonej przez '%s' podaną nazwą '%s'",
-                event.getAuthor().getAsTag(), event.getArgs()), event.getGuild());
+                event.getUser().getAsTag(), event.getArgs()), event.getGuild());
     }
 
     @Override
@@ -103,7 +102,7 @@ class AudioLoaderResult implements AudioLoadResultHandler {
         );
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
         logger.error(String.format("Wystąpił nieznany błąd podczas dodawania piosenki/playlisty przez '%s'",
-                event.getAuthor().getAsTag()), event.getGuild());
+                event.getUser().getAsTag()), event.getGuild());
     }
 
     private void onSingleTrackLoadedSendEmbedMessage(AudioTrack track) {
@@ -115,7 +114,7 @@ class AudioLoaderResult implements AudioLoadResultHandler {
         embedBuilder.addField("Czas trwania:", convertMilisToDateFormat(track.getDuration()), true);
         embedBuilder.addField("Pozycja w kolejce:", musicManager.getScheduler().queueTrackPositionBaseId(), true);
         embedBuilder.addBlankField(true);
-        embedBuilder.addField("Dodana przez:", event.getAuthor().getName(), true);
+        embedBuilder.addField("Dodana przez:", event.getUser().getName(), true);
         event.getTextChannel().sendMessageEmbeds(embedBuilder.build()).queue();
     }
 
@@ -127,7 +126,7 @@ class AudioLoaderResult implements AudioLoadResultHandler {
         embedBuilder.addField("Ilość piosenek:", Integer.toString(playlist.getTracks().size()), true);
         embedBuilder.addBlankField(true);
         embedBuilder.addField("Całkowity czas trwania:", convertMilisToDateFormat(maxQueueMilis), true);
-        embedBuilder.addField("Dodana przez:", event.getAuthor().getName(), true);
+        embedBuilder.addField("Dodana przez:", event.getUser().getName(), true);
         event.getTextChannel().sendMessageEmbeds(embedBuilder.build()).queue();
     }
 }

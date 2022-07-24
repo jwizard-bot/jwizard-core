@@ -26,6 +26,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
 import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
+import pl.miloszgilga.franekbotapp.audioplayer.EventWrapper;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
 import pl.miloszgilga.franekbotapp.audioplayer.TrackScheduler;
@@ -53,7 +54,7 @@ public class RepeatTrackCommandExecutor extends Command {
     @Description("command: <[prefix]loop>")
     protected void execute(CommandEvent event) {
         try {
-            final TrackScheduler trackScheduler = playerManager.getMusicManager(event).getScheduler();
+            final TrackScheduler trackScheduler = playerManager.getMusicManager(new EventWrapper(event)).getScheduler();
             if (trackScheduler.getAudioPlayer().getPlayingTrack() == null) {
                 throw new EmptyAudioQueueException(event);
             }

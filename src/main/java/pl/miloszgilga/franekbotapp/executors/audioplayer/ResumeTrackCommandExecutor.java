@@ -23,6 +23,8 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
+import pl.miloszgilga.franekbotapp.audioplayer.MusicManager;
+import pl.miloszgilga.franekbotapp.audioplayer.EventWrapper;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
 import pl.miloszgilga.franekbotapp.exceptions.UnableAccessToInvokeCommandException;
@@ -46,7 +48,10 @@ public class ResumeTrackCommandExecutor extends Command {
     protected void execute(CommandEvent event) {
         try {
             checkIfActionEventInvokeBySender(event);
-            playerManager.getMusicManager(event).getAudioPlayer().setPaused(false);
+            final MusicManager musicManager = playerManager.getMusicManager(new EventWrapper(event));
+            if (musicManager.getScheduler().getPausedTrack() == null) return;
+
+            musicManager.getAudioPlayer().setPaused(false);
         } catch (EmptyAudioQueueException | UnableAccessToInvokeCommandException ex) {
             logger.warn(ex.getMessage(), event.getGuild());
         }

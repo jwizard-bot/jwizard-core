@@ -27,6 +27,7 @@ import java.util.*;
 import jdk.jfr.Description;
 
 import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
+import pl.miloszgilga.franekbotapp.audioplayer.EventWrapper;
 import pl.miloszgilga.franekbotapp.audioplayer.MusicManager;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
@@ -51,7 +52,8 @@ public class VoteSkipTrackCommandExecutor extends Command {
     @Description("command: <[prefix]voteskip>")
     protected void execute(CommandEvent event) {
         try {
-            final MusicManager musicManager = playerManager.getMusicManager(event);
+            final var eventWrapper = new EventWrapper(event);
+            final MusicManager musicManager = playerManager.getMusicManager(eventWrapper);
             final VoiceChannel voiceChannelWithBot = findVoiceChannelWithBotAndUser(event);
             if (musicManager.getAudioPlayer().getPlayingTrack() == null) {
                 throw new EmptyAudioQueueException(event);
@@ -60,9 +62,9 @@ public class VoteSkipTrackCommandExecutor extends Command {
             final var voteHandler = new VoteCommandExecutorHandler(event, voiceChannelWithBot,
                     "piosenka pominięta", "pominięcie piosenki", "piosenka niepominięta");
             if (voteHandler.voteCommandExecutor()) {
-                playerManager.getMusicManager(event).getScheduler().setRepeating(false);
+                playerManager.getMusicManager(eventWrapper).getScheduler().setRepeating(false);
                 logger.info(String.format("Piosenka '%s' w wyniku głosowania użytkowników '%s' została pominięta",
-                        playerManager.getMusicManager(event).getAudioPlayer().getPlayingTrack().getInfo().title,
+                        playerManager.getMusicManager(eventWrapper).getAudioPlayer().getPlayingTrack().getInfo().title,
                         voteHandler.allVotedUsers()), event.getGuild());
                 if (musicManager.getScheduler().getQueue().isEmpty()) {
                     musicManager.getAudioPlayer().stopTrack();

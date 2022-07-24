@@ -25,11 +25,12 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 
 import java.util.Queue;
 
+import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
+import pl.miloszgilga.franekbotapp.audioplayer.EventWrapper;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.audioplayer.QueueTrackExtendedInfo;
 import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
 import pl.miloszgilga.franekbotapp.executorhandlers.VoteCommandExecutorHandler;
-import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_VOTE_SHUFFLE;
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.ShowAllQueueCommandExecutor.showQueueElementsInEmbedMessage;
@@ -50,7 +51,8 @@ public class VoteQueueShuffleCommandExecutor extends Command {
     @Description("command: <[prefix]voteshuffle>")
     protected void execute(CommandEvent event) {
         try {
-            final Queue<QueueTrackExtendedInfo> queue = playerManager.getMusicManager(event).getScheduler().getQueue();
+            final var eventWrapper = new EventWrapper(event);
+            final Queue<QueueTrackExtendedInfo> queue = playerManager.getMusicManager(eventWrapper).getScheduler().getQueue();
             if (queue.isEmpty()) {
                 throw new EmptyAudioQueueException(event);
             }
@@ -60,7 +62,7 @@ public class VoteQueueShuffleCommandExecutor extends Command {
                     "kolejka przetasowana", "przetasowanie kolejki", "kolejka nieprzetasowana");
 
             if (voteHandler.voteCommandExecutor()) {
-                playerManager.getMusicManager(event).getScheduler().queueShuffle();
+                playerManager.getMusicManager(eventWrapper).getScheduler().queueShuffle();
                 showQueueElementsInEmbedMessage(event, queue);
                 logger.info(String.format("Kolejka piosenek w wyniku głosowania użytkowników '%s' została przetasowana",
                         voteHandler.allVotedUsers()), event.getGuild());

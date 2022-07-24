@@ -26,6 +26,7 @@ import java.util.Queue;
 
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
+import pl.miloszgilga.franekbotapp.audioplayer.EventWrapper;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
 import pl.miloszgilga.franekbotapp.audioplayer.QueueTrackExtendedInfo;
 import pl.miloszgilga.franekbotapp.exceptions.EmptyAudioQueueException;
@@ -50,7 +51,8 @@ public class VoteQueueClearCommandExecutor extends Command {
     @Description("command: <[prefix]voteclqueue>")
     protected void execute(CommandEvent event) {
         try {
-            final Queue<QueueTrackExtendedInfo> queue = playerManager.getMusicManager(event).getScheduler().getQueue();
+            final Queue<QueueTrackExtendedInfo> queue = playerManager.getMusicManager(new EventWrapper(event))
+                    .getScheduler().getQueue();
             if (queue.isEmpty()) {
                 throw new EmptyAudioQueueException(event);
             }

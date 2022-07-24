@@ -42,7 +42,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     private final LoggerFactory logger = new LoggerFactory(TrackScheduler.class);
 
-    private final CommandEvent event;
+    private final EventWrapper event;
     private final AudioPlayer audioPlayer;
     private final Queue<QueueTrackExtendedInfo> queue = new LinkedList<>();
 
@@ -50,7 +50,7 @@ public class TrackScheduler extends AudioEventAdapter {
     private boolean alreadyDisplayed = false;
     private Thread countingToLeaveTheChannel;
 
-    TrackScheduler(AudioPlayer audioPlayer, CommandEvent event) {
+    TrackScheduler(AudioPlayer audioPlayer, EventWrapper event) {
         this.audioPlayer = audioPlayer;
         this.event = event;
     }
@@ -76,7 +76,7 @@ public class TrackScheduler extends AudioEventAdapter {
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
 
         logger.info(String.format("Odtwarzanie piosenki '%s' zostało wstrzymane przez '%s'",
-                info.title, event.getAuthor().getAsTag()), event.getGuild());
+                info.title, event.getUser().getAsTag()), event.getGuild());
     }
 
     @Override
@@ -89,7 +89,7 @@ public class TrackScheduler extends AudioEventAdapter {
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
 
         logger.info(String.format("Odtwarzanie piosenki '%s' zostało ponowione przez '%s'",
-                info.title, event.getAuthor().getAsTag()), event.getGuild());
+                info.title, event.getUser().getAsTag()), event.getGuild());
     }
 
     @Override
@@ -105,7 +105,7 @@ public class TrackScheduler extends AudioEventAdapter {
         if (repeating) alreadyDisplayed = true;
 
         logger.info(String.format("Automatyczne odtwarzanie piosenki '%s' dodanej przez '%s'",
-                info.title, event.getAuthor().getAsTag()), event.getGuild());
+                info.title, event.getUser().getAsTag()), event.getGuild());
     }
 
     @Override
@@ -122,7 +122,7 @@ public class TrackScheduler extends AudioEventAdapter {
                             config.getMaxInactivityTimeMinutes()), EmbedMessageColor.RED
                     );
                     event.getTextChannel().sendMessageEmbeds(leavingMessage.buildMessage()).queue();
-                    event.getJDA().getDirectAudioController().disconnect(event.getGuild());
+                    event.getJda().getDirectAudioController().disconnect(event.getGuild());
                     logger.warn(String.format(
                             "Automatyczne opuszczenie kanału głosowego przez bota po %s minutach nieaktywności",
                             config.getMaxInactivityTimeMinutes()), event.getGuild());
@@ -149,7 +149,7 @@ public class TrackScheduler extends AudioEventAdapter {
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
 
         logger.error(String.format("Wystąpił nieznany błąd podczas dodawania piosenki/playlisty przez '%s'",
-                event.getAuthor().getAsTag()), event.getGuild());
+                event.getUser().getAsTag()), event.getGuild());
     }
 
     public void setRepeating(boolean repeating) {

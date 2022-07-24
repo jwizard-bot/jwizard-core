@@ -18,7 +18,6 @@
 
 package pl.miloszgilga.franekbotapp.audioplayer;
 
-import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 
@@ -29,7 +28,7 @@ public class MusicManager {
     private final TrackScheduler scheduler;
     private final AudioPlayerSendHandler sendHandler;
 
-    public MusicManager(AudioPlayerManager manager, CommandEvent event) {
+    public MusicManager(AudioPlayerManager manager, EventWrapper event) {
         audioPlayer = manager.createPlayer();
         scheduler = new TrackScheduler(audioPlayer, event);
         audioPlayer.addListener(scheduler);
