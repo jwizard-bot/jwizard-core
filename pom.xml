@@ -29,6 +29,8 @@
     </repositories>
 
     <dependencies>
+
+        <!-- discord wrappers and APIs packages -->
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
@@ -46,6 +48,8 @@
             <artifactId>lavaplayer</artifactId>
             <version>1.3.77</version>
         </dependency>
+
+        <!-- databind and object mapper packages -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
@@ -67,6 +71,8 @@
             <version>1.18.24</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- logging packages -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -78,6 +84,35 @@
             <version>1.7.36</version>
         </dependency>
         <dependency>
+            <groupId>com.mattbertolini</groupId>
+            <artifactId>liquibase-slf4j</artifactId>
+            <version>4.1.0</version>
+        </dependency>
+
+        <!-- database packages -->
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>6.1.1.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.29</version>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>4.13.0</version>
+        </dependency>
+
+        <!-- misc packages -->
+        <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.10.2</version>
@@ -88,6 +123,7 @@
             <version>3.3.0</version>
             <type>maven-plugin</type>
         </dependency>
+
     </dependencies>
 
     <build>
