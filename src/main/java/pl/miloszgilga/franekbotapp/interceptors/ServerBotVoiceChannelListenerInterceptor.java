@@ -37,10 +37,10 @@ import pl.miloszgilga.franekbotapp.executorhandlers.ExecutorTimer;
 import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 
 
-public class ServerBotVoiceChannelListener extends ListenerAdapter {
+public class ServerBotVoiceChannelListenerInterceptor extends ListenerAdapter {
 
     private final byte ELAPSE_TIME = config.getMaxInactivityTimeAfterPauseTrackMinutes();
-    private final LoggerFactory logger = new LoggerFactory(ServerBotVoiceChannelListener.class);
+    private final LoggerFactory logger = new LoggerFactory(ServerBotVoiceChannelListenerInterceptor.class);
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();
 
     private ExecutorTimer executorTimer;
