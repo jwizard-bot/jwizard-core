@@ -31,7 +31,7 @@ public class PlayerManager {
 
     private final int CONNECTION_REFUSED = 10000;
 
-    private static PlayerManager playerManager;
+    private static volatile PlayerManager playerManager;
     private final Map<Long, MusicManager> musicManagerMap = new HashMap<>();
     private final AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
 
@@ -55,7 +55,7 @@ public class PlayerManager {
         audioPlayerManager.loadItemOrdered(musicManager, trackURL, new AudioLoaderResult(event, ifValidUri, musicManager));
     }
 
-    public static PlayerManager getSingletonInstance() {
+    public static synchronized PlayerManager getSingletonInstance() {
         if (playerManager == null) {
             playerManager = new PlayerManager();
         }

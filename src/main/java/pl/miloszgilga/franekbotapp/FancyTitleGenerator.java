@@ -21,7 +21,7 @@ package pl.miloszgilga.franekbotapp;
 
 class FancyTitleGenerator {
 
-    private static FancyTitleGenerator fancyTitleGenerator;
+    private static volatile FancyTitleGenerator fancyTitleGenerator;
 
     private FancyTitleGenerator() { }
 
@@ -38,7 +38,7 @@ class FancyTitleGenerator {
         System.out.println();
     }
 
-    public static FancyTitleGenerator getSingleton() {
+    public static synchronized FancyTitleGenerator getSingleton() {
         if (fancyTitleGenerator == null) {
             fancyTitleGenerator = new FancyTitleGenerator();
         }
