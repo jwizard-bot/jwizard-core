@@ -24,4 +24,5 @@ import lombok.Data;
 @Data
 public class MiscellaneousConfiguration {
     private LoggerConfiguration logger;
+    private DatabaseConfiguration database;
 }

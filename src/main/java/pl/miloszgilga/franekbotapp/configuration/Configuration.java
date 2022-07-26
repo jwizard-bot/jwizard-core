@@ -50,4 +50,8 @@ public class Configuration {
     public byte getMaxInactivityTimeAfterPauseTrackMinutes() {
         return sequencers.getMaxInactivityTimeAfterPauseTrackMinutes();
     }
+
+    public DatabaseConfiguration getDbConfig() {
+        return miscellaneous.getDatabase();
+    }
 }
