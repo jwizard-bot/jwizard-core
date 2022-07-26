@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <changeSet id="1" author="Milosz08">
+        <createTable tableName="USER_STATS">
+            <column name="ID" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="UNIQUE_USER_ID" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_NAME_WITH_ID" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SERVER_GUILD_ID" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MESSAGES_SEND" type="bigint" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MESSAGES_UPDATED" type="bigint" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MESSAGES_DELETED" type="bigint" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REACTIONS_ADDED" type="bigint" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REACTIONS_REMOVED" type="bigint" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
