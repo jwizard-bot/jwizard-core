@@ -23,16 +23,14 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import com.jagrosh.jdautilities.command.Command;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
 import java.io.IOException;
 import javax.security.auth.login.LoginException;
 
-import pl.miloszgilga.franekbotapp.interceptors.MismatchCommandInterceptor;
-import pl.miloszgilga.franekbotapp.interceptors.ServerBotVoiceChannelListener;
 import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.HELP_ME;
@@ -44,6 +42,7 @@ public class FranekBot {
 
     private static final FancyTitleGenerator generator = FancyTitleGenerator.getSingleton();
     private static final String EXECUTORS_PACKAGE = "pl.miloszgilga.franekbotapp.executors";
+    private static final String INTERCEPTORS_PACKAGE = "pl.miloszgilga.franekbotapp.interceptors";
 
     public static void main(String[] args) throws LoginException, IOException {
         checkIfItsDevelopmentVersion(args);
@@ -52,6 +51,9 @@ public class FranekBot {
                 config.getBotVersion());
         if (config.isShowFancyTitle()) generator.generateFancyTitle();
 
+        final LoggerFactory logger = new LoggerFactory(FranekBot.class);
+        final Deque<Object> interceptors = new LinkedList<>();
+
         final String BOT_ID = config.getAuthorization().getApplicationId();
         final String BOT_TOKEN = config.getAuthorization().getToken();
 
@@ -59,27 +61,23 @@ public class FranekBot {
         builder.setPrefix(config.getPrefix());
         builder.setOwnerId(BOT_ID);
         builder.setHelpWord(HELP_ME.getCommandName());
-        builder.addCommands(reflectAllCommandExecutors());
+        builder.addCommands(reflectAllCommandExecutors(logger));
+        interceptors.addFirst(builder.build());
 
         JDABuilder
                 .createDefault(BOT_TOKEN)
                 .enableCache(CacheFlag.VOICE_STATE)
                 .setActivity(Activity.listening(config.getPrefix() + HELP_ME.getCommandName()))
                 .setStatus(OnlineStatus.ONLINE)
-                .addEventListeners(
-                        builder.build(),
-                        new MismatchCommandInterceptor(),
-                        new ServerBotVoiceChannelListener()
-                )
+                .addEventListeners(reflectAllInterceptors(logger, interceptors))
                 .build();
     }
 
-    private static Command[] reflectAllCommandExecutors() {
-        final LoggerFactory logger = new LoggerFactory(FranekBot.class);
+    private static Command[] reflectAllCommandExecutors(final LoggerFactory logger) {
         final Reflections reflections = new Reflections(EXECUTORS_PACKAGE);
-
         final Set<Class<? extends Command>> executorsClazz = reflections.getSubTypesOf(Command.class);
         final Set<Command> executors = new HashSet<>();
+
         executorsClazz.forEach(clazz -> {
             try {
                 executors.add(clazz.getDeclaredConstructor().newInstance());
@@ -92,5 +90,23 @@ public class FranekBot {
         });
 
         return executors.toArray(Command[]::new);
+    }
+
+    private static Object[] reflectAllInterceptors(final LoggerFactory logger, final Deque<Object> interceptors) {
+        final Reflections reflections = new Reflections(INTERCEPTORS_PACKAGE);
+        final Set<Class<? extends ListenerAdapter>> interceptorsClazz = reflections.getSubTypesOf(ListenerAdapter.class);
+
+        interceptorsClazz.forEach(clazz -> {
+            try {
+                interceptors.add(clazz.getDeclaredConstructor().newInstance());
+                logger.debug(String.format("Interceptor '%s' załadowany pomyślnie poprzez mechanizm refleksji",
+                        clazz.getSimpleName()), null);
+            } catch (Exception ignored) {
+                logger.error(String.format("Wystąpił problem z załadowaniem interceptora '%s' poprzez mechanizm refleksji",
+                        clazz.getSimpleName()), null);
+            }
+        });
+
+        return interceptors.toArray();
     }
 }
