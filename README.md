@@ -11,8 +11,12 @@ A multi-functional music bot (likely to be enhanced with additional features ove
 - [Lavaplayer](https://github.com/sedmelluq/lavaplayer)
 - [JacksonJSON](https://github.com/FasterXML/jackson)
 - [Project Lombok](https://projectlombok.org/)
+- [Jakarta Persistence API](https://jakarta.ee/specifications/persistence/3.0/)
+- [Hibernate](https://hibernate.org/)
+- [Liquibase](https://www.liquibase.org/)
+- [MySQL Connector](https://mvnrepository.com/artifact/mysql/mysql-connector-java)
 - [Maven Assemby Plugin](https://maven.apache.org/plugins/maven-assembly-plugin/)
-
+> NOTE: For a list of all dependencies, check the `pom.xml` file.
 ## Clone, prepare and run
 To install the program on your computer use the command (or use the built-in GIT system in your IDE environment):
 ```
@@ -51,9 +55,21 @@ With this configuration, it is possible to run the production version on the ser
             "enableLoggedToStandardOutput": true, // enable/disable logging values in console
             "enableLoggedToFileOutput": true // enable/disable save logs into .log files
         }
+    },
+    "database": {
+        "databaseUrl": "jdbc:[dbType]://[dbServer]:[dbPort]/[dbName]", // two db instances for dev and prod version
+        "enforceSslConnection": true, // force ssl connection (only for production mode)
+        "username": "xxxx", // database username
+        "password": "xxxx", // database password
+        "createDatabaseIfNotExist": true, // create database, if does not exist
+        "sqlOnStandardOutput": true, // print JDBC sql commands on console
+        "hibernateDriverPackage": "[external database driver package, ex. com.mysql.cj.jdbc.Driver]",
+        "hibernateDialectPackage": "org.hibernate.dialect.[selected database dialect]",
+        "hbm2ddlAutoMode": "validate" // hibernate db management (DONT USE AUTO!!!, use NONE/VALIDATE)
     }
 }
 ```
+
 > NOTE: By default, the application saves logs in the `/target` directory, while in the production (.jar) version this will be the folder in which the application will be launched.
 * To run the application in the development mode, use the `--dev` switch. Running the application without any arguments will load the production version configuration file.
 ```
