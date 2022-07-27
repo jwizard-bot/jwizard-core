@@ -38,7 +38,7 @@ class FancyTitleGenerator {
         System.out.println();
     }
 
-    public static synchronized FancyTitleGenerator getSingleton() {
+    public static synchronized FancyTitleGenerator getSingletonInstance() {
         if (fancyTitleGenerator == null) {
             fancyTitleGenerator = new FancyTitleGenerator();
         }
