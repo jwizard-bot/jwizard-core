@@ -59,15 +59,15 @@ class HibernateInitializer {
         properties.setProperty(HBM2DDL_AUTO, JSON_CONFIG.getHbm2ddlAutoMode());
         properties.setProperty(PHYSICAL_NAMING_STRATEGY, CustomPhysicalNamingStrategy.class.getName());
 
-        for(Class<? extends Serializable> entityClazz : reflectAllEntities()) {
+        for(Class<? extends BasicHibernateEntity> entityClazz : reflectAllEntities()) {
             configuration.addAnnotatedClass(entityClazz);
         }
         configuration.setProperties(properties);
     }
 
-    private Set<Class<? extends Serializable>> reflectAllEntities() {
+    private Set<Class<? extends BasicHibernateEntity>> reflectAllEntities() {
         final Reflections entitiesReflections = new Reflections(ENTITIES_PACKAGE_NAME);
-        return entitiesReflections.getSubTypesOf(Serializable.class);
+        return entitiesReflections.getSubTypesOf(BasicHibernateEntity.class);
     }
 
     public Configuration getConfiguration() {
