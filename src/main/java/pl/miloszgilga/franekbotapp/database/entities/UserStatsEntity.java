@@ -18,21 +18,18 @@
 
 package pl.miloszgilga.franekbotapp.database.entities;
 
-import jakarta.persistence.Id;
+import lombok.ToString;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import pl.miloszgilga.franekbotapp.database.BasicHibernateEntity;
 
 import java.io.Serializable;
 
 
 @Entity
-public class UserStats implements Serializable {
+@ToString
+public class UserStatsEntity extends AuditEntity implements Serializable, BasicHibernateEntity {
     private static final long serialversionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
     private String uniqueUserId;
     private String userNameWithId;
     private String serverGuildId;
@@ -42,15 +39,7 @@ public class UserStats implements Serializable {
     private long reactionsAdded;
     private long reactionsDeleted;
 
-    public UserStats() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    public UserStatsEntity() {
     }
 
     public String getUniqueUserId() {

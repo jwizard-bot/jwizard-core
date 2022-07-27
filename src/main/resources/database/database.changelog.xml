@@ -5,5 +5,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
 
     <include file="classpath:database/changelog/2022-07-migrations/V1__2022-07-26__create-server-schema.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:database/changelog/2022-07-migrations/V2__2022-07-27__auditable-superclass-stats-entity.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
