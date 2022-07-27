@@ -18,12 +18,9 @@
 
 package pl.miloszgilga.franekbotapp;
 
-import org.reflections.Reflections;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-import com.jagrosh.jdautilities.command.Command;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 
@@ -40,9 +37,8 @@ import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.chec
 
 public class FranekBot {
 
-    private static final FancyTitleGenerator generator = FancyTitleGenerator.getSingleton();
-    private static final String EXECUTORS_PACKAGE = "pl.miloszgilga.franekbotapp.executors";
-    private static final String INTERCEPTORS_PACKAGE = "pl.miloszgilga.franekbotapp.interceptors";
+    private static final FancyTitleGenerator generator = FancyTitleGenerator.getSingletonInstance();
+    private static final ElementsReflection reflection = ElementsReflection.getSingletonInstance();
 
     public static void main(String[] args) throws LoginException, IOException {
         checkIfItsDevelopmentVersion(args);
@@ -61,7 +57,7 @@ public class FranekBot {
         builder.setPrefix(config.getPrefix());
         builder.setOwnerId(BOT_ID);
         builder.setHelpWord(HELP_ME.getCommandName());
-        builder.addCommands(reflectAllCommandExecutors(logger));
+        builder.addCommands(reflection.reflectAllCommandExecutors(logger));
         interceptors.addFirst(builder.build());
 
         JDABuilder
@@ -69,44 +65,9 @@ public class FranekBot {
                 .enableCache(CacheFlag.VOICE_STATE)
                 .setActivity(Activity.listening(config.getPrefix() + HELP_ME.getCommandName()))
                 .setStatus(OnlineStatus.ONLINE)
-                .addEventListeners(reflectAllInterceptors(logger, interceptors))
+                .addEventListeners(reflection.reflectAllInterceptors(logger, interceptors))
                 .build();
     }
 
-    private static Command[] reflectAllCommandExecutors(final LoggerFactory logger) {
-        final Reflections reflections = new Reflections(EXECUTORS_PACKAGE);
-        final Set<Class<? extends Command>> executorsClazz = reflections.getSubTypesOf(Command.class);
-        final Set<Command> executors = new HashSet<>();
 
-        executorsClazz.forEach(clazz -> {
-            try {
-                executors.add(clazz.getDeclaredConstructor().newInstance());
-                logger.debug(String.format("Egzekutor '%s' załadowany pomyślnie poprzez mechanizm refleksji",
-                        clazz.getSimpleName()), null);
-            } catch (Exception ignored) {
-                logger.error(String.format("Wystąpił problem z załadowaniem egzekutora '%s' poprzez mechanizm refleksji",
-                        clazz.getSimpleName()), null);
-            }
-        });
-
-        return executors.toArray(Command[]::new);
-    }
-
-    private static Object[] reflectAllInterceptors(final LoggerFactory logger, final Deque<Object> interceptors) {
-        final Reflections reflections = new Reflections(INTERCEPTORS_PACKAGE);
-        final Set<Class<? extends ListenerAdapter>> interceptorsClazz = reflections.getSubTypesOf(ListenerAdapter.class);
-
-        interceptorsClazz.forEach(clazz -> {
-            try {
-                interceptors.add(clazz.getDeclaredConstructor().newInstance());
-                logger.debug(String.format("Interceptor '%s' załadowany pomyślnie poprzez mechanizm refleksji",
-                        clazz.getSimpleName()), null);
-            } catch (Exception ignored) {
-                logger.error(String.format("Wystąpił problem z załadowaniem interceptora '%s' poprzez mechanizm refleksji",
-                        clazz.getSimpleName()), null);
-            }
-        });
-
-        return interceptors.toArray();
-    }
 }
