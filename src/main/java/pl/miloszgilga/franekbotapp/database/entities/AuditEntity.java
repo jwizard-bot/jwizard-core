@@ -24,11 +24,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
+import java.io.Serializable;
 
 
 @ToString
 @MappedSuperclass
-public abstract class AuditEntity {
+public abstract class AuditEntity implements Serializable {
+    private static final long serialversionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
