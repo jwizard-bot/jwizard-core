@@ -18,16 +18,20 @@
 
 package pl.miloszgilga.franekbotapp.interceptors;
 
+import org.hibernate.Session;
 import org.jetbrains.annotations.NotNull;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.Guild;
+import jakarta.persistence.NoResultException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
-import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 
 import pl.miloszgilga.franekbotapp.database.HibernateSessionFactory;
+import pl.miloszgilga.franekbotapp.database.entities.UserStats;
 
+import static pl.miloszgilga.franekbotapp.interceptors.UpdateParameters.*;
 
 
 public final class OnEveryUserActionInterceptor extends ListenerAdapter {
@@ -35,27 +39,48 @@ public final class OnEveryUserActionInterceptor extends ListenerAdapter {
     private final HibernateSessionFactory sessionFactory = HibernateSessionFactory.getSingletonInstance();
 
     @Override
-    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        System.out.println("add new message listener" + event.getMessage() + event.getGuild().getId());
+    public void onMessageReceived(@NotNull final MessageReceivedEvent event) {
+        findUserAndUpdateSelectedParameter(event.getAuthor(), event.getGuild(), MESSAGES_CREATED);
     }
 
     @Override
     public void onMessageUpdate(@NotNull MessageUpdateEvent event) {
-        System.out.println("update messagage listener" + event.getMessage());
-    }
-
-    @Override
-    public void onMessageDelete(@NotNull MessageDeleteEvent event) {
-        System.out.println("delete messagage listener" + event.getMessageId());
+        findUserAndUpdateSelectedParameter(event.getAuthor(), event.getGuild(), MESSAGES_UPDATED);
     }
 
     @Override
     public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
-        System.out.println("add reaction listener" + event.getMessageId());
+        if (event.getUser() == null) return;
+        findUserAndUpdateSelectedParameter(event.getUser(), event.getGuild(), REACTIONS_ADDED);
     }
 
-    @Override
-    public void onMessageReactionRemove(@NotNull MessageReactionRemoveEvent event) {
-        System.out.println("remove reaction listener" + event.getMessageId());
+    private void findUserAndUpdateSelectedParameter(User user, Guild guild, UpdateParameters parameters) {
+        try (Session session = sessionFactory.openTransactionalSessionAndBeginTransaction()) {
+            try {
+                UserStats userStats = session
+                        .createQuery("SELECT u FROM UserStats u WHERE u.uniqueUserId=:uid AND u.serverGuildId=:sid",
+                                UserStats.class)
+                        .setParameter("uid", user.getId()).setParameter("sid", guild.getId()).getSingleResult();
+                updateUserStats(parameters, userStats);
+                session.flush();
+            } catch (NoResultException ex) {
+                final var userStats = new UserStats(user.getId(), user.getAsTag(), guild.getId());
+                updateUserStats(parameters, userStats);
+                session.persist(userStats);
+            }
+        }
+    }
+
+    private void updateUserStats(UpdateParameters parameters, UserStats userStats) {
+        switch (parameters) {
+            case MESSAGES_CREATED:
+                userStats.setMessagesSend(userStats.getMessagesSend() + 1);
+                break;
+            case MESSAGES_UPDATED:
+                userStats.setMessagesUpdated(userStats.getMessagesUpdated() + 1);
+                break;
+            case REACTIONS_ADDED:
+                userStats.setReactionsAdded(userStats.getReactionsAdded() + 1);
+        }
     }
 }
