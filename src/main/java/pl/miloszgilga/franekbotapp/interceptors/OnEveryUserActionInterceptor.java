@@ -44,12 +44,12 @@ public final class OnEveryUserActionInterceptor extends ListenerAdapter {
     }
 
     @Override
-    public void onMessageUpdate(@NotNull MessageUpdateEvent event) {
+    public void onMessageUpdate(@NotNull final MessageUpdateEvent event) {
         findUserAndUpdateSelectedParameter(event.getAuthor(), event.getGuild(), MESSAGES_UPDATED);
     }
 
     @Override
-    public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
+    public void onMessageReactionAdd(@NotNull final MessageReactionAddEvent event) {
         if (event.getUser() == null) return;
         findUserAndUpdateSelectedParameter(event.getUser(), event.getGuild(), REACTIONS_ADDED);
     }
