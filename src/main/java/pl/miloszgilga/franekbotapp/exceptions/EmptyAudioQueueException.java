@@ -30,7 +30,7 @@ import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_PLAY;
 import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 
 
-public class EmptyAudioQueueException extends JdaIllegalChatStateException {
+public final class EmptyAudioQueueException extends JdaIllegalChatStateException {
 
     public EmptyAudioQueueException(CommandEvent event) {
         super(event);

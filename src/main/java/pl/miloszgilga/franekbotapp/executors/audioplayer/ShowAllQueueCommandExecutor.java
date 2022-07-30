@@ -43,7 +43,7 @@ import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_QUEUE;
 import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 
 
-public class ShowAllQueueCommandExecutor extends Command {
+public final class ShowAllQueueCommandExecutor extends Command {
 
     private final LoggerFactory logger = new LoggerFactory(ShowAllQueueCommandExecutor.class);
     private static final PlayerManager playerManager = PlayerManager.getSingletonInstance();

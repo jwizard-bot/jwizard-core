@@ -41,7 +41,7 @@ import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_PLAY;
 import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 
 
-public class PlayTrackCommandExecutor extends Command {
+public final class PlayTrackCommandExecutor extends Command {
 
     private final LoggerFactory logger = new LoggerFactory(PlayTrackCommandExecutor.class);
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();

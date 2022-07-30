@@ -28,7 +28,7 @@ import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
 import pl.miloszgilga.franekbotapp.messages.MessageEmbedField;
 
 
-public class IllegalCommandArgumentsException extends JdaIllegalChatStateException {
+public final class IllegalCommandArgumentsException extends JdaIllegalChatStateException {
 
     private final BotCommand command;
 

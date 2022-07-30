@@ -42,7 +42,7 @@ import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_JOIN;
 import static net.dv8tion.jda.api.Permission.VOICE_MOVE_OTHERS;
 
 
-public class MoveBotToVoiceChannelCommandExecutor extends Command {
+public final class MoveBotToVoiceChannelCommandExecutor extends Command {
 
     private final LoggerFactory logger = new LoggerFactory(MoveBotToVoiceChannelCommandExecutor.class);
 

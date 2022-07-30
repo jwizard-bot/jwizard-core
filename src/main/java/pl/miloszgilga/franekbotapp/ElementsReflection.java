@@ -28,7 +28,7 @@ import java.util.Deque;
 import java.util.HashSet;
 
 
-class ElementsReflection {
+final class ElementsReflection {
 
     private static final String EXECUTORS_PACKAGE = "pl.miloszgilga.franekbotapp.executors";
     private static final String INTERCEPTORS_PACKAGE = "pl.miloszgilga.franekbotapp.interceptors";
@@ -62,7 +62,8 @@ class ElementsReflection {
                 interceptors.add(clazz.getDeclaredConstructor().newInstance());
                 logger.debug(String.format("Interceptor '%s' załadowany pomyślnie poprzez mechanizm refleksji",
                         clazz.getSimpleName()), null);
-            } catch (Exception ignored) {
+            } catch (Exception ex) {
+                ex.printStackTrace();
                 logger.error(String.format("Wystąpił problem z załadowaniem interceptora '%s' poprzez mechanizm refleksji",
                         clazz.getSimpleName()), null);
             }

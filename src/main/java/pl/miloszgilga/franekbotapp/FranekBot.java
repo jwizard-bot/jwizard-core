@@ -35,7 +35,7 @@ import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.conf
 import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.checkIfItsDevelopmentVersion;
 
 
-public class FranekBot {
+public final class FranekBot {
 
     private static final FancyTitleGenerator generator = FancyTitleGenerator.getSingletonInstance();
     private static final ElementsReflection reflection = ElementsReflection.getSingletonInstance();

@@ -24,7 +24,7 @@ import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
 
 
-public class MusicBotNotActiveException extends JdaIllegalChatStateException {
+public final class MusicBotNotActiveException extends JdaIllegalChatStateException {
 
     public MusicBotNotActiveException(CommandEvent event) {
         super(event);

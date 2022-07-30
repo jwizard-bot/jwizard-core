@@ -34,7 +34,7 @@ import java.time.format.DateTimeFormatter;
 import pl.miloszgilga.franekbotapp.configuration.LoggerRank;
 
 
-public class LoggerOutputFilePrinter implements ILoggerOutputPrinter {
+public final class LoggerOutputFilePrinter implements ILoggerOutputPrinter {
 
     private final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     private final SimpleDateFormat fileNameDateFormatter = new SimpleDateFormat("ddMMyyyy");

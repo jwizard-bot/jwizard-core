@@ -24,7 +24,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import static pl.miloszgilga.franekbotapp.BotCommand.SRV_STATS;
 
 
-public class ShowServerStatisticsCommandExecutor extends Command {
+public final class ShowServerStatisticsCommandExecutor extends Command {
 
     public ShowServerStatisticsCommandExecutor() {
         name = SRV_STATS.getCommandName();

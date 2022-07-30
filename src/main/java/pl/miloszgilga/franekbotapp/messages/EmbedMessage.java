@@ -28,7 +28,7 @@ import java.util.ArrayList;
 
 
 @AllArgsConstructor
-public class EmbedMessage {
+public final class EmbedMessage {
 
     private final EmbedBuilder builder = new EmbedBuilder();
 

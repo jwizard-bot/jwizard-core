@@ -34,7 +34,7 @@ import static net.dv8tion.jda.api.Permission.ADMINISTRATOR;
 import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_PAUSE;
 
 
-public class PauseTrackCommandExecutor extends Command {
+public final class PauseTrackCommandExecutor extends Command {
 
     private final LoggerFactory logger = new LoggerFactory(PauseTrackCommandExecutor.class);
     private static final PlayerManager playerManager = PlayerManager.getSingletonInstance();

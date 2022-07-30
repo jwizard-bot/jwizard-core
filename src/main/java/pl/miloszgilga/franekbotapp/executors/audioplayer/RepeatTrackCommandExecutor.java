@@ -40,7 +40,7 @@ import static pl.miloszgilga.franekbotapp.executors.audioplayer.PauseTrackComman
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.VoteSkipTrackCommandExecutor.findVoiceChannelWithBotAndUser;
 
 
-public class RepeatTrackCommandExecutor extends Command {
+public final class RepeatTrackCommandExecutor extends Command {
 
     private final LoggerFactory logger = new LoggerFactory(RepeatTrackCommandExecutor.class);
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();

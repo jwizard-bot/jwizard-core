@@ -37,7 +37,7 @@ import static pl.miloszgilga.franekbotapp.executors.audioplayer.ShowAllQueueComm
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.VoteSkipTrackCommandExecutor.findVoiceChannelWithBotAndUser;
 
 
-public class VoteQueueShuffleCommandExecutor extends Command {
+public final class VoteQueueShuffleCommandExecutor extends Command {
 
     private final LoggerFactory logger = new LoggerFactory(VoteQueueShuffleCommandExecutor.class);
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();

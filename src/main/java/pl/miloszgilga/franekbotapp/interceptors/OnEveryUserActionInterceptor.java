@@ -29,7 +29,8 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import pl.miloszgilga.franekbotapp.database.HibernateSessionFactory;
 
 
-public class OnEveryUserActionInterceptor extends ListenerAdapter {
+
+public final class OnEveryUserActionInterceptor extends ListenerAdapter {
 
     private final HibernateSessionFactory sessionFactory = HibernateSessionFactory.getSingletonInstance();
 

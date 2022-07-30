@@ -24,7 +24,7 @@ import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
 
 
-public class AttemptToRevoteSkippingSongException extends JdaIllegalChatStateException {
+public final class AttemptToRevoteSkippingSongException extends JdaIllegalChatStateException {
 
     public AttemptToRevoteSkippingSongException(CommandEvent event) {
         super(event);

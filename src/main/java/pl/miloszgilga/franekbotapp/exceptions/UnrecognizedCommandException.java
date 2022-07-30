@@ -31,7 +31,7 @@ import static pl.miloszgilga.franekbotapp.BotCommand.HELP_ME;
 import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 
 
-public class UnrecognizedCommandException extends RuntimeException {
+public final class UnrecognizedCommandException extends RuntimeException {
 
     private final MessageReceivedEvent event;
 

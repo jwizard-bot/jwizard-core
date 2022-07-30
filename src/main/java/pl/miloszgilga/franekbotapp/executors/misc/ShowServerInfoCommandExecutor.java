@@ -35,7 +35,7 @@ import static pl.miloszgilga.franekbotapp.BotCommand.HELP_ME;
 import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 
 
-public class ShowServerInfoCommandExecutor extends Command {
+public final class ShowServerInfoCommandExecutor extends Command {
 
     public ShowServerInfoCommandExecutor() {
         name = HELP.getCommandName();

@@ -19,7 +19,7 @@
 package pl.miloszgilga.franekbotapp.exceptions;
 
 
-public class UnableToLoadDatabaseConfigurationException extends RuntimeException {
+public final class UnableToLoadDatabaseConfigurationException extends RuntimeException {
 
     public UnableToLoadDatabaseConfigurationException(String message) {
         super(message);

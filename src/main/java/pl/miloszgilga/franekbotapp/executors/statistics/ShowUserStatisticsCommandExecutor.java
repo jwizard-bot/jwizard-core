@@ -24,7 +24,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import static pl.miloszgilga.franekbotapp.BotCommand.MAIN_STATS;
 
 
-public class ShowUserStatisticsCommandExecutor extends Command {
+public final class ShowUserStatisticsCommandExecutor extends Command {
 
     public ShowUserStatisticsCommandExecutor() {
         name = MAIN_STATS.getCommandName();

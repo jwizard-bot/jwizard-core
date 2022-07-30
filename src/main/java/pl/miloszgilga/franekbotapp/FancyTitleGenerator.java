@@ -19,7 +19,7 @@
 package pl.miloszgilga.franekbotapp;
 
 
-class FancyTitleGenerator {
+final class FancyTitleGenerator {
 
     private static volatile FancyTitleGenerator fancyTitleGenerator;
 

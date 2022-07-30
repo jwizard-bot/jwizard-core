@@ -24,7 +24,7 @@ import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
 
 
-public class UnableAccessToInvokeCommandException extends JdaIllegalChatStateException {
+public final class UnableAccessToInvokeCommandException extends JdaIllegalChatStateException {
 
     public UnableAccessToInvokeCommandException(CommandEvent event, String additionalMessage) {
         super(event);

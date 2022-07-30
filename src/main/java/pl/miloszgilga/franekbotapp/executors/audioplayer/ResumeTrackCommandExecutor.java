@@ -33,7 +33,7 @@ import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_RESUME;
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.PauseTrackCommandExecutor.checkIfActionEventInvokeBySender;
 
 
-public class ResumeTrackCommandExecutor extends Command {
+public final class ResumeTrackCommandExecutor extends Command {
 
     private final LoggerFactory logger = new LoggerFactory(ResumeTrackCommandExecutor.class);
     private static final PlayerManager playerManager = PlayerManager.getSingletonInstance();

@@ -38,7 +38,7 @@ import pl.miloszgilga.franekbotapp.executorhandlers.VoteCommandExecutorHandler;
 import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_VOTE_SKIP;
 
 
-public class VoteSkipTrackCommandExecutor extends Command {
+public final class VoteSkipTrackCommandExecutor extends Command {
 
     private final LoggerFactory logger = new LoggerFactory(VoteSkipTrackCommandExecutor.class);
     private final PlayerManager playerManager = PlayerManager.getSingletonInstance();

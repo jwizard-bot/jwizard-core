@@ -34,7 +34,7 @@ import static pl.miloszgilga.franekbotapp.configuration.LoggerRank.*;
 import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 
 
-public class LoggerFactory {
+public final class LoggerFactory {
 
     private final LoggerOutputConsolePrinter loggerOutputConsolePrinter = new LoggerOutputConsolePrinter();
     private final LoggerOutputFilePrinter loggerOutputFilePrinter = new LoggerOutputFilePrinter();

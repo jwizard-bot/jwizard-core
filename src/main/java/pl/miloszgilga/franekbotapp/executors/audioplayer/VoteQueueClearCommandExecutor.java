@@ -37,7 +37,7 @@ import static pl.miloszgilga.franekbotapp.BotCommand.MUSIC_VOTE_QUEUE_CLEAR;
 import static pl.miloszgilga.franekbotapp.executors.audioplayer.VoteSkipTrackCommandExecutor.findVoiceChannelWithBotAndUser;
 
 
-public class VoteQueueClearCommandExecutor extends Command {
+public final class VoteQueueClearCommandExecutor extends Command {
 
     private final LoggerFactory logger = new LoggerFactory(VoteQueueClearCommandExecutor.class);
     private static final PlayerManager playerManager = PlayerManager.getSingletonInstance();

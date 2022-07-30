@@ -24,7 +24,7 @@ import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
 
 
-public class UserOnVoiceChannelNotFoundException extends JdaIllegalChatStateException {
+public final class UserOnVoiceChannelNotFoundException extends JdaIllegalChatStateException {
 
     public UserOnVoiceChannelNotFoundException(CommandEvent event, String description) {
         super(event);
