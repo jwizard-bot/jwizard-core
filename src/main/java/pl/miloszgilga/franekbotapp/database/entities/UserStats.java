@@ -27,17 +27,16 @@ import java.io.Serializable;
 
 @Entity
 @ToString
-public class UserStatsEntity extends AuditEntity implements Serializable, BasicHibernateEntity {
+@Table(name = "USER_STATS")
+public class UserStats extends AuditEntity implements Serializable, BasicHibernateEntity {
     private static final long serialversionUID = 1L;
 
-    private String uniqueUserId;
-    private String userNameWithId;
-    private String serverGuildId;
-    private long messagesSend;
-    private long messagesUpdated;
-    private long messagesDeleted;
-    private long reactionsAdded;
-    private long reactionsDeleted;
+    @Column(name = "UNIQUE_USER_ID")    private String uniqueUserId;
+    @Column(name = "USER_NAME_WITH_ID") private String userNameWithId;
+    @Column(name = "SERVER_GUILD_ID")   private String serverGuildId;
+    @Column(name = "MESSAGES_SEND")     private long messagesSend;
+    @Column(name = "MESSAGES_UPDATED")  private long messagesUpdated;
+    @Column(name = "REACTIONS_ADDED")   private long reactionsAdded;
 
     public UserStatsEntity() {
     }

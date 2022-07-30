@@ -34,13 +34,13 @@ public abstract class AuditEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Column(name = "ID") private long id;
 
     @CreationTimestamp()
-    private Date createdAt;
+    @Column(name = "CREATED_AT") private Date createdAt;
 
     @UpdateTimestamp()
-    private Date updatedAt;
+    @Column(name = "UPDATED_AT") private Date updatedAt;
 
     public AuditEntity() {
     }
