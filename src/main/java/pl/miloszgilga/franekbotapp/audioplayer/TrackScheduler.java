@@ -76,7 +76,7 @@ public class TrackScheduler extends AudioEventAdapter {
         pausedTrack = audioPlayer.getPlayingTrack();
 
         final var embedMessage = new EmbedMessage("", String.format(
-                "Zatrzymałem odtwarzanie piosenki: **%s**.", info.title), EmbedMessageColor.GREEN);
+                "Zatrzymałem odtwarzanie piosenki: **[%s](%s)**.", info.title, info.uri), EmbedMessageColor.GREEN);
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
 
         logger.info(String.format("Odtwarzanie piosenki '%s' zostało wstrzymane przez '%s'",
@@ -91,7 +91,7 @@ public class TrackScheduler extends AudioEventAdapter {
         pausedTrack = null;
 
         final var embedMessage = new EmbedMessage("", String.format(
-                "Ponawiam odtwarzanie piosenki: **%s**.", info.title), EmbedMessageColor.GREEN);
+                "Ponawiam odtwarzanie piosenki: **[%s](%s)**.", info.title, info.uri), EmbedMessageColor.GREEN);
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
 
         logger.info(String.format("Odtwarzanie piosenki '%s' zostało ponowione przez '%s'",
@@ -107,13 +107,13 @@ public class TrackScheduler extends AudioEventAdapter {
         final EmbedMessage embedMessage;
         if (audioPlayer.isPaused()) {
             embedMessage = new EmbedMessage("", String.format(
-                    "Piosenka: **%s** została dodana do kolejki, lecz nie jest odtwarzana z uwagi na zatrzymany " +
-                            "odtwarzacz. Aby uruchomić odtwarzanie piosenki, wpisz `%s`.",
-                    info.title, config.getPrefix() + MUSIC_RESUME.getCommandName()
+                    "Piosenka: **[%s](%s)** została dodana do kolejki, lecz nie jest odtwarzana z uwagi na zatrzymany " +
+                    "odtwarzacz. Aby uruchomić odtwarzanie piosenki, wpisz `%s`.",
+                    info.title, info.uri, config.getPrefix() + MUSIC_RESUME.getCommandName()
             ), EmbedMessageColor.GREEN);
         } else {
-            embedMessage = new EmbedMessage("", String.format("Rozpoczynam odtwarzanie piosenki: **%s**.",
-                    info.title), EmbedMessageColor.GREEN);
+            embedMessage = new EmbedMessage("", String.format("Rozpoczynam odtwarzanie piosenki: **[%s](%s)**.",
+                    info.title, info.uri), EmbedMessageColor.GREEN);
             logger.info(String.format("Automatyczne odtwarzanie piosenki '%s' dodanej przez '%s'",
                     info.title, event.getUser().getAsTag()), event.getGuild());
         }

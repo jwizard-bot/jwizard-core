@@ -31,7 +31,7 @@
             "username": "xxxx",
             "password": "xxxx",
             "createDatabaseIfNotExist": true,
-            "sqlOnStandardOutput": true,
+            "sqlOnStandardOutput": false,
             "hibernateDriverPackage": "[external database driver package, ex. com.mysql.cj.jdbc.Driver]",
             "hibernateDialectPackage": "org.hibernate.dialect.[selected database dialect]",
             "hbm2ddlAutoMode": "validate"

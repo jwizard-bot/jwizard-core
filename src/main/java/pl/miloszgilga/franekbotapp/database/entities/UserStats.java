@@ -19,8 +19,9 @@
 package pl.miloszgilga.franekbotapp.database.entities;
 
 import lombok.ToString;
+import jakarta.persistence.Column;
+import jakarta.persistence.Table;
 import jakarta.persistence.Entity;
-import pl.miloszgilga.franekbotapp.database.BasicHibernateEntity;
 
 import java.io.Serializable;
 
@@ -38,7 +39,12 @@ public class UserStats extends AuditEntity implements Serializable, BasicHiberna
     @Column(name = "MESSAGES_UPDATED")  private long messagesUpdated;
     @Column(name = "REACTIONS_ADDED")   private long reactionsAdded;
 
-    public UserStatsEntity() {
+    public UserStats() { }
+
+    public UserStats(String uniqueUserId, String userNameWithId, String serverGuildId) {
+        this.uniqueUserId = uniqueUserId;
+        this.userNameWithId = userNameWithId;
+        this.serverGuildId = serverGuildId;
     }
 
     public String getUniqueUserId() {
@@ -81,27 +87,11 @@ public class UserStats extends AuditEntity implements Serializable, BasicHiberna
         this.messagesUpdated = messagesUpdated;
     }
 
-    public long getMessagesDeleted() {
-        return messagesDeleted;
-    }
-
-    public void setMessagesDeleted(long messagesDeleted) {
-        this.messagesDeleted = messagesDeleted;
-    }
-
     public long getReactionsAdded() {
         return reactionsAdded;
     }
 
     public void setReactionsAdded(long reactionsAdded) {
         this.reactionsAdded = reactionsAdded;
-    }
-
-    public long getReactionsDeleted() {
-        return reactionsDeleted;
-    }
-
-    public void setReactionsDeleted(long reactionsDeleted) {
-        this.reactionsDeleted = reactionsDeleted;
     }
 }

@@ -42,8 +42,7 @@ public abstract class AuditEntity implements Serializable {
     @UpdateTimestamp()
     @Column(name = "UPDATED_AT") private Date updatedAt;
 
-    public AuditEntity() {
-    }
+    public AuditEntity() { }
 
     public long getId() {
         return id;

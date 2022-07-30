@@ -23,7 +23,6 @@ import org.hibernate.cfg.Configuration;
 
 import java.util.Set;
 import java.util.Properties;
-import java.io.Serializable;
 
 import pl.miloszgilga.franekbotapp.configuration.DatabaseConfiguration;
 import pl.miloszgilga.franekbotapp.exceptions.UnableToLoadDatabaseConfigurationException;
@@ -34,7 +33,7 @@ import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.conf
 
 class HibernateInitializer {
 
-    private static final String ENTITIES_PACKAGE_NAME = "pl.miloszgilga.franekbotapp.domain.entities";
+    private static final String ENTITIES_PACKAGE_NAME = "pl.miloszgilga.franekbotapp.database.entities";
     private static final DatabaseConfiguration JSON_CONFIG = config.getDbConfig();
     private static volatile HibernateInitializer initializer;
 
