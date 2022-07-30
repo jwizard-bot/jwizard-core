@@ -28,6 +28,7 @@ import java.util.*;
 import java.io.IOException;
 import javax.security.auth.login.LoginException;
 
+import pl.miloszgilga.franekbotapp.database.HibernateSessionFactory;
 import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.HELP_ME;
@@ -52,6 +53,8 @@ public final class FranekBot {
 
         final String BOT_ID = config.getAuthorization().getApplicationId();
         final String BOT_TOKEN = config.getAuthorization().getToken();
+
+        HibernateSessionFactory.getSingletonInstance();
 
         CommandClientBuilder builder = new CommandClientBuilder();
         builder.setPrefix(config.getPrefix());
