@@ -25,6 +25,8 @@ import jakarta.persistence.Entity;
 
 import java.io.Serializable;
 
+import pl.miloszgilga.franekbotapp.database.BasicHibernateEntity;
+
 
 @Entity
 @ToString

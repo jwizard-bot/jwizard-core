@@ -22,6 +22,7 @@ import lombok.ToString;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.CreationTimestamp;
+import pl.miloszgilga.franekbotapp.database.BasicHibernateEntity;
 
 import java.util.Date;
 import java.io.Serializable;
@@ -29,7 +30,7 @@ import java.io.Serializable;
 
 @ToString
 @MappedSuperclass
-public abstract class AuditEntity implements Serializable {
+public abstract class AuditEntity implements Serializable, BasicHibernateEntity {
     private static final long serialversionUID = 1L;
 
     @Id
