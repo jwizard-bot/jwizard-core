@@ -55,6 +55,8 @@ public final class OnEveryUserActionInterceptor extends ListenerAdapter {
     }
 
     private void findUserAndUpdateSelectedParameter(User user, Guild guild, UpdateParameters parameters) {
+        if (user.isBot()) return;
+
         try (Session session = sessionFactory.openTransactionalSessionAndBeginTransaction()) {
             try {
                 UserStats userStats = session
