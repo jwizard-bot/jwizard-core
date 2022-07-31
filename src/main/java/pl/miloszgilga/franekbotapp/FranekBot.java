@@ -29,7 +29,6 @@ import java.io.IOException;
 import javax.security.auth.login.LoginException;
 
 import pl.miloszgilga.franekbotapp.database.HibernateSessionFactory;
-import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.HELP_ME;
 import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
@@ -48,9 +47,7 @@ public final class FranekBot {
                 config.getBotVersion());
         if (config.isShowFancyTitle()) generator.generateFancyTitle();
 
-        final LoggerFactory logger = new LoggerFactory(FranekBot.class);
         final Deque<Object> interceptors = new LinkedList<>();
-
         final String BOT_ID = config.getAuthorization().getApplicationId();
         final String BOT_TOKEN = config.getAuthorization().getToken();
 
@@ -60,7 +57,7 @@ public final class FranekBot {
         builder.setPrefix(config.getPrefix());
         builder.setOwnerId(BOT_ID);
         builder.setHelpWord(HELP_ME.getCommandName());
-        builder.addCommands(reflection.reflectAllCommandExecutors(logger));
+        builder.addCommands(reflection.reflectAllCommandExecutors());
         interceptors.addFirst(builder.build());
 
         JDABuilder
@@ -68,7 +65,7 @@ public final class FranekBot {
                 .enableCache(CacheFlag.VOICE_STATE)
                 .setActivity(Activity.listening(config.getPrefix() + HELP_ME.getCommandName()))
                 .setStatus(OnlineStatus.ONLINE)
-                .addEventListeners(reflection.reflectAllInterceptors(logger, interceptors))
+                .addEventListeners(reflection.reflectAllInterceptors(interceptors))
                 .build();
     }
 

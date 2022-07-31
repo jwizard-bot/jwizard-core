@@ -18,10 +18,11 @@
 
 package pl.miloszgilga.franekbotapp;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.reflections.Reflections;
 import com.jagrosh.jdautilities.command.Command;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 
 import java.util.Set;
 import java.util.Deque;
@@ -32,9 +33,11 @@ final class ElementsReflection {
 
     private static final String EXECUTORS_PACKAGE = "pl.miloszgilga.franekbotapp.executors";
     private static final String INTERCEPTORS_PACKAGE = "pl.miloszgilga.franekbotapp.interceptors";
+
+    private final Logger logger = LoggerFactory.getLogger(ElementsReflection.class);
     private static volatile ElementsReflection instance;
 
-    Command[] reflectAllCommandExecutors(final LoggerFactory logger) {
+    Command[] reflectAllCommandExecutors() {
         final Reflections reflections = new Reflections(EXECUTORS_PACKAGE);
         final Set<Class<? extends Command>> executorsClazz = reflections.getSubTypesOf(Command.class);
         final Set<Command> executors = new HashSet<>();
@@ -42,30 +45,28 @@ final class ElementsReflection {
         executorsClazz.forEach(clazz -> {
             try {
                 executors.add(clazz.getDeclaredConstructor().newInstance());
-                logger.debug(String.format("Egzekutor '%s' załadowany pomyślnie poprzez mechanizm refleksji",
-                        clazz.getSimpleName()), null);
+                logger.debug("Egzekutor '{}' załadowany pomyślnie poprzez mechanizm refleksji", clazz.getSimpleName());
             } catch (Exception ignored) {
-                logger.error(String.format("Wystąpił problem z załadowaniem egzekutora '%s' poprzez mechanizm refleksji",
-                        clazz.getSimpleName()), null);
+                logger.error("Wystąpił problem z załadowaniem egzekutora '{}' poprzez mechanizm refleksji",
+                        clazz.getSimpleName());
             }
         });
 
         return executors.toArray(Command[]::new);
     }
 
-    Object[] reflectAllInterceptors(final LoggerFactory logger, final Deque<Object> interceptors) {
+    Object[] reflectAllInterceptors(final Deque<Object> interceptors) {
         final Reflections reflections = new Reflections(INTERCEPTORS_PACKAGE);
         final Set<Class<? extends ListenerAdapter>> interceptorsClazz = reflections.getSubTypesOf(ListenerAdapter.class);
 
         interceptorsClazz.forEach(clazz -> {
             try {
                 interceptors.add(clazz.getDeclaredConstructor().newInstance());
-                logger.debug(String.format("Interceptor '%s' załadowany pomyślnie poprzez mechanizm refleksji",
-                        clazz.getSimpleName()), null);
+                logger.debug("Interceptor '{}' załadowany pomyślnie poprzez mechanizm refleksji", clazz.getSimpleName());
             } catch (Exception ex) {
                 ex.printStackTrace();
-                logger.error(String.format("Wystąpił problem z załadowaniem interceptora '%s' poprzez mechanizm refleksji",
-                        clazz.getSimpleName()), null);
+                logger.error("Wystąpił problem z załadowaniem interceptora '{}' poprzez mechanizm refleksji",
+                        clazz.getSimpleName());
             }
         });
 
