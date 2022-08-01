@@ -18,6 +18,7 @@
 
 package pl.miloszgilga.franekbotapp;
 
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -39,8 +40,8 @@ import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.chec
 
 public final class FranekBot {
 
-    private static final FancyTitleGenerator generator = FancyTitleGenerator.getSingletonInstance();
     private static final ElementsReflection reflection = ElementsReflection.getSingletonInstance();
+    private static final FancyTitleGenerator generator = FancyTitleGenerator.getSingletonInstance();
 
     public static void main(String[] args) throws LoginException, IOException {
         checkIfItsDevelopmentVersion(args);
@@ -62,16 +63,18 @@ public final class FranekBot {
         builder.addCommands(reflection.reflectAllCommandExecutors());
         interceptors.addFirst(builder.build());
 
-        JDABuilder
+        JDA jda = JDABuilder
                 .createDefault(BOT_TOKEN)
                 .setChunkingFilter(ChunkingFilter.ALL)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .enableIntents(GatewayIntent.GUILD_MEMBERS)
-                .setActivity(Activity.listening(config.getPrefix() + HELP_ME.getCommandName()))
                 .setStatus(OnlineStatus.ONLINE)
+                .setActivity(Activity.listening("Loading..."))
                 .addEventListeners(reflection.reflectAllInterceptors(interceptors))
                 .build();
+
+        final BotActivitySequencer sequencer = BotActivitySequencer.getSingletonInstance();
+        sequencer.setJda(jda);
+        sequencer.invokeSequencer();
     }
-
-
 }
