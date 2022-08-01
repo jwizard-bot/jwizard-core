@@ -36,6 +36,7 @@ public class PlayerManager {
     private final AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
 
     private PlayerManager() {
+        if (playerManager != null) throw new IllegalArgumentException();
         AudioSourceManagers.registerRemoteSources(audioPlayerManager);
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
         audioPlayerManager.setHttpRequestConfigurator((config) ->

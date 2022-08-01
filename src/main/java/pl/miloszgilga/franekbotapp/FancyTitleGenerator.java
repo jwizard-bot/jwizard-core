@@ -23,7 +23,9 @@ final class FancyTitleGenerator {
 
     private static volatile FancyTitleGenerator fancyTitleGenerator;
 
-    private FancyTitleGenerator() { }
+    private FancyTitleGenerator() {
+        if (fancyTitleGenerator != null) throw new IllegalArgumentException();
+    }
 
     public void generateFancyTitle() {
         System.out.println();

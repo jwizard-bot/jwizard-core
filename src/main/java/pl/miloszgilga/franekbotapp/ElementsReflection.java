@@ -37,6 +37,10 @@ final class ElementsReflection {
     private final Logger logger = LoggerFactory.getLogger(ElementsReflection.class);
     private static volatile ElementsReflection instance;
 
+    private ElementsReflection() {
+        if (instance != null) throw new IllegalArgumentException();
+    }
+
     Command[] reflectAllCommandExecutors() {
         final Reflections reflections = new Reflections(EXECUTORS_PACKAGE);
         final Set<Class<? extends Command>> executorsClazz = reflections.getSubTypesOf(Command.class);
