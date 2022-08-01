@@ -49,7 +49,7 @@ final class ElementsReflection {
         executorsClazz.forEach(clazz -> {
             try {
                 executors.add(clazz.getDeclaredConstructor().newInstance());
-                logger.debug("Egzekutor '{}' załadowany pomyślnie poprzez mechanizm refleksji", clazz.getSimpleName());
+                logger.info("Egzekutor '{}' załadowany pomyślnie poprzez mechanizm refleksji", clazz.getSimpleName());
             } catch (Exception ignored) {
                 logger.error("Wystąpił problem z załadowaniem egzekutora '{}' poprzez mechanizm refleksji",
                         clazz.getSimpleName());
@@ -66,7 +66,7 @@ final class ElementsReflection {
         interceptorsClazz.forEach(clazz -> {
             try {
                 interceptors.add(clazz.getDeclaredConstructor().newInstance());
-                logger.debug("Interceptor '{}' załadowany pomyślnie poprzez mechanizm refleksji", clazz.getSimpleName());
+                logger.info("Interceptor '{}' załadowany pomyślnie poprzez mechanizm refleksji", clazz.getSimpleName());
             } catch (Exception ex) {
                 ex.printStackTrace();
                 logger.error("Wystąpił problem z załadowaniem interceptora '{}' poprzez mechanizm refleksji",
