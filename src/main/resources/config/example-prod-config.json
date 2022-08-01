@@ -13,7 +13,11 @@
     "sequencers": {
         "maxInactivityTimeMinutes": 5,
         "maxInactivityTimeAfterPauseTrackMinutes": 10,
-        "maxVotingElapseTimeMinutes": 2
+        "maxVotingElapseTimeMinutes": 2,
+        "activityStatusSequencer": {
+            "enableRandomizeActivityStatus": true,
+            "intervalSeconds": 10
+        }
     },
     "miscellaneous": {
         "logger": {

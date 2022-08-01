@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2022 by MILOSZ GILGA <https://miloszgilga.pl>
  *
- * File name: SequencersConfiguration.java
- * Last modified: 23/07/2022, 17:59
+ * File name: ActivityStatusSequencerConfiguration.java
+ * Last modified: 01/08/2022, 21:13
  * Project name: franek-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -22,9 +22,7 @@ import lombok.Data;
 
 
 @Data
-public class SequencersConfiguration {
-    private byte maxInactivityTimeMinutes;
-    private byte maxInactivityTimeAfterPauseTrackMinutes;
-    private byte maxVotingElapseTimeMinutes;
-    private ActivityStatusSequencerConfiguration activityStatusSequencer;
+public class ActivityStatusSequencerConfiguration {
+    private boolean enableRandomizeActivityStatus;
+    private int intervalSeconds;
 }

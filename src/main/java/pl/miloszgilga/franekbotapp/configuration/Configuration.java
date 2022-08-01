@@ -54,4 +54,8 @@ public class Configuration {
     public DatabaseConfiguration getDbConfig() {
         return miscellaneous.getDatabase();
     }
+
+    public ActivityStatusSequencerConfiguration getActivitySequencerConfiguration() {
+        return sequencers.getActivityStatusSequencer();
+    }
 }
