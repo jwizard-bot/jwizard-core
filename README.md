@@ -79,7 +79,7 @@ $ java --dev FranekBot
 ## Running in the background (daemon)
 In order to run the programme as a separate server process (on a machine running UNIX, for example Linux), it is recommended to use a daemon. You can read how to use the programme on the [official website](https://manpages.ubuntu.com/manpages/kinetic/en/man1/daemon.1.html). Alternatively, you can run the programme as a separate process and save the PID to a file. To do this, use the command:
 ```
-$ nohup java -jar -Xmx512m franek-bot_1.0-SNAPSHOT-jar-with-dependencies.jar <dev/null 2>$1 | tee logfile.log &
+$ nohup java -Xmx512m -jar franek-bot_1.0-SNAPSHOT-jar-with-dependencies.jarev/null 2>&1 | tee logfile.log &
 ```
 
 ## JAR package
