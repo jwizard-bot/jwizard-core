@@ -18,13 +18,40 @@
 
 package pl.miloszgilga.franekbotapp.executors.statistics;
 
+import org.hibernate.Session;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.Member;
+import jakarta.persistence.NoResultException;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
-import static pl.miloszgilga.franekbotapp.BotCommand.MAIN_STATS;
+import java.util.List;
+import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.text.SimpleDateFormat;
+
+import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
+import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
+import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
+import pl.miloszgilga.franekbotapp.messages.MessageEmbedField;
+import pl.miloszgilga.franekbotapp.database.entities.UserStats;
+import pl.miloszgilga.franekbotapp.database.HibernateSessionFactory;
+import pl.miloszgilga.franekbotapp.database.dao.UserStatsStringifyDAO;
+import pl.miloszgilga.franekbotapp.exceptions.UserHasNotStatisticsYetException;
+import pl.miloszgilga.franekbotapp.exceptions.IllegalCommandArgumentsException;
+import pl.miloszgilga.franekbotapp.exceptions.FindingUserByGuidNotFoundException;
+
+import static pl.miloszgilga.franekbotapp.BotCommand.USER_STATS;
+import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 
 
 public final class ShowUserStatisticsCommandExecutor extends Command {
+
+    private final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+    private final LoggerFactory logger = new LoggerFactory(ShowUserStatisticsCommandExecutor.class);
+    private final HibernateSessionFactory sessionFactory = HibernateSessionFactory.getSingletonInstance();
+    private final Pattern pattern = Pattern.compile("^<@.[0-9]+.>$");
 
     public ShowUserStatisticsCommandExecutor() {
         name = USER_STATS.getCommandName();
@@ -33,6 +60,52 @@ public final class ShowUserStatisticsCommandExecutor extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+        try {
+            User findingUserStats = findUserBaseArgs(event);
+            try {
+                try (Session session = sessionFactory.openTransactionalSessionAndBeginTransaction()) {
+                    String jpqlQuery = "SELECT u FROM UserStats u WHERE u.serverGuildId=:sid AND u.uniqueUserId=:uid";
+                    UserStats userStats = session.createQuery(jpqlQuery, UserStats.class)
+                            .setParameter("sid", event.getGuild().getId()).setParameter("uid", findingUserStats.getId())
+                            .getSingleResult();
+                    final var embedMessage = new EmbedMessage(
+                            String.format("Statystyki użytkownika %s", userStats.getUserNameWithId()),
+                            "Poniżej znajdziesz szczegółowe statystyki wybranego użytkownika.",
+                            EmbedMessageColor.PURPLE,
+                            allUpdatableEmbededMessages(userStats)
+                    );
+                    embedMessage.getBuilder().setFooter(
+                            String.format("Statystyki na dzień: %s", formatter.format(new Date())),
+                            findingUserStats.getAvatarUrl());
+                    event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
+                }
+            } catch (NoResultException ex) {
+                throw new UserHasNotStatisticsYetException(event, findingUserStats);
+            }
+        } catch (IllegalCommandArgumentsException | FindingUserByGuidNotFoundException ex) {
+            logger.error(ex.getMessage(), event.getGuild());
+        } catch (UserHasNotStatisticsYetException ex) {
+            logger.warn(ex.getMessage(), event.getGuild());
+        }
+    }
 
+    private User findUserBaseArgs(CommandEvent event) {
+        final Matcher matcher = pattern.matcher(event.getArgs());
+        if (!matcher.matches()) throw new IllegalCommandArgumentsException(event, USER_STATS, String.format(
+                "`%s [opcjonalny tag użytkownika]`", config.getPrefix() + USER_STATS.getCommandName()));
+        if (event.getArgs().length() == 0) return event.getAuthor();
+
+        Member userMember = event.getGuild().getMemberById(event.getArgs().replaceAll("[^\\d.]", ""));
+        if (userMember == null) throw new FindingUserByGuidNotFoundException(event, event.getArgs());
+        return userMember.getUser();
+    }
+
+    private List<MessageEmbedField> allUpdatableEmbededMessages(UserStats userStats) {
+        final var stats = new UserStatsStringifyDAO(userStats);
+        return List.of(
+                new MessageEmbedField("Wysłane wiadomości:", stats.getMessagesSend()),
+                new MessageEmbedField("Zaktualizowane wiadomości:", stats.getMessagesUpdated()),
+                new MessageEmbedField("Dodane reakcje:", stats.getReactionsAdded())
+        );
     }
 }
