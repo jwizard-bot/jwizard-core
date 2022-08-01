@@ -27,8 +27,8 @@ import static pl.miloszgilga.franekbotapp.BotCommand.SRV_STATS;
 public final class ShowServerStatisticsCommandExecutor extends Command {
 
     public ShowServerStatisticsCommandExecutor() {
-        name = SRV_STATS.getCommandName();
-        help = SRV_STATS.getCommandDescription();
+        name = SERVER_STATS.getCommandName();
+        help = SERVER_STATS.getCommandDescription();
     }
 
     @Override

@@ -40,8 +40,8 @@ public enum BotCommand {
     MUSIC_VOTE_SKIP("voteskip", "pominięcie aktualnie odtwarzanej piosenki z kolejki i odtworzenie nowej poprzez głosowanie"),
     MUSIC_VOTE_SHUFFLE("voteshuffle", "przetasowanie kolejki z piosenkami poprzez głosowanie"),
     MUSIC_VOTE_QUEUE_CLEAR("voteclqueue", "wyczyszczenie całej kolejki z piosenkami (nie usuwa aktualnie odtwarzającej) poprzez głosowanie"),
-    SRV_STATS("srvstats", "pokazuje statystyki serwera (ilość osób, ilość wysłanych wiadomości itp.)"),
-    MAIN_STATS("mainstats", "pokazuje statystyki konkretnego użytkownika serwera (ilość wysłanych wiadomości itp.)"),
+    SERVER_STATS("serverstats", "pokazuje statystyki serwera (ilość osób, ilość wysłanych wiadomości itp.)"),
+    USER_STATS("userstats", "pokazuje statystyki konkretnego użytkownika serwera (ilość wysłanych wiadomości itp.)"),
     HELP("help", "wyświelnie wszystkich komend bota"),
     HELP_ME("helpme", "wyświetlenie wszystkich komend bota w wiadomości prywatnej");
 

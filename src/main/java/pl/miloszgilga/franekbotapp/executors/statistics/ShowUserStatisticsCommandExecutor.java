@@ -27,8 +27,8 @@ import static pl.miloszgilga.franekbotapp.BotCommand.MAIN_STATS;
 public final class ShowUserStatisticsCommandExecutor extends Command {
 
     public ShowUserStatisticsCommandExecutor() {
-        name = MAIN_STATS.getCommandName();
-        help = MAIN_STATS.getCommandDescription();
+        name = USER_STATS.getCommandName();
+        help = USER_STATS.getCommandDescription();
     }
 
     @Override
