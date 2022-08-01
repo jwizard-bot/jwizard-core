@@ -18,6 +18,7 @@
 
 package pl.miloszgilga.franekbotapp.logger;
 
+import org.slf4j.Logger;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.io.File;
@@ -36,19 +37,19 @@ import pl.miloszgilga.franekbotapp.configuration.LoggerRank;
 
 public final class LoggerOutputFilePrinter implements ILoggerOutputPrinter {
 
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(LoggerOutputFilePrinter.class);
+
     private final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     private final SimpleDateFormat fileNameDateFormatter = new SimpleDateFormat("ddMMyyyy");
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("ddMM");
 
     @Override
     public void loggerOutputPrinter(String message, LoggerRank rank, Guild guild, Class<?> authorClazz) {
-        if (guild == null) return;
-
         Date date = new Date();
         PrintWriter out;
         try {
             String logsDirPath = LoggerFactory.getLogsFolderPath();
-            String serverGuidDirName = guild.getId() + "_" + guild.getName();
+            String serverGuidDirName = guild.getId() + "_" + guild.getName().replaceAll("[^a-zA-Z0-9_-]", "-");
             String logDataDirName = generateDirNameBaseDate(guild);
 
             File serverDir = new File(logsDirPath + serverGuidDirName);
@@ -78,7 +79,7 @@ public final class LoggerOutputFilePrinter implements ILoggerOutputPrinter {
 
             out.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            logger.error("Błąd podczas tworzenia struktury katalogów loggera");
         }
     }
 

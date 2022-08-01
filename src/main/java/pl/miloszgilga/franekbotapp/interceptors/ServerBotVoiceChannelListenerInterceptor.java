@@ -61,18 +61,16 @@ public final class ServerBotVoiceChannelListenerInterceptor extends ListenerAdap
                 .filter(member -> !member.getUser().isBot())
                 .collect(Collectors.toList());
         if (allChannelMembersWithoutBot.isEmpty() && event.getChannelLeft().getMembers().contains(botMember)) {
-            if (executorTimer == null) {
-                executorTimer = new ExecutorTimer(ELAPSE_TIME, () -> {
-                    final MusicManager musicManager = playerManager.getMusicManager(eventWrapper);
-                    event.getJDA().getDirectAudioController().disconnect(event.getGuild());
-                    musicManager.getAudioPlayer().stopTrack();
-                    musicManager.getScheduler().getQueue().clear();
-                    logger.warn(String.format(
-                            "Opuszczenie kanału głosowego '%s' w wyniku braku aktywnych użytkowników przez '%s' minut",
-                            event.getChannelLeft().getName(), ELAPSE_TIME
-                    ), null);
-                });
-            }
+            executorTimer = new ExecutorTimer(ELAPSE_TIME, () -> {
+                final MusicManager musicManager = playerManager.getMusicManager(eventWrapper);
+                event.getJDA().getDirectAudioController().disconnect(event.getGuild());
+                musicManager.getAudioPlayer().stopTrack();
+                musicManager.getScheduler().getQueue().clear();
+                logger.warn(String.format(
+                        "Opuszczenie kanału głosowego '%s' w wyniku braku aktywnych użytkowników przez '%s' minut",
+                        event.getChannelLeft().getName(), ELAPSE_TIME
+                ), null);
+            });
             executorTimer.execute();
         }
     }

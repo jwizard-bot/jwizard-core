@@ -59,10 +59,6 @@ public final class LoggerFactory {
         loggerPrintableInvoker(message, ERROR, guild);
     }
 
-    public void debug(String message, Guild guild) {
-        loggerPrintableInvoker(message, DEBUG, guild);
-    }
-
     private void loggerPrintableInvoker(String message, LoggerRank loggerRank, Guild guild) {
         if (loggerConfig.isLoggerEnabled() && loggerConfig.getLoggerSensitivity().contains(ERROR)) {
             if (loggerConfig.isEnableLoggedToStandardOutput()) {
