@@ -44,6 +44,10 @@ With this configuration, it is possible to run the production version on the ser
         "maxInactivityTimeMinutes": 5, // max inactivity time, after bot leaving voice channel (if less than 0, not leave)
         "maxInactivityTimeAfterPauseTrackMinutes": 10, // max inactivity time (also empty channel) after bot leave
         "maxVotingElapseTimeMinutes": 2 // max time in which to conduct the vote (if less than 0, no maximum time)
+        "activityStatusSequencer": {
+            "enableRandomizeActivityStatus": true, // enable/disable changing after X time bot activity status
+            "intervalSeconds": 10 // change activity status interval (in seconds)
+        }
     },
     "miscellaneous": {
         "logger": {
