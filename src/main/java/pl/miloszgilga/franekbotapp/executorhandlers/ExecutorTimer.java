@@ -27,6 +27,7 @@ public class ExecutorTimer {
     private final Timer timer = new Timer();
     private final long executingTime;
     private final TimerTask timerTask;
+    private boolean isCancel;
 
     public ExecutorTimer(byte executingTimeInMinutes, IExecutorTimerLambaExpression expression) {
         executingTime = executingTimeInMinutes * 60 * 1000;
@@ -39,10 +40,13 @@ public class ExecutorTimer {
     }
 
     public void execute() {
+        isCancel = false;
         timer.schedule(timerTask, executingTime);
     }
 
     public void interrupt() {
+        if (isCancel) return;
+        isCancel = true;
         timerTask.cancel();
         timer.cancel();
     }
