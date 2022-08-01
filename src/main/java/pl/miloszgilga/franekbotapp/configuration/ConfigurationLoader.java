@@ -18,8 +18,8 @@
 
 package pl.miloszgilga.franekbotapp.configuration;
 
+import org.slf4j.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 
 import java.io.InputStream;
 import java.io.IOException;
@@ -27,6 +27,8 @@ import java.io.FileNotFoundException;
 
 
 public class ConfigurationLoader {
+
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(ConfigurationLoader.class);
 
     private static final String PROD_CONFIG_FILE = "prod-config.json";
     private static final String DEV_CONFIG_FILE = "dev-config.json";
@@ -41,8 +43,7 @@ public class ConfigurationLoader {
             throw new FileNotFoundException(String.format("Plik konfiguracyjny %s nie istnieje!", configJSON));
         }
         config = objectMapper.readValue(new String(configFile.readAllBytes()), Configuration.class);
-        final LoggerFactory logger = new LoggerFactory(ConfigurationLoader.class);
-        logger.debug(String.format("Konfiguracja z pliku '%s' załadowana pomyślnie", configJSON), null);
+        logger.info("Konfiguracja z pliku '{}' załadowana pomyślnie", configJSON);
     }
 
     public static void checkIfItsDevelopmentVersion(String[] args) throws IOException {
