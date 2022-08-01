@@ -32,8 +32,7 @@ public final class MusicBotIsInUseException extends JdaIllegalChatStateException
         super(event);
         final var embedMessage = new EmbedMessage("UWAGA!", String.format(
                 "Bot jest aktualnie używany na kanale głosowym **%s**. Aby przenieść bota na kanał głosowy na którym " +
-                "aktualnie się znajdujesz, użyj komendy `%s`.", event.getChannel().getName(), MUSIC_JOIN.getCommandName()
-                ),
+                "aktualnie się znajdujesz, użyj komendy `%s`.", event.getChannel().getName(), MUSIC_JOIN.getCommandName()),
                 EmbedMessageColor.ORANGE
         );
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();

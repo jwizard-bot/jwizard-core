@@ -28,4 +28,10 @@ public class MessageEmbedField {
     private final String name;
     private final String description;
     private final boolean ifInline;
+
+    public MessageEmbedField(String name, String description) {
+        this.name = name;
+        this.description = description;
+        ifInline = true;
+    }
 }

@@ -27,7 +27,8 @@ import lombok.AllArgsConstructor;
 public enum EmbedMessageColor {
     GREEN("#19d166"),
     RED("#d11919"),
-    ORANGE("#ffa805");
+    ORANGE("#ffa805"),
+    PURPLE("#d580ff");
 
     private final String color;
 }
