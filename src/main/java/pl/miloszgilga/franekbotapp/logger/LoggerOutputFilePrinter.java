@@ -35,7 +35,7 @@ import java.time.format.DateTimeFormatter;
 import pl.miloszgilga.franekbotapp.configuration.LoggerRank;
 
 
-public final class LoggerOutputFilePrinter implements ILoggerOutputPrinter {
+final class LoggerOutputFilePrinter implements ILoggerOutputPrinter {
 
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(LoggerOutputFilePrinter.class);
 
