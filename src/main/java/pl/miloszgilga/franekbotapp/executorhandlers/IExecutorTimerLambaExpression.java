@@ -19,6 +19,7 @@
 package pl.miloszgilga.franekbotapp.executorhandlers;
 
 
+@FunctionalInterface
 public interface IExecutorTimerLambaExpression {
     void executeContentAfterTimeElapse();
 }
