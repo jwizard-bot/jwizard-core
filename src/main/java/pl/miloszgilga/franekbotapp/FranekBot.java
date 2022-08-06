@@ -73,8 +73,7 @@ public final class FranekBot {
                 .addEventListeners(reflection.reflectAllInterceptors(interceptors))
                 .build();
 
-        final BotActivitySequencer sequencer = BotActivitySequencer.getSingletonInstance();
-        sequencer.setJda(jda);
+        final BotActivitySequencer sequencer = BotActivitySequencer.getSingletonInstance(jda);
         sequencer.invokeSequencer();
     }
 }
