@@ -25,13 +25,13 @@ import jakarta.persistence.Entity;
 
 import java.io.Serializable;
 
-import pl.miloszgilga.franekbotapp.database.BasicHibernateEntity;
+import pl.miloszgilga.franekbotapp.database.IBasicHibernateEntity;
 
 
 @Entity
 @ToString
 @Table(name = "USER_STATS")
-public class UserStats extends AuditEntity implements Serializable, BasicHibernateEntity {
+public class UserStats extends AuditEntity implements Serializable, IBasicHibernateEntity {
     private static final long serialversionUID = 1L;
 
     @Column(name = "UNIQUE_USER_ID")    private String uniqueUserId;

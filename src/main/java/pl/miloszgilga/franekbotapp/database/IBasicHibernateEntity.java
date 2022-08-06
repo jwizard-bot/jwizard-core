@@ -19,5 +19,5 @@
 package pl.miloszgilga.franekbotapp.database;
 
 
-public interface BasicHibernateEntity {
+public interface IBasicHibernateEntity {
 }
