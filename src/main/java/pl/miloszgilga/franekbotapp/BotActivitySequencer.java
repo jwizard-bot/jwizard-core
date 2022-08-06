@@ -31,14 +31,15 @@ class BotActivitySequencer extends TimerTask {
 
     private static final ActivityStatusSequencerConfiguration seqConfig = config.getActivitySequencerConfiguration();
     private static volatile BotActivitySequencer sequencer;
-    private JDA jda;
+    private final JDA jda;
 
     private final List<BotCommand> activityRandomizerElements = BotCommand.getAllCommandsAsEnumValues();
     private final Timer timer = new Timer();
     private int elementPos = 0;
 
-    private BotActivitySequencer() {
+    private BotActivitySequencer(JDA jda) {
         if (sequencer != null) throw new IllegalArgumentException();
+        this.jda = jda;
     }
 
     void invokeSequencer() {
@@ -56,14 +57,10 @@ class BotActivitySequencer extends TimerTask {
         jda.getPresence().setActivity(Activity.listening(config.getPrefix() + selectedActivity));
     }
 
-    static synchronized BotActivitySequencer getSingletonInstance() {
+    static synchronized BotActivitySequencer getSingletonInstance(JDA jda) {
         if (sequencer == null) {
-            sequencer = new BotActivitySequencer();
+            sequencer = new BotActivitySequencer(jda);
         }
         return sequencer;
-    }
-
-    public void setJda(JDA jda) {
-        this.jda = jda;
     }
 }
