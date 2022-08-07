@@ -85,12 +85,6 @@ public class HibernateSessionFactory {
         return session;
     }
 
-    public void commitAndCloseTransactionalSession(Session session) {
-        session.getTransaction().commit();
-        session.close();
-        sessionFactory.close();
-    }
-
     public static synchronized HibernateSessionFactory getSingletonInstance() {
         if (instance == null) {
             instance = new HibernateSessionFactory();

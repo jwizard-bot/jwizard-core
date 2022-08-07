@@ -29,7 +29,7 @@ import java.util.HashMap;
 
 public class PlayerManager {
 
-    private final int CONNECTION_REFUSED = 10000;
+    private final int CONNECTION_REFUSED_MILIS = 10000;
 
     private static volatile PlayerManager playerManager;
     private final Map<Long, MusicManager> musicManagerMap = new HashMap<>();
@@ -40,7 +40,7 @@ public class PlayerManager {
         AudioSourceManagers.registerRemoteSources(audioPlayerManager);
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
         audioPlayerManager.setHttpRequestConfigurator((config) ->
-                RequestConfig.copy(config).setConnectTimeout(CONNECTION_REFUSED).build());
+                RequestConfig.copy(config).setConnectTimeout(CONNECTION_REFUSED_MILIS).build());
     }
 
     public MusicManager getMusicManager(EventWrapper event) {

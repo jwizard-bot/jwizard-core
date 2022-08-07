@@ -41,14 +41,13 @@ public final class MismatchCommandInterceptor extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         try {
-            if (!event.getAuthor().isBot() && event.getMessage().getContentRaw().contains(config.getPrefix())) {
-                List<String> prefixAndArgs = Arrays.stream(event.getMessage().getContentRaw().split(" "))
-                        .collect(Collectors.toList());
+            if (event.getAuthor().isBot() && !event.getMessage().getContentRaw().contains(config.getPrefix())) return;
 
-                String commandName = prefixAndArgs.get(0).replace(config.getPrefix(), "");
-                if (allCommands.stream().noneMatch(el -> el.equals(commandName))) {
-                    throw new UnrecognizedCommandException(event);
-                }
+            List<String> prefixAndArgs = Arrays.stream(event.getMessage().getContentRaw().split(" "))
+                    .collect(Collectors.toList());
+            String commandName = prefixAndArgs.get(0).replace(config.getPrefix(), "");
+            if (allCommands.stream().noneMatch(el -> el.equals(commandName))) {
+                throw new UnrecognizedCommandException(event);
             }
         } catch (UnrecognizedCommandException ex) {
             logger.error(ex.getMessage(), event.getGuild());

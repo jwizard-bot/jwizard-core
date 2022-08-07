@@ -60,22 +60,20 @@ public final class LoggerFactory {
     }
 
     private void loggerPrintableInvoker(String message, LoggerRank loggerRank, Guild guild) {
-        if (loggerConfig.isLoggerEnabled() && loggerConfig.getLoggerSensitivity().contains(ERROR)) {
-            if (loggerConfig.isEnableLoggedToStandardOutput()) {
-                loggerOutputConsolePrinter.loggerOutputPrinter(message, loggerRank, guild, loggingAuthorClazz);
-            }
-            if (loggerConfig.isEnableLoggedToFileOutput()) {
-                loggerOutputFilePrinter.loggerOutputPrinter(message, loggerRank, guild, loggingAuthorClazz);
-            }
+        if (!loggerConfig.isLoggerEnabled() || !loggerConfig.getLoggerSensitivity().contains(loggerRank)) return;
+        if (loggerConfig.isEnableLoggedToStandardOutput()) {
+            loggerOutputConsolePrinter.loggerOutputPrinter(message, loggerRank, guild, loggingAuthorClazz);
+        }
+        if (loggerConfig.isEnableLoggedToFileOutput()) {
+            loggerOutputFilePrinter.loggerOutputPrinter(message, loggerRank, guild, loggingAuthorClazz);
         }
     }
 
     private void createFolderInstance() {
         try {
-            if (loggerConfig.isEnableLoggedToFileOutput()) {
-                if (Files.exists(Paths.get(getLogsFolderPath()))) return;
-                if (!new File(getLogsFolderPath()).mkdir()) throw new IOException();
-            }
+            if (!loggerConfig.isEnableLoggedToFileOutput()) return;
+            if (Files.exists(Paths.get(getLogsFolderPath()))) return;
+            if (!new File(getLogsFolderPath()).mkdir()) throw new IOException();
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }

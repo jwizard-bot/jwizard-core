@@ -51,20 +51,19 @@ class AudioLoaderResult implements AudioLoadResultHandler {
         final Member senderUser = event.getGuild().getMember(event.getUser());
         audioTrack.setUserData(senderUser);
         musicManager.getScheduler().queue(new QueueTrackExtendedInfo(senderUser, audioTrack));
-        if (!musicManager.getScheduler().getQueue().isEmpty()) {
-            onSingleTrackLoadedSendEmbedMessage(audioTrack);
-            logger.info(String.format("Użytkownik '%s' dodał nową piosenkę do kolejki '%s'",
-                    event.getUser().getAsTag(), audioTrack.getInfo().title), event.getGuild());
-        }
+        if (musicManager.getScheduler().getQueue().isEmpty()) return;
+
+        onSingleTrackLoadedSendEmbedMessage(audioTrack);
+        logger.info(String.format("Użytkownik '%s' dodał nową piosenkę do kolejki '%s'",
+                event.getUser().getAsTag(), audioTrack.getInfo().title), event.getGuild());
     }
 
     @Override
     public void playlistLoaded(AudioPlaylist audioPlaylist) {
         final List<AudioTrack> trackList = audioPlaylist.getTracks();
         final Member senderUser = event.getGuild().getMember(event.getUser());
-        if (trackList.isEmpty()) {
-            return;
-        }
+        if (trackList.isEmpty()) return;
+
         if (ifValidUri) {
             onPlaylistLoadedSendEmbedMessage(trackList, audioPlaylist);
             for(int i = 0; i < audioPlaylist.getTracks().size(); i++) {

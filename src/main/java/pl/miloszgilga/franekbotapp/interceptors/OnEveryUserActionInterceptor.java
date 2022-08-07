@@ -28,8 +28,8 @@ import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 
-import pl.miloszgilga.franekbotapp.database.HibernateSessionFactory;
 import pl.miloszgilga.franekbotapp.database.entities.UserStats;
+import pl.miloszgilga.franekbotapp.database.HibernateSessionFactory;
 
 import static pl.miloszgilga.franekbotapp.interceptors.UpdateParameters.*;
 

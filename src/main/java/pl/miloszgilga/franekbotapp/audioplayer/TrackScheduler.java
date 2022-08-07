@@ -142,12 +142,11 @@ public class TrackScheduler extends AudioEventAdapter {
             executorTimer.execute();
             return;
         }
-        if (endReason.mayStartNext) {
-            if (repeating) {
-                audioPlayer.startTrack(track.makeClone(), false);
-            } else {
-                nextTrack();
-            }
+        if (endReason.mayStartNext) return;
+        if (repeating) {
+            audioPlayer.startTrack(track.makeClone(), false);
+        } else {
+            nextTrack();
         }
     }
 
@@ -165,9 +164,8 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public void setRepeating(boolean repeating) {
         this.repeating = repeating;
-        if (!repeating) {
-            alreadyDisplayed = false;
-        }
+        if (repeating) return;
+        alreadyDisplayed = false;
     }
 
     public void queueShuffle() {
@@ -175,9 +173,7 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public String queueTrackPositionBaseId() {
-        if (queue.size() == 1) {
-            return "Następna";
-        }
+        if (queue.size() == 1) return "Następna";
         return Integer.toString(queue.size());
     }
 }
