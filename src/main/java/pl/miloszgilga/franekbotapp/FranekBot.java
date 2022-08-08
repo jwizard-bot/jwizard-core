@@ -79,5 +79,9 @@ public final class FranekBot {
 
         final BotActivitySequencer sequencer = BotActivitySequencer.getSingletonInstance(jda);
         sequencer.invokeSequencer();
+
+        // initialise inside-logger channel configuration loader
+        final ChannelLoggerLoader loggerLoader = ChannelLoggerLoader.getSingletonInstance(jda);
+        loggerLoader.initialiseChannelLoggerConfiguration();
     }
 }
