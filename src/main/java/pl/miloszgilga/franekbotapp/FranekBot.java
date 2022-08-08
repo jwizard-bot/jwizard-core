@@ -32,6 +32,8 @@ import java.io.IOException;
 import javax.security.auth.login.LoginException;
 
 import pl.miloszgilga.franekbotapp.database.HibernateSessionFactory;
+import pl.miloszgilga.franekbotapp.channellogger.ChannelLoggerLoader;
+import pl.miloszgilga.franekbotapp.channellogger.AuditableInterceptorsReflection;
 
 import static pl.miloszgilga.franekbotapp.BotCommand.HELP_ME;
 import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
@@ -42,6 +44,7 @@ public final class FranekBot {
 
     private static final ElementsReflection reflection = ElementsReflection.getSingletonInstance();
     private static final FancyTitleGenerator generator = FancyTitleGenerator.getSingletonInstance();
+    private static final AuditableInterceptorsReflection auditReflection = AuditableInterceptorsReflection.getSingletonInstance();
 
     public static void main(String[] args) throws LoginException, IOException {
         checkIfItsDevelopmentVersion(args);
@@ -71,6 +74,7 @@ public final class FranekBot {
                 .setStatus(OnlineStatus.ONLINE)
                 .setActivity(Activity.listening("Loading..."))
                 .addEventListeners(reflection.reflectAllInterceptors(interceptors))
+                .addEventListeners(auditReflection.reflectAllAuditableInterceptors())
                 .build();
 
         final BotActivitySequencer sequencer = BotActivitySequencer.getSingletonInstance(jda);
