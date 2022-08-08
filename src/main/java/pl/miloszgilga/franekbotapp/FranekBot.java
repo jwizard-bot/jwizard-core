@@ -57,6 +57,7 @@ public final class FranekBot {
         final String BOT_ID = config.getAuthorization().getApplicationId();
         final String BOT_TOKEN = config.getAuthorization().getToken();
 
+        // initialise hibernate singleton instance
         HibernateSessionFactory.getSingletonInstance();
 
         CommandClientBuilder builder = new CommandClientBuilder();
@@ -77,6 +78,7 @@ public final class FranekBot {
                 .addEventListeners(auditReflection.reflectAllAuditableInterceptors())
                 .build();
 
+        // initialise threading bot activity status sequencer
         final BotActivitySequencer sequencer = BotActivitySequencer.getSingletonInstance(jda);
         sequencer.invokeSequencer();
 
