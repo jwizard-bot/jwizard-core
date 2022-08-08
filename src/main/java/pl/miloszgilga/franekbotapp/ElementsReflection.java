@@ -22,12 +22,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.reflections.Reflections;
 import com.jagrosh.jdautilities.command.Command;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.util.Set;
 import java.util.Deque;
 import java.util.HashSet;
 
+import pl.miloszgilga.franekbotapp.interceptors.IBasicInterceptor;
 
 final class ElementsReflection {
 
@@ -61,7 +61,7 @@ final class ElementsReflection {
 
     Object[] reflectAllInterceptors(final Deque<Object> interceptors) {
         final Reflections reflections = new Reflections(INTERCEPTORS_PACKAGE);
-        final Set<Class<? extends ListenerAdapter>> interceptorsClazz = reflections.getSubTypesOf(ListenerAdapter.class);
+        final Set<Class<? extends IBasicInterceptor>> interceptorsClazz = reflections.getSubTypesOf(IBasicInterceptor.class);
 
         interceptorsClazz.forEach(clazz -> {
             try {
