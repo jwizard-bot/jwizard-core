@@ -34,7 +34,7 @@ import pl.miloszgilga.franekbotapp.database.HibernateSessionFactory;
 import static pl.miloszgilga.franekbotapp.interceptors.UpdateParameters.*;
 
 
-public final class OnEveryUserActionInterceptor extends ListenerAdapter {
+public final class StatisticsUsersActionInterceptor extends ListenerAdapter implements IBasicInterceptor {
 
     private final HibernateSessionFactory sessionFactory = HibernateSessionFactory.getSingletonInstance();
 

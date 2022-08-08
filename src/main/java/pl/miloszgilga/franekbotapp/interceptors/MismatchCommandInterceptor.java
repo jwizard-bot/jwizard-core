@@ -33,7 +33,7 @@ import static pl.miloszgilga.franekbotapp.BotCommand.getAllCommands;
 import static pl.miloszgilga.franekbotapp.configuration.ConfigurationLoader.config;
 
 
-public final class MismatchCommandInterceptor extends ListenerAdapter {
+public final class MismatchCommandInterceptor extends ListenerAdapter implements IBasicInterceptor {
 
     private final LoggerFactory logger = new LoggerFactory(MismatchCommandInterceptor.class);
     private final List<String> allCommands = getAllCommands();
