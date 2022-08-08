@@ -58,4 +58,8 @@ public class Configuration {
     public ActivityStatusSequencerConfiguration getActivitySequencerConfiguration() {
         return sequencers.getActivityStatusSequencer();
     }
+
+    public ChannelLoggerConfiguration getChannelLoggerConfiguration() {
+        return miscellaneous.getChannelLogger();
+    }
 }

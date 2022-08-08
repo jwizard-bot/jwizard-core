@@ -20,6 +20,27 @@
         }
     },
     "miscellaneous": {
+        "channelLogger": {
+            "loggerEnabled": true,
+            "loggerChannelsCategoryName": "━━━━━ LOGGER ━━━━━",
+            "loggerChannels": [
+                {
+                    "channelType": "MOD_LOGGER",
+                    "channelName": "log_mod",
+                    "enabled": true
+                },
+                {
+                    "channelType": "CHAT_LOGGER",
+                    "channelName": "log_chat",
+                    "enabled": true
+                },
+                {
+                    "channelType": "VOICE_LOGGER",
+                    "channelName": "log_voice",
+                    "enabled": true
+                }
+            ]
+        },
         "logger": {
             "loggerEnabled": true,
             "loggerOutputFolderName": "prod-logs",
