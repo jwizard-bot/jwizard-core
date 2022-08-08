@@ -23,6 +23,7 @@ import lombok.Data;
 
 @Data
 public class MiscellaneousConfiguration {
+    private ChannelLoggerConfiguration channelLogger;
     private LoggerConfiguration logger;
     private DatabaseConfiguration database;
 }
