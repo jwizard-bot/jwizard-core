@@ -41,7 +41,7 @@ public final class MismatchCommandInterceptor extends ListenerAdapter implements
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         try {
-            if (event.getAuthor().isBot() && !event.getMessage().getContentRaw().contains(config.getPrefix())) return;
+            if (event.getAuthor().isBot() || !event.getMessage().getContentRaw().contains(config.getPrefix())) return;
 
             List<String> prefixAndArgs = Arrays.stream(event.getMessage().getContentRaw().split(" "))
                     .collect(Collectors.toList());
