@@ -50,27 +50,6 @@ With this configuration, it is possible to run the production version on the ser
         }
     },
     "miscellaneous": {
-        "channelLogger": {
-            "loggerEnabled": true, // enable/disable channel-build logger
-            "loggerChannelsCategoryName": "━━━━━ LOGGER ━━━━━", // logger channels category name
-            "loggerChannels": [
-                {
-                    "channelType": "MOD_LOGGER", // type of channel-build text channel
-                    "channelName": "log_mod", // name of channel-build text channel
-                    "enabled": true // enable/disable logging into text channel
-                },
-                {
-                    "channelType": "CHAT_LOGGER",
-                    "channelName": "log_chat",
-                    "enabled": true
-                },
-                {
-                    "channelType": "VOICE_LOGGER",
-                    "channelName": "log_voice",
-                    "enabled": true
-                }
-            ]
-        },
         "logger": {
             "loggerEnabled": true, // enable/disable logger
             "loggerOutputFolderName": "dev-logs", // logger output directory
