@@ -85,7 +85,7 @@ In order to run the programme as a separate server process (on a machine running
 ```
 $ nohup java -Xmx512m -jar franek-bot_1.0-SNAPSHOT-jar-with-dependencies.jarev/null 2>&1 | tee logfile.log &
 ```
-
+> NOTE: To return to the shell, use the `Ctrl+C` or `⌘+C`
 ## JAR package
 The application has been prepared to make package of this application into a JAR executable file. All you need to do is run the `clean` option in the IDE and then `package` in the `Maven` tab. To run the packaged jar file, use the following command:
 ```
