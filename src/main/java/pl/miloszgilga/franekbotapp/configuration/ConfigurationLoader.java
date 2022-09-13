@@ -51,13 +51,13 @@ public class ConfigurationLoader {
     }
 
     private static void includeEnvironmentVariablesIntoConfig() {
-        final Dotenv dotenv = Dotenv.configure().load();
+        //final Dotenv dotenv = Dotenv.configure().systemProperties().load();
         final String envPrefix = config.isDevelopmentMode() ? DEV_PREFIX.getName() : PROD_PREFIX.getName();
-        config.getAuthorization().setToken(dotenv.get(envPrefix + TOKEN.getName()));
-        config.getAuthorization().setApplicationId(dotenv.get(envPrefix + APPLICATION_ID.getName()));
-        config.getDbConfig().setDatabaseUrl(dotenv.get(envPrefix + DATABASE_CONNECTION_STRING.getName()));
-        config.getDbConfig().setUsername(dotenv.get(envPrefix + DATABASE_USERNAME.getName()));
-        config.getDbConfig().setPassword(dotenv.get(envPrefix + DATABASE_PASSWORD.getName()));
+        config.getAuthorization().setToken(System.getenv(envPrefix + TOKEN.getName()));
+        config.getAuthorization().setApplicationId(System.getenv(envPrefix + APPLICATION_ID.getName()));
+        config.getDbConfig().setDatabaseUrl(System.getenv(envPrefix + DATABASE_CONNECTION_STRING.getName()));
+        config.getDbConfig().setUsername(System.getenv(envPrefix + DATABASE_USERNAME.getName()));
+        config.getDbConfig().setPassword(System.getenv(envPrefix + DATABASE_PASSWORD.getName()));
         logger.info("Konfiguracja zmiennych środowiskowych załatowana pomyślnie.");
     }
 
