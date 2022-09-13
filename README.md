@@ -26,15 +26,34 @@ $ git clone https://github.com/Milosz08/JDA_Discord_Bot
 The application was split into a production start-up and a development start-up. There are different configuration files for the two versions. For the development version it is `dev-config.json` and for the production version it is `prod-config.json`.
 With this configuration, it is possible to run the production version on the server at the same time (continuity of service), and the development version on the computer, where new functionalities can be added and tested.
 > NOTE: The production and development versions are actually separate instances of discord bots. Two separate applications must be created for them to work properly.
-* Change file name from `example-prod-config.json`/`example-dev-config.json` to `prod-config.json`/`dev-config.json` and fill with the appropriate values:
-```js
+* FOR LOCAL MACHINE: Create `.env` file:
+```properties
+PROD_TOKEN=xxxxx <- discord api token (available in discord api dashboard)
+PROD_APPLICATION_ID=xxxxx <- discord application identifier (available in discord api dashboard)
+PROD_DATABASE_CONNECTION_STRING=xxxxx <- ex. jdbc:[dbClient]://[dbServer]:[dbPort]/[dbName]
+PROD_DATABASE_USERNAME=xxxxx <- database agent username
+PROD_DATABASE_PASSWORD=xxxxx <- database agent password
+
+DEV_TOKEN=xxxxx
+DEV_APPLICATION_ID=xxxxx
+DEV_DATABASE_CONNECTION_STRING=xxxxx
+DEV_DATABASE_USERNAME=xxxxx
+DEV_DATABASE_PASSWORD=xxxxx
+```
+* FOR HEROKU CLOUD: Add environment variables from a file via the GUI or using the command:
+```
+$ heroku config:set VARIABLE_NAME=variablevalue
+```
+> NOTE: For more informations about environment variables, go to [heroku website](https://devcenter.heroku.com/articles/config-vars).
+* Fill with the appropriate values (skip environment variables):
+```json5
 {
     "botVersion": "1.0-SNAPSHOT", // version of bot
     "showFancyTitle": true, // showing ASCII letters title, when application starting
     "developmentMode": true, // in prod-config.json file must be false, in dev-config.json must be true
     "authorization": {
-        "token": "xxxx", // discord bot token (for find more, goto https://discord.com/developers/)
-        "applicationId": "xxxx" // discord application identifier (for find more, goto https://discord.com/developers/)
+        "token": "${DEV_TOKEN}", // refeer to environment variable DEV_TOKEN
+        "applicationId": "${DEV_APPLICATION_ID}" // refeer to environment variable DEV_APPLICATION_ID
     },
     "executors": {
         "defPrefix": "?", // default bot prefix, which used to invoke all commands
@@ -43,7 +62,7 @@ With this configuration, it is possible to run the production version on the ser
     "sequencers": {
         "maxInactivityTimeMinutes": 5, // max inactivity time, after bot leaving voice channel (if less than 0, not leave)
         "maxInactivityTimeAfterPauseTrackMinutes": 10, // max inactivity time (also empty channel) after bot leave
-        "maxVotingElapseTimeMinutes": 2 // max time in which to conduct the vote (if less than 0, no maximum time)
+        "maxVotingElapseTimeMinutes": 2, // max time in which to conduct the vote (if less than 0, no maximum time)
         "activityStatusSequencer": {
             "enableRandomizeActivityStatus": true, // enable/disable changing after X time bot activity status
             "intervalSeconds": 10 // change activity status interval (in seconds)
@@ -61,15 +80,15 @@ With this configuration, it is possible to run the production version on the ser
         }
     },
     "database": {
-        "databaseUrl": "jdbc:[dbType]://[dbServer]:[dbPort]/[dbName]", // two db instances for dev and prod version
+        "databaseUrl": "${DEV_DATABASE_CONNECTION_STRING}", // refeer to environment variable DEV_DATABASE_CONNECTION_STRING
         "enforceSslConnection": true, // force ssl connection (only for production mode)
-        "username": "xxxx", // database username
-        "password": "xxxx", // database password
+        "username": "${DEV_DATABASE_USERNAME}", // refeer to environment variable DEV_DATABASE_USERNAME
+        "password": "${DEV_DATABASE_PASSWORD}", // refeer to environment variable DEV_DATABASE_PASSWORD
         "createDatabaseIfNotExist": true, // create database, if does not exist
         "sqlOnStandardOutput": true, // print JDBC sql commands on console
         "hibernateDriverPackage": "[external database driver package, ex. com.mysql.cj.jdbc.Driver]",
         "hibernateDialectPackage": "org.hibernate.dialect.[selected database dialect]",
-        "hbm2ddlAutoMode": "validate" // hibernate db management (DONT USE AUTO!!!, use NONE/VALIDATE)
+        "hbm2ddlAutoMode": "none" // hibernate db management (DONT USE AUTO!!!, use NONE/VALIDATE)
     }
 }
 ```
@@ -86,10 +105,15 @@ In order to run the programme as a separate server process (on a machine running
 $ nohup java -Xmx512m -jar franek-bot_1.0-SNAPSHOT-jar-with-dependencies.jar </dev/null 2>&1 | tee logfile.log &
 ```
 > NOTE: To return to the shell, use the `Ctrl+C` or `⌘+C`.
+
 ## JAR package
 The application has been prepared to make package of this application into a JAR executable file. All you need to do is run the `clean` option in the IDE and then `package` in the `Maven` tab. To run the packaged jar file, use the following command:
 ```
 $ java -jar -Xmx512m franek-bot_1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
+
+## Author
+Created by Miłosz Gilga. If you have any questions about the application send message: [personal@miloszgilga.pl](mailto:personal@miloszgilga.pl).
+
 ## License
 This application is on MIT License.
