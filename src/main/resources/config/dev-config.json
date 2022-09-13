@@ -3,17 +3,17 @@
     "showFancyTitle": true,
     "developmentMode": true,
     "authorization": {
-        "token": "xxxx",
-        "applicationId": "xxxx"
+        "token": "${DEV_TOKEN}",
+        "applicationId": "${DEV_APPLICATION_ID}"
     },
     "executors": {
         "defPrefix": "?",
         "queuePaginationMaxElmsOnPage": 20
     },
     "sequencers": {
-        "maxInactivityTimeMinutes": 5,
-        "maxInactivityTimeAfterPauseTrackMinutes": 10,
-        "maxVotingElapseTimeMinutes": 2,
+        "maxInactivityTimeMinutes": 1,
+        "maxInactivityTimeAfterPauseTrackMinutes": 1,
+        "maxVotingElapseTimeMinutes": 1,
         "activityStatusSequencer": {
             "enableRandomizeActivityStatus": true,
             "intervalSeconds": 10
@@ -30,15 +30,15 @@
             "enableLoggedToFileOutput": true
         },
         "database": {
-            "databaseUrl": "jdbc:[dbType]://[dbServer]:[dbPort]/[dbName]",
+            "databaseUrl": "${DEV_DATABASE_CONNECTION_STRING}",
             "enforceSslConnection": true,
-            "username": "xxxx",
-            "password": "xxxx",
+            "username": "${DEV_DATABASE_USERNAME}",
+            "password": "${DEV_DATABASE_PASSWORD}",
             "createDatabaseIfNotExist": true,
             "sqlOnStandardOutput": true,
-            "hibernateDriverPackage": "[external database driver package, ex. com.mysql.cj.jdbc.Driver]",
-            "hibernateDialectPackage": "org.hibernate.dialect.[selected database dialect]",
-            "hbm2ddlAutoMode": "validate"
+            "hibernateDriverPackage": "com.mysql.cj.jdbc.Driver",
+            "hibernateDialectPackage": "org.hibernate.dialect.MySQLDialect",
+            "hbm2ddlAutoMode": "none"
         }
     }
 }

@@ -3,5 +3,4 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 .idea
-**/src/main/resources/config/dev-config.json
-**/src/main/resources/config/prod-config.json
+.env

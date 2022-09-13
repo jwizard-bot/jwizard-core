@@ -124,6 +124,11 @@
             <version>3.3.0</version>
             <type>maven-plugin</type>
         </dependency>
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>java-dotenv</artifactId>
+            <version>5.2.2</version>
+        </dependency>
 
     </dependencies>
 
@@ -132,10 +137,6 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>config/example-prod-config.json</exclude>
-                    <exclude>config/example-dev-config.json</exclude>
-                </excludes>
             </resource>
         </resources>
         <plugins>

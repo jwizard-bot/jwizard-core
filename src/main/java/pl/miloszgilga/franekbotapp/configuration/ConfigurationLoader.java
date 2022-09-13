@@ -19,11 +19,14 @@
 package pl.miloszgilga.franekbotapp.configuration;
 
 import org.slf4j.Logger;
+import io.github.cdimascio.dotenv.Dotenv;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+
+import static pl.miloszgilga.franekbotapp.configuration.EnvironmentVariable.*;
 
 
 public class ConfigurationLoader {
@@ -44,6 +47,18 @@ public class ConfigurationLoader {
         }
         config = objectMapper.readValue(new String(configFile.readAllBytes()), Configuration.class);
         logger.info("Konfiguracja z pliku '{}' załadowana pomyślnie", configJSON);
+        includeEnvironmentVariablesIntoConfig();
+    }
+
+    private static void includeEnvironmentVariablesIntoConfig() {
+        final Dotenv dotenv = Dotenv.configure().load();
+        final String envPrefix = config.isDevelopmentMode() ? DEV_PREFIX.getName() : PROD_PREFIX.getName();
+        config.getAuthorization().setToken(dotenv.get(envPrefix + TOKEN.getName()));
+        config.getAuthorization().setApplicationId(dotenv.get(envPrefix + APPLICATION_ID.getName()));
+        config.getDbConfig().setDatabaseUrl(dotenv.get(envPrefix + DATABASE_CONNECTION_STRING.getName()));
+        config.getDbConfig().setUsername(dotenv.get(envPrefix + DATABASE_USERNAME.getName()));
+        config.getDbConfig().setPassword(dotenv.get(envPrefix + DATABASE_PASSWORD.getName()));
+        logger.info("Konfiguracja zmiennych środowiskowych załatowana pomyślnie.");
     }
 
     public static void checkIfItsDevelopmentVersion(String[] args) throws IOException {
