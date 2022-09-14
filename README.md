@@ -6,27 +6,12 @@
 A multi-functional music bot (likely to be enhanced with additional features over time) that allows you to play, pause, repeat and queue songs on the popular VoIP Discord platform. Written entirely using Java SE 11. The bot also includes a proprietary log system I wrote (with the ability to log to a file and standard output).
 
 ## Table of content
-* [Dependencies list](#dependencies-list)
 * [Clone script](#clone-script)
 * [Prepare and run](#prepare-and-run)
 * [Running in the background (daemon)](#running-in-the-background-daemon)
 * [JAR package](#jar-package)
 * [Author](#author)
 * [License](#license)
-
-<a name="dependencies-list"></a>
-## Dependencies list
-- [Discord JDA](https://github.com/DV8FromTheWorld/JDA)
-- [Discord JDA Utilities](https://github.com/JDA-Applications/JDA-Utilities)
-- [Lavaplayer](https://github.com/sedmelluq/lavaplayer)
-- [JacksonJSON](https://github.com/FasterXML/jackson)
-- [Project Lombok](https://projectlombok.org/)
-- [Jakarta Persistence API](https://jakarta.ee/specifications/persistence/3.0/)
-- [Hibernate](https://hibernate.org/)
-- [Liquibase](https://www.liquibase.org/)
-- [MySQL Connector](https://mvnrepository.com/artifact/mysql/mysql-connector-java)
-- [Maven Assemby Plugin](https://maven.apache.org/plugins/maven-assembly-plugin/)
-> NOTE: For a list of all dependencies, check the `pom.xml` file.
 
 <a name="clone-script"></a>
 ## Clone script
