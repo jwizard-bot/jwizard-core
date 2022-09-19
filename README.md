@@ -27,17 +27,18 @@ With this configuration, it is possible to run the production version on the ser
 > NOTE: The production and development versions are actually separate instances of discord bots. Two separate applications must be created for them to work properly.
 * FOR LOCAL MACHINE: Create `.env` file:
 ```properties
-PROD_TOKEN=xxxxx <- discord api token (available in discord api dashboard)
-PROD_APPLICATION_ID=xxxxx <- discord application identifier (available in discord api dashboard)
-PROD_DATABASE_CONNECTION_STRING=xxxxx <- ex. jdbc:[dbClient]://[dbServer]:[dbPort]/[dbName]
-PROD_DATABASE_USERNAME=xxxxx <- database agent username
-PROD_DATABASE_PASSWORD=xxxxx <- database agent password
-
-DEV_TOKEN=xxxxx
-DEV_APPLICATION_ID=xxxxx
-DEV_DATABASE_CONNECTION_STRING=xxxxx
-DEV_DATABASE_USERNAME=xxxxx
-DEV_DATABASE_PASSWORD=xxxxx
+# for production version
+PROD_TOKEN                          = xxxxx <- discord api token (available in discord api dashboard)
+PROD_APPLICATION_ID                 = xxxxx <- discord application identifier (available in discord api dashboard)
+PROD_DATABASE_CONNECTION_STRING     = xxxxx <- ex. jdbc:[dbClient]://[dbServer]:[dbPort]/[dbName]
+PROD_DATABASE_USERNAME              = xxxxx <- database agent username
+PROD_DATABASE_PASSWORD              = xxxxx <- database agent password
+# for development version
+DEV_TOKEN                           = xxxxx
+DEV_APPLICATION_ID                  = xxxxx
+DEV_DATABASE_CONNECTION_STRING      = xxxxx
+DEV_DATABASE_USERNAME               = xxxxx
+DEV_DATABASE_PASSWORD               = xxxxx
 ```
 * FOR HEROKU CLOUD: Add environment variables from a file via the GUI or using the command:
 ```
