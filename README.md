@@ -52,8 +52,8 @@ $ heroku config:set VARIABLE_NAME=variablevalue
     "showFancyTitle": true, // showing ASCII letters title, when application starting
     "developmentMode": true, // in prod-config.json file must be false, in dev-config.json must be true
     "authorization": {
-        "token": "${DEV_TOKEN}", // refeer to environment variable DEV_TOKEN
-        "applicationId": "${DEV_APPLICATION_ID}" // refeer to environment variable DEV_APPLICATION_ID
+        "token": "${DEV_TOKEN}", // refer to environment variable DEV_TOKEN
+        "applicationId": "${DEV_APPLICATION_ID}" // refer to environment variable DEV_APPLICATION_ID
     },
     "executors": {
         "defPrefix": "?", // default bot prefix, which used to invoke all commands
@@ -80,10 +80,10 @@ $ heroku config:set VARIABLE_NAME=variablevalue
         }
     },
     "database": {
-        "databaseUrl": "${DEV_DATABASE_CONNECTION_STRING}", // refeer to environment variable DEV_DATABASE_CONNECTION_STRING
+        "databaseUrl": "${DEV_DATABASE_CONNECTION_STRING}", // refer to environment variable DEV_DATABASE_CONNECTION_STRING
         "enforceSslConnection": true, // force ssl connection (only for production mode)
-        "username": "${DEV_DATABASE_USERNAME}", // refeer to environment variable DEV_DATABASE_USERNAME
-        "password": "${DEV_DATABASE_PASSWORD}", // refeer to environment variable DEV_DATABASE_PASSWORD
+        "username": "${DEV_DATABASE_USERNAME}", // refer to environment variable DEV_DATABASE_USERNAME
+        "password": "${DEV_DATABASE_PASSWORD}", // refer to environment variable DEV_DATABASE_PASSWORD
         "createDatabaseIfNotExist": true, // create database, if does not exist
         "sqlOnStandardOutput": true, // print JDBC sql commands on console
         "hibernateDriverPackage": "[external database driver package, ex. com.mysql.cj.jdbc.Driver]",
