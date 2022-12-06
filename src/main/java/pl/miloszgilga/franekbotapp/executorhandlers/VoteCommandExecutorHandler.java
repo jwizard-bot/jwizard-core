@@ -91,7 +91,7 @@ public class VoteCommandExecutorHandler {
     private Thread countingUntilVoteElapsed() {
         return new Thread(() -> {
             try {
-                Thread.sleep(1000 * config.getMaxVotingElapseTimeMinutes());
+                Thread.sleep(1000 * 60 * config.getMaxVotingElapseTimeMinutes());
                 if (!isSuccessVoted) {
                     usersAlreadyVoted.clear();
                     final var leavingMessage = new EmbedMessage("GŁOSOWANIE ZAKOŃCZONE NIEPOWODZENIEM", "",
