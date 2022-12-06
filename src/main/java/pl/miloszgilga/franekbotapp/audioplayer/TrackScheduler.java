@@ -145,6 +145,7 @@ public class TrackScheduler extends AudioEventAdapter {
         if (repeating) {
             audioPlayer.startTrack(track.makeClone(), false);
         } else {
+            if (!endReason.mayStartNext) return;
             nextTrack();
         }
     }
