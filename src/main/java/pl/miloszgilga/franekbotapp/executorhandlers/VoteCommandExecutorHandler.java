@@ -23,6 +23,7 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
 import pl.miloszgilga.franekbotapp.audioplayer.PlayerManager;
@@ -55,7 +56,8 @@ public class VoteCommandExecutorHandler {
         this.votePassEmbedTitle = votePassEmbedTitle.toUpperCase(Locale.ROOT);
         this.voteTakesEmbedTitle = voteTakesEmbedTitle.toUpperCase(Locale.ROOT);
         this.voteFailureEmbedTitle = voteFailureEmbedTitle.toUpperCase(Locale.ROOT);
-        allChannelMembers = voiceChannel.getMembers().size() - 1;
+        allChannelMembers = voiceChannel.getMembers().stream()
+                .filter(m -> m.getUser().isBot()).collect(Collectors.toSet()).size();
         requireVotesToPass = (allChannelMembers / 2) + 1;
     }
 
