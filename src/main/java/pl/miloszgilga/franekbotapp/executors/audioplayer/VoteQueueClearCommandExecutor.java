@@ -63,11 +63,11 @@ public final class VoteQueueClearCommandExecutor extends Command {
 
             if (voteHandler.voteCommandExecutor()) {
                 queue.clear();
-                logger.info(String.format("Kolejka piosenek w wyniku głosowania użytkowników '%s' została wyczyszczona",
-                        voteHandler.allVotedUsers()), event.getGuild());
+                logger.info(event.getGuild(), "Kolejka piosenek w wyniku głosowania użytkowników '%s' została wyczyszczona",
+                        voteHandler.allVotedUsers());
             }
         } catch (UnableAccessToInvokeCommandException | EmptyAudioQueueException ex) {
-            logger.warn(ex.getMessage(), event.getGuild());
+            logger.warn(event.getGuild(), ex.getMessage());
         }
     }
 }

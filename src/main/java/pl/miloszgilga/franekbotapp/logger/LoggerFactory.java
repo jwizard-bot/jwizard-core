@@ -47,25 +47,26 @@ public final class LoggerFactory {
         createFolderInstance();
     }
 
-    public void info(String message, Guild guild) {
-        loggerPrintableInvoker(message, INFO, guild);
+    public void info(Guild guild, String message, Object... args) {
+        loggerPrintableInvoker(INFO, guild, message, args);
     }
 
-    public void warn(String message, Guild guild) {
-        loggerPrintableInvoker(message, WARN, guild);
+    public void warn(Guild guild, String message, Object... args) {
+        loggerPrintableInvoker(WARN, guild, message, args);
     }
 
-    public void error(String message, Guild guild) {
-        loggerPrintableInvoker(message, ERROR, guild);
+    public void error(Guild guild, String message, Object... args) {
+        loggerPrintableInvoker(ERROR, guild, message, args);
     }
 
-    private void loggerPrintableInvoker(String message, LoggerRank loggerRank, Guild guild) {
+    private void loggerPrintableInvoker(LoggerRank loggerRank, Guild guild, String message, Object... args) {
         if (!loggerConfig.isLoggerEnabled() || !loggerConfig.getLoggerSensitivity().contains(loggerRank)) return;
+        final String parsedMessage = String.format(message, args);
         if (loggerConfig.isEnableLoggedToStandardOutput()) {
-            loggerOutputConsolePrinter.loggerOutputPrinter(message, loggerRank, guild, loggingAuthorClazz);
+            loggerOutputConsolePrinter.loggerOutputPrinter(parsedMessage, loggerRank, guild, loggingAuthorClazz);
         }
         if (loggerConfig.isEnableLoggedToFileOutput()) {
-            loggerOutputFilePrinter.loggerOutputPrinter(message, loggerRank, guild, loggingAuthorClazz);
+            loggerOutputFilePrinter.loggerOutputPrinter(parsedMessage, loggerRank, guild, loggingAuthorClazz);
         }
     }
 

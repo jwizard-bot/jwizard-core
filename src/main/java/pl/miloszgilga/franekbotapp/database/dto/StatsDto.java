@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2022 by MILOSZ GILGA <https://miloszgilga.pl>
  *
- * File name: ExecutionHandlerLambaExpression.java
- * Last modified: 24/07/2022, 22:22
- * Project name: franek-bot
+ * File name: ServerStatsDto.java
+ * Last modified: 06.12.2022, 00:35
+ * Project name: java-franek-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
  *
@@ -16,10 +16,26 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga.franekbotapp.executorhandlers;
+package pl.miloszgilga.franekbotapp.database.dto;
+
+import lombok.*;
 
 
-@FunctionalInterface
-public interface IExecutorTimerLambaExpression {
-    void executeContentAfterTimeElapse();
+@AllArgsConstructor
+public class StatsDto {
+    private final long addedMess;
+    private final long updatedMess;
+    private final long addedReacts;
+
+    public String getAddedMess() {
+        return Long.toString(addedMess);
+    }
+
+    public String getUpdatedMess() {
+        return Long.toString(updatedMess);
+    }
+
+    public String getAddedReacts() {
+        return Long.toString(addedReacts);
+    }
 }

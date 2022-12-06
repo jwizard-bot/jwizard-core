@@ -33,11 +33,10 @@ import java.text.SimpleDateFormat;
 
 import pl.miloszgilga.franekbotapp.logger.LoggerFactory;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessage;
+import pl.miloszgilga.franekbotapp.database.dto.UserStatsDto;
 import pl.miloszgilga.franekbotapp.messages.EmbedMessageColor;
 import pl.miloszgilga.franekbotapp.messages.MessageEmbedField;
-import pl.miloszgilga.franekbotapp.database.entities.UserStats;
 import pl.miloszgilga.franekbotapp.database.HibernateSessionFactory;
-import pl.miloszgilga.franekbotapp.database.dao.UserStatsStringifyDAO;
 import pl.miloszgilga.franekbotapp.exceptions.UserHasNotStatisticsYetException;
 import pl.miloszgilga.franekbotapp.exceptions.IllegalCommandArgumentsException;
 import pl.miloszgilga.franekbotapp.exceptions.FindingUserByGuidNotFoundException;
@@ -64,12 +63,19 @@ public final class ShowUserStatisticsCommandExecutor extends Command {
             User findingUserStats = findUserBaseArgs(event);
             try {
                 try (Session session = sessionFactory.openTransactionalSessionAndBeginTransaction()) {
-                    String jpqlQuery = "SELECT u FROM UserStats u WHERE u.serverGuildId=:sid AND u.uniqueUserId=:uid";
-                    UserStats userStats = session.createQuery(jpqlQuery, UserStats.class)
-                            .setParameter("sid", event.getGuild().getId()).setParameter("uid", findingUserStats.getId())
+                    final String jpqlQuery =
+                            "SELECT new pl.miloszgilga.franekbotapp.database.dto.UserStatsDto(" +
+                            "u.id, " +
+                            "u.messagesSend, " +
+                            "u.messagesUpdated, " +
+                            "u.reactionsAdded) " +
+                            "FROM UserStats u WHERE u.serverGuildId=:sid AND u.uniqueUserId=:uid";
+                    final UserStatsDto userStats = session.createQuery(jpqlQuery, UserStatsDto.class)
+                            .setParameter("sid", event.getGuild().getId())
+                            .setParameter("uid", findingUserStats.getId())
                             .getSingleResult();
                     final var embedMessage = new EmbedMessage(
-                            String.format("Statystyki użytkownika %s", userStats.getUserNameWithId()),
+                            String.format("Statystyki użytkownika %s", userStats.getUserId()),
                             "Poniżej znajdziesz szczegółowe statystyki wybranego użytkownika.",
                             EmbedMessageColor.PURPLE,
                             allUpdatableEmbededMessages(userStats)
@@ -83,9 +89,9 @@ public final class ShowUserStatisticsCommandExecutor extends Command {
                 throw new UserHasNotStatisticsYetException(event, findingUserStats);
             }
         } catch (IllegalCommandArgumentsException | FindingUserByGuidNotFoundException ex) {
-            logger.error(ex.getMessage(), event.getGuild());
+            logger.error(event.getGuild(), ex.getMessage());
         } catch (UserHasNotStatisticsYetException ex) {
-            logger.warn(ex.getMessage(), event.getGuild());
+            logger.warn(event.getGuild(), ex.getMessage());
         }
     }
 
@@ -100,12 +106,11 @@ public final class ShowUserStatisticsCommandExecutor extends Command {
         return userMember.getUser();
     }
 
-    private List<MessageEmbedField> allUpdatableEmbededMessages(UserStats userStats) {
-        final var stats = new UserStatsStringifyDAO(userStats);
+    private List<MessageEmbedField> allUpdatableEmbededMessages(UserStatsDto userStats) {
         return List.of(
-                new MessageEmbedField("Wysłane wiadomości:", stats.getMessagesSend()),
-                new MessageEmbedField("Zaktualizowane wiadomości:", stats.getMessagesUpdated()),
-                new MessageEmbedField("Dodane reakcje:", stats.getReactionsAdded())
+                new MessageEmbedField("Wysłane wiadomości:", userStats.getAddedMess()),
+                new MessageEmbedField("Zaktualizowane wiadomości:", userStats.getUpdatedMess()),
+                new MessageEmbedField("Dodane reakcje:", userStats.getAddedReacts())
         );
     }
 }

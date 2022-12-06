@@ -88,12 +88,12 @@ public final class MoveBotToVoiceChannelCommandExecutor extends Command {
                     EmbedMessageColor.GREEN);
             event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
 
-            logger.info(String.format("Przeniesienie bota muzycznego na kanał '%s' przez '%s'", voiceChannel.getName(),
-                    event.getAuthor().getAsTag()), event.getGuild());
+            logger.info(event.getGuild(), "Przeniesienie bota muzycznego na kanał '%s' przez '%s'",
+                    voiceChannel.getName(), event.getAuthor().getAsTag());
 
         } catch (UnableAccessToInvokeCommandException | UserOnVoiceChannelNotFoundException |
                  MusicBotNotActiveException ex) {
-            logger.warn(ex.getMessage(), event.getGuild());
+            logger.warn(event.getGuild(), ex.getMessage());
         }
     }
 

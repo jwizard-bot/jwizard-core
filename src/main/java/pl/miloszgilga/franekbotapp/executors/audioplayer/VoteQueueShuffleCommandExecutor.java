@@ -64,11 +64,11 @@ public final class VoteQueueShuffleCommandExecutor extends Command {
             if (voteHandler.voteCommandExecutor()) {
                 playerManager.getMusicManager(eventWrapper).getScheduler().queueShuffle();
                 showQueueElementsInEmbedMessage(event, queue);
-                logger.info(String.format("Kolejka piosenek w wyniku głosowania użytkowników '%s' została przetasowana",
-                        voteHandler.allVotedUsers()), event.getGuild());
+                logger.info(event.getGuild(), "Kolejka piosenek w wyniku głosowania użytkowników '%s' została przetasowana",
+                        voteHandler.allVotedUsers());
             }
         } catch (EmptyAudioQueueException ex) {
-            logger.warn(ex.getMessage(), event.getGuild());
+            logger.warn(event.getGuild(), ex.getMessage());
         }
     }
 }

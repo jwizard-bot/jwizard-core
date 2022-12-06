@@ -22,7 +22,6 @@ import org.hibernate.Session;
 import org.jetbrains.annotations.NotNull;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.Guild;
-import jakarta.persistence.NoResultException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -58,31 +57,30 @@ public final class StatisticsUsersActionInterceptor extends ListenerAdapter impl
         if (user.isBot()) return;
 
         try (Session session = sessionFactory.openTransactionalSessionAndBeginTransaction()) {
-            try {
-                UserStats userStats = session
-                        .createQuery("SELECT u FROM UserStats u WHERE u.uniqueUserId=:uid AND u.serverGuildId=:sid",
-                                UserStats.class)
-                        .setParameter("uid", user.getId()).setParameter("sid", guild.getId()).getSingleResult();
-                updateUserStats(parameters, userStats);
-                session.flush();
-            } catch (NoResultException ex) {
+            String jpqlUpdatePartialQuery;
+            switch (parameters) {
+                case MESSAGES_CREATED: jpqlUpdatePartialQuery = "u.messagesSend = u.messagesSend + 1"; break;
+                case MESSAGES_UPDATED: jpqlUpdatePartialQuery = "u.messagesUpdated = u.messagesUpdated + 1"; break;
+                case REACTIONS_ADDED: jpqlUpdatePartialQuery = "u.reactionsAdded = u.reactionsAdded + 1"; break;
+                default: throw new IllegalArgumentException("Niedozwolona opcja aktualizacji: " + parameters.name());
+            }
+            final String ifExistQuery =
+                    "SELECT COUNT(u.id) > 0 FROM UserStats u " +
+                    "WHERE u.serverGuildId=:sid AND u.uniqueUserId=:uid";
+            final Boolean ifUserExist = session.createQuery(ifExistQuery, Boolean.class)
+                    .setParameter("uid", user.getId()).setParameter("sid", guild.getId())
+                    .getSingleResult();
+            if (ifUserExist) {
+                String jpqlQuery =
+                        "UPDATE UserStats u SET " + jpqlUpdatePartialQuery + " " +
+                        "WHERE u.serverGuildId=:sid AND u.uniqueUserId=:uid";
+                session.createQuery(jpqlQuery, null)
+                        .setParameter("uid", user.getId()).setParameter("sid", guild.getId())
+                        .executeUpdate();
+            } else {
                 final var userStats = new UserStats(user.getId(), user.getAsTag(), guild.getId());
-                updateUserStats(parameters, userStats);
                 session.persist(userStats);
             }
-        }
-    }
-
-    private void updateUserStats(UpdateParameters parameters, UserStats userStats) {
-        switch (parameters) {
-            case MESSAGES_CREATED:
-                userStats.setMessagesSend(userStats.getMessagesSend() + 1);
-                break;
-            case MESSAGES_UPDATED:
-                userStats.setMessagesUpdated(userStats.getMessagesUpdated() + 1);
-                break;
-            case REACTIONS_ADDED:
-                userStats.setReactionsAdded(userStats.getReactionsAdded() + 1);
         }
     }
 }

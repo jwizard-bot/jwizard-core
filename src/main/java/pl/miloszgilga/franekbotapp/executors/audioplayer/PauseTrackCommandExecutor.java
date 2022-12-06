@@ -54,7 +54,7 @@ public final class PauseTrackCommandExecutor extends Command {
 
             musicManager.getAudioPlayer().setPaused(true);
         } catch (EmptyAudioQueueException | UnableAccessToInvokeCommandException ex) {
-            logger.warn(ex.getMessage(), event.getGuild());
+            logger.warn(event.getGuild(), ex.getMessage());
         }
     }
 

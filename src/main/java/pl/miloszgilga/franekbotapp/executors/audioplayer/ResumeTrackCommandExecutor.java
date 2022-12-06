@@ -53,7 +53,7 @@ public final class ResumeTrackCommandExecutor extends Command {
 
             musicManager.getAudioPlayer().setPaused(false);
         } catch (EmptyAudioQueueException | UnableAccessToInvokeCommandException ex) {
-            logger.warn(ex.getMessage(), event.getGuild());
+            logger.warn(event.getGuild(), ex.getMessage());
         }
     }
 }

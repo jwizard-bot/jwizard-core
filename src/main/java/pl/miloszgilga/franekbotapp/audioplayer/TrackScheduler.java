@@ -79,8 +79,8 @@ public class TrackScheduler extends AudioEventAdapter {
                 "Zatrzymałem odtwarzanie piosenki: **[%s](%s)**.", info.title, info.uri), EmbedMessageColor.GREEN);
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
 
-        logger.info(String.format("Odtwarzanie piosenki '%s' zostało wstrzymane przez '%s'",
-                info.title, event.getUser().getAsTag()), event.getGuild());
+        logger.info(event.getGuild(), "Odtwarzanie piosenki '%s' zostało wstrzymane przez '%s'",
+                info.title, event.getUser().getAsTag());
     }
 
     @Override
@@ -94,8 +94,8 @@ public class TrackScheduler extends AudioEventAdapter {
                 "Ponawiam odtwarzanie piosenki: **[%s](%s)**.", info.title, info.uri), EmbedMessageColor.GREEN);
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
 
-        logger.info(String.format("Odtwarzanie piosenki '%s' zostało ponowione przez '%s'",
-                info.title, event.getUser().getAsTag()), event.getGuild());
+        logger.info(event.getGuild(), "Odtwarzanie piosenki '%s' zostało ponowione przez '%s'",
+                info.title, event.getUser().getAsTag());
     }
 
     @Override
@@ -114,8 +114,8 @@ public class TrackScheduler extends AudioEventAdapter {
         } else {
             embedMessage = new EmbedMessage("", String.format("Rozpoczynam odtwarzanie piosenki: **[%s](%s)**.",
                     info.title, info.uri), EmbedMessageColor.GREEN);
-            logger.info(String.format("Automatyczne odtwarzanie piosenki '%s' dodanej przez '%s'",
-                    info.title, event.getUser().getAsTag()), event.getGuild());
+            logger.info(event.getGuild(), "Automatyczne odtwarzanie piosenki '%s' dodanej przez '%s'",
+                    info.title, event.getUser().getAsTag());
         }
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
 
@@ -135,9 +135,9 @@ public class TrackScheduler extends AudioEventAdapter {
                 );
                 event.getTextChannel().sendMessageEmbeds(leavingMessage.buildMessage()).queue();
                 event.getJda().getDirectAudioController().disconnect(event.getGuild());
-                logger.warn(String.format(
+                logger.warn(event.getGuild(),
                         "Automatyczne opuszczenie kanału głosowego przez bota po %s minutach nieaktywności",
-                        config.getMaxInactivityTimeMinutes()), event.getGuild());
+                        config.getMaxInactivityTimeMinutes());
             });
             executorTimer.execute();
             return;
@@ -157,8 +157,8 @@ public class TrackScheduler extends AudioEventAdapter {
         );
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
 
-        logger.error(String.format("Wystąpił nieznany błąd podczas dodawania piosenki/playlisty przez '%s'",
-                event.getUser().getAsTag()), event.getGuild());
+        logger.error(event.getGuild(), "Wystąpił nieznany błąd podczas dodawania piosenki/playlisty przez '%s'",
+                event.getUser().getAsTag());
     }
 
     public void setRepeating(boolean repeating) {

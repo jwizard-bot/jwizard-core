@@ -69,15 +69,15 @@ public final class SkipTrackCommandExecutor extends Command {
 
             final AudioTrackInfo audioTrackInfo = playerManager.getMusicManager(eventWrapper).getAudioPlayer()
                     .getPlayingTrack().getInfo();
-            logger.info(String.format("Odtwarzanie piosenki '%s' zostało pominięte przez dodającego '%s'",
-                    audioTrackInfo.title, event.getAuthor().getAsTag()), event.getGuild());
+            logger.info(event.getGuild(), "Odtwarzanie piosenki '%s' zostało pominięte przez dodającego '%s'",
+                    audioTrackInfo.title, event.getAuthor().getAsTag());
             if (queue.isEmpty()) {
                 playerManager.getMusicManager(eventWrapper).getAudioPlayer().stopTrack();
             } else {
                 playerManager.getMusicManager(eventWrapper).getScheduler().nextTrack();
             }
         } catch (EmptyAudioQueueException | UnableAccessToInvokeCommandException ex) {
-            logger.warn(ex.getMessage(), event.getGuild());
+            logger.warn(event.getGuild(), ex.getMessage());
         }
     }
 }

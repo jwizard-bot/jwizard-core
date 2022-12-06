@@ -82,11 +82,11 @@ public final class SetTrackVolumeCommandExecutor extends Command {
             ), EmbedMessageColor.GREEN);
             event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
 
-            logger.info(String.format("Zmiana głośności odtwarzacza z '%s%%' na '%s%%' przez '%s'",
-                    previousVolume, audioPlayer.getVolume(), event.getAuthor().getAsTag()), event.getGuild());
+            logger.info(event.getGuild(), "Zmiana głośności odtwarzacza z '%s%%' na '%s%%' przez '%s'",
+                    previousVolume, audioPlayer.getVolume(), event.getAuthor().getAsTag());
 
         } catch (EmptyAudioQueueException | IllegalCommandArgumentsException | UnableAccessToInvokeCommandException ex) {
-            logger.warn(ex.getMessage(), event.getGuild());
+            logger.warn(event.getGuild(), ex.getMessage());
         }
     }
 }

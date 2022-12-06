@@ -63,9 +63,9 @@ public final class VoteSkipTrackCommandExecutor extends Command {
                     "piosenka pominięta", "pominięcie piosenki", "piosenka niepominięta");
             if (voteHandler.voteCommandExecutor()) {
                 playerManager.getMusicManager(eventWrapper).getScheduler().setRepeating(false);
-                logger.info(String.format("Piosenka '%s' w wyniku głosowania użytkowników '%s' została pominięta",
+                logger.info(event.getGuild(), "Piosenka '%s' w wyniku głosowania użytkowników '%s' została pominięta",
                         playerManager.getMusicManager(eventWrapper).getAudioPlayer().getPlayingTrack().getInfo().title,
-                        voteHandler.allVotedUsers()), event.getGuild());
+                        voteHandler.allVotedUsers());
                 if (musicManager.getScheduler().getQueue().isEmpty()) {
                     musicManager.getAudioPlayer().stopTrack();
                 } else {
@@ -74,7 +74,7 @@ public final class VoteSkipTrackCommandExecutor extends Command {
             }
         } catch (EmptyAudioQueueException | UserOnVoiceChannelNotFoundException |
                  AttemptToRevoteSkippingSongException ex) {
-            logger.warn(ex.getMessage(), event.getGuild());
+            logger.warn(event.getGuild(), ex.getMessage());
         }
     }
 

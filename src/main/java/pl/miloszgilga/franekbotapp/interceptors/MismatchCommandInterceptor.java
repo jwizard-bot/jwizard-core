@@ -50,7 +50,7 @@ public final class MismatchCommandInterceptor extends ListenerAdapter implements
                 throw new UnrecognizedCommandException(event);
             }
         } catch (UnrecognizedCommandException ex) {
-            logger.error(ex.getMessage(), event.getGuild());
+            logger.error(event.getGuild(), ex.getMessage());
         }
     }
 }

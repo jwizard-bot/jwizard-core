@@ -79,7 +79,7 @@ public final class PlayTrackCommandExecutor extends Command {
             }
             playerManager.loadAndPlay(new EventWrapper(event), withoutPrefix, ifValidUri);
         } catch (UserOnVoiceChannelNotFoundException | MusicBotIsInUseException | IllegalCommandArgumentsException ex) {
-            logger.warn(ex.getMessage(), event.getGuild());
+            logger.warn(event.getGuild(), ex.getMessage());
         }
     }
 
