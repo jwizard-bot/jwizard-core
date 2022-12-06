@@ -64,7 +64,7 @@ public final class ShowAllQueueCommandExecutor extends Command {
             }
             showQueueElementsInEmbedMessage(event, queue);
         } catch (EmptyAudioQueueException | IllegalCommandArgumentsException ex) {
-            logger.warn(ex.getMessage(), event.getGuild());
+            logger.warn(event.getGuild(), ex.getMessage());
         }
     }
 

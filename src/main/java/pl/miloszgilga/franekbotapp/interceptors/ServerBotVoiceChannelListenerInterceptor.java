@@ -66,10 +66,10 @@ public final class ServerBotVoiceChannelListenerInterceptor extends ListenerAdap
                 event.getJDA().getDirectAudioController().disconnect(event.getGuild());
                 musicManager.getAudioPlayer().stopTrack();
                 musicManager.getScheduler().getQueue().clear();
-                logger.warn(String.format(
+                logger.warn(null,
                         "Opuszczenie kanału głosowego '%s' w wyniku braku aktywnych użytkowników przez '%s' minut",
                         event.getChannelLeft().getName(), ELAPSE_TIME
-                ), null);
+                );
             });
             executorTimer.execute();
         }

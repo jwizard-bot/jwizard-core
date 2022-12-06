@@ -78,12 +78,12 @@ public final class RepeatTrackCommandExecutor extends Command {
                     EmbedMessageColor.GREEN);
             event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
 
-            logger.info(String.format("Piosenka '%s' została %s nieskończonej pętli przez '%s'",
-                    info.title, embedMessageDescription, event.getAuthor().getAsTag()), event.getGuild());
+            logger.info(event.getGuild(), "Piosenka '%s' została %s nieskończonej pętli przez '%s'",
+                    info.title, embedMessageDescription, event.getAuthor().getAsTag());
 
         } catch (UserOnVoiceChannelNotFoundException | UnableAccessToInvokeCommandException |
                  EmptyAudioQueueException ex) {
-            logger.warn(ex.getMessage(), event.getGuild());
+            logger.warn(event.getGuild(), ex.getMessage());
         }
     }
 }

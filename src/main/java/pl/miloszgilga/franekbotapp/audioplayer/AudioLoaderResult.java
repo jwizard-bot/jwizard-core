@@ -54,8 +54,8 @@ class AudioLoaderResult implements AudioLoadResultHandler {
         if (musicManager.getScheduler().getQueue().isEmpty()) return;
 
         onSingleTrackLoadedSendEmbedMessage(audioTrack);
-        logger.info(String.format("Użytkownik '%s' dodał nową piosenkę do kolejki '%s'",
-                event.getUser().getAsTag(), audioTrack.getInfo().title), event.getGuild());
+        logger.info(event.getGuild(), "Użytkownik '%s' dodał nową piosenkę do kolejki '%s'",
+                event.getUser().getAsTag(), audioTrack.getInfo().title);
     }
 
     @Override
@@ -70,15 +70,15 @@ class AudioLoaderResult implements AudioLoadResultHandler {
                 audioPlaylist.getTracks().get(i).setUserData(senderUser);
                 musicManager.getScheduler().queue(new QueueTrackExtendedInfo(senderUser, trackList.get(i)));
             }
-            logger.info(String.format("Użytkownik '%s' dodał nową playlistę do kolejki składającą się z '%s' piosenek",
-                    event.getUser().getAsTag(), audioPlaylist.getTracks().size()), event.getGuild());
+            logger.info(event.getGuild(), "Użytkownik '%s' dodał nową playlistę do kolejki składającą się z '%s' piosenek",
+                    event.getUser().getAsTag(), audioPlaylist.getTracks().size());
         } else {
             audioPlaylist.getTracks().get(0).setUserData(senderUser);
             musicManager.getScheduler().queue(new QueueTrackExtendedInfo(senderUser, audioPlaylist.getTracks().get(0)));
             if (!musicManager.getScheduler().getQueue().isEmpty()) {
                 onSingleTrackLoadedSendEmbedMessage(audioPlaylist.getTracks().get(0));
-                logger.info(String.format("Użytkownik '%s' dodał nową piosenkę do kolejki '%s'",
-                        event.getUser().getAsTag(), audioPlaylist.getTracks().get(0).getInfo().title), event.getGuild());
+                logger.info(event.getGuild(), "Użytkownik '%s' dodał nową piosenkę do kolejki '%s'",
+                        event.getUser().getAsTag(), audioPlaylist.getTracks().get(0).getInfo().title);
             }
         }
     }
@@ -89,8 +89,8 @@ class AudioLoaderResult implements AudioLoadResultHandler {
                 EmbedMessageColor.RED
         );
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
-        logger.error(String.format("Nie znaleziono piosenki z wprowadzonej przez '%s' podaną nazwą '%s'",
-                event.getUser().getAsTag(), event.getArgs()), event.getGuild());
+        logger.error(event.getGuild(), "Nie znaleziono piosenki z wprowadzonej przez '%s' podaną nazwą '%s'",
+                event.getUser().getAsTag(), event.getArgs());
     }
 
     @Override
@@ -100,8 +100,8 @@ class AudioLoaderResult implements AudioLoadResultHandler {
                 EmbedMessageColor.RED
         );
         event.getTextChannel().sendMessageEmbeds(embedMessage.buildMessage()).queue();
-        logger.error(String.format("Wystąpił nieznany błąd podczas dodawania piosenki/playlisty przez '%s'",
-                event.getUser().getAsTag()), event.getGuild());
+        logger.error(event.getGuild(), "Wystąpił nieznany błąd podczas dodawania piosenki/playlisty przez '%s'",
+                event.getUser().getAsTag());
     }
 
     private void onSingleTrackLoadedSendEmbedMessage(AudioTrack track) {

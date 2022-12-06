@@ -83,9 +83,9 @@ public final class ShowUserStatisticsCommandExecutor extends Command {
                 throw new UserHasNotStatisticsYetException(event, findingUserStats);
             }
         } catch (IllegalCommandArgumentsException | FindingUserByGuidNotFoundException ex) {
-            logger.error(ex.getMessage(), event.getGuild());
+            logger.error(event.getGuild(), ex.getMessage());
         } catch (UserHasNotStatisticsYetException ex) {
-            logger.warn(ex.getMessage(), event.getGuild());
+            logger.warn(event.getGuild(), ex.getMessage());
         }
     }
 
