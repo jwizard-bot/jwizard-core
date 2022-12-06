@@ -72,7 +72,7 @@ public final class StatisticsUsersActionInterceptor extends ListenerAdapter impl
                     .getSingleResult();
             if (ifUserExist) {
                 String jpqlQuery =
-                        "UPDATE UserStats u SET " + jpqlUpdatePartialQuery + " " +
+                        "UPDATE UserStats u SET " + jpqlUpdatePartialQuery + ", u.updatedAt = CURRENT_TIMESTAMP " +
                         "WHERE u.serverGuildId=:sid AND u.uniqueUserId=:uid";
                 session.createQuery(jpqlQuery, null)
                         .setParameter("uid", user.getId()).setParameter("sid", guild.getId())
@@ -81,7 +81,6 @@ public final class StatisticsUsersActionInterceptor extends ListenerAdapter impl
                 final var userStats = new UserStats(user.getId(), user.getAsTag(), guild.getId());
                 session.persist(userStats);
             }
-            session.flush();
         }
     }
 }
