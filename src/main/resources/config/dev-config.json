@@ -31,13 +31,13 @@
         },
         "database": {
             "databaseUrl": "${DEV_DATABASE_CONNECTION_STRING}",
-            "enforceSslConnection": true,
+            "enforceSslConnection": false,
             "username": "${DEV_DATABASE_USERNAME}",
             "password": "${DEV_DATABASE_PASSWORD}",
-            "createDatabaseIfNotExist": true,
+            "createDatabaseIfNotExist": false,
             "sqlOnStandardOutput": true,
-            "hibernateDriverPackage": "com.mysql.cj.jdbc.Driver",
-            "hibernateDialectPackage": "org.hibernate.dialect.MySQLDialect",
+            "hibernateDriverPackage": "org.h2.Driver",
+            "hibernateDialectPackage": "org.hibernate.dialect.H2Dialect",
             "hbm2ddlAutoMode": "none"
         }
     }

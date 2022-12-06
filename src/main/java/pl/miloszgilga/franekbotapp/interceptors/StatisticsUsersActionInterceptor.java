@@ -81,6 +81,7 @@ public final class StatisticsUsersActionInterceptor extends ListenerAdapter impl
                 final var userStats = new UserStats(user.getId(), user.getAsTag(), guild.getId());
                 session.persist(userStats);
             }
+            session.flush();
         }
     }
 }

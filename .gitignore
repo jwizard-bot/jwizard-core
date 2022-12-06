@@ -4,3 +4,5 @@ target/
 !**/src/test/**/target/
 .idea
 .env
+h2-db.mv.db
+h2-db.trace.db
