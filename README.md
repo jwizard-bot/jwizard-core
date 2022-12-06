@@ -5,24 +5,23 @@
 <br><br>
 A multi-functional music bot (likely to be enhanced with additional features over time) that allows you to play, pause, repeat and queue songs on the popular VoIP Discord platform. Written entirely using Java SE 11. The bot also includes a proprietary log system I wrote (with the ability to log to a file and standard output).
 
-## Dependencies
-- [Discord JDA](https://github.com/DV8FromTheWorld/JDA)
-- [Discord JDA Utilities](https://github.com/JDA-Applications/JDA-Utilities)
-- [Lavaplayer](https://github.com/sedmelluq/lavaplayer)
-- [JacksonJSON](https://github.com/FasterXML/jackson)
-- [Project Lombok](https://projectlombok.org/)
-- [Jakarta Persistence API](https://jakarta.ee/specifications/persistence/3.0/)
-- [Hibernate](https://hibernate.org/)
-- [Liquibase](https://www.liquibase.org/)
-- [MySQL Connector](https://mvnrepository.com/artifact/mysql/mysql-connector-java)
-- [Maven Assemby Plugin](https://maven.apache.org/plugins/maven-assembly-plugin/)
-> NOTE: For a list of all dependencies, check the `pom.xml` file.
-## Clone, prepare and run
+## Table of content
+* [Clone script](#clone-script)
+* [Prepare and run](#prepare-and-run)
+* [Running in the background (daemon)](#running-in-the-background-daemon)
+* [JAR package](#jar-package)
+* [Author](#author)
+* [License](#license)
+
+<a name="clone-script"></a>
+## Clone script
 To install the program on your computer use the command (or use the built-in GIT system in your IDE environment):
 ```
 $ git clone https://github.com/Milosz08/JDA_Discord_Bot
 ```
-### Prepare and run
+
+<a name="prepare-and-run"></a>
+## Prepare and run
 The application was split into a production start-up and a development start-up. There are different configuration files for the two versions. For the development version it is `dev-config.json` and for the production version it is `prod-config.json`.
 With this configuration, it is possible to run the production version on the server at the same time (continuity of service), and the development version on the computer, where new functionalities can be added and tested.
 > NOTE: The production and development versions are actually separate instances of discord bots. Two separate applications must be created for them to work properly.
@@ -99,6 +98,7 @@ $ heroku config:set VARIABLE_NAME=variablevalue
 $ java --dev FranekBot
 ```
 
+<a name="running-in-the-background-daemon"></a>
 ## Running in the background (daemon)
 In order to run the programme as a separate server process (on a machine running UNIX, for example Linux), it is recommended to use a daemon. You can read how to use the programme on the [official website](https://manpages.ubuntu.com/manpages/kinetic/en/man1/daemon.1.html). Alternatively, you can run the programme as a separate process and save the PID to a file. To do this, use the command:
 ```
@@ -106,14 +106,17 @@ $ nohup java -Xmx512m -jar franek-bot_1.0-SNAPSHOT-jar-with-dependencies.jar </d
 ```
 > NOTE: To return to the shell, use the `Ctrl+C` or `⌘+C`.
 
+<a name="jar-package"></a>
 ## JAR package
 The application has been prepared to make package of this application into a JAR executable file. All you need to do is run the `clean` option in the IDE and then `package` in the `Maven` tab. To run the packaged jar file, use the following command:
 ```
 $ java -jar -Xmx512m franek-bot_1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 
+<a name="author"></a>
 ## Author
 Created by Miłosz Gilga. If you have any questions about the application send message: [personal@miloszgilga.pl](mailto:personal@miloszgilga.pl).
 
+<a name="license"></a>
 ## License
 This application is on MIT License.
