@@ -34,10 +34,10 @@
             "enforceSslConnection": false,
             "username": "${DEV_DATABASE_USERNAME}",
             "password": "${DEV_DATABASE_PASSWORD}",
-            "createDatabaseIfNotExist": false,
+            "createDatabaseIfNotExist": true,
             "sqlOnStandardOutput": true,
-            "hibernateDriverPackage": "org.h2.Driver",
-            "hibernateDialectPackage": "org.hibernate.dialect.H2Dialect",
+            "hibernateDriverPackage": "com.mysql.cj.jdbc.Driver",
+            "hibernateDialectPackage": "org.hibernate.dialect.MySQLDialect",
             "hbm2ddlAutoMode": "none"
         }
     }
