@@ -1,0 +1,142 @@
+/*
+ * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
+ *
+ * File name: build.gradle
+ * Last modified: 22/02/2023, 17:00
+ * Project name: jwizard-discord-bot
+ *
+ * Licensed under the MIT license; you may not use this file except in compliance with the License.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+ * documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * THE ABOVE COPYRIGHT NOTICE AND THIS PERMISSION NOTICE SHALL BE INCLUDED IN ALL
+ * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
+ */
+
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+def props = new Properties()
+file("src/main/resources/artifact.properties").withInputStream { props.load(it) }
+
+version         = props.getProperty("project.version")
+group           = 'pl.miloszgilga'
+mainClassName   = 'pl.miloszgilga.Bootloader'
+
+repositories {
+    jcenter()
+    mavenCentral()
+    maven { url 'https://m2.dv8tion.net/releases' }
+}
+
+compileJava.options.encoding = 'UTF-8'
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+ext {
+    // discord integrations
+    jdaVersion                  = '4.4.0_352'
+    lavaplayerVersion           = '1.3.47'
+    jdaUtilitiesVersion         = '3.0.5'
+
+    // database utils
+    mySqlVersion                = '8.0.31'
+    hibernateVersion            = '6.1.6.Final'
+    liquibaseVersion            = '4.18.0'
+    liquibaseSlf4jVersion       = '4.1.0'
+
+    // others
+    lombokVersion               = '1.18.26'
+    log4jVersion                = '2.20.0'
+    junitVersion                = '5.8.1'
+    springVersion               = '6.0.5'
+    springVaultVersion          = '3.0.0'
+    snakeYamlVersion            = '1.33'
+    commonsTextVersion          = '1.10.0'
+    dotEnvVersion               = '5.2.2'
+    commonsCliVersion           = '1.5.0'
+    reflectionsVersion          = '0.10.2'
+}
+
+java.sourceCompatibility = JavaVersion.VERSION_17
+java.targetCompatibility = JavaVersion.VERSION_17
+
+dependencies {
+    implementation      "net.dv8tion:JDA:${jdaVersion}"
+    implementation      "com.sedmelluq:lavaplayer:${lavaplayerVersion}"
+    implementation      "com.jagrosh:jda-utilities:${jdaUtilitiesVersion}"
+
+    implementation      "mysql:mysql-connector-java:${mySqlVersion}"
+    implementation      "org.hibernate:hibernate-core:${hibernateVersion}"
+    implementation      "org.hibernate.orm:hibernate-c3p0:${hibernateVersion}"
+    implementation      "org.liquibase:liquibase-core:${liquibaseVersion}"
+    implementation      "com.mattbertolini:liquibase-slf4j:${liquibaseSlf4jVersion}"
+
+    implementation      "org.projectlombok:lombok:${lombokVersion}"
+    implementation      "org.apache.logging.log4j:log4j-core:${log4jVersion}"
+    implementation      "org.apache.logging.log4j:log4j-api:${log4jVersion}"
+    implementation      "org.apache.logging.log4j:log4j-slf4j-impl:${log4jVersion}"
+    implementation      "org.springframework:spring-context:${springVersion}"
+    implementation      "org.springframework.vault:spring-vault-core:${springVaultVersion}"
+    implementation      "org.yaml:snakeyaml:${snakeYamlVersion}"
+    implementation      "org.apache.commons:commons-text:${commonsTextVersion}"
+    implementation      "io.github.cdimascio:java-dotenv:${dotEnvVersion}"
+    implementation      "commons-cli:commons-cli:${commonsCliVersion}"
+    implementation      "org.reflections:reflections:${reflectionsVersion}"
+
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    testImplementation  "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testRuntimeOnly     "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+}
+
+shadowJar {
+    archiveFileName = "${props.getProperty("project.artifact")}-${project.version}.jar"
+    manifest {
+        attributes  'Main-Class':           "$project.mainClassName",
+                    'Specification-Title':  props.getProperty("project.name"),
+                    'Description':          props.getProperty("project.description"),
+                    'Multi-Release':        true
+    }
+    exclude(
+        '**/DEPENDENCIES*',
+        '**/LICENSE*',
+        '**/README*',
+        '**/AUTHORS*',
+        'changelog.txt',
+        'release-timestamp.txt',
+        'opus-java*.pom',
+        '**/*.html',
+        'META-INF/NOTICE*'
+    )
+    destinationDir(file("$rootDir/build/shadow"))
+}
+
+tasks.register('moveConfigurationFiles', Copy) {
+    from layout.projectDirectory.files([
+        'properties-dev.yml',
+        'properties-prod.yml',
+        'fancy-title.txt',
+        'activities-sequencer.txt',
+        '.env'
+    ])
+    into layout.buildDirectory.dir("$rootDir/build/shadow")
+}
+
+tasks.register('moveLangFiles', Copy) {
+    from layout.projectDirectory.dir('lang')
+    into layout.buildDirectory.dir("$rootDir/build/shadow/lang")
+}
+
+shadowJar.finalizedBy moveConfigurationFiles
+shadowJar.finalizedBy moveLangFiles
+
+test {
+    useJUnitPlatform()
+}

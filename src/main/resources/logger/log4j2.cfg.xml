@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration monitorInterval="5">
+
+    <Properties>
+        <Property name="consolePattern">%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] (%-35.35c{1.}) : %m%n%ex</Property>
+        <Property name="fileStacktracePattern">%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] (%-35.35c{1.}) : %m%n%ex</Property>
+        <Property name="fileSpecificLogPattern">%d{yyyy-MM-dd HH:mm:ss.SSS} (%-35.35c{1.}) : %m%n%ex</Property>
+        <Property name="filePerfPattern">%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] : %m%n%ex</Property>
+
+        <Property name="jdaLogsPath">logs/jda-api</Property>
+        <Property name="springLogsPath">logs/spring-api</Property>
+        <Property name="appLogsPath">logs</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="consoleLogger" target="SYSTEM_OUT" follow="true">
+            <LevelRangeFilter minLevel="ERROR" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${consolePattern}"/>
+        </Console>
+
+        <RollingFile
+                name="errorLogger"
+                fileName="${appLogsPath}/error.log" filePattern="${appLogsPath}/error-%d{yyyy-MM-dd}-%i.log"
+                immediateFlush="true">
+            <LevelRangeFilter minLevel="ERROR" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${fileSpecificLogPattern}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="30MB" />
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="10">
+                <Delete basePath="${appLogsPath}" maxDepth="10">
+                    <IfLastModified age="30d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile
+                name="jda.debugLogger"
+                fileName="${jdaLogsPath}/debug.log" filePattern="${jdaLogsPath}/debug-%d{yyyy-MM-dd}-%i.log"
+                immediateFlush="true">
+            <LevelRangeFilter minLevel="DEBUG" maxLevel="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${fileSpecificLogPattern}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="30MB" />
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="10">
+                <Delete basePath="${jdaLogsPath}" maxDepth="10">
+                    <IfLastModified age="30d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile
+                name="jda.traceLogger"
+                fileName="${jdaLogsPath}/trace.log" filePattern="${jdaLogsPath}/trace-%d{yyyy-MM-dd}-%i.log"
+                immediateFlush="true">
+            <LevelRangeFilter minLevel="TRACE" maxLevel="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${fileSpecificLogPattern}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="30MB" />
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="10">
+                <Delete basePath="${jdaLogsPath}" maxDepth="10">
+                    <IfLastModified age="30d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile
+                name="spring.debugLogger"
+                fileName="${springLogsPath}/debug.log" filePattern="${springLogsPath}/debug-%d{yyyy-MM-dd}-%i.log"
+                immediateFlush="true">
+            <LevelRangeFilter minLevel="DEBUG" maxLevel="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${fileSpecificLogPattern}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="30MB" />
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="10">
+                <Delete basePath="${springLogsPath}" maxDepth="10">
+                    <IfLastModified age="30d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile
+                name="spring.traceLogger"
+                fileName="${springLogsPath}/trace.log" filePattern="${springLogsPath}/trace-%d{yyyy-MM-dd}-%i.log"
+                immediateFlush="true">
+            <LevelRangeFilter minLevel="TRACE" maxLevel="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${fileSpecificLogPattern}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="30MB" />
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="10">
+                <Delete basePath="${springLogsPath}" maxDepth="10">
+                    <IfLastModified age="30d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile
+                name="debugLogger"
+                fileName="${appLogsPath}/debug.log" filePattern="${appLogsPath}/debug-%d{yyyy-MM-dd}-%i.log"
+                immediateFlush="true">
+            <LevelRangeFilter minLevel="DEBUG" maxLevel="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${fileSpecificLogPattern}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="30MB" />
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="10">
+                <Delete basePath="${appLogsPath}" maxDepth="10">
+                    <IfLastModified age="30d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile
+                name="traceLogger"
+                fileName="${appLogsPath}/trace.log" filePattern="${appLogsPath}/trace-%d{yyyy-MM-dd}-%i.log"
+                immediateFlush="true">
+            <LevelRangeFilter minLevel="TRACE" maxLevel="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${fileSpecificLogPattern}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="30MB" />
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="10">
+                <Delete basePath="${appLogsPath}" maxDepth="10">
+                    <IfLastModified age="30d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile
+                name="infoLogger"
+                fileName="${appLogsPath}/info.log" filePattern="${appLogsPath}/info-%d{yyyy-MM-dd}-%i.log"
+                immediateFlush="true">
+            <LevelRangeFilter minLevel="WARN" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${fileStacktracePattern}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="30MB" />
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="10">
+                <Delete basePath="${appLogsPath}" maxDepth="10">
+                    <IfLastModified age="30d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile
+                name="perfLogger"
+                fileName="${appLogsPath}/perf.log" filePattern="${appLogsPath}/perf-%d{yyyy-MM-dd}-%i.log"
+                immediateFlush="true">
+            <PatternLayout pattern="${filePerfPattern}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="50MB" />
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger level="ALL" name="net.dv8tion.jda" additivity="false">
+            <Appender-ref ref="infoLogger"/>
+            <Appender-ref ref="errorLogger"/>
+            <Appender-ref ref="jda.debugLogger"/>
+            <Appender-ref ref="jda.traceLogger"/>
+            <Appender-ref ref="consoleLogger"/>
+        </Logger>
+
+        <Logger level="ALL" name="pl.miloszgilga.command" additivity="false">
+            <Appender-ref ref="perfLogger"/>
+            <Appender-ref ref="debugLogger"/>
+            <Appender-ref ref="traceLogger"/>
+            <Appender-ref ref="consoleLogger"/>
+        </Logger>
+
+        <Logger level="ALL" name="pl.miloszgilga.listener" additivity="false">
+            <Appender-ref ref="perfLogger"/>
+            <Appender-ref ref="debugLogger"/>
+            <Appender-ref ref="traceLogger"/>
+            <Appender-ref ref="consoleLogger"/>
+        </Logger>
+
+        <Logger level="ALL" name="org.springframework" additivity="false">
+            <Appender-ref ref="infoLogger"/>
+            <Appender-ref ref="errorLogger"/>
+            <Appender-ref ref="spring.debugLogger"/>
+            <Appender-ref ref="spring.traceLogger"/>
+        </Logger>
+
+        <Root level="ALL" additivity="false">
+            <Appender-ref ref="infoLogger"/>
+            <Appender-ref ref="errorLogger"/>
+            <Appender-ref ref="debugLogger"/>
+            <Appender-ref ref="traceLogger"/>
+            <Appender-ref ref="consoleLogger"/>
+        </Root>
+    </Loggers>
+</Configuration>

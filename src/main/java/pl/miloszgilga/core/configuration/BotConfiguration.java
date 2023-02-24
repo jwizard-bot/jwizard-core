@@ -1,0 +1,221 @@
+/*
+ * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
+ *
+ * File name: PropertiesLoader.java
+ * Last modified: 22/02/2023, 22:48
+ * Project name: jwizard-discord-bot
+ *
+ * Licensed under the MIT license; you may not use this file except in compliance with the License.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+ * documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * THE ABOVE COPYRIGHT NOTICE AND THIS PERMISSION NOTICE SHALL BE INCLUDED IN ALL
+ * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
+ */
+
+package pl.miloszgilga.core.configuration;
+
+import lombok.extern.slf4j.Slf4j;
+import io.github.cdimascio.dotenv.Dotenv;
+
+import org.yaml.snakeyaml.Yaml;
+import org.apache.commons.cli.*;
+import org.hibernate.PropertyNotFoundException;
+import org.springframework.stereotype.Component;
+import org.apache.logging.log4j.core.config.Configurator;
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+import pl.miloszgilga.core.LocaleSet;
+
+import static java.lang.System.getenv;
+import static java.util.Objects.isNull;
+
+import static io.github.cdimascio.dotenv.Dotenv.configure;
+import static org.springframework.vault.support.JsonMapFlattener.flattenToStringMap;
+
+import static pl.miloszgilga.core.LocaleSet.*;
+import static pl.miloszgilga.core.configuration.AppMode.*;
+import static pl.miloszgilga.core.configuration.BotProperty.*;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+@Slf4j
+@Component
+public class BotConfiguration {
+
+    public static final String JPREFIX = "jwizard";
+    private static final String LOG4J_CFG = "logger/log4j2.cfg.xml";
+    private static final String LOCALE_BUNDLE_DIR = "lang";
+    private static final String LOCALE_BUNDLE_PROP = "messages";
+    private static final String ARTIFACT_PROP = "/artifact.properties";
+
+    private final Map<BotProperty, Object> jProperties = new HashMap<>();
+    private final Set<String> envProperties = new HashSet<>();
+    private final Yaml yaml = new Yaml();
+
+    private final CommandLineParser commandLineParser = new DefaultParser();
+    private final HelpFormatter helpFormatter = new HelpFormatter();
+    private final Dotenv dotenv = configure().systemProperties().load();
+
+    private ResourceBundle localeBundle;
+
+    private final List<CastType<?>> castTypes = List.of(
+        new CastType<>(String.class, rawData -> rawData),
+        new CastType<>(Boolean.class, Boolean::valueOf),
+        new CastType<>(Integer.class, Integer::valueOf)
+    );
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void loadConfiguration(String[] args) {
+        Configurator.initialize(null, LOG4J_CFG);
+        final AppMode appMode = extractModeFromArguments(args);
+        String language;
+        try {
+            final InputStream inputStream = new FileInputStream(appMode.getConfigFile());
+
+            final Map<String, String> propertiesMap = flattenToStringMap(yaml.load(inputStream));
+            for (final Map.Entry<String, String> entry : propertiesMap.entrySet()) {
+                final EnvPropertyHolder envProp = getEnvProperty(entry.getKey(), appMode);
+                if (!isNull(envProp) && entry.getValue().equalsIgnoreCase(envProp.placeholder())) {
+                    String envValue = getenv(envProp.rawProp());
+                    if (isNull(envValue)) envValue = dotenv.get(envProp.rawProp());
+                    if (isNull(envValue)) {
+                        throw new RuntimeException("Env property " + envProp.rawProp() + " not found.");
+                    }
+                    entry.setValue(envValue);
+                    envProperties.add(envProp.rawProp());
+                }
+                jProperties.put(getBaseName(entry.getKey()), entry.getValue());
+            }
+            inputStream.close();
+            language = getProperty(J_SELECTED_LOCALE);
+
+            final ClassLoader loader = new URLClassLoader(new URL[]{ new File(LOCALE_BUNDLE_DIR).toURI().toURL() });
+            localeBundle = ResourceBundle.getBundle(LOCALE_BUNDLE_PROP, new Locale(language), loader);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+        log.info("Primary language for bot '{}' was successfully loaded", language);
+        log.info("Bot configuration for '{}' version was successfully loaded", appMode.getAlias());
+        log.info("Successfully loaded variables from '.env' file: {}", envProperties);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void printFancyTitle() {
+        if (!getProperty(J_SHOW_FANCY_TITLE, Boolean.class)) return;
+        try {
+            final InputStream fileStream = new FileInputStream(getProperty(J_FANCY_TITLE_PATH));
+            try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileStream))) {
+                String line;
+                while (!isNull(line = bufferedReader.readLine())) {
+                    System.out.println(line);
+                }
+                System.out.println();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        } catch (FileNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void printAdditionalInformations() {
+        log.info("Starting application...");
+        log.info("Detected Java Virtual Machine version (JVM): '{}'", System.getProperty("java.runtime.version"));
+        if (!System.getProperty("java.vm.name").contains("64")) {
+            log.warn("Found not supported Java version. Recommended Java version is 64bit.");
+        }
+        try {
+            final Properties properties = new Properties();
+            properties.load(getClass().getResourceAsStream(ARTIFACT_PROP));
+
+            final String versionProp = (String) properties.get("project.version");
+            if (isNull(versionProp)) throw new PropertyNotFoundException("Property project.version not found.");
+            log.info("Application version: '{}'", versionProp);
+
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private AppMode extractModeFromArguments(String[] args) {
+        final Options options = new Options();
+        try {
+            final Option option = Option.builder("m").longOpt("mode").hasArg()
+                .required(true)
+                .desc("Select application mode (dev/prod)")
+                .build();
+            options.addOption(option);
+            final CommandLine commandLine = commandLineParser.parse(options, args, true);
+            if (commandLine.hasOption("m")) {
+                if (commandLine.getOptionValue("m").equalsIgnoreCase(DEV.getMode())) return DEV;
+                return PROD;
+            }
+            return DEV;
+        } catch (ParseException ex) {
+            helpFormatter.printHelp("Usage:", options);
+            throw new RuntimeException(ex);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @SuppressWarnings("unchecked")
+    public <T> T getProperty(BotProperty property, Class<T> castClazz) {
+        return jProperties.entrySet().stream()
+            .filter(p -> p.getKey().equals(property))
+            .findFirst()
+            .map(p -> (T)castTypes.stream()
+                .filter(c -> c.typeClazz().isAssignableFrom(castClazz))
+                .findFirst()
+                .map(t -> t.cast().apply((String)p.getValue()))
+                .orElseThrow(() -> { throw new RuntimeException("Unsupported casting type."); })
+            )
+            .orElseThrow(() -> { throw new RuntimeException("Property are not declared."); });
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public String getProperty(BotProperty property) {
+        return getProperty(property, String.class);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public String getLocaleText(LocaleSet localeSet, Map<String, Object> params) {
+        try {
+            String resourceText = localeBundle.getString(localeSet.getHolder());
+            for (final Map.Entry<String, Object> param : params.entrySet()) {
+                resourceText = resourceText.replace("{{" + param.getKey() + "}}", String.valueOf(param.getValue()));
+            }
+            return resourceText;
+        } catch (MissingResourceException ex) {
+            return localeSet.getHolder();
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public String getLocaleText(LocaleSet localeSet) {
+        return getLocaleText(localeSet, Map.of());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public String getLocaleText(String localeHolder) {
+        return getLocaleText(findByHolder(localeHolder), Map.of());
+    }
+
+}

@@ -1,0 +1,61 @@
+#
+# Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
+#
+# File name: properties-prod.yml
+# Last modified: 23/02/2023, 16:51
+# Project name: jwizard-discord-bot
+#
+# Licensed under the MIT license; you may not use this file except in compliance with the License.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+# documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to the following conditions:
+#
+# THE ABOVE COPYRIGHT NOTICE AND THIS PERMISSION NOTICE SHALL BE INCLUDED IN ALL
+# COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
+#
+
+# jwizard bot production properties
+
+jwizard:
+    development-mode: false
+    prefix: '$'
+    authorization:
+        token: ${env:PROD_TOKEN}
+        application-id: ${env:PROD_APP_ID}
+    timeout:
+        inactivity:
+            max-time-minutes: 5
+            max-time-after-pause-track-minutes: 10
+        voting:
+            max-elapsed-time-minutes: 2
+    misc:
+        locale:
+            selected-locale: pl
+        fancy-title:
+            show: true
+            path-to-file: fancy-title.txt
+        round-robin-activity:
+            enable-sequencer: true
+            sequencer-inverval-seconds: 6
+            randomized: false
+            show-from-external-file:
+                enabled: true
+                path-to-file: activities-sequencer.txt
+            show-commands:
+                enabled: true
+    pagination:
+        max-elements-per-page: 20
+    database:
+        jdbc:
+            connection: ${env:PROD_DB_JDBC}
+            enforce-ssl: true
+            username: ${env:PROD_DB_USERNAME}
+            password: ${env:PROD_DB_PASSWORD}
+            create-if-not-exist: true
+        hibernate:
+            sql-on-output: false
+            driver-package: com.mysql.cj.jdbc.Driver
+            dialect-package: org.hibernate.dialect.MySQLDialect
+            hbm2ddl-auto-mode: none

@@ -1,0 +1,8 @@
+      ___        ___                  _   ____        _
+     | \ \      / (_)______ _ _ __ __| | | __ )  ___ | |_
+  _  | |\ \ /\ / /| |_  / _` | '__/ _` | |  _ \ / _ \| __|
+ | |_| | \ V  V / | |/ / (_| | | | (_| | | |_) | (_) | |_
+  \___/   \_/\_/  |_/___\__,_|_|  \__,_| |____/ \___/ \__|
+
+ Created by Miłosz Gilga (https://miloszgilga.pl)
+ Source code (https://github.com/Milosz08/JWizard_Discord_Bot)
