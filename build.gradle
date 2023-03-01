@@ -131,6 +131,11 @@ tasks.register('moveConfigurationFiles', Copy) {
     into layout.buildDirectory.dir("$rootDir/build/shadow")
 }
 
+tasks.register('moveExecutableFiles', Copy) {
+    from layout.projectDirectory.dir('run-scripts')
+    into layout.buildDirectory.dir("$rootDir/build/shadow")
+}
+
 tasks.register('moveLangFiles', Copy) {
     from layout.projectDirectory.dir('lang')
     into layout.buildDirectory.dir("$rootDir/build/shadow/lang")
@@ -138,6 +143,7 @@ tasks.register('moveLangFiles', Copy) {
 
 shadowJar.finalizedBy moveConfigurationFiles
 shadowJar.finalizedBy moveLangFiles
+shadowJar.finalizedBy moveExecutableFiles
 
 test {
     useJUnitPlatform()
