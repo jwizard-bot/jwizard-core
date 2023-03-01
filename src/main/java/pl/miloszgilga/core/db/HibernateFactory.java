@@ -121,7 +121,7 @@ public class HibernateFactory {
 
             liquibase.getDatabase().setDatabaseChangeLogTableName(LIQUIBASE_CHANGELOG_TABLE);
             liquibase.getDatabase().setDatabaseChangeLogLockTableName(LIQUIBASE_CHANGELOG_LOCK_TABLE);
-            liquibase.update();
+            liquibase.update("liquibaseContext");
 
             sessionFactory = configuration.buildSessionFactory();
             log.info("Successfully created Hibernate session factory instance.");
