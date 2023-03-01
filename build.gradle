@@ -23,7 +23,7 @@ plugins {
 }
 
 def props = new Properties()
-file("src/main/resources/artifact.properties").withInputStream { props.load(it) }
+file('src/main/resources/artifact.properties').withInputStream { props.load(it) }
 
 version         = props.getProperty("project.version")
 group           = 'pl.miloszgilga'
@@ -99,7 +99,7 @@ dependencies {
 shadowJar {
     archiveFileName = "${props.getProperty("project.artifact")}-${project.version}.jar"
     manifest {
-        attributes  'Main-Class':           "$project.mainClassName",
+        attributes  'Main-Class':           project.mainClassName,
                     'Specification-Title':  props.getProperty("project.name"),
                     'Description':          props.getProperty("project.description"),
                     'Multi-Release':        true
