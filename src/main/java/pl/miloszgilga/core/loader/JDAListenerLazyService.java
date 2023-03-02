@@ -21,16 +21,17 @@ package pl.miloszgilga.core.loader;
 import org.springframework.stereotype.Service;
 import org.springframework.context.annotation.Lazy;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Target;
+import java.lang.annotation.Retention;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.RetentionPolicy;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Lazy
 @Service
-@Target(TYPE)
-@Retention(RUNTIME)
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface JDAListenerLazyService {
 }

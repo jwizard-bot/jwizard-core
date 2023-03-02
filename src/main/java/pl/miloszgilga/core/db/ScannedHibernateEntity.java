@@ -18,14 +18,15 @@
 
 package pl.miloszgilga.core.db;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Target;
+import java.lang.annotation.Retention;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.RetentionPolicy;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@Target(TYPE)
-@Retention(RUNTIME)
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface ScannedHibernateEntity {
 }

@@ -21,34 +21,34 @@ package pl.miloszgilga.core.db;
 import lombok.extern.slf4j.Slf4j;
 
 import liquibase.Liquibase;
-import liquibase.database.*;
+import liquibase.database.Database;
+import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 
 import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.stereotype.Component;
-import org.reflections.util.ConfigurationBuilder;
 
-import java.util.*;
+import java.util.Set;
+import java.util.Objects;
+import java.util.Properties;
 import java.sql.SQLException;
 
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
-
-import static java.util.Objects.isNull;
-import static org.hibernate.cfg.AvailableSettings.*;
-import static org.reflections.util.ClasspathHelper.forPackage;
-import static org.reflections.scanners.Scanners.TypesAnnotated;
-
-import static pl.miloszgilga.core.configuration.BotProperty.*;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -69,7 +69,7 @@ public class HibernateFactory {
     private static final String LIQUIBASE_CHANGELOG_LOCK_TABLE = "_liquibase_changelog_lock";
 
     final org.reflections.Configuration reflectionConfig = new ConfigurationBuilder()
-        .setUrls(forPackage("pl.miloszgilga.entities")).setScanners(TypesAnnotated);
+        .setUrls(ClasspathHelper.forPackage("pl.miloszgilga.entities")).setScanners(Scanners.TypesAnnotated);
     private final Reflections reflections = new Reflections(reflectionConfig);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,16 +82,16 @@ public class HibernateFactory {
 
     public void loadConfiguration() {
         final URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.addParameter("createDatabaseIfNotExist", config.getProperty(J_DB_CREATE));
-        uriBuilder.addParameter("useSSL", config.getProperty(J_DB_ENFORCE_SSL));
+        uriBuilder.addParameter("createDatabaseIfNotExist", config.getProperty(BotProperty.J_DB_CREATE));
+        uriBuilder.addParameter("useSSL", config.getProperty(BotProperty.J_DB_ENFORCE_SSL));
 
-        properties.setProperty(URL, config.getProperty(J_DB_CONNECTION) + uriBuilder);
-        properties.setProperty(USER, config.getProperty(J_DB_USERNAME));
-        properties.setProperty(PASS, config.getProperty(J_DB_PASSWORD));
-        properties.setProperty(DRIVER, config.getProperty(J_HDB_DRIVER));
-        properties.setProperty(DIALECT, config.getProperty(J_HDB_DIALECT));
-        properties.setProperty(SHOW_SQL, config.getProperty(J_HDB_SQL_OUT));
-        properties.setProperty(HBM2DDL_AUTO, config.getProperty(J_HDB_HBM2DDL));
+        properties.setProperty(AvailableSettings.URL, config.getProperty(BotProperty.J_DB_CONNECTION) + uriBuilder);
+        properties.setProperty(AvailableSettings.USER, config.getProperty(BotProperty.J_DB_USERNAME));
+        properties.setProperty(AvailableSettings.PASS, config.getProperty(BotProperty.J_DB_PASSWORD));
+        properties.setProperty(AvailableSettings.DRIVER, config.getProperty(BotProperty.J_HDB_DRIVER));
+        properties.setProperty(AvailableSettings.DIALECT, config.getProperty(BotProperty.J_HDB_DIALECT));
+        properties.setProperty(AvailableSettings.SHOW_SQL, config.getProperty(BotProperty.J_HDB_SQL_OUT));
+        properties.setProperty(AvailableSettings.HBM2DDL_AUTO, config.getProperty(BotProperty.J_HDB_HBM2DDL));
 
         final Set<Class<?>> hibernateEntitiesClazz = reflections.getTypesAnnotatedWith(ScannedHibernateEntity.class);
         for (final Class<?> hibernateEntitityClazz : hibernateEntitiesClazz) {
@@ -105,7 +105,7 @@ public class HibernateFactory {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void initialize() {
-        if (!isNull(sessionFactory)) return;
+        if (!Objects.isNull(sessionFactory)) return;
         try {
             final ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(properties)

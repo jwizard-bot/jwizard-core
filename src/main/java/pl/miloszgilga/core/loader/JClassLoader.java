@@ -20,21 +20,23 @@ package pl.miloszgilga.core.loader;
 
 import lombok.extern.slf4j.Slf4j;
 
+import com.jagrosh.jdautilities.command.Command;
+import com.jagrosh.jdautilities.command.CommandClient;
+
 import org.reflections.Reflections;
-import com.jagrosh.jdautilities.command.*;
+import org.reflections.scanners.Scanners;
+import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Set;
+import java.util.HashSet;
 
-import pl.miloszgilga.core.*;
+import pl.miloszgilga.Bootloader;
+import pl.miloszgilga.core.JDACommand;
+import pl.miloszgilga.core.JDAListenerAdapter;
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
-
-import static pl.miloszgilga.Bootloader.APP_CONTEXT;
-import static pl.miloszgilga.core.configuration.BotProperty.J_PREFIX;
-
-import static org.reflections.util.ClasspathHelper.forPackage;
-import static org.reflections.scanners.Scanners.TypesAnnotated;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -43,11 +45,11 @@ import static org.reflections.scanners.Scanners.TypesAnnotated;
 public class JClassLoader {
 
     final org.reflections.Configuration commandsReflectionConfig = new ConfigurationBuilder()
-        .setUrls(forPackage("pl.miloszgilga.command")).setScanners(TypesAnnotated);
+        .setUrls(ClasspathHelper.forPackage("pl.miloszgilga.command")).setScanners(Scanners.TypesAnnotated);
     private final Reflections commandsReflections = new Reflections(commandsReflectionConfig);
 
     final org.reflections.Configuration listenersReflectionsConfig = new ConfigurationBuilder()
-        .setUrls(forPackage("pl.miloszgilga.listener")).setScanners(TypesAnnotated);
+        .setUrls(ClasspathHelper.forPackage("pl.miloszgilga.listener")).setScanners(Scanners.TypesAnnotated);
     private final Reflections listenersReflections = new Reflections(listenersReflectionsConfig);
 
     private final Set<JDACommand> loadedCommands = new HashSet<>();
@@ -67,11 +69,11 @@ public class JClassLoader {
         final Set<Class<?>> commandsClazz = commandsReflections.getTypesAnnotatedWith(JDACommandLazyService.class);
         if (commandsClazz.isEmpty()) return;
         for (final Class<?> commandClazz : commandsClazz) {
-            loadedCommands.add((JDACommand) APP_CONTEXT.getBean(commandClazz));
+            loadedCommands.add((JDACommand) Bootloader.APP_CONTEXT.getBean(commandClazz));
         }
         log.info("Successfully loaded command interceptors ({}):", loadedCommands.size());
         for (final JDACommand jdaCommand : loadedCommands) {
-            final String commandInvoker = config.getProperty(J_PREFIX) + jdaCommand.getName();
+            final String commandInvoker = config.getProperty(BotProperty.J_PREFIX) + jdaCommand.getName();
             log.info(" --- {} {} ({})", commandInvoker, jdaCommand.getAliases(), jdaCommand.getClass().getName());
         }
     }
@@ -82,7 +84,7 @@ public class JClassLoader {
         final Set<Class<?>> listenersClazz = listenersReflections.getTypesAnnotatedWith(JDAListenerLazyService.class);
         if (listenersClazz.isEmpty()) return;
         for (final Class<?> listenerClazz : listenersClazz) {
-            loadedListeners.add((JDAListenerAdapter) APP_CONTEXT.getBean(listenerClazz));
+            loadedListeners.add((JDAListenerAdapter) Bootloader.APP_CONTEXT.getBean(listenerClazz));
         }
         log.info("Successfully loaded listener adapter interceptors ({}):", loadedListeners.size());
         for (final Object jdaListener : loadedListeners) {

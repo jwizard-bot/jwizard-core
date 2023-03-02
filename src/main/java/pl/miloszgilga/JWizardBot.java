@@ -20,28 +20,25 @@ package pl.miloszgilga;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.dv8tion.jda.api.*;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.Permission;
-import org.springframework.stereotype.Component;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 
-import pl.miloszgilga.core.loader.JClassLoader;
-import pl.miloszgilga.core.db.HibernateFactory;
-import pl.miloszgilga.misc.ActivityStatusSequencer;
-import pl.miloszgilga.core.configuration.BotConfiguration;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import javax.security.auth.login.LoginException;
 
-import static pl.miloszgilga.BotCommand.HELP_ME;
-import static pl.miloszgilga.core.configuration.BotProperty.*;
-
-import static net.dv8tion.jda.api.Permission.*;
-import static net.dv8tion.jda.api.OnlineStatus.ONLINE;
-import static net.dv8tion.jda.api.utils.cache.CacheFlag.*;
-import static net.dv8tion.jda.api.requests.GatewayIntent.*;
-import static net.dv8tion.jda.api.entities.Activity.listening;
+import pl.miloszgilga.core.loader.JClassLoader;
+import pl.miloszgilga.core.db.HibernateFactory;
+import pl.miloszgilga.core.configuration.BotProperty;
+import pl.miloszgilga.core.configuration.BotConfiguration;
+import pl.miloszgilga.misc.ActivityStatusSequencer;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -57,13 +54,23 @@ public class JWizardBot {
     private static final int LINKED_CACHE_SIZE = 200;
 
     private static final GatewayIntent[] GATEWAY_INTENTS = {
-        DIRECT_MESSAGES, GUILD_MESSAGES, GUILD_MESSAGE_REACTIONS, GUILD_VOICE_STATES, GUILD_MESSAGE_TYPING
+        GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS,
+        GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MESSAGE_TYPING
     };
 
     public static final Permission[] PERMISSIONS = {
-        MESSAGE_READ, MESSAGE_WRITE, MESSAGE_HISTORY, MESSAGE_ADD_REACTION, MESSAGE_EMBED_LINKS, MESSAGE_ATTACH_FILES,
-        MESSAGE_MANAGE, MESSAGE_EXT_EMOJI, MANAGE_CHANNEL, VOICE_CONNECT, VOICE_SPEAK
+        Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION,
+        Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE,
+        Permission.MESSAGE_EXT_EMOJI, Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK
     };
+
+    private static final List<CacheFlag> ENABLED_CACHE_FLAGS = List.of(
+        CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE
+    );
+
+    private static final List<CacheFlag> DISABLED_CACHE_FLAGS = List.of(
+        CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS, CacheFlag.EMOTE, CacheFlag.ONLINE_STATUS
+    );
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -91,19 +98,19 @@ public class JWizardBot {
         hibernateFactory.initialize();
 
         final CommandClientBuilder commandBuilder = new CommandClientBuilder()
-            .setPrefix(config.getProperty(J_PREFIX))
-            .setOwnerId(config.getProperty(J_APP_ID))
-            .setHelpWord(HELP_ME.getName())
+            .setPrefix(config.getProperty(BotProperty.J_PREFIX))
+            .setOwnerId(config.getProperty(BotProperty.J_APP_ID))
+            .setHelpWord(BotCommand.HELP_ME.getName())
             .setLinkedCacheSize(LINKED_CACHE_SIZE)
             .addCommands(jClassLoader.getLoadedCommands());
 
         try {
             final JDA jda = JDABuilder
-                .create(config.getProperty(J_AUTH_TOKEN), Arrays.asList(GATEWAY_INTENTS))
-                .enableCache(MEMBER_OVERRIDES, VOICE_STATE)
-                .disableCache(ACTIVITY, CLIENT_STATUS, EMOTE, ONLINE_STATUS)
-                .setActivity(listening("Loading..."))
-                .setStatus(ONLINE)
+                .create(config.getProperty(BotProperty.J_AUTH_TOKEN), Arrays.asList(GATEWAY_INTENTS))
+                .enableCache(ENABLED_CACHE_FLAGS)
+                .disableCache(DISABLED_CACHE_FLAGS)
+                .setActivity(Activity.listening("Loading..."))
+                .setStatus(OnlineStatus.ONLINE)
                 .setBulkDeleteSplittingEnabled(true)
                 .addEventListeners(jClassLoader.getAllListeners(commandBuilder.build()))
                 .build();

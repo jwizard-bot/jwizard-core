@@ -18,11 +18,11 @@
 
 package pl.miloszgilga.core.configuration;
 
-import lombok.*;
-import java.util.Arrays;
+import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-import static pl.miloszgilga.core.configuration.EnvProperty.*;
-import static pl.miloszgilga.core.configuration.BotConfiguration.JPREFIX;
+import java.util.Arrays;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -32,8 +32,8 @@ import static pl.miloszgilga.core.configuration.BotConfiguration.JPREFIX;
 public enum BotProperty {
     J_DEVELOPMENT_MODE          ("development-mode"),
     J_PREFIX                    ("prefix"),
-    J_AUTH_TOKEN                ("authorization.token",                                         true, TOKEN),
-    J_APP_ID                    ("authorization.application-id",                                true, APP_ID),
+    J_AUTH_TOKEN                ("authorization.token",                                         true, EnvProperty.TOKEN),
+    J_APP_ID                    ("authorization.application-id",                                true, EnvProperty.APP_ID),
     J_INACTIVITY_TIMEOUT        ("timeout.inactivity.max-time-minutes"),
     J_INACTIVITY_PAUSE_TIMEOUT  ("timeout.inactivity.max-time-after-pause-track-minutes"),
     J_INACTIVITY_VOTING_TIMEOUT ("timeout.voting.max-elapsed-time-minutes"),
@@ -47,10 +47,10 @@ public enum BotProperty {
     J_RR_EXTERNAL_FILE_PATH     ("misc.round-robin-activity.show-from-external-file.path-to-file"),
     J_RR_COMMANDS_ENABLED       ("misc.round-robin-activity.show-commands.enabled"),
     J_PAGINATION_MAX            ("pagination.max-elements-per-page"),
-    J_DB_CONNECTION             ("database.jdbc.connection",                                    true, DB_JDBC),
+    J_DB_CONNECTION             ("database.jdbc.connection",                                    true, EnvProperty.DB_JDBC),
     J_DB_ENFORCE_SSL            ("database.jdbc.enforce-ssl"),
-    J_DB_USERNAME               ("database.jdbc.username",                                      true, DB_USERNAME),
-    J_DB_PASSWORD               ("database.jdbc.password",                                      true, DB_PASSWORD),
+    J_DB_USERNAME               ("database.jdbc.username",                                      true, EnvProperty.DB_USERNAME),
+    J_DB_PASSWORD               ("database.jdbc.password",                                      true, EnvProperty.DB_PASSWORD),
     J_DB_CREATE                 ("database.jdbc.create-if-not-exist"),
     J_HDB_SQL_OUT               ("database.hibernate.sql-on-output"),
     J_HDB_DRIVER                ("database.hibernate.driver-package"),
@@ -67,7 +67,7 @@ public enum BotProperty {
 
     static BotProperty getBaseName(String name) {
         return Arrays.stream(BotProperty.values())
-            .filter(v -> (JPREFIX + "." + v.name).equals(name))
+            .filter(v -> (BotConfiguration.JPREFIX + "." + v.name).equals(name))
             .findFirst()
             .orElseThrow(() -> {
                 throw new IllegalArgumentException("Property " + name + " not exist.");

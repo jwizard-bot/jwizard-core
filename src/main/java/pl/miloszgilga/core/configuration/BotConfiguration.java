@@ -19,29 +19,21 @@
 package pl.miloszgilga.core.configuration;
 
 import lombok.extern.slf4j.Slf4j;
-import io.github.cdimascio.dotenv.Dotenv;
 
 import org.yaml.snakeyaml.Yaml;
 import org.apache.commons.cli.*;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.hibernate.PropertyNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.vault.support.JsonMapFlattener;
 import org.apache.logging.log4j.core.config.Configurator;
 
 import java.io.*;
-import java.net.*;
 import java.util.*;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 import pl.miloszgilga.core.LocaleSet;
-
-import static java.lang.System.getenv;
-import static java.util.Objects.isNull;
-
-import static io.github.cdimascio.dotenv.Dotenv.configure;
-import static org.springframework.vault.support.JsonMapFlattener.flattenToStringMap;
-
-import static pl.miloszgilga.core.LocaleSet.*;
-import static pl.miloszgilga.core.configuration.AppMode.*;
-import static pl.miloszgilga.core.configuration.BotProperty.*;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -61,7 +53,7 @@ public class BotConfiguration {
 
     private final CommandLineParser commandLineParser = new DefaultParser();
     private final HelpFormatter helpFormatter = new HelpFormatter();
-    private final Dotenv dotenv = configure().systemProperties().load();
+    private final Dotenv dotenv = Dotenv.configure().systemProperties().load();
 
     private ResourceBundle localeBundle;
 
@@ -80,22 +72,22 @@ public class BotConfiguration {
         try {
             final InputStream inputStream = new FileInputStream(appMode.getConfigFile());
 
-            final Map<String, String> propertiesMap = flattenToStringMap(yaml.load(inputStream));
+            final Map<String, String> propertiesMap = JsonMapFlattener.flattenToStringMap(yaml.load(inputStream));
             for (final Map.Entry<String, String> entry : propertiesMap.entrySet()) {
-                final EnvPropertyHolder envProp = getEnvProperty(entry.getKey(), appMode);
-                if (!isNull(envProp) && entry.getValue().equalsIgnoreCase(envProp.placeholder())) {
-                    String envValue = getenv(envProp.rawProp());
-                    if (isNull(envValue)) envValue = dotenv.get(envProp.rawProp());
-                    if (isNull(envValue)) {
+                final EnvPropertyHolder envProp = BotProperty.getEnvProperty(entry.getKey(), appMode);
+                if (!Objects.isNull(envProp) && entry.getValue().equalsIgnoreCase(envProp.placeholder())) {
+                    String envValue = System.getenv(envProp.rawProp());
+                    if (Objects.isNull(envValue)) envValue = dotenv.get(envProp.rawProp());
+                    if (Objects.isNull(envValue)) {
                         throw new RuntimeException("Env property " + envProp.rawProp() + " not found.");
                     }
                     entry.setValue(envValue);
                     envProperties.add(envProp.rawProp());
                 }
-                jProperties.put(getBaseName(entry.getKey()), entry.getValue());
+                jProperties.put(BotProperty.getBaseName(entry.getKey()), entry.getValue());
             }
             inputStream.close();
-            language = getProperty(J_SELECTED_LOCALE);
+            language = getProperty(BotProperty.J_SELECTED_LOCALE);
 
             final ClassLoader loader = new URLClassLoader(new URL[]{ new File(LOCALE_BUNDLE_DIR).toURI().toURL() });
             localeBundle = ResourceBundle.getBundle(LOCALE_BUNDLE_PROP, new Locale(language), loader);
@@ -110,12 +102,12 @@ public class BotConfiguration {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void printFancyTitle() {
-        if (!getProperty(J_SHOW_FANCY_TITLE, Boolean.class)) return;
+        if (!getProperty(BotProperty.J_SHOW_FANCY_TITLE, Boolean.class)) return;
         try {
-            final InputStream fileStream = new FileInputStream(getProperty(J_FANCY_TITLE_PATH));
+            final InputStream fileStream = new FileInputStream(getProperty(BotProperty.J_FANCY_TITLE_PATH));
             try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileStream))) {
                 String line;
-                while (!isNull(line = bufferedReader.readLine())) {
+                while (!Objects.isNull(line = bufferedReader.readLine())) {
                     System.out.println(line);
                 }
                 System.out.println();
@@ -140,7 +132,7 @@ public class BotConfiguration {
             properties.load(getClass().getResourceAsStream(ARTIFACT_PROP));
 
             final String versionProp = (String) properties.get("project.version");
-            if (isNull(versionProp)) throw new PropertyNotFoundException("Property project.version not found.");
+            if (Objects.isNull(versionProp)) throw new PropertyNotFoundException("Property project.version not found.");
             log.info("Application version: '{}'", versionProp);
 
         } catch (IOException ex) {
@@ -160,10 +152,10 @@ public class BotConfiguration {
             options.addOption(option);
             final CommandLine commandLine = commandLineParser.parse(options, args, true);
             if (commandLine.hasOption("m")) {
-                if (commandLine.getOptionValue("m").equalsIgnoreCase(DEV.getMode())) return DEV;
-                return PROD;
+                if (commandLine.getOptionValue("m").equalsIgnoreCase(AppMode.DEV.getMode())) return AppMode.DEV;
+                return AppMode.PROD;
             }
-            return DEV;
+            return AppMode.DEV;
         } catch (ParseException ex) {
             helpFormatter.printHelp("Usage:", options);
             throw new RuntimeException(ex);
@@ -215,7 +207,7 @@ public class BotConfiguration {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public String getLocaleText(String localeHolder) {
-        return getLocaleText(findByHolder(localeHolder), Map.of());
+        return getLocaleText(LocaleSet.findByHolder(localeHolder), Map.of());
     }
 
 }

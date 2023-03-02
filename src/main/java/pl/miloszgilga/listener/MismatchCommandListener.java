@@ -24,10 +24,9 @@ import org.jetbrains.annotations.NotNull;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import pl.miloszgilga.core.JDAListenerAdapter;
-import pl.miloszgilga.core.configuration.BotConfiguration;
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.loader.JDAListenerLazyService;
-
-import static pl.miloszgilga.core.configuration.BotProperty.J_PREFIX;
+import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -43,7 +42,8 @@ class MismatchCommandListener extends JDAListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
-        final boolean startsWithPrefix = event.getMessage().getContentRaw().startsWith(config.getProperty(J_PREFIX));
+        final boolean startsWithPrefix = event.getMessage().getContentRaw()
+            .startsWith(config.getProperty(BotProperty.J_PREFIX));
         if (event.getAuthor().isBot() || !startsWithPrefix) return;
 
         log.info("MismatchCommandListener invoke...");

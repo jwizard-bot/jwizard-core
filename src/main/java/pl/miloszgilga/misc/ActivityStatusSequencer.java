@@ -26,18 +26,13 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
-
-import static java.util.Objects.isNull;
-import static java.util.Collections.shuffle;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
-
-import static pl.miloszgilga.core.configuration.BotProperty.*;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -53,7 +48,7 @@ public class ActivityStatusSequencer {
     private final List<BotCommand> botCommands = Arrays.stream(BotCommand.values()).toList();
     private final Deque<String> cachedTextActivities = new LinkedList<>();
 
-    private final ScheduledExecutorService threadPool = newSingleThreadScheduledExecutor(r -> {
+    private final ScheduledExecutorService threadPool = Executors.newSingleThreadScheduledExecutor(r -> {
         final Thread thread = new Thread(r);
         thread.setDaemon(true);
         return thread;
@@ -68,15 +63,15 @@ public class ActivityStatusSequencer {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void loadConfiguration(JDA jda) {
-        if (!jConfig.getProperty(J_RR_ACTIVITY_ENABLED, Boolean.class)) return;
+        if (!jConfig.getProperty(BotProperty.J_RR_ACTIVITY_ENABLED, Boolean.class)) return;
         this.jda = jda;
 
-        if (jConfig.getProperty(J_RR_EXTERNAL_FILE_ENABLED, Boolean.class)) {
+        if (jConfig.getProperty(BotProperty.J_RR_EXTERNAL_FILE_ENABLED, Boolean.class)) {
             try {
-                final InputStream fileStream = new FileInputStream(jConfig.getProperty(J_RR_EXTERNAL_FILE_PATH));
+                final InputStream fileStream = new FileInputStream(jConfig.getProperty(BotProperty.J_RR_EXTERNAL_FILE_PATH));
                 try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileStream))) {
                     String line;
-                    while (!isNull(line = bufferedReader.readLine())) {
+                    while (!Objects.isNull(line = bufferedReader.readLine())) {
                         cachedTextActivities.add(line);
                     }
                 } catch (IOException ex) {
@@ -86,13 +81,13 @@ public class ActivityStatusSequencer {
                 throw new RuntimeException(ex);
             }
         }
-        if (!jConfig.getProperty(J_RR_COMMANDS_ENABLED, Boolean.class)) {
+        if (!jConfig.getProperty(BotProperty.J_RR_COMMANDS_ENABLED, Boolean.class)) {
             botCommands.stream()
-                .map(c -> jConfig.getProperty(J_PREFIX) + c.getName())
+                .map(c -> jConfig.getProperty(BotProperty.J_PREFIX) + c.getName())
                 .forEach(cachedTextActivities::addLast);
         }
-        if (jConfig.getProperty(J_RR_RANDOMIZED, Boolean.class)) {
-            shuffle((List<?>) cachedTextActivities);
+        if (jConfig.getProperty(BotProperty.J_RR_RANDOMIZED, Boolean.class)) {
+            Collections.shuffle((List<?>) cachedTextActivities);
         }
         log.info("Successfully loaded activity sequencer with parameters");
     }
@@ -100,16 +95,16 @@ public class ActivityStatusSequencer {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void invoke() {
-        if (!jConfig.getProperty(J_RR_ACTIVITY_ENABLED, Boolean.class)) return;
+        if (!jConfig.getProperty(BotProperty.J_RR_ACTIVITY_ENABLED, Boolean.class)) return;
 
-        final int interval = jConfig.getProperty(J_RR_INTERVAL, Integer.class);
+        final int interval = jConfig.getProperty(BotProperty.J_RR_INTERVAL, Integer.class);
         log.info("Invoke activity sequencer thread. Inverval: {} sec per activity", interval);
 
         threadPool.scheduleWithFixedDelay(() -> {
-            if (isNull(jda)) return;
+            if (Objects.isNull(jda)) return;
             final String selectedActivity = ((LinkedList<String>) cachedTextActivities).get(position);
             jda.getPresence().setActivity(Activity.listening(selectedActivity));
             position = (position + 1) % cachedTextActivities.size();
-        }, 0, interval, SECONDS);
+        }, 0, interval, TimeUnit.SECONDS);
     }
 }

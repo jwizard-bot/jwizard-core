@@ -22,11 +22,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.core.JDACommand;
 import pl.miloszgilga.core.loader.JDACommandLazyService;
 import pl.miloszgilga.core.configuration.BotConfiguration;
-
-import static pl.miloszgilga.BotCommand.HELP;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -35,7 +34,7 @@ import static pl.miloszgilga.BotCommand.HELP;
 class HelpCmd extends JDACommand {
 
     HelpCmd(BotConfiguration jConfig) {
-        super(HELP, jConfig);
+        super(BotCommand.HELP, jConfig);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

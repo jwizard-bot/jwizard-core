@@ -21,7 +21,8 @@ package pl.miloszgilga.core.db;
 import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serial;
 import java.io.Serializable;
