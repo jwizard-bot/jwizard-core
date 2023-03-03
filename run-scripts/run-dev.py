@@ -74,7 +74,13 @@ if not envExist:
     print('[python run script err] <> Env file not found in current directory')
     exit(5)
 
-executableScript = f'java -Xmx{maxJavaHeapSize} -Xms{startJavaHeapSize} -jar {executableJarFileName} --mode=dev'
+executableScript = \
+    f'java ' \
+    f'-Xmx{maxJavaHeapSize} -Xms{startJavaHeapSize} ' \
+    f'-Duser.timezone=UTC ' \
+    f'-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/ ' \
+    f'-jar {executableJarFileName} ' \
+    f'--mode=dev'
 
 print('[python run script info] <> Executing JWizard bot JAR file in development mode...')
 print(f'[python run script info] <> {executableScript}')

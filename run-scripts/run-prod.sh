@@ -76,7 +76,15 @@ if [ ! -f ".env" ]; then
     exit 6
 fi
 
-EXEC_SCRIPT="java -Xmx$MAX_JAVA_HEAP_SIZE -Xms$START_JAVA_HEAP_SIZE -jar $EXEC_JAR_FILE_NAME --mode=prod"
+EXEC_SCRIPT="java
+-Xmx$MAX_JAVA_HEAP_SIZE -Xms$START_JAVA_HEAP_SIZE
+-Duser.timezone=UTC
+-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/
+-jar $EXEC_JAR_FILE_NAME
+--mode=prod
+"
+
+EXEC_SCRIPT=$(echo "$EXEC_SCRIPT" | tr '\n' ' ')
 
 echo "[bash run script info] <> Executing JWizard bot JAR file in production mode..."
 echo "[bash run script info] <> $EXEC_SCRIPT"
