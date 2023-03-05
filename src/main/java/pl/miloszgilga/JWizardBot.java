@@ -34,6 +34,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import javax.security.auth.login.LoginException;
 
+import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.core.loader.JClassLoader;
 import pl.miloszgilga.core.db.HibernateFactory;
 import pl.miloszgilga.core.configuration.BotProperty;
@@ -50,6 +51,7 @@ public class JWizardBot {
     private final JClassLoader jClassLoader;
     private final ActivityStatusSequencer statusSequencer;
     private final HibernateFactory hibernateFactory;
+    private final PlayerManager playerManager;
 
     private static final int LINKED_CACHE_SIZE = 200;
 
@@ -76,12 +78,13 @@ public class JWizardBot {
 
     JWizardBot(
         BotConfiguration config, JClassLoader jClassLoader, ActivityStatusSequencer statusSequencer,
-        HibernateFactory hibernateFactory
+        HibernateFactory hibernateFactory, PlayerManager playerManager
     ) {
         this.config = config;
         this.jClassLoader = jClassLoader;
         this.statusSequencer = statusSequencer;
         this.hibernateFactory = hibernateFactory;
+        this.playerManager = playerManager;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -119,6 +122,8 @@ public class JWizardBot {
 
             statusSequencer.loadConfiguration(jda);
             statusSequencer.invoke();
+
+            playerManager.initialize();
 
             log.info("Add bot into Discord server via link: {}", jda.getInviteUrl(PERMISSIONS));
             log.info("Started listening incoming requests...");

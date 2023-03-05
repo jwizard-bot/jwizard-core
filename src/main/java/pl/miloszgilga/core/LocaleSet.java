@@ -29,7 +29,18 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public enum LocaleSet {
     HELP_COMMAND_DESC               ("jwizard.command.description.Help"),
-    HELPME_COMMAND_DESC             ("jwizard.command.description.HelpMe");
+    HELPME_COMMAND_DESC             ("jwizard.command.description.HelpMe"),
+    PLAY_TRACK_COMMAND_DESC         ("jwizard.command.description.PlayTrack"),
+
+    INFO_HEADER                     ("jwizard.message.response.header.info"),
+    WARN_HEADER                     ("jwizard.message.response.header.warn"),
+    ERROR_HEADER                    ("jwizard.message.response.header.error"),
+
+    TRACK_IS_NOT_PLAYING_EXC        ("jwizard.exception.TrackIsNotPlayingException"),
+    TRACK_IS_NOT_PAUSED_EXC         ("jwizard.exception.TrackIsNotPausedException"),
+    USER_ON_CHANNEL_NOT_FOUND_EXC   ("jwizard.exception.UserOnVoiceChannelNotFoundException"),
+    MUSIC_BOT_IS_CURRENTLY_USED_EXC ("jwizard.exception.MusicBotIsCurrentlyUsedException"),
+    UNRECOGNIZED_COMMAND_EXC        ("jwizard.exception.UnrecognizedCommandException");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

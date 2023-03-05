@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: JCommand.java
- * Last modified: 23/02/2023, 19:10
+ * File name: AudioPlayerSendHandler.java
+ * Last modified: 04/03/2023, 23:06
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -16,45 +16,49 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga;
+package pl.miloszgilga.audioplayer;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import net.dv8tion.jda.api.audio.AudioSendHandler;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import com.sedmelluq.discord.lavaplayer.track.playback.MutableAudioFrame;
 
-import pl.miloszgilga.core.LocaleSet;
-
-import java.util.Set;
-import java.util.Arrays;
-import java.util.stream.Stream;
-import java.util.stream.Collectors;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@Getter
-@RequiredArgsConstructor
-public enum BotCommand {
-    HELP        ("help",    new String[]{ "h", "hl" },     LocaleSet.HELP_COMMAND_DESC,             false),
-    HELP_ME     ("helpme",  new String[]{ "hm", "hlm" },   LocaleSet.HELPME_COMMAND_DESC,           false),
-    PLAY_TRACK  ("play",    new String[]{ "p", "pl" },     LocaleSet.PLAY_TRACK_COMMAND_DESC,       false);
+public class AudioPlayerSendHandler implements AudioSendHandler {
+
+    private final AudioPlayer audioPlayer;
+    private final ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+    private final MutableAudioFrame audioFrame = new MutableAudioFrame();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final String name;
-    private final String[] aliases;
-    private final LocaleSet descriptionHolder;
-    private final boolean onlyOwner;
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public String getDescriptionHolder() {
-        return descriptionHolder.getHolder();
+    public AudioPlayerSendHandler(AudioPlayer audioPlayer) {
+        this.audioPlayer = audioPlayer;
+        audioFrame.setBuffer(byteBuffer);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static Set<String> getAllCommandsWithAliases() {
-        final Stream<String> commands =  Arrays.stream(values()).map(v -> v.name);
-        final Stream<String> aliases = Arrays.stream(values()).map(v -> v.aliases).flatMap(Arrays::stream);
-        return Stream.concat(commands, aliases).collect(Collectors.toSet());
+    @Override
+    public boolean canProvide() {
+        return audioPlayer.provide(audioFrame);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public ByteBuffer provide20MsAudio() {
+        final Buffer buffer = ((Buffer) this.byteBuffer).flip();
+        return (ByteBuffer) buffer;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public boolean isOpus() {
+        return true;
     }
 }
