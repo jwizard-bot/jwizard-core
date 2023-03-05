@@ -20,13 +20,20 @@ package pl.miloszgilga.listener;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.jetbrains.annotations.NotNull;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
+import java.util.Set;
+
+import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.core.JDAListenerAdapter;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.loader.JDAListenerLazyService;
 import pl.miloszgilga.core.configuration.BotConfiguration;
+
+import static pl.miloszgilga.exception.CommandException.UnrecognizedCommandException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -34,19 +41,30 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 @JDAListenerLazyService
 class MismatchCommandListener extends JDAListenerAdapter {
 
-    MismatchCommandListener(BotConfiguration jConfig) {
-        super(jConfig);
+    private final Set<String> allCommandsWithAliases = BotCommand.getAllCommandsWithAliases();
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    MismatchCommandListener(BotConfiguration jConfig, EmbedMessageBuilder embedBuilder) {
+        super(jConfig, embedBuilder);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
-        final boolean startsWithPrefix = event.getMessage().getContentRaw()
-            .startsWith(config.getProperty(BotProperty.J_PREFIX));
-        if (event.getAuthor().isBot() || !startsWithPrefix) return;
+    public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+        try {
+            final String message = event.getMessage().getContentRaw();
+            final String prefix = config.getProperty(BotProperty.J_PREFIX);
 
-        log.info("MismatchCommandListener invoke...");
-        event.getChannel().sendMessage("MismatchCommandListener").queue();
+            if (event.getAuthor().isBot() || !message.startsWith(prefix)) return;
+            if (allCommandsWithAliases.stream().noneMatch(c -> c.equals(message.substring(1)))) {
+                throw new UnrecognizedCommandException(config, new EventWrapper(event));
+            }
+        } catch (BotException ex) {
+            event.getChannel()
+                .sendMessageEmbeds(embedBuilder.createErrorMessage(new EventWrapper(event), ex.getMessage()))
+                .queue();
+        }
     }
 }
