@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: JDACommand.java
- * Last modified: 23/02/2023, 19:09
+ * File name: EmbedMessageBuilder.java
+ * Last modified: 05/03/2023, 23:38
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -16,31 +16,40 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga.core;
+package pl.miloszgilga.embed;
 
-import com.jagrosh.jdautilities.command.Command;
-import org.springframework.context.annotation.DependsOn;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 
-import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.embed.EmbedMessageBuilder;
+import org.springframework.stereotype.Component;
+
+import java.awt.*;
+
+import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@DependsOn("botConfiguration")
-public abstract class JDACommand extends Command {
+@Component
+public class EmbedMessageBuilder {
 
-    protected final BotConfiguration config;
-    protected final EmbedMessageBuilder embedBuilder;
+    private final BotConfiguration config;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public JDACommand(BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder) {
-        this.name = command.getName();
-        this.help = config.getLocaleText(command.getDescriptionHolder());
-        this.ownerCommand = command.isOnlyOwner();
-        this.aliases = command.getAliases();
+    public EmbedMessageBuilder(BotConfiguration config) {
         this.config = config;
-        this.embedBuilder = embedBuilder;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public MessageEmbed createErrorMessage(EventWrapper wrapper, String message) {
+        return new EmbedBuilder()
+            .setAuthor(wrapper.authorTag(), null, wrapper.authorAvatarUrl())
+            .setTitle(config.getLocaleText(LocaleSet.ERROR_HEADER))
+            .setDescription(message)
+            .setColor(Color.decode(EmbedColor.PURPLE.getHex()))
+            .build();
     }
 }

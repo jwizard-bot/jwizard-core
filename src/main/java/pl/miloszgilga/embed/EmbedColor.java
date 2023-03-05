@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: JDACommand.java
- * Last modified: 23/02/2023, 19:09
+ * File name: EmbedColor.java
+ * Last modified: 05/03/2023, 23:32
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -16,31 +16,22 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga.core;
+package pl.miloszgilga.embed;
 
-import com.jagrosh.jdautilities.command.Command;
-import org.springframework.context.annotation.DependsOn;
-
-import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.embed.EmbedMessageBuilder;
-import pl.miloszgilga.core.configuration.BotConfiguration;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@DependsOn("botConfiguration")
-public abstract class JDACommand extends Command {
-
-    protected final BotConfiguration config;
-    protected final EmbedMessageBuilder embedBuilder;
+@Getter
+@RequiredArgsConstructor
+public enum EmbedColor {
+    GRAY                ("#CFCFCF"),
+    WHITE               ("#FAFAFA"),
+    PURPLE              ("#8E7CC3"),
+    ANTIQUE_WHITE       ("#FAEBD7");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public JDACommand(BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder) {
-        this.name = command.getName();
-        this.help = config.getLocaleText(command.getDescriptionHolder());
-        this.ownerCommand = command.isOnlyOwner();
-        this.aliases = command.getAliases();
-        this.config = config;
-        this.embedBuilder = embedBuilder;
-    }
+    private final String hex;
 }

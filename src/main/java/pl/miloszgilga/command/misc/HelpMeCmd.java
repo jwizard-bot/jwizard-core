@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: SayHelloCommand.java
- * Last modified: 22/02/2023, 17:00
+ * File name: HelpMeCmd.java
+ * Last modified: 06/03/2023, 00:23
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -16,25 +16,26 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga.command;
+package pl.miloszgilga.command.misc;
 
 import lombok.extern.slf4j.Slf4j;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.JDACommand;
 import pl.miloszgilga.core.loader.JDACommandLazyService;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////s
 
 @Slf4j
 @JDACommandLazyService
-class HelpCmd extends JDACommand {
+class HelpMeCmd extends JDACommand {
 
-    HelpCmd(BotConfiguration jConfig) {
-        super(BotCommand.HELP, jConfig);
+    HelpMeCmd(BotConfiguration jConfig, EmbedMessageBuilder embedBuilder) {
+        super(BotCommand.HELP_ME, jConfig, embedBuilder);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

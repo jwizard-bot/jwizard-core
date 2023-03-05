@@ -175,7 +175,7 @@ public class BotConfiguration {
                 .map(t -> t.cast().apply((String)p.getValue()))
                 .orElseThrow(() -> { throw new RuntimeException("Unsupported casting type."); })
             )
-            .orElseThrow(() -> { throw new RuntimeException("Property are not declared."); });
+            .orElseThrow(() -> { throw new RuntimeException("Property is not declared."); });
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

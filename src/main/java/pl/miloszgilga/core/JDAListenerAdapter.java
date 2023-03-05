@@ -21,6 +21,7 @@ package pl.miloszgilga.core;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.context.annotation.DependsOn;
 
+import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -29,10 +30,12 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 public abstract class JDAListenerAdapter extends ListenerAdapter {
 
     protected BotConfiguration config;
+    protected EmbedMessageBuilder embedBuilder;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public JDAListenerAdapter(BotConfiguration config) {
+    public JDAListenerAdapter(BotConfiguration config, EmbedMessageBuilder embedBuilder) {
         this.config = config;
+        this.embedBuilder = embedBuilder;
     }
 }
