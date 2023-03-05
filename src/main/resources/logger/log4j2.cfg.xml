@@ -179,8 +179,12 @@
 
         <Logger level="ALL" name="pl.miloszgilga.command" additivity="false">
             <Appender-ref ref="perfLogger"/>
+            <Appender-ref ref="consoleLogger"/>
+        </Logger>
+
+        <Logger level="ALL" name="pl.miloszgilga.exception" additivity="false">
+            <Appender-ref ref="perfLogger"/>
             <Appender-ref ref="debugLogger"/>
-            <Appender-ref ref="traceLogger"/>
             <Appender-ref ref="consoleLogger"/>
         </Logger>
 
