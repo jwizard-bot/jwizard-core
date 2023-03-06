@@ -42,7 +42,7 @@ jwizard:
             randomized: false
             show-from-external-file:
                 enabled: true
-                path-to-file: activities-sequencer.txt
+                path-to-file: activities-splashes.txt
             show-commands:
                 enabled: true
     pagination:
