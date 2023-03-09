@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: JDAListenerLoader.java
- * Last modified: 23/02/2023, 18:45
+ * File name: JDACommandLoader.java
+ * Last modified: 23/02/2023, 18:43
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -33,5 +33,5 @@ import java.lang.annotation.RetentionPolicy;
 @Service
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface JDAListenerLazyService {
+public @interface JDAInjectableCommandLazyService {
 }

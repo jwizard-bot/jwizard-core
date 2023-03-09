@@ -30,15 +30,15 @@ import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.core.JDAListenerAdapter;
 import pl.miloszgilga.core.configuration.BotProperty;
-import pl.miloszgilga.core.loader.JDAListenerLazyService;
 import pl.miloszgilga.core.configuration.BotConfiguration;
+import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
 
 import static pl.miloszgilga.exception.CommandException.UnrecognizedCommandException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Slf4j
-@JDAListenerLazyService
+@JDAInjectableListenerLazyService
 class MismatchCommandListener extends JDAListenerAdapter {
 
     private final Set<String> allCommandsWithAliases = BotCommand.getAllCommandsWithAliases();

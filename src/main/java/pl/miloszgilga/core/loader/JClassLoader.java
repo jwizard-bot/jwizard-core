@@ -66,7 +66,7 @@ public class JClassLoader {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void loadCommandsViaReflection() {
-        final Set<Class<?>> commandsClazz = commandsReflections.getTypesAnnotatedWith(JDACommandLazyService.class);
+        final Set<Class<?>> commandsClazz = commandsReflections.getTypesAnnotatedWith(JDAInjectableCommandLazyService.class);
         if (commandsClazz.isEmpty()) return;
         for (final Class<?> commandClazz : commandsClazz) {
             loadedCommands.add((JDACommand) Bootloader.APP_CONTEXT.getBean(commandClazz));
@@ -81,7 +81,7 @@ public class JClassLoader {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void loadListenersViaReflection() {
-        final Set<Class<?>> listenersClazz = listenersReflections.getTypesAnnotatedWith(JDAListenerLazyService.class);
+        final Set<Class<?>> listenersClazz = listenersReflections.getTypesAnnotatedWith(JDAInjectableListenerLazyService.class);
         if (listenersClazz.isEmpty()) return;
         for (final Class<?> listenerClazz : listenersClazz) {
             loadedListeners.add((JDAListenerAdapter) Bootloader.APP_CONTEXT.getBean(listenerClazz));

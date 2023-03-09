@@ -29,15 +29,15 @@ import pl.miloszgilga.dto.EventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.command.JDAMusicCommand;
-import pl.miloszgilga.core.loader.JDACommandLazyService;
 import pl.miloszgilga.core.configuration.BotConfiguration;
+import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
 import static pl.miloszgilga.exception.AudioPlayerException.MusicBotIsCurrentlyUsedException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Slf4j
-@JDACommandLazyService
+@JDAInjectableCommandLazyService
 public class PlayTrackCmd extends JDAMusicCommand {
 
     PlayTrackCmd(BotConfiguration config, EmbedMessageBuilder embedBuilder) {
