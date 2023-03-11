@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: JWizard.java
- * Last modified: 22/02/2023, 16:55
+ * File name: CommandWithArgsCount.java
+ * Last modified: 09/03/2023, 14:49
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -16,24 +16,12 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+package pl.miloszgilga.misc;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-public class Bootloader {
-
-    private static final String SPRING_CFG = "spring/spring-context.cfg.xml";
-    public static final ApplicationContext APP_CONTEXT = new ClassPathXmlApplicationContext(SPRING_CFG);
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static void main(String[] args) {
-        final JDABot jdaBot = APP_CONTEXT.getBean(JDABot.class);
-        jdaBot.run(args);
-        ((ConfigurableApplicationContext)APP_CONTEXT).close();
-    }
+public record CommandWithArgsCount(
+    String command,
+    int argsCount
+) {
 }

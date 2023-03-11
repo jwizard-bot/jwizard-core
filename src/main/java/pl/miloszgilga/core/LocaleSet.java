@@ -28,19 +28,45 @@ import java.util.Arrays;
 @Getter
 @RequiredArgsConstructor
 public enum LocaleSet {
-    HELP_COMMAND_DESC               ("jwizard.command.description.Help"),
-    HELPME_COMMAND_DESC             ("jwizard.command.description.HelpMe"),
-    PLAY_TRACK_COMMAND_DESC         ("jwizard.command.description.PlayTrack"),
+    HELP_COMMAND_DESC                           ("jwizard.command.description.Help"),
+    HELPME_COMMAND_DESC                         ("jwizard.command.description.HelpMe"),
+    PLAY_TRACK_COMMAND_DESC                     ("jwizard.command.description.PlayTrack"),
+    PAUSE_TRACK_COMMAND_DESC                    ("jwizard.command.description.PauseTrack"),
+    RESUME_TRACK_COMMAND_DESC                   ("jwizard.command.description.ResumeTrack"),
+    REPEAT_TRACK_COMMAND_DESC                   ("jwizard.command.description.RepeatTrack"),
+    LOOP_TRACK_COMMAND_DESC                     ("jwizard.command.description.LoopTrack"),
 
-    INFO_HEADER                     ("jwizard.message.response.header.info"),
-    WARN_HEADER                     ("jwizard.message.response.header.warn"),
-    ERROR_HEADER                    ("jwizard.message.response.header.error"),
+    PLAY_TRACK_ARG_SYNTAX                       ("jwizard.command.arguments.PlayTrack"),
+    REPEAT_TRACK_ARG_SYNTAX                     ("jwizard.command.arguments.RepeatTrack"),
 
-    TRACK_IS_NOT_PLAYING_EXC        ("jwizard.exception.TrackIsNotPlayingException"),
-    TRACK_IS_NOT_PAUSED_EXC         ("jwizard.exception.TrackIsNotPausedException"),
-    USER_ON_CHANNEL_NOT_FOUND_EXC   ("jwizard.exception.UserOnVoiceChannelNotFoundException"),
-    MUSIC_BOT_IS_CURRENTLY_USED_EXC ("jwizard.exception.MusicBotIsCurrentlyUsedException"),
-    UNRECOGNIZED_COMMAND_EXC        ("jwizard.exception.UnrecognizedCommandException");
+    INFO_HEADER                                 ("jwizard.message.response.header.info"),
+    WARN_HEADER                                 ("jwizard.message.response.header.warn"),
+    ERROR_HEADER                                ("jwizard.message.response.header.error"),
+
+    ADD_NEW_TRACK_MESS                          ("jwizard.message.response.AddNewTrack"),
+    NEW_TRACK_NAME_MESS                         ("jwizard.message.response.NewTrackName"),
+    TRACK_DURATION_TIME_MESS                    ("jwizard.message.response.DurationTime"),
+    TRACK_POSITION_IN_QUEUE_MESS                ("jwizard.message.response.PositionInQueue"),
+    ADD_NEW_PLAYLIST_MESS                       ("jwizard.message.response.AddNewPlaylist"),
+    COUNT_OF_TRACKS_MESS                        ("jwizard.message.response.CountOfTracks"),
+    TRACKS_TOTAL_DURATION_TIME_MESS             ("jwizard.message.response.TotalDurationTime"),
+    TRACK_ADDDED_BY_MESS                        ("jwizard.message.response.AddedBy"),
+    NEXT_TRACK_INDEX_MESS                       ("jwizard.message.response.NextTrackIndex"),
+    NOT_FOUND_TRACK_MESS                        ("jwizard.message.response.NotFoundAudioTrack"),
+    ISSUE_WHILE_LOADING_TRACK_MESS              ("jwizard.message.response.UnexpectedErrorOnLoadTrack"),
+    ISSUE_WHILE_PLAYING_TRACK_MESS              ("jwizard.message.response.UnexpectedErrorOnPlayTrack"),
+    BUG_TRACKER_MESS                            ("jwizard.message.response.BugTracker"),
+    PAUSE_TRACK_MESS                            ("jwizard.message.response.PauseTrack"),
+    RESUME_TRACK_MESS                           ("jwizard.message.response.ResumeTrack"),
+
+    TRACK_IS_NOT_PLAYING_EXC                    ("jwizard.exception.TrackIsNotPlayingException"),
+    TRACK_IS_NOT_PAUSED_EXC                     ("jwizard.exception.TrackIsNotPausedException"),
+    ACTIVE_MUSIC_PLAYING_NOT_FOUND_EXC          ("jwizard.exception.ActiveMusicPlayingNotFoundException"),
+    USER_ON_VOICE_CHANNEL_NOT_FOUND_EXEC        ("jwizard.exception.UserOnVoiceChannelNotFoundException"),
+    UNRECOGNIZED_COMMAND_EXC                    ("jwizard.exception.UnrecognizedCommandException"),
+    USED_COMM_ON_FORBIDDEN_CHANNEL_EXC          ("jwizard.exception.UsedCommandOnForbiddenChannelException"),
+    MISMATCH_COMMAND_ARGS_COUNT_EXC             ("jwizard.exception.MismatchCommandArgumentsCountException"),
+    INVOKER_IS_NOT_TRACK_SENDER_OR_ADMIN_EXC    ("jwizard.exception.InvokerIsNotTrackSenderOrAdmin");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

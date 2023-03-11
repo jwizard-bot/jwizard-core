@@ -18,11 +18,11 @@
 
 package pl.miloszgilga.exception;
 
-import pl.miloszgilga.core.LocaleSet;
-import pl.miloszgilga.core.configuration.BotConfiguration;
-
 import java.util.Map;
 import java.util.HashMap;
+
+import pl.miloszgilga.core.LocaleSet;
+import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -18,44 +18,77 @@
 
 package pl.miloszgilga.command;
 
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.GuildVoiceState;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import java.util.Objects;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.dto.EventWrapper;
-import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.JDACommand;
 import pl.miloszgilga.core.configuration.BotConfiguration;
+import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.exception.BotException;
+import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.audioplayer.PlayerManager;
+import pl.miloszgilga.audioplayer.AudioPlayerSendHandler;
 
+import static pl.miloszgilga.exception.CommandException.UsedCommandOnForbiddenChannelException;
+import static pl.miloszgilga.exception.AudioPlayerException.ActiveMusicPlayingNotFoundException;
 import static pl.miloszgilga.exception.AudioPlayerException.UserOnVoiceChannelNotFoundException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 public abstract class JDAMusicCommand extends JDACommand {
 
-    protected VoiceChannel voiceChannel;
     protected final BotConfiguration config;
+    protected final PlayerManager playerManager;
 
-    public JDAMusicCommand(BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder) {
+    protected boolean inPlayingMode;
+    protected boolean inListeningMode;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public JDAMusicCommand(
+        BotCommand command, BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder
+    ) {
         super(command, config, embedBuilder);
         this.config = config;
+        this.playerManager = playerManager;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected void execute(CommandEvent event) {
-        final String guildId = event.getGuild().getId();
-        this.voiceChannel = Objects.requireNonNull(event.getJDA().getGuildById(guildId)).getVoiceChannels().stream()
-            .filter(channel -> {
-                final Member sender = event.getGuild().getMember(event.getAuthor());
-                final Member bot = event.getGuild().getMember(event.getJDA().getSelfUser());
-                return channel.getMembers().contains(sender) && channel.getMembers().contains(bot);
-            })
-            .findFirst()
-            .orElseThrow(() -> { throw new UserOnVoiceChannelNotFoundException(config, new EventWrapper(event)); });
+    protected void doExecuteCommand(CommandEvent event) {
+        final var audioSendHandler = (AudioPlayerSendHandler) event.getGuild().getAudioManager().getSendingHandler();
+        try {
+            if (inPlayingMode && !Objects.isNull(audioSendHandler) && !audioSendHandler.isInPlayingMode()) {
+                throw new ActiveMusicPlayingNotFoundException(config, new EventWrapper(event));
+            }
+            if (inListeningMode) {
+                final GuildVoiceState userState = event.getMember().getVoiceState();
+                if (Objects.isNull(userState) || !userState.inVoiceChannel() || userState.isDeafened()) {
+                    throw new UserOnVoiceChannelNotFoundException(config, new EventWrapper(event));
+                }
+                final VoiceChannel afkChannel = event.getGuild().getAfkChannel();
+                if (!Objects.isNull(afkChannel) && Objects.equals(afkChannel, userState.getChannel())) {
+                    throw new UsedCommandOnForbiddenChannelException(config, new EventWrapper(event));
+                }
+                final GuildVoiceState voiceState = event.getGuild().getSelfMember().getVoiceState();
+                if (!Objects.isNull(voiceState) && !voiceState.inVoiceChannel()) {
+                    event.getGuild().getAudioManager().openAudioConnection(userState.getChannel());
+                }
+            }
+            doExecuteMusicCommand(event);
+        } catch (BotException ex) {
+            event.getChannel()
+                .sendMessageEmbeds(embedBuilder.createErrorMessage(new EventWrapper(event), ex))
+                .queue();
+        }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    protected abstract void doExecuteMusicCommand(CommandEvent event);
 }

@@ -19,16 +19,27 @@
 package pl.miloszgilga.core;
 
 import com.jagrosh.jdautilities.command.Command;
+import com.jagrosh.jdautilities.command.CommandEvent;
+
 import org.springframework.context.annotation.DependsOn;
 
+import java.util.Arrays;
+
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.configuration.BotConfiguration;
+
+import static pl.miloszgilga.exception.CommandException.MismatchCommandArgumentsCountException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @DependsOn("botConfiguration")
 public abstract class JDACommand extends Command {
+
+    private final int argsCount;
+    private final BotCommand command;
 
     protected final BotConfiguration config;
     protected final EmbedMessageBuilder embedBuilder;
@@ -39,8 +50,32 @@ public abstract class JDACommand extends Command {
         this.name = command.getName();
         this.help = config.getLocaleText(command.getDescriptionHolder());
         this.ownerCommand = command.isOnlyOwner();
+        this.argsCount = command.getArguments();
         this.aliases = command.getAliases();
+        this.command = command;
         this.config = config;
         this.embedBuilder = embedBuilder;
+        this.arguments = command.getArgSyntax();
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    protected void execute(CommandEvent event) {
+        try {
+            final long args = Arrays.stream(event.getArgs().split("\\|")).filter(a -> a.length() > 0).count();
+            if (args != argsCount) {
+                throw new MismatchCommandArgumentsCountException(config, new EventWrapper(event), command);
+            }
+            doExecuteCommand(event);
+        } catch (BotException ex) {
+            event.getChannel()
+                .sendMessageEmbeds(embedBuilder.createErrorMessage(new EventWrapper(event), ex))
+                .queue();
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    protected abstract void doExecuteCommand(CommandEvent event);
 }

@@ -20,6 +20,11 @@ package pl.miloszgilga.core.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Icon;
+import net.dv8tion.jda.api.managers.AccountManager;
+import net.dv8tion.jda.internal.managers.AccountManagerImpl;
+
 import org.yaml.snakeyaml.Yaml;
 import org.apache.commons.cli.*;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -41,7 +46,7 @@ import pl.miloszgilga.core.LocaleSet;
 @Component
 public class BotConfiguration {
 
-    public static final String JPREFIX = "jwizard";
+    public static final String JPREFIX = "bot";
     private static final String LOG4J_CFG = "logger/log4j2.cfg.xml";
     private static final String LOCALE_BUNDLE_DIR = "lang";
     private static final String LOCALE_BUNDLE_PROP = "messages";
@@ -56,6 +61,7 @@ public class BotConfiguration {
     private final Dotenv dotenv = Dotenv.configure().systemProperties().load();
 
     private ResourceBundle localeBundle;
+    private String projectVersion;
 
     private final List<CastType<?>> castTypes = List.of(
         new CastType<>(String.class, rawData -> rawData),
@@ -133,8 +139,29 @@ public class BotConfiguration {
 
             final String versionProp = (String) properties.get("project.version");
             if (Objects.isNull(versionProp)) throw new PropertyNotFoundException("Property project.version not found.");
+            projectVersion = versionProp;
             log.info("Application version: '{}'", versionProp);
 
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void setTitleAndIcon(JDA jda) {
+        try {
+            final AccountManager accountManager = new AccountManagerImpl(jda.getSelfUser())
+                .setName(getProperty(BotProperty.J_NAME));
+            if (!getProperty(BotProperty.J_HAS_AVATAR, Boolean.class)) {
+                accountManager.queue();
+                return;
+            }
+            final String fileName = getProperty(BotProperty.J_PATH_TO_AVATAR);
+            accountManager
+                .setAvatar(Icon.from(new File(fileName)))
+                .queue();
+            log.info("Successfully set application avatar from file: {}", fileName);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -204,10 +231,11 @@ public class BotConfiguration {
         return getLocaleText(localeSet, Map.of());
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     public String getLocaleText(String localeHolder) {
         return getLocaleText(LocaleSet.findByHolder(localeHolder), Map.of());
     }
 
+    public String getProjectVersion() {
+        return projectVersion;
+    }
 }

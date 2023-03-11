@@ -25,7 +25,6 @@ import java.util.Map;
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.EventWrapper;
 import pl.miloszgilga.core.LocaleSet;
-import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,14 +33,35 @@ public class CommandException {
 
     @Slf4j public static class UnrecognizedCommandException extends BotException {
         public UnrecognizedCommandException(BotConfiguration config, EventWrapper event) {
-            super(config, LocaleSet.UNRECOGNIZED_COMMAND_EXC.getHolder(), Map.of(
-                "helpCmd", config.getProperty(BotProperty.J_PREFIX) + BotCommand.HELP.getName(),
-                "helpmeCmd", config.getProperty(BotProperty.J_PREFIX) + BotCommand.HELP_ME.getName()
-            ));
+            super(config, LocaleSet.UNRECOGNIZED_COMMAND_EXC, Map.of(
+                "helpCmd", BotCommand.HELP.parseWithPrefix(config),
+                "helpmeCmd", BotCommand.HELP_ME.parseWithPrefix(config)
+            ), BugTracker.UNRECOGNIZED_COMMAND);
             log.debug("G: {}, A: {} <> Unrecognized command exception. Command not found: {}",
                 event.guildName(), event.authorTag(), event.message());
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Slf4j public static class UsedCommandOnForbiddenChannelException extends BotException {
+        public UsedCommandOnForbiddenChannelException(BotConfiguration config, EventWrapper event) {
+            super(config, LocaleSet.USED_COMM_ON_FORBIDDEN_CHANNEL_EXC,
+                BugTracker.USED_COMMAND_ON_FORBIDDEN_CHANNEL);
+            log.error("G: {}, A: {} <> Attempt to invoke command on forbidden channel",
+                event.guildName(), event.authorTag());
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Slf4j public static class MismatchCommandArgumentsCountException extends BotException {
+        public MismatchCommandArgumentsCountException(BotConfiguration config, EventWrapper event, BotCommand command) {
+            super(config, LocaleSet.MISMATCH_COMMAND_ARGS_COUNT_EXC, Map.of(
+                "syntax", command.getAvailableSyntax(config)
+            ), BugTracker.MISMATCH_COMMAND_ARGUMENTS);
+            log.error("G: {}, A: {} <> Attempt to invoke command on with non-exact arguments count",
+                event.guildName(), event.authorTag());
+        }
+    }
 }
