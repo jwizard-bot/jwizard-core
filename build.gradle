@@ -129,7 +129,7 @@ tasks.register('moveConfigurationFiles', Copy) {
         'properties-dev.yml',
         'properties-prod.yml',
         'fancy-title.txt',
-        'activities-sequencer.txt',
+        'activities-splashes.txt',
         '.env'
     ])
     into layout.buildDirectory.dir("$rootDir/build/shadow")
