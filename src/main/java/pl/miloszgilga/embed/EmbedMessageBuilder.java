@@ -23,9 +23,11 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import org.springframework.stereotype.Component;
 
-import java.awt.*;
-
 import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.dto.TrackEmbedContent;
+import pl.miloszgilga.dto.PlaylistEmbedContent;
+import pl.miloszgilga.exception.BugTracker;
+import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
@@ -50,7 +52,63 @@ public class EmbedMessageBuilder {
             .setAuthor(wrapper.authorTag(), null, wrapper.authorAvatarUrl())
             .setTitle(config.getLocaleText(LocaleSet.ERROR_HEADER))
             .setDescription(message)
-            .setColor(Color.decode(EmbedColor.PURPLE.getHex()))
+            .appendDescription("\n\n" + config.getLocaleText(LocaleSet.BUG_TRACKER_MESS) + ": " + tracker)
+            .setColor(EmbedColor.PURPLE.getColor())
             .build();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public MessageEmbed createErrorMessage(EventWrapper wrapper, BotException ex) {
+        return createErrorMessage(wrapper, ex.getMessage(), ex.getBugTracker());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public MessageEmbed createSingleTrackMessage(EventWrapper wrapper, TrackEmbedContent content) {
+        return new EmbedBuilder()
+            .setAuthor(wrapper.authorTag(), null, wrapper.authorAvatarUrl())
+            .setDescription(config.getLocaleText(LocaleSet.ADD_NEW_TRACK_MESS))
+            .addField(config.getLocaleText(LocaleSet.NEW_TRACK_NAME_MESS) + ":", content.trackUrl(), true)
+            .addBlankField(true)
+            .addField(config.getLocaleText(LocaleSet.TRACK_DURATION_TIME_MESS) + ":", content.durationTime(), true)
+            .addField(config.getLocaleText(LocaleSet.TRACK_POSITION_IN_QUEUE_MESS) + ":", content.trackPosition(), true)
+            .addBlankField(true)
+            .addField(config.getLocaleText(LocaleSet.TRACK_ADDDED_BY_MESS) + ":", wrapper.authorTag(), true)
+            .setThumbnail(content.thumbnailUrl())
+            .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
+            .build();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public MessageEmbed createPlaylistTracksMessage(EventWrapper wrapper, PlaylistEmbedContent content) {
+        return new EmbedBuilder()
+            .setAuthor(wrapper.authorTag(), null, wrapper.authorAvatarUrl())
+            .setDescription(config.getLocaleText(LocaleSet.ADD_NEW_PLAYLIST_MESS))
+            .addField(config.getLocaleText(LocaleSet.COUNT_OF_TRACKS_MESS) + ":", content.queueTracksCount(), true)
+            .addBlankField(true)
+            .addField(config.getLocaleText(LocaleSet.TRACKS_TOTAL_DURATION_TIME_MESS) + ":", content.queueDurationTime(), true)
+            .addField(config.getLocaleText(LocaleSet.TRACK_ADDDED_BY_MESS) + ":", wrapper.authorTag(), true)
+            .setThumbnail(content.thumbnailUrl())
+            .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
+            .build();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public MessageEmbed createMessage(EventWrapper wrapper, String message) {
+        return new EmbedBuilder()
+            .setAuthor(wrapper.authorTag(), null, wrapper.authorAvatarUrl())
+            .setDescription(message)
+            .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
+            .build();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private String parseBugTracker(BugTracker bugTracker) {
+        final String projectVersion = config.getProjectVersion().replaceAll("\\.", "");
+        return String.format("j%sb%s_exc%06d", Runtime.version().feature(), projectVersion, bugTracker.getId());
     }
 }
