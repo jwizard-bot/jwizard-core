@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: PlayTrackCmd.java
- * Last modified: 05/03/2023, 00:46
+ * File name: PauseTrackCmd.java
+ * Last modified: 11/03/2023, 10:06
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ package pl.miloszgilga.command.music;
 import lombok.extern.slf4j.Slf4j;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
-import org.apache.commons.validator.routines.UrlValidator;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.EventWrapper;
@@ -36,11 +35,11 @@ import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
 @Slf4j
 @JDAInjectableCommandLazyService
-public class PlayTrackCmd extends JDAMusicCommand {
+public class PauseTrackCmd extends JDAMusicCommand {
 
-    PlayTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
-        super(BotCommand.PLAY_TRACK, config, playerManager, embedBuilder);
-        super.inPlayingMode = false;
+    PauseTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
+        super(BotCommand.PAUSE_TRACK, config, playerManager, embedBuilder);
+        super.inPlayingMode = true;
         super.inListeningMode = true;
     }
 
@@ -49,15 +48,9 @@ public class PlayTrackCmd extends JDAMusicCommand {
     @Override
     protected void doExecuteMusicCommand(CommandEvent event) {
         try {
-            final UrlValidator urlValidator = new UrlValidator();
-            String searchPhrase = event.getArgs();
-            boolean urlPatternValid = urlValidator.isValid(searchPhrase);
-            if (urlPatternValid) {
-                searchPhrase = searchPhrase.replaceAll(" ", "");
-            } else {
-                searchPhrase = "ytsearch: " + searchPhrase + " audio";
-            }
-            super.playerManager.loadAndPlay(event, searchPhrase, urlPatternValid);
+
+
+
         } catch (BotException ex) {
             event.getChannel()
                 .sendMessageEmbeds(embedBuilder.createErrorMessage(new EventWrapper(event), ex))
