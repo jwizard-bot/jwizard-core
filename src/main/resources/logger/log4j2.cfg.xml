@@ -105,40 +105,6 @@
         </RollingFile>
 
         <RollingFile
-                name="debugLogger"
-                fileName="${appLogsPath}/debug.log" filePattern="${appLogsPath}/debug-%d{yyyy-MM-dd}-%i.log"
-                immediateFlush="true">
-            <LevelRangeFilter minLevel="DEBUG" maxLevel="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
-            <PatternLayout pattern="${fileSpecificLogPattern}"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="30MB" />
-                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
-            </Policies>
-            <DefaultRolloverStrategy max="10">
-                <Delete basePath="${appLogsPath}" maxDepth="10">
-                    <IfLastModified age="30d" />
-                </Delete>
-            </DefaultRolloverStrategy>
-        </RollingFile>
-
-        <RollingFile
-                name="traceLogger"
-                fileName="${appLogsPath}/trace.log" filePattern="${appLogsPath}/trace-%d{yyyy-MM-dd}-%i.log"
-                immediateFlush="true">
-            <LevelRangeFilter minLevel="TRACE" maxLevel="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>
-            <PatternLayout pattern="${fileSpecificLogPattern}"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="30MB" />
-                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
-            </Policies>
-            <DefaultRolloverStrategy max="10">
-                <Delete basePath="${appLogsPath}" maxDepth="10">
-                    <IfLastModified age="30d" />
-                </Delete>
-            </DefaultRolloverStrategy>
-        </RollingFile>
-
-        <RollingFile
                 name="infoLogger"
                 fileName="${appLogsPath}/info.log" filePattern="${appLogsPath}/info-%d{yyyy-MM-dd}-%i.log"
                 immediateFlush="true">
@@ -182,16 +148,18 @@
             <Appender-ref ref="consoleLogger"/>
         </Logger>
 
+        <Logger level="ALL" name="pl.miloszgilga.audioplayer" additivity="false">
+            <Appender-ref ref="perfLogger"/>
+            <Appender-ref ref="consoleLogger"/>
+        </Logger>
+
         <Logger level="ALL" name="pl.miloszgilga.exception" additivity="false">
             <Appender-ref ref="perfLogger"/>
-            <Appender-ref ref="debugLogger"/>
             <Appender-ref ref="consoleLogger"/>
         </Logger>
 
         <Logger level="ALL" name="pl.miloszgilga.listener" additivity="false">
             <Appender-ref ref="perfLogger"/>
-            <Appender-ref ref="debugLogger"/>
-            <Appender-ref ref="traceLogger"/>
             <Appender-ref ref="consoleLogger"/>
         </Logger>
 
@@ -205,8 +173,6 @@
         <Root level="ALL" additivity="false">
             <Appender-ref ref="infoLogger"/>
             <Appender-ref ref="errorLogger"/>
-            <Appender-ref ref="debugLogger"/>
-            <Appender-ref ref="traceLogger"/>
             <Appender-ref ref="consoleLogger"/>
         </Root>
     </Loggers>
