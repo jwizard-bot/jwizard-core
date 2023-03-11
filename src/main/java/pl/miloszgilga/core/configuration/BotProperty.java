@@ -30,6 +30,9 @@ import java.util.Arrays;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public enum BotProperty {
+    J_NAME                      ("name"),
+    J_HAS_AVATAR                ("avatar.has-avatar"),
+    J_PATH_TO_AVATAR            ("avatar.path-to-avatar"),
     J_DEVELOPMENT_MODE          ("development-mode"),
     J_PREFIX                    ("prefix"),
     J_AUTH_TOKEN                ("authorization.token",                                         true, EnvProperty.TOKEN),

@@ -18,8 +18,11 @@
 
 package pl.miloszgilga.dto;
 
-import com.jagrosh.jdautilities.command.CommandEvent;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+
+import com.jagrosh.jdautilities.command.CommandEvent;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -27,13 +30,17 @@ public record EventWrapper(
     String guildName,
     String authorTag,
     String authorAvatarUrl,
-    String message
+    String message,
+    Member dataSender,
+    TextChannel textChannel
 ) {
     public EventWrapper(CommandEvent event) {
         this(event.getGuild().getName(),
             event.getAuthor().getAsTag(),
             event.getAuthor().getAvatarUrl(),
-            event.getMessage().getContentRaw()
+            event.getMessage().getContentRaw(),
+            event.getGuild().getMember(event.getAuthor()),
+            event.getTextChannel()
         );
     }
 
@@ -43,6 +50,9 @@ public record EventWrapper(
         this(event.getGuild().getName(),
             event.getAuthor().getAsTag(),
             event.getAuthor().getAvatarUrl(),
-            event.getMessage().getContentRaw());
+            event.getMessage().getContentRaw(),
+            event.getGuild().getMember(event.getAuthor()),
+            event.getChannel()
+        );
     }
 }

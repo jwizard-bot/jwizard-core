@@ -16,9 +16,13 @@
 # COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
 #
 
-# jwizard bot development properties
+# bot development properties
 
-jwizard:
+bot:
+    name: 'JWizard DEV'
+    avatar:
+        has-avatar: true
+        path-to-avatar: gfx/bot-logo.png
     development-mode: true
     prefix: '?'
     authorization:

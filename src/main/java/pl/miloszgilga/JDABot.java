@@ -45,7 +45,7 @@ import pl.miloszgilga.misc.ActivityStatusSequencer;
 
 @Slf4j
 @Component
-public class JWizardBot {
+public class JDABot {
 
     private final BotConfiguration config;
     private final JClassLoader jClassLoader;
@@ -76,7 +76,7 @@ public class JWizardBot {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    JWizardBot(
+    JDABot(
         BotConfiguration config, JClassLoader jClassLoader, ActivityStatusSequencer statusSequencer,
         HibernateFactory hibernateFactory, PlayerManager playerManager
     ) {
@@ -119,6 +119,8 @@ public class JWizardBot {
                 .build();
 
             jda.awaitReady();
+
+            config.setTitleAndIcon(jda);
 
             statusSequencer.loadConfiguration(jda);
             statusSequencer.invoke();

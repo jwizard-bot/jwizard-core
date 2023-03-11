@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: HelpCmd.java
- * Last modified: 06/03/2023, 00:23
+ * File name: Utilities.java
+ * Last modified: 10/03/2023, 02:15
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -16,32 +16,22 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga.command.misc;
+package pl.miloszgilga.misc;
 
-import lombok.extern.slf4j.Slf4j;
-
-import com.jagrosh.jdautilities.command.CommandEvent;
-
-import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.embed.EmbedMessageBuilder;
-import pl.miloszgilga.core.JDACommand;
-import pl.miloszgilga.core.configuration.BotConfiguration;
-import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
+import java.util.concurrent.TimeUnit;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@Slf4j
-@JDAInjectableCommandLazyService
-class HelpCmd extends JDACommand {
+public final class Utilities {
 
-    HelpCmd(BotConfiguration jConfig, EmbedMessageBuilder embedBuilder) {
-        super(BotCommand.HELP, jConfig, embedBuilder);
+    private Utilities() {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override
-    protected void doExecuteCommand(CommandEvent event) {
-        event.reply("Hello how a u? I m under the water. Please helpe me! Here too much raining n brlbrl...");
+    public static String convertMilisToDate(long milis) {
+        return String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(milis),
+            TimeUnit.MILLISECONDS.toMinutes(milis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(milis)),
+            TimeUnit.MILLISECONDS.toSeconds(milis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milis)));
     }
 }

@@ -41,7 +41,7 @@ class HelpMeCmd extends JDACommand {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected void execute(CommandEvent event) {
+    protected void doExecuteCommand(CommandEvent event) {
         event.reply("Hello how a u? I m under the water. Please helpe me! Here too much raining n brlbrl...");
     }
 }

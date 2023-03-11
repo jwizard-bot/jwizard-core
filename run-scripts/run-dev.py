@@ -21,11 +21,11 @@ import re
 import sys
 import subprocess
 
-startJavaHeapSize = '256m'      # -Xms parameter, min. 128MB
-maxJavaHeapSize = '512m'        # -Xmx parameter
+start_java_heap_size    = '256m' # -Xms parameter, min. 128MB, recommended 256MB
+max_java_heap_size      = '512m' # -Xmx parameter
 
-executableJarFileName = ''
-defaultJarFilePattern = 'jwizard-discord-bot-\\d.\\d.\\d.jar'
+executable_jar_file_name = ''
+default_jar_file_pattern = 'jwizard-discord-bot-\\d.\\d.\\d.jar'
 sys.argv.pop()
 
 if len(sys.argv) > 1:
@@ -35,54 +35,54 @@ if len(sys.argv) > 1:
 if len(sys.argv) == 1:
     key, value = sys.argv[0].split('=')
     if key == '--execJar':
-        executableJarFilePattern = value
+        executable_jar_file_pattern = value
     else:
-        executableJarFilePattern = defaultJarFilePattern
+        executable_jar_file_pattern = default_jar_file_pattern
 else:
-    executableJarFilePattern = defaultJarFilePattern
+    executable_jar_file_pattern = default_jar_file_pattern
 
-jreVersion = subprocess.check_output(['java', '-version'], stderr=subprocess.STDOUT).decode()
-jreVersion = re.search('\"(\\d+\\.\\d+).*\"', jreVersion).groups()[0]
+jre_version = subprocess.check_output(['java', '-version'], stderr=subprocess.STDOUT).decode()
+jre_version = re.search('\"(\\d+\\.\\d+).*\"', jre_version).groups()[0]
 
-jreVersion = jreVersion.split('.')[0]
-if not jreVersion == '17':
+jre_version = jre_version.split('.')[0]
+if not jre_version == '17':
     print('[python run script err] <> To run application you must have installed JRE 17.X')
     exit(2)
 
 files = [f for f in os.listdir('.') if os.path.isfile(f)]
-executableExist = False
+executable_exist = False
 
 for f in files:
-    if re.search(executableJarFilePattern, f):
-        executableExist = True
-        executableJarFileName = f
+    if re.search(executable_jar_file_pattern, f):
+        executable_exist = True
+        executable_jar_file_name = f
 
-configurationExist = [f for f in files if f == 'properties-dev.yml']
-envExist = [f for f in files if f == '.env']
+configuration_exist = [f for f in files if f == 'properties-dev.yml']
+env_exist = [f for f in files if f == '.env']
 
-if not executableExist:
+if not executable_exist:
     print('[python run script err] <> Executable JAR file not found in current directory')
     exit(3)
 
-if not configurationExist:
+if not configuration_exist:
     print('[python run script err] <> Configuration file properties-dev.yml not found in current directory')
     print('[python run script err] <> Download file from:')
     print('[python run script err] <> https://github.com/Milosz08/JWizard_Discord_Bot/blob/master/properties-dev.yml')
     exit(4)
 
-if not envExist:
+if not env_exist:
     print('[python run script err] <> Env file not found in current directory')
     exit(5)
 
-executableScript = \
+executable_script = \
     f'java ' \
-    f'-Xmx{maxJavaHeapSize} -Xms{startJavaHeapSize} ' \
+    f'-Xmx{max_java_heap_size} -Xms{start_java_heap_size} ' \
     f'-Duser.timezone=UTC ' \
     f'-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/ ' \
-    f'-jar {executableJarFileName} ' \
+    f'-jar {executable_jar_file_name} ' \
     f'--mode=dev'
 
 print('[python run script info] <> Executing JWizard bot JAR file in development mode...')
-print(f'[python run script info] <> {executableScript}')
+print(f'[python run script info] <> {executable_script}')
 
-os.system(executableScript)
+os.system(executable_script)

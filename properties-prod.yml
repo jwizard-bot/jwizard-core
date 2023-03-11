@@ -16,9 +16,13 @@
 # COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
 #
 
-# jwizard bot production properties
+# bot production properties
 
-jwizard:
+bot:
+    name: 'JWizard'
+    avatar:
+        has-avatar: true
+        path-to-avatar: gfx/bot-logo.png
     development-mode: false
     prefix: '$'
     authorization:
