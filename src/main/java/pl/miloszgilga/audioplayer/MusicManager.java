@@ -18,13 +18,16 @@
 
 package pl.miloszgilga.audioplayer;
 
+import net.dv8tion.jda.api.entities.Guild;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 
+import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-public class MusicManager {
+class MusicManager {
 
     private final AudioPlayer audioPlayer;
     private final TrackScheduler trackScheduler;
@@ -32,11 +35,14 @@ public class MusicManager {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public MusicManager(PlayerManager playerManager, BotConfiguration config) {
+    MusicManager(
+        PlayerManager playerManager, EmbedMessageBuilder builder, BotConfiguration config, Guild guild,
+        EventWrapper eventWrapper
+    ) {
         this.audioPlayer = playerManager.createPlayer();
-        this.trackScheduler = new TrackScheduler(config);
-        this.audioPlayer.addListener(this.trackScheduler);
-        this.audioPlayerSendHandler = new AudioPlayerSendHandler(audioPlayer);
+        this.trackScheduler = new TrackScheduler(config, builder, audioPlayer, eventWrapper);
+        this.audioPlayer.addListener(trackScheduler);
+        this.audioPlayerSendHandler = new AudioPlayerSendHandler(audioPlayer, guild);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

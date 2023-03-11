@@ -28,6 +28,16 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 
 public class AudioPlayerException {
 
+    @Slf4j public static class ActiveMusicPlayingNotFoundException extends BotException {
+        public ActiveMusicPlayingNotFoundException(BotConfiguration config, EventWrapper event) {
+            super(config, LocaleSet.ACTIVE_MUSIC_PLAYING_NOT_FOUND_EXC, BugTracker.ACTIVE_MUSIC_PLAYING_NOT_FOUND);
+            log.error("G: {}, A: {} <> Attempt to invoke command while user is not in any voice channel",
+                event.guildName(), event.authorTag());
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Slf4j public static class UserOnVoiceChannelNotFoundException extends BotException {
         public UserOnVoiceChannelNotFoundException(BotConfiguration config, EventWrapper event) {
             super(config, LocaleSet.USER_ON_VOICE_CHANNEL_NOT_FOUND_EXEC, BugTracker.USER_ON_VOICE_CHANNEL_NOT_FOUND);

@@ -20,46 +20,139 @@ package pl.miloszgilga.audioplayer;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import pl.miloszgilga.misc.Utilities;
+import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.dto.TrackEmbedContent;
+import pl.miloszgilga.dto.PlaylistEmbedContent;
+import pl.miloszgilga.exception.BugTracker;
+import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Slf4j
-public class AudioLoaderResultImpl implements AudioLoadResultHandler {
+class AudioLoaderResultImpl implements AudioLoadResultHandler {
+
+    private final boolean isUrlPattern;
+    private final EventWrapper deliveryEvent;
 
     private final BotConfiguration config;
     private final MusicManager musicManager;
+    private final EmbedMessageBuilder builder;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public AudioLoaderResultImpl(MusicManager musicManager, BotConfiguration config) {
+    AudioLoaderResultImpl(
+        MusicManager musicManager, BotConfiguration config, EmbedMessageBuilder builder, EventWrapper deliveryEvent,
+        boolean isUrlPattern
+    ) {
         this.musicManager = musicManager;
         this.config = config;
+        this.builder = builder;
+        this.deliveryEvent = deliveryEvent;
+        this.isUrlPattern = isUrlPattern;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void trackLoaded(AudioTrack track) {
-
+        addNewAudioTrackToQueue(deliveryEvent.dataSender(), track);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void playlistLoaded(AudioPlaylist playlist) {
+        final Member dataSender = deliveryEvent.dataSender();
+        final List<AudioTrack> trackList = playlist.getTracks();
+        if (trackList.isEmpty()) return;
 
+        if (isUrlPattern) {
+            for (final AudioTrack track : trackList) {
+                track.setUserData(dataSender);
+                musicManager.getTrackScheduler().addToQueue(new AudioQueueExtendedInfo(dataSender, track));
+            }
+            final long durationsMilis = trackList.stream().mapToLong(AudioTrack::getDuration).sum();
+            final String sumDurationTime = Utilities.convertMilisToDate(durationsMilis);
+            final String thumbnailUrl = "https://img.youtube.com/vi/" + trackList.get(0).getInfo().identifier + "/0.jpg";
+
+            final MessageEmbed messageEmbed = builder.createPlaylistTracksMessage(deliveryEvent,
+                new PlaylistEmbedContent(Integer.toString(trackList.size()), sumDurationTime, thumbnailUrl));
+            deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
+
+            log.info("G: {}, A: {} <> New audio playlist: '{}' was added to queue", deliveryEvent.guildName(),
+                deliveryEvent.authorTag(), flattedTrackList(trackList));
+        } else {
+            addNewAudioTrackToQueue(dataSender, trackList.get(0));
+        }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void noMatches() {
+        final MessageEmbed messageEmbed = builder.createErrorMessage(deliveryEvent,
+            config.getLocaleText(LocaleSet.NOT_FOUND_TRACK_MESS), BugTracker.NOT_FOUND_TRACK);
+        deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
 
+        log.info("G: {}, A: {} <> Not available to find provided audio track/playlist", deliveryEvent.guildName(),
+            deliveryEvent.authorTag());
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void loadFailed(FriendlyException exception) {
+        final MessageEmbed messageEmbed = builder.createErrorMessage(deliveryEvent,
+            config.getLocaleText(LocaleSet.ISSUE_WHILE_LOADING_TRACK_MESS), BugTracker.ISSUE_ON_LOAD_TRACK);
+        deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
 
+        log.info("G: {}, A: {} <> Unexpected exception during load audio track/playlist: {}", deliveryEvent.guildName(),
+            deliveryEvent.authorTag(), exception.getMessage());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void addNewAudioTrackToQueue(Member dataSender, AudioTrack track) {
+        track.setUserData(dataSender);
+        musicManager.getTrackScheduler().addToQueue(new AudioQueueExtendedInfo(dataSender, track));
+        if (musicManager.getTrackScheduler().getTrackQueue().isEmpty()) return;
+
+        final MessageEmbed messageEmbed = createSingleTrackEmbedMessage(track);
+        deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
+
+        log.info("G: {}, A: {} <> New audio track: '{}' was added to queue", deliveryEvent.guildName(),
+            deliveryEvent.authorTag(), track.getInfo().title);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private MessageEmbed createSingleTrackEmbedMessage(AudioTrack track) {
+        final String trackUrl = String.format("[%s](%s)", track.getInfo().title, track.getInfo().uri);
+        final String durationTime = Utilities.convertMilisToDate(track.getDuration());
+        final String trackPos = musicManager.getTrackScheduler().getTrackPositionInQueue();
+        final String thumbnailUrl = "https://img.youtube.com/vi/" + track.getInfo().identifier + "/0.jpg";
+
+        return builder.createSingleTrackMessage(deliveryEvent,
+            new TrackEmbedContent(trackUrl, durationTime, trackPos, thumbnailUrl));
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private String flattedTrackList(List<AudioTrack> audioTracks) {
+        return audioTracks.stream().map(t -> t.getInfo().title).collect(Collectors.joining(", "));
     }
 }

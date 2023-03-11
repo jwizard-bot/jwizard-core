@@ -20,8 +20,12 @@ package pl.miloszgilga.audioplayer;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.Member;
 import com.jagrosh.jdautilities.command.CommandEvent;
+
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
@@ -35,11 +39,13 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 import static pl.miloszgilga.exception.AudioPlayerException.TrackIsNotPausedException;
 import static pl.miloszgilga.exception.AudioPlayerException.TrackIsNotPlayingException;
+import static pl.miloszgilga.exception.AudioPlayerException.InvokerIsNotTrackSenderOrAdmin;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -50,12 +56,14 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     private static final int CONNECTION_TIMEOUT = 10000;
 
     private final BotConfiguration config;
+    private final EmbedMessageBuilder builder;
     private final Map<Long, MusicManager> musicManagers = new HashMap<>();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    PlayerManager(BotConfiguration config) {
+    PlayerManager(BotConfiguration config, EmbedMessageBuilder builder) {
         this.config = config;
+        this.builder = builder;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,26 +74,23 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
         setHttpRequestConfigurator(config -> RequestConfig.copy(config).setConnectTimeout(CONNECTION_TIMEOUT).build());
         source(YoutubeAudioSourceManager.class)
             .setPlaylistPageCount(config.getProperty(BotProperty.J_PAGINATION_MAX, Integer.class));
-        log.info("Player manager was successfuly initialized.");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void loadAndPlay(CommandEvent event, String trackUrl) {
-        final MusicManager musicManager = getMusicManager(event.getGuild());
-        final AudioLoadResultHandler audioLoadResultHandler = new AudioLoaderResultImpl(musicManager, config);
-        this.loadItemOrdered(musicManager, trackUrl, audioLoadResultHandler);
+    public void loadAndPlay(CommandEvent event, String trackUrl, boolean isUrlPattern) {
+        final MusicManager musicManager = getMusicManager(event);
+        final AudioLoadResultHandler audioLoadResultHandler = new AudioLoaderResultImpl(musicManager, config,
+            builder, new EventWrapper(event), isUrlPattern);
+        loadItemOrdered(musicManager, trackUrl, audioLoadResultHandler);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void pauseCurrentTrack(CommandEvent event) {
-        final MusicManager musicManager = getMusicManager(event.getGuild());
-        if (Objects.isNull(musicManager.getAudioPlayer().getPlayingTrack())) {
-            throw new TrackIsNotPlayingException(config, new EventWrapper(event));
-        }
+        final MusicManager musicManager = checkPermissions(event);
         musicManager.getAudioPlayer().setPaused(true);
     }
 
@@ -93,9 +98,13 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
 
     @Override
     public void resumeCurrentTrack(CommandEvent event) {
-        final MusicManager musicManager = getMusicManager(event.getGuild());
-        if (Objects.isNull(musicManager.getTrackScheduler().getPausedTrack())) {
+        final MusicManager musicManager = getMusicManager(event);
+        final AudioTrack pausedTrack = musicManager.getTrackScheduler().getPausedTrack();
+        if (Objects.isNull(pausedTrack)) {
             throw new TrackIsNotPausedException(config, new EventWrapper(event));
+        }
+        if (invokerIsNotTrackSenderOrAdmin(pausedTrack, event)) {
+            throw new InvokerIsNotTrackSenderOrAdmin(config, new EventWrapper(event));
         }
         musicManager.getAudioPlayer().setPaused(false);
     }
@@ -103,20 +112,51 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void toggleRepeatCurrentTrack(CommandEvent event) {
-        final MusicManager musicManager = getMusicManager(event.getGuild());
-        if (Objects.isNull(musicManager.getAudioPlayer().getPlayingTrack())) {
-            throw new TrackIsNotPlayingException(config, new EventWrapper(event));
-        }
-
+    public void repeatCurrentTrack(CommandEvent event, int countOfRepeats) {
+        final MusicManager musicManager = checkPermissions(event);
+        musicManager.getTrackScheduler().setCountOfRepeats(countOfRepeats);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private MusicManager getMusicManager(Guild guild) {
-        return musicManagers.computeIfAbsent(guild.getIdLong(), guildId -> {
-            final MusicManager musicManager = new MusicManager(this, config);
-            guild.getAudioManager().setSendingHandler(musicManager.getAudioPlayerSendHandler());
+    @Override
+    public void toggleInfiniteLoopCurrentTrack(CommandEvent event) {
+        final MusicManager musicManager = checkPermissions(event);
+        musicManager.getTrackScheduler().setRepeating(!musicManager.getTrackScheduler().isRepeating());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private MusicManager checkPermissions(CommandEvent event) {
+        final MusicManager musicManager = getMusicManager(event);
+        final AudioTrack playingTrack = musicManager.getAudioPlayer().getPlayingTrack();
+        if (Objects.isNull(playingTrack)) {
+            throw new TrackIsNotPlayingException(config, new EventWrapper(event));
+        }
+        if (invokerIsNotTrackSenderOrAdmin(playingTrack, event)) {
+            throw new InvokerIsNotTrackSenderOrAdmin(config, new EventWrapper(event));
+        }
+        return musicManager;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private boolean invokerIsNotTrackSenderOrAdmin(AudioTrack track, CommandEvent event) {
+        final User dataSender = ((Member)track.getUserData()).getUser();
+        final Member messageSender = event.getGuild().getMember(event.getAuthor());
+        if (Objects.isNull(messageSender)) return true;
+
+        final boolean isAdmin = messageSender.getPermissions().contains(Permission.ADMINISTRATOR);
+        return !dataSender.getAsTag().equals(event.getAuthor().getAsTag()) && !isAdmin;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private MusicManager getMusicManager(CommandEvent event) {
+        return musicManagers.computeIfAbsent(event.getGuild().getIdLong(), guildId -> {
+            final MusicManager musicManager = new MusicManager(this, builder, config,
+                event.getGuild(), new EventWrapper(event));
+            event.getGuild().getAudioManager().setSendingHandler(musicManager.getAudioPlayerSendHandler());
             return musicManager;
         });
     }

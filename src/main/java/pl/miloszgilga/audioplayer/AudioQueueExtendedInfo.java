@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: IPlayerManager.java
- * Last modified: 04/03/2023, 23:39
+ * File name: AudioQueueExtendedInfo.java
+ * Last modified: 10/03/2023, 01:34
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -18,14 +18,13 @@
 
 package pl.miloszgilga.audioplayer;
 
-import com.jagrosh.jdautilities.command.CommandEvent;
+import net.dv8tion.jda.api.entities.Member;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-interface IPlayerManager {
-    void loadAndPlay(CommandEvent event, String trackUrl, boolean isUrlPattern);
-    void pauseCurrentTrack(CommandEvent event);
-    void resumeCurrentTrack(CommandEvent event);
-    void repeatCurrentTrack(CommandEvent event, int countOfRepeats);
-    void toggleInfiniteLoopCurrentTrack(CommandEvent event);
+record AudioQueueExtendedInfo(
+    Member sender,
+    AudioTrack audioTrack
+) {
 }

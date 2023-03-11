@@ -18,68 +18,163 @@
 
 package pl.miloszgilga.audioplayer;
 
+import lombok.extern.slf4j.Slf4j;
+
+import net.dv8tion.jda.api.entities.MessageEmbed;
+
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 
+import java.util.Map;
+import java.util.Queue;
+import java.util.Objects;
+import java.util.LinkedList;
+
+import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.exception.BugTracker;
+import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-public class TrackScheduler extends AudioEventAdapter {
+@Slf4j
+class TrackScheduler extends AudioEventAdapter {
 
     private final BotConfiguration config;
+    private final EmbedMessageBuilder builder;
+    private final AudioPlayer audioPlayer;
+    private final EventWrapper deliveryEvent;
+
+    private final Queue<AudioQueueExtendedInfo> trackQueue = new LinkedList<>();
 
     private AudioTrack pausedTrack;
+    private int countOfRepeats = 0;
     private boolean repeating = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public TrackScheduler(BotConfiguration config) {
+    TrackScheduler(
+        BotConfiguration config, EmbedMessageBuilder builder, AudioPlayer audioPlayer, EventWrapper deliveryEvent
+    ) {
         this.config = config;
+        this.builder = builder;
+        this.audioPlayer = audioPlayer;
+        this.deliveryEvent = deliveryEvent;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onPlayerPause(AudioPlayer player) {
+        if (Objects.isNull(audioPlayer.getPlayingTrack())) return;
 
+        final AudioTrackInfo trackInfo = audioPlayer.getPlayingTrack().getInfo();
+        pausedTrack = audioPlayer.getPlayingTrack();
+
+        final String rawMessage = config.getLocaleText(LocaleSet.PAUSE_TRACK_MESS, Map.of(
+            "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
+            "invoker", deliveryEvent.authorTag(),
+            "resumeCmd", BotCommand.RESUME_TRACK.parseWithPrefix(config)
+        ));
+        final MessageEmbed messageEmbed = builder.createMessage(deliveryEvent, rawMessage);
+        deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
+
+        log.info("G: {}, A: {} <> Audio track: '{}' was paused", deliveryEvent.guildName(),
+            deliveryEvent.authorTag(), trackInfo.title);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onPlayerResume(AudioPlayer player) {
+        if (Objects.isNull(pausedTrack)) return;
 
+        final AudioTrackInfo trackInfo = audioPlayer.getPlayingTrack().getInfo();
+        pausedTrack = null;
+
+        final String rawMessage = config.getLocaleText(LocaleSet.RESUME_TRACK_MESS, Map.of(
+            "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
+            "invoker", deliveryEvent.authorTag(),
+            "pauseCmd", BotCommand.PAUSE_TRACK.parseWithPrefix(config)
+        ));
+        final MessageEmbed messageEmbed = builder.createMessage(deliveryEvent, rawMessage);
+        deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
+
+        log.info("G: {}, A: {} <> Paused audio track: '{}' was resumed", deliveryEvent.guildName(),
+            deliveryEvent.authorTag(), trackInfo.title);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
 
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
 
     }
 
-    @Override
-    public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
-
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
+    public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException ex) {
+        final MessageEmbed messageEmbed = builder.createErrorMessage(deliveryEvent,
+            config.getLocaleText(LocaleSet.ISSUE_WHILE_PLAYING_TRACK_MESS), BugTracker.ISSUE_WHILE_PLAYING_TRACK);
+        deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
 
+        log.error("G: {}, A: {} <> Unexpected issue while playing track: '{}'. Cause: {}", deliveryEvent.guildName(),
+            deliveryEvent.authorTag(), track.getInfo().title, ex.getMessage());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public AudioTrack getPausedTrack() {
+    void addToQueue(AudioQueueExtendedInfo extendedInfo) {
+        if (audioPlayer.startTrack(extendedInfo.audioTrack(), true)) return;
+        trackQueue.offer(extendedInfo);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void nextTrack() {
+        final AudioQueueExtendedInfo extendedInfo = trackQueue.poll();
+        if (Objects.isNull(extendedInfo)) return;
+        audioPlayer.startTrack(extendedInfo.audioTrack(), false);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Queue<AudioQueueExtendedInfo> getTrackQueue() {
+        return trackQueue;
+    }
+
+    AudioTrack getPausedTrack() {
         return pausedTrack;
     }
 
-    public void setRepeating(boolean repeating) {
+    String getTrackPositionInQueue() {
+        if (trackQueue.size() == 1) return config.getLocaleText(LocaleSet.NEXT_TRACK_INDEX_MESS);
+        return Integer.toString(trackQueue.size());
+    }
+
+    boolean isRepeating() {
+        return repeating;
+    }
+
+    void setCountOfRepeats(int countOfRepeats) {
+        this.countOfRepeats = countOfRepeats;
+    }
+
+    void setRepeating(boolean repeating) {
         this.repeating = repeating;
     }
 }
