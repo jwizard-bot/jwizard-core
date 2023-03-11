@@ -26,8 +26,9 @@ import java.util.Set;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.EventWrapper;
-import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.exception.BotException;
+import pl.miloszgilga.misc.CommandWithArgsCount;
+import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.JDAListenerAdapter;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
@@ -41,7 +42,7 @@ import static pl.miloszgilga.exception.CommandException.UnrecognizedCommandExcep
 @JDAInjectableListenerLazyService
 class MismatchCommandListener extends JDAListenerAdapter {
 
-    private final Set<String> allCommandsWithAliases = BotCommand.getAllCommandsWithAliases();
+    private final Set<CommandWithArgsCount> allCommandsWithAliases = BotCommand.getAllCommandsWithAliases();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -54,16 +55,21 @@ class MismatchCommandListener extends JDAListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         try {
-            final String message = event.getMessage().getContentRaw();
+            String message = event.getMessage().getContentRaw();
+            final int endPosition = message.indexOf(' ');
+            if (endPosition > -1) {
+                message = message.substring(0, message.indexOf(' '));
+            }
             final String prefix = config.getProperty(BotProperty.J_PREFIX);
 
             if (event.getAuthor().isBot() || !message.startsWith(prefix)) return;
-            if (allCommandsWithAliases.stream().noneMatch(c -> c.equals(message.substring(1)))) {
+            final String rawMessage = message;
+            if (allCommandsWithAliases.stream().noneMatch(c -> c.command().equals(rawMessage.substring(1)))) {
                 throw new UnrecognizedCommandException(config, new EventWrapper(event));
             }
         } catch (BotException ex) {
             event.getChannel()
-                .sendMessageEmbeds(embedBuilder.createErrorMessage(new EventWrapper(event), ex.getMessage()))
+                .sendMessageEmbeds(embedBuilder.createErrorMessage(new EventWrapper(event), ex))
                 .queue();
         }
     }
