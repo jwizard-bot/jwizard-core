@@ -30,7 +30,7 @@ public class AudioPlayerException {
 
     @Slf4j public static class UserOnVoiceChannelNotFoundException extends BotException {
         public UserOnVoiceChannelNotFoundException(BotConfiguration config, EventWrapper event) {
-            super(config, LocaleSet.USER_ON_CHANNEL_NOT_FOUND_EXC.getHolder());
+            super(config, LocaleSet.USER_ON_VOICE_CHANNEL_NOT_FOUND_EXEC, BugTracker.USER_ON_VOICE_CHANNEL_NOT_FOUND);
             log.error("G: {}, A: {} <> Attempt to invoke command while user is not in voice channel with bot",
                 event.guildName(), event.authorTag());
         }
@@ -40,7 +40,7 @@ public class AudioPlayerException {
 
     @Slf4j public static class TrackIsNotPlayingException extends BotException {
         public TrackIsNotPlayingException(BotConfiguration config, EventWrapper event) {
-            super(config, LocaleSet.TRACK_IS_NOT_PLAYING_EXC.getHolder());
+            super(config, LocaleSet.TRACK_IS_NOT_PLAYING_EXC, BugTracker.TRACK_IS_NOT_PLAYING);
             log.error("G: {}, A: {} <> Attempt to invoke command while current played track not existing",
                 event.guildName(), event.authorTag());
         }
@@ -50,7 +50,7 @@ public class AudioPlayerException {
 
     @Slf4j public static class TrackIsNotPausedException extends BotException {
         public TrackIsNotPausedException(BotConfiguration config, EventWrapper event) {
-            super(config, LocaleSet.TRACK_IS_NOT_PAUSED_EXC.getHolder());
+            super(config, LocaleSet.TRACK_IS_NOT_PAUSED_EXC, BugTracker.TRACK_IS_NOT_PAUSED);
             log.error("G: {}, A: {} <> Attempt to invoke command while current played track is not paused",
                 event.guildName(), event.authorTag());
         }
@@ -58,9 +58,9 @@ public class AudioPlayerException {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Slf4j public static class MusicBotIsCurrentlyUsedException extends BotException {
-        public MusicBotIsCurrentlyUsedException(BotConfiguration config, EventWrapper event) {
-            super(config, LocaleSet.MUSIC_BOT_IS_CURRENTLY_USED_EXC.getHolder());
+    @Slf4j public static class InvokerIsNotTrackSenderOrAdmin extends BotException {
+        public InvokerIsNotTrackSenderOrAdmin(BotConfiguration config, EventWrapper event) {
+            super(config, LocaleSet.INVOKER_IS_NOT_TRACK_SENDER_OR_ADMIN_EXC, BugTracker.INVOKE_FORBIDDEN_COMMAND);
             log.error("G: {}, A: {} <> Attempt to invoke command while bot is used on another channel",
                 event.guildName(), event.authorTag());
         }

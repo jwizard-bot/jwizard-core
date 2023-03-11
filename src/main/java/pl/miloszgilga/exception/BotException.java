@@ -28,29 +28,36 @@ import java.util.HashMap;
 
 public class BotException extends RuntimeException {
 
-    private final String langPattern;
+    private final BugTracker bugTracker;
+    private final LocaleSet langPattern;
     private final BotConfiguration config;
     private Map<String, Object> arguments = new HashMap<>();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public BotException(BotConfiguration config, String langPattern) {
+    public BotException(BotConfiguration config, LocaleSet langPattern, BugTracker bugTracker) {
         this.config = config;
         this.langPattern = langPattern;
+        this.bugTracker = bugTracker;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public BotException(BotConfiguration config, String langPattern, Map<String, Object> arguments) {
+    public BotException(BotConfiguration config, LocaleSet langPattern, Map<String, Object> arguments, BugTracker bugTracker) {
         this.config = config;
         this.langPattern = langPattern;
         this.arguments = arguments;
+        this.bugTracker = bugTracker;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public String getMessage() {
-        return config.getLocaleText(LocaleSet.findByHolder(langPattern), arguments);
+        return config.getLocaleText(LocaleSet.findByHolder(langPattern.getHolder()), arguments);
+    }
+
+    public BugTracker getBugTracker() {
+        return bugTracker;
     }
 }

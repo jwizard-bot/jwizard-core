@@ -44,7 +44,8 @@ public class EmbedMessageBuilder {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public MessageEmbed createErrorMessage(EventWrapper wrapper, String message) {
+    public MessageEmbed createErrorMessage(EventWrapper wrapper, String message, BugTracker bugTracker) {
+        final String tracker = "`" + parseBugTracker(bugTracker) + "`";
         return new EmbedBuilder()
             .setAuthor(wrapper.authorTag(), null, wrapper.authorAvatarUrl())
             .setTitle(config.getLocaleText(LocaleSet.ERROR_HEADER))
