@@ -24,14 +24,30 @@ import java.util.concurrent.TimeUnit;
 
 public final class Utilities {
 
+    private static final TimeUnit SEC = TimeUnit.SECONDS;
+    private static final TimeUnit MILIS = TimeUnit.MILLISECONDS;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private Utilities() {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static String convertMilisToDate(long milis) {
-        return String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(milis),
-            TimeUnit.MILLISECONDS.toMinutes(milis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(milis)),
-            TimeUnit.MILLISECONDS.toSeconds(milis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milis)));
+        return String.format("%02d:%02d:%02d", MILIS.toHours(milis),
+            MILIS.toMinutes(milis) - TimeUnit.HOURS.toMinutes(MILIS.toHours(milis)),
+            MILIS.toSeconds(milis) - TimeUnit.MINUTES.toSeconds(MILIS.toMinutes(milis)));
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static String convertSecondsToMinutes(long seconds) {
+        final long minutes = SEC.toMinutes(seconds) - TimeUnit.HOURS.toMinutes(SEC.toHours(seconds));
+        if (minutes == 0) {
+            return String.format("%ds", SEC.toSeconds(seconds) - TimeUnit.MINUTES.toSeconds(SEC.toMinutes(seconds)));
+        }
+        return String.format("%02dm, %02ds", minutes,
+            SEC.toSeconds(seconds) - TimeUnit.MINUTES.toSeconds(SEC.toMinutes(seconds)));
     }
 }

@@ -104,7 +104,7 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
             throw new TrackIsNotPausedException(config, new EventWrapper(event));
         }
         if (invokerIsNotTrackSenderOrAdmin(pausedTrack, event)) {
-            throw new InvokerIsNotTrackSenderOrAdmin(config, new EventWrapper(event));
+            throw new InvokerIsNotTrackSenderOrAdminException(config, new EventWrapper(event));
         }
         musicManager.getAudioPlayer().setPaused(false);
     }
@@ -120,7 +120,7 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void toggleInfiniteLoopCurrentTrack(CommandEvent event) {
+    public boolean toggleInfiniteLoopCurrentTrack(CommandEvent event) {
         final MusicManager musicManager = checkPermissions(event);
         musicManager.getTrackScheduler().setRepeating(!musicManager.getTrackScheduler().isRepeating());
     }
@@ -134,7 +134,7 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
             throw new TrackIsNotPlayingException(config, new EventWrapper(event));
         }
         if (invokerIsNotTrackSenderOrAdmin(playingTrack, event)) {
-            throw new InvokerIsNotTrackSenderOrAdmin(config, new EventWrapper(event));
+            throw new InvokerIsNotTrackSenderOrAdminException(config, new EventWrapper(event));
         }
         return musicManager;
     }

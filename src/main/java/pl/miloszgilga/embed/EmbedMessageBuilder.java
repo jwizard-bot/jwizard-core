@@ -23,6 +23,8 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 import pl.miloszgilga.dto.EventWrapper;
 import pl.miloszgilga.dto.TrackEmbedContent;
 import pl.miloszgilga.dto.PlaylistEmbedContent;
@@ -97,12 +99,17 @@ public class EmbedMessageBuilder {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public MessageEmbed createMessage(EventWrapper wrapper, String message) {
+    public MessageEmbed createMessage(LocaleSet localeSet, Map<String, Object> attributes) {
         return new EmbedBuilder()
-            .setAuthor(wrapper.authorTag(), null, wrapper.authorAvatarUrl())
-            .setDescription(message)
+            .setDescription(config.getLocaleText(localeSet, attributes))
             .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
             .build();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public MessageEmbed createMessage(LocaleSet localeSet) {
+        return createMessage(localeSet, Map.of());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

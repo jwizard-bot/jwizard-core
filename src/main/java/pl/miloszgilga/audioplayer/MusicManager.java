@@ -27,7 +27,7 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class MusicManager {
+public class MusicManager {
 
     private final AudioPlayer audioPlayer;
     private final TrackScheduler trackScheduler;

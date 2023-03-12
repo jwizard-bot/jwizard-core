@@ -27,5 +27,5 @@ interface IPlayerManager {
     void pauseCurrentTrack(CommandEvent event);
     void resumeCurrentTrack(CommandEvent event);
     void repeatCurrentTrack(CommandEvent event, int countOfRepeats);
-    void toggleInfiniteLoopCurrentTrack(CommandEvent event);
+    boolean toggleInfiniteLoopCurrentTrack(CommandEvent event);
 }

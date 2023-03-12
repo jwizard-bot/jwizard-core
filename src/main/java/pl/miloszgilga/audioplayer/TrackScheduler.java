@@ -77,12 +77,11 @@ class TrackScheduler extends AudioEventAdapter {
         final AudioTrackInfo trackInfo = audioPlayer.getPlayingTrack().getInfo();
         pausedTrack = audioPlayer.getPlayingTrack();
 
-        final String rawMessage = config.getLocaleText(LocaleSet.PAUSE_TRACK_MESS, Map.of(
+        final MessageEmbed messageEmbed = builder.createMessage(LocaleSet.PAUSE_TRACK_MESS, Map.of(
             "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
             "invoker", deliveryEvent.authorTag(),
             "resumeCmd", BotCommand.RESUME_TRACK.parseWithPrefix(config)
         ));
-        final MessageEmbed messageEmbed = builder.createMessage(deliveryEvent, rawMessage);
         deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
 
         log.info("G: {}, A: {} <> Audio track: '{}' was paused", deliveryEvent.guildName(),
@@ -98,12 +97,11 @@ class TrackScheduler extends AudioEventAdapter {
         final AudioTrackInfo trackInfo = audioPlayer.getPlayingTrack().getInfo();
         pausedTrack = null;
 
-        final String rawMessage = config.getLocaleText(LocaleSet.RESUME_TRACK_MESS, Map.of(
+        final MessageEmbed messageEmbed = builder.createMessage(LocaleSet.RESUME_TRACK_MESS, Map.of(
             "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
             "invoker", deliveryEvent.authorTag(),
             "pauseCmd", BotCommand.PAUSE_TRACK.parseWithPrefix(config)
         ));
-        final MessageEmbed messageEmbed = builder.createMessage(deliveryEvent, rawMessage);
         deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
 
         log.info("G: {}, A: {} <> Paused audio track: '{}' was resumed", deliveryEvent.guildName(),
@@ -166,15 +164,17 @@ class TrackScheduler extends AudioEventAdapter {
         return Integer.toString(trackQueue.size());
     }
 
-    boolean isRepeating() {
-        return repeating;
+    boolean isInfiniteRepeating() {
+        return infiniteRepeating;
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     void setCountOfRepeats(int countOfRepeats) {
         this.countOfRepeats = countOfRepeats;
     }
 
-    void setRepeating(boolean repeating) {
-        this.repeating = repeating;
+    void setInfiniteRepeating(boolean infiniteRepeating) {
+        this.infiniteRepeating = infiniteRepeating;
     }
 }

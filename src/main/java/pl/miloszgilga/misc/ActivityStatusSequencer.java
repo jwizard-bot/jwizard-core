@@ -40,7 +40,7 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 @Component
 public class ActivityStatusSequencer {
 
-    private final BotConfiguration jConfig;
+    private final BotConfiguration config;
 
     private int position = 0;
     private JDA jda;
@@ -56,19 +56,19 @@ public class ActivityStatusSequencer {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    ActivityStatusSequencer(BotConfiguration jConfig) {
-        this.jConfig = jConfig;
+    ActivityStatusSequencer(BotConfiguration config) {
+        this.config = config;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void loadConfiguration(JDA jda) {
-        if (!jConfig.getProperty(BotProperty.J_RR_ACTIVITY_ENABLED, Boolean.class)) return;
+        if (!config.getProperty(BotProperty.J_RR_ACTIVITY_ENABLED, Boolean.class)) return;
         this.jda = jda;
 
-        if (jConfig.getProperty(BotProperty.J_RR_EXTERNAL_FILE_ENABLED, Boolean.class)) {
+        if (config.getProperty(BotProperty.J_RR_EXTERNAL_FILE_ENABLED, Boolean.class)) {
             try {
-                final InputStream fileStream = new FileInputStream(jConfig.getProperty(BotProperty.J_RR_EXTERNAL_FILE_PATH));
+                final InputStream fileStream = new FileInputStream(config.getProperty(BotProperty.J_RR_EXTERNAL_FILE_PATH));
                 try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileStream))) {
                     String line;
                     while (!Objects.isNull(line = bufferedReader.readLine())) {
@@ -81,12 +81,12 @@ public class ActivityStatusSequencer {
                 throw new RuntimeException(ex);
             }
         }
-        if (!jConfig.getProperty(BotProperty.J_RR_COMMANDS_ENABLED, Boolean.class)) {
+        if (!config.getProperty(BotProperty.J_RR_COMMANDS_ENABLED, Boolean.class)) {
             botCommands.stream()
-                .map(c -> jConfig.getProperty(BotProperty.J_PREFIX) + c.getName())
+                .map(c -> config.getProperty(BotProperty.J_PREFIX) + c.getName())
                 .forEach(cachedTextActivities::addLast);
         }
-        if (jConfig.getProperty(BotProperty.J_RR_RANDOMIZED, Boolean.class)) {
+        if (config.getProperty(BotProperty.J_RR_RANDOMIZED, Boolean.class)) {
             Collections.shuffle((List<?>) cachedTextActivities);
         }
         log.info("Successfully loaded activity sequencer with parameters");
@@ -95,9 +95,9 @@ public class ActivityStatusSequencer {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void invoke() {
-        if (!jConfig.getProperty(BotProperty.J_RR_ACTIVITY_ENABLED, Boolean.class)) return;
+        if (!config.getProperty(BotProperty.J_RR_ACTIVITY_ENABLED, Boolean.class)) return;
 
-        final int interval = jConfig.getProperty(BotProperty.J_RR_INTERVAL, Integer.class);
+        final int interval = config.getProperty(BotProperty.J_RR_INTERVAL, Integer.class);
         log.info("Invoke activity sequencer thread. Inverval: {} sec per activity", interval);
 
         threadPool.scheduleWithFixedDelay(() -> {

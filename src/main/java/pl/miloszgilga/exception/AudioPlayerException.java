@@ -68,8 +68,8 @@ public class AudioPlayerException {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Slf4j public static class InvokerIsNotTrackSenderOrAdmin extends BotException {
-        public InvokerIsNotTrackSenderOrAdmin(BotConfiguration config, EventWrapper event) {
+    @Slf4j public static class InvokerIsNotTrackSenderOrAdminException extends BotException {
+        public InvokerIsNotTrackSenderOrAdminException(BotConfiguration config, EventWrapper event) {
             super(config, LocaleSet.INVOKER_IS_NOT_TRACK_SENDER_OR_ADMIN_EXC, BugTracker.INVOKE_FORBIDDEN_COMMAND);
             log.error("G: {}, A: {} <> Attempt to invoke command while bot is used on another channel",
                 event.guildName(), event.authorTag());
