@@ -29,7 +29,7 @@ import pl.miloszgilga.dto.EventWrapper;
 import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.misc.CommandWithArgsCount;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
-import pl.miloszgilga.core.JDAListenerAdapter;
+import pl.miloszgilga.core.AbstractListenerAdapter;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
@@ -40,7 +40,7 @@ import static pl.miloszgilga.exception.CommandException.UnrecognizedCommandExcep
 
 @Slf4j
 @JDAInjectableListenerLazyService
-class MismatchCommandListener extends JDAListenerAdapter {
+class MismatchCommandListener extends AbstractListenerAdapter {
 
     private final Set<CommandWithArgsCount> allCommandsWithAliases = BotCommand.getAllCommandsWithAliases();
 

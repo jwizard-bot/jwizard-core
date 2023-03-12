@@ -36,7 +36,7 @@ import static pl.miloszgilga.exception.CommandException.MismatchCommandArguments
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @DependsOn("botConfiguration")
-public abstract class JDACommand extends Command {
+public abstract class AbstractCommand extends Command {
 
     private final int argsCount;
     private final BotCommand command;
@@ -46,7 +46,7 @@ public abstract class JDACommand extends Command {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public JDACommand(BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder) {
+    public AbstractCommand(BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder) {
         this.name = command.getName();
         this.help = config.getLocaleText(command.getDescriptionHolder());
         this.ownerCommand = command.isOnlyOwner();

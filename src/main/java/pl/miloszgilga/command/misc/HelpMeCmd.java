@@ -24,7 +24,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
-import pl.miloszgilga.core.JDACommand;
+import pl.miloszgilga.core.AbstractCommand;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -32,7 +32,7 @@ import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
 @Slf4j
 @JDAInjectableCommandLazyService
-class HelpMeCmd extends JDACommand {
+class HelpMeCmd extends AbstractCommand {
 
     HelpMeCmd(BotConfiguration jConfig, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.HELP_ME, jConfig, embedBuilder);

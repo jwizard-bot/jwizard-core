@@ -26,9 +26,9 @@ import org.apache.commons.validator.routines.UrlValidator;
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.EventWrapper;
 import pl.miloszgilga.exception.BotException;
-import pl.miloszgilga.command.JDAMusicCommand;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.command.AbstractMusicCommand;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -36,7 +36,7 @@ import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
 @Slf4j
 @JDAInjectableCommandLazyService
-public class PlayTrackCmd extends JDAMusicCommand {
+public class PlayTrackCmd extends AbstractMusicCommand {
 
     PlayTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.PLAY_TRACK, config, playerManager, embedBuilder);

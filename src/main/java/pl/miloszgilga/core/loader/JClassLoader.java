@@ -33,8 +33,8 @@ import java.util.Set;
 import java.util.HashSet;
 
 import pl.miloszgilga.Bootloader;
-import pl.miloszgilga.core.JDACommand;
-import pl.miloszgilga.core.JDAListenerAdapter;
+import pl.miloszgilga.core.AbstractCommand;
+import pl.miloszgilga.core.AbstractListenerAdapter;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
@@ -52,8 +52,8 @@ public class JClassLoader {
         .setUrls(ClasspathHelper.forPackage("pl.miloszgilga.listener")).setScanners(Scanners.TypesAnnotated);
     private final Reflections listenersReflections = new Reflections(listenersReflectionsConfig);
 
-    private final Set<JDACommand> loadedCommands = new HashSet<>();
-    private final Set<JDAListenerAdapter> loadedListeners = new HashSet<>();
+    private final Set<AbstractCommand> loadedCommands = new HashSet<>();
+    private final Set<AbstractListenerAdapter> loadedListeners = new HashSet<>();
 
     private final BotConfiguration config;
 
@@ -69,12 +69,12 @@ public class JClassLoader {
         final Set<Class<?>> commandsClazz = commandsReflections.getTypesAnnotatedWith(JDAInjectableCommandLazyService.class);
         if (commandsClazz.isEmpty()) return;
         for (final Class<?> commandClazz : commandsClazz) {
-            loadedCommands.add((JDACommand) Bootloader.APP_CONTEXT.getBean(commandClazz));
+            loadedCommands.add((AbstractCommand) Bootloader.APP_CONTEXT.getBean(commandClazz));
         }
         log.info("Successfully loaded command interceptors ({}):", loadedCommands.size());
-        for (final JDACommand jdaCommand : loadedCommands) {
-            final String commandInvoker = config.getProperty(BotProperty.J_PREFIX) + jdaCommand.getName();
-            log.info(" --- {} {} ({})", commandInvoker, jdaCommand.getAliases(), jdaCommand.getClass().getName());
+        for (final AbstractCommand abstractCommand : loadedCommands) {
+            final String commandInvoker = config.getProperty(BotProperty.J_PREFIX) + abstractCommand.getName();
+            log.info(" --- {} {} ({})", commandInvoker, abstractCommand.getAliases(), abstractCommand.getClass().getName());
         }
     }
 
@@ -84,7 +84,7 @@ public class JClassLoader {
         final Set<Class<?>> listenersClazz = listenersReflections.getTypesAnnotatedWith(JDAInjectableListenerLazyService.class);
         if (listenersClazz.isEmpty()) return;
         for (final Class<?> listenerClazz : listenersClazz) {
-            loadedListeners.add((JDAListenerAdapter) Bootloader.APP_CONTEXT.getBean(listenerClazz));
+            loadedListeners.add((AbstractListenerAdapter) Bootloader.APP_CONTEXT.getBean(listenerClazz));
         }
         log.info("Successfully loaded listener adapter interceptors ({}):", loadedListeners.size());
         for (final Object jdaListener : loadedListeners) {

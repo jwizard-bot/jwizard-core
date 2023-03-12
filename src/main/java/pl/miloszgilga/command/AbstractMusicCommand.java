@@ -25,11 +25,11 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import java.util.Objects;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.core.JDACommand;
-import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.dto.EventWrapper;
 import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.core.AbstractCommand;
+import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.audioplayer.AudioPlayerSendHandler;
 
@@ -39,7 +39,7 @@ import static pl.miloszgilga.exception.AudioPlayerException.UserOnVoiceChannelNo
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-public abstract class JDAMusicCommand extends JDACommand {
+public abstract class AbstractMusicCommand extends AbstractCommand {
 
     protected final BotConfiguration config;
     protected final PlayerManager playerManager;
@@ -49,7 +49,7 @@ public abstract class JDAMusicCommand extends JDACommand {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public JDAMusicCommand(
+    public AbstractMusicCommand(
         BotCommand command, BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder
     ) {
         super(command, config, embedBuilder);

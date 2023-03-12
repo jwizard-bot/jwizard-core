@@ -28,7 +28,7 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.audioplayer.AloneOnChannelListener;
-import pl.miloszgilga.core.JDAListenerAdapter;
+import pl.miloszgilga.core.AbstractListenerAdapter;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
 
@@ -36,7 +36,7 @@ import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
 
 @Slf4j
 @JDAInjectableListenerLazyService
-public class BotStatusListener extends JDAListenerAdapter {
+public class BotStatusListener extends AbstractListenerAdapter {
 
     private boolean shuttingDown = false;
 

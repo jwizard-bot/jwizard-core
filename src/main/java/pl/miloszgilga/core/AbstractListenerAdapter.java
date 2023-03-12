@@ -27,14 +27,14 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @DependsOn("botConfiguration")
-public abstract class JDAListenerAdapter extends ListenerAdapter {
+public abstract class AbstractListenerAdapter extends ListenerAdapter {
 
     protected BotConfiguration config;
     protected EmbedMessageBuilder embedBuilder;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public JDAListenerAdapter(BotConfiguration config, EmbedMessageBuilder embedBuilder) {
+    public AbstractListenerAdapter(BotConfiguration config, EmbedMessageBuilder embedBuilder) {
         this.config = config;
         this.embedBuilder = embedBuilder;
     }

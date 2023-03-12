@@ -25,9 +25,9 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.EventWrapper;
 import pl.miloszgilga.exception.BotException;
-import pl.miloszgilga.command.JDAMusicCommand;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.command.AbstractMusicCommand;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -35,7 +35,7 @@ import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
 @Slf4j
 @JDAInjectableCommandLazyService
-public class ResumeTrackCmd extends JDAMusicCommand {
+public class ResumeTrackCmd extends AbstractMusicCommand {
 
     ResumeTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.RESUME_TRACK, config, playerManager, embedBuilder);

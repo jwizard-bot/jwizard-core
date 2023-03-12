@@ -30,9 +30,9 @@ import java.util.Map;
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.EventWrapper;
 import pl.miloszgilga.exception.BotException;
-import pl.miloszgilga.command.JDAMusicCommand;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.command.AbstractMusicCommand;
 import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
@@ -44,7 +44,7 @@ import static pl.miloszgilga.exception.AudioPlayerException.TrackRepeatsOutOfBou
 
 @Slf4j
 @JDAInjectableCommandLazyService
-public class RepeatTrackCmd extends JDAMusicCommand {
+public class RepeatTrackCmd extends AbstractMusicCommand {
 
     RepeatTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.REPEAT_TRACK, config, playerManager, embedBuilder);
