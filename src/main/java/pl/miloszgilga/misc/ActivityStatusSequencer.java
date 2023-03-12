@@ -27,8 +27,6 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.core.configuration.BotProperty;
@@ -47,12 +45,6 @@ public class ActivityStatusSequencer {
 
     private final List<BotCommand> botCommands = Arrays.stream(BotCommand.values()).toList();
     private final Deque<String> cachedTextActivities = new LinkedList<>();
-
-    private final ScheduledExecutorService threadPool = Executors.newSingleThreadScheduledExecutor(r -> {
-        final Thread thread = new Thread(r);
-        thread.setDaemon(true);
-        return thread;
-    });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -100,7 +92,7 @@ public class ActivityStatusSequencer {
         final int interval = config.getProperty(BotProperty.J_RR_INTERVAL, Integer.class);
         log.info("Invoke activity sequencer thread. Inverval: {} sec per activity", interval);
 
-        threadPool.scheduleWithFixedDelay(() -> {
+        config.getThreadPool().scheduleWithFixedDelay(() -> {
             if (Objects.isNull(jda)) return;
             final String selectedActivity = ((LinkedList<String>) cachedTextActivities).get(position);
             jda.getPresence().setActivity(Activity.listening(selectedActivity));

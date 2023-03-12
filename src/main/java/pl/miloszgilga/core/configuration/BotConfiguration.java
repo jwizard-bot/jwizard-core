@@ -37,6 +37,8 @@ import java.io.*;
 import java.util.*;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import pl.miloszgilga.core.LocaleSet;
 
@@ -62,6 +64,12 @@ public class BotConfiguration {
 
     private ResourceBundle localeBundle;
     private String projectVersion;
+
+    private final ScheduledExecutorService threadPool = Executors.newSingleThreadScheduledExecutor(r -> {
+        final Thread thread = new Thread(r);
+        thread.setDaemon(true);
+        return thread;
+    });
 
     private final List<CastType<?>> castTypes = List.of(
         new CastType<>(String.class, rawData -> rawData),
@@ -237,5 +245,9 @@ public class BotConfiguration {
 
     public String getProjectVersion() {
         return projectVersion;
+    }
+
+    public ScheduledExecutorService getThreadPool() {
+        return threadPool;
     }
 }
