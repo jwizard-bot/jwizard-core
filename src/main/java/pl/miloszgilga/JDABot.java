@@ -35,6 +35,7 @@ import java.util.*;
 import javax.security.auth.login.LoginException;
 
 import pl.miloszgilga.audioplayer.PlayerManager;
+import pl.miloszgilga.audioplayer.AloneOnChannelListener;
 import pl.miloszgilga.core.loader.JClassLoader;
 import pl.miloszgilga.core.db.HibernateFactory;
 import pl.miloszgilga.core.configuration.BotProperty;
@@ -52,6 +53,7 @@ public class JDABot {
     private final ActivityStatusSequencer statusSequencer;
     private final HibernateFactory hibernateFactory;
     private final PlayerManager playerManager;
+    private final AloneOnChannelListener aloneOnChannelListener;
 
     private static final int LINKED_CACHE_SIZE = 200;
 
@@ -78,13 +80,14 @@ public class JDABot {
 
     JDABot(
         BotConfiguration config, JClassLoader jClassLoader, ActivityStatusSequencer statusSequencer,
-        HibernateFactory hibernateFactory, PlayerManager playerManager
+        HibernateFactory hibernateFactory, PlayerManager playerManager, AloneOnChannelListener aloneOnChannelListener
     ) {
         this.config = config;
         this.jClassLoader = jClassLoader;
         this.statusSequencer = statusSequencer;
         this.hibernateFactory = hibernateFactory;
         this.playerManager = playerManager;
+        this.aloneOnChannelListener = aloneOnChannelListener;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,6 +129,7 @@ public class JDABot {
             statusSequencer.invoke();
 
             playerManager.initialize();
+            aloneOnChannelListener.initialize(jda);
 
             log.info("Add bot into Discord server via link: {}", jda.getInviteUrl(PERMISSIONS));
             log.info("Started listening incoming requests...");

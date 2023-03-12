@@ -30,8 +30,8 @@ bot:
         application-id: ${env:PROD_APP_ID}
     timeout:
         inactivity:
-            max-time-minutes: 5
-            max-time-after-pause-track-minutes: 10
+            max-time-after-leave-empty-channel: 180
+            max-time-after-leave-no-track-channel: 180
         voting:
             max-elapsed-time-minutes: 2
     misc:
