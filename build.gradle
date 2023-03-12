@@ -19,7 +19,7 @@
 plugins {
     id 'java'
     id 'application'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    alias libs.plugins.shadow.packager
 }
 
 def props = new Properties()
@@ -40,62 +40,38 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
-ext {
-    // discord integrations
-    jdaVersion                  = '4.4.0_352'
-    lavaplayerVersion           = '1.3.77'
-    jdaUtilitiesVersion         = '3.0.5'
-
-    // database utils
-    mySqlVersion                = '8.0.31'
-    hibernateVersion            = '6.1.6.Final'
-    liquibaseVersion            = '3.10.3'
-
-    // others
-    lombokVersion               = '1.18.26'
-    log4jVersion                = '2.20.0'
-    junitVersion                = '5.8.1'
-    springVersion               = '6.0.5'
-    springVaultVersion          = '3.0.0'
-    snakeYamlVersion            = '1.33'
-    commonsTextVersion          = '1.10.0'
-    commonsValidatorVersion     = '1.7'
-    dotEnvVersion               = '5.2.2'
-    commonsCliVersion           = '1.5.0'
-    reflectionsVersion          = '0.10.2'
-    apacheHttpClientVersion     = '4.5.14'
-}
-
 java.sourceCompatibility = JavaVersion.VERSION_17
 java.targetCompatibility = JavaVersion.VERSION_17
 
+// NOTE: all 3rd part libraries in /gradle/libs.version.toml file
+
 dependencies {
-    implementation      "net.dv8tion:JDA:${jdaVersion}"
-    implementation      "com.sedmelluq:lavaplayer:${lavaplayerVersion}"
-    implementation      "com.jagrosh:jda-utilities:${jdaUtilitiesVersion}"
+    implementation      libs.jda
+    implementation      libs.lavaplayer
+    implementation      libs.jdautilities
 
-    implementation      "mysql:mysql-connector-java:${mySqlVersion}"
-    implementation      "org.hibernate:hibernate-core:${hibernateVersion}"
-    implementation      "org.hibernate.orm:hibernate-c3p0:${hibernateVersion}"
-    implementation      "org.liquibase:liquibase-core:${liquibaseVersion}"
+    implementation      libs.mysql.driver
+    implementation      libs.hibernate
+    implementation      libs.c3p0pools
+    implementation      libs.liquibase
 
-    implementation      "org.projectlombok:lombok:${lombokVersion}"
-    implementation      "org.apache.logging.log4j:log4j-core:${log4jVersion}"
-    implementation      "org.apache.logging.log4j:log4j-api:${log4jVersion}"
-    implementation      "org.apache.logging.log4j:log4j-slf4j-impl:${log4jVersion}"
-    implementation      "org.springframework:spring-context:${springVersion}"
-    implementation      "org.springframework.vault:spring-vault-core:${springVaultVersion}"
-    implementation      "org.yaml:snakeyaml:${snakeYamlVersion}"
-    implementation      "org.apache.commons:commons-text:${commonsTextVersion}"
-    implementation      "commons-validator:commons-validator:${commonsValidatorVersion}"
-    implementation      "io.github.cdimascio:java-dotenv:${dotEnvVersion}"
-    implementation      "commons-cli:commons-cli:${commonsCliVersion}"
-    implementation      "org.reflections:reflections:${reflectionsVersion}"
-    implementation      "org.apache.httpcomponents:httpclient:${apacheHttpClientVersion}"
+    implementation      libs.lombok
+    implementation      libs.log4j.core
+    implementation      libs.log4j.api
+    implementation      libs.log4j.slf4j
+    implementation      libs.spring.context
+    implementation      libs.spring.vault
+    implementation      libs.snakeyaml
+    implementation      libs.commons.text
+    implementation      libs.commons.validator
+    implementation      libs.commons.cli
+    implementation      libs.dotenv
+    implementation      libs.reflections
+    implementation      libs.apache.httpclient
 
-    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-    testImplementation  "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
-    testRuntimeOnly     "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+    annotationProcessor libs.lombok
+    testImplementation  libs.junit.api
+    testRuntimeOnly     libs.junit.engine
 }
 
 configurations.all {
@@ -147,7 +123,7 @@ tasks.register('moveLangFiles', Copy) {
 
 tasks.register('moveGfxFiles', Copy) {
     from layout.projectDirectory.dir('gfx')
-    into layout.buildDirectory.dir("$rootDir/build/shadow")
+    into layout.buildDirectory.dir("$rootDir/build/shadow/gfx")
 }
 
 shadowJar.finalizedBy moveConfigurationFiles
