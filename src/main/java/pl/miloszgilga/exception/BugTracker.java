@@ -37,7 +37,8 @@ public enum BugTracker {
     NOT_FOUND_TRACK                                         (105),
     ISSUE_ON_LOAD_TRACK                                     (106),
     ISSUE_WHILE_PLAYING_TRACK                               (107),
-    INVOKE_FORBIDDEN_COMMAND                                (108);
+    INVOKE_FORBIDDEN_COMMAND                                (108),
+    REPEATS_OUT_OF_BOUNDS                                   (109);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

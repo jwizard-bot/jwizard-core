@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: PauseTrackCmd.java
- * Last modified: 11/03/2023, 10:06
+ * File name: ClearRepeatTrackCmd.java
+ * Last modified: 12/03/2023, 16:26
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -20,7 +20,11 @@ package pl.miloszgilga.command.music;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+
+import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.EventWrapper;
@@ -28,6 +32,7 @@ import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.command.JDAMusicCommand;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -35,12 +40,10 @@ import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
 @Slf4j
 @JDAInjectableCommandLazyService
-public class PauseTrackCmd extends JDAMusicCommand {
+public class ClearRepeatTrackCmd extends JDAMusicCommand {
 
-    PauseTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
-        super(BotCommand.PAUSE_TRACK, config, playerManager, embedBuilder);
-        super.inPlayingMode = true;
-        super.inListeningMode = true;
+    ClearRepeatTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
+        super(BotCommand.CLEAR_REPEAT_TRACK, config, playerManager, embedBuilder);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,7 +51,15 @@ public class PauseTrackCmd extends JDAMusicCommand {
     @Override
     protected void doExecuteMusicCommand(CommandEvent event) {
         try {
-            playerManager.pauseCurrentTrack(event);
+            playerManager.repeatCurrentTrack(event, 0);
+
+            final AudioTrackInfo trackInfo = playerManager.getCurrentPlayingTrack(event);
+            final MessageEmbed messageEmbed = embedBuilder
+                .createMessage(LocaleSet.REMOVE_MULTIPLE_REPEATING_TRACK_MESS, Map.of(
+                    "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
+                    "repeatingCmd", BotCommand.REPEAT_TRACK.parseWithPrefix(config)
+                ));
+            event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
         } catch (BotException ex) {
             event.getChannel()
                 .sendMessageEmbeds(embedBuilder.createErrorMessage(new EventWrapper(event), ex))

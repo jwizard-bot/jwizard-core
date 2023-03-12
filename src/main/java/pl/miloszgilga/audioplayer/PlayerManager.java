@@ -22,10 +22,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
@@ -45,7 +47,7 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 
 import static pl.miloszgilga.exception.AudioPlayerException.TrackIsNotPausedException;
 import static pl.miloszgilga.exception.AudioPlayerException.TrackIsNotPlayingException;
-import static pl.miloszgilga.exception.AudioPlayerException.InvokerIsNotTrackSenderOrAdmin;
+import static pl.miloszgilga.exception.AudioPlayerException.InvokerIsNotTrackSenderOrAdminException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -114,7 +116,15 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     @Override
     public void repeatCurrentTrack(CommandEvent event, int countOfRepeats) {
         final MusicManager musicManager = checkPermissions(event);
+        final EventWrapper eventWrapper = new EventWrapper(event);
         musicManager.getTrackScheduler().setCountOfRepeats(countOfRepeats);
+        if (countOfRepeats == 0) {
+            log.info("G: {}, A: {} <> Repeating of current playing track '{}' was removed", eventWrapper.guildName(),
+                eventWrapper.authorTag(), getCurrentPlayingTrack(event).title);
+            return;
+        }
+        log.info("G: {}, A: {} <> Current playing track '{}' will be repeating {}x times",
+            eventWrapper.guildName(), eventWrapper.authorTag(), getCurrentPlayingTrack(event).title, countOfRepeats);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -122,7 +132,17 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     @Override
     public boolean toggleInfiniteLoopCurrentTrack(CommandEvent event) {
         final MusicManager musicManager = checkPermissions(event);
-        musicManager.getTrackScheduler().setRepeating(!musicManager.getTrackScheduler().isRepeating());
+        musicManager.getTrackScheduler().setInfiniteRepeating(!musicManager.getTrackScheduler().isInfiniteRepeating());
+        final boolean isRepeating = musicManager.getTrackScheduler().isInfiniteRepeating();
+        final EventWrapper eventWrapper = new EventWrapper(event);
+        if (isRepeating) {
+            log.info("G: {}, A: {} <> Current playing track '{}' has been placed in infinite loop",
+                eventWrapper.guildName(), eventWrapper.authorTag(), getCurrentPlayingTrack(event).title);
+        } else {
+            log.info("G: {}, A: {} <> Current playing track '{}' has been removed from infinite loop",
+                eventWrapper.guildName(), eventWrapper.authorTag(), getCurrentPlayingTrack(event).title);
+        }
+        return musicManager.getTrackScheduler().isInfiniteRepeating();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -159,5 +179,17 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
             event.getGuild().getAudioManager().setSendingHandler(musicManager.getAudioPlayerSendHandler());
             return musicManager;
         });
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public MusicManager getMusicManager(Guild guild) {
+        return musicManagers.get(guild.getIdLong());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public AudioTrackInfo getCurrentPlayingTrack(CommandEvent event) {
+        return getMusicManager(event).getAudioPlayer().getPlayingTrack().getInfo();
     }
 }

@@ -20,7 +20,12 @@ package pl.miloszgilga.command.music;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import org.apache.commons.lang3.math.NumberUtils;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+
+import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.EventWrapper;
@@ -28,8 +33,12 @@ import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.command.JDAMusicCommand;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.core.LocaleSet;
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
+
+import static pl.miloszgilga.exception.AudioPlayerException.TrackRepeatsOutOfBoundsException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -47,13 +56,25 @@ public class RepeatTrackCmd extends JDAMusicCommand {
 
     @Override
     protected void doExecuteMusicCommand(CommandEvent event) {
+        final EventWrapper eventWrapper = new EventWrapper(event);
         try {
+            final int repeats = NumberUtils.toInt(event.getArgs());
+            if (repeats < 1 || repeats > config.getProperty(BotProperty.J_MAX_REPEATS_SINGLE_TRACK, Integer.class)) {
+                throw new TrackRepeatsOutOfBoundsException(config, eventWrapper);
+            }
+            playerManager.repeatCurrentTrack(event, repeats);
 
-
-
+            final AudioTrackInfo trackInfo = playerManager.getCurrentPlayingTrack(event);
+            final MessageEmbed messageEmbed = embedBuilder
+                .createMessage(LocaleSet.SET_MULTIPLE_REPEATING_TRACK_MESS, Map.of(
+                    "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
+                    "times", repeats,
+                    "clearRepeatingCmd", BotCommand.CLEAR_REPEAT_TRACK.parseWithPrefix(config)
+                ));
+            event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
         } catch (BotException ex) {
             event.getChannel()
-                .sendMessageEmbeds(embedBuilder.createErrorMessage(new EventWrapper(event), ex))
+                .sendMessageEmbeds(embedBuilder.createErrorMessage(eventWrapper, ex))
                 .queue();
         }
     }

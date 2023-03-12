@@ -34,6 +34,7 @@ public enum LocaleSet {
     PAUSE_TRACK_COMMAND_DESC                    ("jwizard.command.description.PauseTrack"),
     RESUME_TRACK_COMMAND_DESC                   ("jwizard.command.description.ResumeTrack"),
     REPEAT_TRACK_COMMAND_DESC                   ("jwizard.command.description.RepeatTrack"),
+    CLEAR_REPEAT_TRACK_COMMAND_DESC             ("jwizard.command.description.ClearRepeatTrack"),
     LOOP_TRACK_COMMAND_DESC                     ("jwizard.command.description.LoopTrack"),
 
     PLAY_TRACK_ARG_SYNTAX                       ("jwizard.command.arguments.PlayTrack"),
@@ -58,6 +59,16 @@ public enum LocaleSet {
     BUG_TRACKER_MESS                            ("jwizard.message.response.BugTracker"),
     PAUSE_TRACK_MESS                            ("jwizard.message.response.PauseTrack"),
     RESUME_TRACK_MESS                           ("jwizard.message.response.ResumeTrack"),
+    LEAVE_EMPTY_CHANNEL_MESS                    ("jwizard.message.response.LeaveEmptyChannel"),
+    ON_TRACK_START_MESS                         ("jwizard.message.response.OnTrackStart"),
+    ON_TRACK_START_ON_PAUSED_MESS               ("jwizard.message.response.OnTrackStartOnPause"),
+    ON_END_PLAYBACK_QUEUE_MESS                  ("jwizard.message.response.OnEndPlaybackQueue"),
+    LEAVE_END_PLAYBACK_QUEUE_MESS               ("jwizard.message.response.LeaveEndPlaybackQueue"),
+    ADD_TRACK_TO_INFINITE_LOOP_MESS             ("jwizard.message.response.AddTrackToInfiniteLoop"),
+    REMOVE_TRACK_FROM_INFINITE_LOOP_MESS        ("jwizard.message.response.RemoveTrackFromInfiniteLoop"),
+    SET_MULTIPLE_REPEATING_TRACK_MESS           ("jwizard.message.response.SetMultipleRepeatingTrack"),
+    REMOVE_MULTIPLE_REPEATING_TRACK_MESS        ("jwizard.message.response.RemoveMultipleRepeatingTrack"),
+    MULTIPLE_REPEATING_TRACK_INFO_MESS          ("jwizard.message.response.MultipleRepeatingTrackInfo"),
 
     TRACK_IS_NOT_PLAYING_EXC                    ("jwizard.exception.TrackIsNotPlayingException"),
     TRACK_IS_NOT_PAUSED_EXC                     ("jwizard.exception.TrackIsNotPausedException"),
@@ -66,7 +77,8 @@ public enum LocaleSet {
     UNRECOGNIZED_COMMAND_EXC                    ("jwizard.exception.UnrecognizedCommandException"),
     USED_COMM_ON_FORBIDDEN_CHANNEL_EXC          ("jwizard.exception.UsedCommandOnForbiddenChannelException"),
     MISMATCH_COMMAND_ARGS_COUNT_EXC             ("jwizard.exception.MismatchCommandArgumentsCountException"),
-    INVOKER_IS_NOT_TRACK_SENDER_OR_ADMIN_EXC    ("jwizard.exception.InvokerIsNotTrackSenderOrAdmin");
+    INVOKER_IS_NOT_TRACK_SENDER_OR_ADMIN_EXC    ("jwizard.exception.InvokerIsNotTrackSenderOrAdmin"),
+    TRACK_REPEATS_OUT_OF_BOUNDS_EXC             ("jwizard.exception.TrackRepeatsOutOfBoundsException");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

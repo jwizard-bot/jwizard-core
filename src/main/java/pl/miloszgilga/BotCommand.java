@@ -32,19 +32,23 @@ import java.util.Objects;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
+import static pl.miloszgilga.core.LocaleSet.*;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Getter
 @RequiredArgsConstructor
 public enum BotCommand {
-    HELP            ("help",    new String[]{ "h", "hl" },     LocaleSet.HELP_COMMAND_DESC,             null,                               false, 0),
-    HELP_ME         ("helpme",  new String[]{ "hm", "hlm" },   LocaleSet.HELPME_COMMAND_DESC,           null,                               false, 0),
 
-    PLAY_TRACK      ("play",    new String[]{ "p", "pl" },     LocaleSet.PLAY_TRACK_COMMAND_DESC,       LocaleSet.PLAY_TRACK_ARG_SYNTAX,    false, 1),
-    PAUSE_TRACK     ("pause",   new String[]{ "ps" },          LocaleSet.PAUSE_TRACK_COMMAND_DESC,      null,                               false, 0),
-    RESUME_TRACK    ("resume",  new String[]{ "rs" },          LocaleSet.RESUME_TRACK_COMMAND_DESC,     null,                               false, 0),
-    REPEAT_TRACK    ("repeat",  new String[]{ "rp" },          LocaleSet.REPEAT_TRACK_COMMAND_DESC,     LocaleSet.REPEAT_TRACK_ARG_SYNTAX,  false, 1),
-    LOOP_TRACK      ("loop",    new String[]{ "lp" },          LocaleSet.LOOP_TRACK_COMMAND_DESC,       null,                               false, 0);
+    HELP                    ("help",        new String[]{ "h", "hl" },     HELP_COMMAND_DESC,                 null,                     false, 0),
+    HELP_ME                 ("helpme",      new String[]{ "hm", "hlm" },   HELPME_COMMAND_DESC,               null,                     false, 0),
+
+    PLAY_TRACK              ("play",        new String[]{ "p", "pl" },     PLAY_TRACK_COMMAND_DESC,           PLAY_TRACK_ARG_SYNTAX,    false, 1),
+    PAUSE_TRACK             ("pause",       new String[]{ "ps" },          PAUSE_TRACK_COMMAND_DESC,          null,                     false, 0),
+    RESUME_TRACK            ("resume",      new String[]{ "rs" },          RESUME_TRACK_COMMAND_DESC,         null,                     false, 0),
+    REPEAT_TRACK            ("repeat",      new String[]{ "rp" },          REPEAT_TRACK_COMMAND_DESC,         REPEAT_TRACK_ARG_SYNTAX,  false, 1),
+    CLEAR_REPEAT_TRACK      ("repeatcls",   new String[]{ "rpcl" },        CLEAR_REPEAT_TRACK_COMMAND_DESC,   null,                     false, 0),
+    LOOP_TRACK              ("loop",        new String[]{ "lp" },          LOOP_TRACK_COMMAND_DESC,           null,                     false, 0);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

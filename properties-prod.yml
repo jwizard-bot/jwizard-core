@@ -33,7 +33,9 @@ bot:
             max-time-after-leave-empty-channel: 180
             max-time-after-leave-no-track-channel: 180
         voting:
-            max-elapsed-time-minutes: 2
+            max-elapsed-time-after-finish: 2
+    audio:
+        max-repeats-single-track: 30
     misc:
         locale:
             selected-locale: pl

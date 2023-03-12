@@ -48,9 +48,7 @@ public class ResumeTrackCmd extends JDAMusicCommand {
     @Override
     protected void doExecuteMusicCommand(CommandEvent event) {
         try {
-
-
-
+            playerManager.resumeCurrentTrack(event);
         } catch (BotException ex) {
             event.getChannel()
                 .sendMessageEmbeds(embedBuilder.createErrorMessage(new EventWrapper(event), ex))

@@ -20,6 +20,7 @@ package pl.miloszgilga.audioplayer;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -33,18 +34,22 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Objects;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ScheduledFuture;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.EventWrapper;
 import pl.miloszgilga.exception.BugTracker;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.LocaleSet;
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Slf4j
-class TrackScheduler extends AudioEventAdapter {
+public class TrackScheduler extends AudioEventAdapter {
 
     private final BotConfiguration config;
     private final EmbedMessageBuilder builder;
@@ -54,8 +59,12 @@ class TrackScheduler extends AudioEventAdapter {
     private final Queue<AudioQueueExtendedInfo> trackQueue = new LinkedList<>();
 
     private AudioTrack pausedTrack;
+    private ScheduledFuture<?> threadCountToLeave;
     private int countOfRepeats = 0;
-    private boolean repeating = false;
+    private int totalCountOfRepeats = 0;
+    private boolean nextTrackInfoDisabled = false;
+    private boolean infiniteRepeating = false;
+    private boolean onClearing = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -72,7 +81,7 @@ class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onPlayerPause(AudioPlayer player) {
-        if (Objects.isNull(audioPlayer.getPlayingTrack())) return;
+        if (Objects.isNull(audioPlayer.getPlayingTrack()) || onClearing) return;
 
         final AudioTrackInfo trackInfo = audioPlayer.getPlayingTrack().getInfo();
         pausedTrack = audioPlayer.getPlayingTrack();
@@ -92,7 +101,7 @@ class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onPlayerResume(AudioPlayer player) {
-        if (Objects.isNull(pausedTrack)) return;
+        if (Objects.isNull(pausedTrack) || onClearing) return;
 
         final AudioTrackInfo trackInfo = audioPlayer.getPlayingTrack().getInfo();
         pausedTrack = null;
@@ -112,14 +121,77 @@ class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
+        if (!Objects.isNull(threadCountToLeave)) threadCountToLeave.cancel(true);
+        if (nextTrackInfoDisabled || onClearing) return;
 
+        final AudioTrackInfo trackInfo = audioPlayer.getPlayingTrack().getInfo();
+        final MessageEmbed messageEmbed;
+
+        if (audioPlayer.isPaused()) {
+            messageEmbed = builder.createMessage(LocaleSet.ON_TRACK_START_ON_PAUSED_MESS, Map.of(
+                "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
+                "resumeCmd", BotCommand.RESUME_TRACK.parseWithPrefix(config)
+            ));
+            log.info("G: {}, A: {} <> Staring playing audio track: '{}' when audio player is paused",
+                deliveryEvent.guildName(), deliveryEvent.authorTag(), trackInfo.title);
+        } else {
+            messageEmbed = builder.createMessage(LocaleSet.ON_TRACK_START_MESS, Map.of(
+                "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri)
+            ));
+            log.info("G: {}, A: {} <> Staring playing audio track: '{}'", deliveryEvent.guildName(),
+                deliveryEvent.authorTag(), trackInfo.title);
+        }
+        deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
+        if (infiniteRepeating) nextTrackInfoDisabled = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+        if (onClearing) return;
+        final boolean isNoneRepeating = !infiniteRepeating && countOfRepeats == 0;
+        if (Objects.isNull(audioPlayer.getPlayingTrack()) && trackQueue.isEmpty() && isNoneRepeating) {
+            final MessageEmbed messageEmbed = builder.createMessage(LocaleSet.ON_END_PLAYBACK_QUEUE_MESS);
+            deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
+            log.info("G: {}, A: {} <> End of playing queue tracks", deliveryEvent.guildName(), deliveryEvent.authorTag());
 
+            nextTrackInfoDisabled = false;
+            final int timeToLeaveChannel = config.getProperty(BotProperty.J_INACTIVITY_NO_TRACK_TIMEOUT, Integer.class);
+            threadCountToLeave = config.getThreadPool().schedule(() -> {
+                final MessageEmbed leaveMessageEmbed = builder
+                    .createMessage(LocaleSet.LEAVE_END_PLAYBACK_QUEUE_MESS, Map.of(
+                        "elapsed", Utilities.convertSecondsToMinutes(timeToLeaveChannel)
+                    ));
+                closeAudioConnection();
+                audioPlayer.setPaused(false);
+
+                deliveryEvent.textChannel().sendMessageEmbeds(leaveMessageEmbed).queue();
+                log.info("G: {}, A: {} <> Leave voice channel after '{}' seconds of inactivity",
+                    deliveryEvent.guildName(), deliveryEvent.authorTag(), timeToLeaveChannel);
+            }, timeToLeaveChannel, TimeUnit.SECONDS);
+            return;
+        }
+        if (infiniteRepeating) {
+            audioPlayer.startTrack(track.makeClone(), false);
+        } else if (countOfRepeats > 0) {
+            final AudioTrackInfo trackInfo = track.getInfo();
+            final int currentRepeat = (totalCountOfRepeats - countOfRepeats) + 1;
+
+            final MessageEmbed messageEmbed = builder
+                .createMessage(LocaleSet.MULTIPLE_REPEATING_TRACK_INFO_MESS, Map.of(
+                    "currentRepeat", currentRepeat,
+                    "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
+                    "elapsedRepeats", --countOfRepeats
+                ));
+            audioPlayer.startTrack(track.makeClone(), false);
+            deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
+            nextTrackInfoDisabled = true;
+            log.info("G: {}, A: {} <> Repeat {}x times of track '{}' from elapsed {}x repeats",
+                deliveryEvent.guildName(), deliveryEvent.authorTag(), currentRepeat, trackInfo.title, countOfRepeats);
+        } else if (endReason.mayStartNext) {
+            nextTrack();
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -151,6 +223,33 @@ class TrackScheduler extends AudioEventAdapter {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public void clearAndDestroy(boolean showMessage) {
+        onClearing = true;
+        audioPlayer.setPaused(false);
+        audioPlayer.stopTrack();
+        trackQueue.clear();
+
+        pausedTrack = null;
+        countOfRepeats = 0;
+        totalCountOfRepeats = 0;
+        infiniteRepeating = false;
+        nextTrackInfoDisabled = false;
+
+        if (!showMessage) return;
+        final MessageEmbed messageEmbed = builder.createMessage(LocaleSet.LEAVE_EMPTY_CHANNEL_MESS);
+        deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
+        onClearing = false;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void closeAudioConnection() {
+        final Guild guild = deliveryEvent.dataSender().getGuild();
+        config.getThreadPool().submit(() -> guild.getAudioManager().closeAudioConnection());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public Queue<AudioQueueExtendedInfo> getTrackQueue() {
         return trackQueue;
     }
@@ -172,6 +271,10 @@ class TrackScheduler extends AudioEventAdapter {
 
     void setCountOfRepeats(int countOfRepeats) {
         this.countOfRepeats = countOfRepeats;
+        totalCountOfRepeats = countOfRepeats;
+        if (countOfRepeats > 0) {
+            nextTrackInfoDisabled = true;
+        }
     }
 
     void setInfiniteRepeating(boolean infiniteRepeating) {

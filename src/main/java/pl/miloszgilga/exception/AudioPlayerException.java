@@ -20,8 +20,11 @@ package pl.miloszgilga.exception;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Map;
+
 import pl.miloszgilga.dto.EventWrapper;
 import pl.miloszgilga.core.LocaleSet;
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,6 +75,18 @@ public class AudioPlayerException {
         public InvokerIsNotTrackSenderOrAdminException(BotConfiguration config, EventWrapper event) {
             super(config, LocaleSet.INVOKER_IS_NOT_TRACK_SENDER_OR_ADMIN_EXC, BugTracker.INVOKE_FORBIDDEN_COMMAND);
             log.error("G: {}, A: {} <> Attempt to invoke command while bot is used on another channel",
+                event.guildName(), event.authorTag());
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Slf4j public static class TrackRepeatsOutOfBoundsException extends BotException {
+        public TrackRepeatsOutOfBoundsException(BotConfiguration config, EventWrapper event) {
+            super(config, LocaleSet.TRACK_REPEATS_OUT_OF_BOUNDS_EXC, Map.of(
+                "topLimit", config.getProperty(BotProperty.J_MAX_REPEATS_SINGLE_TRACK)
+            ), BugTracker.REPEATS_OUT_OF_BOUNDS);
+            log.error("G: {}, A: {} <> Attempt to set out of bounds current audio track repeats number",
                 event.guildName(), event.authorTag());
         }
     }
