@@ -28,6 +28,7 @@ import java.util.Map;
 import pl.miloszgilga.dto.EventWrapper;
 import pl.miloszgilga.dto.TrackEmbedContent;
 import pl.miloszgilga.dto.PlaylistEmbedContent;
+import pl.miloszgilga.dto.PauseTrackEmbedContent;
 import pl.miloszgilga.exception.BugTracker;
 import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.core.LocaleSet;
@@ -94,6 +95,17 @@ public class EmbedMessageBuilder {
             .addField(config.getLocaleText(LocaleSet.TRACK_ADDDED_BY_MESS) + ":", wrapper.authorTag(), true)
             .setThumbnail(content.thumbnailUrl())
             .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
+            .build();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public MessageEmbed createPauseTrackMessage(PauseTrackEmbedContent content) {
+        return new EmbedBuilder()
+            .setDescription(config.getLocaleText(content.localeSet(), content.localeVariables()))
+            .addField(config.getLocaleText(LocaleSet.PAUSED_TRACK_TIME_MESS) + ":", content.pausedTimestamp(), true)
+            .addField(config.getLocaleText(LocaleSet.PAUSED_TRACK_ESTIMATE_TIME_MESS) + ":", content.estimatedDuration(), true)
+            .addField(config.getLocaleText(LocaleSet.PAUSED_TRACK_TOTAL_DURATION_MESS) + ":", content.totalDuration(), true)
             .build();
     }
 

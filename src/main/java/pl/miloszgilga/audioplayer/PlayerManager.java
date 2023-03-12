@@ -85,6 +85,7 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
         final MusicManager musicManager = getMusicManager(event);
         final AudioLoadResultHandler audioLoadResultHandler = new AudioLoaderResultImpl(musicManager, config,
             builder, new EventWrapper(event), isUrlPattern);
+        event.getGuild().getAudioManager().setSelfDeafened(true);
         loadItemOrdered(musicManager, trackUrl, audioLoadResultHandler);
     }
 
@@ -186,8 +187,6 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     public MusicManager getMusicManager(Guild guild) {
         return musicManagers.get(guild.getIdLong());
     }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public AudioTrackInfo getCurrentPlayingTrack(CommandEvent event) {
         return getMusicManager(event).getAudioPlayer().getPlayingTrack().getInfo();

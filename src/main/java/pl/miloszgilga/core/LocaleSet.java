@@ -69,6 +69,11 @@ public enum LocaleSet {
     SET_MULTIPLE_REPEATING_TRACK_MESS           ("jwizard.message.response.SetMultipleRepeatingTrack"),
     REMOVE_MULTIPLE_REPEATING_TRACK_MESS        ("jwizard.message.response.RemoveMultipleRepeatingTrack"),
     MULTIPLE_REPEATING_TRACK_INFO_MESS          ("jwizard.message.response.MultipleRepeatingTrackInfo"),
+    PAUSE_TRACK_ON_FORCE_MUTE_MESS              ("jwizard.message.response.PauseTrackOnForceMute"),
+    RESUME_TRACK_ON_FORCE_UNMUTE_MESS           ("jwizard.message.response.ResumeTrackOnForceUnmute"),
+    PAUSED_TRACK_TIME_MESS                      ("jwizard.message.response.PausedTrackTime"),
+    PAUSED_TRACK_ESTIMATE_TIME_MESS             ("jwizard.message.response.PausedTrackEstimateTime"),
+    PAUSED_TRACK_TOTAL_DURATION_MESS            ("jwizard.message.response.PausedTrackTotalDuration"),
 
     TRACK_IS_NOT_PLAYING_EXC                    ("jwizard.exception.TrackIsNotPlayingException"),
     TRACK_IS_NOT_PAUSED_EXC                     ("jwizard.exception.TrackIsNotPausedException"),
@@ -77,8 +82,9 @@ public enum LocaleSet {
     UNRECOGNIZED_COMMAND_EXC                    ("jwizard.exception.UnrecognizedCommandException"),
     USED_COMM_ON_FORBIDDEN_CHANNEL_EXC          ("jwizard.exception.UsedCommandOnForbiddenChannelException"),
     MISMATCH_COMMAND_ARGS_COUNT_EXC             ("jwizard.exception.MismatchCommandArgumentsCountException"),
-    INVOKER_IS_NOT_TRACK_SENDER_OR_ADMIN_EXC    ("jwizard.exception.InvokerIsNotTrackSenderOrAdmin"),
-    TRACK_REPEATS_OUT_OF_BOUNDS_EXC             ("jwizard.exception.TrackRepeatsOutOfBoundsException");
+    INVOKER_IS_NOT_TRACK_SENDER_OR_ADMIN_EXC    ("jwizard.exception.InvokerIsNotTrackSenderOrAdminException"),
+    TRACK_REPEATS_OUT_OF_BOUNDS_EXC             ("jwizard.exception.TrackRepeatsOutOfBoundsException"),
+    LOCK_COMMAND_ON_TEMPORARY_HALTED_EXC        ("jwizard.exception.LockCommandOnTemporaryHaltedException");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

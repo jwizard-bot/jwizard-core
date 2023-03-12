@@ -36,6 +36,7 @@ import pl.miloszgilga.audioplayer.AudioPlayerSendHandler;
 import static pl.miloszgilga.exception.CommandException.UsedCommandOnForbiddenChannelException;
 import static pl.miloszgilga.exception.AudioPlayerException.ActiveMusicPlayingNotFoundException;
 import static pl.miloszgilga.exception.AudioPlayerException.UserOnVoiceChannelNotFoundException;
+import static pl.miloszgilga.exception.AudioPlayerException.LockCommandOnTemporaryHaltedException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -63,6 +64,10 @@ public abstract class AbstractMusicCommand extends AbstractCommand {
     protected void doExecuteCommand(CommandEvent event) {
         final var audioSendHandler = (AudioPlayerSendHandler) event.getGuild().getAudioManager().getSendingHandler();
         try {
+            final GuildVoiceState guildVoiceState = event.getGuild().getSelfMember().getVoiceState();
+            if (Objects.isNull(guildVoiceState) || guildVoiceState.isMuted()) {
+                throw new LockCommandOnTemporaryHaltedException(config, new EventWrapper(event));
+            }
             if (inPlayingMode && !Objects.isNull(audioSendHandler) && !audioSendHandler.isInPlayingMode()) {
                 throw new ActiveMusicPlayingNotFoundException(config, new EventWrapper(event));
             }

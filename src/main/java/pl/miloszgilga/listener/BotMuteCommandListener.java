@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: BotAloneCommandListener.java
- * Last modified: 12/03/2023, 11:33
+ * File name: BotMuteCommandListener.java
+ * Last modified: 12/03/2023, 19:03
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -20,14 +20,16 @@ package pl.miloszgilga.listener;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.ShutdownEvent;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMuteEvent;
 
+import java.util.Objects;
+
+import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
-import pl.miloszgilga.audioplayer.AloneOnChannelListener;
+import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.AbstractListenerAdapter;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
@@ -36,45 +38,35 @@ import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
 
 @Slf4j
 @JDAInjectableListenerLazyService
-public class BotStatusListener extends AbstractListenerAdapter {
+public class BotMuteCommandListener extends AbstractListenerAdapter {
 
-    private boolean shuttingDown = false;
-
-    private final AloneOnChannelListener aloneOnChannelListener;
     private final PlayerManager playerManager;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    BotStatusListener(
-        BotConfiguration config, EmbedMessageBuilder embedBuilder, AloneOnChannelListener aloneOnChannelListener,
-        PlayerManager playerManager
-    ) {
+    BotMuteCommandListener(BotConfiguration config, EmbedMessageBuilder embedBuilder, PlayerManager playerManager) {
         super(config, embedBuilder);
-        this.aloneOnChannelListener = aloneOnChannelListener;
         this.playerManager = playerManager;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void onGuildVoiceUpdate(GuildVoiceUpdateEvent event) {
-        aloneOnChannelListener.onEveryVoiceUpdate(event);
-    }
+    public void onGuildVoiceMute(GuildVoiceMuteEvent event) {
+        final Member botMember = event.getGuild().getSelfMember();
+        if (Objects.isNull(botMember.getVoiceState())) return;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        final MusicManager musicManager = playerManager.getMusicManager(botMember.getGuild());
+        if (Objects.isNull(musicManager)) return;
 
-    @Override
-    public void onShutdown(ShutdownEvent event) {
-        if (shuttingDown) return;
-        shuttingDown = true;
-        super.config.getThreadPool().shutdownNow();
-        if (event.getJDA().getStatus() == JDA.Status.SHUTTING_DOWN) return;
-
-        for (final Guild guild : event.getJDA().getGuilds()) {
-            guild.getAudioManager().closeAudioConnection();
-            playerManager.getMusicManager(guild).getTrackScheduler().clearAndDestroy(false);
+        LocaleSet message = LocaleSet.RESUME_TRACK_ON_FORCE_UNMUTE_MESS;
+        if (botMember.getVoiceState().isMuted()) {
+            message = LocaleSet.PAUSE_TRACK_ON_FORCE_MUTE_MESS;
+            musicManager.getAudioPlayer().setPaused(true);
+        } else {
+            musicManager.getAudioPlayer().setPaused(false);
         }
-        event.getJDA().shutdown();
-        System.exit(0);
+        final MessageEmbed messageEmbed = embedBuilder.createMessage(message);
+        musicManager.getTrackScheduler().getDeliveryEvent().textChannel().sendMessageEmbeds(messageEmbed).queue();
     }
 }

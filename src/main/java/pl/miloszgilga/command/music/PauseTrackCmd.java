@@ -20,14 +20,21 @@ package pl.miloszgilga.command.music;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+
+import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.dto.PauseTrackEmbedContent;
 import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
+import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -47,11 +54,27 @@ public class PauseTrackCmd extends AbstractMusicCommand {
 
     @Override
     protected void doExecuteMusicCommand(CommandEvent event) {
+        final EventWrapper eventWrapper = new EventWrapper(event);
         try {
             playerManager.pauseCurrentTrack(event);
+
+            final AudioTrack track = playerManager.getMusicManager(event.getGuild()).getAudioPlayer().getPlayingTrack();
+            final PauseTrackEmbedContent content = new PauseTrackEmbedContent(
+                LocaleSet.PAUSE_TRACK_MESS,
+                Map.of(
+                    "track", String.format("[%s](%s)", track.getInfo().title, track.getInfo().uri),
+                    "invoker", eventWrapper.authorTag(),
+                    "resumeCmd", BotCommand.RESUME_TRACK.parseWithPrefix(config)
+                ),
+                Utilities.convertMilisToDate(track.getPosition()),
+                Utilities.convertMilisToDate(track.getDuration() - track.getPosition()),
+                Utilities.convertMilisToDate(track.getDuration())
+            );
+            final MessageEmbed messageEmbed = embedBuilder.createPauseTrackMessage(content);
+            event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
         } catch (BotException ex) {
             event.getChannel()
-                .sendMessageEmbeds(embedBuilder.createErrorMessage(new EventWrapper(event), ex))
+                .sendMessageEmbeds(embedBuilder.createErrorMessage(eventWrapper, ex))
                 .queue();
         }
     }

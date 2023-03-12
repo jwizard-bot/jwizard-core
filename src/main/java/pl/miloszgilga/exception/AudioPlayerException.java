@@ -90,4 +90,14 @@ public class AudioPlayerException {
                 event.guildName(), event.authorTag());
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Slf4j public static class LockCommandOnTemporaryHaltedException extends BotException {
+        public LockCommandOnTemporaryHaltedException(BotConfiguration config, EventWrapper event) {
+            super(config, LocaleSet.LOCK_COMMAND_ON_TEMPORARY_HALTED_EXC, BugTracker.LOCK_COMMAND_TEMPORARY_HALTED);
+            log.error("G: {}, A: {} <> Attempt to use music command on halted (muted) bot",
+                event.guildName(), event.authorTag());
+        }
+    }
 }

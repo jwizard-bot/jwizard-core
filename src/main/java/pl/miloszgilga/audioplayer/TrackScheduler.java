@@ -82,17 +82,9 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onPlayerPause(AudioPlayer player) {
         if (Objects.isNull(audioPlayer.getPlayingTrack()) || onClearing) return;
-
-        final AudioTrackInfo trackInfo = audioPlayer.getPlayingTrack().getInfo();
         pausedTrack = audioPlayer.getPlayingTrack();
 
-        final MessageEmbed messageEmbed = builder.createMessage(LocaleSet.PAUSE_TRACK_MESS, Map.of(
-            "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
-            "invoker", deliveryEvent.authorTag(),
-            "resumeCmd", BotCommand.RESUME_TRACK.parseWithPrefix(config)
-        ));
-        deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
-
+        final AudioTrackInfo trackInfo = audioPlayer.getPlayingTrack().getInfo();
         log.info("G: {}, A: {} <> Audio track: '{}' was paused", deliveryEvent.guildName(),
             deliveryEvent.authorTag(), trackInfo.title);
     }
@@ -102,17 +94,9 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onPlayerResume(AudioPlayer player) {
         if (Objects.isNull(pausedTrack) || onClearing) return;
-
-        final AudioTrackInfo trackInfo = audioPlayer.getPlayingTrack().getInfo();
         pausedTrack = null;
 
-        final MessageEmbed messageEmbed = builder.createMessage(LocaleSet.RESUME_TRACK_MESS, Map.of(
-            "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
-            "invoker", deliveryEvent.authorTag(),
-            "pauseCmd", BotCommand.PAUSE_TRACK.parseWithPrefix(config)
-        ));
-        deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
-
+        final AudioTrackInfo trackInfo = audioPlayer.getPlayingTrack().getInfo();
         log.info("G: {}, A: {} <> Paused audio track: '{}' was resumed", deliveryEvent.guildName(),
             deliveryEvent.authorTag(), trackInfo.title);
     }
@@ -254,7 +238,7 @@ public class TrackScheduler extends AudioEventAdapter {
         return trackQueue;
     }
 
-    AudioTrack getPausedTrack() {
+    public AudioTrack getPausedTrack() {
         return pausedTrack;
     }
 
@@ -265,6 +249,10 @@ public class TrackScheduler extends AudioEventAdapter {
 
     boolean isInfiniteRepeating() {
         return infiniteRepeating;
+    }
+
+    public EventWrapper getDeliveryEvent() {
+        return deliveryEvent;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
