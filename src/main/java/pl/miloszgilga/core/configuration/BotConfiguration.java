@@ -74,7 +74,8 @@ public class BotConfiguration {
     private final List<CastType<?>> castTypes = List.of(
         new CastType<>(String.class, rawData -> rawData),
         new CastType<>(Boolean.class, Boolean::valueOf),
-        new CastType<>(Integer.class, Integer::valueOf)
+        new CastType<>(Integer.class, Integer::valueOf),
+        new CastType<>(Short.class, Short::valueOf)
     );
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -101,6 +102,11 @@ public class BotConfiguration {
                 jProperties.put(BotProperty.getBaseName(entry.getKey()), entry.getValue());
             }
             inputStream.close();
+
+            final short defaultVolumeUnits = getProperty(BotProperty.J_DEFAULT_PLAYER_VOLUME_UNITS, Short.class);
+            if (defaultVolumeUnits < 0 || defaultVolumeUnits > 150) {
+                throw new IllegalArgumentException("Default player volume units must be between 0 and 150.");
+            }
             language = getProperty(BotProperty.J_SELECTED_LOCALE);
 
             final ClassLoader loader = new URLClassLoader(new URL[]{ new File(LOCALE_BUNDLE_DIR).toURI().toURL() });

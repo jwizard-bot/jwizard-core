@@ -41,6 +41,8 @@ public enum BotProperty {
     J_INACTIVITY_NO_TRACK_TIMEOUT   ("timeout.inactivity.max-time-after-leave-no-track-channel"),
     J_INACTIVITY_VOTING_TIMEOUT     ("timeout.voting.max-elapsed-time-after-finish"),
     J_MAX_REPEATS_SINGLE_TRACK      ("audio.max-repeats-single-track"),
+    J_DEFAULT_PLAYER_VOLUME_UNITS   ("audio.default-player-volume-units"),
+    J_DJ_ROLE_NAME                  ("misc.dj-role-name"),
     J_SHOW_FANCY_TITLE              ("misc.fancy-title.show"),
     J_FANCY_TITLE_PATH              ("misc.fancy-title.path-to-file"),
     J_SELECTED_LOCALE               ("misc.locale.selected-locale"),

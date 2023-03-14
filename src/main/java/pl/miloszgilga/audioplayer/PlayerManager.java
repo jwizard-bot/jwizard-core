@@ -148,6 +148,17 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    @Override
+    public void setPlayerVolume(CommandEvent event, int volume) {
+        final MusicManager musicManager = checkPermissions(event);
+        final EventWrapper eventWrapper = new EventWrapper(event);
+        musicManager.getAudioPlayer().setVolume(volume);
+        log.info("G: {}, A: {} <> Audio player volume was set to '{}' volume units", eventWrapper.guildName(),
+            eventWrapper.authorTag(), volume);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private MusicManager checkPermissions(CommandEvent event) {
         final MusicManager musicManager = getMusicManager(event);
         final AudioTrack playingTrack = musicManager.getAudioPlayer().getPlayingTrack();
@@ -173,7 +184,7 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private MusicManager getMusicManager(CommandEvent event) {
+    public MusicManager getMusicManager(CommandEvent event) {
         return musicManagers.computeIfAbsent(event.getGuild().getIdLong(), guildId -> {
             final MusicManager musicManager = new MusicManager(this, builder, config,
                 event.getGuild(), new EventWrapper(event));

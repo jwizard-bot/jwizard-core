@@ -40,15 +40,19 @@ import static pl.miloszgilga.core.LocaleSet.*;
 @RequiredArgsConstructor
 public enum BotCommand {
 
-    HELP                    ("help",        new String[]{ "h", "hl" },     HELP_COMMAND_DESC,                 null,                     false, 0),
-    HELP_ME                 ("helpme",      new String[]{ "hm", "hlm" },   HELPME_COMMAND_DESC,               null,                     false, 0),
+    HELP                    ("help",        new String[]{ "h", "hl" },      HELP_COMMAND_DESC,                 null,                                 false, 0),
+    HELP_ME                 ("helpme",      new String[]{ "hm", "hlm" },    HELPME_COMMAND_DESC,               null,                                 false, 0),
 
-    PLAY_TRACK              ("play",        new String[]{ "p", "pl" },     PLAY_TRACK_COMMAND_DESC,           PLAY_TRACK_ARG_SYNTAX,    false, 1),
-    PAUSE_TRACK             ("pause",       new String[]{ "ps" },          PAUSE_TRACK_COMMAND_DESC,          null,                     false, 0),
-    RESUME_TRACK            ("resume",      new String[]{ "rs" },          RESUME_TRACK_COMMAND_DESC,         null,                     false, 0),
-    REPEAT_TRACK            ("repeat",      new String[]{ "rp" },          REPEAT_TRACK_COMMAND_DESC,         REPEAT_TRACK_ARG_SYNTAX,  false, 1),
-    CLEAR_REPEAT_TRACK      ("repeatcls",   new String[]{ "rpcl" },        CLEAR_REPEAT_TRACK_COMMAND_DESC,   null,                     false, 0),
-    LOOP_TRACK              ("loop",        new String[]{ "lp" },          LOOP_TRACK_COMMAND_DESC,           null,                     false, 0);
+    PLAY_TRACK              ("play",        new String[]{ "p", "pl" },      PLAY_TRACK_COMMAND_DESC,           PLAY_TRACK_ARG_SYNTAX,                false, 1),
+    PAUSE_TRACK             ("pause",       new String[]{ "ps" },           PAUSE_TRACK_COMMAND_DESC,          null,                                 false, 0),
+    RESUME_TRACK            ("resume",      new String[]{ "rs" },           RESUME_TRACK_COMMAND_DESC,         null,                                 false, 0),
+    REPEAT_TRACK            ("repeat",      new String[]{ "rp" },           REPEAT_TRACK_COMMAND_DESC,         REPEAT_TRACK_ARG_SYNTAX,              false, 1),
+    CLEAR_REPEAT_TRACK      ("repeatcls",   new String[]{ "rpcl" },         CLEAR_REPEAT_TRACK_COMMAND_DESC,   null,                                 false, 0),
+    LOOP_TRACK              ("loop",        new String[]{ "lp" },           LOOP_TRACK_COMMAND_DESC,           null,                                 false, 0),
+    CURRENT_PLAYING         ("playing",     new String[]{ "cp" },           CURRENT_PLAYING_TRACK_DESC,        null,                                 false, 0),
+    SET_PLAYER_VOLUME       ("setvolume",   new String[]{ "svl" },          AUDIO_PLAYER_SET_VOLUME_DESC,      AUDIO_PLAYER_SET_VOLUME_ARG_SYNTAX,   false, 1),
+    GET_PLAYER_VOLUME       ("getvolume",   new String[]{ "gvl" },          AUDIO_PLAYER_GET_VOLUME_DESC,      null,                                 false, 0),
+    RESET_PLAYER_VOLUME     ("volumecls",   new String[]{ "cvl" },          AUDIO_PLAYER_RESET_VOLUME_DESC,    null,                                 false, 0);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

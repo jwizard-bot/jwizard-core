@@ -36,9 +36,14 @@ public enum LocaleSet {
     REPEAT_TRACK_COMMAND_DESC                   ("jwizard.command.description.RepeatTrack"),
     CLEAR_REPEAT_TRACK_COMMAND_DESC             ("jwizard.command.description.ClearRepeatTrack"),
     LOOP_TRACK_COMMAND_DESC                     ("jwizard.command.description.LoopTrack"),
+    CURRENT_PLAYING_TRACK_DESC                  ("jwizard.command.description.CurrentPlaying"),
+    AUDIO_PLAYER_SET_VOLUME_DESC                ("jwizard.command.description.AudioPlayerSetVolume"),
+    AUDIO_PLAYER_GET_VOLUME_DESC                ("jwizard.command.description.AudioPlayerGetVolume"),
+    AUDIO_PLAYER_RESET_VOLUME_DESC              ("jwizard.command.description.AudioPlayerResetVolume"),
 
     PLAY_TRACK_ARG_SYNTAX                       ("jwizard.command.arguments.PlayTrack"),
     REPEAT_TRACK_ARG_SYNTAX                     ("jwizard.command.arguments.RepeatTrack"),
+    AUDIO_PLAYER_SET_VOLUME_ARG_SYNTAX          ("jwizard.command.arguments.AudioPlayerSetVolume"),
 
     INFO_HEADER                                 ("jwizard.message.response.header.info"),
     WARN_HEADER                                 ("jwizard.message.response.header.warn"),
@@ -74,6 +79,9 @@ public enum LocaleSet {
     PAUSED_TRACK_TIME_MESS                      ("jwizard.message.response.PausedTrackTime"),
     PAUSED_TRACK_ESTIMATE_TIME_MESS             ("jwizard.message.response.PausedTrackEstimateTime"),
     PAUSED_TRACK_TOTAL_DURATION_MESS            ("jwizard.message.response.PausedTrackTotalDuration"),
+    SET_CURRENT_AUDIO_PLAYER_VOLUME_MESS        ("jwizard.message.response.SetCurrentAudioPlayerVolume"),
+    GET_CURRENT_AUDIO_PLAYER_VOLUME_MESS        ("jwizard.message.response.GetCurrentAudioPlayerVolume"),
+    RESET_AUDIO_PLAYER_VOLUME_MESS              ("jwizard.message.response.ResetAudioPlayerVolume"),
 
     TRACK_IS_NOT_PLAYING_EXC                    ("jwizard.exception.TrackIsNotPlayingException"),
     TRACK_IS_NOT_PAUSED_EXC                     ("jwizard.exception.TrackIsNotPausedException"),
@@ -84,7 +92,9 @@ public enum LocaleSet {
     MISMATCH_COMMAND_ARGS_COUNT_EXC             ("jwizard.exception.MismatchCommandArgumentsCountException"),
     INVOKER_IS_NOT_TRACK_SENDER_OR_ADMIN_EXC    ("jwizard.exception.InvokerIsNotTrackSenderOrAdminException"),
     TRACK_REPEATS_OUT_OF_BOUNDS_EXC             ("jwizard.exception.TrackRepeatsOutOfBoundsException"),
-    LOCK_COMMAND_ON_TEMPORARY_HALTED_EXC        ("jwizard.exception.LockCommandOnTemporaryHaltedException");
+    LOCK_COMMAND_ON_TEMPORARY_HALTED_EXC        ("jwizard.exception.LockCommandOnTemporaryHaltedException"),
+    VOLUME_UNITS_OUT_OF_BOUNDS_EXC              ("jwizard.exception.VolumeUnitsOutOfBoundsException"),
+    UNAUTHORIZED_DJ_COMMAND_EXECUTION_EXC       ("jwizard.exception.UnauthorizedDjCommandExecutionException");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

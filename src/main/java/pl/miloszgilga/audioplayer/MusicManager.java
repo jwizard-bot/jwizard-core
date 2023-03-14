@@ -23,12 +23,14 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 
 import pl.miloszgilga.dto.EventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 public class MusicManager {
 
+    private final BotConfiguration config;
     private final AudioPlayer audioPlayer;
     private final TrackScheduler trackScheduler;
     private final AudioPlayerSendHandler audioPlayerSendHandler;
@@ -39,8 +41,10 @@ public class MusicManager {
         PlayerManager playerManager, EmbedMessageBuilder builder, BotConfiguration config, Guild guild,
         EventWrapper eventWrapper
     ) {
+        this.config = config;
         this.audioPlayer = playerManager.createPlayer();
         this.trackScheduler = new TrackScheduler(config, builder, audioPlayer, eventWrapper);
+        this.audioPlayer.setVolume(config.getProperty(BotProperty.J_DEFAULT_PLAYER_VOLUME_UNITS, Short.class));
         this.audioPlayer.addListener(trackScheduler);
         this.audioPlayerSendHandler = new AudioPlayerSendHandler(audioPlayer, guild);
     }
@@ -57,5 +61,17 @@ public class MusicManager {
 
     public TrackScheduler getTrackScheduler() {
         return trackScheduler;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public short getPlayerVolume() {
+        return (short) audioPlayer.getVolume();
+    }
+
+    public short resetPlayerVolume() {
+        final short defVolume = config.getProperty(BotProperty.J_DEFAULT_PLAYER_VOLUME_UNITS, Short.class);
+        audioPlayer.setVolume(defVolume);
+        return defVolume;
     }
 }

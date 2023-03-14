@@ -36,6 +36,7 @@ bot:
             max-elapsed-time-after-finish: 2
     audio:
         max-repeats-single-track: 30
+        default-player-volume-units: 50
     misc:
         locale:
             selected-locale: pl

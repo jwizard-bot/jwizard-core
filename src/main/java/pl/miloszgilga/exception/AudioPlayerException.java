@@ -100,4 +100,14 @@ public class AudioPlayerException {
                 event.guildName(), event.authorTag());
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Slf4j public static class VolumeUnitsOutOfBoundsException extends BotException {
+        public VolumeUnitsOutOfBoundsException(BotConfiguration config, EventWrapper event) {
+            super(config, LocaleSet.VOLUME_UNITS_OUT_OF_BOUNDS_EXC, BugTracker.VOLUME_UNITS_OUT_OF_BOUNDS);
+            log.error("G: {}, A: {} <> Attempt to set out of bounds audio player volume units",
+                event.guildName(), event.authorTag());
+        }
+    }
 }
