@@ -150,7 +150,7 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
 
     @Override
     public void setPlayerVolume(CommandEvent event, int volume) {
-        final MusicManager musicManager = checkPermissions(event);
+        final MusicManager musicManager = getMusicManager(event);
         final EventWrapper eventWrapper = new EventWrapper(event);
         musicManager.getAudioPlayer().setVolume(volume);
         log.info("G: {}, A: {} <> Audio player volume was set to '{}' volume units", eventWrapper.guildName(),
@@ -178,8 +178,12 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
         final Member messageSender = event.getGuild().getMember(event.getAuthor());
         if (Objects.isNull(messageSender)) return true;
 
-        final boolean isAdmin = messageSender.getPermissions().contains(Permission.ADMINISTRATOR);
-        return !dataSender.getAsTag().equals(event.getAuthor().getAsTag()) && !isAdmin;
+        final String djRoleName = config.getProperty(BotProperty.J_DJ_ROLE_NAME);
+        final boolean isNotOwner = !event.getAuthor().getId().equals(event.getClient().getOwnerId());
+        final boolean isNotManager = !event.getMember().hasPermission(Permission.MANAGE_SERVER);
+        final boolean isNotDj = event.getMember().getRoles().stream().noneMatch(r -> r.getName().equals(djRoleName));
+
+        return !dataSender.getAsTag().equals(event.getAuthor().getAsTag()) && !isNotOwner && !isNotManager && !isNotDj;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

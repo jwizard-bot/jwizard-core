@@ -31,12 +31,13 @@ import java.util.concurrent.TimeUnit;
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
+import pl.miloszgilga.core.loader.AbstractConfigLoadableComponent;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Slf4j
 @Component
-public class ActivityStatusSequencer {
+public class ActivityStatusSequencer extends AbstractConfigLoadableComponent {
 
     private final BotConfiguration config;
 
@@ -54,9 +55,10 @@ public class ActivityStatusSequencer {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void loadConfiguration(JDA jda) {
+    @Override
+    protected void abstractLoadConfiguration(Object... params) {
         if (!config.getProperty(BotProperty.J_RR_ACTIVITY_ENABLED, Boolean.class)) return;
-        this.jda = jda;
+        this.jda = (JDA) params[0];
 
         if (config.getProperty(BotProperty.J_RR_EXTERNAL_FILE_ENABLED, Boolean.class)) {
             try {
@@ -86,7 +88,8 @@ public class ActivityStatusSequencer {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void invoke() {
+    @Override
+    protected void abstractInitializeComponent() {
         if (!config.getProperty(BotProperty.J_RR_ACTIVITY_ENABLED, Boolean.class)) return;
 
         final int interval = config.getProperty(BotProperty.J_RR_INTERVAL, Integer.class);

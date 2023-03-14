@@ -26,6 +26,7 @@ import pl.miloszgilga.dto.EventWrapper;
 import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 import static pl.miloszgilga.exception.CommandException.UnauthorizedDjCommandExecutionException;
@@ -44,14 +45,13 @@ public abstract class AbstractDjCommand extends AbstractMusicCommand {
 
     @Override
     protected void doExecuteMusicCommand(CommandEvent event) {
+        final String djRoleName = config.getProperty(BotProperty.J_DJ_ROLE_NAME);
         try {
-            boolean isUnauthorized;
+            final boolean isNotOwner = !event.getAuthor().getId().equals(event.getClient().getOwnerId());
+            final boolean isNotManager = !event.getMember().hasPermission(Permission.MANAGE_SERVER);
+            final boolean isNotDj = event.getMember().getRoles().stream().noneMatch(r -> r.getName().equals(djRoleName));
 
-            isUnauthorized = !event.getAuthor().getId().equals(event.getClient().getOwnerId());
-            isUnauthorized = !event.getMember().hasPermission(Permission.MANAGE_SERVER);
-            //isUnauthorized = !event.getMember().getRoles().contains()
-
-            if (isUnauthorized) {
+            if (isNotOwner && isNotManager && isNotDj) {
                 throw new UnauthorizedDjCommandExecutionException(config, new EventWrapper(event));
             }
             doExecuteDjCommand(event);

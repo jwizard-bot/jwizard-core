@@ -49,12 +49,13 @@ import java.sql.SQLException;
 
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
+import pl.miloszgilga.core.loader.AbstractConfigLoadableComponent;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Slf4j
 @Component
-public class HibernateFactory {
+public class HibernateFactory extends AbstractConfigLoadableComponent {
 
     private final BotConfiguration config;
     private SessionFactory sessionFactory;
@@ -80,7 +81,8 @@ public class HibernateFactory {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void loadConfiguration() {
+    @Override
+    protected void abstractLoadConfiguration(Object... params) {
         final URIBuilder uriBuilder = new URIBuilder();
         uriBuilder.addParameter("createDatabaseIfNotExist", config.getProperty(BotProperty.J_DB_CREATE));
         uriBuilder.addParameter("useSSL", config.getProperty(BotProperty.J_DB_ENFORCE_SSL));
@@ -104,7 +106,8 @@ public class HibernateFactory {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void initialize() {
+    @Override
+    protected void abstractInitializeComponent() {
         if (!Objects.isNull(sessionFactory)) return;
         try {
             final ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()

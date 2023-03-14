@@ -75,7 +75,8 @@ public class BotConfiguration {
         new CastType<>(String.class, rawData -> rawData),
         new CastType<>(Boolean.class, Boolean::valueOf),
         new CastType<>(Integer.class, Integer::valueOf),
-        new CastType<>(Short.class, Short::valueOf)
+        new CastType<>(Short.class, Short::valueOf),
+        new CastType<>(Byte.class, Byte::valueOf)
     );
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -29,8 +29,7 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
 
 import pl.miloszgilga.Bootloader;
 import pl.miloszgilga.core.AbstractCommand;
@@ -52,8 +51,8 @@ public class JClassLoader {
         .setUrls(ClasspathHelper.forPackage("pl.miloszgilga.listener")).setScanners(Scanners.TypesAnnotated);
     private final Reflections listenersReflections = new Reflections(listenersReflectionsConfig);
 
-    private final Set<AbstractCommand> loadedCommands = new HashSet<>();
-    private final Set<AbstractListenerAdapter> loadedListeners = new HashSet<>();
+    private final List<AbstractCommand> loadedCommands = new ArrayList<>();
+    private final List<AbstractListenerAdapter> loadedListeners = new ArrayList<>();
 
     private final BotConfiguration config;
 
@@ -72,6 +71,7 @@ public class JClassLoader {
             loadedCommands.add((AbstractCommand) Bootloader.APP_CONTEXT.getBean(commandClazz));
         }
         log.info("Successfully loaded command interceptors ({}):", loadedCommands.size());
+        loadedCommands.sort(Comparator.comparing(Command::getName));
         for (final AbstractCommand abstractCommand : loadedCommands) {
             final String commandInvoker = config.getProperty(BotProperty.J_PREFIX) + abstractCommand.getName();
             log.info(" --- {} {} ({})", commandInvoker, abstractCommand.getAliases(), abstractCommand.getClass().getName());
