@@ -34,13 +34,14 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import javax.security.auth.login.LoginException;
 
-import pl.miloszgilga.audioplayer.PlayerManager;
-import pl.miloszgilga.audioplayer.AloneOnChannelListener;
 import pl.miloszgilga.core.loader.JClassLoader;
 import pl.miloszgilga.core.db.HibernateFactory;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
+import pl.miloszgilga.audioplayer.PlayerManager;
+import pl.miloszgilga.audioplayer.AloneOnChannelListener;
 import pl.miloszgilga.misc.ActivityStatusSequencer;
+import pl.miloszgilga.misc.DayNightBotThumbnailSequencer;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -54,6 +55,7 @@ public class JDABot {
     private final HibernateFactory hibernateFactory;
     private final PlayerManager playerManager;
     private final AloneOnChannelListener aloneOnChannelListener;
+    private final DayNightBotThumbnailSequencer dayNightBotThumbnailSequencer;
 
     private static final int LINKED_CACHE_SIZE = 200;
 
@@ -80,7 +82,8 @@ public class JDABot {
 
     JDABot(
         BotConfiguration config, JClassLoader jClassLoader, ActivityStatusSequencer statusSequencer,
-        HibernateFactory hibernateFactory, PlayerManager playerManager, AloneOnChannelListener aloneOnChannelListener
+        HibernateFactory hibernateFactory, PlayerManager playerManager, AloneOnChannelListener aloneOnChannelListener,
+        DayNightBotThumbnailSequencer dayNightBotThumbnailSequencer
     ) {
         this.config = config;
         this.jClassLoader = jClassLoader;
@@ -88,6 +91,7 @@ public class JDABot {
         this.hibernateFactory = hibernateFactory;
         this.playerManager = playerManager;
         this.aloneOnChannelListener = aloneOnChannelListener;
+        this.dayNightBotThumbnailSequencer = dayNightBotThumbnailSequencer;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -101,7 +105,7 @@ public class JDABot {
         jClassLoader.loadListenersViaReflection();
 
         hibernateFactory.loadConfiguration();
-        hibernateFactory.initialize();
+        hibernateFactory.initializeComponent();
 
         final CommandClientBuilder commandBuilder = new CommandClientBuilder()
             .setPrefix(config.getProperty(BotProperty.J_PREFIX))
@@ -126,7 +130,10 @@ public class JDABot {
             config.setTitleAndIcon(jda);
 
             statusSequencer.loadConfiguration(jda);
-            statusSequencer.invoke();
+            statusSequencer.initializeComponent();
+
+            dayNightBotThumbnailSequencer.loadConfiguration(jda);
+            dayNightBotThumbnailSequencer.initializeComponent();
 
             playerManager.initialize();
             aloneOnChannelListener.initialize(jda);

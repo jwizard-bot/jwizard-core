@@ -20,11 +20,20 @@
 
 bot:
     name: 'JWizard'
-    avatar:
-        has-avatar: true
-        path-to-avatar: gfx/bot-logo.png
     development-mode: false
     prefix: '$'
+    avatar:
+        has-avatar: true
+        path-to-avatar: gfx/bot-logo-day-variant.png
+        day-night-mode:
+            enabled: true
+            timezone: Europe/Warsaw
+            day:
+                trigger-hour: 6
+                path-to-avatar: gfx/bot-logo-day-variant.png
+            night:
+                trigger-hour: 23
+                path-to-avatar: gfx/bot-logo-night-variant.png
     authorization:
         token: ${env:PROD_TOKEN}
         application-id: ${env:PROD_APP_ID}

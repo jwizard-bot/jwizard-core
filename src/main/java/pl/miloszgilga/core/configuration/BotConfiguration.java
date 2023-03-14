@@ -168,7 +168,9 @@ public class BotConfiguration {
         try {
             final AccountManager accountManager = new AccountManagerImpl(jda.getSelfUser())
                 .setName(getProperty(BotProperty.J_NAME));
-            if (!getProperty(BotProperty.J_HAS_AVATAR, Boolean.class)) {
+
+            final boolean isDayNightModeOn = getProperty(BotProperty.J_AVATAR_DAY_NIGHT_ENABLED, Boolean.class);
+            if (!getProperty(BotProperty.J_HAS_AVATAR, Boolean.class) || isDayNightModeOn) {
                 accountManager.queue();
                 return;
             }

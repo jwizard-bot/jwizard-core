@@ -31,10 +31,16 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public enum BotProperty {
     J_NAME                          ("name"),
-    J_HAS_AVATAR                    ("avatar.has-avatar"),
-    J_PATH_TO_AVATAR                ("avatar.path-to-avatar"),
     J_DEVELOPMENT_MODE              ("development-mode"),
     J_PREFIX                        ("prefix"),
+    J_HAS_AVATAR                    ("avatar.has-avatar"),
+    J_PATH_TO_AVATAR                ("avatar.path-to-avatar"),
+    J_AVATAR_DAY_NIGHT_ENABLED      ("avatar.day-night-mode.enabled"),
+    J_AVATAR_DAY_NIGHT_TIMEZONE     ("avatar.day-night-mode.timezone"),
+    J_AVATAR_DAY_TRIGGER            ("avatar.day-night-mode.day.trigger-hour"),
+    J_PATH_TO_AVATAR_DAY_MODE       ("avatar.day-night-mode.day.path-to-avatar"),
+    J_AVATAR_NIGHT_TRIGGER          ("avatar.day-night-mode.night.trigger-hour"),
+    J_PATH_TO_AVATAR_NIGHT_MODE     ("avatar.day-night-mode.night.path-to-avatar"),
     J_AUTH_TOKEN                    ("authorization.token",                                         true, EnvProperty.TOKEN),
     J_APP_ID                        ("authorization.application-id",                                true, EnvProperty.APP_ID),
     J_INACTIVITY_EMPTY_TIMEOUT      ("timeout.inactivity.max-time-after-leave-empty-channel"),
