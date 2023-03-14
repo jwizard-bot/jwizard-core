@@ -64,4 +64,14 @@ public class CommandException {
                 event.guildName(), event.authorTag());
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Slf4j public static class UnauthorizedDjCommandExecutionException extends BotException {
+        public UnauthorizedDjCommandExecutionException(BotConfiguration config, EventWrapper event) {
+            super(config, LocaleSet.UNAUTHORIZED_DJ_COMMAND_EXECUTION_EXC, BugTracker.UNAUTHORIZED_DJ_COMMAND_EXECUTION);
+            log.error("G: {}, A: {} <> Attempt to invoke DJ command without DJ guild role",
+                event.guildName(), event.authorTag());
+        }
+    }
 }

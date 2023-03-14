@@ -22,14 +22,20 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 
-import pl.miloszgilga.audioplayer.PlayerManager;
+import java.util.List;
+import java.util.ArrayList;
+
+import pl.miloszgilga.embed.EmbedColor;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.audioplayer.AloneOnChannelListener;
 import pl.miloszgilga.core.AbstractListenerAdapter;
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
 
@@ -53,6 +59,25 @@ public class BotStatusCommandListener extends AbstractListenerAdapter {
         super(config, embedBuilder);
         this.aloneOnChannelListener = aloneOnChannelListener;
         this.playerManager = playerManager;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onReady(ReadyEvent event) {
+        final String defaultDjRoleName = config.getProperty(BotProperty.J_DJ_ROLE_NAME);
+        final List<String> addedDjRolesIntoGulds = new ArrayList<>();
+        for (final Guild guild : event.getJDA().getGuilds()) {
+            final boolean roleAlreadyExist = guild.getRoles().stream()
+                .anyMatch(r -> r.getName().equals(defaultDjRoleName));
+            if (roleAlreadyExist) continue;
+            addedDjRolesIntoGulds.add(guild.getName());
+            guild.createRole()
+                .setName(defaultDjRoleName)
+                .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
+                .submit();
+        }
+        log.info("DJ role '{}' for guilds '{}' was successfully created", defaultDjRoleName, addedDjRolesIntoGulds);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

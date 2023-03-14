@@ -29,6 +29,7 @@ public enum BugTracker {
     UNRECOGNIZED_COMMAND                                    (1),
     USED_COMMAND_ON_FORBIDDEN_CHANNEL                       (2),
     MISMATCH_COMMAND_ARGUMENTS                              (3),
+    UNAUTHORIZED_DJ_COMMAND_EXECUTION                       (4),
 
     ACTIVE_MUSIC_PLAYING_NOT_FOUND                          (101),
     USER_ON_VOICE_CHANNEL_NOT_FOUND                         (102),

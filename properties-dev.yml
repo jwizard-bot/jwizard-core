@@ -38,6 +38,7 @@ bot:
         max-repeats-single-track: 30
         default-player-volume-units: 50
     misc:
+        dj-role-name: 'DJwizard'
         locale:
             selected-locale: pl
         fancy-title:
