@@ -27,8 +27,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.dto.EventWrapper;
-import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
@@ -52,22 +50,16 @@ public class InfiniteLoopTrackCmd extends AbstractMusicCommand {
 
     @Override
     protected void doExecuteMusicCommand(CommandEvent event) {
-        try {
-            final boolean isRepeating = playerManager.toggleInfiniteLoopCurrentTrack(event);
-            LocaleSet messsage = LocaleSet.REMOVE_TRACK_FROM_INFINITE_LOOP_MESS;
-            if (isRepeating) {
-                messsage = LocaleSet.ADD_TRACK_TO_INFINITE_LOOP_MESS;
-            }
-            final AudioTrackInfo playingTrack = playerManager.getCurrentPlayingTrack(event);
-            final MessageEmbed messageEmbed = embedBuilder.createMessage(messsage, Map.of(
-                "track", String.format("[%s](%s)", playingTrack.title, playingTrack.uri),
-                "loopCmd", BotCommand.LOOP_TRACK.parseWithPrefix(config)
-            ));
-            event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
-        } catch (BotException ex) {
-            event.getChannel()
-                .sendMessageEmbeds(embedBuilder.createErrorMessage(new EventWrapper(event), ex))
-                .queue();
+        final boolean isRepeating = playerManager.toggleInfiniteLoopCurrentTrack(event);
+        LocaleSet messsage = LocaleSet.REMOVE_TRACK_FROM_INFINITE_LOOP_MESS;
+        if (isRepeating) {
+            messsage = LocaleSet.ADD_TRACK_TO_INFINITE_LOOP_MESS;
         }
+        final AudioTrackInfo playingTrack = playerManager.getCurrentPlayingTrack(event);
+        final MessageEmbed messageEmbed = embedBuilder.createMessage(messsage, Map.of(
+            "track", String.format("[%s](%s)", playingTrack.title, playingTrack.uri),
+            "loopCmd", BotCommand.LOOP_TRACK.parseWithPrefix(config)
+        ));
+        event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
     }
 }

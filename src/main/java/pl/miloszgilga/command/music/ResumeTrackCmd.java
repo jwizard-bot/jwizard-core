@@ -27,12 +27,11 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.dto.EventWrapper;
-import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
+import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -53,20 +52,14 @@ public class ResumeTrackCmd extends AbstractMusicCommand {
     @Override
     protected void doExecuteMusicCommand(CommandEvent event) {
         final EventWrapper eventWrapper = new EventWrapper(event);
-        try {
-            playerManager.resumeCurrentTrack(event);
+        playerManager.resumeCurrentTrack(event);
 
-            final AudioTrackInfo trackInfo = playerManager.getCurrentPlayingTrack(event);
-            final MessageEmbed messageEmbed = embedBuilder.createMessage(LocaleSet.RESUME_TRACK_MESS, Map.of(
-                "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
-                "invoker", eventWrapper.authorTag(),
-                "pauseCmd", BotCommand.PAUSE_TRACK.parseWithPrefix(config)
-            ));
-            event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
-        } catch (BotException ex) {
-            event.getChannel()
-                .sendMessageEmbeds(embedBuilder.createErrorMessage(eventWrapper, ex))
-                .queue();
-        }
+        final AudioTrackInfo trackInfo = playerManager.getCurrentPlayingTrack(event);
+        final MessageEmbed messageEmbed = embedBuilder.createMessage(LocaleSet.RESUME_TRACK_MESS, Map.of(
+            "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
+            "invoker", eventWrapper.authorTag(),
+            "pauseCmd", BotCommand.PAUSE_TRACK.parseWithPrefix(config)
+        ));
+        event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
     }
 }

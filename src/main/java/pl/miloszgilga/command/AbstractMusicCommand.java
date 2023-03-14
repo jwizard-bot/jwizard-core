@@ -50,7 +50,7 @@ public abstract class AbstractMusicCommand extends AbstractCommand {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public AbstractMusicCommand(
+    protected AbstractMusicCommand(
         BotCommand command, BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder
     ) {
         super(command, config, embedBuilder);

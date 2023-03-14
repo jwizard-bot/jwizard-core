@@ -29,7 +29,6 @@ import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.EventWrapper;
-import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
@@ -56,26 +55,19 @@ public class RepeatTrackCmd extends AbstractMusicCommand {
 
     @Override
     protected void doExecuteMusicCommand(CommandEvent event) {
-        final EventWrapper eventWrapper = new EventWrapper(event);
-        try {
-            final int repeats = NumberUtils.toInt(event.getArgs());
-            if (repeats < 1 || repeats > config.getProperty(BotProperty.J_MAX_REPEATS_SINGLE_TRACK, Integer.class)) {
-                throw new TrackRepeatsOutOfBoundsException(config, eventWrapper);
-            }
-            playerManager.repeatCurrentTrack(event, repeats);
-
-            final AudioTrackInfo trackInfo = playerManager.getCurrentPlayingTrack(event);
-            final MessageEmbed messageEmbed = embedBuilder
-                .createMessage(LocaleSet.SET_MULTIPLE_REPEATING_TRACK_MESS, Map.of(
-                    "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
-                    "times", repeats,
-                    "clearRepeatingCmd", BotCommand.CLEAR_REPEAT_TRACK.parseWithPrefix(config)
-                ));
-            event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
-        } catch (BotException ex) {
-            event.getChannel()
-                .sendMessageEmbeds(embedBuilder.createErrorMessage(eventWrapper, ex))
-                .queue();
+        final int repeats = NumberUtils.toInt(event.getArgs());
+        if (repeats < 1 || repeats > config.getProperty(BotProperty.J_MAX_REPEATS_SINGLE_TRACK, Integer.class)) {
+            throw new TrackRepeatsOutOfBoundsException(config, new EventWrapper(event));
         }
+        playerManager.repeatCurrentTrack(event, repeats);
+
+        final AudioTrackInfo trackInfo = playerManager.getCurrentPlayingTrack(event);
+        final MessageEmbed messageEmbed = embedBuilder
+            .createMessage(LocaleSet.SET_MULTIPLE_REPEATING_TRACK_MESS, Map.of(
+                "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
+                "times", repeats,
+                "clearRepeatingCmd", BotCommand.CLEAR_REPEAT_TRACK.parseWithPrefix(config)
+            ));
+        event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
     }
 }

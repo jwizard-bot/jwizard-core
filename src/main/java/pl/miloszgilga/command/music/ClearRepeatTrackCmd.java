@@ -27,8 +27,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.dto.EventWrapper;
-import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
@@ -50,20 +48,14 @@ public class ClearRepeatTrackCmd extends AbstractMusicCommand {
 
     @Override
     protected void doExecuteMusicCommand(CommandEvent event) {
-        try {
-            playerManager.repeatCurrentTrack(event, 0);
+        playerManager.repeatCurrentTrack(event, 0);
 
-            final AudioTrackInfo trackInfo = playerManager.getCurrentPlayingTrack(event);
-            final MessageEmbed messageEmbed = embedBuilder
-                .createMessage(LocaleSet.REMOVE_MULTIPLE_REPEATING_TRACK_MESS, Map.of(
-                    "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
-                    "repeatingCmd", BotCommand.REPEAT_TRACK.parseWithPrefix(config)
-                ));
-            event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
-        } catch (BotException ex) {
-            event.getChannel()
-                .sendMessageEmbeds(embedBuilder.createErrorMessage(new EventWrapper(event), ex))
-                .queue();
-        }
+        final AudioTrackInfo trackInfo = playerManager.getCurrentPlayingTrack(event);
+        final MessageEmbed messageEmbed = embedBuilder
+            .createMessage(LocaleSet.REMOVE_MULTIPLE_REPEATING_TRACK_MESS, Map.of(
+                "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
+                "repeatingCmd", BotCommand.REPEAT_TRACK.parseWithPrefix(config)
+            ));
+        event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
     }
 }

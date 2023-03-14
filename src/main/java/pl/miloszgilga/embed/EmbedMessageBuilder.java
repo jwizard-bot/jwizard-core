@@ -106,6 +106,7 @@ public class EmbedMessageBuilder {
             .addField(config.getLocaleText(LocaleSet.PAUSED_TRACK_TIME_MESS) + ":", content.pausedTimestamp(), true)
             .addField(config.getLocaleText(LocaleSet.PAUSED_TRACK_ESTIMATE_TIME_MESS) + ":", content.estimatedDuration(), true)
             .addField(config.getLocaleText(LocaleSet.PAUSED_TRACK_TOTAL_DURATION_MESS) + ":", content.totalDuration(), true)
+            .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
             .build();
     }
 

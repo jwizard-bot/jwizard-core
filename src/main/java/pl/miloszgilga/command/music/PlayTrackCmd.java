@@ -24,8 +24,6 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import org.apache.commons.validator.routines.UrlValidator;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.dto.EventWrapper;
-import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
@@ -48,20 +46,14 @@ public class PlayTrackCmd extends AbstractMusicCommand {
 
     @Override
     protected void doExecuteMusicCommand(CommandEvent event) {
-        try {
-            final UrlValidator urlValidator = new UrlValidator();
-            String searchPhrase = event.getArgs();
-            boolean urlPatternValid = urlValidator.isValid(searchPhrase);
-            if (urlPatternValid) {
-                searchPhrase = searchPhrase.replaceAll(" ", "");
-            } else {
-                searchPhrase = "ytsearch: " + searchPhrase + " audio";
-            }
-            super.playerManager.loadAndPlay(event, searchPhrase, urlPatternValid);
-        } catch (BotException ex) {
-            event.getChannel()
-                .sendMessageEmbeds(embedBuilder.createErrorMessage(new EventWrapper(event), ex))
-                .queue();
+        final UrlValidator urlValidator = new UrlValidator();
+        String searchPhrase = event.getArgs();
+        boolean urlPatternValid = urlValidator.isValid(searchPhrase);
+        if (urlPatternValid) {
+            searchPhrase = searchPhrase.replaceAll(" ", "");
+        } else {
+            searchPhrase = "ytsearch: " + searchPhrase + " audio";
         }
+        playerManager.loadAndPlay(event, searchPhrase, urlPatternValid);
     }
 }
