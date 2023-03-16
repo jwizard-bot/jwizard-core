@@ -24,6 +24,10 @@ import java.util.concurrent.TimeUnit;
 
 public final class Utilities {
 
+    private static final int MAX_EMBED_PLAYER_INDICATOR_LENGTH = 36;
+    private static final char PLAYER_INDICATOR_FULL = '█';
+    private static final char PLAYER_INDICATOR_EMPTY = '▒';
+
     private static final TimeUnit SEC = TimeUnit.SECONDS;
     private static final TimeUnit MILIS = TimeUnit.MILLISECONDS;
 
@@ -49,5 +53,19 @@ public final class Utilities {
         }
         return String.format("%02dm, %02ds", minutes,
             SEC.toSeconds(seconds) - TimeUnit.MINUTES.toSeconds(SEC.toMinutes(seconds)));
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static String createPlayerPercentageTrack(double position, double maxDuration, int maxBlocks) {
+        final double progressPerc = position / maxDuration * 100f;
+        final int fullBlocksCount = (int) Math.round(maxBlocks * progressPerc / 100);
+        final int emptyBlocksCount = maxBlocks - fullBlocksCount;
+        return String.valueOf(PLAYER_INDICATOR_FULL).repeat(Math.max(0, fullBlocksCount)) +
+            String.valueOf(PLAYER_INDICATOR_EMPTY).repeat(Math.max(0, emptyBlocksCount));
+    }
+
+    public static String createPlayerPercentageTrack(double position, double maxDuration) {
+        return createPlayerPercentageTrack(position, maxDuration, MAX_EMBED_PLAYER_INDICATOR_LENGTH);
     }
 }

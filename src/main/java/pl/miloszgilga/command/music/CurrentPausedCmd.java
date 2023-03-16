@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: CurrentPlayingCmd.java
- * Last modified: 14/03/2023, 04:03
+ * File name: CurrentPausedCmd.java
+ * Last modified: 16/03/2023, 19:05
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -20,7 +20,9 @@ package pl.miloszgilga.command.music;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.Utilities;
@@ -38,12 +40,13 @@ import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @JDAInjectableCommandLazyService
-public class CurrentPlayingCmd extends AbstractMusicCommand {
+public class CurrentPausedCmd extends AbstractMusicCommand {
 
-    CurrentPlayingCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
-        super(BotCommand.CURRENT_PLAYING, config, playerManager, embedBuilder);
-        super.inPlayingMode = true;
+    CurrentPausedCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
+        super(BotCommand.CURRENT_PAUSED, config, playerManager, embedBuilder);
+        super.inPlayingMode = false;
         super.inListeningMode = true;
+        super.isPaused = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,14 +54,15 @@ public class CurrentPlayingCmd extends AbstractMusicCommand {
     @Override
     protected void doExecuteMusicCommand(CommandEvent event) {
         final MusicManager musicManager = playerManager.getMusicManager(event);
-        final ExtendedAudioTrackInfo track = playerManager.getCurrentPlayingTrack(event);
+        final AudioTrack pausedTrack = musicManager.getTrackScheduler().getPausedTrack();
+        final ExtendedAudioTrackInfo track = new ExtendedAudioTrackInfo(pausedTrack);
 
-        final String trackTimestamp = Utilities.convertMilisToDate(track.getTimestamp());
-        final String trackMaxDuration = Utilities.convertMilisToDate(track.getMaxDuration());
+        final String trackTimestamp = Utilities.convertMilisToDate(pausedTrack.getPosition());
+        final String trackMaxDuration = Utilities.convertMilisToDate(pausedTrack.getDuration());
 
         final CurrentPlayEmbedContent content = new CurrentPlayEmbedContent(
-            LocaleSet.CURRENT_PLAYING_TRACK_MESS,
-            LocaleSet.CURRENT_PLAYING_TIMESTAMP_MESS,
+            LocaleSet.CURRENT_PAUSED_TRACK_MESS,
+            LocaleSet.CURRENT_PAUSED_TIMESTAMP_MESS,
             String.format("[%s](%s)", track.title, track.uri),
             track.getThumbnailUrl(),
             ((Member) musicManager.getAudioPlayer().getPlayingTrack().getUserData()).getUser().getAsTag(),
