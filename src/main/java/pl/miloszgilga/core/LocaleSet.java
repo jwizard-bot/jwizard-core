@@ -50,7 +50,7 @@ public enum LocaleSet {
     ERROR_HEADER                                ("jwizard.message.response.header.error"),
 
     ADD_NEW_TRACK_MESS                          ("jwizard.message.response.AddNewTrack"),
-    NEW_TRACK_NAME_MESS                         ("jwizard.message.response.NewTrackName"),
+    TRACK_NAME_MESS                             ("jwizard.message.response.TrackName"),
     TRACK_DURATION_TIME_MESS                    ("jwizard.message.response.DurationTime"),
     TRACK_POSITION_IN_QUEUE_MESS                ("jwizard.message.response.PositionInQueue"),
     ADD_NEW_PLAYLIST_MESS                       ("jwizard.message.response.AddNewPlaylist"),

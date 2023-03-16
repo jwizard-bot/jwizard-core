@@ -40,6 +40,10 @@ import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 @JDAInjectableCommandLazyService
 public class PauseTrackCmd extends AbstractMusicCommand {
 
+    private static final int MAX_VIS_BLOCKS_COUNT = 48; // embed 49 MAX
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     PauseTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.PAUSE_TRACK, config, playerManager, embedBuilder);
         super.inPlayingMode = true;
@@ -62,7 +66,8 @@ public class PauseTrackCmd extends AbstractMusicCommand {
             ),
             Utilities.convertMilisToDate(track.getPosition()),
             Utilities.convertMilisToDate(track.getDuration() - track.getPosition()),
-            Utilities.convertMilisToDate(track.getDuration())
+            Utilities.convertMilisToDate(track.getDuration()),
+            Utilities.createPlayerPercentageTrack(track.getPosition(), track.getDuration(), MAX_VIS_BLOCKS_COUNT)
         );
         final MessageEmbed messageEmbed = embedBuilder.createPauseTrackMessage(content);
         event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();

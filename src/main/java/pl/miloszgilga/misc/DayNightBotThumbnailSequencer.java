@@ -78,6 +78,7 @@ public class DayNightBotThumbnailSequencer extends AbstractConfigLoadableCompone
     @Override
     protected void abstractInitializeComponent() {
         if (!config.getProperty(BotProperty.J_AVATAR_DAY_NIGHT_ENABLED, Boolean.class)) return;
+        if (config.getProperty(BotProperty.J_DEVELOPMENT_MODE, Boolean.class)) return;
 
         dayAvatarPath = config.getProperty(BotProperty.J_PATH_TO_AVATAR_DAY_MODE);
         nightAvatarPath = config.getProperty(BotProperty.J_PATH_TO_AVATAR_NIGHT_MODE);

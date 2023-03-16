@@ -27,7 +27,6 @@ import net.dv8tion.jda.api.entities.Member;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
@@ -45,7 +44,6 @@ import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
-import static pl.miloszgilga.exception.AudioPlayerException.TrackIsNotPausedException;
 import static pl.miloszgilga.exception.AudioPlayerException.TrackIsNotPlayingException;
 import static pl.miloszgilga.exception.AudioPlayerException.InvokerIsNotTrackSenderOrAdminException;
 
@@ -103,9 +101,6 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     public void resumeCurrentTrack(CommandEvent event) {
         final MusicManager musicManager = getMusicManager(event);
         final AudioTrack pausedTrack = musicManager.getTrackScheduler().getPausedTrack();
-        if (Objects.isNull(pausedTrack)) {
-            throw new TrackIsNotPausedException(config, new EventWrapper(event));
-        }
         if (invokerIsNotTrackSenderOrAdmin(pausedTrack, event)) {
             throw new InvokerIsNotTrackSenderOrAdminException(config, new EventWrapper(event));
         }
@@ -203,7 +198,7 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
         return musicManagers.get(guild.getIdLong());
     }
 
-    public AudioTrackInfo getCurrentPlayingTrack(CommandEvent event) {
-        return getMusicManager(event).getAudioPlayer().getPlayingTrack().getInfo();
+    public ExtendedAudioTrackInfo getCurrentPlayingTrack(CommandEvent event) {
+        return new ExtendedAudioTrackInfo(getMusicManager(event).getAudioPlayer().getPlayingTrack());
     }
 }

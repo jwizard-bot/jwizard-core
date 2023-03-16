@@ -29,6 +29,7 @@ public record PauseTrackEmbedContent(
     Map<String, Object> localeVariables,
     String pausedTimestamp,
     String estimatedDuration,
-    String totalDuration
+    String totalDuration,
+    String pausedVisualizationTrack
 ) {
 }

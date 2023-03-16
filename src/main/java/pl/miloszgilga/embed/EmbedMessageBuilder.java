@@ -25,10 +25,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-import pl.miloszgilga.dto.EventWrapper;
-import pl.miloszgilga.dto.TrackEmbedContent;
-import pl.miloszgilga.dto.PlaylistEmbedContent;
-import pl.miloszgilga.dto.PauseTrackEmbedContent;
+import pl.miloszgilga.dto.*;
 import pl.miloszgilga.exception.BugTracker;
 import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.core.LocaleSet;
@@ -72,7 +69,7 @@ public class EmbedMessageBuilder {
         return new EmbedBuilder()
             .setAuthor(wrapper.authorTag(), null, wrapper.authorAvatarUrl())
             .setDescription(config.getLocaleText(LocaleSet.ADD_NEW_TRACK_MESS))
-            .addField(config.getLocaleText(LocaleSet.NEW_TRACK_NAME_MESS) + ":", content.trackUrl(), true)
+            .addField(config.getLocaleText(LocaleSet.TRACK_NAME_MESS) + ":", content.trackUrl(), true)
             .addBlankField(true)
             .addField(config.getLocaleText(LocaleSet.TRACK_DURATION_TIME_MESS) + ":", content.durationTime(), true)
             .addField(config.getLocaleText(LocaleSet.TRACK_POSITION_IN_QUEUE_MESS) + ":", content.trackPosition(), true)
@@ -103,6 +100,7 @@ public class EmbedMessageBuilder {
     public MessageEmbed createPauseTrackMessage(PauseTrackEmbedContent content) {
         return new EmbedBuilder()
             .setDescription(config.getLocaleText(content.localeSet(), content.localeVariables()))
+            .addField(StringUtils.EMPTY, content.pausedVisualizationTrack(), false)
             .addField(config.getLocaleText(LocaleSet.PAUSED_TRACK_TIME_MESS) + ":", content.pausedTimestamp(), true)
             .addField(config.getLocaleText(LocaleSet.PAUSED_TRACK_ESTIMATE_TIME_MESS) + ":", content.estimatedDuration(), true)
             .addField(config.getLocaleText(LocaleSet.PAUSED_TRACK_TOTAL_DURATION_MESS) + ":", content.totalDuration(), true)

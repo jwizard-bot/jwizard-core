@@ -21,7 +21,7 @@
 
 [versions]
 jda                 = '4.4.0_352'
-lavaPlayer          = '1.3.77'
+lavaPlayer          = '1.3.99.1'
 jdaUtilities        = '3.0.5'
 
 mysqlDriver         = '8.0.31'
@@ -45,7 +45,7 @@ shadowJarPackager   = '7.1.2'
 
 [libraries]
 jda                     = { module = 'net.dv8tion:JDA',                             version.ref = 'jda' }
-lavaplayer              = { module = 'com.sedmelluq:lavaplayer',                    version.ref = 'lavaPlayer' }
+lavaplayer              = { module = 'com.github.walkyst:lavaplayer-fork',          version.ref = 'lavaPlayer' }
 jdautilities            = { module = 'com.jagrosh:jda-utilities',                   version.ref = 'jdaUtilities' }
 
 mysql-driver            = { module = 'mysql:mysql-connector-java',                  version.ref = 'mysqlDriver' }

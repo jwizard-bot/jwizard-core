@@ -53,6 +53,8 @@ public class BotMuteCommandListener extends AbstractListenerAdapter {
 
     @Override
     public void onGuildVoiceMute(GuildVoiceMuteEvent event) {
+        if (!event.getMember().getUser().isBot()) return;
+
         final Member botMember = event.getGuild().getSelfMember();
         if (Objects.isNull(botMember.getVoiceState())) return;
 

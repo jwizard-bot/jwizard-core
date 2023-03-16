@@ -21,15 +21,18 @@ package pl.miloszgilga.command;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import java.util.Objects;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.exception.AudioPlayerException;
 import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.AbstractCommand;
 import pl.miloszgilga.core.configuration.BotConfiguration;
+import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.audioplayer.AudioPlayerSendHandler;
 
@@ -47,6 +50,8 @@ public abstract class AbstractMusicCommand extends AbstractCommand {
 
     protected boolean inPlayingMode;
     protected boolean inListeningMode;
+    protected boolean selfJoinable;
+    protected boolean isPaused;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -68,8 +73,14 @@ public abstract class AbstractMusicCommand extends AbstractCommand {
             if (Objects.isNull(guildVoiceState) || guildVoiceState.isMuted()) {
                 throw new LockCommandOnTemporaryHaltedException(config, new EventWrapper(event));
             }
-            if (inPlayingMode && !Objects.isNull(audioSendHandler) && !audioSendHandler.isInPlayingMode()) {
+            final MusicManager musicManager = playerManager.getMusicManager(event);
+            if (inPlayingMode && (Objects.isNull(audioSendHandler) || !audioSendHandler.isInPlayingMode()
+                || musicManager.getAudioPlayer().isPaused())) {
                 throw new ActiveMusicPlayingNotFoundException(config, new EventWrapper(event));
+            }
+            final AudioTrack pausedTrack = musicManager.getTrackScheduler().getPausedTrack();
+            if (isPaused && Objects.isNull(pausedTrack)) {
+                throw new AudioPlayerException.TrackIsNotPausedException(config, new EventWrapper(event));
             }
             if (inListeningMode) {
                 final GuildVoiceState userState = event.getMember().getVoiceState();
@@ -82,7 +93,7 @@ public abstract class AbstractMusicCommand extends AbstractCommand {
                 }
                 final GuildVoiceState voiceState = event.getGuild().getSelfMember().getVoiceState();
                 if (!Objects.isNull(voiceState) && !voiceState.inVoiceChannel()) {
-                    event.getGuild().getAudioManager().openAudioConnection(userState.getChannel());
+                    if (selfJoinable) event.getGuild().getAudioManager().openAudioConnection(userState.getChannel());
                 }
             }
             doExecuteMusicCommand(event);
