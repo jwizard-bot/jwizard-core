@@ -18,8 +18,6 @@
 
 package pl.miloszgilga.command.music;
 
-import lombok.extern.slf4j.Slf4j;
-
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
@@ -35,7 +33,6 @@ import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@Slf4j
 @JDAInjectableCommandLazyService
 public class GetPlayerVolumeCmd extends AbstractMusicCommand {
 

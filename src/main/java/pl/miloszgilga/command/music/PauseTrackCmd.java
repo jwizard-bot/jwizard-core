@@ -18,8 +18,6 @@
 
 package pl.miloszgilga.command.music;
 
-import lombok.extern.slf4j.Slf4j;
-
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -39,7 +37,6 @@ import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@Slf4j
 @JDAInjectableCommandLazyService
 public class PauseTrackCmd extends AbstractMusicCommand {
 

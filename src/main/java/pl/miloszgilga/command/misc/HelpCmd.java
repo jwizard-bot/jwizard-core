@@ -18,8 +18,6 @@
 
 package pl.miloszgilga.command.misc;
 
-import lombok.extern.slf4j.Slf4j;
-
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import pl.miloszgilga.BotCommand;
@@ -30,7 +28,6 @@ import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@Slf4j
 @JDAInjectableCommandLazyService
 class HelpCmd extends AbstractCommand {
 

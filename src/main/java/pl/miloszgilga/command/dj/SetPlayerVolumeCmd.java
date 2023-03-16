@@ -18,8 +18,6 @@
 
 package pl.miloszgilga.command.dj;
 
-import lombok.extern.slf4j.Slf4j;
-
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.apache.commons.lang3.math.NumberUtils;
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -40,7 +38,6 @@ import static pl.miloszgilga.exception.AudioPlayerException.VolumeUnitsOutOfBoun
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@Slf4j
 @JDAInjectableCommandLazyService
 public class SetPlayerVolumeCmd extends AbstractDjCommand {
 
