@@ -18,11 +18,18 @@
 
 package pl.miloszgilga.command.misc;
 
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+import java.util.Map;
+
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.dto.HelpEmbedContent;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.AbstractCommand;
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -39,6 +46,14 @@ class HelpCmd extends AbstractCommand {
 
     @Override
     protected void doExecuteCommand(CommandEvent event) {
-        event.reply("Hello how a u? I m under the water. Please helpe me! Here too much raining n brlbrl...");
+        final HelpEmbedContent content = new HelpEmbedContent(
+            config.getLocaleText(LocaleSet.HELP_INFO_SOURCE_CODE_LINK_MESS,
+                Map.of("sourceCodeLink", config.getProperty(BotProperty.J_SOURCE_CODE_PATH))),
+            String.format("jre%s_%s", Runtime.version().feature(), config.getProjectVersion()),
+            BotCommand.count(),
+            BotCommand.getCommandsAsEmbedContent(config)
+        );
+        final MessageEmbed messageEmbed = embedBuilder.createHelpMessage(new EventWrapper(event), content);
+        event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
     }
 }

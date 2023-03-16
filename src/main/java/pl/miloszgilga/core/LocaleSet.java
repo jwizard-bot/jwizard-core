@@ -45,6 +45,12 @@ public enum LocaleSet {
     REPEAT_TRACK_ARG_SYNTAX                     ("jwizard.command.arguments.RepeatTrack"),
     AUDIO_PLAYER_SET_VOLUME_ARG_SYNTAX          ("jwizard.command.arguments.AudioPlayerSetVolume"),
 
+    COMMAND_CATEGORY_MUSIC                      ("jwizard.command.category.Music"),
+    COMMAND_CATEGORY_DJ_ROLE                    ("jwizard.command.category.DjRole"),
+    COMMAND_CATEGORY_STATISTICS                 ("jwizard.command.category.Statistics"),
+    COMMAND_CATEGORY_OWNER_AND_MANAGER          ("jwizard.command.category.OwnerAndManager"),
+    COMMAND_CATEGORY_OTHERS                     ("jwizard.command.category.Others"),
+
     INFO_HEADER                                 ("jwizard.message.response.header.info"),
     WARN_HEADER                                 ("jwizard.message.response.header.warn"),
     ERROR_HEADER                                ("jwizard.message.response.header.error"),
