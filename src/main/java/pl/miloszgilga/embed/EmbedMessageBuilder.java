@@ -21,6 +21,7 @@ package pl.miloszgilga.embed;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -106,6 +107,42 @@ public class EmbedMessageBuilder {
             .addField(config.getLocaleText(LocaleSet.PAUSED_TRACK_TOTAL_DURATION_MESS) + ":", content.totalDuration(), true)
             .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
             .build();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public MessageEmbed createCurrentPlayingMessage(EventWrapper wrapper, CurrentPlayEmbedContent content) {
+        return new EmbedBuilder()
+            .setAuthor(wrapper.authorTag(), null, wrapper.authorAvatarUrl())
+            .setDescription(config.getLocaleText(content.playingPauseMessage()))
+            .addField(config.getLocaleText(LocaleSet.TRACK_NAME_MESS) + ":", content.trackUrl(), true)
+            .addBlankField(true)
+            .addField(config.getLocaleText(LocaleSet.TRACK_ADDDED_BY_MESS) + ":", content.addedByTag(), true)
+            .addField(StringUtils.EMPTY, content.playerPercentageTrack(), false)
+            .addField(config.getLocaleText(content.playingVisualizationTrack()), content.timestampNowAndMax(), true)
+            .addBlankField(true)
+            .addField(config.getLocaleText(LocaleSet.CURRENT_TRACK_LEFT_TO_NEXT_MESS), content.leftToNextTrack(), true)
+            .setThumbnail(content.thumbnailUrl())
+            .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
+            .build();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public MessageEmbed createHelpMessage(EventWrapper wrapper, HelpEmbedContent content) {
+        final String compilationHeader = config.getLocaleText(LocaleSet.HELP_INFO_COMPILATION_VERSION_MESS);
+        final String availableCommandsHeader = config.getLocaleText(LocaleSet.HELP_INFO_COUNT_OF_AVAILABLE_COMMANDS_MESS);
+        final EmbedBuilder embedBuilder = new EmbedBuilder()
+            .setAuthor(wrapper.authorTag(), null, wrapper.authorAvatarUrl())
+            .setDescription(content.description())
+            .addField(compilationHeader + ":", content.compilationVersion(), true)
+            .addBlankField(true)
+            .addField(availableCommandsHeader + ":", content.availableCommandsCount(), true)
+            .setColor(EmbedColor.ANTIQUE_WHITE.getColor());
+        for (final MessageEmbed.Field field : content.availableCommands()) {
+            embedBuilder.addField(field);
+        }
+        return embedBuilder.build();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
