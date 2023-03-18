@@ -18,16 +18,11 @@
 
 package pl.miloszgilga.dto;
 
-import net.dv8tion.jda.api.entities.MessageEmbed;
-
-import java.util.List;
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 public record HelpEmbedContent(
     String description,
     String compilationVersion,
-    String availableCommandsCount,
-    List<MessageEmbed.Field> availableCommands
+    String availableCommandsCount
 ) {
 }
