@@ -132,17 +132,25 @@ public class EmbedMessageBuilder {
     public MessageEmbed createHelpMessage(CommandEventWrapper wrapper, HelpEmbedContent content) {
         final String compilationHeader = config.getLocaleText(LocaleSet.HELP_INFO_COMPILATION_VERSION_MESS);
         final String availableCommandsHeader = config.getLocaleText(LocaleSet.HELP_INFO_COUNT_OF_AVAILABLE_COMMANDS_MESS);
-        final EmbedBuilder embedBuilder = new EmbedBuilder()
+        return new EmbedBuilder()
             .setAuthor(wrapper.authorTag(), null, wrapper.authorAvatarUrl())
             .setDescription(content.description())
             .addField(compilationHeader + ":", content.compilationVersion(), true)
-            .addBlankField(true)
             .addField(availableCommandsHeader + ":", content.availableCommandsCount(), true)
-            .setColor(EmbedColor.ANTIQUE_WHITE.getColor());
-        for (final MessageEmbed.Field field : content.availableCommands()) {
-            embedBuilder.addField(field);
-        }
-        return embedBuilder.build();
+            .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
+            .build();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public MessageEmbed createQueueInfoMessage(QueueEmbedContent content) {
+        return new EmbedBuilder()
+            .addField(config.getLocaleText(LocaleSet.ALL_TRACKS_IN_QUEUE_COUNT_MESS) + ":", content.queueSize(), true)
+            .addBlankField(true)
+            .addField(config.getLocaleText(LocaleSet.ALL_TRACKS_IN_QUEUE_DURATION_MESS) + ":", content.queueMaxDuration(), true)
+            .addField(config.getLocaleText(LocaleSet.APPROX_TO_NEXT_TRACK_FROM_QUEUE_MESS) + ":", content.approxToNextTrack(), true)
+            .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
+            .build();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

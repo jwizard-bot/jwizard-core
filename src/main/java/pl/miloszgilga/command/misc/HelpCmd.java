@@ -18,6 +18,7 @@
 
 package pl.miloszgilga.command.misc;
 
+import com.jagrosh.jdautilities.menu.Paginator;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.Map;
@@ -26,6 +27,7 @@ import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.dto.HelpEmbedContent;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.embed.EmbedPaginationBuilder;
 import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.AbstractCommand;
 import pl.miloszgilga.core.configuration.BotProperty;
@@ -37,8 +39,13 @@ import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 @JDAInjectableCommandLazyService
 class HelpCmd extends AbstractCommand {
 
-    HelpCmd(BotConfiguration jConfig, EmbedMessageBuilder embedBuilder) {
-        super(BotCommand.HELP, jConfig, embedBuilder);
+    private final EmbedPaginationBuilder paginate;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    HelpCmd(BotConfiguration config, EmbedMessageBuilder embedBuilder, EmbedPaginationBuilder paginate) {
+        super(BotCommand.HELP, config, embedBuilder);
+        this.paginate = paginate;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,10 +56,11 @@ class HelpCmd extends AbstractCommand {
             config.getLocaleText(LocaleSet.HELP_INFO_SOURCE_CODE_LINK_MESS,
                 Map.of("sourceCodeLink", config.getProperty(BotProperty.J_SOURCE_CODE_PATH))),
             String.format("jre%s_%s", Runtime.version().feature(), config.getProjectVersion()),
-            BotCommand.count(),
-            BotCommand.getCommandsAsEmbedContent(config)
+            BotCommand.count()
         );
-        final MessageEmbed messageEmbed = embedBuilder.createHelpMessage(new EventWrapper(event), content);
-        event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
+        final MessageEmbed messageEmbed = embedBuilder.createHelpMessage(event, content);
+        final Paginator paginator = paginate.createDefaultPaginator(BotCommand.getCommandsAsEmbedContent(config));
+        event.textChannel().sendMessageEmbeds(messageEmbed).complete();
+        paginator.display(event.textChannel());
     }
 }

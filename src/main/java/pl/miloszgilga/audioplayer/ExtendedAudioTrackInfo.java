@@ -50,6 +50,10 @@ public class ExtendedAudioTrackInfo extends AudioTrackInfo {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public long getApproxTime() {
+        return audioTrack.getDuration() - audioTrack.getPosition();
+    }
+
     public long getTimestamp() {
         return audioTrack.getPosition();
     }
