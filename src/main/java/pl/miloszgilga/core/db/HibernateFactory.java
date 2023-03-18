@@ -27,6 +27,7 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.AvailableSettings;
@@ -45,6 +46,7 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.function.Consumer;
 import java.sql.SQLException;
 
 import pl.miloszgilga.core.configuration.BotProperty;
@@ -135,7 +137,19 @@ public class HibernateFactory extends AbstractConfigLoadableComponent {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
+    public void executeTrasactQuery(Consumer<Session> onExecute, Consumer<RuntimeException> onException) {
+        try (final Session session = sessionFactory.openSession()) {
+            try {
+                session.beginTransaction();
+                onExecute.accept(session);
+                session.getTransaction().commit();
+            } catch (RuntimeException ex) {
+                session.getTransaction().rollback();
+                log.error("Something goes wrong. Rollback and return previous DB state...");
+                throw ex;
+            }
+        } catch (RuntimeException ex) {
+            onException.accept(ex);
+        }
     }
 }
