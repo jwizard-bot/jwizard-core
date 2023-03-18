@@ -26,6 +26,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
@@ -34,9 +35,7 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import org.springframework.stereotype.Component;
 import org.apache.http.client.config.RequestConfig;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
@@ -111,7 +110,27 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     @Override
     public AudioTrackInfo skipCurrentTrack(CommandEventWrapper event) {
         final MusicManager musicManager = checkPermissions(event);
-        final EventWrapper eventWrapper = new EventWrapper(event);
+        final AudioTrackInfo skippedTrack = getCurrentPlayingTrack(event);
+        musicManager.getTrackScheduler().nextTrack();
+        log.info("G: {}, A: {} <> Current playing track '{}' was skipped", event.guildName(), event.authorTag(),
+            skippedTrack.title);
+        return skippedTrack;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void shuffleQueue(CommandEventWrapper event) {
+        final MusicManager musicManager = getMusicManager(event);
+        Collections.shuffle((List<?>)musicManager.getQueue());
+        log.info("G: {}, A: {} <> Current queue tracks was shuffled", event.guildName(), event.authorTag());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void repeatCurrentTrack(CommandEventWrapper event, int countOfRepeats) {
+        final MusicManager musicManager = checkPermissions(event);
         musicManager.getTrackScheduler().setCountOfRepeats(countOfRepeats);
         if (countOfRepeats == 0) {
             log.info("G: {}, A: {} <> Repeating of current playing track '{}' was removed", event.guildName(),

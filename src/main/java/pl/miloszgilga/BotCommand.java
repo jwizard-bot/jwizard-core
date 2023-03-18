@@ -21,9 +21,6 @@ package pl.miloszgilga;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import org.apache.commons.lang3.StringUtils;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-
 import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
@@ -43,20 +40,32 @@ import static pl.miloszgilga.misc.CommandCategory.*;
 @RequiredArgsConstructor
 public enum BotCommand {
 
-    HELP                    ("help",        new String[]{ "h", "hl" },      OTHERS,     HELP_COMMAND_DESC,                 null,                                 false, 0),
-    HELP_ME                 ("helpme",      new String[]{ "hm", "hlm" },    OTHERS,     HELPME_COMMAND_DESC,               null,                                 false, 0),
+    HELP                    ("help",        new String[]{ "h", "hl" },      OTHERS, HELP_COMMAND_DESC,                          null,                                 false, 0),
+    HELP_ME                 ("helpme",      new String[]{ "hm", "hlm" },    OTHERS, HELPME_COMMAND_DESC,                        null,                                 false, 0),
 
-    PLAY_TRACK              ("play",        new String[]{ "p", "pl" },      MUSIC,      PLAY_TRACK_COMMAND_DESC,           PLAY_TRACK_ARG_SYNTAX,                false, 1),
-    PAUSE_TRACK             ("pause",       new String[]{ "ps" },           MUSIC,      PAUSE_TRACK_COMMAND_DESC,          null,                                 false, 0),
-    RESUME_TRACK            ("resume",      new String[]{ "rs" },           MUSIC,      RESUME_TRACK_COMMAND_DESC,         null,                                 false, 0),
-    REPEAT_TRACK            ("repeat",      new String[]{ "rp" },           MUSIC,      REPEAT_TRACK_COMMAND_DESC,         REPEAT_TRACK_ARG_SYNTAX,              false, 1),
-    CLEAR_REPEAT_TRACK      ("repeatcls",   new String[]{ "rpcl" },         MUSIC,      CLEAR_REPEAT_TRACK_COMMAND_DESC,   null,                                 false, 0),
-    LOOP_TRACK              ("loop",        new String[]{ "lp" },           MUSIC,      LOOP_TRACK_COMMAND_DESC,           null,                                 false, 0),
-    CURRENT_PLAYING         ("playing",     new String[]{ "cp" },           MUSIC,      CURRENT_PLAYING_TRACK_DESC,        null,                                 false, 0),
-    CURRENT_PAUSED          ("paused",      new String[]{ "cps" },          MUSIC,      CURRENT_PAUSED_TRACK_DESC,         null,                                 false, 0),
-    GET_PLAYER_VOLUME       ("getvolume",   new String[]{ "gvl" },          MUSIC,      AUDIO_PLAYER_GET_VOLUME_DESC,      null,                                 false, 0),
-    SET_PLAYER_VOLUME       ("setvolume",   new String[]{ "svl" },          DJ,         AUDIO_PLAYER_SET_VOLUME_DESC,      AUDIO_PLAYER_SET_VOLUME_ARG_SYNTAX,   false, 1),
-    RESET_PLAYER_VOLUME     ("volumecls",   new String[]{ "cvl" },          DJ,         AUDIO_PLAYER_RESET_VOLUME_DESC,    null,                                 false, 0);
+    PLAY_TRACK              ("play",        new String[]{ "p", "pl" },      MUSIC,  PLAY_TRACK_COMMAND_DESC,                    PLAY_TRACK_ARG_SYNTAX,                false, 1),
+    PAUSE_TRACK             ("pause",       new String[]{ "ps" },           MUSIC,  PAUSE_TRACK_COMMAND_DESC,                   null,                                 false, 0),
+    RESUME_TRACK            ("resume",      new String[]{ "rs" },           MUSIC,  RESUME_TRACK_COMMAND_DESC,                  null,                                 false, 0),
+    REPEAT_TRACK            ("repeat",      new String[]{ "rp" },           MUSIC,  REPEAT_TRACK_COMMAND_DESC,                  REPEAT_TRACK_ARG_SYNTAX,              false, 1),
+    CLEAR_REPEAT_TRACK      ("repeatcls",   new String[]{ "rpcl" },         MUSIC,  CLEAR_REPEAT_TRACK_COMMAND_DESC,            null,                                 false, 0),
+    LOOP_TRACK              ("loop",        new String[]{ "lp" },           MUSIC,  LOOP_TRACK_COMMAND_DESC,                    null,                                 false, 0),
+    CURRENT_PLAYING         ("playing",     new String[]{ "cp" },           MUSIC,  CURRENT_PLAYING_TRACK_COMMAND_DESC,         null,                                 false, 0),
+    CURRENT_PAUSED          ("paused",      new String[]{ "cps" },          MUSIC,  CURRENT_PAUSED_TRACK_COMMAND_DESC,          null,                                 false, 0),
+    GET_PLAYER_VOLUME       ("getvolume",   new String[]{ "gvl" },          MUSIC,  AUDIO_PLAYER_GET_VOLUME_COMMAND_DESC,       null,                                 false, 0),
+    QUEUE                   ("queue",       new String[]{ "qt" },           MUSIC,  QUEUE_COMMAND_DESC,                         null,                                 false, 0),
+
+    SET_PLAYER_VOLUME       ("setvolume",   new String[]{ "svl" },          DJ,     AUDIO_PLAYER_SET_VOLUME_COMMAND_DESC,       AUDIO_PLAYER_SET_VOLUME_ARG_SYNTAX,   false, 1),
+    RESET_PLAYER_VOLUME     ("volumecls",   new String[]{ "cvl" },          DJ,     AUDIO_PLAYER_RESET_VOLUME_COMMAND_DESC,     null,                                 false, 0),
+    JOIN_TO_CHANNEL         ("join",        new String[]{ "jch" },          DJ,     JOIN_TO_CHANNEL_COMMAND_DESC,               null,                                 false, 0),
+    REMOVE_MEMBER_TRACKS    ("tracksrm",    new String[]{ "rtr" },          DJ,     REMOVE_MEMBER_TRACKS_COMMAND_DESC,          REMOVE_MEMBER_TRACKS_ARG_SYNTAX,      false, 1),
+    SHUFFLE_QUEUE           ("shuffle",     new String[]{ "shq" },          DJ,     SHUFFLE_QUEUE_COMMAND_DESC,                 null,                                 false, 0),
+    SKIP_TO_TRACK           ("skipto",      new String[]{ "skt" },          DJ,     SKIP_QUEUE_TO_TRACK_COMMAND_DESC,           SKIP_QUEUE_TO_TRACK_ARG_SYNTAX,       false, 1),
+    SKIP_TRACK              ("skip",        new String[]{ "sk" },           DJ,     SKIP_TRACK_COMMAND_DESC,                    null,                                 false, 0),
+    STOP_CLEAR_QUEUE        ("stop",        new String[]{ "st" },           DJ,     STOP_CLEAR_QUEUE_COMMAND_DESC,              null,                                 false, 0),
+
+    VOTE_SHUFFLE_QUEUE      ("vshuffle",    new String[]{ "vshq" },         MUSIC,  VOTE_SHUFFLE_QUEUE_COMMAND_DESC,            null,                                 false, 0),
+    VOTE_SKIP_TRACK         ("vskip",       new String[]{ "vsk" },          MUSIC,  VOTE_SKIP_TRACK_COMMAND_DESC,               null,                                 false, 0),
+    VOTE_STOP_CLEAR_QUEUE   ("vstop",       new String[]{ "vst" },          MUSIC,  VOTE_STOP_CLEAR_QUEUE_COMMAND_DESC,         null,                                 false, 0);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -109,33 +118,34 @@ public enum BotCommand {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static List<MessageEmbed.Field> getCommandsAsEmbedContent(BotConfiguration config) {
-        final List<MessageEmbed.Field> fields = new ArrayList<>();
+    public static List<String> getCommandsAsEmbedContent(BotConfiguration config) {
+        final List<String> commands = new ArrayList<>();
         final String prefix = config.getProperty(BotProperty.J_PREFIX);
 
         for (final CommandCategory commandCategory : CommandCategory.values()) {
             if (Arrays.stream(values()).noneMatch(v -> v.category.equals(commandCategory))) continue;
 
-            fields.add(new MessageEmbed.Field(StringUtils.EMPTY,
-                String.format("**%s**", commandCategory.getHolder(config)).toUpperCase(), false));
+            commands.add(String.format("**%s**\n", commandCategory.getHolder(config)).toUpperCase());
             for (final BotCommand command : values()) {
                 if (!command.category.equals(commandCategory)) continue;
 
+                final StringBuilder builder = new StringBuilder();
                 final String commandAliases = Arrays.stream(command.aliases)
                     .map(a -> prefix + a).collect(Collectors.joining(", "));
-                final StringBuilder builder = new StringBuilder();
+
                 builder.append("`");
                 builder.append(prefix);
                 builder.append(String.format("%s [%s]", command.name, commandAliases));
                 if (!Objects.isNull(command.argSyntax)) {
                     builder.append(String.format(" %s", config.getLocaleText(command.argSyntax)));
                 }
-                builder.append("`");
-                fields.add(new MessageEmbed.Field(builder.toString(),
-                    config.getLocaleText(command.descriptionHolder), false));
+                builder.append("`\n");
+                builder.append(config.getLocaleText(command.descriptionHolder));
+                builder.append('\n');
+                commands.add(builder.toString());
             }
         }
-        return fields;
+        return commands;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

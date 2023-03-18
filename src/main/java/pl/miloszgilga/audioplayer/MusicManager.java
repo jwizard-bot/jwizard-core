@@ -65,6 +65,10 @@ public class MusicManager {
         return trackScheduler;
     }
 
+    public Queue<AudioQueueExtendedInfo> getQueue() {
+        return trackScheduler.getTrackQueue();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public short getPlayerVolume() {

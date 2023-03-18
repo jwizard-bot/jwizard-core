@@ -33,15 +33,17 @@ public enum BugTracker {
 
     ACTIVE_MUSIC_PLAYING_NOT_FOUND                          (101),
     USER_ON_VOICE_CHANNEL_NOT_FOUND                         (102),
-    TRACK_IS_NOT_PLAYING                                    (103),
-    TRACK_IS_NOT_PAUSED                                     (104),
-    NOT_FOUND_TRACK                                         (105),
-    ISSUE_ON_LOAD_TRACK                                     (106),
-    ISSUE_WHILE_PLAYING_TRACK                               (107),
-    INVOKE_FORBIDDEN_COMMAND                                (108),
-    REPEATS_OUT_OF_BOUNDS                                   (109),
-    LOCK_COMMAND_TEMPORARY_HALTED                           (110),
-    VOLUME_UNITS_OUT_OF_BOUNDS                              (111);
+    USER_ON_VOICE_CHANNEL_WITH_BOT_NOT_FOUND                (103),
+    TRACK_IS_NOT_PLAYING                                    (104),
+    TRACK_IS_NOT_PAUSED                                     (105),
+    NOT_FOUND_TRACK                                         (106),
+    ISSUE_ON_LOAD_TRACK                                     (107),
+    ISSUE_WHILE_PLAYING_TRACK                               (108),
+    INVOKE_FORBIDDEN_COMMAND                                (109),
+    REPEATS_OUT_OF_BOUNDS                                   (110),
+    LOCK_COMMAND_TEMPORARY_HALTED                           (111),
+    VOLUME_UNITS_OUT_OF_BOUNDS                              (112),
+    TRACK_QUEUE_IS_EMPTY                                    (113);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
