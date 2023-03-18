@@ -19,12 +19,11 @@
 package pl.miloszgilga.command.misc;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import com.jagrosh.jdautilities.command.CommandEvent;
 
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.dto.HelpEmbedContent;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.LocaleSet;
@@ -45,7 +44,7 @@ class HelpCmd extends AbstractCommand {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected void doExecuteCommand(CommandEvent event) {
+    protected void doExecuteCommand(CommandEventWrapper event) {
         final HelpEmbedContent content = new HelpEmbedContent(
             config.getLocaleText(LocaleSet.HELP_INFO_SOURCE_CODE_LINK_MESS,
                 Map.of("sourceCodeLink", config.getProperty(BotProperty.J_SOURCE_CODE_PATH))),

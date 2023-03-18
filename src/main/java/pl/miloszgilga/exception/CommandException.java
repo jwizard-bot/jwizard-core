@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
@@ -32,7 +32,7 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 public class CommandException {
 
     @Slf4j public static class UnrecognizedCommandException extends BotException {
-        public UnrecognizedCommandException(BotConfiguration config, EventWrapper event) {
+        public UnrecognizedCommandException(BotConfiguration config, CommandEventWrapper event) {
             super(config, LocaleSet.UNRECOGNIZED_COMMAND_EXC, Map.of(
                 "helpCmd", BotCommand.HELP.parseWithPrefix(config),
                 "helpmeCmd", BotCommand.HELP_ME.parseWithPrefix(config)
@@ -45,7 +45,7 @@ public class CommandException {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Slf4j public static class UsedCommandOnForbiddenChannelException extends BotException {
-        public UsedCommandOnForbiddenChannelException(BotConfiguration config, EventWrapper event) {
+        public UsedCommandOnForbiddenChannelException(BotConfiguration config, CommandEventWrapper event) {
             super(config, LocaleSet.USED_COMM_ON_FORBIDDEN_CHANNEL_EXC,
                 BugTracker.USED_COMMAND_ON_FORBIDDEN_CHANNEL);
             log.error("G: {}, A: {} <> Attempt to invoke command on forbidden channel",
@@ -56,7 +56,7 @@ public class CommandException {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Slf4j public static class MismatchCommandArgumentsCountException extends BotException {
-        public MismatchCommandArgumentsCountException(BotConfiguration config, EventWrapper event, BotCommand command) {
+        public MismatchCommandArgumentsCountException(BotConfiguration config, CommandEventWrapper event, BotCommand command) {
             super(config, LocaleSet.MISMATCH_COMMAND_ARGS_COUNT_EXC, Map.of(
                 "syntax", command.getAvailableSyntax(config)
             ), BugTracker.MISMATCH_COMMAND_ARGUMENTS);
@@ -68,7 +68,7 @@ public class CommandException {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Slf4j public static class UnauthorizedDjCommandExecutionException extends BotException {
-        public UnauthorizedDjCommandExecutionException(BotConfiguration config, EventWrapper event) {
+        public UnauthorizedDjCommandExecutionException(BotConfiguration config, CommandEventWrapper event) {
             super(config, LocaleSet.UNAUTHORIZED_DJ_COMMAND_EXECUTION_EXC, BugTracker.UNAUTHORIZED_DJ_COMMAND_EXECUTION);
             log.error("G: {}, A: {} <> Attempt to invoke DJ command without DJ guild role",
                 event.guildName(), event.authorTag());

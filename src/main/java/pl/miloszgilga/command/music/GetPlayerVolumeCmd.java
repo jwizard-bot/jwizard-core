@@ -19,11 +19,11 @@
 package pl.miloszgilga.command.music;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import com.jagrosh.jdautilities.command.CommandEvent;
 
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
@@ -45,11 +45,11 @@ public class GetPlayerVolumeCmd extends AbstractMusicCommand {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected void doExecuteMusicCommand(CommandEvent event) {
+    protected void doExecuteMusicCommand(CommandEventWrapper event) {
         final MessageEmbed messageEmbed = embedBuilder
             .createMessage(LocaleSet.GET_CURRENT_AUDIO_PLAYER_VOLUME_MESS, Map.of(
                 "currentVolume", playerManager.getMusicManager(event).getPlayerVolume()
             ));
-        event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
+        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
     }
 }

@@ -20,13 +20,12 @@ package pl.miloszgilga.command.music;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.apache.commons.lang3.math.NumberUtils;
-import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
@@ -51,10 +50,10 @@ public class RepeatTrackCmd extends AbstractMusicCommand {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected void doExecuteMusicCommand(CommandEvent event) {
-        final int repeats = NumberUtils.toInt(event.getArgs());
+    protected void doExecuteMusicCommand(CommandEventWrapper event) {
+        final int repeats = NumberUtils.toInt(event.args());
         if (repeats < 1 || repeats > config.getProperty(BotProperty.J_MAX_REPEATS_SINGLE_TRACK, Integer.class)) {
-            throw new TrackRepeatsOutOfBoundsException(config, new EventWrapper(event));
+            throw new TrackRepeatsOutOfBoundsException(config, event);
         }
         playerManager.repeatCurrentTrack(event, repeats);
 
@@ -65,6 +64,6 @@ public class RepeatTrackCmd extends AbstractMusicCommand {
                 "times", repeats,
                 "clearRepeatingCmd", BotCommand.CLEAR_REPEAT_TRACK.parseWithPrefix(config)
             ));
-        event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
+        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
     }
 }

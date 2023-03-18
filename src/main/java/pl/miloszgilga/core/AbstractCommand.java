@@ -26,7 +26,7 @@ import org.springframework.context.annotation.DependsOn;
 import java.util.Arrays;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.configuration.BotConfiguration;
@@ -62,20 +62,21 @@ public abstract class AbstractCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+        final CommandEventWrapper commandEventWrapper = new CommandEventWrapper(event);
         try {
             final long args = Arrays.stream(event.getArgs().split("\\|")).filter(a -> a.length() > 0).count();
             if (args != argsCount) {
-                throw new MismatchCommandArgumentsCountException(config, new EventWrapper(event), command);
+                throw new MismatchCommandArgumentsCountException(config, commandEventWrapper, command);
             }
-            doExecuteCommand(event);
+            doExecuteCommand(commandEventWrapper);
         } catch (BotException ex) {
             event.getChannel()
-                .sendMessageEmbeds(embedBuilder.createErrorMessage(new EventWrapper(event), ex))
+                .sendMessageEmbeds(embedBuilder.createErrorMessage(commandEventWrapper, ex))
                 .queue();
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    protected abstract void doExecuteCommand(CommandEvent event);
+    protected abstract void doExecuteCommand(CommandEventWrapper event);
 }

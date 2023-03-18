@@ -19,13 +19,12 @@
 package pl.miloszgilga.command.music;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
@@ -48,8 +47,7 @@ public class ResumeTrackCmd extends AbstractMusicCommand {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected void doExecuteMusicCommand(CommandEvent event) {
-        final EventWrapper eventWrapper = new EventWrapper(event);
+    protected void doExecuteMusicCommand(CommandEventWrapper event) {
         playerManager.resumeCurrentTrack(event);
 
         final AudioTrackInfo trackInfo = playerManager.getCurrentPlayingTrack(event);
@@ -58,6 +56,6 @@ public class ResumeTrackCmd extends AbstractMusicCommand {
             "invoker", eventWrapper.authorTag(),
             "pauseCmd", BotCommand.PAUSE_TRACK.parseWithPrefix(config)
         ));
-        event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
+        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
     }
 }

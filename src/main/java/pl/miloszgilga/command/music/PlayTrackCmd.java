@@ -18,10 +18,10 @@
 
 package pl.miloszgilga.command.music;
 
-import com.jagrosh.jdautilities.command.CommandEvent;
 import org.apache.commons.validator.routines.UrlValidator;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
@@ -43,9 +43,9 @@ public class PlayTrackCmd extends AbstractMusicCommand {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected void doExecuteMusicCommand(CommandEvent event) {
+    protected void doExecuteMusicCommand(CommandEventWrapper event) {
         final UrlValidator urlValidator = new UrlValidator();
-        String searchPhrase = event.getArgs();
+        String searchPhrase = event.args();
         boolean urlPatternValid = urlValidator.isValid(searchPhrase);
         if (urlPatternValid) {
             searchPhrase = searchPhrase.replaceAll(" ", "");

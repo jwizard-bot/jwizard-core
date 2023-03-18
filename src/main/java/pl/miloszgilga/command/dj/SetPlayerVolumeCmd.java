@@ -20,12 +20,11 @@ package pl.miloszgilga.command.dj;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.apache.commons.lang3.math.NumberUtils;
-import com.jagrosh.jdautilities.command.CommandEvent;
 
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
@@ -50,12 +49,12 @@ public class SetPlayerVolumeCmd extends AbstractDjCommand {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected void doExecuteDjCommand(CommandEvent event) {
+    protected void doExecuteDjCommand(CommandEventWrapper event) {
         final short defaultVolumeUnits = config.getProperty(BotProperty.J_DEFAULT_PLAYER_VOLUME_UNITS, Short.class);
         final short currentVolumeUnits = playerManager.getMusicManager(event).getPlayerVolume();
-        final short volumeUnits = NumberUtils.toShort(event.getArgs(), defaultVolumeUnits);
+        final short volumeUnits = NumberUtils.toShort(event.args(), defaultVolumeUnits);
         if (volumeUnits < 0 || volumeUnits > 150) {
-            throw new VolumeUnitsOutOfBoundsException(config, new EventWrapper(event));
+            throw new VolumeUnitsOutOfBoundsException(config, event);
         }
         playerManager.setPlayerVolume(event, currentVolumeUnits);
         final MessageEmbed messageEmbed = embedBuilder
@@ -63,6 +62,6 @@ public class SetPlayerVolumeCmd extends AbstractDjCommand {
                 "previousVolume", currentVolumeUnits,
                 "setVolume", volumeUnits
             ));
-        event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
+        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
     }
 }

@@ -39,8 +39,8 @@ import java.util.concurrent.ScheduledFuture;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.Utilities;
-import pl.miloszgilga.dto.EventWrapper;
 import pl.miloszgilga.exception.BugTracker;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotProperty;
@@ -54,7 +54,7 @@ public class TrackScheduler extends AudioEventAdapter {
     private final BotConfiguration config;
     private final EmbedMessageBuilder builder;
     private final AudioPlayer audioPlayer;
-    private final EventWrapper deliveryEvent;
+    private final CommandEventWrapper deliveryEvent;
 
     private final Queue<AudioQueueExtendedInfo> trackQueue = new LinkedList<>();
 
@@ -69,7 +69,7 @@ public class TrackScheduler extends AudioEventAdapter {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     TrackScheduler(
-        BotConfiguration config, EmbedMessageBuilder builder, AudioPlayer audioPlayer, EventWrapper deliveryEvent
+        BotConfiguration config, EmbedMessageBuilder builder, AudioPlayer audioPlayer, CommandEventWrapper deliveryEvent
     ) {
         this.config = config;
         this.builder = builder;
@@ -251,7 +251,7 @@ public class TrackScheduler extends AudioEventAdapter {
         return infiniteRepeating;
     }
 
-    public EventWrapper getDeliveryEvent() {
+    public CommandEventWrapper getDeliveryEvent() {
         return deliveryEvent;
     }
 

@@ -19,14 +19,13 @@
 package pl.miloszgilga.command.music;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.Utilities;
-import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.dto.PauseTrackEmbedContent;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
@@ -53,10 +52,10 @@ public class PauseTrackCmd extends AbstractMusicCommand {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected void doExecuteMusicCommand(CommandEvent event) {
+    protected void doExecuteMusicCommand(CommandEventWrapper event) {
         playerManager.pauseCurrentTrack(event);
 
-        final AudioTrack track = playerManager.getMusicManager(event.getGuild()).getAudioPlayer().getPlayingTrack();
+        final AudioTrack track = playerManager.getMusicManager(event.guild()).getAudioPlayer().getPlayingTrack();
         final PauseTrackEmbedContent content = new PauseTrackEmbedContent(
             LocaleSet.PAUSE_TRACK_MESS,
             Map.of(
@@ -70,6 +69,6 @@ public class PauseTrackCmd extends AbstractMusicCommand {
             Utilities.createPlayerPercentageTrack(track.getPosition(), track.getDuration(), MAX_VIS_BLOCKS_COUNT)
         );
         final MessageEmbed messageEmbed = embedBuilder.createPauseTrackMessage(content);
-        event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
+        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
     }
 }

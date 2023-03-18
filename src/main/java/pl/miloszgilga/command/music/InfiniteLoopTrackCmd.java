@@ -19,12 +19,12 @@
 package pl.miloszgilga.command.music;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
@@ -46,7 +46,7 @@ public class InfiniteLoopTrackCmd extends AbstractMusicCommand {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected void doExecuteMusicCommand(CommandEvent event) {
+    protected void doExecuteMusicCommand(CommandEventWrapper event) {
         final boolean isRepeating = playerManager.toggleInfiniteLoopCurrentTrack(event);
         LocaleSet messsage = LocaleSet.REMOVE_TRACK_FROM_INFINITE_LOOP_MESS;
         if (isRepeating) {
@@ -57,6 +57,6 @@ public class InfiniteLoopTrackCmd extends AbstractMusicCommand {
             "track", String.format("[%s](%s)", playingTrack.title, playingTrack.uri),
             "loopCmd", BotCommand.LOOP_TRACK.parseWithPrefix(config)
         ));
-        event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
+        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
     }
 }

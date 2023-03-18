@@ -19,13 +19,14 @@
 package pl.miloszgilga.command.music;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.audioplayer.PlayerManager;
+import pl.miloszgilga.audioplayer.TrackScheduler;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
 import pl.miloszgilga.core.LocaleSet;
@@ -46,7 +47,7 @@ public class ClearRepeatTrackCmd extends AbstractMusicCommand {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected void doExecuteMusicCommand(CommandEvent event) {
+    protected void doExecuteMusicCommand(CommandEventWrapper event) {
         playerManager.repeatCurrentTrack(event, 0);
 
         final AudioTrackInfo trackInfo = playerManager.getCurrentPlayingTrack(event);
@@ -55,6 +56,6 @@ public class ClearRepeatTrackCmd extends AbstractMusicCommand {
                 "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
                 "repeatingCmd", BotCommand.REPEAT_TRACK.parseWithPrefix(config)
             ));
-        event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
+        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
     }
 }

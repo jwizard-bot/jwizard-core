@@ -20,11 +20,10 @@ package pl.miloszgilga.command.music;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import com.jagrosh.jdautilities.command.CommandEvent;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.Utilities;
-import pl.miloszgilga.dto.EventWrapper;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.dto.CurrentPlayEmbedContent;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
@@ -43,13 +42,12 @@ public class CurrentPlayingCmd extends AbstractMusicCommand {
     CurrentPlayingCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.CURRENT_PLAYING, config, playerManager, embedBuilder);
         super.inPlayingMode = true;
-        super.inListeningMode = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected void doExecuteMusicCommand(CommandEvent event) {
+    protected void doExecuteMusicCommand(CommandEventWrapper event) {
         final MusicManager musicManager = playerManager.getMusicManager(event);
         final ExtendedAudioTrackInfo track = playerManager.getCurrentPlayingTrack(event);
 
@@ -66,7 +64,7 @@ public class CurrentPlayingCmd extends AbstractMusicCommand {
             Utilities.convertMilisToDate(track.getMaxDuration() - track.getTimestamp()),
             Utilities.createPlayerPercentageTrack(track.getTimestamp(), track.getMaxDuration())
         );
-        final MessageEmbed messageEmbed = embedBuilder.createCurrentPlayingMessage(new EventWrapper(event), content);
-        event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
+        final MessageEmbed messageEmbed = embedBuilder.createCurrentPlayingMessage(event, content);
+        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
     }
 }

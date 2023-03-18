@@ -47,7 +47,7 @@ public class EmbedMessageBuilder {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public MessageEmbed createErrorMessage(EventWrapper wrapper, String message, BugTracker bugTracker) {
+    public MessageEmbed createErrorMessage(CommandEventWrapper wrapper, String message, BugTracker bugTracker) {
         final String tracker = "`" + parseBugTracker(bugTracker) + "`";
         return new EmbedBuilder()
             .setAuthor(wrapper.authorTag(), null, wrapper.authorAvatarUrl())
@@ -60,13 +60,13 @@ public class EmbedMessageBuilder {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public MessageEmbed createErrorMessage(EventWrapper wrapper, BotException ex) {
+    public MessageEmbed createErrorMessage(CommandEventWrapper wrapper, BotException ex) {
         return createErrorMessage(wrapper, ex.getMessage(), ex.getBugTracker());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public MessageEmbed createSingleTrackMessage(EventWrapper wrapper, TrackEmbedContent content) {
+    public MessageEmbed createSingleTrackMessage(CommandEventWrapper wrapper, TrackEmbedContent content) {
         return new EmbedBuilder()
             .setAuthor(wrapper.authorTag(), null, wrapper.authorAvatarUrl())
             .setDescription(config.getLocaleText(LocaleSet.ADD_NEW_TRACK_MESS))
@@ -83,7 +83,7 @@ public class EmbedMessageBuilder {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public MessageEmbed createPlaylistTracksMessage(EventWrapper wrapper, PlaylistEmbedContent content) {
+    public MessageEmbed createPlaylistTracksMessage(CommandEventWrapper wrapper, PlaylistEmbedContent content) {
         return new EmbedBuilder()
             .setAuthor(wrapper.authorTag(), null, wrapper.authorAvatarUrl())
             .setDescription(config.getLocaleText(LocaleSet.ADD_NEW_PLAYLIST_MESS))
@@ -111,7 +111,7 @@ public class EmbedMessageBuilder {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public MessageEmbed createCurrentPlayingMessage(EventWrapper wrapper, CurrentPlayEmbedContent content) {
+    public MessageEmbed createCurrentPlayingMessage(CommandEventWrapper wrapper, CurrentPlayEmbedContent content) {
         return new EmbedBuilder()
             .setAuthor(wrapper.authorTag(), null, wrapper.authorAvatarUrl())
             .setDescription(config.getLocaleText(content.playingPauseMessage()))
@@ -129,7 +129,7 @@ public class EmbedMessageBuilder {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public MessageEmbed createHelpMessage(EventWrapper wrapper, HelpEmbedContent content) {
+    public MessageEmbed createHelpMessage(CommandEventWrapper wrapper, HelpEmbedContent content) {
         final String compilationHeader = config.getLocaleText(LocaleSet.HELP_INFO_COMPILATION_VERSION_MESS);
         final String availableCommandsHeader = config.getLocaleText(LocaleSet.HELP_INFO_COUNT_OF_AVAILABLE_COMMANDS_MESS);
         final EmbedBuilder embedBuilder = new EmbedBuilder()

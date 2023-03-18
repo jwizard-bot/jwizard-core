@@ -19,11 +19,10 @@
 package pl.miloszgilga.command;
 
 import net.dv8tion.jda.api.Permission;
-import com.jagrosh.jdautilities.command.CommandEvent;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.dto.EventWrapper;
 import pl.miloszgilga.exception.BotException;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.configuration.BotProperty;
@@ -44,25 +43,25 @@ public abstract class AbstractDjCommand extends AbstractMusicCommand {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected void doExecuteMusicCommand(CommandEvent event) {
+    protected void doExecuteMusicCommand(CommandEventWrapper event) {
         final String djRoleName = config.getProperty(BotProperty.J_DJ_ROLE_NAME);
         try {
-            final boolean isNotOwner = !event.getAuthor().getId().equals(event.getClient().getOwnerId());
-            final boolean isNotManager = !event.getMember().hasPermission(Permission.MANAGE_SERVER);
-            final boolean isNotDj = event.getMember().getRoles().stream().noneMatch(r -> r.getName().equals(djRoleName));
+            final boolean isNotOwner = !event.author().getId().equals(event.client().getOwnerId());
+            final boolean isNotManager = !event.member().hasPermission(Permission.MANAGE_SERVER);
+            final boolean isNotDj = event.member().getRoles().stream().noneMatch(r -> r.getName().equals(djRoleName));
 
             if (isNotOwner && isNotManager && isNotDj) {
-                throw new UnauthorizedDjCommandExecutionException(config, new EventWrapper(event));
+                throw new UnauthorizedDjCommandExecutionException(config, event);
             }
             doExecuteDjCommand(event);
         } catch (BotException ex) {
-            event.getChannel()
-                .sendMessageEmbeds(embedBuilder.createErrorMessage(new EventWrapper(event), ex))
+            event.textChannel()
+                .sendMessageEmbeds(embedBuilder.createErrorMessage(event, ex))
                 .queue();
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    protected abstract void doExecuteDjCommand(CommandEvent event);
+    protected abstract void doExecuteDjCommand(CommandEventWrapper event);
 }

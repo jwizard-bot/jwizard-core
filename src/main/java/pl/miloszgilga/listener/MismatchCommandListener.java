@@ -25,8 +25,8 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import java.util.Set;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.dto.EventWrapper;
 import pl.miloszgilga.exception.BotException;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.misc.CommandWithArgsCount;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.AbstractListenerAdapter;
@@ -54,6 +54,7 @@ class MismatchCommandListener extends AbstractListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+        final CommandEventWrapper commandEventWrapper = new CommandEventWrapper(event);
         try {
             String message = event.getMessage().getContentRaw();
             final int endPosition = message.indexOf(' ');
@@ -65,11 +66,11 @@ class MismatchCommandListener extends AbstractListenerAdapter {
             if (event.getAuthor().isBot() || !message.startsWith(prefix)) return;
             final String rawMessage = message;
             if (allCommandsWithAliases.stream().noneMatch(c -> c.command().equals(rawMessage.substring(1)))) {
-                throw new UnrecognizedCommandException(config, new EventWrapper(event));
+                throw new UnrecognizedCommandException(config, commandEventWrapper);
             }
         } catch (BotException ex) {
             event.getChannel()
-                .sendMessageEmbeds(embedBuilder.createErrorMessage(new EventWrapper(event), ex))
+                .sendMessageEmbeds(embedBuilder.createErrorMessage(commandEventWrapper, ex))
                 .queue();
         }
     }

@@ -67,7 +67,8 @@ public class JDABot {
     public static final Permission[] PERMISSIONS = {
         Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION,
         Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE,
-        Permission.MESSAGE_EXT_EMOJI, Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK
+        Permission.MESSAGE_EXT_EMOJI, Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK,
+        Permission.USE_SLASH_COMMANDS
     };
 
     private static final List<CacheFlag> ENABLED_CACHE_FLAGS = List.of(

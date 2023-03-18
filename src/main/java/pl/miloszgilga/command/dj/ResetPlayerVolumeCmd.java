@@ -19,11 +19,11 @@
 package pl.miloszgilga.command.dj;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import com.jagrosh.jdautilities.command.CommandEvent;
 
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
@@ -45,11 +45,11 @@ public class ResetPlayerVolumeCmd extends AbstractDjCommand {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected void doExecuteDjCommand(CommandEvent event) {
+    protected void doExecuteDjCommand(CommandEventWrapper event) {
         final short defVolume = playerManager.getMusicManager(event).resetPlayerVolume();
         final MessageEmbed messageEmbed = embedBuilder.createMessage(LocaleSet.RESET_AUDIO_PLAYER_VOLUME_MESS, Map.of(
             "defVolume", defVolume
         ));
-        event.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
+        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
     }
 }

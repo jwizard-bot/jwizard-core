@@ -32,8 +32,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import pl.miloszgilga.misc.Utilities;
-import pl.miloszgilga.dto.EventWrapper;
 import pl.miloszgilga.dto.TrackEmbedContent;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.dto.PlaylistEmbedContent;
 import pl.miloszgilga.exception.BugTracker;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
@@ -46,7 +46,7 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 class AudioLoaderResultImpl implements AudioLoadResultHandler {
 
     private final boolean isUrlPattern;
-    private final EventWrapper deliveryEvent;
+    private final CommandEventWrapper deliveryEvent;
 
     private final BotConfiguration config;
     private final MusicManager musicManager;
@@ -55,7 +55,7 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     AudioLoaderResultImpl(
-        MusicManager musicManager, BotConfiguration config, EmbedMessageBuilder builder, EventWrapper deliveryEvent,
+        MusicManager musicManager, BotConfiguration config, EmbedMessageBuilder builder, CommandEventWrapper deliveryEvent,
         boolean isUrlPattern
     ) {
         this.musicManager = musicManager;

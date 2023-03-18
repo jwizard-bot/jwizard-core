@@ -21,7 +21,9 @@ package pl.miloszgilga.audioplayer;
 import net.dv8tion.jda.api.entities.Guild;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 
-import pl.miloszgilga.dto.EventWrapper;
+import java.util.Queue;
+
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
@@ -39,7 +41,7 @@ public class MusicManager {
 
     MusicManager(
         PlayerManager playerManager, EmbedMessageBuilder builder, BotConfiguration config, Guild guild,
-        EventWrapper eventWrapper
+        CommandEventWrapper eventWrapper
     ) {
         this.config = config;
         this.audioPlayer = playerManager.createPlayer();
