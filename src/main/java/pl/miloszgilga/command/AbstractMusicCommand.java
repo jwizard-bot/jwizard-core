@@ -18,6 +18,7 @@
 
 package pl.miloszgilga.command;
 
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -39,6 +40,7 @@ import static pl.miloszgilga.exception.CommandException.UsedCommandOnForbiddenCh
 import static pl.miloszgilga.exception.AudioPlayerException.ActiveMusicPlayingNotFoundException;
 import static pl.miloszgilga.exception.AudioPlayerException.UserOnVoiceChannelNotFoundException;
 import static pl.miloszgilga.exception.AudioPlayerException.LockCommandOnTemporaryHaltedException;
+import static pl.miloszgilga.exception.AudioPlayerException.UserOnVoiceChannelWithBotNotFoundException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -48,7 +50,7 @@ public abstract class AbstractMusicCommand extends AbstractCommand {
     protected final PlayerManager playerManager;
 
     protected boolean inPlayingMode;
-    protected boolean inListeningMode;
+    protected boolean inSameChannelWithBot;
     protected boolean selfJoinable;
     protected boolean isPaused;
 
@@ -81,18 +83,23 @@ public abstract class AbstractMusicCommand extends AbstractCommand {
             if (isPaused && Objects.isNull(pausedTrack)) {
                 throw new AudioPlayerException.TrackIsNotPausedException(config, event);
             }
-            if (inListeningMode) {
-                final GuildVoiceState userState = event.getMember().getVoiceState();
-                if (Objects.isNull(userState) || !userState.inVoiceChannel() || userState.isDeafened()) {
-                    throw new UserOnVoiceChannelNotFoundException(config, new EventWrapper(event));
-                }
-                final VoiceChannel afkChannel = event.getGuild().getAfkChannel();
-                if (!Objects.isNull(afkChannel) && Objects.equals(afkChannel, userState.getChannel())) {
-                    throw new UsedCommandOnForbiddenChannelException(config, new EventWrapper(event));
-                }
-                final GuildVoiceState voiceState = event.getGuild().getSelfMember().getVoiceState();
-                if (!Objects.isNull(voiceState) && !voiceState.inVoiceChannel()) {
-                    if (selfJoinable) event.getGuild().getAudioManager().openAudioConnection(userState.getChannel());
+            final GuildVoiceState userState = event.member().getVoiceState();
+            final GuildVoiceState voiceState = event.guild().getSelfMember().getVoiceState();
+            if (Objects.isNull(userState) || !userState.inVoiceChannel() || userState.isDeafened()) {
+                throw new UserOnVoiceChannelNotFoundException(config, event);
+            }
+            final VoiceChannel afkChannel = event.guild().getAfkChannel();
+            if (!Objects.isNull(afkChannel) && Objects.equals(afkChannel, userState.getChannel())) {
+                throw new UsedCommandOnForbiddenChannelException(config, event);
+            }
+            if (selfJoinable && !voiceState.inVoiceChannel()) {
+                event.guild().getAudioManager().openAudioConnection(userState.getChannel());
+            } else {
+                final boolean isNotOwner = !event.author().getId().equals(event.client().getOwnerId());
+                final boolean isNotManager = !event.member().hasPermission(Permission.MANAGE_SERVER);
+                if (!Objects.equals(voiceState.getChannel(), userState.getChannel()) && inSameChannelWithBot
+                    && (isNotOwner || isNotManager)) {
+                    throw new UserOnVoiceChannelWithBotNotFoundException(config, event);
                 }
             }
             doExecuteMusicCommand(event);

@@ -44,6 +44,16 @@ public class AudioPlayerException {
     @Slf4j public static class UserOnVoiceChannelNotFoundException extends BotException {
         public UserOnVoiceChannelNotFoundException(BotConfiguration config, CommandEventWrapper event) {
             super(config, LocaleSet.USER_ON_VOICE_CHANNEL_NOT_FOUND_EXEC, BugTracker.USER_ON_VOICE_CHANNEL_NOT_FOUND);
+            log.error("G: {}, A: {} <> Attempt to invoke command while user is not in voice channel",
+                event.guildName(), event.authorTag());
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Slf4j public static class UserOnVoiceChannelWithBotNotFoundException extends BotException {
+        public UserOnVoiceChannelWithBotNotFoundException(BotConfiguration config, CommandEventWrapper event) {
+            super(config, LocaleSet.USER_ON_VOICE_CHANNEL_WITH_BOT_NOT_FOUND_EXEC, BugTracker.USER_ON_VOICE_CHANNEL_NOT_FOUND);
             log.error("G: {}, A: {} <> Attempt to invoke command while user is not in voice channel with bot",
                 event.guildName(), event.authorTag());
         }
@@ -107,6 +117,16 @@ public class AudioPlayerException {
         public VolumeUnitsOutOfBoundsException(BotConfiguration config, CommandEventWrapper event) {
             super(config, LocaleSet.VOLUME_UNITS_OUT_OF_BOUNDS_EXC, BugTracker.VOLUME_UNITS_OUT_OF_BOUNDS);
             log.error("G: {}, A: {} <> Attempt to set out of bounds audio player volume units",
+                event.guildName(), event.authorTag());
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Slf4j public static class TrackQueueIsEmptyException extends BotException {
+        public TrackQueueIsEmptyException(BotConfiguration config, CommandEventWrapper event) {
+            super(config, LocaleSet.TRACK_QUEUE_IS_EMPTY_EXC, BugTracker.TRACK_QUEUE_IS_EMPTY);
+            log.error("G: {}, A: {} <> Attempt to use command on empty track queue",
                 event.guildName(), event.authorTag());
         }
     }
