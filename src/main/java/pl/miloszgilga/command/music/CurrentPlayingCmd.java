@@ -29,6 +29,7 @@ import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
 import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.audioplayer.PlayerManager;
+import pl.miloszgilga.audioplayer.TrackScheduler;
 import pl.miloszgilga.audioplayer.ExtendedAudioTrackInfo;
 import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
@@ -57,7 +58,7 @@ public class CurrentPlayingCmd extends AbstractMusicCommand {
         final CurrentPlayEmbedContent content = new CurrentPlayEmbedContent(
             LocaleSet.CURRENT_PLAYING_TRACK_MESS,
             LocaleSet.CURRENT_PLAYING_TIMESTAMP_MESS,
-            String.format("[%s](%s)", track.title, track.uri),
+            TrackScheduler.getRichTrackTitle(track),
             track.getThumbnailUrl(),
             ((Member) musicManager.getAudioPlayer().getPlayingTrack().getUserData()).getUser().getAsTag(),
             String.format("%s / %s", trackTimestamp, trackMaxDuration),

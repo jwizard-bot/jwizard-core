@@ -38,8 +38,6 @@ public class ResetPlayerVolumeCmd extends AbstractDjCommand {
 
     ResetPlayerVolumeCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.RESET_PLAYER_VOLUME, config, playerManager, embedBuilder);
-        super.inPlayingMode = false;
-        super.inListeningMode = false;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -28,6 +28,7 @@ import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.dto.PauseTrackEmbedContent;
 import pl.miloszgilga.audioplayer.PlayerManager;
+import pl.miloszgilga.audioplayer.TrackScheduler;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
 import pl.miloszgilga.core.LocaleSet;
@@ -46,7 +47,7 @@ public class PauseTrackCmd extends AbstractMusicCommand {
     PauseTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.PAUSE_TRACK, config, playerManager, embedBuilder);
         super.inPlayingMode = true;
-        super.inListeningMode = true;
+        super.inSameChannelWithBot = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,8 +60,8 @@ public class PauseTrackCmd extends AbstractMusicCommand {
         final PauseTrackEmbedContent content = new PauseTrackEmbedContent(
             LocaleSet.PAUSE_TRACK_MESS,
             Map.of(
-                "track", String.format("[%s](%s)", track.getInfo().title, track.getInfo().uri),
-                "invoker", new EventWrapper(event).authorTag(),
+                "track", TrackScheduler.getRichTrackTitle(track.getInfo()),
+                "invoker", event.authorTag(),
                 "resumeCmd", BotCommand.RESUME_TRACK.parseWithPrefix(config)
             ),
             Utilities.convertMilisToDate(track.getPosition()),

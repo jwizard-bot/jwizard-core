@@ -32,8 +32,7 @@ public class Bootloader {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void main(String[] args) {
-        final JDABot jdaBot = APP_CONTEXT.getBean(JDABot.class);
-        jdaBot.run(args);
+        APP_CONTEXT.getBean(JDABot.class).run(args);
         ((ConfigurableApplicationContext)APP_CONTEXT).close();
     }
 }

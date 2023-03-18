@@ -101,9 +101,12 @@ public class JClassLoader {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Object[] getAllListeners(CommandClient commandClient) {
-        final Object[] objects = new Object[loadedListeners.size() + 1];
+        final Object[] objects = new Object[loadedListeners.size() + 2];
         objects[0] = commandClient;
-        System.arraycopy(loadedListeners.toArray(), 0, objects, 1, loadedListeners.size());
+        objects[1] = config.getEventWaiter();
+        for (int i = 2; i < loadedListeners.size() + 2; i++) {
+            objects[i] = loadedListeners.get(i - 2);
+        }
         return objects;
     }
 }

@@ -26,6 +26,7 @@ import java.util.Map;
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
+import pl.miloszgilga.audioplayer.TrackScheduler;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
 import pl.miloszgilga.core.LocaleSet;
@@ -40,7 +41,7 @@ public class ResumeTrackCmd extends AbstractMusicCommand {
     ResumeTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.RESUME_TRACK, config, playerManager, embedBuilder);
         super.inPlayingMode = false;
-        super.inListeningMode = true;
+        super.inSameChannelWithBot = true;
         super.isPaused = true;
     }
 
@@ -52,8 +53,8 @@ public class ResumeTrackCmd extends AbstractMusicCommand {
 
         final AudioTrackInfo trackInfo = playerManager.getCurrentPlayingTrack(event);
         final MessageEmbed messageEmbed = embedBuilder.createMessage(LocaleSet.RESUME_TRACK_MESS, Map.of(
-            "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
-            "invoker", eventWrapper.authorTag(),
+            "track", TrackScheduler.getRichTrackTitle(trackInfo),
+            "invoker", event.authorTag(),
             "pauseCmd", BotCommand.PAUSE_TRACK.parseWithPrefix(config)
         ));
         event.textChannel().sendMessageEmbeds(messageEmbed).queue();

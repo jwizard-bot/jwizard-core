@@ -42,8 +42,6 @@ public class SetPlayerVolumeCmd extends AbstractDjCommand {
 
     SetPlayerVolumeCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.SET_PLAYER_VOLUME, config, playerManager, embedBuilder);
-        super.inPlayingMode = false;
-        super.inListeningMode = false;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

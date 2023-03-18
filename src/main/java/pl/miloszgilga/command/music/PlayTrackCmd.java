@@ -36,7 +36,7 @@ public class PlayTrackCmd extends AbstractMusicCommand {
     PlayTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.PLAY_TRACK, config, playerManager, embedBuilder);
         super.inPlayingMode = false;
-        super.inListeningMode = true;
+        super.inSameChannelWithBot = true;
         super.selfJoinable = true;
     }
 

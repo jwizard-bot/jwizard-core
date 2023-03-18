@@ -39,7 +39,6 @@ public class GetPlayerVolumeCmd extends AbstractMusicCommand {
     GetPlayerVolumeCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.GET_PLAYER_VOLUME, config, playerManager, embedBuilder);
         super.inPlayingMode = false;
-        super.inListeningMode = false;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

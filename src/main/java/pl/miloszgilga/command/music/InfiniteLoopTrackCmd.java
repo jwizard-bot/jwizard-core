@@ -26,6 +26,7 @@ import java.util.Map;
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
+import pl.miloszgilga.audioplayer.TrackScheduler;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
 import pl.miloszgilga.core.LocaleSet;
@@ -40,7 +41,7 @@ public class InfiniteLoopTrackCmd extends AbstractMusicCommand {
     InfiniteLoopTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.LOOP_TRACK, config, playerManager, embedBuilder);
         super.inPlayingMode = true;
-        super.inListeningMode = true;
+        super.inSameChannelWithBot = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +55,7 @@ public class InfiniteLoopTrackCmd extends AbstractMusicCommand {
         }
         final AudioTrackInfo playingTrack = playerManager.getCurrentPlayingTrack(event);
         final MessageEmbed messageEmbed = embedBuilder.createMessage(messsage, Map.of(
-            "track", String.format("[%s](%s)", playingTrack.title, playingTrack.uri),
+            "track", TrackScheduler.getRichTrackTitle(playingTrack),
             "loopCmd", BotCommand.LOOP_TRACK.parseWithPrefix(config)
         ));
         event.textChannel().sendMessageEmbeds(messageEmbed).queue();

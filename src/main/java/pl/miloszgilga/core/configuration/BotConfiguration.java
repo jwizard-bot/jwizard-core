@@ -24,6 +24,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Icon;
 import net.dv8tion.jda.api.managers.AccountManager;
 import net.dv8tion.jda.internal.managers.AccountManagerImpl;
+import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 
 import org.yaml.snakeyaml.Yaml;
 import org.apache.commons.cli.*;
@@ -61,6 +62,7 @@ public class BotConfiguration {
     private final CommandLineParser commandLineParser = new DefaultParser();
     private final HelpFormatter helpFormatter = new HelpFormatter();
     private final Dotenv dotenv = Dotenv.configure().systemProperties().load();
+    private final EventWaiter eventWaiter = new EventWaiter();
 
     private ResourceBundle localeBundle;
     private String projectVersion;
@@ -258,5 +260,9 @@ public class BotConfiguration {
 
     public ScheduledExecutorService getThreadPool() {
         return threadPool;
+    }
+
+    public EventWaiter getEventWaiter() {
+        return eventWaiter;
     }
 }

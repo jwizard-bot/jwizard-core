@@ -41,7 +41,7 @@ public class ClearRepeatTrackCmd extends AbstractMusicCommand {
     ClearRepeatTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.CLEAR_REPEAT_TRACK, config, playerManager, embedBuilder);
         super.inPlayingMode = false;
-        super.inListeningMode = true;
+        super.inSameChannelWithBot = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,7 +53,7 @@ public class ClearRepeatTrackCmd extends AbstractMusicCommand {
         final AudioTrackInfo trackInfo = playerManager.getCurrentPlayingTrack(event);
         final MessageEmbed messageEmbed = embedBuilder
             .createMessage(LocaleSet.REMOVE_MULTIPLE_REPEATING_TRACK_MESS, Map.of(
-                "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
+                "track", TrackScheduler.getRichTrackTitle(trackInfo),
                 "repeatingCmd", BotCommand.REPEAT_TRACK.parseWithPrefix(config)
             ));
         event.textChannel().sendMessageEmbeds(messageEmbed).queue();

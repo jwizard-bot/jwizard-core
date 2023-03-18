@@ -125,7 +125,7 @@ public class TrackScheduler extends AudioEventAdapter {
             log.info("G: {}, A: {} <> Staring playing audio track: '{}'", deliveryEvent.guildName(),
                 deliveryEvent.authorTag(), trackInfo.title);
         }
-        deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
+        deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queueAfter(1, TimeUnit.SECONDS);
         if (infiniteRepeating) nextTrackInfoDisabled = true;
     }
 
@@ -219,9 +219,10 @@ public class TrackScheduler extends AudioEventAdapter {
         infiniteRepeating = false;
         nextTrackInfoDisabled = false;
 
-        if (!showMessage) return;
-        final MessageEmbed messageEmbed = builder.createMessage(LocaleSet.LEAVE_EMPTY_CHANNEL_MESS);
-        deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
+        if (showMessage) {
+            final MessageEmbed messageEmbed = builder.createMessage(LocaleSet.LEAVE_EMPTY_CHANNEL_MESS);
+            deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
+        }
         onClearing = false;
     }
 
@@ -253,6 +254,10 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public CommandEventWrapper getDeliveryEvent() {
         return deliveryEvent;
+    }
+
+    public static String getRichTrackTitle(AudioTrackInfo audioTrackInfo) {
+        return String.format("[%s](%s)", audioTrackInfo.title, audioTrackInfo.uri);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

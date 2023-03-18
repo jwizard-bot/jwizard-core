@@ -23,7 +23,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-record AudioQueueExtendedInfo(
+public record AudioQueueExtendedInfo(
     Member sender,
     AudioTrack audioTrack
 ) {
