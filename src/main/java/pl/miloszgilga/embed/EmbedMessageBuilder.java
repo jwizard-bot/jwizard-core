@@ -155,6 +155,16 @@ public class EmbedMessageBuilder {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public MessageEmbed createTrackMessage(LocaleSet localeSet, Map<String, Object> attributes, String thumbnail) {
+        return new EmbedBuilder()
+            .setDescription(config.getLocaleText(localeSet, attributes))
+            .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
+            .setThumbnail(thumbnail)
+            .build();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public MessageEmbed createMessage(LocaleSet localeSet, Map<String, Object> attributes) {
         return new EmbedBuilder()
             .setDescription(config.getLocaleText(localeSet, attributes))

@@ -108,24 +108,23 @@ public class TrackScheduler extends AudioEventAdapter {
         if (!Objects.isNull(threadCountToLeave)) threadCountToLeave.cancel(true);
         if (nextTrackInfoDisabled || onClearing) return;
 
-        final AudioTrackInfo trackInfo = audioPlayer.getPlayingTrack().getInfo();
+        final ExtendedAudioTrackInfo trackInfo = new ExtendedAudioTrackInfo(audioPlayer.getPlayingTrack());
         final MessageEmbed messageEmbed;
 
         if (audioPlayer.isPaused()) {
-            messageEmbed = builder.createMessage(LocaleSet.ON_TRACK_START_ON_PAUSED_MESS, Map.of(
+            messageEmbed = builder.createTrackMessage(LocaleSet.ON_TRACK_START_ON_PAUSED_MESS, Map.of(
                 "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
                 "resumeCmd", BotCommand.RESUME_TRACK.parseWithPrefix(config)
-            ));
-            log.info("G: {}, A: {} <> Staring playing audio track: '{}' when audio player is paused",
-                deliveryEvent.guildName(), deliveryEvent.authorTag(), trackInfo.title);
+            ), trackInfo.getThumbnailUrl());
+            JDALog.info(log, deliveryEvent, "Staring playing audio track: '%s' when audio player is paused",
+                trackInfo.title);
         } else {
-            messageEmbed = builder.createMessage(LocaleSet.ON_TRACK_START_MESS, Map.of(
+            messageEmbed = builder.createTrackMessage(LocaleSet.ON_TRACK_START_MESS, Map.of(
                 "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri)
-            ));
-            log.info("G: {}, A: {} <> Staring playing audio track: '{}'", deliveryEvent.guildName(),
-                deliveryEvent.authorTag(), trackInfo.title);
+            ), trackInfo.getThumbnailUrl());
+            JDALog.info(log, deliveryEvent, "Staring playing audio track: '%s'", trackInfo.title);
         }
-        deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queueAfter(1, TimeUnit.SECONDS);
+        deliveryEvent.sendEmbedMessage(messageEmbed, new QueueAfterParam(1, TimeUnit.SECONDS));
         if (infiniteRepeating) nextTrackInfoDisabled = true;
     }
 
