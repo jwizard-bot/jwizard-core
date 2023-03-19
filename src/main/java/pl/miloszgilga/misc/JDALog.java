@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: SlashCommandListener.java
- * Last modified: 18/03/2023, 20:47
+ * File name: Log.java
+ * Last modified: 19/03/2023, 15:08
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -16,28 +16,28 @@
  * COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
  */
 
-package pl.miloszgilga.listener;
+package pl.miloszgilga.misc;
 
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import org.slf4j.Logger;
 
-import pl.miloszgilga.embed.EmbedMessageBuilder;
-import pl.miloszgilga.core.AbstractListenerAdapter;
-import pl.miloszgilga.core.configuration.BotConfiguration;
-import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
+import pl.miloszgilga.dto.CommandEventWrapper;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@JDAInjectableListenerLazyService
-public class SlashCommandListener extends AbstractListenerAdapter {
+public class JDALog {
 
-    SlashCommandListener(BotConfiguration config, EmbedMessageBuilder embedBuilder) {
-        super(config, embedBuilder);
+    private JDALog() {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override
-    public void onSlashCommand(SlashCommandEvent event) {
+    public static void info(Logger logger, CommandEventWrapper wrapper, String message, Object... args) {
+        logger.info("G: {}, A: {} <> " + String.format(message, args), wrapper.getGuildName(), wrapper.getAuthorTag());
+    }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void error(Logger logger, CommandEventWrapper wrapper, String message, Object... args) {
+        logger.error("G: {}, A: {} <> " + String.format(message, args), wrapper.getGuildName(), wrapper.getAuthorTag());
     }
 }

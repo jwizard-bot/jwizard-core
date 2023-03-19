@@ -18,11 +18,14 @@
 
 package pl.miloszgilga.audioplayer;
 
+import lombok.extern.slf4j.Slf4j;
+
 import net.dv8tion.jda.api.entities.Guild;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 
 import java.util.Queue;
 
+import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.configuration.BotProperty;
@@ -30,6 +33,7 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+@Slf4j
 public class MusicManager {
 
     private final BotConfiguration config;
@@ -75,9 +79,10 @@ public class MusicManager {
         return (short) audioPlayer.getVolume();
     }
 
-    public short resetPlayerVolume() {
+    public short resetPlayerVolume(CommandEventWrapper eventWrapper) {
         final short defVolume = config.getProperty(BotProperty.J_DEFAULT_PLAYER_VOLUME_UNITS, Short.class);
         audioPlayer.setVolume(defVolume);
+        JDALog.info(log, eventWrapper, "Audio player volume was reset to default value (%s points)", defVolume);
         return defVolume;
     }
 }

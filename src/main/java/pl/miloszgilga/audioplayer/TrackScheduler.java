@@ -38,7 +38,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ScheduledFuture;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.misc.Utilities;
+import pl.miloszgilga.misc.QueueAfterParam;
 import pl.miloszgilga.exception.BugTracker;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
@@ -85,8 +87,7 @@ public class TrackScheduler extends AudioEventAdapter {
         pausedTrack = audioPlayer.getPlayingTrack();
 
         final AudioTrackInfo trackInfo = audioPlayer.getPlayingTrack().getInfo();
-        log.info("G: {}, A: {} <> Audio track: '{}' was paused", deliveryEvent.guildName(),
-            deliveryEvent.authorTag(), trackInfo.title);
+        JDALog.info(log, deliveryEvent, "Audio track: '%s' was paused", trackInfo.title);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -97,8 +98,7 @@ public class TrackScheduler extends AudioEventAdapter {
         pausedTrack = null;
 
         final AudioTrackInfo trackInfo = audioPlayer.getPlayingTrack().getInfo();
-        log.info("G: {}, A: {} <> Paused audio track: '{}' was resumed", deliveryEvent.guildName(),
-            deliveryEvent.authorTag(), trackInfo.title);
+        JDALog.info(log, deliveryEvent, "Paused audio track: '%s' was resumed", trackInfo.title);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -170,8 +170,8 @@ public class TrackScheduler extends AudioEventAdapter {
             audioPlayer.startTrack(track.makeClone(), false);
             deliveryEvent.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
             nextTrackInfoDisabled = true;
-            log.info("G: {}, A: {} <> Repeat {}x times of track '{}' from elapsed {}x repeats",
-                deliveryEvent.guildName(), deliveryEvent.authorTag(), currentRepeat, trackInfo.title, countOfRepeats);
+            JDALog.info(log, deliveryEvent, "Repeat %s times of track '%s' from elapsed %s repeats",
+                currentRepeat, trackInfo.title, countOfRepeats);
         } else if (endReason.mayStartNext) {
             nextTrack();
         }
@@ -221,6 +221,7 @@ public class TrackScheduler extends AudioEventAdapter {
             deliveryEvent.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
         }
         onClearing = false;
+        JDALog.info(log, deliveryEvent, "Remove playing track and clear queue");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -228,6 +229,7 @@ public class TrackScheduler extends AudioEventAdapter {
     private void closeAudioConnection() {
         final Guild guild = deliveryEvent.getDataSender().getGuild();
         config.getThreadPool().submit(() -> guild.getAudioManager().closeAudioConnection());
+        JDALog.info(log, deliveryEvent, "Audio connection threadpool closed");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

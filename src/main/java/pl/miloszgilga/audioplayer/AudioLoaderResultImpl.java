@@ -31,6 +31,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.TrackEmbedContent;
 import pl.miloszgilga.dto.CommandEventWrapper;
@@ -93,8 +94,7 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
                 new PlaylistEmbedContent(Integer.toString(trackList.size()), sumDurationTime, thumbnailUrl));
             deliveryEvent.sendEmbedMessage(messageEmbed);
 
-            log.info("G: {}, A: {} <> New audio playlist: '{}' was added to queue", deliveryEvent.guildName(),
-                deliveryEvent.authorTag(), flattedTrackList(trackList));
+            JDALog.info(log, deliveryEvent, "New audio playlist: '%s' was added to queue", flattedTrackList(trackList));
         } else {
             addNewAudioTrackToQueue(dataSender, trackList.get(0));
         }
@@ -108,8 +108,7 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
             config.getLocaleText(LocaleSet.NOT_FOUND_TRACK_MESS), BugTracker.NOT_FOUND_TRACK);
         deliveryEvent.sendEmbedMessage(messageEmbed);
 
-        log.info("G: {}, A: {} <> Not available to find provided audio track/playlist", deliveryEvent.guildName(),
-            deliveryEvent.authorTag());
+        JDALog.info(log, deliveryEvent, "Not available to find provided audio track/playlist");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -120,8 +119,8 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
             config.getLocaleText(LocaleSet.ISSUE_WHILE_LOADING_TRACK_MESS), BugTracker.ISSUE_ON_LOAD_TRACK);
         deliveryEvent.sendEmbedMessage(messageEmbed);
 
-        log.info("G: {}, A: {} <> Unexpected exception during load audio track/playlist: {}", deliveryEvent.guildName(),
-            deliveryEvent.authorTag(), exception.getMessage());
+        JDALog.error(log, deliveryEvent, "Unexpected exception during load audio track/playlist: %s",
+            exception.getMessage());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -134,8 +133,7 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
         final MessageEmbed messageEmbed = createSingleTrackEmbedMessage(track);
         deliveryEvent.sendEmbedMessage(messageEmbed);
 
-        log.info("G: {}, A: {} <> New audio track: '{}' was added to queue", deliveryEvent.guildName(),
-            deliveryEvent.authorTag(), track.getInfo().title);
+        JDALog.info(log, deliveryEvent, "New audio track: '%s' was added to queue", track.getInfo().title);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

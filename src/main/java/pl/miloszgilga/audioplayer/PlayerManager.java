@@ -36,6 +36,9 @@ import org.apache.http.client.config.RequestConfig;
 
 import java.util.*;
 
+import pl.miloszgilga.misc.JDALog;
+import pl.miloszgilga.misc.Utilities;
+import pl.miloszgilga.misc.ValidateUserDetails;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.configuration.BotProperty;
@@ -111,8 +114,8 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
         final MusicManager musicManager = checkPermissions(event);
         final AudioTrackInfo skippedTrack = getCurrentPlayingTrack(event);
         musicManager.getTrackScheduler().nextTrack();
-        log.info("G: {}, A: {} <> Current playing track '{}' was skipped", event.guildName(), event.authorTag(),
-            skippedTrack.title);
+
+        JDALog.info(log, event, "Current playing track '%s' was skipped", skippedTrack.title);
         return skippedTrack;
     }
 
@@ -122,7 +125,7 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     public void shuffleQueue(CommandEventWrapper event) {
         final MusicManager musicManager = getMusicManager(event);
         Collections.shuffle((List<?>)musicManager.getQueue());
-        log.info("G: {}, A: {} <> Current queue tracks was shuffled", event.guildName(), event.authorTag());
+        JDALog.info(log, event, "Current queue tracks was shuffled");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -132,12 +135,12 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
         final MusicManager musicManager = checkPermissions(event);
         musicManager.getTrackScheduler().setCountOfRepeats(countOfRepeats);
         if (countOfRepeats == 0) {
-            log.info("G: {}, A: {} <> Repeating of current playing track '{}' was removed", event.guildName(),
-                event.authorTag(), getCurrentPlayingTrack(event).title);
+            JDALog.info(log, event, "Repeating of current playing track '%s' was removed",
+                getCurrentPlayingTrack(event).title);
             return;
         }
-        log.info("G: {}, A: {} <> Current playing track '{}' will be repeating {}x times",
-            event.guildName(), event.authorTag(), getCurrentPlayingTrack(event).title, countOfRepeats);
+        JDALog.info(log, event, "Current playing track '%s' will be repeating %s times",
+            getCurrentPlayingTrack(event).title, String.valueOf(countOfRepeats));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -147,12 +150,11 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
         final MusicManager musicManager = checkPermissions(event);
         musicManager.getTrackScheduler().setInfiniteRepeating(!musicManager.getTrackScheduler().isInfiniteRepeating());
         final boolean isRepeating = musicManager.getTrackScheduler().isInfiniteRepeating();
+        final String currentTrackTitle = getCurrentPlayingTrack(event).title;
         if (isRepeating) {
-            log.info("G: {}, A: {} <> Current playing track '{}' has been placed in infinite loop",
-                event.guildName(), event.authorTag(), getCurrentPlayingTrack(event).title);
+            JDALog.info(log, event, "Current playing track '%s' has been placed in infinite loop", currentTrackTitle);
         } else {
-            log.info("G: {}, A: {} <> Current playing track '{}' has been removed from infinite loop",
-                event.guildName(), event.authorTag(), getCurrentPlayingTrack(event).title);
+            JDALog.info(log, event, "Current playing track '%s' has been removed from infinite loop", currentTrackTitle);
         }
         return musicManager.getTrackScheduler().isInfiniteRepeating();
     }
@@ -163,8 +165,7 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     public void setPlayerVolume(CommandEventWrapper event, int volume) {
         final MusicManager musicManager = getMusicManager(event);
         musicManager.getAudioPlayer().setVolume(volume);
-        log.info("G: {}, A: {} <> Audio player volume was set to '{}' volume units", event.guildName(),
-            event.authorTag(), volume);
+        JDALog.info(log, event, "Audio player volume was set to '%s' volume units", volume);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
