@@ -18,25 +18,34 @@
 
 package pl.miloszgilga.core;
 
-import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommand;
+
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import org.springframework.context.annotation.DependsOn;
 
+import java.util.List;
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.BotSlashCommand;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.configuration.BotConfiguration;
+import pl.miloszgilga.misc.QueueAfterParam;
 
 import static pl.miloszgilga.exception.CommandException.MismatchCommandArgumentsCountException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @DependsOn("botConfiguration")
-public abstract class AbstractCommand extends Command {
+public abstract class AbstractCommand extends SlashCommand {
 
     private final int argsCount;
     private final BotCommand command;
@@ -56,6 +65,8 @@ public abstract class AbstractCommand extends Command {
         this.config = config;
         this.embedBuilder = embedBuilder;
         this.arguments = command.getArgSyntax();
+        this.guildOnly = false;
+        this.options = insertSlashOptionsData(command);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,11 +80,63 @@ public abstract class AbstractCommand extends Command {
                 throw new MismatchCommandArgumentsCountException(config, commandEventWrapper, command);
             }
             doExecuteCommand(commandEventWrapper);
+
+            final var defferedMessages = event.getTextChannel().sendMessageEmbeds(commandEventWrapper.getEmbeds());
+            final Consumer<QueueAfterParam> defferedSendConsumer = queueAfterParam -> {
+                if (Objects.isNull(queueAfterParam)) {
+                    defferedMessages.queue();
+                } else {
+                    defferedMessages.queueAfter(queueAfterParam.duration(), queueAfterParam.timeUnit());
+                }
+            };
+            sendEmbeds(commandEventWrapper, defferedSendConsumer);
         } catch (BotException ex) {
-            event.getChannel()
+            event.reply(embedBuilder.createErrorMessage(commandEventWrapper, ex));
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    protected void execute(SlashCommandEvent event) {
+        final CommandEventWrapper commandEventWrapper = new CommandEventWrapper(event);
+        event.deferReply().queue();
+        try {
+            doExecuteCommand(commandEventWrapper);
+
+            final var defferedMessages = event.getHook().sendMessageEmbeds(commandEventWrapper.getEmbeds());
+            final Consumer<QueueAfterParam> defferedSendConsumer = queueAfterParam -> {
+                if (Objects.isNull(queueAfterParam)) {
+                    defferedMessages.queue();
+                } else {
+                    defferedMessages.queueAfter(queueAfterParam.duration(), queueAfterParam.timeUnit());
+                }
+            };
+            sendEmbeds(commandEventWrapper, defferedSendConsumer);
+        } catch (BotException ex) {
+            event.getHook()
                 .sendMessageEmbeds(embedBuilder.createErrorMessage(commandEventWrapper, ex))
                 .queue();
         }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void sendEmbeds(CommandEventWrapper wrapper, Consumer<QueueAfterParam> defferedMessage) {
+        final List<MessageEmbed> messageEmbeds = wrapper.getEmbeds();
+        if (messageEmbeds.isEmpty()) return;
+
+        final QueueAfterParam queueAfterParam = wrapper.getQueueAfterParam();
+        defferedMessage.accept(queueAfterParam);
+
+        if (!Objects.isNull(wrapper.getAppendAfterEmbeds())) {
+            wrapper.getAppendAfterEmbeds().run();
+        }
+    }
+
+    private List<OptionData> insertSlashOptionsData(BotCommand command) {
+        final BotSlashCommand slashCommand = BotSlashCommand.getFromRegularCommand(command);
+        return slashCommand.fabricateOptions(config);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

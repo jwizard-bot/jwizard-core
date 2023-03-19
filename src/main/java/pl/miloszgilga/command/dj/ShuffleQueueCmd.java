@@ -57,6 +57,6 @@ public class ShuffleQueueCmd extends AbstractDjCommand {
         final MessageEmbed messageEmbed = embedBuilder.createMessage(LocaleSet.QUEUE_WAS_SHUFFLED, Map.of(
             "showQueueCmd", BotCommand.QUEUE.parseWithPrefix(config)
         ));
-        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
+        event.appendEmbedMessage(messageEmbed);
     }
 }

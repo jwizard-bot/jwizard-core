@@ -54,11 +54,11 @@ public class TrackScheduler extends AudioEventAdapter {
     private final BotConfiguration config;
     private final EmbedMessageBuilder builder;
     private final AudioPlayer audioPlayer;
-    private final CommandEventWrapper deliveryEvent;
 
     private final Queue<AudioQueueExtendedInfo> trackQueue = new LinkedList<>();
 
     private AudioTrack pausedTrack;
+    private CommandEventWrapper deliveryEvent;
     private ScheduledFuture<?> threadCountToLeave;
     private int countOfRepeats = 0;
     private int totalCountOfRepeats = 0;
@@ -137,8 +137,8 @@ public class TrackScheduler extends AudioEventAdapter {
         final boolean isNoneRepeating = !infiniteRepeating && countOfRepeats == 0;
         if (Objects.isNull(audioPlayer.getPlayingTrack()) && trackQueue.isEmpty() && isNoneRepeating) {
             final MessageEmbed messageEmbed = builder.createMessage(LocaleSet.ON_END_PLAYBACK_QUEUE_MESS);
-            deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
-            log.info("G: {}, A: {} <> End of playing queue tracks", deliveryEvent.guildName(), deliveryEvent.authorTag());
+            deliveryEvent.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
+            JDALog.info(log, deliveryEvent, "End of playing queue tracks");
 
             nextTrackInfoDisabled = false;
             final int timeToLeaveChannel = config.getProperty(BotProperty.J_INACTIVITY_NO_TRACK_TIMEOUT, Integer.class);
@@ -150,9 +150,8 @@ public class TrackScheduler extends AudioEventAdapter {
                 closeAudioConnection();
                 audioPlayer.setPaused(false);
 
-                deliveryEvent.textChannel().sendMessageEmbeds(leaveMessageEmbed).queue();
-                log.info("G: {}, A: {} <> Leave voice channel after '{}' seconds of inactivity",
-                    deliveryEvent.guildName(), deliveryEvent.authorTag(), timeToLeaveChannel);
+                deliveryEvent.getTextChannel().sendMessageEmbeds(leaveMessageEmbed).queue();
+                JDALog.info(log, deliveryEvent, "Leave voice channel after '%s' seconds of inactivity", timeToLeaveChannel);
             }, timeToLeaveChannel, TimeUnit.SECONDS);
             return;
         }
@@ -169,7 +168,7 @@ public class TrackScheduler extends AudioEventAdapter {
                     "elapsedRepeats", --countOfRepeats
                 ));
             audioPlayer.startTrack(track.makeClone(), false);
-            deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
+            deliveryEvent.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
             nextTrackInfoDisabled = true;
             log.info("G: {}, A: {} <> Repeat {}x times of track '{}' from elapsed {}x repeats",
                 deliveryEvent.guildName(), deliveryEvent.authorTag(), currentRepeat, trackInfo.title, countOfRepeats);
@@ -184,10 +183,8 @@ public class TrackScheduler extends AudioEventAdapter {
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException ex) {
         final MessageEmbed messageEmbed = builder.createErrorMessage(deliveryEvent,
             config.getLocaleText(LocaleSet.ISSUE_WHILE_PLAYING_TRACK_MESS), BugTracker.ISSUE_WHILE_PLAYING_TRACK);
-        deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
-
-        log.error("G: {}, A: {} <> Unexpected issue while playing track: '{}'. Cause: {}", deliveryEvent.guildName(),
-            deliveryEvent.authorTag(), track.getInfo().title, ex.getMessage());
+        deliveryEvent.sendEmbedMessage(messageEmbed);
+        JDALog.error(log, deliveryEvent, "Unexpected issue while playing track: '%s'. Cause: %s", ex.getMessage());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -221,7 +218,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
         if (showMessage) {
             final MessageEmbed messageEmbed = builder.createMessage(LocaleSet.LEAVE_EMPTY_CHANNEL_MESS);
-            deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
+            deliveryEvent.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
         }
         onClearing = false;
     }
@@ -229,7 +226,7 @@ public class TrackScheduler extends AudioEventAdapter {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void closeAudioConnection() {
-        final Guild guild = deliveryEvent.dataSender().getGuild();
+        final Guild guild = deliveryEvent.getDataSender().getGuild();
         config.getThreadPool().submit(() -> guild.getAudioManager().closeAudioConnection());
     }
 
@@ -254,6 +251,10 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public CommandEventWrapper getDeliveryEvent() {
         return deliveryEvent;
+    }
+
+    public void setDeliveryEvent(CommandEventWrapper event) {
+        this.deliveryEvent = event;
     }
 
     public static String getRichTrackTitle(AudioTrackInfo audioTrackInfo) {

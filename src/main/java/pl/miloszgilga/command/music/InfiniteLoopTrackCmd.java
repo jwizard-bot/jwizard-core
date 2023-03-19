@@ -58,6 +58,6 @@ public class InfiniteLoopTrackCmd extends AbstractMusicCommand {
             "track", TrackScheduler.getRichTrackTitle(playingTrack),
             "loopCmd", BotCommand.LOOP_TRACK.parseWithPrefix(config)
         ));
-        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
+        event.appendEmbedMessage(messageEmbed);
     }
 }

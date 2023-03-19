@@ -115,6 +115,9 @@ public class JDABot {
             .setLinkedCacheSize(LINKED_CACHE_SIZE)
             .addCommands(jClassLoader.getLoadedCommands());
 
+        if (config.getProperty(BotProperty.J_SLASH_COMMANDS_ENABLED, Boolean.class)) {
+            commandBuilder.addSlashCommands(jClassLoader.getLoadedCommands());
+        }
         try {
             final JDA jda = JDABuilder
                 .create(config.getProperty(BotProperty.J_AUTH_TOKEN), Arrays.asList(GATEWAY_INTENTS))

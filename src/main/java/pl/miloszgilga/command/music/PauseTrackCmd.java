@@ -56,12 +56,12 @@ public class PauseTrackCmd extends AbstractMusicCommand {
     protected void doExecuteMusicCommand(CommandEventWrapper event) {
         playerManager.pauseCurrentTrack(event);
 
-        final AudioTrack track = playerManager.getMusicManager(event.guild()).getAudioPlayer().getPlayingTrack();
+        final AudioTrack track = playerManager.getMusicManager(event.getGuild()).getAudioPlayer().getPlayingTrack();
         final PauseTrackEmbedContent content = new PauseTrackEmbedContent(
             LocaleSet.PAUSE_TRACK_MESS,
             Map.of(
                 "track", TrackScheduler.getRichTrackTitle(track.getInfo()),
-                "invoker", event.authorTag(),
+                "invoker", event.getAuthorTag(),
                 "resumeCmd", BotCommand.RESUME_TRACK.parseWithPrefix(config)
             ),
             Utilities.convertMilisToDate(track.getPosition()),
@@ -70,6 +70,6 @@ public class PauseTrackCmd extends AbstractMusicCommand {
             Utilities.createPlayerPercentageTrack(track.getPosition(), track.getDuration(), MAX_VIS_BLOCKS_COUNT)
         );
         final MessageEmbed messageEmbed = embedBuilder.createPauseTrackMessage(content);
-        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
+        event.appendEmbedMessage(messageEmbed);
     }
 }

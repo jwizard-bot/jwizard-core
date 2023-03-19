@@ -78,7 +78,8 @@ public class BotConfiguration {
         new CastType<>(Boolean.class, Boolean::valueOf),
         new CastType<>(Integer.class, Integer::valueOf),
         new CastType<>(Short.class, Short::valueOf),
-        new CastType<>(Byte.class, Byte::valueOf)
+        new CastType<>(Byte.class, Byte::valueOf),
+        new CastType<>(Float.class, Float::valueOf)
     );
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -120,6 +121,8 @@ public class BotConfiguration {
         log.info("Primary language for bot '{}' was successfully loaded", language);
         log.info("Bot configuration for '{}' version was successfully loaded", appMode.getAlias());
         log.info("Successfully loaded variables from '.env' file: {}", envProperties);
+        log.info("Slash commands in application was turned {}. To change, set 'slash-commands.enabled' property.",
+            getProperty(BotProperty.J_SLASH_COMMANDS_ENABLED, Boolean.class) ? "ON" : "OFF");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

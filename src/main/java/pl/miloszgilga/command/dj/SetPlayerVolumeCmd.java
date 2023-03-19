@@ -42,24 +42,25 @@ public class SetPlayerVolumeCmd extends AbstractDjCommand {
 
     SetPlayerVolumeCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.SET_PLAYER_VOLUME, config, playerManager, embedBuilder);
+        super.inIdleMode = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void doExecuteDjCommand(CommandEventWrapper event) {
-        final short defaultVolumeUnits = config.getProperty(BotProperty.J_DEFAULT_PLAYER_VOLUME_UNITS, Short.class);
+        final float defaultVolumeUnits = config.getProperty(BotProperty.J_DEFAULT_PLAYER_VOLUME_UNITS, Float.class);
         final short currentVolumeUnits = playerManager.getMusicManager(event).getPlayerVolume();
-        final short volumeUnits = NumberUtils.toShort(event.args(), defaultVolumeUnits);
+        final short volumeUnits = (short) NumberUtils.toFloat(event.getArgs().get(0), defaultVolumeUnits);
         if (volumeUnits < 0 || volumeUnits > 150) {
             throw new VolumeUnitsOutOfBoundsException(config, event);
         }
-        playerManager.setPlayerVolume(event, currentVolumeUnits);
+        playerManager.setPlayerVolume(event, volumeUnits);
         final MessageEmbed messageEmbed = embedBuilder
             .createMessage(LocaleSet.SET_CURRENT_AUDIO_PLAYER_VOLUME_MESS, Map.of(
                 "previousVolume", currentVolumeUnits,
                 "setVolume", volumeUnits
             ));
-        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
+        event.appendEmbedMessage(messageEmbed);
     }
 }

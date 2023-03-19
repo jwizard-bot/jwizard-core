@@ -18,7 +18,13 @@
 
 package pl.miloszgilga.misc;
 
+import net.dv8tion.jda.api.Permission;
+
 import java.util.concurrent.TimeUnit;
+
+import pl.miloszgilga.dto.CommandEventWrapper;
+import pl.miloszgilga.core.configuration.BotProperty;
+import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -67,5 +73,17 @@ public final class Utilities {
 
     public static String createPlayerPercentageTrack(double position, double maxDuration) {
         return createPlayerPercentageTrack(position, maxDuration, MAX_EMBED_PLAYER_INDICATOR_LENGTH);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static ValidateUserDetails validateUserDetails(CommandEventWrapper event, BotConfiguration config) {
+        final String djRoleName = config.getProperty(BotProperty.J_DJ_ROLE_NAME);
+
+        final boolean isNotOwner = !event.getAuthor().getId().equals(event.getGuild().getOwnerId());
+        final boolean isNotManager = !event.getMember().hasPermission(Permission.MANAGE_SERVER);
+        final boolean isNotDj = event.getMember().getRoles().stream().noneMatch(r -> r.getName().equals(djRoleName));
+
+        return new ValidateUserDetails(isNotOwner, isNotManager, isNotDj);
     }
 }

@@ -21,6 +21,7 @@ package pl.miloszgilga.core.loader;
 import lombok.extern.slf4j.Slf4j;
 
 import com.jagrosh.jdautilities.command.Command;
+import com.jagrosh.jdautilities.command.SlashCommand;
 import com.jagrosh.jdautilities.command.CommandClient;
 
 import org.reflections.Reflections;
@@ -32,6 +33,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 import pl.miloszgilga.Bootloader;
+import pl.miloszgilga.BotSlashCommand;
 import pl.miloszgilga.core.AbstractCommand;
 import pl.miloszgilga.core.AbstractListenerAdapter;
 import pl.miloszgilga.core.configuration.BotProperty;
@@ -65,7 +67,8 @@ public class JClassLoader {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void loadCommandsViaReflection() {
-        final Set<Class<?>> commandsClazz = commandsReflections.getTypesAnnotatedWith(JDAInjectableCommandLazyService.class);
+        final Set<Class<?>> commandsClazz = commandsReflections
+            .getTypesAnnotatedWith(JDAInjectableCommandLazyService.class);
         if (commandsClazz.isEmpty()) return;
         for (final Class<?> commandClazz : commandsClazz) {
             loadedCommands.add((AbstractCommand) Bootloader.APP_CONTEXT.getBean(commandClazz));
@@ -74,14 +77,17 @@ public class JClassLoader {
         loadedCommands.sort(Comparator.comparing(Command::getName));
         for (final AbstractCommand abstractCommand : loadedCommands) {
             final String commandInvoker = config.getProperty(BotProperty.J_PREFIX) + abstractCommand.getName();
-            log.info(" --- {} {} ({})", commandInvoker, abstractCommand.getAliases(), abstractCommand.getClass().getName());
+            log.info(" --- {} {} ({}), slash command exist: {}", commandInvoker, abstractCommand.getAliases(),
+                abstractCommand.getClass().getName(),
+                BotSlashCommand.checkIfSlashExist(abstractCommand.getName()) ? "YES" : "NO");
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void loadListenersViaReflection() {
-        final Set<Class<?>> listenersClazz = listenersReflections.getTypesAnnotatedWith(JDAInjectableListenerLazyService.class);
+        final Set<Class<?>> listenersClazz = listenersReflections
+            .getTypesAnnotatedWith(JDAInjectableListenerLazyService.class);
         if (listenersClazz.isEmpty()) return;
         for (final Class<?> listenerClazz : listenersClazz) {
             loadedListeners.add((AbstractListenerAdapter) Bootloader.APP_CONTEXT.getBean(listenerClazz));
@@ -94,8 +100,8 @@ public class JClassLoader {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Command[] getLoadedCommands() {
-        return loadedCommands.toArray(Command[]::new);
+    public SlashCommand[] getLoadedCommands() {
+        return loadedCommands.toArray(SlashCommand[]::new);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

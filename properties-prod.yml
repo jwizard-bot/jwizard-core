@@ -23,6 +23,8 @@ bot:
     source-code-path: 'https://github.com/Milosz08/JWizard_Discord_Bot'
     development-mode: false
     prefix: '$'
+    slash-commands:
+        enabled: true
     avatar:
         has-avatar: true
         path-to-avatar: gfx/bot-logo-day-variant.png

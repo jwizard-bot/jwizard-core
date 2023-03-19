@@ -27,7 +27,6 @@ import java.util.Objects;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.CommandEventWrapper;
-import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.exception.AudioPlayerException;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.AbstractCommand;
@@ -50,6 +49,7 @@ public abstract class AbstractMusicCommand extends AbstractCommand {
     protected final PlayerManager playerManager;
 
     protected boolean inPlayingMode;
+    protected boolean inIdleMode;
     protected boolean inSameChannelWithBot;
     protected boolean selfJoinable;
     protected boolean isPaused;
@@ -68,46 +68,43 @@ public abstract class AbstractMusicCommand extends AbstractCommand {
 
     @Override
     protected void doExecuteCommand(CommandEventWrapper event) {
-        final var audioSendHandler = (AudioPlayerSendHandler) event.guild().getAudioManager().getSendingHandler();
-        try {
-            final GuildVoiceState guildVoiceState = event.guild().getSelfMember().getVoiceState();
-            if (Objects.isNull(guildVoiceState) || guildVoiceState.isMuted()) {
-                throw new LockCommandOnTemporaryHaltedException(config, event);
-            }
-            final MusicManager musicManager = playerManager.getMusicManager(event);
-            if (inPlayingMode && (Objects.isNull(audioSendHandler) || !audioSendHandler.isInPlayingMode()
-                || musicManager.getAudioPlayer().isPaused()) && !isPaused) {
-                throw new ActiveMusicPlayingNotFoundException(config, event);
-            }
+        final var audioSendHandler = (AudioPlayerSendHandler) event.getGuild().getAudioManager().getSendingHandler();
+
+        final GuildVoiceState guildVoiceState = event.getGuild().getSelfMember().getVoiceState();
+        if (Objects.isNull(guildVoiceState) || guildVoiceState.isMuted()) {
+            throw new LockCommandOnTemporaryHaltedException(config, event);
+        }
+        final MusicManager musicManager = playerManager.getMusicManager(event);
+        if (inPlayingMode && (Objects.isNull(audioSendHandler) || !audioSendHandler.isInPlayingMode()
+            || musicManager.getAudioPlayer().isPaused()) && !isPaused) {
+            throw new ActiveMusicPlayingNotFoundException(config, event);
+        }
+        if (!inIdleMode) {
             final AudioTrack pausedTrack = musicManager.getTrackScheduler().getPausedTrack();
             if (isPaused && Objects.isNull(pausedTrack)) {
                 throw new AudioPlayerException.TrackIsNotPausedException(config, event);
             }
-            final GuildVoiceState userState = event.member().getVoiceState();
-            final GuildVoiceState voiceState = event.guild().getSelfMember().getVoiceState();
+            final GuildVoiceState userState = event.getMember().getVoiceState();
+            final GuildVoiceState voiceState = event.getGuild().getSelfMember().getVoiceState();
             if (Objects.isNull(userState) || !userState.inVoiceChannel() || userState.isDeafened()) {
                 throw new UserOnVoiceChannelNotFoundException(config, event);
             }
-            final VoiceChannel afkChannel = event.guild().getAfkChannel();
+            final VoiceChannel afkChannel = event.getGuild().getAfkChannel();
             if (!Objects.isNull(afkChannel) && Objects.equals(afkChannel, userState.getChannel())) {
                 throw new UsedCommandOnForbiddenChannelException(config, event);
             }
             if (selfJoinable && !voiceState.inVoiceChannel()) {
-                event.guild().getAudioManager().openAudioConnection(userState.getChannel());
+                event.getGuild().getAudioManager().openAudioConnection(userState.getChannel());
             } else {
-                final boolean isNotOwner = !event.author().getId().equals(event.client().getOwnerId());
-                final boolean isNotManager = !event.member().hasPermission(Permission.MANAGE_SERVER);
+                final boolean isNotOwner = !event.getAuthor().getId().equals(event.getGuild().getOwnerId());
+                final boolean isNotManager = !event.getMember().hasPermission(Permission.MANAGE_SERVER);
                 if (!Objects.equals(voiceState.getChannel(), userState.getChannel()) && inSameChannelWithBot
                     && (isNotOwner || isNotManager)) {
                     throw new UserOnVoiceChannelWithBotNotFoundException(config, event);
                 }
             }
-            doExecuteMusicCommand(event);
-        } catch (BotException ex) {
-            event.textChannel()
-                .sendMessageEmbeds(embedBuilder.createErrorMessage(event, ex))
-                .queue();
         }
+        doExecuteMusicCommand(event);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

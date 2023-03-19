@@ -91,7 +91,6 @@ public class ShowQueueCmd extends AbstractMusicCommand {
         final MessageEmbed messageEmbed = embedBuilder.createQueueInfoMessage(content);
         final Paginator paginator = pagination.createDefaultPaginator(pageableTracks);
 
-        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
-        paginator.display(event.textChannel());
+        event.appendEmbedMessage(messageEmbed, () -> paginator.display(event.getTextChannel()));
     }
 }

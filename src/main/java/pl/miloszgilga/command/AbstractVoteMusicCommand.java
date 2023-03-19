@@ -19,7 +19,6 @@
 package pl.miloszgilga.command;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
@@ -39,15 +38,8 @@ public abstract class AbstractVoteMusicCommand extends AbstractMusicCommand {
 
     @Override
     protected void doExecuteMusicCommand(CommandEventWrapper event) {
-        try {
 
-
-            doExecuteVoteMusicCommand(event);
-        } catch (BotException ex) {
-            event.textChannel()
-                .sendMessageEmbeds(embedBuilder.createErrorMessage(event, ex))
-                .queue();
-        }
+        doExecuteVoteMusicCommand(event);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

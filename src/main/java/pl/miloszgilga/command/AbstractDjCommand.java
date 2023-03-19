@@ -18,14 +18,12 @@
 
 package pl.miloszgilga.command;
 
-import net.dv8tion.jda.api.Permission;
-
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.exception.BotException;
+import pl.miloszgilga.misc.Utilities;
+import pl.miloszgilga.misc.ValidateUserDetails;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
-import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 import static pl.miloszgilga.exception.CommandException.UnauthorizedDjCommandExecutionException;
@@ -44,21 +42,11 @@ public abstract class AbstractDjCommand extends AbstractMusicCommand {
 
     @Override
     protected void doExecuteMusicCommand(CommandEventWrapper event) {
-        final String djRoleName = config.getProperty(BotProperty.J_DJ_ROLE_NAME);
-        try {
-            final boolean isNotOwner = !event.author().getId().equals(event.client().getOwnerId());
-            final boolean isNotManager = !event.member().hasPermission(Permission.MANAGE_SERVER);
-            final boolean isNotDj = event.member().getRoles().stream().noneMatch(r -> r.getName().equals(djRoleName));
-
-            if (isNotOwner && isNotManager && isNotDj) {
-                throw new UnauthorizedDjCommandExecutionException(config, event);
-            }
-            doExecuteDjCommand(event);
-        } catch (BotException ex) {
-            event.textChannel()
-                .sendMessageEmbeds(embedBuilder.createErrorMessage(event, ex))
-                .queue();
+        final ValidateUserDetails details = Utilities.validateUserDetails(event, config);
+        if (details.isNotOwner() && details.isNotManager() && details.isNotDj()) {
+            throw new UnauthorizedDjCommandExecutionException(config, event);
         }
+        doExecuteDjCommand(event);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -34,6 +34,7 @@ public enum BotProperty {
     J_SOURCE_CODE_PATH              ("source-code-path"),
     J_DEVELOPMENT_MODE              ("development-mode"),
     J_PREFIX                        ("prefix"),
+    J_SLASH_COMMANDS_ENABLED        ("slash-commands.enabled"),
     J_HAS_AVATAR                    ("avatar.has-avatar"),
     J_PATH_TO_AVATAR                ("avatar.path-to-avatar"),
     J_AVATAR_DAY_NIGHT_ENABLED      ("avatar.day-night-mode.enabled"),

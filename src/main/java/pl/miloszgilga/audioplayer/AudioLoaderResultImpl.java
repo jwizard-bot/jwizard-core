@@ -69,14 +69,14 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
 
     @Override
     public void trackLoaded(AudioTrack track) {
-        addNewAudioTrackToQueue(deliveryEvent.dataSender(), track);
+        addNewAudioTrackToQueue(deliveryEvent.getDataSender(), track);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void playlistLoaded(AudioPlaylist playlist) {
-        final Member dataSender = deliveryEvent.dataSender();
+        final Member dataSender = deliveryEvent.getDataSender();
         final List<AudioTrack> trackList = playlist.getTracks();
         if (trackList.isEmpty()) return;
 
@@ -91,7 +91,7 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
 
             final MessageEmbed messageEmbed = builder.createPlaylistTracksMessage(deliveryEvent,
                 new PlaylistEmbedContent(Integer.toString(trackList.size()), sumDurationTime, thumbnailUrl));
-            deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
+            deliveryEvent.sendEmbedMessage(messageEmbed);
 
             log.info("G: {}, A: {} <> New audio playlist: '{}' was added to queue", deliveryEvent.guildName(),
                 deliveryEvent.authorTag(), flattedTrackList(trackList));
@@ -106,7 +106,7 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
     public void noMatches() {
         final MessageEmbed messageEmbed = builder.createErrorMessage(deliveryEvent,
             config.getLocaleText(LocaleSet.NOT_FOUND_TRACK_MESS), BugTracker.NOT_FOUND_TRACK);
-        deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
+        deliveryEvent.sendEmbedMessage(messageEmbed);
 
         log.info("G: {}, A: {} <> Not available to find provided audio track/playlist", deliveryEvent.guildName(),
             deliveryEvent.authorTag());
@@ -118,7 +118,7 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
     public void loadFailed(FriendlyException exception) {
         final MessageEmbed messageEmbed = builder.createErrorMessage(deliveryEvent,
             config.getLocaleText(LocaleSet.ISSUE_WHILE_LOADING_TRACK_MESS), BugTracker.ISSUE_ON_LOAD_TRACK);
-        deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
+        deliveryEvent.sendEmbedMessage(messageEmbed);
 
         log.info("G: {}, A: {} <> Unexpected exception during load audio track/playlist: {}", deliveryEvent.guildName(),
             deliveryEvent.authorTag(), exception.getMessage());
@@ -132,7 +132,7 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
         if (musicManager.getTrackScheduler().getTrackQueue().isEmpty()) return;
 
         final MessageEmbed messageEmbed = createSingleTrackEmbedMessage(track);
-        deliveryEvent.textChannel().sendMessageEmbeds(messageEmbed).queue();
+        deliveryEvent.sendEmbedMessage(messageEmbed);
 
         log.info("G: {}, A: {} <> New audio track: '{}' was added to queue", deliveryEvent.guildName(),
             deliveryEvent.authorTag(), track.getInfo().title);

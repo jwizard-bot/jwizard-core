@@ -53,6 +53,6 @@ public class SkipTrackCmd extends AbstractMusicCommand {
         final MessageEmbed messageEmbed = embedBuilder.createMessage(LocaleSet.SKIP_TRACK_AND_PLAY_NEXT_MESS, Map.of(
             "skippedTrack", TrackScheduler.getRichTrackTitle(skippedTrack)
         ));
-        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
+        event.appendEmbedMessage(messageEmbed);
     }
 }

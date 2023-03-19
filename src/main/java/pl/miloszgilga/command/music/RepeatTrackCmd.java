@@ -52,7 +52,7 @@ public class RepeatTrackCmd extends AbstractMusicCommand {
 
     @Override
     protected void doExecuteMusicCommand(CommandEventWrapper event) {
-        final int repeats = NumberUtils.toInt(event.args());
+        final int repeats = (int) NumberUtils.toFloat(event.getArgs().get(0));
         if (repeats < 1 || repeats > config.getProperty(BotProperty.J_MAX_REPEATS_SINGLE_TRACK, Integer.class)) {
             throw new TrackRepeatsOutOfBoundsException(config, event);
         }
@@ -65,6 +65,6 @@ public class RepeatTrackCmd extends AbstractMusicCommand {
                 "times", repeats,
                 "clearRepeatingCmd", BotCommand.CLEAR_REPEAT_TRACK.parseWithPrefix(config)
             ));
-        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
+        event.appendEmbedMessage(messageEmbed);
     }
 }

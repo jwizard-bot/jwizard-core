@@ -40,7 +40,6 @@ public class ResumeTrackCmd extends AbstractMusicCommand {
 
     ResumeTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.RESUME_TRACK, config, playerManager, embedBuilder);
-        super.inPlayingMode = false;
         super.inSameChannelWithBot = true;
         super.isPaused = true;
     }
@@ -54,9 +53,9 @@ public class ResumeTrackCmd extends AbstractMusicCommand {
         final AudioTrackInfo trackInfo = playerManager.getCurrentPlayingTrack(event);
         final MessageEmbed messageEmbed = embedBuilder.createMessage(LocaleSet.RESUME_TRACK_MESS, Map.of(
             "track", TrackScheduler.getRichTrackTitle(trackInfo),
-            "invoker", event.authorTag(),
+            "invoker", event.getAuthorTag(),
             "pauseCmd", BotCommand.PAUSE_TRACK.parseWithPrefix(config)
         ));
-        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
+        event.appendEmbedMessage(messageEmbed);
     }
 }

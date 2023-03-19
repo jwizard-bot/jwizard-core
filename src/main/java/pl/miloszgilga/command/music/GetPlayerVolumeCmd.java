@@ -38,7 +38,7 @@ public class GetPlayerVolumeCmd extends AbstractMusicCommand {
 
     GetPlayerVolumeCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.GET_PLAYER_VOLUME, config, playerManager, embedBuilder);
-        super.inPlayingMode = false;
+        super.inIdleMode = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,6 +49,6 @@ public class GetPlayerVolumeCmd extends AbstractMusicCommand {
             .createMessage(LocaleSet.GET_CURRENT_AUDIO_PLAYER_VOLUME_MESS, Map.of(
                 "currentVolume", playerManager.getMusicManager(event).getPlayerVolume()
             ));
-        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
+        event.appendEmbedMessage(messageEmbed);
     }
 }

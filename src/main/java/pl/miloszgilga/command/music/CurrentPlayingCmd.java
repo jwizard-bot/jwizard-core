@@ -66,6 +66,6 @@ public class CurrentPlayingCmd extends AbstractMusicCommand {
             Utilities.createPlayerPercentageTrack(track.getTimestamp(), track.getMaxDuration())
         );
         final MessageEmbed messageEmbed = embedBuilder.createCurrentPlayingMessage(event, content);
-        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
+        event.appendEmbedMessage(messageEmbed);
     }
 }

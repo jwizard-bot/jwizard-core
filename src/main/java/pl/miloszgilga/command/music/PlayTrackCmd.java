@@ -20,7 +20,10 @@ package pl.miloszgilga.command.music;
 
 import org.apache.commons.validator.routines.UrlValidator;
 
+import java.util.Objects;
+
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
@@ -35,7 +38,6 @@ public class PlayTrackCmd extends AbstractMusicCommand {
 
     PlayTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.PLAY_TRACK, config, playerManager, embedBuilder);
-        super.inPlayingMode = false;
         super.inSameChannelWithBot = true;
         super.selfJoinable = true;
     }
@@ -45,12 +47,16 @@ public class PlayTrackCmd extends AbstractMusicCommand {
     @Override
     protected void doExecuteMusicCommand(CommandEventWrapper event) {
         final UrlValidator urlValidator = new UrlValidator();
-        String searchPhrase = event.args();
+        String searchPhrase = event.getArgs().get(0);
         boolean urlPatternValid = urlValidator.isValid(searchPhrase);
         if (urlPatternValid) {
             searchPhrase = searchPhrase.replaceAll(" ", "");
         } else {
             searchPhrase = "ytsearch: " + searchPhrase + " audio";
+        }
+        final MusicManager musicManager = playerManager.getMusicManager(event);
+        if (!Objects.isNull(musicManager)) {
+            musicManager.getTrackScheduler().setDeliveryEvent(event);
         }
         playerManager.loadAndPlay(event, searchPhrase, urlPatternValid);
     }

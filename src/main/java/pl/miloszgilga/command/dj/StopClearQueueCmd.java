@@ -60,6 +60,6 @@ public class StopClearQueueCmd extends AbstractDjCommand {
         } else {
             messageEmbed = embedBuilder.createMessage(LocaleSet.CLEAR_QUEUE_MESS);
         }
-        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
+        event.appendEmbedMessage(messageEmbed);
     }
 }

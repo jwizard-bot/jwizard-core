@@ -44,7 +44,6 @@ public class CurrentPausedCmd extends AbstractMusicCommand {
 
     CurrentPausedCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.CURRENT_PAUSED, config, playerManager, embedBuilder);
-        super.inPlayingMode = false;
         super.isPaused = true;
     }
 
@@ -70,6 +69,6 @@ public class CurrentPausedCmd extends AbstractMusicCommand {
             Utilities.createPlayerPercentageTrack(track.getTimestamp(), track.getMaxDuration())
         );
         final MessageEmbed messageEmbed = embedBuilder.createCurrentPlayingMessage(event, content);
-        event.textChannel().sendMessageEmbeds(messageEmbed).queue();
+        event.appendEmbedMessage(messageEmbed);
     }
 }

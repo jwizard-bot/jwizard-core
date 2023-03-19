@@ -20,7 +20,6 @@ package pl.miloszgilga.audioplayer;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -81,7 +80,7 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
         final MusicManager musicManager = getMusicManager(event);
         final AudioLoadResultHandler audioLoadResultHandler = new AudioLoaderResultImpl(musicManager, config,
             builder, event, isUrlPattern);
-        event.guild().getAudioManager().setSelfDeafened(true);
+        event.getGuild().getAudioManager().setSelfDeafened(true);
         loadItemOrdered(musicManager, trackUrl, audioLoadResultHandler);
     }
 
@@ -185,24 +184,21 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private boolean invokerIsNotTrackSenderOrAdmin(AudioTrack track, CommandEventWrapper event) {
-        final User dataSender = ((Member)track.getUserData()).getUser();
-        final Member messageSender = event.guild().getMember(event.author());
+        final User dataSender = ((Member) track.getUserData()).getUser();
+        final Member messageSender = event.getGuild().getMember(event.getAuthor());
         if (Objects.isNull(messageSender)) return true;
 
-        final String djRoleName = config.getProperty(BotProperty.J_DJ_ROLE_NAME);
-        final boolean isNotOwner = !event.author().getId().equals(event.client().getOwnerId());
-        final boolean isNotManager = !event.member().hasPermission(Permission.MANAGE_SERVER);
-        final boolean isNotDj = event.member().getRoles().stream().noneMatch(r -> r.getName().equals(djRoleName));
-
-        return !(dataSender.getAsTag().equals(event.author().getAsTag()) || !isNotOwner || !isNotManager || !isNotDj);
+        final ValidateUserDetails details =  Utilities.validateUserDetails(event, config);
+        return !(dataSender.getAsTag().equals(event.getAuthor().getAsTag()) || !details.isNotOwner()
+            || !details.isNotManager() || !details.isNotDj());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public MusicManager getMusicManager(CommandEventWrapper event) {
-        return musicManagers.computeIfAbsent(event.guild().getIdLong(), guildId -> {
-            final MusicManager musicManager = new MusicManager(this, builder, config, event.guild(), event);
-            event.guild().getAudioManager().setSendingHandler(musicManager.getAudioPlayerSendHandler());
+        return musicManagers.computeIfAbsent(event.getGuild().getIdLong(), guildId -> {
+            final MusicManager musicManager = new MusicManager(this, builder, config, event.getGuild(), event);
+            event.getGuild().getAudioManager().setSendingHandler(musicManager.getAudioPlayerSendHandler());
             return musicManager;
         });
     }

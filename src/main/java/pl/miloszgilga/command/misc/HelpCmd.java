@@ -24,8 +24,8 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.dto.HelpEmbedContent;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.embed.EmbedPaginationBuilder;
 import pl.miloszgilga.core.LocaleSet;
@@ -60,7 +60,7 @@ class HelpCmd extends AbstractCommand {
         );
         final MessageEmbed messageEmbed = embedBuilder.createHelpMessage(event, content);
         final Paginator paginator = paginate.createDefaultPaginator(BotCommand.getCommandsAsEmbedContent(config));
-        event.textChannel().sendMessageEmbeds(messageEmbed).complete();
-        paginator.display(event.textChannel());
+
+        event.appendEmbedMessage(messageEmbed, () -> paginator.display(event.getTextChannel()));
     }
 }

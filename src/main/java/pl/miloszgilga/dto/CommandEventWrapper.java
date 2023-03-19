@@ -18,82 +18,116 @@
 
 package pl.miloszgilga.dto;
 
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.TextChannel;
+import lombok.Data;
+
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.command.CommandClient;
 
+import pl.miloszgilga.misc.QueueAfterParam;
+
+import java.util.List;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.ArrayList;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-public record CommandEventWrapper(
-    Guild guild,
-    String guildName,
-    String authorTag,
-    String authorAvatarUrl,
-    TextChannel textChannel,
-    Member dataSender,
-    User author,
-    Member member,
-    CommandClient client,
-    String message,
-    String args
-) {
+@Data
+public class CommandEventWrapper {
+    private final Guild guild;
+    private final String guildName;
+    private final String authorTag;
+    private final String authorAvatarUrl;
+    private final TextChannel textChannel;
+    private final Member dataSender;
+    private final User author;
+    private final Member member;
+    private CommandClient client;
+    private String message;
+    private List<String> args = new ArrayList<>();
+    private List<MessageEmbed> embeds= new ArrayList<>();
+    private Runnable appendAfterEmbeds;
+    private QueueAfterParam queueAfterParam;
+    private boolean isFromSlashCommand = false;
+    private SlashCommandEvent slashCommandEvent;
+    private boolean isSended = false;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public CommandEventWrapper(CommandEvent event) {
-        this(
-            event.getGuild(),
-            event.getGuild().getName(),
-            event.getAuthor().getAsTag(),
-            Objects.requireNonNullElse(event.getAuthor().getAvatarUrl(), event.getAuthor().getDefaultAvatarUrl()),
-            event.getTextChannel(),
-            event.getGuild().getMember(event.getAuthor()),
-            event.getAuthor(),
-            event.getMember(),
-            event.getClient(),
-            event.getMessage().getContentRaw(),
-            event.getArgs()
-        );
+        this.guild = event.getGuild();
+        this.guildName = event.getGuild().getName();
+        this.authorTag = event.getAuthor().getAsTag();
+        this.authorAvatarUrl = Objects.requireNonNullElse(event.getAuthor().getAvatarUrl(), event.getAuthor().getDefaultAvatarUrl());
+        this.textChannel = event.getTextChannel();
+        this.dataSender = event.getGuild().getMember(event.getAuthor());
+        this.author = event.getAuthor();
+        this.member = event.getMember();
+        this.client = event.getClient();
+        this.message = event.getMessage().getContentRaw();
+        this.args = Arrays.stream(event.getArgs().split("\\|")).toList();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public CommandEventWrapper(GuildMessageReceivedEvent event) {
-        this(
-            event.getGuild(),
-            event.getGuild().getName(),
-            event.getAuthor().getAsTag(),
-            Objects.requireNonNullElse(event.getAuthor().getAvatarUrl(), event.getAuthor().getDefaultAvatarUrl()),
-            event.getChannel(),
-            event.getGuild().getMember(event.getAuthor()),
-            event.getAuthor(),
-            event.getMember(),
-            null,
-            event.getMessage().getContentRaw(),
-            null
-        );
+        this.guild = event.getGuild();
+        this.guildName = event.getGuild().getName();
+        this.authorTag = event.getAuthor().getAsTag();
+        this.authorAvatarUrl = Objects.requireNonNullElse(event.getAuthor().getAvatarUrl(), event.getAuthor().getDefaultAvatarUrl());
+        this.textChannel = event.getChannel();
+        this.dataSender = event.getGuild().getMember(event.getAuthor());
+        this.author = event.getAuthor();
+        this.member = event.getMember();
+        this.message = event.getMessage().getContentRaw();
+        this.isFromSlashCommand = false;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public CommandEventWrapper(SlashCommandEvent event) {
-        this(
-            event.getGuild(),
-            Objects.requireNonNull(event.getGuild()).getName(),
-            Objects.requireNonNull(event.getMember()).getUser().getAsTag(),
-            Objects.requireNonNullElse(event.getMember().getAvatarUrl(), event.getMember().getUser().getDefaultAvatarUrl()),
-            event.getJDA().getTextChannelById(event.getChannel().getId()),
-            event.getGuild().getMember(event.getMember().getUser()),
-            event.getMember().getUser(),
-            event.getMember(),
-            null,
-            null,
-            null
-        );
+        this.guild = event.getGuild();
+        this.guildName = Objects.requireNonNull(event.getGuild()).getName();
+        this.authorTag = Objects.requireNonNull(event.getMember()).getUser().getAsTag();
+        this.authorAvatarUrl = Objects.requireNonNullElse(event.getMember().getUser().getAvatarUrl(),
+            event.getMember().getUser().getDefaultAvatarUrl());
+        this.textChannel = event.getTextChannel();
+        this.dataSender = event.getGuild().getMember(event.getMember().getUser());
+        this.author = event.getMember().getUser();
+        this.member = event.getMember();
+        this.args = event.getOptions().stream().map(OptionMapping::getAsString).toList();
+        this.isFromSlashCommand = true;
+        this.slashCommandEvent = event;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void sendEmbedMessage(MessageEmbed messageEmbed, QueueAfterParam deffer) {
+        if (isFromSlashCommand) {
+            slashCommandEvent.getHook()
+                .sendMessageEmbeds(messageEmbed).completeAfter(deffer.duration(), deffer.timeUnit());
+            return;
+        }
+        textChannel.sendMessageEmbeds(messageEmbed).completeAfter(deffer.duration(), deffer.timeUnit());
+    }
+
+    public void sendEmbedMessage(MessageEmbed messageEmbed) {
+        sendEmbedMessage(messageEmbed, new QueueAfterParam());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void appendEmbedMessage(MessageEmbed messageEmbed) {
+        this.embeds.add(messageEmbed);
+    }
+
+    public void appendEmbedMessage(MessageEmbed messageEmbed, Runnable appendAfterEmbeds) {
+        appendEmbedMessage(messageEmbed);
+        this.appendAfterEmbeds = appendAfterEmbeds;
     }
 }
