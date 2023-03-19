@@ -23,6 +23,7 @@ package pl.miloszgilga.dto;
 public record QueueEmbedContent(
     String queueSize,
     String queueMaxDuration,
-    String approxToNextTrack
+    String approxToNextTrack,
+    String averageSingleTrackDuration
 ) {
 }

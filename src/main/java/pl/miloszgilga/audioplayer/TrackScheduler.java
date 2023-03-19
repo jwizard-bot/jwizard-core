@@ -262,6 +262,10 @@ public class TrackScheduler extends AudioEventAdapter {
         return String.format("[%s](%s)", audioTrackInfo.title, audioTrackInfo.uri);
     }
 
+    public long getAverageTrackDuration() {
+        return (long) (trackQueue.stream().mapToLong(t -> t.audioTrack().getDuration()).average().orElse(0));
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     void setCountOfRepeats(int countOfRepeats) {

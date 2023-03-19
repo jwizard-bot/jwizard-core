@@ -147,8 +147,10 @@ public class EmbedMessageBuilder {
         return new EmbedBuilder()
             .addField(config.getLocaleText(LocaleSet.ALL_TRACKS_IN_QUEUE_COUNT_MESS) + ":", c.queueSize(), true)
             .addBlankField(true)
-            .addField(config.getLocaleText(LocaleSet.ALL_TRACKS_IN_QUEUE_DURATION_MESS) + ":", content.queueMaxDuration(), true)
-            .addField(config.getLocaleText(LocaleSet.APPROX_TO_NEXT_TRACK_FROM_QUEUE_MESS) + ":", content.approxToNextTrack(), true)
+            .addField(config.getLocaleText(LocaleSet.ALL_TRACKS_IN_QUEUE_DURATION_MESS) + ":", c.queueMaxDuration(), true)
+            .addField(config.getLocaleText(LocaleSet.APPROX_TO_NEXT_TRACK_FROM_QUEUE_MESS) + ":", c.approxToNextTrack(), true)
+            .addBlankField(true)
+            .addField(config.getLocaleText(LocaleSet.PLAYLIST_AVERAGE_TRACK_DURATION) + ":", c.averageSingleTrackDuration(), true)
             .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
             .build();
     }

@@ -45,7 +45,7 @@ public class ResetPlayerVolumeCmd extends AbstractDjCommand {
 
     @Override
     protected void doExecuteDjCommand(CommandEventWrapper event) {
-        final short defVolume = playerManager.getMusicManager(event).resetPlayerVolume();
+        final short defVolume = playerManager.getMusicManager(event).resetPlayerVolume(event);
         final MessageEmbed messageEmbed = embedBuilder.createMessage(LocaleSet.RESET_AUDIO_PLAYER_VOLUME_MESS, Map.of(
             "defVolume", defVolume
         ));

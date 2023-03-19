@@ -77,6 +77,7 @@ public enum LocaleSet {
     TRACKS_TOTAL_DURATION_TIME_MESS                 ("jwizard.message.response.TotalDurationTime"),
     TRACK_ADDDED_BY_MESS                            ("jwizard.message.response.AddedBy"),
     NEXT_TRACK_INDEX_MESS                           ("jwizard.message.response.NextTrackIndex"),
+    PLAYLIST_AVERAGE_TRACK_DURATION                 ("jwizard.message.response.PlaylistAverageTrackDuration"),
     NOT_FOUND_TRACK_MESS                            ("jwizard.message.response.NotFoundAudioTrack"),
     ISSUE_WHILE_LOADING_TRACK_MESS                  ("jwizard.message.response.UnexpectedErrorOnLoadTrack"),
     ISSUE_WHILE_PLAYING_TRACK_MESS                  ("jwizard.message.response.UnexpectedErrorOnPlayTrack"),

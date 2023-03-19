@@ -28,13 +28,10 @@ import java.util.Objects;
 import java.util.ArrayList;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.audioplayer.*;
 import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.QueueEmbedContent;
 import pl.miloszgilga.dto.CommandEventWrapper;
-import pl.miloszgilga.audioplayer.PlayerManager;
-import pl.miloszgilga.audioplayer.TrackScheduler;
-import pl.miloszgilga.audioplayer.AudioQueueExtendedInfo;
-import pl.miloszgilga.audioplayer.ExtendedAudioTrackInfo;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.embed.EmbedPaginationBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
@@ -65,7 +62,8 @@ public class ShowQueueCmd extends AbstractMusicCommand {
 
     @Override
     protected void doExecuteMusicCommand(CommandEventWrapper event) {
-        final Queue<AudioQueueExtendedInfo> tracks = playerManager.getMusicManager(event).getQueue();
+        final MusicManager musicManager = playerManager.getMusicManager(event);
+        final Queue<AudioQueueExtendedInfo> tracks = musicManager.getQueue();
         if (tracks.isEmpty()) {
             throw new TrackQueueIsEmptyException(config, event);
         }
@@ -86,8 +84,12 @@ public class ShowQueueCmd extends AbstractMusicCommand {
         }
         final long durationMilis = tracks.stream().mapToLong(t -> t.audioTrack().getDuration()).sum();
 
-        final QueueEmbedContent content = new QueueEmbedContent(String.valueOf(tracks.size()),
-            Utilities.convertMilisToDate(durationMilis), leftToNextTrack);
+        final QueueEmbedContent content = new QueueEmbedContent(
+            String.valueOf(tracks.size()),
+            Utilities.convertMilisToDate(durationMilis),
+            leftToNextTrack,
+            Utilities.convertMilisToDate(musicManager.getTrackScheduler().getAverageTrackDuration())
+        );
         final MessageEmbed messageEmbed = embedBuilder.createQueueInfoMessage(content);
         final Paginator paginator = pagination.createDefaultPaginator(pageableTracks);
 
