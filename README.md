@@ -61,7 +61,7 @@ $ ./gradlew run --args="--mode=prod"   # for production version
 <a name="run-from-jar"></a>
 ## Run from JAR
 > NOTE: At this moment, I don't provide the JAR archive. The JAR archive along with the configuration files will be made available in a stable release.
-1. Before creating JAR package, make sur, that `.env` file exist and has been filled with appropriet values. If isn't, do 1 task in `Prepare and run` section.
+1. Before creating JAR package, make sur, that `.env` file exist and has been filled with appropriet values. If isn't, do 1 task in `Run from IDE` section.
 2. To create fat JAR package via gradle script, run `shadowJar` task:
 ```
 $ ./gradlew shadowJar
