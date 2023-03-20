@@ -100,7 +100,10 @@ Java heap size configuration is the same for both configuration (development and
 1. To add a new language, create a new resource file in the `/lang` directory with a name contains the language prefix, ex. `messages_fr.properties`, copy all keys from `messages_en_us.properties` and change messages into corresponding to the selected language.
 2. To set the language, change this property in `properties-dev.yml` or `properties-prod.yml`:
 ```yml
-bot.misc.locale.selected-locale: fr
+bot:
+  misc:
+    locale:
+      selected-locale: fr
 ```
 
 <a name="author"></a>
