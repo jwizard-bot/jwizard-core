@@ -42,8 +42,7 @@ DEV_TOKEN           = xxxxx <- discord api token (available in discord api dashb
 DEV_APP_ID          = xxxxx <- discord application identifier (available in discord api dashboard)
 PROD_TOKEN          = xxxxx
 PROD_APP_ID         = xxxxx
-
-#database
+# database
 DEV_DB_JDBC         = xxxxx <- ex. jdbc:[dbClient]://[dbServer]:[dbPort]/[dbName]
 DEV_DB_USERNAME     = xxxxx <- database username
 DEV_DB_PASSWORD     = xxxxx <- database password
