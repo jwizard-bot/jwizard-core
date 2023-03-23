@@ -14,7 +14,7 @@ A multi-functional music bot (likely to be enhanced with additional features ove
 * [Clone script](#clone-script)
 * [Run from IDE](#run-from-ide)
 * [Run from JAR](#run-from-jar)
-* [Change Xmx and Xms parameters](#change-xmx-and-xms-parameters)
+* [Change Xmx and Xms parameters (JVM Heap Size)](#change-xmx-and-xms-parameters)
 * [Internationalization (i18n)](#internationalization-i18n)
 * [Author](#author)
 * [Project status](#project-status)
@@ -80,7 +80,7 @@ $ python run-prod.py   # for production version (loading configuration from prop
 > NOTE: To run the script, you must have installed Python interpreter 3.11.2 or above. To check Python version, type `python --version` in your command prompt.
 
 <a name="change-xmx-and-xms-parameters"></a>
-## Change Xmx and Xms parameters
+## Change Xmx and Xms parameters (JVM Heap Size)
 For bash script file, change this lines of code:
 ```bash
 START_JAVA_HEAP_SIZE="256m"     # -Xms parameter, min. 128MB
