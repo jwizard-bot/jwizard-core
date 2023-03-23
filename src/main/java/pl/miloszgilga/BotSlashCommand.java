@@ -41,6 +41,7 @@ public enum BotSlashCommand {
 
     HELP                    (BotCommand.HELP),
     HELP_ME                 (BotCommand.HELP_ME),
+    DEBUG                   (BotCommand.DEBUG),
 
     PLAY_TRACK              (BotCommand.PLAY_TRACK,             List.of(new SlashOption(STRING, "track", PLAY_TRACK_ARG_SYNTAX))),
     PAUSE_TRACK             (BotCommand.PAUSE_TRACK),

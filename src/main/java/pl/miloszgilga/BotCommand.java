@@ -42,6 +42,7 @@ public enum BotCommand {
 
     HELP                    ("help",        new String[]{ "h", "hl" },      OTHERS, HELP_COMMAND_DESC,                          null,                                 false, 0),
     HELP_ME                 ("helpme",      new String[]{ "hm", "hlm" },    OTHERS, HELPME_COMMAND_DESC,                        null,                                 false, 0),
+    DEBUG                   ("debug",       new String[]{ "db", "dbg" },    OTHERS, DEBUG_COMMAND_DESC,                         null,                                 false, 0),
 
     PLAY_TRACK              ("play",        new String[]{ "p", "pl" },      MUSIC,  PLAY_TRACK_COMMAND_DESC,                    PLAY_TRACK_ARG_SYNTAX,                false, 1),
     PAUSE_TRACK             ("pause",       new String[]{ "ps" },           MUSIC,  PAUSE_TRACK_COMMAND_DESC,                   null,                                 false, 0),
