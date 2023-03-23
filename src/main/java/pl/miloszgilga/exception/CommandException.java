@@ -71,4 +71,13 @@ public class CommandException {
             JDALog.error(log, event, "Attempt to invoke DJ command without DJ guild role");
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Slf4j public static class UnauthorizedManagerCommandExecutionException extends BotException {
+        public UnauthorizedManagerCommandExecutionException(BotConfiguration config, CommandEventWrapper event) {
+            super(config, LocaleSet.UNAUTHORIZED_MANAGER_COMMAND_EXECUTION_EXC, BugTracker.UNAUTHORIZED_MANAGER_COMMAND_EXECUTION);
+            JDALog.error(log, event, "Attempt to invoke DJ command without DJ guild role");
+        }
+    }
 }

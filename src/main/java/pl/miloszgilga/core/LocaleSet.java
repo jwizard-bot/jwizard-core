@@ -131,6 +131,7 @@ public enum LocaleSet {
     LOCK_COMMAND_ON_TEMPORARY_HALTED_EXC            ("jwizard.exception.LockCommandOnTemporaryHaltedException"),
     VOLUME_UNITS_OUT_OF_BOUNDS_EXC                  ("jwizard.exception.VolumeUnitsOutOfBoundsException"),
     UNAUTHORIZED_DJ_COMMAND_EXECUTION_EXC           ("jwizard.exception.UnauthorizedDjCommandExecutionException"),
+    UNAUTHORIZED_MANAGER_COMMAND_EXECUTION_EXC      ("jwizard.exception.UnauthorizedManagerCommandExecutionException"),
     TRACK_QUEUE_IS_EMPTY_EXC                        ("jwizard.exception.TrackQueueIsEmptyException");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
