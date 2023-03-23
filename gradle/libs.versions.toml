@@ -21,7 +21,7 @@
 
 [versions]
 jda                 = '4.4.0_352'
-lavaPlayer          = '1.3.99.1'
+lavaPlayer          = '1.4.0'
 jdaUtilities        = '1.24.1'
 
 mysqlDriver         = '8.0.31'

@@ -54,7 +54,7 @@ public class ShuffleQueueCmd extends AbstractDjCommand {
         }
         playerManager.shuffleQueue(event);
 
-        final MessageEmbed messageEmbed = embedBuilder.createMessage(LocaleSet.QUEUE_WAS_SHUFFLED, Map.of(
+        final MessageEmbed messageEmbed = embedBuilder.createMessage(LocaleSet.QUEUE_WAS_SHUFFLED_MESS, Map.of(
             "showQueueCmd", BotCommand.QUEUE.parseWithPrefix(config)
         ));
         event.appendEmbedMessage(messageEmbed);
