@@ -20,7 +20,7 @@
 # refer to build.gradle 3rd part libraries script file
 
 [versions]
-jda                 = '4.4.0_352'
+jda                 = '4.4.1_353'
 lavaPlayer          = '1.4.0'
 jdaUtilities        = '1.24.1'
 
