@@ -84,6 +84,7 @@ public class BotStatusCommandListener extends AbstractListenerAdapter {
 
     @Override
     public void onGuildVoiceJoin(GuildVoiceJoinEvent event) {
+        if (!event.getMember().getUser().isBot()) return;
         event.getGuild().getAudioManager().setSelfDeafened(true);
         event.getGuild().getSelfMember().deafen(true).complete();
     }
