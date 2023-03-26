@@ -77,11 +77,7 @@ public class ShowQueueCmd extends AbstractMusicCommand {
         int i = 0;
         for (final AudioQueueExtendedInfo aTrack : tracks) {
             final AudioTrack track = aTrack.audioTrack();
-            pageableTracks.add(String.format("`%d`. [ %s ]\n**%s**",
-                ++i,
-                Utilities.convertMilisToDate(track.getDuration()),
-                TrackScheduler.getRichTrackTitle(track.getInfo())
-            ));
+            pageableTracks.add(Utilities.getRichPageableTrackInfo(++i, track));
         }
         String leftToNextTrack = "-";
         final ExtendedAudioTrackInfo currentTrack = playerManager.getCurrentPlayingTrack(event);

@@ -264,10 +264,6 @@ public class TrackScheduler extends AudioEventAdapter {
         this.deliveryEvent = event;
     }
 
-    public static String getRichTrackTitle(AudioTrackInfo audioTrackInfo) {
-        return String.format("[%s](%s)", audioTrackInfo.title, audioTrackInfo.uri);
-    }
-
     public long getAverageTrackDuration() {
         return (long) (trackQueue.stream().mapToLong(t -> t.audioTrack().getDuration()).average().orElse(0));
     }

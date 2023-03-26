@@ -25,10 +25,16 @@
 package pl.miloszgilga.misc;
 
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.Member;
+
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
 import java.util.concurrent.TimeUnit;
 
 import pl.miloszgilga.dto.CommandEventWrapper;
+import pl.miloszgilga.exception.CommandException;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
@@ -91,5 +97,28 @@ public final class Utilities {
         final boolean isNotDj = event.getMember().getRoles().stream().noneMatch(r -> r.getName().equals(djRoleName));
 
         return new ValidateUserDetails(isNotOwner, isNotManager, isNotDj);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static Member checkIfMemberInGuildExist(CommandEventWrapper event, String id, BotConfiguration config) {
+        return event.getGuild().getMembers().stream()
+            .filter(m -> m.getId().equals(id))
+            .findFirst()
+            .orElseThrow(() -> { throw new CommandException.UserNotFoundInGuildException(config, event); });
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static String getRichPageableTrackInfo(int index, AudioTrack track) {
+        final User sender = ((Member) track.getUserData()).getUser();
+        return String.format("`%d`. [ %s ], %s\n**%s**",
+            index, convertMilisToDate(track.getDuration()), sender.getAsTag(), getRichTrackTitle(track.getInfo()));
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static String getRichTrackTitle(AudioTrackInfo audioTrackInfo) {
+        return String.format("[%s](%s)", audioTrackInfo.title, audioTrackInfo.uri);
     }
 }
