@@ -125,6 +125,8 @@ public enum LocaleSet {
     CLEAR_QUEUE_MESS                                ("jwizard.message.response.ClearQueue"),
     QUEUE_WAS_SHUFFLED_MESS                         ("jwizard.message.response.QueueWasShuffled"),
     DEBUG_DATA_MESS                                 ("jwizard.message.response.DebugData"),
+    SKIP_TO_SELECT_TRACK_POSITION_MESS              ("jwizard.message.response.SkipToSelectedTrackPosition"),
+    REMOVED_TRACKS_FROM_SELECTED_MEMBER_MESS        ("jwizard.message.response.RemoveTracksFromSelectedMember"),
 
     GENERAL_HEADER_DEBUG                            ("jwizard.message.debug.header.General"),
     CONFIGURATION_HEADER_DEBUG                      ("jwizard.message.debug.header.Configuration"),
@@ -166,9 +168,12 @@ public enum LocaleSet {
     TRACK_REPEATS_OUT_OF_BOUNDS_EXC                 ("jwizard.exception.TrackRepeatsOutOfBoundsException"),
     LOCK_COMMAND_ON_TEMPORARY_HALTED_EXC            ("jwizard.exception.LockCommandOnTemporaryHaltedException"),
     VOLUME_UNITS_OUT_OF_BOUNDS_EXC                  ("jwizard.exception.VolumeUnitsOutOfBoundsException"),
+    TRACK_OFFSET_OUT_OF_BOUNDS_EXC                  ("jwizard.exception.TrackOffsetOutOfBoundsException"),
     UNAUTHORIZED_DJ_COMMAND_EXECUTION_EXC           ("jwizard.exception.UnauthorizedDjCommandExecutionException"),
     UNAUTHORIZED_MANAGER_COMMAND_EXECUTION_EXC      ("jwizard.exception.UnauthorizedManagerCommandExecutionException"),
-    TRACK_QUEUE_IS_EMPTY_EXC                        ("jwizard.exception.TrackQueueIsEmptyException");
+    TRACK_QUEUE_IS_EMPTY_EXC                        ("jwizard.exception.TrackQueueIsEmptyException"),
+    USER_NOT_FOUND_IN_GUILD_EXC                     ("jwizard.exception.UserNotFoundInGuildException"),
+    USER_NOT_ADDED_TRACKS_TO_QUEUE_EXC              ("jwizard.exception.UserNotAddedTracksToQueueException");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

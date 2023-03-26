@@ -46,11 +46,14 @@ import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.misc.ValidateUserDetails;
 import pl.miloszgilga.dto.CommandEventWrapper;
+import pl.miloszgilga.dto.MemberRemovedTracksInfo;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 import static pl.miloszgilga.exception.AudioPlayerException.TrackIsNotPlayingException;
+import static pl.miloszgilga.exception.AudioPlayerException.TrackQueueIsEmptyException;
+import static pl.miloszgilga.exception.AudioPlayerException.UserNotAddedTracksToQueueException;
 import static pl.miloszgilga.exception.AudioPlayerException.InvokerIsNotTrackSenderOrAdminException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -172,6 +175,36 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
         final MusicManager musicManager = getMusicManager(event);
         musicManager.getAudioPlayer().setVolume(volume);
         JDALog.info(log, event, "Audio player volume was set to '%s' volume units", volume);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public AudioTrack skipToTrackPos(CommandEventWrapper event, int position) {
+        final MusicManager musicManager = getMusicManager(event);
+        if (musicManager.getTrackScheduler().getTrackQueue().isEmpty()) {
+            throw new TrackQueueIsEmptyException(config, event);
+        }
+        musicManager.getTrackScheduler().skipToPosition(position);
+        final AudioTrack currentPlaying = musicManager.getAudioPlayer().getPlayingTrack();
+        JDALog.info(log, event, "'%s' tracks in queue was skipped and started playing track: '%s'", position,
+            currentPlaying.getInfo().title);
+        return currentPlaying;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public MemberRemovedTracksInfo removeTracksFromMember(CommandEventWrapper event, String memberId) {
+        final Member memberRemoveTracks = Utilities.checkIfMemberInGuildExist(event, memberId, config);
+        final MusicManager musicManager = getMusicManager(event);
+
+        if (!musicManager.getTrackScheduler().checkIfMemberAddAnyTracksToQueue(memberRemoveTracks)) {
+            throw new UserNotAddedTracksToQueueException(config, event);
+        }
+        final List<ExtendedAudioTrackInfo> removedTracks = musicManager.getTrackScheduler()
+            .removeAllTracksFromMember(memberRemoveTracks);
+        return new MemberRemovedTracksInfo(memberRemoveTracks, removedTracks);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

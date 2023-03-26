@@ -121,10 +121,30 @@ public class AudioPlayerException {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    @Slf4j public static class TrackPositionOutOfBoundsException extends BotException {
+        public TrackPositionOutOfBoundsException(BotConfiguration config, CommandEventWrapper event, int maxOffset) {
+            super(config, LocaleSet.TRACK_OFFSET_OUT_OF_BOUNDS_EXC, Map.of(
+                "maxOffset", maxOffset
+            ), BugTracker.TRACK_OFFSET_OUT_OF_BOUNDS);
+            JDALog.error(log, event, "Attempt to offset to out of bounds track position in queue");
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Slf4j public static class TrackQueueIsEmptyException extends BotException {
         public TrackQueueIsEmptyException(BotConfiguration config, CommandEventWrapper event) {
             super(config, LocaleSet.TRACK_QUEUE_IS_EMPTY_EXC, BugTracker.TRACK_QUEUE_IS_EMPTY);
             JDALog.error(log, event, "Attempt to use command on empty track queue");
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Slf4j public static class UserNotAddedTracksToQueueException extends BotException {
+        public UserNotAddedTracksToQueueException(BotConfiguration config, CommandEventWrapper event) {
+            super(config, LocaleSet.USER_NOT_ADDED_TRACKS_TO_QUEUE_EXC, BugTracker.USER_NOT_ADDED_TRACKS_TO_QUEUE);
+            JDALog.error(log, event, "Attempt to remove tracks from user which not added any track in queue");
         }
     }
 }

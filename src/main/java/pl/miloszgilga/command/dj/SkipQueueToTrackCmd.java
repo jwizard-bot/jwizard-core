@@ -24,13 +24,25 @@
 
 package pl.miloszgilga.command.dj;
 
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+
+import org.apache.commons.lang3.math.NumberUtils;
+
+import java.util.Map;
+
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
+import pl.miloszgilga.audioplayer.TrackScheduler;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
+import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
+
+import static pl.miloszgilga.exception.AudioPlayerException.TrackPositionOutOfBoundsException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -47,6 +59,19 @@ public class SkipQueueToTrackCmd extends AbstractDjCommand {
 
     @Override
     protected void doExecuteDjCommand(CommandEventWrapper event) {
+        final TrackScheduler trackScheduler = playerManager.getMusicManager(event).getTrackScheduler();
+        final int trackPos = (int) NumberUtils.toFloat(event.getArgs().get(0));
 
+        if (!trackScheduler.checkTrackPosition(trackPos)) {
+            throw new TrackPositionOutOfBoundsException(config, event, trackScheduler.getTrackQueue().size());
+        }
+        final AudioTrack currentPlaying = playerManager.skipToTrackPos(event, trackPos);
+
+        final MessageEmbed messageEmbed = embedBuilder
+            .createMessage(LocaleSet.SKIP_TO_SELECT_TRACK_POSITION_MESS, Map.of(
+                "countOfSkippedTracks", String.valueOf(trackPos + 1),
+                "currentTrack", Utilities.getRichTrackTitle(currentPlaying.getInfo())
+            ));
+        event.appendEmbedMessage(messageEmbed);
     }
 }

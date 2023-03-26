@@ -24,11 +24,23 @@
 
 package pl.miloszgilga.command.dj;
 
+import com.jagrosh.jdautilities.menu.Paginator;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.CommandEventWrapper;
+import pl.miloszgilga.dto.MemberRemovedTracksInfo;
 import pl.miloszgilga.audioplayer.PlayerManager;
+import pl.miloszgilga.audioplayer.ExtendedAudioTrackInfo;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.embed.EmbedPaginationBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
+import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -37,15 +49,38 @@ import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 @JDAInjectableCommandLazyService
 public class RemoveMemberTracksCmd extends AbstractDjCommand {
 
-    RemoveMemberTracksCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
+    private final EmbedPaginationBuilder pagination;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    RemoveMemberTracksCmd(
+        BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
+        EmbedPaginationBuilder pagination
+    ) {
         super(BotCommand.REMOVE_MEMBER_TRACKS, config, playerManager, embedBuilder);
-        super.inSameChannelWithBot = true;
+        super.onSameChannelWithBot = true;
+        this.pagination = pagination;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void doExecuteDjCommand(CommandEventWrapper event) {
+        final String userId = event.getArgs().get(0);
+        final MemberRemovedTracksInfo removedTracksInfo = playerManager.removeTracksFromMember(event, userId);
 
+        int i = 0;
+        final List<String> pageableRemovedTracks = new ArrayList<>();
+        for (final ExtendedAudioTrackInfo audioTrackInfo : removedTracksInfo.removedTracks()) {
+            pageableRemovedTracks.add(Utilities.getRichPageableTrackInfo(++i, audioTrackInfo.getAudioTrack()));
+        }
+
+        final Paginator removedTracksList = pagination.createDefaultPaginator(pageableRemovedTracks);
+        final MessageEmbed messageEmbed = embedBuilder
+            .createMessage(LocaleSet.REMOVED_TRACKS_FROM_SELECTED_MEMBER_MESS, Map.of(
+                "countOfRemovedTracks", pageableRemovedTracks.size(),
+                "memberTag", removedTracksInfo.member().getUser().getAsTag()
+            ));
+        event.appendEmbedMessage(messageEmbed, () -> removedTracksList.display(event.getTextChannel()));
     }
 }

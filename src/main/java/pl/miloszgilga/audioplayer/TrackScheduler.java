@@ -27,6 +27,7 @@ package pl.miloszgilga.audioplayer;
 import lombok.extern.slf4j.Slf4j;
 
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -36,10 +37,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 
-import java.util.Map;
-import java.util.Queue;
-import java.util.Objects;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ScheduledFuture;
 
@@ -207,6 +205,28 @@ public class TrackScheduler extends AudioEventAdapter {
         audioPlayer.startTrack(extendedInfo.audioTrack(), false);
     }
 
+    public void skipToPosition(int position) {
+        AudioQueueExtendedInfo extendedInfo = null;
+        for (int i = 0; i < position; i++) {
+            extendedInfo = trackQueue.poll();
+        }
+        if (Objects.isNull(extendedInfo)) return;
+        audioPlayer.startTrack(extendedInfo.audioTrack(), false);
+    }
+
+    public List<ExtendedAudioTrackInfo> removeAllTracksFromMember(Member member) {
+        final List<ExtendedAudioTrackInfo> removedTracks = new ArrayList<>();
+        final List<AudioQueueExtendedInfo> toRemove = new ArrayList<>(trackQueue);
+        for (final AudioQueueExtendedInfo track : toRemove) {
+            if (!track.sender().equals(member)) continue;
+
+            final AudioQueueExtendedInfo extendedInfo = trackQueue.poll();
+            if (Objects.isNull(extendedInfo)) continue;
+            removedTracks.add(new ExtendedAudioTrackInfo(extendedInfo.audioTrack()));
+        }
+        return removedTracks;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void clearAndDestroy(boolean showMessage) {
@@ -266,6 +286,17 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public long getAverageTrackDuration() {
         return (long) (trackQueue.stream().mapToLong(t -> t.audioTrack().getDuration()).average().orElse(0));
+    }
+
+    public boolean checkTrackPosition(int position) {
+        return position > 0 && position <= trackQueue.size();
+    }
+
+    public boolean checkIfMemberAddAnyTracksToQueue(Member member) {
+        return trackQueue.stream().anyMatch(t -> {
+            final Member iterateMember = (Member) t.audioTrack().getUserData();
+            return member.equals(iterateMember);
+        });
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

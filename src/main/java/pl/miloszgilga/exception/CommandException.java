@@ -86,4 +86,13 @@ public class CommandException {
             JDALog.error(log, event, "Attempt to invoke DJ command without DJ guild role");
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Slf4j public static class UserNotFoundInGuildException extends BotException {
+        public UserNotFoundInGuildException(BotConfiguration config, CommandEventWrapper event) {
+            super(config, LocaleSet.USER_NOT_FOUND_IN_GUILD_EXC, BugTracker.USER_NOT_FOUND_IN_GUILD);
+            JDALog.error(log, event, "Attempt to find not existing user in selected guild");
+        }
+    }
 }

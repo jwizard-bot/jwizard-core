@@ -37,6 +37,7 @@ public enum BugTracker {
     MISMATCH_COMMAND_ARGUMENTS                              (3),
     UNAUTHORIZED_DJ_COMMAND_EXECUTION                       (4),
     UNAUTHORIZED_MANAGER_COMMAND_EXECUTION                  (5),
+    USER_NOT_FOUND_IN_GUILD                                 (6),
 
     ACTIVE_MUSIC_PLAYING_NOT_FOUND                          (101),
     USER_ON_VOICE_CHANNEL_NOT_FOUND                         (102),
@@ -50,7 +51,9 @@ public enum BugTracker {
     REPEATS_OUT_OF_BOUNDS                                   (110),
     LOCK_COMMAND_TEMPORARY_HALTED                           (111),
     VOLUME_UNITS_OUT_OF_BOUNDS                              (112),
-    TRACK_QUEUE_IS_EMPTY                                    (113);
+    TRACK_OFFSET_OUT_OF_BOUNDS                              (113),
+    TRACK_QUEUE_IS_EMPTY                                    (114),
+    USER_NOT_ADDED_TRACKS_TO_QUEUE                          (115);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
