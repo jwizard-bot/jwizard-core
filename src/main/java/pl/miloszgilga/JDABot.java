@@ -67,7 +67,7 @@ public class JDABot {
 
     private static final GatewayIntent[] GATEWAY_INTENTS = {
         GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS,
-        GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MESSAGE_TYPING
+        GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MESSAGE_TYPING, GatewayIntent.GUILD_MEMBERS
     };
 
     public static final Permission[] PERMISSIONS = {

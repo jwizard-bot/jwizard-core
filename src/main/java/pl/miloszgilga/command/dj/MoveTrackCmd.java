@@ -39,6 +39,7 @@ public class MoveTrackCmd extends AbstractDjCommand {
 
     MoveTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.MOVE_TRACK, config, playerManager, embedBuilder);
+        super.onSameChannelWithBot = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -207,6 +207,9 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
         }
         final List<ExtendedAudioTrackInfo> removedTracks = musicManager.getTrackScheduler()
             .removeAllTracksFromMember(memberRemoveTracks);
+
+        JDALog.info(log, event, "Following tracks was removed '%s', added by member: '%s'", removedTracks,
+            memberRemoveTracks.getUser().getAsTag());
         return new MemberRemovedTracksInfo(memberRemoveTracks, removedTracks);
     }
 

@@ -34,9 +34,10 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import java.util.concurrent.TimeUnit;
 
 import pl.miloszgilga.dto.CommandEventWrapper;
-import pl.miloszgilga.exception.CommandException;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
+
+import static pl.miloszgilga.exception.CommandException.UserNotFoundInGuildException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -105,7 +106,7 @@ public final class Utilities {
         return event.getGuild().getMembers().stream()
             .filter(m -> m.getId().equals(id))
             .findFirst()
-            .orElseThrow(() -> { throw new CommandException.UserNotFoundInGuildException(config, event); });
+            .orElseThrow(() -> { throw new UserNotFoundInGuildException(config, event); });
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
