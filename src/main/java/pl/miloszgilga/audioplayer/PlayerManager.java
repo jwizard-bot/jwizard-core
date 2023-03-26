@@ -122,8 +122,11 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     public AudioTrackInfo skipCurrentTrack(CommandEventWrapper event) {
         final MusicManager musicManager = checkPermissions(event);
         final AudioTrackInfo skippedTrack = getCurrentPlayingTrack(event);
-        musicManager.getTrackScheduler().nextTrack();
-
+        if (musicManager.getTrackScheduler().getTrackQueue().isEmpty()) {
+            musicManager.getAudioPlayer().stopTrack();
+        } else {
+            musicManager.getTrackScheduler().nextTrack();
+        }
         JDALog.info(log, event, "Current playing track '%s' was skipped", skippedTrack.title);
         return skippedTrack;
     }
