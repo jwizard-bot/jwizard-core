@@ -31,9 +31,9 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
-import pl.miloszgilga.audioplayer.TrackScheduler;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
 import pl.miloszgilga.core.LocaleSet;
@@ -67,7 +67,7 @@ public class RepeatTrackCmd extends AbstractMusicCommand {
         final AudioTrackInfo trackInfo = playerManager.getCurrentPlayingTrack(event);
         final MessageEmbed messageEmbed = embedBuilder
             .createMessage(LocaleSet.SET_MULTIPLE_REPEATING_TRACK_MESS, Map.of(
-                "track", TrackScheduler.getRichTrackTitle(trackInfo),
+                "track", Utilities.getRichTrackTitle(trackInfo),
                 "times", repeats,
                 "clearRepeatingCmd", BotCommand.CLEAR_REPEAT_TRACK.parseWithPrefix(config)
             ));

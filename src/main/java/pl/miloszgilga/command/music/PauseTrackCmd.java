@@ -34,7 +34,6 @@ import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.dto.PauseTrackEmbedContent;
 import pl.miloszgilga.audioplayer.PlayerManager;
-import pl.miloszgilga.audioplayer.TrackScheduler;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
 import pl.miloszgilga.core.LocaleSet;
@@ -66,7 +65,7 @@ public class PauseTrackCmd extends AbstractMusicCommand {
         final PauseTrackEmbedContent content = new PauseTrackEmbedContent(
             LocaleSet.PAUSE_TRACK_MESS,
             Map.of(
-                "track", TrackScheduler.getRichTrackTitle(track.getInfo()),
+                "track", Utilities.getRichTrackTitle(track.getInfo()),
                 "invoker", event.getAuthorTag(),
                 "resumeCmd", BotCommand.RESUME_TRACK.parseWithPrefix(config)
             ),

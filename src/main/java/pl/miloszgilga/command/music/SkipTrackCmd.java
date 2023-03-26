@@ -30,9 +30,9 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
-import pl.miloszgilga.audioplayer.TrackScheduler;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
 import pl.miloszgilga.core.LocaleSet;
@@ -57,7 +57,7 @@ public class SkipTrackCmd extends AbstractMusicCommand {
         final AudioTrackInfo skippedTrack = playerManager.skipCurrentTrack(event);
 
         final MessageEmbed messageEmbed = embedBuilder.createMessage(LocaleSet.SKIP_TRACK_AND_PLAY_NEXT_MESS, Map.of(
-            "skippedTrack", TrackScheduler.getRichTrackTitle(skippedTrack)
+            "skippedTrack", Utilities.getRichTrackTitle(skippedTrack)
         ));
         event.appendEmbedMessage(messageEmbed);
     }

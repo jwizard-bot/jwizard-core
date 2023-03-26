@@ -30,8 +30,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.audioplayer.PlayerManager;
-import pl.miloszgilga.audioplayer.TrackScheduler;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
@@ -58,7 +58,7 @@ public class ClearRepeatTrackCmd extends AbstractMusicCommand {
         final AudioTrackInfo trackInfo = playerManager.getCurrentPlayingTrack(event);
         final MessageEmbed messageEmbed = embedBuilder
             .createMessage(LocaleSet.REMOVE_MULTIPLE_REPEATING_TRACK_MESS, Map.of(
-                "track", TrackScheduler.getRichTrackTitle(trackInfo),
+                "track", Utilities.getRichTrackTitle(trackInfo),
                 "repeatingCmd", BotCommand.REPEAT_TRACK.parseWithPrefix(config)
             ));
         event.appendEmbedMessage(messageEmbed);

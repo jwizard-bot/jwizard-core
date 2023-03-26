@@ -37,7 +37,6 @@ import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
 import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.audioplayer.PlayerManager;
-import pl.miloszgilga.audioplayer.TrackScheduler;
 import pl.miloszgilga.audioplayer.ExtendedAudioTrackInfo;
 import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
@@ -67,7 +66,7 @@ public class CurrentPausedCmd extends AbstractMusicCommand {
         final CurrentPlayEmbedContent content = new CurrentPlayEmbedContent(
             LocaleSet.CURRENT_PAUSED_TRACK_MESS,
             LocaleSet.CURRENT_PAUSED_TIMESTAMP_MESS,
-            TrackScheduler.getRichTrackTitle(track),
+            Utilities.getRichTrackTitle(track),
             track.getThumbnailUrl(),
             ((Member) musicManager.getAudioPlayer().getPlayingTrack().getUserData()).getUser().getAsTag(),
             String.format("%s / %s", trackTimestamp, trackMaxDuration),

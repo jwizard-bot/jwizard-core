@@ -30,9 +30,9 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
-import pl.miloszgilga.audioplayer.TrackScheduler;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
 import pl.miloszgilga.core.LocaleSet;
@@ -61,7 +61,7 @@ public class InfiniteLoopTrackCmd extends AbstractMusicCommand {
         }
         final AudioTrackInfo playingTrack = playerManager.getCurrentPlayingTrack(event);
         final MessageEmbed messageEmbed = embedBuilder.createMessage(messsage, Map.of(
-            "track", TrackScheduler.getRichTrackTitle(playingTrack),
+            "track", Utilities.getRichTrackTitle(playingTrack),
             "loopCmd", BotCommand.LOOP_TRACK.parseWithPrefix(config)
         ));
         event.appendEmbedMessage(messageEmbed);
