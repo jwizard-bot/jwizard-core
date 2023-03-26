@@ -55,6 +55,7 @@ public enum LocaleSet {
     SKIP_QUEUE_TO_TRACK_COMMAND_DESC                ("jwizard.command.description.SkipQueueToTrack"),
     SKIP_TRACK_COMMAND_DESC                         ("jwizard.command.description.SkipTrack"),
     STOP_CLEAR_QUEUE_COMMAND_DESC                   ("jwizard.command.description.StopClearQueue"),
+    MOVE_TRACK_DESC                                 ("jwizard.command.description.MoveTrack"),
     VOTE_SHUFFLE_QUEUE_COMMAND_DESC                 ("jwizard.command.description.VoteShuffleQueue"),
     VOTE_SKIP_TRACK_COMMAND_DESC                    ("jwizard.command.description.VoteSkipTrack"),
     VOTE_STOP_CLEAR_QUEUE_COMMAND_DESC              ("jwizard.command.description.VoteStopClearQueue"),
@@ -64,6 +65,7 @@ public enum LocaleSet {
     AUDIO_PLAYER_SET_VOLUME_ARG_SYNTAX              ("jwizard.command.arguments.AudioPlayerSetVolume"),
     REMOVE_MEMBER_TRACKS_ARG_SYNTAX                 ("jwizard.command.arguments.RemoveMemberTracks"),
     SKIP_QUEUE_TO_TRACK_ARG_SYNTAX                  ("jwizard.command.arguments.SkipQueueToTrack"),
+    MOVE_TRACK_ARG_SYNTAX                           ("jwizard.command.arguments.MoveTrack"),
 
     COMMAND_CATEGORY_MUSIC                          ("jwizard.command.category.Music"),
     COMMAND_CATEGORY_DJ_ROLE                        ("jwizard.command.category.DjRole"),

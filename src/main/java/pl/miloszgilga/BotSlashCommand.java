@@ -68,6 +68,7 @@ public enum BotSlashCommand {
     SKIP_TO_TRACK           (BotCommand.SKIP_TO_TRACK,          List.of(new SlashOption(NUMBER, "position", SKIP_QUEUE_TO_TRACK_ARG_SYNTAX))),
     SKIP_TRACK              (BotCommand.SKIP_TRACK),
     STOP_CLEAR_QUEUE        (BotCommand.STOP_CLEAR_QUEUE),
+    MOVE_TRACK              (BotCommand.MOVE_TRACK,             List.of(new SlashOption(NUMBER, "position", SKIP_QUEUE_TO_TRACK_ARG_SYNTAX))),
 
     VOTE_SHUFFLE_QUEUE      (BotCommand.VOTE_SHUFFLE_QUEUE),
     VOTE_SKIP_TRACK         (BotCommand.VOTE_SKIP_TRACK),
