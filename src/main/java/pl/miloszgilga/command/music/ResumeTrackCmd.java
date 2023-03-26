@@ -46,7 +46,7 @@ public class ResumeTrackCmd extends AbstractMusicCommand {
 
     ResumeTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.RESUME_TRACK, config, playerManager, embedBuilder);
-        super.inSameChannelWithBot = true;
+        super.onSameChannelWithBot = true;
         super.isPaused = true;
     }
 

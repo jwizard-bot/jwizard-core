@@ -47,7 +47,7 @@ public class InfiniteLoopTrackCmd extends AbstractMusicCommand {
     InfiniteLoopTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.LOOP_TRACK, config, playerManager, embedBuilder);
         super.inPlayingMode = true;
-        super.inSameChannelWithBot = true;
+        super.onSameChannelWithBot = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

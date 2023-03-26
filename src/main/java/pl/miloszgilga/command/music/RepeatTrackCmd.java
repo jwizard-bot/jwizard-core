@@ -51,7 +51,7 @@ public class RepeatTrackCmd extends AbstractMusicCommand {
     RepeatTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.REPEAT_TRACK, config, playerManager, embedBuilder);
         super.inPlayingMode = true;
-        super.inSameChannelWithBot = true;
+        super.onSameChannelWithBot = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

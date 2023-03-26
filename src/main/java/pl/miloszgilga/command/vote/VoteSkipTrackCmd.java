@@ -39,7 +39,7 @@ public class VoteSkipTrackCmd extends AbstractVoteMusicCommand {
 
     VoteSkipTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.VOTE_SKIP_TRACK, config, playerManager, embedBuilder);
-        super.inSameChannelWithBot = true;
+        super.onSameChannelWithBot = true;
         super.inPlayingMode = true;
     }
 

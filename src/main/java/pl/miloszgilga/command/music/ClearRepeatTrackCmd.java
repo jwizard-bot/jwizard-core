@@ -46,7 +46,7 @@ public class ClearRepeatTrackCmd extends AbstractMusicCommand {
 
     ClearRepeatTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.CLEAR_REPEAT_TRACK, config, playerManager, embedBuilder);
-        super.inSameChannelWithBot = true;
+        super.onSameChannelWithBot = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

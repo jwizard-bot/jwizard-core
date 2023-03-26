@@ -46,7 +46,7 @@ public class SkipTrackCmd extends AbstractMusicCommand {
 
     SkipTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.SKIP_TRACK, config, playerManager, embedBuilder);
-        super.inSameChannelWithBot = true;
+        super.onSameChannelWithBot = true;
         super.inPlayingMode = true;
     }
 

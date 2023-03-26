@@ -56,7 +56,7 @@ public abstract class AbstractMusicCommand extends AbstractCommand {
 
     protected boolean inPlayingMode;
     protected boolean inIdleMode;
-    protected boolean inSameChannelWithBot;
+    protected boolean onSameChannelWithBot;
     protected boolean selfJoinable;
     protected boolean isPaused;
 
@@ -104,7 +104,7 @@ public abstract class AbstractMusicCommand extends AbstractCommand {
             } else {
                 final boolean isNotOwner = !event.getAuthor().getId().equals(event.getGuild().getOwnerId());
                 final boolean isNotManager = !event.getMember().hasPermission(Permission.MANAGE_SERVER);
-                if (!Objects.equals(voiceState.getChannel(), userState.getChannel()) && inSameChannelWithBot
+                if (!Objects.equals(voiceState.getChannel(), userState.getChannel()) && onSameChannelWithBot
                     && (isNotOwner || isNotManager)) {
                     throw new UserOnVoiceChannelWithBotNotFoundException(config, event);
                 }

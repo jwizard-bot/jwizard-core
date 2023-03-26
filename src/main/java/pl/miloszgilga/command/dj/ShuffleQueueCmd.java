@@ -47,7 +47,7 @@ public class ShuffleQueueCmd extends AbstractDjCommand {
 
     ShuffleQueueCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.SHUFFLE_QUEUE, config, playerManager, embedBuilder);
-        super.inSameChannelWithBot = true;
+        super.onSameChannelWithBot = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

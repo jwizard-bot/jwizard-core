@@ -145,13 +145,12 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private MessageEmbed createSingleTrackEmbedMessage(AudioTrack track) {
-        final String trackUrl = String.format("[%s](%s)", track.getInfo().title, track.getInfo().uri);
         final String durationTime = Utilities.convertMilisToDate(track.getDuration());
         final String trackPos = musicManager.getTrackScheduler().getTrackPositionInQueue();
         final String thumbnailUrl = "https://img.youtube.com/vi/" + track.getInfo().identifier + "/0.jpg";
 
-        return builder.createSingleTrackMessage(deliveryEvent,
-            new TrackEmbedContent(trackUrl, durationTime, trackPos, thumbnailUrl));
+        return builder.createSingleTrackMessage(deliveryEvent, new TrackEmbedContent(
+            Utilities.getRichTrackTitle(track.getInfo()), durationTime, trackPos, thumbnailUrl));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

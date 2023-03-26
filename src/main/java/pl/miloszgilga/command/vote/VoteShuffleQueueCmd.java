@@ -39,7 +39,7 @@ public class VoteShuffleQueueCmd extends AbstractVoteMusicCommand {
 
     VoteShuffleQueueCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.VOTE_SHUFFLE_QUEUE, config, playerManager, embedBuilder);
-        super.inSameChannelWithBot = true;
+        super.onSameChannelWithBot = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

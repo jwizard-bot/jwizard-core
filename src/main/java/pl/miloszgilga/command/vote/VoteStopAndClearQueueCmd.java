@@ -39,7 +39,7 @@ public class VoteStopAndClearQueueCmd extends AbstractVoteMusicCommand {
 
     VoteStopAndClearQueueCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.VOTE_STOP_CLEAR_QUEUE, config, playerManager, embedBuilder);
-        super.inSameChannelWithBot = true;
+        super.onSameChannelWithBot = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

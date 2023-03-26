@@ -53,7 +53,7 @@ public class PauseTrackCmd extends AbstractMusicCommand {
     PauseTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.PAUSE_TRACK, config, playerManager, embedBuilder);
         super.inPlayingMode = true;
-        super.inSameChannelWithBot = true;
+        super.onSameChannelWithBot = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

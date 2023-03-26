@@ -61,7 +61,7 @@ public class ShowQueueCmd extends AbstractMusicCommand {
     ) {
         super(BotCommand.QUEUE, config, playerManager, embedBuilder);
         this.pagination = pagination;
-        super.inSameChannelWithBot = true;
+        super.onSameChannelWithBot = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

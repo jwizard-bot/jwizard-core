@@ -39,7 +39,7 @@ public class SkipQueueToTrackCmd extends AbstractDjCommand {
 
     SkipQueueToTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.SKIP_TO_TRACK, config, playerManager, embedBuilder);
-        super.inSameChannelWithBot = true;
+        super.onSameChannelWithBot = true;
         super.inPlayingMode = true;
     }
 
