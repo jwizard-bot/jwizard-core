@@ -27,7 +27,6 @@ package pl.miloszgilga.core;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.command.SlashCommand;
 
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
@@ -36,15 +35,14 @@ import org.springframework.context.annotation.DependsOn;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.BotSlashCommand;
+import pl.miloszgilga.misc.QueueAfterParam;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.configuration.BotConfiguration;
-import pl.miloszgilga.misc.QueueAfterParam;
 
 import static pl.miloszgilga.exception.CommandException.MismatchCommandArgumentsCountException;
 
@@ -86,16 +84,7 @@ public abstract class AbstractCommand extends SlashCommand {
                 throw new MismatchCommandArgumentsCountException(config, commandEventWrapper, command);
             }
             doExecuteCommand(commandEventWrapper);
-
-            final var defferedMessages = event.getTextChannel().sendMessageEmbeds(commandEventWrapper.getEmbeds());
-            final Consumer<QueueAfterParam> defferedSendConsumer = queueAfterParam -> {
-                if (Objects.isNull(queueAfterParam)) {
-                    defferedMessages.queue();
-                } else {
-                    defferedMessages.queueAfter(queueAfterParam.duration(), queueAfterParam.timeUnit());
-                }
-            };
-            sendEmbeds(commandEventWrapper, defferedSendConsumer);
+            sendEmbedsFromCommand(event, commandEventWrapper);
         } catch (BotException ex) {
             event.reply(embedBuilder.createErrorMessage(commandEventWrapper, ex));
         }
@@ -109,16 +98,7 @@ public abstract class AbstractCommand extends SlashCommand {
         event.deferReply().queue();
         try {
             doExecuteCommand(commandEventWrapper);
-
-            final var defferedMessages = event.getHook().sendMessageEmbeds(commandEventWrapper.getEmbeds());
-            final Consumer<QueueAfterParam> defferedSendConsumer = queueAfterParam -> {
-                if (Objects.isNull(queueAfterParam)) {
-                    defferedMessages.queue();
-                } else {
-                    defferedMessages.queueAfter(queueAfterParam.duration(), queueAfterParam.timeUnit());
-                }
-            };
-            sendEmbeds(commandEventWrapper, defferedSendConsumer);
+            sendEmbedsFromSlashCommand(event, commandEventWrapper);
         } catch (BotException ex) {
             event.getHook()
                 .sendMessageEmbeds(embedBuilder.createErrorMessage(commandEventWrapper, ex))
@@ -128,17 +108,57 @@ public abstract class AbstractCommand extends SlashCommand {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void sendEmbeds(CommandEventWrapper wrapper, Consumer<QueueAfterParam> defferedMessage) {
-        final List<MessageEmbed> messageEmbeds = wrapper.getEmbeds();
-        if (messageEmbeds.isEmpty()) return;
+    private void sendEmbedsFromCommand(CommandEvent event, CommandEventWrapper wrapper) {
+        if (wrapper.getEmbeds().isEmpty()) return;
 
-        final QueueAfterParam queueAfterParam = wrapper.getQueueAfterParam();
-        defferedMessage.accept(queueAfterParam);
+        final var defferedMessages = event.getTextChannel().sendMessageEmbeds(wrapper.getEmbeds());
+        final QueueAfterParam afterParam = wrapper.getQueueAfterParam();
 
-        if (!Objects.isNull(wrapper.getAppendAfterEmbeds())) {
-            wrapper.getAppendAfterEmbeds().run();
+        if (Objects.isNull(afterParam)) {
+            if (Objects.isNull(wrapper.getAppendAfterEmbeds())) {
+                defferedMessages.queue();
+            } else {
+                defferedMessages.queue(v -> wrapper.getAppendAfterEmbeds().run());
+            }
+        } else {
+            if (Objects.isNull(wrapper.getAppendAfterEmbeds())) {
+                defferedMessages.queueAfter(afterParam.duration(), afterParam.timeUnit());
+            } else {
+                final var scheduledFuture = defferedMessages.queueAfter(afterParam.duration(), afterParam.timeUnit());
+                if (scheduledFuture.isDone()) {
+                    wrapper.getAppendAfterEmbeds().run();
+                }
+            }
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void sendEmbedsFromSlashCommand(SlashCommandEvent event, CommandEventWrapper wrapper) {
+        if (wrapper.getEmbeds().isEmpty()) return;
+
+        final var defferedMessages = event.getHook().sendMessageEmbeds(wrapper.getEmbeds());
+        final QueueAfterParam afterParam = wrapper.getQueueAfterParam();
+
+        if (Objects.isNull(afterParam)) {
+            if (Objects.isNull(wrapper.getAppendAfterEmbeds())) {
+                defferedMessages.queue();
+            } else {
+                defferedMessages.queue(v -> wrapper.getAppendAfterEmbeds().run());
+            }
+        } else {
+            if (Objects.isNull(wrapper.getAppendAfterEmbeds())) {
+                defferedMessages.queueAfter(afterParam.duration(), afterParam.timeUnit());
+            } else {
+                final var scheduledFuture = defferedMessages.queueAfter(afterParam.duration(), afterParam.timeUnit());
+                if (scheduledFuture.isDone()) {
+                    wrapper.getAppendAfterEmbeds().run();
+                }
+            }
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private List<OptionData> insertSlashOptionsData(BotCommand command) {
         final BotSlashCommand slashCommand = BotSlashCommand.getFromRegularCommand(command);
