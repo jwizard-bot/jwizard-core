@@ -30,7 +30,7 @@ With this configuration, it's possible to run the production version on the serv
 ## Clone script
 To install the program on your computer use the command (or use the built-in GIT system in your IDE environment):
 ```
-$ git clone https://github.com/Milosz08/JWizard_Discord_Bot jwizard-discord-bot
+$ git clone https://github.com/Milosz08/jwizard jwizard-discord-bot
 ```
 
 <a name="run-from-ide"></a>
