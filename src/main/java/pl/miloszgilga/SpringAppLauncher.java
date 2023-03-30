@@ -30,7 +30,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-public class Bootloader {
+public class SpringAppLauncher {
 
     private static final String SPRING_CFG = "spring/spring-context.cfg.xml";
     public static final ApplicationContext APP_CONTEXT = new ClassPathXmlApplicationContext(SPRING_CFG);
