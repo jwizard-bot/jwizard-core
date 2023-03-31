@@ -244,6 +244,9 @@ public class BotConfiguration {
     public String getLocaleText(LocaleSet localeSet, Map<String, Object> params) {
         try {
             String resourceText = localeBundle.getString(localeSet.getHolder());
+            if (resourceText.isBlank()) {
+                return localeSet.getHolder();
+            }
             for (final Map.Entry<String, Object> param : params.entrySet()) {
                 resourceText = resourceText.replace("{{" + param.getKey() + "}}", String.valueOf(param.getValue()));
             }

@@ -2,9 +2,12 @@
 
 # JWizard Discord Bot
 
-[![Generic badge](https://img.shields.io/badge/Made%20in-Java%20SE%2017-1abc9c.svg)](https://www.java.com/en/)&nbsp;&nbsp;
-[![Generic badge](https://img.shields.io/badge/Build%20with-Gradle-green.svg)](https://gradle.org/)&nbsp;&nbsp;
-[![Generic badge](https://img.shields.io/badge/Packaging-Fat%20jar-brown.svg)](https://gradle.org/)&nbsp;&nbsp;
+![](https://img.shields.io/badge/Made%20in-Java%20SE%2017-1abc9c.svg)
+&nbsp;&nbsp;
+![](https://img.shields.io/badge/Build%20with-Gradle-green.svg)
+&nbsp;&nbsp;
+![](https://img.shields.io/badge/Packaging-Fat%20jar-brown.svg)
+&nbsp;&nbsp;
 <br>
 
 A multi-functional music bot (likely to be enhanced with additional features over time) that allows you to play, pause, repeat and queue songs on the popular VoIP Discord platform. Written entirely using Java SE 17 and Spring Framework IoC container.
@@ -67,17 +70,18 @@ $ ./gradlew shadowJar
 ```
 3. All generated files should be located in `/build/shadow`. You can move this files into selected directory.
 4. Optionally, you can change the bot's configuration values in the `properties-prod.yml` or `properties-dev.yml` file for the production or development version, respectively.
-5. (FOR UNIX SYSTEMS) To run JAR file, type:
-```
-$ ./run-dev.sh   # for development version (loading configuration from properties-dev.yml file)
-$ ./run-prod.sh  # for production version (loading configuration from properties-prod.yml file)
-```
-6. (FOR WINDOWS/OTHERS) To run JAR file, type:
-```
-$ python run-dev.py    # for development version (loading configuration from properties-dev.yml file)
-$ python run-prod.py   # for production version (loading configuration from properties-prod.yml file)
-```
-> NOTE: To run the script, you must have installed Python interpreter 3.11.2 or above. To check Python version, type `python --version` in your command prompt.
+5. To run JAR file, type:
+   * (FOR UNIX SYSTEMS):
+    ```
+    $ ./run-dev.sh   # for development version (loading configuration from properties-dev.yml file)
+    $ ./run-prod.sh  # for production version (loading configuration from properties-prod.yml file)
+    ```
+   * (FOR WINDOWS/OTHERS):
+    ```
+    $ python run-dev.py    # for development version (loading configuration from properties-dev.yml file)
+    $ python run-prod.py   # for production version (loading configuration from properties-prod.yml file)
+    ```
+    > NOTE: To run the script, you must have installed Python interpreter 3.11.2 or above. To check Python version, type `python --version` in your command prompt.
 
 <a name="change-xmx-and-xms-parameters"></a>
 ## Change Xmx and Xms parameters (JVM Heap Size)
@@ -96,13 +100,27 @@ Java heap size configuration is the same for both configuration (development and
 
 <a name="internationalization-i18n"></a>
 ## Internationalization (i18n)
-1. To add a new language, create a new resource file in the `/lang` directory with a name contains the language prefix, ex. `messages_fr.properties`, copy all keys from `messages_en_us.properties` and change messages into corresponding to the selected language.
-2. To set the language, change this property in `properties-dev.yml` or `properties-prod.yml`:
+1. To add a new language, create a new resource file in the `/lang` directory via command:
+   * (FOR UNIX SYSTEMS):
+    ```
+    $ cd lang/generator
+    $ ./lang-gen.sh --lang=[i18n tag]
+    ```
+   * (for WINDOWS/OTHERS):
+    ```
+    $ cd lang/generator
+    $ python lang-gen.py --lang=[i18n tag]
+    ```
+    where `[i18n tag]` is one of the internationalization standards tag (ex. `en-US`, `fr`, `pl` etc.)
+    > NOTE: To run the script, you must have installed Python interpreter 3.11.2 or above. To check Python version, type `python --version` in your command prompt.
+2. After successfully generated message resources file, fill keys with properly values.
+> NOTE: If you not provide parameter, application take key as value.
+3. To set the language, change this property in `properties-dev.yml` or `properties-prod.yml`:
 ```yml
 bot:
   misc:
     locale:
-      selected-locale: fr
+      selected-locale: [i18n tag]
 ```
 
 <a name="author"></a>
