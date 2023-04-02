@@ -90,7 +90,7 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
         if (isUrlPattern) {
             for (final AudioTrack track : trackList) {
                 track.setUserData(dataSender);
-                musicManager.getTrackScheduler().addToQueue(new AudioQueueExtendedInfo(dataSender, track));
+                musicManager.getActions().addToQueueAndOffer(new AudioQueueExtendedInfo(dataSender, track));
             }
             final long durationsMilis = trackList.stream().mapToLong(AudioTrack::getDuration).sum();
             final String sumDurationTime = Utilities.convertMilisToDate(durationsMilis);
@@ -133,8 +133,8 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
 
     private void addNewAudioTrackToQueue(Member dataSender, AudioTrack track) {
         track.setUserData(dataSender);
-        musicManager.getTrackScheduler().addToQueue(new AudioQueueExtendedInfo(dataSender, track));
-        if (musicManager.getTrackScheduler().getTrackQueue().isEmpty()) return;
+        musicManager.getActions().addToQueueAndOffer(new AudioQueueExtendedInfo(dataSender, track));
+        if (musicManager.getQueue().isEmpty()) return;
 
         final MessageEmbed messageEmbed = createSingleTrackEmbedMessage(track);
         deliveryEvent.sendEmbedMessage(messageEmbed);
@@ -146,7 +146,7 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
 
     private MessageEmbed createSingleTrackEmbedMessage(AudioTrack track) {
         final String durationTime = Utilities.convertMilisToDate(track.getDuration());
-        final String trackPos = musicManager.getTrackScheduler().getTrackPositionInQueue();
+        final String trackPos = musicManager.getActions().getTrackPositionInQueue();
         final String thumbnailUrl = "https://img.youtube.com/vi/" + track.getInfo().identifier + "/0.jpg";
 
         return builder.createSingleTrackMessage(deliveryEvent, new TrackEmbedContent(

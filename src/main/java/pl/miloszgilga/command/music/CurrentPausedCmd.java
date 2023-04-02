@@ -57,7 +57,7 @@ public class CurrentPausedCmd extends AbstractMusicCommand {
     @Override
     protected void doExecuteMusicCommand(CommandEventWrapper event) {
         final MusicManager musicManager = playerManager.getMusicManager(event);
-        final AudioTrack pausedTrack = musicManager.getTrackScheduler().getPausedTrack();
+        final AudioTrack pausedTrack = musicManager.getActions().getPausedTrack();
         final ExtendedAudioTrackInfo track = new ExtendedAudioTrackInfo(pausedTrack);
 
         final String trackTimestamp = Utilities.convertMilisToDate(pausedTrack.getPosition());

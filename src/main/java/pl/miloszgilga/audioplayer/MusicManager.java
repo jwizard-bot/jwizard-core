@@ -75,12 +75,16 @@ public class MusicManager {
         return trackScheduler;
     }
 
+    public SchedulerActions getActions() {
+        return trackScheduler.getActions();
+    }
+
     public Queue<AudioQueueExtendedInfo> getQueue() {
-        return trackScheduler.getTrackQueue();
+        return trackScheduler.getActions().getTrackQueue();
     }
 
     public boolean isInfinitePlaylistActive() {
-        return trackScheduler.isInfinitePlaylistRepeating();
+        return trackScheduler.getActions().isInfinitePlaylistRepeating();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -100,7 +100,7 @@ public class AloneOnChannelListener {
                 continue;
             }
             final MusicManager musicManager = playerManager.getMusicManager(guild);
-            musicManager.getTrackScheduler().clearAndDestroy(true);
+            musicManager.getActions().clearAndDestroy(true);
             guild.getAudioManager().closeAudioConnection();
 
             log.info("G: {} <> Leave voice channel. Cause: not found any active user", guild.getName());

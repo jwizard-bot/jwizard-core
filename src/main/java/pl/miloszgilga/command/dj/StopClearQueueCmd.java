@@ -57,7 +57,7 @@ public class StopClearQueueCmd extends AbstractDjCommand {
     protected void doExecuteDjCommand(CommandEventWrapper event) {
         final MusicManager musicManager = playerManager.getMusicManager(event);
         final ExtendedAudioTrackInfo currentTrack = playerManager.getCurrentPlayingTrack(event);
-        musicManager.getTrackScheduler().clearAndDestroy(false);
+        musicManager.getActions().clearAndDestroy(false);
         MessageEmbed messageEmbed;
         if (!Objects.isNull(currentTrack)) {
             messageEmbed = embedBuilder.createMessage(LocaleSet.SKIPPED_CURRENT_TRACK_AND_CLEAR_QUEUE_MESS, Map.of(

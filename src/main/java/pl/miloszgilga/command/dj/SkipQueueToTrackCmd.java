@@ -34,8 +34,8 @@ import java.util.Map;
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.CommandEventWrapper;
+import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.audioplayer.PlayerManager;
-import pl.miloszgilga.audioplayer.TrackScheduler;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
 import pl.miloszgilga.core.LocaleSet;
@@ -59,11 +59,11 @@ public class SkipQueueToTrackCmd extends AbstractDjCommand {
 
     @Override
     protected void doExecuteDjCommand(CommandEventWrapper event) {
-        final TrackScheduler trackScheduler = playerManager.getMusicManager(event).getTrackScheduler();
+        final MusicManager musicManager = playerManager.getMusicManager(event);
         final int trackPos = (int) NumberUtils.toFloat(event.getArgs().get(0));
 
-        if (!trackScheduler.checkTrackPosition(trackPos)) {
-            throw new TrackPositionOutOfBoundsException(config, event, trackScheduler.getTrackQueue().size());
+        if (musicManager.getActions().checkInvTrackPosition(trackPos)) {
+            throw new TrackPositionOutOfBoundsException(config, event, musicManager.getQueue().size());
         }
         final AudioTrack currentPlaying = playerManager.skipToTrackPos(event, trackPos);
 

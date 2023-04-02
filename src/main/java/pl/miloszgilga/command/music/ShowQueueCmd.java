@@ -91,7 +91,7 @@ public class ShowQueueCmd extends AbstractMusicCommand {
             String.valueOf(tracks.size()),
             Utilities.convertMilisToDate(durationMilis),
             leftToNextTrack,
-            Utilities.convertMilisToDate(musicManager.getTrackScheduler().getAverageTrackDuration()),
+            Utilities.convertMilisToDate(musicManager.getActions().getAverageTrackDuration()),
             musicManager.isInfinitePlaylistActive() ? LocaleSet.TURN_ON_MESS : LocaleSet.TURN_OFF_MESS
         );
         final MessageEmbed messageEmbed = embedBuilder.createQueueInfoMessage(content);

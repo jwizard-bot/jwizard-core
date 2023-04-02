@@ -109,7 +109,7 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     @Override
     public void resumeCurrentTrack(CommandEventWrapper event) {
         final MusicManager musicManager = getMusicManager(event);
-        final AudioTrack pausedTrack = musicManager.getTrackScheduler().getPausedTrack();
+        final AudioTrack pausedTrack = musicManager.getActions().getPausedTrack();
         if (invokerIsNotTrackSenderOrAdmin(pausedTrack, event)) {
             throw new InvokerIsNotTrackSenderOrAdminException(config, event);
         }
@@ -122,10 +122,10 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     public AudioTrackInfo skipCurrentTrack(CommandEventWrapper event) {
         final MusicManager musicManager = checkPermissions(event);
         final AudioTrackInfo skippedTrack = getCurrentPlayingTrack(event);
-        if (musicManager.getTrackScheduler().getTrackQueue().isEmpty()) {
+        if (musicManager.getQueue().isEmpty()) {
             musicManager.getAudioPlayer().stopTrack();
         } else {
-            musicManager.getTrackScheduler().nextTrack();
+            musicManager.getActions().nextTrack();
         }
         JDALog.info(log, event, "Current playing track '%s' was skipped", skippedTrack.title);
         return skippedTrack;
@@ -145,7 +145,7 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     @Override
     public void repeatCurrentTrack(CommandEventWrapper event, int countOfRepeats) {
         final MusicManager musicManager = checkPermissions(event);
-        musicManager.getTrackScheduler().setCountOfRepeats(countOfRepeats);
+        musicManager.getActions().setCountOfRepeats(countOfRepeats);
         if (countOfRepeats == 0) {
             JDALog.info(log, event, "Repeating of current playing track '%s' was removed",
                 getCurrentPlayingTrack(event).title);
@@ -160,15 +160,15 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     @Override
     public boolean toggleInfiniteLoopCurrentTrack(CommandEventWrapper event) {
         final MusicManager musicManager = checkPermissions(event);
-        musicManager.getTrackScheduler().setInfiniteRepeating(!musicManager.getTrackScheduler().isInfiniteRepeating());
-        final boolean isRepeating = musicManager.getTrackScheduler().isInfiniteRepeating();
+        musicManager.getActions().setInfiniteRepeating(!musicManager.getActions().isInfiniteRepeating());
+        final boolean isRepeating = musicManager.getActions().isInfiniteRepeating();
         final String currentTrackTitle = getCurrentPlayingTrack(event).title;
         if (isRepeating) {
             JDALog.info(log, event, "Current playing track '%s' has been placed in infinite loop", currentTrackTitle);
         } else {
             JDALog.info(log, event, "Current playing track '%s' has been removed from infinite loop", currentTrackTitle);
         }
-        return musicManager.getTrackScheduler().isInfiniteRepeating();
+        return musicManager.getActions().isInfiniteRepeating();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -185,10 +185,10 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     @Override
     public AudioTrack skipToTrackPos(CommandEventWrapper event, int position) {
         final MusicManager musicManager = getMusicManager(event);
-        if (musicManager.getTrackScheduler().getTrackQueue().isEmpty()) {
+        if (musicManager.getQueue().isEmpty()) {
             throw new TrackQueueIsEmptyException(config, event);
         }
-        musicManager.getTrackScheduler().skipToPosition(position);
+        musicManager.getActions().skipToPosition(position);
         final AudioTrack currentPlaying = musicManager.getAudioPlayer().getPlayingTrack();
         JDALog.info(log, event, "'%s' tracks in queue was skipped and started playing track: '%s'", position,
             currentPlaying.getInfo().title);
@@ -202,10 +202,10 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
         final Member memberRemoveTracks = Utilities.checkIfMemberInGuildExist(event, memberId, config);
         final MusicManager musicManager = getMusicManager(event);
 
-        if (!musicManager.getTrackScheduler().checkIfMemberAddAnyTracksToQueue(memberRemoveTracks)) {
+        if (!musicManager.getActions().checkIfMemberAddAnyTracksToQueue(memberRemoveTracks)) {
             throw new UserNotAddedTracksToQueueException(config, event);
         }
-        final List<ExtendedAudioTrackInfo> removedTracks = musicManager.getTrackScheduler()
+        final List<ExtendedAudioTrackInfo> removedTracks = musicManager.getActions()
             .removeAllTracksFromMember(memberRemoveTracks);
 
         JDALog.info(log, event, "Following tracks was removed '%s', added by member: '%s'", removedTracks,
@@ -218,10 +218,10 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     @Override
     public boolean toggleInfinitePlaylistLoop(CommandEventWrapper event) {
         final MusicManager musicManager = getMusicManager(event);
-        if (musicManager.getTrackScheduler().getTrackQueue().isEmpty()) {
+        if (musicManager.getQueue().isEmpty()) {
             throw new TrackQueueIsEmptyException(config, event);
         }
-        final boolean isTurnOn = musicManager.getTrackScheduler().toggleInfinitePlaylistRepeating();
+        final boolean isTurnOn = musicManager.getActions().toggleInfinitePlaylistRepeating();
         JDALog.info(log, event, "Current playlist was turn '%s' for infinite repeating", isTurnOn ? "ON" : "OFF");
         return isTurnOn;
     }

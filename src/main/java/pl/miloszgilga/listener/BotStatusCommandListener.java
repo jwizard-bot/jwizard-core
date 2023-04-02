@@ -113,7 +113,7 @@ public class BotStatusCommandListener extends AbstractListenerAdapter {
 
         for (final Guild guild : event.getJDA().getGuilds()) {
             guild.getAudioManager().closeAudioConnection();
-            playerManager.getMusicManager(guild).getTrackScheduler().clearAndDestroy(false);
+            playerManager.getMusicManager(guild).getActions().clearAndDestroy(false);
         }
         event.getJDA().shutdown();
         System.exit(0);

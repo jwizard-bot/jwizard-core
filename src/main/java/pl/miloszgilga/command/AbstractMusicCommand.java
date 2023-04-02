@@ -86,7 +86,7 @@ public abstract class AbstractMusicCommand extends AbstractCommand {
             throw new ActiveMusicPlayingNotFoundException(config, event);
         }
         if (!inIdleMode) {
-            final AudioTrack pausedTrack = musicManager.getTrackScheduler().getPausedTrack();
+            final AudioTrack pausedTrack = musicManager.getActions().getPausedTrack();
             if (isPaused && Objects.isNull(pausedTrack)) {
                 throw new AudioPlayerException.TrackIsNotPausedException(config, event);
             }
