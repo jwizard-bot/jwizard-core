@@ -80,6 +80,15 @@ public class CommandException {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    @Slf4j public static class UnauthorizedDjOrSenderException extends BotException {
+        public UnauthorizedDjOrSenderException(BotConfiguration config, CommandEventWrapper event) {
+            super(config, LocaleSet.UNAUTHORIZED_DJ_OR_SENDER_EXC, BugTracker.UNAUTHORIZED_DJ_OR_SENDER);
+            JDALog.error(log, event, "Attempt to invoke DJ command without DJ guild role or without send all tracks");
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Slf4j public static class UnauthorizedManagerCommandExecutionException extends BotException {
         public UnauthorizedManagerCommandExecutionException(BotConfiguration config, CommandEventWrapper event) {
             super(config, LocaleSet.UNAUTHORIZED_MANAGER_EXC, BugTracker.UNAUTHORIZED_MANAGER);
