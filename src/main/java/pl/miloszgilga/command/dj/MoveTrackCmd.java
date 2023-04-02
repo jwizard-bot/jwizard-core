@@ -24,11 +24,20 @@
 
 package pl.miloszgilga.command.dj;
 
+import org.apache.commons.lang3.math.NumberUtils;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+
+import java.util.Map;
+
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.misc.Utilities;
+import pl.miloszgilga.dto.TrackPosition;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
+import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -46,6 +55,18 @@ public class MoveTrackCmd extends AbstractDjCommand {
 
     @Override
     protected void doExecuteDjCommand(CommandEventWrapper event) {
+        final int previousPosition = (int) NumberUtils.toFloat(event.getArgs().get(0));
+        final int requestedPosition = (int) NumberUtils.toFloat(event.getArgs().get(1));
 
+        final TrackPosition trackPositions = new TrackPosition(previousPosition, requestedPosition);
+        final AudioTrack movedTrack = playerManager.moveTrackToSelectedPosition(event, trackPositions);
+
+        final MessageEmbed messageEmbed = embedBuilder
+            .createMessage(LocaleSet.MOVE_TRACK_POS_TO_SELECTED_LOCATION_MESS, Map.of(
+                "movedTrack", Utilities.getRichTrackTitle(movedTrack.getInfo()),
+                "previousPosition", String.valueOf(previousPosition),
+                "requestedPosition", String.valueOf(requestedPosition)
+            ));
+        event.sendEmbedMessage(messageEmbed);
     }
 }

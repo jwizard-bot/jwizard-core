@@ -24,11 +24,17 @@
 
 package pl.miloszgilga.command.dj;
 
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.VoiceChannel;
+
+import java.util.Map;
+
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
+import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -40,12 +46,18 @@ public class JoinToChannelCmd extends AbstractDjCommand {
     JoinToChannelCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
         super(BotCommand.JOIN_TO_CHANNEL, config, playerManager, embedBuilder);
         super.inPlayingMode = true;
+        super.allowAlsoForNormal = false;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void doExecuteDjCommand(CommandEventWrapper event) {
-
+        final VoiceChannel movedToVoiceChannel = playerManager.moveToMemberCurrentVoiceChannel(event);
+        final MessageEmbed messageEmbed = embedBuilder
+            .createMessage(LocaleSet.MOVE_BOT_TOO_SELECTED_CHANNEL_MESS, Map.of(
+                "movedChannel", movedToVoiceChannel.getName()
+            ));
+        event.sendEmbedMessage(messageEmbed);
     }
 }

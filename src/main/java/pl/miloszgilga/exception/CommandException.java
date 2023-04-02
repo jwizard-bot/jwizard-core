@@ -104,4 +104,13 @@ public class CommandException {
             JDALog.error(log, event, "Attempt to find not existing user in selected guild");
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Slf4j public static class UserIsAlreadyWithBotException extends BotException {
+        public UserIsAlreadyWithBotException(BotConfiguration config, CommandEventWrapper event) {
+            super(config, LocaleSet.USER_ID_ALREADY_WITH_BOT_EXC, BugTracker.USER_ID_ALREADY_WITH_BOT);
+            JDALog.error(log, event, "Attempt to invoke command, while user is together with bot");
+        }
+    }
 }

@@ -135,6 +135,8 @@ public enum LocaleSet {
     REMOVE_PLAYLIST_FROM_INFINITE_LOOP_MESS         ("jwizard.message.response.RemovePlaylistFromInfiniteLoop"),
     TURN_ON_MESS                                    ("jwizard.message.response.TurnOn"),
     TURN_OFF_MESS                                   ("jwizard.message.response.TurnOff"),
+    MOVE_BOT_TOO_SELECTED_CHANNEL_MESS              ("jwizard.message.response.MoveBotTooSelectedChannel"),
+    MOVE_TRACK_POS_TO_SELECTED_LOCATION_MESS        ("jwizard.message.response.MoveTrackPositionToSelectedLocation"),
 
     GENERAL_HEADER_DEBUG                            ("jwizard.message.debug.header.General"),
     CONFIGURATION_HEADER_DEBUG                      ("jwizard.message.debug.header.Configuration"),
@@ -177,11 +179,14 @@ public enum LocaleSet {
     LOCK_COMMAND_ON_TEMPORARY_HALTED_EXC            ("jwizard.exception.LockCommandOnTemporaryHaltedException"),
     VOLUME_UNITS_OUT_OF_BOUNDS_EXC                  ("jwizard.exception.VolumeUnitsOutOfBoundsException"),
     TRACK_OFFSET_OUT_OF_BOUNDS_EXC                  ("jwizard.exception.TrackOffsetOutOfBoundsException"),
-    UNAUTHORIZED_DJ_COMMAND_EXECUTION_EXC           ("jwizard.exception.UnauthorizedDjCommandExecutionException"),
-    UNAUTHORIZED_MANAGER_COMMAND_EXECUTION_EXC      ("jwizard.exception.UnauthorizedManagerCommandExecutionException"),
+    TRACK_THE_SAME_POSITION_EXC                     ("jwizard.exception.TrackTheSamePositionException"),
+    UNAUTHORIZED_DJ_EXC                             ("jwizard.exception.UnauthorizedDjException"),
+    UNAUTHORIZED_DJ_OR_SENDER_EXC                   ("jwizard.exception.UnauthorizedDjOrSenderException"),
+    UNAUTHORIZED_MANAGER_EXC                        ("jwizard.exception.UnauthorizedManagerException"),
     TRACK_QUEUE_IS_EMPTY_EXC                        ("jwizard.exception.TrackQueueIsEmptyException"),
     USER_NOT_FOUND_IN_GUILD_EXC                     ("jwizard.exception.UserNotFoundInGuildException"),
-    USER_NOT_ADDED_TRACKS_TO_QUEUE_EXC              ("jwizard.exception.UserNotAddedTracksToQueueException");
+    USER_NOT_ADDED_TRACKS_TO_QUEUE_EXC              ("jwizard.exception.UserNotAddedTracksToQueueException"),
+    USER_ID_ALREADY_WITH_BOT_EXC                    ("jwizard.exception.UserIsAlreadyWithBotException");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -147,4 +147,13 @@ public class AudioPlayerException {
             JDALog.error(log, event, "Attempt to remove tracks from user which not added any track in queue");
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Slf4j public static class TrackPositionsIsTheSameException extends BotException {
+        public TrackPositionsIsTheSameException(BotConfiguration config, CommandEventWrapper event) {
+            super(config, LocaleSet.TRACK_THE_SAME_POSITION_EXC, BugTracker.TRACK_THE_SAME_POSITIONS);
+            JDALog.error(log, event, "Attempt to move track to the same origin position");
+        }
+    }
 }

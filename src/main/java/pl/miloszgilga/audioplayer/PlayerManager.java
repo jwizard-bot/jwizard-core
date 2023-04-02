@@ -29,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
@@ -45,15 +46,20 @@ import java.util.*;
 import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.misc.ValidateUserDetails;
+import pl.miloszgilga.dto.TrackPosition;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.dto.MemberRemovedTracksInfo;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
+import static pl.miloszgilga.exception.CommandException.UserIsAlreadyWithBotException;
 import static pl.miloszgilga.exception.AudioPlayerException.TrackIsNotPlayingException;
 import static pl.miloszgilga.exception.AudioPlayerException.TrackQueueIsEmptyException;
+import static pl.miloszgilga.exception.AudioPlayerException.TrackPositionsIsTheSameException;
+import static pl.miloszgilga.exception.AudioPlayerException.TrackPositionOutOfBoundsException;
 import static pl.miloszgilga.exception.AudioPlayerException.UserNotAddedTracksToQueueException;
+import static pl.miloszgilga.exception.AudioPlayerException.UserOnVoiceChannelNotFoundException;
 import static pl.miloszgilga.exception.AudioPlayerException.InvokerIsNotTrackSenderOrAdminException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -224,6 +230,45 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
         final boolean isTurnOn = musicManager.getActions().toggleInfinitePlaylistRepeating();
         JDALog.info(log, event, "Current playlist was turn '%s' for infinite repeating", isTurnOn ? "ON" : "OFF");
         return isTurnOn;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public VoiceChannel moveToMemberCurrentVoiceChannel(CommandEventWrapper event) {
+        final VoiceChannel voiceChannelWithMember = event.getGuild().getVoiceChannels().stream()
+            .filter(c -> c.getMembers().contains(event.getMember()))
+            .findFirst()
+            .orElseThrow(() -> { throw new UserOnVoiceChannelNotFoundException(config, event); });
+
+        final Member botMember = event.getGuild().getSelfMember();
+        if (voiceChannelWithMember.getMembers().contains(botMember)) {
+            throw new UserIsAlreadyWithBotException(config, event);
+        }
+        event.getGuild().moveVoiceMember(botMember, voiceChannelWithMember).complete();
+        JDALog.info(log, event, "Bot was successfully moved to channel '%s'", voiceChannelWithMember.getName());
+        return voiceChannelWithMember;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public AudioTrack moveTrackToSelectedPosition(CommandEventWrapper event, TrackPosition position) {
+        final MusicManager musicManager = getMusicManager(event);
+        final SchedulerActions actions = musicManager.getActions();
+        if (musicManager.getQueue().isEmpty()) {
+            throw new TrackQueueIsEmptyException(config, event);
+        }
+        if (actions.checkInvTrackPosition(position.previous()) || actions.checkInvTrackPosition(position.selected())) {
+            throw new TrackPositionOutOfBoundsException(config, event, musicManager.getQueue().size());
+        }
+        if (position.previous() == position.selected()) {
+            throw new TrackPositionsIsTheSameException(config, event);
+        }
+        final AudioTrack movedAudioTrack = musicManager.getActions().moveToPosition(position);
+        JDALog.info(log, event, "Audio Track '%s' was successfully moved from '%d' to '%d' position in queue",
+            movedAudioTrack.getInfo().title, position.previous(), position.selected());
+        return movedAudioTrack;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
