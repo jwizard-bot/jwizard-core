@@ -71,9 +71,9 @@ public class CommandException {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Slf4j public static class UnauthorizedDjCommandExecutionException extends BotException {
-        public UnauthorizedDjCommandExecutionException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, LocaleSet.UNAUTHORIZED_DJ_COMMAND_EXECUTION_EXC, BugTracker.UNAUTHORIZED_DJ_COMMAND_EXECUTION);
+    @Slf4j public static class UnauthorizedDjException extends BotException {
+        public UnauthorizedDjException(BotConfiguration config, CommandEventWrapper event) {
+            super(config, LocaleSet.UNAUTHORIZED_DJ_EXC, BugTracker.UNAUTHORIZED_DJ);
             JDALog.error(log, event, "Attempt to invoke DJ command without DJ guild role");
         }
     }
@@ -82,7 +82,7 @@ public class CommandException {
 
     @Slf4j public static class UnauthorizedManagerCommandExecutionException extends BotException {
         public UnauthorizedManagerCommandExecutionException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, LocaleSet.UNAUTHORIZED_MANAGER_COMMAND_EXECUTION_EXC, BugTracker.UNAUTHORIZED_MANAGER_COMMAND_EXECUTION);
+            super(config, LocaleSet.UNAUTHORIZED_MANAGER_EXC, BugTracker.UNAUTHORIZED_MANAGER);
             JDALog.error(log, event, "Attempt to invoke DJ command without DJ guild role");
         }
     }

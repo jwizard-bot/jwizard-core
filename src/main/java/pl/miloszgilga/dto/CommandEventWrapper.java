@@ -66,49 +66,49 @@ public class CommandEventWrapper {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public CommandEventWrapper(CommandEvent event) {
-        this.guild = event.getGuild();
-        this.guildName = event.getGuild().getName();
-        this.authorTag = event.getAuthor().getAsTag();
-        this.authorAvatarUrl = Objects.requireNonNullElse(event.getAuthor().getAvatarUrl(), event.getAuthor().getDefaultAvatarUrl());
-        this.textChannel = event.getTextChannel();
-        this.dataSender = event.getGuild().getMember(event.getAuthor());
-        this.author = event.getAuthor();
-        this.member = event.getMember();
-        this.client = event.getClient();
-        this.message = event.getMessage().getContentRaw();
-        this.args = Arrays.stream(event.getArgs().split("\\|")).toList();
+        guild = event.getGuild();
+        guildName = event.getGuild().getName();
+        authorTag = event.getAuthor().getAsTag();
+        authorAvatarUrl = Objects.requireNonNullElse(event.getAuthor().getAvatarUrl(), event.getAuthor().getDefaultAvatarUrl());
+        textChannel = event.getTextChannel();
+        dataSender = event.getGuild().getMember(event.getAuthor());
+        author = event.getAuthor();
+        member = event.getMember();
+        client = event.getClient();
+        message = event.getMessage().getContentRaw();
+        args = Arrays.stream(event.getArgs().split("\\|")).toList();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public CommandEventWrapper(GuildMessageReceivedEvent event) {
-        this.guild = event.getGuild();
-        this.guildName = event.getGuild().getName();
-        this.authorTag = event.getAuthor().getAsTag();
-        this.authorAvatarUrl = Objects.requireNonNullElse(event.getAuthor().getAvatarUrl(), event.getAuthor().getDefaultAvatarUrl());
-        this.textChannel = event.getChannel();
-        this.dataSender = event.getGuild().getMember(event.getAuthor());
-        this.author = event.getAuthor();
-        this.member = event.getMember();
-        this.message = event.getMessage().getContentRaw();
-        this.isFromSlashCommand = false;
+        guild = event.getGuild();
+        guildName = event.getGuild().getName();
+        authorTag = event.getAuthor().getAsTag();
+        authorAvatarUrl = Objects.requireNonNullElse(event.getAuthor().getAvatarUrl(), event.getAuthor().getDefaultAvatarUrl());
+        textChannel = event.getChannel();
+        dataSender = event.getGuild().getMember(event.getAuthor());
+        author = event.getAuthor();
+        member = event.getMember();
+        message = event.getMessage().getContentRaw();
+        isFromSlashCommand = false;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public CommandEventWrapper(SlashCommandEvent event) {
-        this.guild = event.getGuild();
-        this.guildName = Objects.requireNonNull(event.getGuild()).getName();
-        this.authorTag = Objects.requireNonNull(event.getMember()).getUser().getAsTag();
-        this.authorAvatarUrl = Objects.requireNonNullElse(event.getMember().getUser().getAvatarUrl(),
+        guild = event.getGuild();
+        guildName = Objects.requireNonNull(event.getGuild()).getName();
+        authorTag = Objects.requireNonNull(event.getMember()).getUser().getAsTag();
+        authorAvatarUrl = Objects.requireNonNullElse(event.getMember().getUser().getAvatarUrl(),
             event.getMember().getUser().getDefaultAvatarUrl());
-        this.textChannel = event.getTextChannel();
-        this.dataSender = event.getGuild().getMember(event.getMember().getUser());
-        this.author = event.getMember().getUser();
-        this.member = event.getMember();
-        this.args = event.getOptions().stream().map(OptionMapping::getAsString).toList();
-        this.isFromSlashCommand = true;
-        this.slashCommandEvent = event;
+        textChannel = event.getTextChannel();
+        dataSender = event.getGuild().getMember(event.getMember().getUser());
+        author = event.getMember().getUser();
+        member = event.getMember();
+        args = event.getOptions().stream().map(OptionMapping::getAsString).toList();
+        isFromSlashCommand = true;
+        slashCommandEvent = event;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
