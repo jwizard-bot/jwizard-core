@@ -29,10 +29,9 @@ import lombok.RequiredArgsConstructor;
 
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-import java.util.List;
-import java.util.Arrays;
-import java.util.ArrayList;
+import java.util.*;
 
+import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.slash.SlashOption;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
