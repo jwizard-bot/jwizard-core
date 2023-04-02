@@ -70,6 +70,7 @@ public enum BotCommand {
     SKIP_TRACK              ("skip",        new String[]{ "sk" },           DJ,     SKIP_TRACK_COMMAND_DESC,                    null,                                 false, 0),
     STOP_CLEAR_QUEUE        ("stop",        new String[]{ "st" },           DJ,     STOP_CLEAR_QUEUE_COMMAND_DESC,              null,                                 false, 0),
     MOVE_TRACK              ("move",        new String[]{ "mv" },           DJ,     MOVE_TRACK_DESC,                            MOVE_TRACK_ARG_SYNTAX,                false, 1),
+    INFINITE_PLAYLIST       ("infinite",    new String[]{ "inf" },          DJ,     INFINITE_PLAYLIST_DESC,                     null,                                 false, 0),
 
     VOTE_SHUFFLE_QUEUE      ("vshuffle",    new String[]{ "vshq" },         MUSIC,  VOTE_SHUFFLE_QUEUE_COMMAND_DESC,            null,                                 false, 0),
     VOTE_SKIP_TRACK         ("vskip",       new String[]{ "vsk" },          MUSIC,  VOTE_SKIP_TRACK_COMMAND_DESC,               null,                                 false, 0),

@@ -215,6 +215,19 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    @Override
+    public boolean toggleInfinitePlaylistLoop(CommandEventWrapper event) {
+        final MusicManager musicManager = getMusicManager(event);
+        if (musicManager.getTrackScheduler().getTrackQueue().isEmpty()) {
+            throw new TrackQueueIsEmptyException(config, event);
+        }
+        final boolean isTurnOn = musicManager.getTrackScheduler().toggleInfinitePlaylistRepeating();
+        JDALog.info(log, event, "Current playlist was turn '%s' for infinite repeating", isTurnOn ? "ON" : "OFF");
+        return isTurnOn;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private MusicManager checkPermissions(CommandEventWrapper event) {
         final MusicManager musicManager = getMusicManager(event);
         final AudioTrack playingTrack = musicManager.getAudioPlayer().getPlayingTrack();

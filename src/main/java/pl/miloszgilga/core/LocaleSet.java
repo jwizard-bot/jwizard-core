@@ -56,6 +56,7 @@ public enum LocaleSet {
     SKIP_TRACK_COMMAND_DESC                         ("jwizard.command.description.SkipTrack"),
     STOP_CLEAR_QUEUE_COMMAND_DESC                   ("jwizard.command.description.StopClearQueue"),
     MOVE_TRACK_DESC                                 ("jwizard.command.description.MoveTrack"),
+    INFINITE_PLAYLIST_DESC                          ("jwizard.command.description.InfinitePlaylist"),
     VOTE_SHUFFLE_QUEUE_COMMAND_DESC                 ("jwizard.command.description.VoteShuffleQueue"),
     VOTE_SKIP_TRACK_COMMAND_DESC                    ("jwizard.command.description.VoteSkipTrack"),
     VOTE_STOP_CLEAR_QUEUE_COMMAND_DESC              ("jwizard.command.description.VoteStopClearQueue"),
@@ -129,6 +130,8 @@ public enum LocaleSet {
     DEBUG_DATA_MESS                                 ("jwizard.message.response.DebugData"),
     SKIP_TO_SELECT_TRACK_POSITION_MESS              ("jwizard.message.response.SkipToSelectedTrackPosition"),
     REMOVED_TRACKS_FROM_SELECTED_MEMBER_MESS        ("jwizard.message.response.RemoveTracksFromSelectedMember"),
+    ADD_PLAYLIST_TO_INFINITE_LOOP_MESS              ("jwizard.message.response.AddPlaylistToInfiniteLoop"),
+    REMOVE_PLAYLIST_FROM_INFINITE_LOOP_MESS         ("jwizard.message.response.RemovePlaylistFromInfiniteLoop"),
 
     GENERAL_HEADER_DEBUG                            ("jwizard.message.debug.header.General"),
     CONFIGURATION_HEADER_DEBUG                      ("jwizard.message.debug.header.Configuration"),

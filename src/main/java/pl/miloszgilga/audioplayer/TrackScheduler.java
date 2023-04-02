@@ -71,6 +71,7 @@ public class TrackScheduler extends AudioEventAdapter {
     private boolean nextTrackInfoDisabled = false;
     private boolean infiniteRepeating = false;
     private boolean onClearing = false;
+    private boolean infinitePlaylistRepeating = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -160,7 +161,15 @@ public class TrackScheduler extends AudioEventAdapter {
         }
         if (infiniteRepeating) {
             audioPlayer.startTrack(track.makeClone(), false);
-        } else if (countOfRepeats > 0) {
+            return;
+        }
+        if (infinitePlaylistRepeating) {
+            final Member sender = (Member) track.getUserData();
+            trackQueue.add(new AudioQueueExtendedInfo(sender, track.makeClone()));
+            if (endReason.mayStartNext) nextTrack();
+            return;
+        }
+        if (countOfRepeats > 0) {
             final AudioTrackInfo trackInfo = track.getInfo();
             final int currentRepeat = (totalCountOfRepeats - countOfRepeats) + 1;
 
@@ -175,7 +184,9 @@ public class TrackScheduler extends AudioEventAdapter {
             nextTrackInfoDisabled = true;
             JDALog.info(log, deliveryEvent, "Repeat %s times of track '%s' from elapsed %s repeats",
                 currentRepeat, trackInfo.title, countOfRepeats);
-        } else if (endReason.mayStartNext) {
+            return;
+        }
+        if (endReason.mayStartNext) {
             nextTrack();
         }
     }
@@ -249,6 +260,7 @@ public class TrackScheduler extends AudioEventAdapter {
         totalCountOfRepeats = 0;
         infiniteRepeating = false;
         nextTrackInfoDisabled = false;
+        infinitePlaylistRepeating = false;
 
         if (showMessage) {
             final MessageEmbed messageEmbed = builder.createMessage(LocaleSet.LEAVE_EMPTY_CHANNEL_MESS);
@@ -304,6 +316,11 @@ public class TrackScheduler extends AudioEventAdapter {
             final Member iterateMember = (Member) t.audioTrack().getUserData();
             return member.equals(iterateMember);
         });
+    }
+
+    public boolean toggleInfinitePlaylistRepeating() {
+        infinitePlaylistRepeating = !infinitePlaylistRepeating;
+        return infinitePlaylistRepeating;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

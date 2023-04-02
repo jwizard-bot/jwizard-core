@@ -43,4 +43,5 @@ interface IPlayerManager {
     void setPlayerVolume(CommandEventWrapper event, int volume);
     AudioTrack skipToTrackPos(CommandEventWrapper event, int position);
     MemberRemovedTracksInfo removeTracksFromMember(CommandEventWrapper event, String memberId);
+    boolean toggleInfinitePlaylistLoop(CommandEventWrapper event);
 }
