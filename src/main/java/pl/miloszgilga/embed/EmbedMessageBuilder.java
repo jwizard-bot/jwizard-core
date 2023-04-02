@@ -31,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.function.BiFunction;
 
 import pl.miloszgilga.dto.*;
 import pl.miloszgilga.exception.BugTracker;
@@ -44,11 +45,13 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 public class EmbedMessageBuilder {
 
     private final BotConfiguration config;
+    private final BiFunction<LocaleSet, String, MessageEmbed.Field> inlineField;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public EmbedMessageBuilder(BotConfiguration config) {
         this.config = config;
+        this.inlineField  = (key, value) -> new MessageEmbed.Field(config.getLocaleText(key) + ":", value, true);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,10 +79,10 @@ public class EmbedMessageBuilder {
         return new EmbedBuilder()
             .setAuthor(wrapper.getAuthorTag(), null, wrapper.getAuthorAvatarUrl())
             .setDescription(config.getLocaleText(LocaleSet.ADD_NEW_TRACK_MESS))
-            .addField(config.getLocaleText(LocaleSet.TRACK_NAME_MESS) + ":", c.trackUrl(), true)
+            .addField(inlineField.apply(LocaleSet.TRACK_NAME_MESS, c.trackUrl()))
             .addBlankField(true)
-            .addField(config.getLocaleText(LocaleSet.TRACK_DURATION_TIME_MESS) + ":", c.durationTime(), true)
-            .addField(config.getLocaleText(LocaleSet.TRACK_POSITION_IN_QUEUE_MESS) + ":", c.trackPosition(), true)
+            .addField(inlineField.apply(LocaleSet.TRACK_DURATION_TIME_MESS, c.durationTime()))
+            .addField(inlineField.apply(LocaleSet.TRACK_POSITION_IN_QUEUE_MESS, c.trackPosition()))
             .addBlankField(true)
             .addField(config.getLocaleText(LocaleSet.TRACK_ADDDED_BY_MESS) + ":", wrapper.getAuthorTag(), true)
             .setThumbnail(c.thumbnailUrl())
@@ -93,10 +96,10 @@ public class EmbedMessageBuilder {
         return new EmbedBuilder()
             .setAuthor(wrapper.getAuthorTag(), null, wrapper.getAuthorAvatarUrl())
             .setDescription(config.getLocaleText(LocaleSet.ADD_NEW_PLAYLIST_MESS))
-            .addField(config.getLocaleText(LocaleSet.COUNT_OF_TRACKS_MESS) + ":", c.queueTracksCount(), true)
+            .addField(inlineField.apply(LocaleSet.COUNT_OF_TRACKS_MESS, c.queueTracksCount()))
             .addBlankField(true)
-            .addField(config.getLocaleText(LocaleSet.TRACKS_TOTAL_DURATION_TIME_MESS) + ":", c.queueDurationTime(), true)
-            .addField(config.getLocaleText(LocaleSet.TRACK_ADDDED_BY_MESS) + ":", wrapper.getAuthorTag(), true)
+            .addField(inlineField.apply(LocaleSet.TRACKS_TOTAL_DURATION_TIME_MESS, c.queueDurationTime()))
+            .addField(inlineField.apply(LocaleSet.TRACK_ADDDED_BY_MESS, wrapper.getAuthorTag()))
             .setThumbnail(c.thumbnailUrl())
             .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
             .build();
@@ -108,9 +111,9 @@ public class EmbedMessageBuilder {
         return new EmbedBuilder()
             .setDescription(config.getLocaleText(c.localeSet(), c.localeVariables()))
             .addField(StringUtils.EMPTY, c.pausedVisualizationTrack(), false)
-            .addField(config.getLocaleText(LocaleSet.PAUSED_TRACK_TIME_MESS) + ":", c.pausedTimestamp(), true)
-            .addField(config.getLocaleText(LocaleSet.PAUSED_TRACK_ESTIMATE_TIME_MESS) + ":", c.estimatedDuration(), true)
-            .addField(config.getLocaleText(LocaleSet.PAUSED_TRACK_TOTAL_DURATION_MESS) + ":", c.totalDuration(), true)
+            .addField(inlineField.apply(LocaleSet.PAUSED_TRACK_TIME_MESS, c.pausedTimestamp()))
+            .addField(inlineField.apply(LocaleSet.PAUSED_TRACK_ESTIMATE_TIME_MESS, c.estimatedDuration()))
+            .addField(inlineField.apply(LocaleSet.PAUSED_TRACK_TOTAL_DURATION_MESS, c.totalDuration()))
             .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
             .build();
     }
@@ -121,9 +124,9 @@ public class EmbedMessageBuilder {
         return new EmbedBuilder()
             .setAuthor(wrapper.getAuthorTag(), null, wrapper.getAuthorAvatarUrl())
             .setDescription(config.getLocaleText(c.playingPauseMessage()))
-            .addField(config.getLocaleText(LocaleSet.TRACK_NAME_MESS) + ":", c.trackUrl(), true)
+            .addField(inlineField.apply(LocaleSet.TRACK_NAME_MESS, c.trackUrl()))
             .addBlankField(true)
-            .addField(config.getLocaleText(LocaleSet.TRACK_ADDDED_BY_MESS) + ":", c.addedByTag(), true)
+            .addField(inlineField.apply(LocaleSet.TRACK_ADDDED_BY_MESS, c.addedByTag()))
             .addField(StringUtils.EMPTY, c.playerPercentageTrack(), false)
             .addField(config.getLocaleText(c.playingVisualizationTrack()), c.timestampNowAndMax(), true)
             .addBlankField(true)
@@ -136,13 +139,11 @@ public class EmbedMessageBuilder {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public MessageEmbed createHelpMessage(CommandEventWrapper wrapper, HelpEmbedContent c) {
-        final String compilationHeader = config.getLocaleText(LocaleSet.HELP_INFO_COMPILATION_VERSION_MESS);
-        final String availableCommandsHeader = config.getLocaleText(LocaleSet.HELP_INFO_COUNT_OF_AVAILABLE_COMMANDS_MESS);
         return new EmbedBuilder()
             .setAuthor(wrapper.getAuthorTag(), null, wrapper.getAuthorAvatarUrl())
             .setDescription(c.description())
-            .addField(compilationHeader + ":", c.compilationVersion(), true)
-            .addField(availableCommandsHeader + ":", c.availableCommandsCount(), true)
+            .addField(inlineField.apply(LocaleSet.HELP_INFO_COMPILATION_VERSION_MESS, c.compilationVersion()))
+            .addField(inlineField.apply(LocaleSet.HELP_INFO_COUNT_OF_AVAILABLE_COMMANDS_MESS, c.availableCommandsCount()))
             .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
             .build();
     }
@@ -151,10 +152,10 @@ public class EmbedMessageBuilder {
 
     public MessageEmbed createQueueInfoMessage(QueueEmbedContent c) {
         return new EmbedBuilder()
-            .addField(config.getLocaleText(LocaleSet.ALL_TRACKS_IN_QUEUE_COUNT_MESS) + ":", c.queueSize(), true)
+            .addField(inlineField.apply(LocaleSet.ALL_TRACKS_IN_QUEUE_COUNT_MESS, c.queueSize()))
             .addBlankField(true)
-            .addField(config.getLocaleText(LocaleSet.ALL_TRACKS_IN_QUEUE_DURATION_MESS) + ":", c.queueMaxDuration(), true)
-            .addField(config.getLocaleText(LocaleSet.APPROX_TO_NEXT_TRACK_FROM_QUEUE_MESS) + ":", c.approxToNextTrack(), true)
+            .addField(inlineField.apply(LocaleSet.ALL_TRACKS_IN_QUEUE_DURATION_MESS, c.queueMaxDuration()))
+            .addField(inlineField.apply(LocaleSet.APPROX_TO_NEXT_TRACK_FROM_QUEUE_MESS, c.approxToNextTrack()))
             .addBlankField(true)
             .addField(config.getLocaleText(LocaleSet.PLAYLIST_AVERAGE_TRACK_DURATION) + ":", c.averageSingleTrackDuration(), true)
             .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
