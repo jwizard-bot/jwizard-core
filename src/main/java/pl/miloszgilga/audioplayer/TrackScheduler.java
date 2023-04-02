@@ -227,6 +227,15 @@ public class TrackScheduler extends AudioEventAdapter {
         return removedTracks;
     }
 
+    public boolean checkIfAllTrackOrTracksIsFromSelectedMember(Member member) {
+        if (trackQueue.isEmpty()) {
+            if (Objects.isNull(audioPlayer.getPlayingTrack())) return false;
+            final Member sender = (Member) audioPlayer.getPlayingTrack().getUserData();
+            return sender.getId().equals(member.getId());
+        }
+        return trackQueue.stream().allMatch(t -> t.sender().getId().equals(member.getId()));
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void clearAndDestroy(boolean showMessage) {

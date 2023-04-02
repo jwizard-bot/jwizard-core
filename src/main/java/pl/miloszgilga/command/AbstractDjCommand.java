@@ -29,6 +29,7 @@ import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.misc.ValidateUserDetails;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
+import pl.miloszgilga.audioplayer.TrackScheduler;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
@@ -49,7 +50,9 @@ public abstract class AbstractDjCommand extends AbstractMusicCommand {
     @Override
     protected void doExecuteMusicCommand(CommandEventWrapper event) {
         final ValidateUserDetails details = Utilities.validateUserDetails(event, config);
-        if (details.isNotOwner() && details.isNotManager() && details.isNotDj()) {
+        final TrackScheduler trackScheduler = playerManager.getMusicManager(event).getTrackScheduler();
+        final boolean allFromOneMember = trackScheduler.checkIfAllTrackOrTracksIsFromSelectedMember(event.getMember());
+        if (details.isNotOwner() && details.isNotManager() && details.isNotDj() && !allFromOneMember) {
             throw new UnauthorizedDjCommandExecutionException(config, event);
         }
         doExecuteDjCommand(event);
