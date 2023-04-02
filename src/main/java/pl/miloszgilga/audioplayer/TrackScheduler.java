@@ -323,6 +323,10 @@ public class TrackScheduler extends AudioEventAdapter {
         return infinitePlaylistRepeating;
     }
 
+    boolean isInfinitePlaylistRepeating() {
+        return infinitePlaylistRepeating;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     void setCountOfRepeats(int countOfRepeats) {

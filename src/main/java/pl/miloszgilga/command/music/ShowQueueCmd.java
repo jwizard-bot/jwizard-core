@@ -41,6 +41,7 @@ import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.embed.EmbedPaginationBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
+import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -90,7 +91,8 @@ public class ShowQueueCmd extends AbstractMusicCommand {
             String.valueOf(tracks.size()),
             Utilities.convertMilisToDate(durationMilis),
             leftToNextTrack,
-            Utilities.convertMilisToDate(musicManager.getTrackScheduler().getAverageTrackDuration())
+            Utilities.convertMilisToDate(musicManager.getTrackScheduler().getAverageTrackDuration()),
+            musicManager.isInfinitePlaylistActive() ? LocaleSet.TURN_ON_MESS : LocaleSet.TURN_OFF_MESS
         );
         final MessageEmbed messageEmbed = embedBuilder.createQueueInfoMessage(content);
         final Paginator paginator = pagination.createDefaultPaginator(pageableTracks);

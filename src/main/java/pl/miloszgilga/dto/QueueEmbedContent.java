@@ -24,12 +24,15 @@
 
 package pl.miloszgilga.dto;
 
+import pl.miloszgilga.core.LocaleSet;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 public record QueueEmbedContent(
     String queueSize,
     String queueMaxDuration,
     String approxToNextTrack,
-    String averageSingleTrackDuration
+    String averageSingleTrackDuration,
+    LocaleSet repeatingMode
 ) {
 }

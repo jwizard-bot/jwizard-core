@@ -87,7 +87,8 @@ public enum LocaleSet {
     TRACKS_TOTAL_DURATION_TIME_MESS                 ("jwizard.message.response.TotalDurationTime"),
     TRACK_ADDDED_BY_MESS                            ("jwizard.message.response.AddedBy"),
     NEXT_TRACK_INDEX_MESS                           ("jwizard.message.response.NextTrackIndex"),
-    PLAYLIST_AVERAGE_TRACK_DURATION                 ("jwizard.message.response.PlaylistAverageTrackDuration"),
+    PLAYLIST_AVERAGE_TRACK_DURATION_MESS            ("jwizard.message.response.PlaylistAverageTrackDuration"),
+    PLAYLIST_REPEATING_MODE_MESS                    ("jwizard.message.response.PlaylistRepeatingMode"),
     NOT_FOUND_TRACK_MESS                            ("jwizard.message.response.NotFoundAudioTrack"),
     ISSUE_WHILE_LOADING_TRACK_MESS                  ("jwizard.message.response.UnexpectedErrorOnLoadTrack"),
     ISSUE_WHILE_PLAYING_TRACK_MESS                  ("jwizard.message.response.UnexpectedErrorOnPlayTrack"),
@@ -132,6 +133,8 @@ public enum LocaleSet {
     REMOVED_TRACKS_FROM_SELECTED_MEMBER_MESS        ("jwizard.message.response.RemoveTracksFromSelectedMember"),
     ADD_PLAYLIST_TO_INFINITE_LOOP_MESS              ("jwizard.message.response.AddPlaylistToInfiniteLoop"),
     REMOVE_PLAYLIST_FROM_INFINITE_LOOP_MESS         ("jwizard.message.response.RemovePlaylistFromInfiniteLoop"),
+    TURN_ON_MESS                                    ("jwizard.message.response.TurnOn"),
+    TURN_OFF_MESS                                   ("jwizard.message.response.TurnOff"),
 
     GENERAL_HEADER_DEBUG                            ("jwizard.message.debug.header.General"),
     CONFIGURATION_HEADER_DEBUG                      ("jwizard.message.debug.header.Configuration"),

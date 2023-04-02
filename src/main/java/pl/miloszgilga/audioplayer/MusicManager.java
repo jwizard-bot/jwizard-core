@@ -79,6 +79,10 @@ public class MusicManager {
         return trackScheduler.getTrackQueue();
     }
 
+    public boolean isInfinitePlaylistActive() {
+        return trackScheduler.isInfinitePlaylistRepeating();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public short getPlayerVolume() {

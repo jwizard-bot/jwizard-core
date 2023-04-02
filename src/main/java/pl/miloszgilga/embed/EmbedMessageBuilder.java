@@ -157,7 +157,8 @@ public class EmbedMessageBuilder {
             .addField(inlineField.apply(LocaleSet.ALL_TRACKS_IN_QUEUE_DURATION_MESS, c.queueMaxDuration()))
             .addField(inlineField.apply(LocaleSet.APPROX_TO_NEXT_TRACK_FROM_QUEUE_MESS, c.approxToNextTrack()))
             .addBlankField(true)
-            .addField(config.getLocaleText(LocaleSet.PLAYLIST_AVERAGE_TRACK_DURATION) + ":", c.averageSingleTrackDuration(), true)
+            .addField(inlineField.apply(LocaleSet.PLAYLIST_AVERAGE_TRACK_DURATION_MESS, c.averageSingleTrackDuration()))
+            .addField(inlineField.apply(LocaleSet.PLAYLIST_REPEATING_MODE_MESS, config.getLocaleText(c.repeatingMode())))
             .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
             .build();
     }
