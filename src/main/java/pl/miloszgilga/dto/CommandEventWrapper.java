@@ -114,7 +114,7 @@ public class CommandEventWrapper {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void sendEmbedMessage(MessageEmbed messageEmbed, QueueAfterParam deffer) {
-        if (isFromSlashCommand) {
+        if (isFromSlashCommand && !slashCommandEvent.getHook().isExpired()) {
             slashCommandEvent.getHook()
                 .sendMessageEmbeds(messageEmbed).completeAfter(deffer.duration(), deffer.timeUnit());
             return;

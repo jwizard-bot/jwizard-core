@@ -27,6 +27,7 @@ package pl.miloszgilga.core;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.command.SlashCommand;
 
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
@@ -110,26 +111,8 @@ public abstract class AbstractCommand extends SlashCommand {
 
     private void sendEmbedsFromCommand(CommandEvent event, CommandEventWrapper wrapper) {
         if (wrapper.getEmbeds().isEmpty()) return;
-
         final var defferedMessages = event.getTextChannel().sendMessageEmbeds(wrapper.getEmbeds());
-        final QueueAfterParam afterParam = wrapper.getQueueAfterParam();
-
-        if (Objects.isNull(afterParam)) {
-            if (Objects.isNull(wrapper.getAppendAfterEmbeds())) {
-                defferedMessages.queue();
-            } else {
-                defferedMessages.queue(v -> wrapper.getAppendAfterEmbeds().run());
-            }
-        } else {
-            if (Objects.isNull(wrapper.getAppendAfterEmbeds())) {
-                defferedMessages.queueAfter(afterParam.duration(), afterParam.timeUnit());
-            } else {
-                final var scheduledFuture = defferedMessages.queueAfter(afterParam.duration(), afterParam.timeUnit());
-                if (scheduledFuture.isDone()) {
-                    wrapper.getAppendAfterEmbeds().run();
-                }
-            }
-        }
+        sendEmbedsFromAnyCommand(defferedMessages, wrapper);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -137,6 +120,11 @@ public abstract class AbstractCommand extends SlashCommand {
     private void sendEmbedsFromSlashCommand(SlashCommandEvent event, CommandEventWrapper wrapper) {
         if (wrapper.getEmbeds().isEmpty()) return;
 
+        if (event.getHook().isExpired()) {
+            final var defferedMessages = event.getTextChannel().sendMessageEmbeds(wrapper.getEmbeds());
+            sendEmbedsFromAnyCommand(defferedMessages, wrapper);
+            return;
+        }
         final var defferedMessages = event.getHook().sendMessageEmbeds(wrapper.getEmbeds());
         final QueueAfterParam afterParam = wrapper.getQueueAfterParam();
 
@@ -159,6 +147,27 @@ public abstract class AbstractCommand extends SlashCommand {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void sendEmbedsFromAnyCommand(MessageAction defferedMessages, CommandEventWrapper wrapper) {
+        final QueueAfterParam afterParam = wrapper.getQueueAfterParam();
+
+        if (Objects.isNull(afterParam)) {
+            if (Objects.isNull(wrapper.getAppendAfterEmbeds())) {
+                defferedMessages.queue();
+            } else {
+                defferedMessages.queue(v -> wrapper.getAppendAfterEmbeds().run());
+            }
+        } else {
+            if (Objects.isNull(wrapper.getAppendAfterEmbeds())) {
+                defferedMessages.queueAfter(afterParam.duration(), afterParam.timeUnit());
+            } else {
+                final var scheduledFuture = defferedMessages.queueAfter(afterParam.duration(), afterParam.timeUnit());
+                if (scheduledFuture.isDone()) {
+                    wrapper.getAppendAfterEmbeds().run();
+                }
+            }
+        }
+    }
 
     private List<OptionData> insertSlashOptionsData(BotCommand command) {
         final BotSlashCommand slashCommand = BotSlashCommand.getFromRegularCommand(command);
