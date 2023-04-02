@@ -150,8 +150,8 @@ public class TrackScheduler extends AudioEventAdapter {
                     .createMessage(LocaleSet.LEAVE_END_PLAYBACK_QUEUE_MESS, Map.of(
                         "elapsed", Utilities.convertSecondsToMinutes(timeToLeaveChannel)
                     ));
+                clearAndDestroy(false);
                 closeAudioConnection();
-                audioPlayer.setPaused(false);
 
                 deliveryEvent.getTextChannel().sendMessageEmbeds(leaveMessageEmbed).queue();
                 JDALog.info(log, deliveryEvent, "Leave voice channel after '%s' seconds of inactivity", timeToLeaveChannel);
@@ -258,12 +258,10 @@ public class TrackScheduler extends AudioEventAdapter {
         JDALog.info(log, deliveryEvent, "Remove playing track and clear queue");
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     private void closeAudioConnection() {
         final Guild guild = deliveryEvent.getDataSender().getGuild();
         config.getThreadPool().submit(() -> guild.getAudioManager().closeAudioConnection());
-        JDALog.info(log, deliveryEvent, "Audio connection threadpool closed");
+        JDALog.info(log, deliveryEvent, "Audio connection threadpool was closed");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
