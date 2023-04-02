@@ -24,15 +24,12 @@
 
 package pl.miloszgilga.slash;
 
-import pl.miloszgilga.core.LocaleSet;
-
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 public record SlashOption(
     OptionType type,
-    String key,
-    LocaleSet description
+    String key
 ) {
 }

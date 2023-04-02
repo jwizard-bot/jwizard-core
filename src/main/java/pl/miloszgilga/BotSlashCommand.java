@@ -49,10 +49,10 @@ public enum BotSlashCommand {
     HELP_ME                 (BotCommand.HELP_ME),
     DEBUG                   (BotCommand.DEBUG),
 
-    PLAY_TRACK              (BotCommand.PLAY_TRACK,             List.of(new SlashOption(STRING, "track", PLAY_TRACK_ARG_SYNTAX))),
+    PLAY_TRACK              (BotCommand.PLAY_TRACK,             List.of(new SlashOption(STRING, "track")), PLAY_TRACK_ARG_SYNTAX),
     PAUSE_TRACK             (BotCommand.PAUSE_TRACK),
     RESUME_TRACK            (BotCommand.RESUME_TRACK),
-    REPEAT_TRACK            (BotCommand.REPEAT_TRACK,           List.of(new SlashOption(NUMBER, "count", REPEAT_TRACK_ARG_SYNTAX))),
+    REPEAT_TRACK            (BotCommand.REPEAT_TRACK,           List.of(new SlashOption(NUMBER, "count")), REPEAT_TRACK_ARG_SYNTAX),
     CLEAR_REPEAT_TRACK      (BotCommand.CLEAR_REPEAT_TRACK),
     LOOP_TRACK              (BotCommand.LOOP_TRACK),
     CURRENT_PLAYING         (BotCommand.CURRENT_PLAYING),
@@ -60,15 +60,15 @@ public enum BotSlashCommand {
     GET_PLAYER_VOLUME       (BotCommand.GET_PLAYER_VOLUME),
     QUEUE                   (BotCommand.QUEUE),
 
-    SET_PLAYER_VOLUME       (BotCommand.SET_PLAYER_VOLUME,      List.of(new SlashOption(NUMBER, "points", AUDIO_PLAYER_SET_VOLUME_ARG_SYNTAX))),
+    SET_PLAYER_VOLUME       (BotCommand.SET_PLAYER_VOLUME,      List.of(new SlashOption(NUMBER, "points")), AUDIO_PLAYER_SET_VOLUME_ARG_SYNTAX),
     RESET_PLAYER_VOLUME     (BotCommand.RESET_PLAYER_VOLUME),
     JOIN_TO_CHANNEL         (BotCommand.JOIN_TO_CHANNEL),
-    REMOVE_MEMBER_TRACKS    (BotCommand.REMOVE_MEMBER_TRACKS,   List.of(new SlashOption(MENTIONABLE, "member", REMOVE_MEMBER_TRACKS_ARG_SYNTAX))),
+    REMOVE_MEMBER_TRACKS    (BotCommand.REMOVE_MEMBER_TRACKS,   List.of(new SlashOption(MENTIONABLE, "member")), REMOVE_MEMBER_TRACKS_ARG_SYNTAX),
     SHUFFLE_QUEUE           (BotCommand.SHUFFLE_QUEUE),
-    SKIP_TO_TRACK           (BotCommand.SKIP_TO_TRACK,          List.of(new SlashOption(NUMBER, "position", SKIP_QUEUE_TO_TRACK_ARG_SYNTAX))),
+    SKIP_TO_TRACK           (BotCommand.SKIP_TO_TRACK,          List.of(new SlashOption(NUMBER, "pos")), SKIP_QUEUE_TO_TRACK_ARG_SYNTAX),
     SKIP_TRACK              (BotCommand.SKIP_TRACK),
     STOP_CLEAR_QUEUE        (BotCommand.STOP_CLEAR_QUEUE),
-    MOVE_TRACK              (BotCommand.MOVE_TRACK,             List.of(new SlashOption(NUMBER, "position", SKIP_QUEUE_TO_TRACK_ARG_SYNTAX))),
+    MOVE_TRACK              (BotCommand.MOVE_TRACK,             List.of(new SlashOption(NUMBER, "curpos"), new SlashOption(NUMBER, "selpos")), MOVE_TRACK_ARG_SYNTAX),
     INFINITE_PLAYLIST       (BotCommand.INFINITE_PLAYLIST),
 
     VOTE_SHUFFLE_QUEUE      (BotCommand.VOTE_SHUFFLE_QUEUE),
@@ -79,12 +79,14 @@ public enum BotSlashCommand {
 
     private final BotCommand regularCommand;
     private final List<SlashOption> slashOptions;
+    private final LocaleSet argsDesc;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     BotSlashCommand(BotCommand regularCommand) {
         this.regularCommand = regularCommand;
         this.slashOptions = new ArrayList<>();
+        this.argsDesc = null;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -106,7 +108,8 @@ public enum BotSlashCommand {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public List<OptionData> fabricateOptions(BotConfiguration config) {
+        if (Objects.isNull(argsDesc)) return List.of();
         return slashOptions.stream()
-            .map(o -> new OptionData(o.type(), o.key(), config.getLocaleText(o.description()), true)).toList();
+            .map(o -> new OptionData(o.type(), o.key(), config.getLocaleText(argsDesc), true)).toList();
     }
 }
