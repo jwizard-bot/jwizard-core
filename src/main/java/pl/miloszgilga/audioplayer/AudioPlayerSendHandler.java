@@ -60,8 +60,7 @@ public class AudioPlayerSendHandler implements AudioSendHandler {
     @Override
     public boolean canProvide() {
         audioFrame = audioPlayer.provide();
-        return audioFrame != null;
-
+        return !Objects.isNull(audioFrame);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
