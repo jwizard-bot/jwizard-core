@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.BotCommandArgument;
 import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.dto.MemberRemovedTracksInfo;
@@ -66,7 +67,7 @@ public class RemoveMemberTracksCmd extends AbstractDjCommand {
 
     @Override
     protected void doExecuteDjCommand(CommandEventWrapper event) {
-        String userId = event.getArgs().get(0);
+        String userId = event.getArgumentAndParse(BotCommandArgument.MEMBER_TAG);
         if (userId.contains("@")) userId = userId.replaceAll("[@<>]", "");
 
         final MemberRemovedTracksInfo removedTracksInfo = playerManager.removeTracksFromMember(event, userId);

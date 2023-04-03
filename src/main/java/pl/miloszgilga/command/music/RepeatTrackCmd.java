@@ -25,12 +25,12 @@
 package pl.miloszgilga.command.music;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import org.apache.commons.lang3.math.NumberUtils;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.BotCommandArgument;
 import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
@@ -58,7 +58,7 @@ public class RepeatTrackCmd extends AbstractMusicCommand {
 
     @Override
     protected void doExecuteMusicCommand(CommandEventWrapper event) {
-        final int repeats = (int) NumberUtils.toFloat(event.getArgs().get(0));
+        final int repeats = event.getArgumentAndParse(BotCommandArgument.COUNT_OF_REPEATS);
         if (repeats < 1 || repeats > config.getProperty(BotProperty.J_MAX_REPEATS_SINGLE_TRACK, Integer.class)) {
             throw new TrackRepeatsOutOfBoundsException(config, event);
         }

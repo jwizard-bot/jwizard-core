@@ -27,11 +27,10 @@ package pl.miloszgilga.command.dj;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
-import org.apache.commons.lang3.math.NumberUtils;
-
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.BotCommandArgument;
 import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.MusicManager;
@@ -60,7 +59,7 @@ public class SkipQueueToTrackCmd extends AbstractDjCommand {
     @Override
     protected void doExecuteDjCommand(CommandEventWrapper event) {
         final MusicManager musicManager = playerManager.getMusicManager(event);
-        final int trackPos = (int) NumberUtils.toFloat(event.getArgs().get(0));
+        final int trackPos = event.getArgumentAndParse(BotCommandArgument.SKIP_TRACK_POSITION);
 
         if (musicManager.getActions().checkInvTrackPosition(trackPos)) {
             throw new TrackPositionOutOfBoundsException(config, event, musicManager.getQueue().size());

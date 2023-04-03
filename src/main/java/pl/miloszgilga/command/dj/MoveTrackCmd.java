@@ -24,13 +24,13 @@
 
 package pl.miloszgilga.command.dj;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.BotCommandArgument;
 import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.TrackPosition;
 import pl.miloszgilga.dto.CommandEventWrapper;
@@ -55,8 +55,8 @@ public class MoveTrackCmd extends AbstractDjCommand {
 
     @Override
     protected void doExecuteDjCommand(CommandEventWrapper event) {
-        final int previousPosition = (int) NumberUtils.toFloat(event.getArgs().get(0));
-        final int requestedPosition = (int) NumberUtils.toFloat(event.getArgs().get(1));
+        final int previousPosition = event.getArgumentAndParse(BotCommandArgument.MOVE_TRACK_POSITION_FROM);
+        final int requestedPosition = event.getArgumentAndParse(BotCommandArgument.MOVE_TRACK_POSITION_TO);
 
         final TrackPosition trackPositions = new TrackPosition(previousPosition, requestedPosition);
         final AudioTrack movedTrack = playerManager.moveTrackToSelectedPosition(event, trackPositions);

@@ -38,7 +38,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-import pl.miloszgilga.BotSlashCommand;
+import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.SpringAppLauncher;
 import pl.miloszgilga.core.AbstractCommand;
 import pl.miloszgilga.core.AbstractListenerAdapter;
@@ -85,7 +85,7 @@ public class JClassLoader {
             final String commandInvoker = config.getProperty(BotProperty.J_PREFIX) + abstractCommand.getName();
             log.info(" --- {} {} ({}), slash command exist: {}", commandInvoker, abstractCommand.getAliases(),
                 abstractCommand.getClass().getName(),
-                BotSlashCommand.checkIfSlashExist(abstractCommand.getName()) ? "YES" : "NO");
+                BotCommand.checkIfSlashExist(abstractCommand.getName()) ? "YES" : "NO");
         }
     }
 

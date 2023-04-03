@@ -25,17 +25,16 @@
 package pl.miloszgilga.command.dj;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.BotCommandArgument;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
 import pl.miloszgilga.core.LocaleSet;
-import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -55,9 +54,8 @@ public class SetPlayerVolumeCmd extends AbstractDjCommand {
 
     @Override
     protected void doExecuteDjCommand(CommandEventWrapper event) {
-        final float defaultVolumeUnits = config.getProperty(BotProperty.J_DEFAULT_PLAYER_VOLUME_UNITS, Float.class);
         final short currentVolumeUnits = playerManager.getMusicManager(event).getPlayerVolume();
-        final short volumeUnits = (short) NumberUtils.toFloat(event.getArgs().get(0), defaultVolumeUnits);
+        final short volumeUnits = event.getArgumentAndParse(BotCommandArgument.VOLUME_POINTS);
         if (volumeUnits < 0 || volumeUnits > 150) {
             throw new VolumeUnitsOutOfBoundsException(config, event);
         }

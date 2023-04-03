@@ -27,19 +27,16 @@ package pl.miloszgilga.dto;
 import lombok.Data;
 
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.command.CommandClient;
 
-import pl.miloszgilga.misc.QueueAfterParam;
+import java.util.*;
 
-import java.util.List;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.ArrayList;
+import pl.miloszgilga.BotCommandArgument;
+import pl.miloszgilga.misc.QueueAfterParam;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -55,7 +52,7 @@ public class CommandEventWrapper {
     private final Member member;
     private CommandClient client;
     private String message;
-    private List<String> args = new ArrayList<>();
+    private Map<BotCommandArgument, String> args = new HashMap<>();
     private List<MessageEmbed> embeds= new ArrayList<>();
     private Runnable appendAfterEmbeds;
     private QueueAfterParam queueAfterParam;
@@ -76,7 +73,6 @@ public class CommandEventWrapper {
         member = event.getMember();
         client = event.getClient();
         message = event.getMessage().getContentRaw();
-        args = Arrays.stream(event.getArgs().split("\\|")).toList();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -106,7 +102,6 @@ public class CommandEventWrapper {
         dataSender = event.getGuild().getMember(event.getMember().getUser());
         author = event.getMember().getUser();
         member = event.getMember();
-        args = event.getOptions().stream().map(OptionMapping::getAsString).toList();
         isFromSlashCommand = true;
         slashCommandEvent = event;
     }
@@ -126,8 +121,6 @@ public class CommandEventWrapper {
         sendEmbedMessage(messageEmbed, new QueueAfterParam());
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     public void appendEmbedMessage(MessageEmbed messageEmbed) {
         this.embeds.add(messageEmbed);
     }
@@ -135,5 +128,16 @@ public class CommandEventWrapper {
     public void appendEmbedMessage(MessageEmbed messageEmbed, Runnable appendAfterEmbeds) {
         appendEmbedMessage(messageEmbed);
         this.appendAfterEmbeds = appendAfterEmbeds;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public <T> T getArgumentAndParse(BotCommandArgument argument) {
+        final String argumentValue = args.entrySet().stream()
+            .filter(a -> a.getKey().equals(argument))
+            .map(Map.Entry::getValue)
+            .findFirst()
+            .orElseThrow(() -> { throw new IllegalStateException("Command has no arguments"); });
+        return argument.parse(argumentValue);
     }
 }

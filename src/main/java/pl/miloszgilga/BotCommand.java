@@ -46,45 +46,55 @@ import static pl.miloszgilga.misc.CommandCategory.*;
 @RequiredArgsConstructor
 public enum BotCommand {
 
-    HELP                    ("help",        new String[]{ "h", "hl" },      OTHERS, HELP_COMMAND_DESC,                          null,                                 false, 0),
-    HELP_ME                 ("helpme",      new String[]{ "hm", "hlm" },    OTHERS, HELPME_COMMAND_DESC,                        null,                                 false, 0),
-    DEBUG                   ("debug",       new String[]{ "db", "dbg" },    OTHERS, DEBUG_COMMAND_DESC,                         null,                                 false, 0),
+    HELP                    ("help",        true, new String[]{ "h", "hl" },      OTHERS, HELP_COMMAND_DESC),
+    HELP_ME                 ("helpme",      true, new String[]{ "hm", "hlm" },    OTHERS, HELPME_COMMAND_DESC),
+    DEBUG                   ("debug",       true, new String[]{ "db", "dbg" },    OTHERS, DEBUG_COMMAND_DESC),
 
-    PLAY_TRACK              ("play",        new String[]{ "p", "pl" },      MUSIC,  PLAY_TRACK_COMMAND_DESC,                    PLAY_TRACK_ARG_SYNTAX,                false, 1),
-    PAUSE_TRACK             ("pause",       new String[]{ "ps" },           MUSIC,  PAUSE_TRACK_COMMAND_DESC,                   null,                                 false, 0),
-    RESUME_TRACK            ("resume",      new String[]{ "rs" },           MUSIC,  RESUME_TRACK_COMMAND_DESC,                  null,                                 false, 0),
-    REPEAT_TRACK            ("repeat",      new String[]{ "rp" },           MUSIC,  REPEAT_TRACK_COMMAND_DESC,                  REPEAT_TRACK_ARG_SYNTAX,              false, 1),
-    CLEAR_REPEAT_TRACK      ("repeatcls",   new String[]{ "rpcl" },         MUSIC,  CLEAR_REPEAT_TRACK_COMMAND_DESC,            null,                                 false, 0),
-    LOOP_TRACK              ("loop",        new String[]{ "lp" },           MUSIC,  LOOP_TRACK_COMMAND_DESC,                    null,                                 false, 0),
-    CURRENT_PLAYING         ("playing",     new String[]{ "cp" },           MUSIC,  CURRENT_PLAYING_TRACK_COMMAND_DESC,         null,                                 false, 0),
-    CURRENT_PAUSED          ("paused",      new String[]{ "cps" },          MUSIC,  CURRENT_PAUSED_TRACK_COMMAND_DESC,          null,                                 false, 0),
-    GET_PLAYER_VOLUME       ("getvolume",   new String[]{ "gvl" },          MUSIC,  AUDIO_PLAYER_GET_VOLUME_COMMAND_DESC,       null,                                 false, 0),
-    QUEUE                   ("queue",       new String[]{ "qt" },           MUSIC,  QUEUE_COMMAND_DESC,                         null,                                 false, 0),
+    PLAY_TRACK              ("play",        true, new String[]{ "p", "pl" },      MUSIC,  PLAY_TRACK_COMMAND_DESC,                    PLAY_TRACK_ARG_SYNTAX),
+    PAUSE_TRACK             ("pause",       true, new String[]{ "ps" },           MUSIC,  PAUSE_TRACK_COMMAND_DESC),
+    RESUME_TRACK            ("resume",      true, new String[]{ "rs" },           MUSIC,  RESUME_TRACK_COMMAND_DESC),
+    REPEAT_TRACK            ("repeat",      true, new String[]{ "rp" },           MUSIC,  REPEAT_TRACK_COMMAND_DESC,                  REPEAT_TRACK_ARG_SYNTAX),
+    CLEAR_REPEAT_TRACK      ("repeatcls",   true, new String[]{ "rpcl" },         MUSIC,  CLEAR_REPEAT_TRACK_COMMAND_DESC),
+    LOOP_TRACK              ("loop",        true, new String[]{ "lp" },           MUSIC,  LOOP_TRACK_COMMAND_DESC),
+    CURRENT_PLAYING         ("playing",     true, new String[]{ "cp" },           MUSIC,  CURRENT_PLAYING_TRACK_COMMAND_DESC),
+    CURRENT_PAUSED          ("paused",      true, new String[]{ "cps" },          MUSIC,  CURRENT_PAUSED_TRACK_COMMAND_DESC),
+    GET_PLAYER_VOLUME       ("getvolume",   true, new String[]{ "gvl" },          MUSIC,  AUDIO_PLAYER_GET_VOLUME_COMMAND_DESC),
+    QUEUE                   ("queue",       true, new String[]{ "qt" },           MUSIC,  QUEUE_COMMAND_DESC),
 
-    SET_PLAYER_VOLUME       ("setvolume",   new String[]{ "svl" },          DJ,     AUDIO_PLAYER_SET_VOLUME_COMMAND_DESC,       AUDIO_PLAYER_SET_VOLUME_ARG_SYNTAX,   false, 1),
-    RESET_PLAYER_VOLUME     ("volumecls",   new String[]{ "cvl" },          DJ,     AUDIO_PLAYER_RESET_VOLUME_COMMAND_DESC,     null,                                 false, 0),
-    JOIN_TO_CHANNEL         ("join",        new String[]{ "jch" },          DJ,     JOIN_TO_CHANNEL_COMMAND_DESC,               null,                                 false, 0),
-    REMOVE_MEMBER_TRACKS    ("tracksrm",    new String[]{ "rtr" },          DJ,     REMOVE_MEMBER_TRACKS_COMMAND_DESC,          REMOVE_MEMBER_TRACKS_ARG_SYNTAX,      false, 1),
-    SHUFFLE_QUEUE           ("shuffle",     new String[]{ "shq" },          DJ,     SHUFFLE_QUEUE_COMMAND_DESC,                 null,                                 false, 0),
-    SKIP_TO_TRACK           ("skipto",      new String[]{ "skt" },          DJ,     SKIP_QUEUE_TO_TRACK_COMMAND_DESC,           SKIP_QUEUE_TO_TRACK_ARG_SYNTAX,       false, 1),
-    SKIP_TRACK              ("skip",        new String[]{ "sk" },           DJ,     SKIP_TRACK_COMMAND_DESC,                    null,                                 false, 0),
-    STOP_CLEAR_QUEUE        ("stop",        new String[]{ "st" },           DJ,     STOP_CLEAR_QUEUE_COMMAND_DESC,              null,                                 false, 0),
-    MOVE_TRACK              ("move",        new String[]{ "mv" },           DJ,     MOVE_TRACK_DESC,                            MOVE_TRACK_ARG_SYNTAX,                false, 2),
-    INFINITE_PLAYLIST       ("infinite",    new String[]{ "inf" },          DJ,     INFINITE_PLAYLIST_DESC,                     null,                                 false, 0),
+    SET_PLAYER_VOLUME       ("setvolume",   true, new String[]{ "svl" },          DJ,     AUDIO_PLAYER_SET_VOLUME_COMMAND_DESC,       AUDIO_PLAYER_SET_VOLUME_ARG_SYNTAX),
+    RESET_PLAYER_VOLUME     ("volumecls",   true, new String[]{ "cvl" },          DJ,     AUDIO_PLAYER_RESET_VOLUME_COMMAND_DESC),
+    JOIN_TO_CHANNEL         ("join",        true, new String[]{ "jch" },          DJ,     JOIN_TO_CHANNEL_COMMAND_DESC),
+    REMOVE_MEMBER_TRACKS    ("tracksrm",    true, new String[]{ "rtr" },          DJ,     REMOVE_MEMBER_TRACKS_COMMAND_DESC,          REMOVE_MEMBER_TRACKS_ARG_SYNTAX),
+    SHUFFLE_QUEUE           ("shuffle",     true, new String[]{ "shq" },          DJ,     SHUFFLE_QUEUE_COMMAND_DESC),
+    SKIP_TO_TRACK           ("skipto",      true, new String[]{ "skt" },          DJ,     SKIP_QUEUE_TO_TRACK_COMMAND_DESC,           SKIP_QUEUE_TO_TRACK_ARG_SYNTAX),
+    SKIP_TRACK              ("skip",        true, new String[]{ "sk" },           DJ,     SKIP_TRACK_COMMAND_DESC),
+    STOP_CLEAR_QUEUE        ("stop",        true, new String[]{ "st" },           DJ,     STOP_CLEAR_QUEUE_COMMAND_DESC),
+    MOVE_TRACK              ("move",        true, new String[]{ "mv" },           DJ,     MOVE_TRACK_DESC,                            MOVE_TRACK_ARG_SYNTAX),
+    INFINITE_PLAYLIST       ("infinite",    true, new String[]{ "inf" },          DJ,     INFINITE_PLAYLIST_DESC),
 
-    VOTE_SHUFFLE_QUEUE      ("vshuffle",    new String[]{ "vshq" },         MUSIC,  VOTE_SHUFFLE_QUEUE_COMMAND_DESC,            null,                                 false, 0),
-    VOTE_SKIP_TRACK         ("vskip",       new String[]{ "vsk" },          MUSIC,  VOTE_SKIP_TRACK_COMMAND_DESC,               null,                                 false, 0),
-    VOTE_STOP_CLEAR_QUEUE   ("vstop",       new String[]{ "vst" },          MUSIC,  VOTE_STOP_CLEAR_QUEUE_COMMAND_DESC,         null,                                 false, 0);
+    VOTE_SHUFFLE_QUEUE      ("vshuffle",    true, new String[]{ "vshq" },         MUSIC,  VOTE_SHUFFLE_QUEUE_COMMAND_DESC),
+    VOTE_SKIP_TRACK         ("vskip",       true, new String[]{ "vsk" },          MUSIC,  VOTE_SKIP_TRACK_COMMAND_DESC),
+    VOTE_STOP_CLEAR_QUEUE   ("vstop",       true, new String[]{ "vst" },          MUSIC,  VOTE_STOP_CLEAR_QUEUE_COMMAND_DESC);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final String name;
+    private final boolean slashActive;
     private final String[] aliases;
     private final CommandCategory category;
     private final LocaleSet descriptionHolder;
     private final LocaleSet argSyntax;
-    private final boolean onlyOwner;
-    private final int arguments;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    BotCommand(String name, boolean slashActive, String[] aliases, CommandCategory category, LocaleSet descriptionHolder) {
+        this.name = name;
+        this.slashActive = slashActive;
+        this.aliases = aliases;
+        this.category = category;
+        this.descriptionHolder = descriptionHolder;
+        this.argSyntax = null;
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -119,9 +129,9 @@ public enum BotCommand {
 
     public static Set<CommandWithArgsCount> getAllCommandsWithAliases() {
         final Stream<CommandWithArgsCount> commands =  Arrays.stream(values())
-            .map(v -> new CommandWithArgsCount(v.name, v.arguments));
+            .map(v -> new CommandWithArgsCount(v.name, BotCommandArgument.count(v)));
         final Stream<CommandWithArgsCount> aliases = Arrays.stream(values())
-            .flatMap(v -> Arrays.stream(v.aliases).map(a -> new CommandWithArgsCount(a, v.arguments)));
+            .flatMap(v -> Arrays.stream(v.aliases).map(a -> new CommandWithArgsCount(a, BotCommandArgument.count(v))));
         return Stream.concat(commands, aliases).collect(Collectors.toSet());
     }
 
@@ -161,5 +171,9 @@ public enum BotCommand {
 
     public static String count() {
         return Integer.toString(values().length);
+    }
+
+    public static boolean checkIfSlashExist(String commandName) {
+        return Arrays.stream(values()).anyMatch(v -> v.getName().equals(commandName) && v.slashActive);
     }
 }

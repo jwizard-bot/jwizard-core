@@ -29,30 +29,25 @@ import com.jagrosh.jdautilities.command.SlashCommand;
 
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import org.springframework.context.annotation.DependsOn;
 
-import java.util.List;
-import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.BotSlashCommand;
 import pl.miloszgilga.misc.QueueAfterParam;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.configuration.BotConfiguration;
-
-import static pl.miloszgilga.exception.CommandException.MismatchCommandArgumentsCountException;
+import pl.miloszgilga.BotCommandArgument;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @DependsOn("botConfiguration")
 public abstract class AbstractCommand extends SlashCommand {
 
-    private final int argsCount;
     private final BotCommand command;
 
     protected final BotConfiguration config;
@@ -63,15 +58,13 @@ public abstract class AbstractCommand extends SlashCommand {
     public AbstractCommand(BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder) {
         this.name = command.getName();
         this.help = config.getLocaleText(command.getDescriptionHolder());
-        this.ownerCommand = command.isOnlyOwner();
-        this.argsCount = command.getArguments();
         this.aliases = command.getAliases();
         this.command = command;
         this.config = config;
         this.embedBuilder = embedBuilder;
         this.arguments = command.getArgSyntax();
         this.guildOnly = false;
-        this.options = insertSlashOptionsData(command);
+        this.options = BotCommandArgument.fabricateSlashOptions(config, command);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,10 +73,10 @@ public abstract class AbstractCommand extends SlashCommand {
     protected void execute(CommandEvent event) {
         final CommandEventWrapper commandEventWrapper = new CommandEventWrapper(event);
         try {
-            final long args = Arrays.stream(event.getArgs().split("\\|")).filter(a -> a.length() > 0).count();
-            if (args != argsCount) {
-                throw new MismatchCommandArgumentsCountException(config, commandEventWrapper, command);
-            }
+            final Map<BotCommandArgument, String> arguments = BotCommandArgument
+                .extractForBaseCommand(event.getArgs(), command, config, commandEventWrapper);
+            commandEventWrapper.setArgs(arguments);
+
             doExecuteCommand(commandEventWrapper);
             sendEmbedsFromCommand(event, commandEventWrapper);
         } catch (BotException ex) {
@@ -96,6 +89,8 @@ public abstract class AbstractCommand extends SlashCommand {
     @Override
     protected void execute(SlashCommandEvent event) {
         final CommandEventWrapper commandEventWrapper = new CommandEventWrapper(event);
+        commandEventWrapper.setArgs(BotCommandArgument.extractForSlashCommand(event.getOptions(), command));
+
         event.deferReply().queue();
         try {
             doExecuteCommand(commandEventWrapper);
@@ -167,11 +162,6 @@ public abstract class AbstractCommand extends SlashCommand {
                 }
             }
         }
-    }
-
-    private List<OptionData> insertSlashOptionsData(BotCommand command) {
-        final BotSlashCommand slashCommand = BotSlashCommand.getFromRegularCommand(command);
-        return slashCommand.fabricateOptions(config);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

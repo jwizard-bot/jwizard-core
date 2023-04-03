@@ -79,7 +79,7 @@ public class BotConfiguration {
         return thread;
     });
 
-    private final List<CastType<?>> castTypes = List.of(
+    public static final List<CastType<?>> CAST_TYPES = List.of(
         new CastType<>(String.class, rawData -> rawData),
         new CastType<>(Boolean.class, Boolean::valueOf),
         new CastType<>(Integer.class, Integer::valueOf),
@@ -224,7 +224,7 @@ public class BotConfiguration {
         return jProperties.entrySet().stream()
             .filter(p -> p.getKey().equals(property))
             .findFirst()
-            .map(p -> (T)castTypes.stream()
+            .map(p -> (T) CAST_TYPES.stream()
                 .filter(c -> c.typeClazz().isAssignableFrom(castClazz))
                 .findFirst()
                 .map(t -> t.cast().apply((String)p.getValue()))

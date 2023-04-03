@@ -29,6 +29,7 @@ import org.apache.commons.validator.routines.UrlValidator;
 import java.util.Objects;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.BotCommandArgument;
 import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
@@ -53,7 +54,7 @@ public class PlayTrackCmd extends AbstractMusicCommand {
     @Override
     protected void doExecuteMusicCommand(CommandEventWrapper event) {
         final UrlValidator urlValidator = new UrlValidator();
-        String searchPhrase = event.getArgs().get(0);
+        String searchPhrase = event.getArgumentAndParse(BotCommandArgument.TRACK_LINK_NAME_ARG);
         boolean urlPatternValid = urlValidator.isValid(searchPhrase);
         if (urlPatternValid) {
             searchPhrase = searchPhrase.replaceAll(" ", "");
