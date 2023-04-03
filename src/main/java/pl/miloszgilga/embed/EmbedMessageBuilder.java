@@ -60,7 +60,6 @@ public class EmbedMessageBuilder {
         final String tracker = "`" + parseBugTracker(bugTracker) + "`";
         return new EmbedBuilder()
             .setAuthor(wrapper.getAuthorTag(), null, wrapper.getAuthorAvatarUrl())
-            .setTitle(config.getLocaleText(LocaleSet.ERROR_HEADER))
             .setDescription(message)
             .appendDescription("\n\n" + config.getLocaleText(LocaleSet.BUG_TRACKER_MESS) + ": " + tracker)
             .setColor(EmbedColor.PURPLE.getColor())

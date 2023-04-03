@@ -74,10 +74,6 @@ public enum LocaleSet {
     COMMAND_CATEGORY_OWNER_AND_MANAGER              ("jwizard.command.category.OwnerAndManager"),
     COMMAND_CATEGORY_OTHERS                         ("jwizard.command.category.Others"),
 
-    INFO_HEADER                                     ("jwizard.message.response.header.info"),
-    WARN_HEADER                                     ("jwizard.message.response.header.warn"),
-    ERROR_HEADER                                    ("jwizard.message.response.header.error"),
-
     ADD_NEW_TRACK_MESS                              ("jwizard.message.response.AddNewTrack"),
     TRACK_NAME_MESS                                 ("jwizard.message.response.TrackName"),
     TRACK_DURATION_TIME_MESS                        ("jwizard.message.response.DurationTime"),
