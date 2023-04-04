@@ -1,0 +1,59 @@
+guilds
+  id
+  discord_id
+  messsages_deleted
+  reactions_deleted
+  updated_at
+  created_at
+
+members
+  id
+  discord_id
+  created_at
+  updated_at
+
+member_stats
+  id
+  messages_sended
+  messages_updated
+  reactions_added
+  guild_id
+  member_id
+
+playlist_tracks
+  id
+  track_query
+  playlist_id
+  created_at
+  updated_at
+
+playlists
+  id
+  name
+  member_id
+  is_private
+  guild_id (opcjonalne, jeśli będzie NULL, to zwraca we wszystkich gildiach, jeśli nie to zwraca dla gildii z podanym ID)
+  created_at
+  updated_at
+
+
+komendy do zbierania statystyk serwera:
+  statystyki całego serwera
+  statystyki pojedynczego użytkownika
+
+sekcja obsługi playlist (komendy):
+  ShowMyPlaylistsCmd - pokazywanie wszystkich playlist użytkownika, włącznie z prywatnymi
+  ShowMemberPlaylistsCmd [member id] - pokazywanie playlist wybranego użytkownika, bez playlist prywatnych
+  CreatePlaylistCmd [playlist name or id] - stworzenie pustej publicznej playlisty
+  ChangePlaylistNameCmd [playlist old name or id, playlist new name] - zmiana nazwy playlisty użytkownika
+  SetPlaylistPublicCmd [playlist name or id] - zmiana widoczności playlisty na publiczną
+  SetPlaylistPrivateCmd [playlist name or id] - zmiana widoczności playlisty na prywatną
+  AddTrackToPlaylistCmd [playlist name or id, name or link] - dodanie ścieżki do playlisty (w formie nazwy lub linku)
+  RemoveTrackFromPlaylistCmd [playlist name or id, name or index] - usunięcie ścieżki z playlisty (na podstawie nazwy lub indeksu)
+  MoveTrackPlaylistCmd [playlist name or id, track name, position] - przeniesienie ścieżki z playlisty na wybraną pozycję
+  ClearPlaylistCmd [playlist name or id] - usunięcie wszystkich piosenek z playlisty
+  RemovePlaylistCmd [playlist name or id] - usunięcie playlisty
+  AddTracksFromFileToPlaylistCmd [playlist name or id, file .txt] - dodanie do playlisty wszystkich ścieżek z pliku .txt
+  SaveCurrentTracksInPlaylistCmd [playlist name or id] - dodanie aktualnie wpisanych piosenek kolejki do istniejącej playlisty
+  SaveCurrentTracksInNewPlaylistCmd [playlist name] - dodanie aktualnie wpisanych piosenek kolejki do nowej playlisty
+  LoadAndPlayPlaylistTracksCmd [playlist name or id] - załadowanie i rozpoczęcie odtwarzania playlisty
