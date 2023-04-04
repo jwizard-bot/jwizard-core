@@ -68,7 +68,7 @@ public class SkipQueueToTrackCmd extends AbstractDjCommand {
 
         final MessageEmbed messageEmbed = embedBuilder
             .createMessage(LocaleSet.SKIP_TO_SELECT_TRACK_POSITION_MESS, Map.of(
-                "countOfSkippedTracks", String.valueOf(trackPos + 1),
+                "countOfSkippedTracks", String.valueOf(trackPos - 1),
                 "currentTrack", Utilities.getRichTrackTitle(currentPlaying.getInfo())
             ));
         event.appendEmbedMessage(messageEmbed);

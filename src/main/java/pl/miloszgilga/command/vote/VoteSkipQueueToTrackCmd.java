@@ -74,7 +74,7 @@ public class VoteSkipQueueToTrackCmd extends AbstractVoteMusicCommand {
         final Map<String, Object> attributes = Map.of(
             "audioTrack", Utilities.getRichTrackTitle(currentPlaying.getInfo()),
             "nextAudioTrack", Utilities.getRichTrackTitle(trackToSkipped.getInfo()),
-            "countOfSkipped", String.valueOf(trackPos + 1)
+            "countOfSkipped", String.valueOf(trackPos - 1)
         );
         return new VoteEmbedResponse(
             VoteSkipQueueToTrackCmd.class,

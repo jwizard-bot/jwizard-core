@@ -131,6 +131,7 @@ tasks.register('moveLangFiles', Copy) {
 
 tasks.register('moveGfxFiles', Copy) {
     from layout.projectDirectory.dir('gfx')
+    exclude 'github-logo.png'
     into layout.buildDirectory.dir("$rootDir/build/shadow/gfx")
 }
 
