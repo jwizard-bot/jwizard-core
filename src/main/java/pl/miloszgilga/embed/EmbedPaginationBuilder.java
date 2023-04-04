@@ -62,7 +62,7 @@ public class EmbedPaginationBuilder {
             .setEventWaiter(config.getEventWaiter())
             .allowTextInput(false)
             .waitOnSinglePage(false)
-            .setTimeout(1, TimeUnit.MINUTES)
+            .setTimeout(config.getProperty(BotProperty.J_PAGINATION_MENU_IS_ALIVE, Long.class), TimeUnit.SECONDS)
             .wrapPageEnds(true)
             .setItems(items.toArray(String[]::new))
             .build();

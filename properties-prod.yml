@@ -50,8 +50,9 @@ bot:
         inactivity:
             max-time-after-leave-empty-channel: 180
             max-time-after-leave-no-track-channel: 180
-        voting:
-            max-elapsed-time-after-finish: 2
+    voting:
+        max-elapsed-time-after-finish: 180
+        percentage-ratio: 50
     audio:
         max-repeats-single-track: 30
         default-player-volume-units: 50
@@ -73,6 +74,7 @@ bot:
                 enabled: true
     pagination:
         max-elements-per-page: 20
+        menu-is-alive-seconds: 60
     database:
         jdbc:
             connection: ${env:PROD_DB_JDBC}

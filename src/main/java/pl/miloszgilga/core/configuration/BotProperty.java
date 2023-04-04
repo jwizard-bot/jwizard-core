@@ -53,7 +53,8 @@ public enum BotProperty {
     J_APP_ID                        ("authorization.application-id",                                true, EnvProperty.APP_ID),
     J_INACTIVITY_EMPTY_TIMEOUT      ("timeout.inactivity.max-time-after-leave-empty-channel"),
     J_INACTIVITY_NO_TRACK_TIMEOUT   ("timeout.inactivity.max-time-after-leave-no-track-channel"),
-    J_INACTIVITY_VOTING_TIMEOUT     ("timeout.voting.max-elapsed-time-after-finish"),
+    J_INACTIVITY_VOTING_TIMEOUT     ("voting.max-elapsed-time-after-finish"),
+    J_VOTING_PERCENTAGE_RATIO       ("voting.percentage-ratio"),
     J_MAX_REPEATS_SINGLE_TRACK      ("audio.max-repeats-single-track"),
     J_DEFAULT_PLAYER_VOLUME_UNITS   ("audio.default-player-volume-units"),
     J_DJ_ROLE_NAME                  ("misc.dj-role-name"),
@@ -67,6 +68,7 @@ public enum BotProperty {
     J_RR_EXTERNAL_FILE_PATH         ("misc.round-robin-activity.show-from-external-file.path-to-file"),
     J_RR_COMMANDS_ENABLED           ("misc.round-robin-activity.show-commands.enabled"),
     J_PAGINATION_MAX                ("pagination.max-elements-per-page"),
+    J_PAGINATION_MENU_IS_ALIVE      ("pagination.menu-is-alive-seconds"),
     J_DB_CONNECTION                 ("database.jdbc.connection",                                    true, EnvProperty.DB_JDBC),
     J_DB_ENFORCE_SSL                ("database.jdbc.enforce-ssl"),
     J_DB_USERNAME                   ("database.jdbc.username",                                      true, EnvProperty.DB_USERNAME),
@@ -89,9 +91,7 @@ public enum BotProperty {
         return Arrays.stream(BotProperty.values())
             .filter(v -> (BotConfiguration.JPREFIX + "." + v.name).equals(name))
             .findFirst()
-            .orElseThrow(() -> {
-                throw new IllegalArgumentException("Property " + name + " not exist.");
-            });
+            .orElseThrow(() -> new IllegalArgumentException("Property " + name + " not exist."));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
