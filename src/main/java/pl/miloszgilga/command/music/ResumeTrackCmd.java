@@ -31,11 +31,11 @@ import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.Utilities;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
-import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -57,7 +57,7 @@ public class ResumeTrackCmd extends AbstractMusicCommand {
         playerManager.resumeCurrentTrack(event);
 
         final AudioTrackInfo trackInfo = playerManager.getCurrentPlayingTrack(event);
-        final MessageEmbed messageEmbed = embedBuilder.createMessage(LocaleSet.RESUME_TRACK_MESS, Map.of(
+        final MessageEmbed messageEmbed = embedBuilder.createMessage(ResLocaleSet.RESUME_TRACK_MESS, Map.of(
             "track", Utilities.getRichTrackTitle(trackInfo),
             "invoker", event.getAuthorTag(),
             "pauseCmd", BotCommand.PAUSE_TRACK.parseWithPrefix(config)

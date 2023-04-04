@@ -24,7 +24,7 @@
 
 package pl.miloszgilga.dto;
 
-import pl.miloszgilga.core.LocaleSet;
+import pl.miloszgilga.locale.ResLocaleSet;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -33,6 +33,6 @@ public record QueueEmbedContent(
     String queueMaxDuration,
     String approxToNextTrack,
     String averageSingleTrackDuration,
-    LocaleSet repeatingMode
+    ResLocaleSet repeatingMode
 ) {
 }

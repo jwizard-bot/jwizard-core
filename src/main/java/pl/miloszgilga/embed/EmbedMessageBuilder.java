@@ -35,10 +35,12 @@ import java.util.function.BiFunction;
 
 import pl.miloszgilga.dto.*;
 import pl.miloszgilga.misc.Utilities;
+import pl.miloszgilga.locale.ResLocaleSet;
+import pl.miloszgilga.locale.VotingLocaleSet;
 import pl.miloszgilga.exception.BugTracker;
 import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.vote.VoteFinishEmbedData;
-import pl.miloszgilga.core.LocaleSet;
+import pl.miloszgilga.core.IEnumerableLocaleSet;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
@@ -48,7 +50,7 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 public class EmbedMessageBuilder {
 
     private final BotConfiguration config;
-    private final BiFunction<LocaleSet, String, MessageEmbed.Field> inlineField;
+    private final BiFunction<IEnumerableLocaleSet, String, MessageEmbed.Field> inlineField;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -64,7 +66,7 @@ public class EmbedMessageBuilder {
         return new EmbedBuilder()
             .setAuthor(wrapper.getAuthorTag(), null, wrapper.getAuthorAvatarUrl())
             .setDescription(message)
-            .appendDescription("\n\n" + config.getLocaleText(LocaleSet.BUG_TRACKER_MESS) + ": " + tracker)
+            .appendDescription("\n\n" + config.getLocaleText(ResLocaleSet.BUG_TRACKER_MESS) + ": " + tracker)
             .setColor(EmbedColor.PURPLE.getColor())
             .build();
     }
@@ -80,13 +82,13 @@ public class EmbedMessageBuilder {
     public MessageEmbed createSingleTrackMessage(CommandEventWrapper wrapper, TrackEmbedContent c) {
         return new EmbedBuilder()
             .setAuthor(wrapper.getAuthorTag(), null, wrapper.getAuthorAvatarUrl())
-            .setDescription(config.getLocaleText(LocaleSet.ADD_NEW_TRACK_MESS))
-            .addField(inlineField.apply(LocaleSet.TRACK_NAME_MESS, c.trackUrl()))
+            .setDescription(config.getLocaleText(ResLocaleSet.ADD_NEW_TRACK_MESS))
+            .addField(inlineField.apply(ResLocaleSet.TRACK_NAME_MESS, c.trackUrl()))
             .addBlankField(true)
-            .addField(inlineField.apply(LocaleSet.TRACK_DURATION_TIME_MESS, c.durationTime()))
-            .addField(inlineField.apply(LocaleSet.TRACK_POSITION_IN_QUEUE_MESS, c.trackPosition()))
+            .addField(inlineField.apply(ResLocaleSet.TRACK_DURATION_TIME_MESS, c.durationTime()))
+            .addField(inlineField.apply(ResLocaleSet.TRACK_POSITION_IN_QUEUE_MESS, c.trackPosition()))
             .addBlankField(true)
-            .addField(config.getLocaleText(LocaleSet.TRACK_ADDDED_BY_MESS) + ":", wrapper.getAuthorTag(), true)
+            .addField(config.getLocaleText(ResLocaleSet.TRACK_ADDDED_BY_MESS) + ":", wrapper.getAuthorTag(), true)
             .setThumbnail(c.thumbnailUrl())
             .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
             .build();
@@ -97,11 +99,11 @@ public class EmbedMessageBuilder {
     public MessageEmbed createPlaylistTracksMessage(CommandEventWrapper wrapper, PlaylistEmbedContent c) {
         return new EmbedBuilder()
             .setAuthor(wrapper.getAuthorTag(), null, wrapper.getAuthorAvatarUrl())
-            .setDescription(config.getLocaleText(LocaleSet.ADD_NEW_PLAYLIST_MESS))
-            .addField(inlineField.apply(LocaleSet.COUNT_OF_TRACKS_MESS, c.queueTracksCount()))
+            .setDescription(config.getLocaleText(ResLocaleSet.ADD_NEW_PLAYLIST_MESS))
+            .addField(inlineField.apply(ResLocaleSet.COUNT_OF_TRACKS_MESS, c.queueTracksCount()))
             .addBlankField(true)
-            .addField(inlineField.apply(LocaleSet.TRACKS_TOTAL_DURATION_TIME_MESS, c.queueDurationTime()))
-            .addField(inlineField.apply(LocaleSet.TRACK_ADDDED_BY_MESS, wrapper.getAuthorTag()))
+            .addField(inlineField.apply(ResLocaleSet.TRACKS_TOTAL_DURATION_TIME_MESS, c.queueDurationTime()))
+            .addField(inlineField.apply(ResLocaleSet.TRACK_ADDDED_BY_MESS, wrapper.getAuthorTag()))
             .setThumbnail(c.thumbnailUrl())
             .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
             .build();
@@ -113,9 +115,9 @@ public class EmbedMessageBuilder {
         return new EmbedBuilder()
             .setDescription(config.getLocaleText(c.localeSet(), c.localeVariables()))
             .addField(StringUtils.EMPTY, c.pausedVisualizationTrack(), false)
-            .addField(inlineField.apply(LocaleSet.PAUSED_TRACK_TIME_MESS, c.pausedTimestamp()))
-            .addField(inlineField.apply(LocaleSet.PAUSED_TRACK_ESTIMATE_TIME_MESS, c.estimatedDuration()))
-            .addField(inlineField.apply(LocaleSet.PAUSED_TRACK_TOTAL_DURATION_MESS, c.totalDuration()))
+            .addField(inlineField.apply(ResLocaleSet.PAUSED_TRACK_TIME_MESS, c.pausedTimestamp()))
+            .addField(inlineField.apply(ResLocaleSet.PAUSED_TRACK_ESTIMATE_TIME_MESS, c.estimatedDuration()))
+            .addField(inlineField.apply(ResLocaleSet.PAUSED_TRACK_TOTAL_DURATION_MESS, c.totalDuration()))
             .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
             .build();
     }
@@ -126,13 +128,13 @@ public class EmbedMessageBuilder {
         return new EmbedBuilder()
             .setAuthor(wrapper.getAuthorTag(), null, wrapper.getAuthorAvatarUrl())
             .setDescription(config.getLocaleText(c.playingPauseMessage()))
-            .addField(inlineField.apply(LocaleSet.TRACK_NAME_MESS, c.trackUrl()))
+            .addField(inlineField.apply(ResLocaleSet.TRACK_NAME_MESS, c.trackUrl()))
             .addBlankField(true)
-            .addField(inlineField.apply(LocaleSet.TRACK_ADDDED_BY_MESS, c.addedByTag()))
+            .addField(inlineField.apply(ResLocaleSet.TRACK_ADDDED_BY_MESS, c.addedByTag()))
             .addField(StringUtils.EMPTY, c.playerPercentageTrack(), false)
             .addField(config.getLocaleText(c.playingVisualizationTrack()), c.timestampNowAndMax(), true)
             .addBlankField(true)
-            .addField(config.getLocaleText(LocaleSet.CURRENT_TRACK_LEFT_TO_NEXT_MESS), c.leftToNextTrack(), true)
+            .addField(config.getLocaleText(ResLocaleSet.CURRENT_TRACK_LEFT_TO_NEXT_MESS), c.leftToNextTrack(), true)
             .setThumbnail(c.thumbnailUrl())
             .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
             .build();
@@ -144,8 +146,8 @@ public class EmbedMessageBuilder {
         return new EmbedBuilder()
             .setAuthor(wrapper.getAuthorTag(), null, wrapper.getAuthorAvatarUrl())
             .setDescription(c.description())
-            .addField(inlineField.apply(LocaleSet.HELP_INFO_COMPILATION_VERSION_MESS, c.compilationVersion()))
-            .addField(inlineField.apply(LocaleSet.HELP_INFO_COUNT_OF_AVAILABLE_COMMANDS_MESS, c.availableCommandsCount()))
+            .addField(inlineField.apply(ResLocaleSet.HELP_INFO_COMPILATION_VERSION_MESS, c.compilationVersion()))
+            .addField(inlineField.apply(ResLocaleSet.HELP_INFO_COUNT_OF_AVAILABLE_COMMANDS_MESS, c.availableCommandsCount()))
             .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
             .build();
     }
@@ -154,20 +156,20 @@ public class EmbedMessageBuilder {
 
     public MessageEmbed createQueueInfoMessage(QueueEmbedContent c) {
         return new EmbedBuilder()
-            .addField(inlineField.apply(LocaleSet.ALL_TRACKS_IN_QUEUE_COUNT_MESS, c.queueSize()))
+            .addField(inlineField.apply(ResLocaleSet.ALL_TRACKS_IN_QUEUE_COUNT_MESS, c.queueSize()))
             .addBlankField(true)
-            .addField(inlineField.apply(LocaleSet.ALL_TRACKS_IN_QUEUE_DURATION_MESS, c.queueMaxDuration()))
-            .addField(inlineField.apply(LocaleSet.APPROX_TO_NEXT_TRACK_FROM_QUEUE_MESS, c.approxToNextTrack()))
+            .addField(inlineField.apply(ResLocaleSet.ALL_TRACKS_IN_QUEUE_DURATION_MESS, c.queueMaxDuration()))
+            .addField(inlineField.apply(ResLocaleSet.APPROX_TO_NEXT_TRACK_FROM_QUEUE_MESS, c.approxToNextTrack()))
             .addBlankField(true)
-            .addField(inlineField.apply(LocaleSet.PLAYLIST_AVERAGE_TRACK_DURATION_MESS, c.averageSingleTrackDuration()))
-            .addField(inlineField.apply(LocaleSet.PLAYLIST_REPEATING_MODE_MESS, config.getLocaleText(c.repeatingMode())))
+            .addField(inlineField.apply(ResLocaleSet.PLAYLIST_AVERAGE_TRACK_DURATION_MESS, c.averageSingleTrackDuration()))
+            .addField(inlineField.apply(ResLocaleSet.PLAYLIST_REPEATING_MODE_MESS, config.getLocaleText(c.repeatingMode())))
             .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
             .build();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public MessageEmbed createTrackMessage(LocaleSet localeSet, Map<String, Object> attributes, String thumbnail) {
+    public MessageEmbed createTrackMessage(ResLocaleSet localeSet, Map<String, Object> attributes, String thumbnail) {
         return new EmbedBuilder()
             .setDescription(config.getLocaleText(localeSet, attributes))
             .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
@@ -177,81 +179,81 @@ public class EmbedMessageBuilder {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public MessageEmbed createInitialVoteMessage(CommandEventWrapper wrapper, LocaleSet locale, Map<String, Object> attrs) {
+    public MessageEmbed createInitialVoteMessage(CommandEventWrapper wrapper, ResLocaleSet locale, Map<String, Object> attrs) {
         final long maxVotingTime = config.getProperty(BotProperty.J_INACTIVITY_VOTING_TIMEOUT, Long.class);
         return new EmbedBuilder()
             .setAuthor(wrapper.getAuthorTag(), null, wrapper.getAuthorAvatarUrl())
             .setDescription(config.getLocaleText(locale, attrs))
-            .setFooter(config.getLocaleText(LocaleSet.MAX_TIME_VOTING) + ": " + Utilities.convertSecondsToMinutes(maxVotingTime))
+            .setFooter(config.getLocaleText(VotingLocaleSet.MAX_TIME_VOTING) + ": " + Utilities.convertSecondsToMinutes(maxVotingTime))
             .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
             .build();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public MessageEmbed createResponseVoteMessage(LocaleSet title, String desc, VoteFinishEmbedData res, EmbedColor color) {
+    public MessageEmbed createResponseVoteMessage(VotingLocaleSet title, String desc, VoteFinishEmbedData res, EmbedColor color) {
         final String yesNo = String.format("%d/%d", res.votesForYes(), res.votesForNo());
         final String requredTotal = String.format("%d/%d", res.requredVotes(), res.totalVotes());
         final byte votingRatio = config.getProperty(BotProperty.J_VOTING_PERCENTAGE_RATIO, Byte.class);
         return new EmbedBuilder()
             .setTitle(config.getLocaleText(title))
             .setDescription(desc)
-            .addField(inlineField.apply(LocaleSet.VOTES_FOR_YES_NO_VOTING, yesNo))
-            .addField(inlineField.apply(LocaleSet.REQUIRED_TOTAL_VOTES_VOTING, requredTotal))
-            .addField(inlineField.apply(LocaleSet.VOTES_RATIO_VOTING, votingRatio + "%"))
+            .addField(inlineField.apply(VotingLocaleSet.VOTES_FOR_YES_NO_VOTING, yesNo))
+            .addField(inlineField.apply(VotingLocaleSet.REQUIRED_TOTAL_VOTES_VOTING, requredTotal))
+            .addField(inlineField.apply(VotingLocaleSet.VOTES_RATIO_VOTING, votingRatio + "%"))
             .setColor(color.getColor())
             .build();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public MessageEmbed createMessage(LocaleSet localeSet, Map<String, Object> attributes) {
+    public MessageEmbed createMessage(IEnumerableLocaleSet localeSet, Map<String, Object> attributes) {
         return new EmbedBuilder()
             .setDescription(config.getLocaleText(localeSet, attributes))
             .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
             .build();
     }
 
-    public MessageEmbed createMessage(LocaleSet localeSet) {
+    public MessageEmbed createMessage(IEnumerableLocaleSet localeSet) {
         return createMessage(localeSet, Map.of());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public MessageEmbed createInitialVoteMessage(CommandEventWrapper wrapper, LocaleSet locale) {
+    public MessageEmbed createInitialVoteMessage(CommandEventWrapper wrapper, ResLocaleSet locale) {
         return createInitialVoteMessage(wrapper, locale, Map.of());
     }
 
-    public MessageEmbed createSuccessVoteMessage(LocaleSet locale, Map<String, Object> attrs, VoteFinishEmbedData res) {
+    public MessageEmbed createSuccessVoteMessage(ResLocaleSet locale, Map<String, Object> attrs, VoteFinishEmbedData res) {
         final String mess = config.getLocaleText(locale, attrs);
-        return createResponseVoteMessage(LocaleSet.ON_SUCCESS_VOTING, mess, res, EmbedColor.ANTIQUE_WHITE);
+        return createResponseVoteMessage(VotingLocaleSet.ON_SUCCESS_VOTING, mess, res, EmbedColor.ANTIQUE_WHITE);
     }
 
-    public MessageEmbed createSuccessVoteMessage(LocaleSet locale, VoteFinishEmbedData res) {
+    public MessageEmbed createSuccessVoteMessage(ResLocaleSet locale, VoteFinishEmbedData res) {
         final String mess = config.getLocaleText(locale);
-        return createResponseVoteMessage(LocaleSet.ON_SUCCESS_VOTING, mess, res, EmbedColor.ANTIQUE_WHITE);
+        return createResponseVoteMessage(VotingLocaleSet.ON_SUCCESS_VOTING, mess, res, EmbedColor.ANTIQUE_WHITE);
     }
 
-    public MessageEmbed createFailureVoteMessage(LocaleSet locale, Map<String, Object> attrs, VoteFinishEmbedData res) {
-        final String mess = config.getLocaleText(LocaleSet.TOO_FEW_POSITIVE_VOTES_VOTING) + ". "
+    public MessageEmbed createFailureVoteMessage(ResLocaleSet locale, Map<String, Object> attrs, VoteFinishEmbedData res) {
+        final String mess = config.getLocaleText(VotingLocaleSet.TOO_FEW_POSITIVE_VOTES_VOTING) + ". "
             + config.getLocaleText(locale, attrs);
-        return createResponseVoteMessage(LocaleSet.ON_FAILURE_VOTING, mess, res, EmbedColor.PURPLE);
+        return createResponseVoteMessage(VotingLocaleSet.ON_FAILURE_VOTING, mess, res, EmbedColor.PURPLE);
     }
 
-    public MessageEmbed createFailureVoteMessage(LocaleSet locale, VoteFinishEmbedData res) {
-        final String mess = config.getLocaleText(LocaleSet.TOO_FEW_POSITIVE_VOTES_VOTING) + ". "
+    public MessageEmbed createFailureVoteMessage(ResLocaleSet locale, VoteFinishEmbedData res) {
+        final String mess = config.getLocaleText(VotingLocaleSet.TOO_FEW_POSITIVE_VOTES_VOTING) + ". "
             + config.getLocaleText(locale);
-        return createResponseVoteMessage(LocaleSet.ON_FAILURE_VOTING, mess, res, EmbedColor.PURPLE);
+        return createResponseVoteMessage(VotingLocaleSet.ON_FAILURE_VOTING, mess, res, EmbedColor.PURPLE);
     }
 
-    public MessageEmbed createTimeoutVoteMessage(LocaleSet locale, Map<String, Object> attrs, VoteFinishEmbedData res) {
+    public MessageEmbed createTimeoutVoteMessage(ResLocaleSet locale, Map<String, Object> attrs, VoteFinishEmbedData res) {
         final String mess = config.getLocaleText(locale, attrs);
-        return createResponseVoteMessage(LocaleSet.ON_TIMEOUT_VOTING, mess, res, EmbedColor.PURPLE);
+        return createResponseVoteMessage(VotingLocaleSet.ON_TIMEOUT_VOTING, mess, res, EmbedColor.PURPLE);
     }
 
-    public MessageEmbed createTimeoutVoteMessage(LocaleSet locale, VoteFinishEmbedData res) {
+    public MessageEmbed createTimeoutVoteMessage(ResLocaleSet locale, VoteFinishEmbedData res) {
         final String mess = config.getLocaleText(locale);
-        return createResponseVoteMessage(LocaleSet.ON_TIMEOUT_VOTING, mess, res, EmbedColor.PURPLE);
+        return createResponseVoteMessage(VotingLocaleSet.ON_TIMEOUT_VOTING, mess, res, EmbedColor.PURPLE);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

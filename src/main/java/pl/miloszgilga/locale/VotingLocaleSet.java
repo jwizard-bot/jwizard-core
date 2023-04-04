@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: JoinToChannelCmd.java
- * Last modified: 18/03/2023, 21:43
+ * File name: CommandLocale.java
+ * Last modified: 04/04/2023, 18:15
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -22,42 +22,28 @@
  * or other dealings in the software.
  */
 
-package pl.miloszgilga.command.dj;
+package pl.miloszgilga.locale;
 
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.VoiceChannel;
-
-import java.util.Map;
-
-import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.locale.ResLocaleSet;
-import pl.miloszgilga.dto.CommandEventWrapper;
-import pl.miloszgilga.audioplayer.PlayerManager;
-import pl.miloszgilga.embed.EmbedMessageBuilder;
-import pl.miloszgilga.command.AbstractDjCommand;
-import pl.miloszgilga.core.configuration.BotConfiguration;
-import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import pl.miloszgilga.core.IEnumerableLocaleSet;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@JDAInjectableCommandLazyService
-public class JoinToChannelCmd extends AbstractDjCommand {
+@Getter
+@RequiredArgsConstructor
+public enum VotingLocaleSet implements IEnumerableLocaleSet {
 
-    JoinToChannelCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
-        super(BotCommand.JOIN_TO_CHANNEL, config, playerManager, embedBuilder);
-        super.inPlayingMode = true;
-        super.allowAlsoForNormal = false;
-    }
+    ON_SUCCESS_VOTING                               ("jwizard.message.voting.VotingSuccess"),
+    ON_FAILURE_VOTING                               ("jwizard.message.voting.VotingFailure"),
+    ON_TIMEOUT_VOTING                               ("jwizard.message.voting.VotingTimeout"),
+    VOTES_FOR_YES_NO_VOTING                         ("jwizard.message.voting.VotesForYesNo"),
+    REQUIRED_TOTAL_VOTES_VOTING                     ("jwizard.message.voting.RequiredTotalVotes"),
+    VOTES_RATIO_VOTING                              ("jwizard.message.voting.VotesRatio"),
+    MAX_TIME_VOTING                                 ("jwizard.message.voting.MaxVotingTime"),
+    TOO_FEW_POSITIVE_VOTES_VOTING                   ("jwizard.message.voting.TooFewPositiveVotes");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override
-    protected void doExecuteDjCommand(CommandEventWrapper event) {
-        final VoiceChannel movedToVoiceChannel = playerManager.moveToMemberCurrentVoiceChannel(event);
-        final MessageEmbed messageEmbed = embedBuilder
-            .createMessage(ResLocaleSet.MOVE_BOT_TOO_SELECTED_CHANNEL_MESS, Map.of(
-                "movedChannel", movedToVoiceChannel.getName()
-            ));
-        event.sendEmbedMessage(messageEmbed);
-    }
+    private final String holder;
 }

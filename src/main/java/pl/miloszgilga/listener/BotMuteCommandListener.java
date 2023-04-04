@@ -32,10 +32,11 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMuteEvent;
 
 import java.util.Objects;
 
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
-import pl.miloszgilga.core.LocaleSet;
+import pl.miloszgilga.core.IEnumerableLocaleSet;
 import pl.miloszgilga.core.AbstractListenerAdapter;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
@@ -67,9 +68,9 @@ public class BotMuteCommandListener extends AbstractListenerAdapter {
         final MusicManager musicManager = playerManager.getMusicManager(botMember.getGuild());
         if (Objects.isNull(musicManager)) return;
 
-        LocaleSet message = LocaleSet.RESUME_TRACK_ON_FORCE_UNMUTE_MESS;
+        IEnumerableLocaleSet message = ResLocaleSet.RESUME_TRACK_ON_FORCE_UNMUTE_MESS;
         if (botMember.getVoiceState().isMuted()) {
-            message = LocaleSet.PAUSE_TRACK_ON_FORCE_MUTE_MESS;
+            message = ResLocaleSet.PAUSE_TRACK_ON_FORCE_MUTE_MESS;
             musicManager.getAudioPlayer().setPaused(true);
         } else {
             musicManager.getAudioPlayer().setPaused(false);

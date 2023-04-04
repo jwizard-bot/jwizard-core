@@ -29,6 +29,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.Utilities;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.dto.CurrentPlayEmbedContent;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
@@ -36,7 +37,6 @@ import pl.miloszgilga.command.AbstractMusicCommand;
 import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.audioplayer.ExtendedAudioTrackInfo;
-import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -61,8 +61,8 @@ public class CurrentPlayingCmd extends AbstractMusicCommand {
         final String trackMaxDuration = Utilities.convertMilisToDate(track.getMaxDuration());
 
         final CurrentPlayEmbedContent content = new CurrentPlayEmbedContent(
-            LocaleSet.CURRENT_PLAYING_TRACK_MESS,
-            LocaleSet.CURRENT_PLAYING_TIMESTAMP_MESS,
+            ResLocaleSet.CURRENT_PLAYING_TRACK_MESS,
+            ResLocaleSet.CURRENT_PLAYING_TIMESTAMP_MESS,
             Utilities.getRichTrackTitle(track),
             track.getThumbnailUrl(),
             ((Member) musicManager.getAudioPlayer().getPlayingTrack().getUserData()).getUser().getAsTag(),

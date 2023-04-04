@@ -39,12 +39,12 @@ import java.util.stream.Collectors;
 
 import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.misc.Utilities;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.TrackEmbedContent;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.dto.PlaylistEmbedContent;
 import pl.miloszgilga.exception.BugTracker;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
-import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,7 +111,7 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
     @Override
     public void noMatches() {
         final MessageEmbed messageEmbed = builder.createErrorMessage(deliveryEvent,
-            config.getLocaleText(LocaleSet.NOT_FOUND_TRACK_MESS), BugTracker.NOT_FOUND_TRACK);
+            config.getLocaleText(ResLocaleSet.NOT_FOUND_TRACK_MESS), BugTracker.NOT_FOUND_TRACK);
         deliveryEvent.sendEmbedMessage(messageEmbed);
 
         JDALog.info(log, deliveryEvent, "Not available to find provided audio track/playlist");
@@ -122,7 +122,7 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
     @Override
     public void loadFailed(FriendlyException exception) {
         final MessageEmbed messageEmbed = builder.createErrorMessage(deliveryEvent,
-            config.getLocaleText(LocaleSet.ISSUE_WHILE_LOADING_TRACK_MESS), BugTracker.ISSUE_ON_LOAD_TRACK);
+            config.getLocaleText(ResLocaleSet.ISSUE_WHILE_LOADING_TRACK_MESS), BugTracker.ISSUE_ON_LOAD_TRACK);
         deliveryEvent.sendEmbedMessage(messageEmbed);
 
         JDALog.error(log, deliveryEvent, "Unexpected exception during load audio track/playlist: %s",

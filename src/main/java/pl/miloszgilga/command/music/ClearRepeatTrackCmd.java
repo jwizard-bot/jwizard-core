@@ -31,11 +31,11 @@ import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.Utilities;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
-import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -57,7 +57,7 @@ public class ClearRepeatTrackCmd extends AbstractMusicCommand {
 
         final AudioTrackInfo trackInfo = playerManager.getCurrentPlayingTrack(event);
         final MessageEmbed messageEmbed = embedBuilder
-            .createMessage(LocaleSet.REMOVE_MULTIPLE_REPEATING_TRACK_MESS, Map.of(
+            .createMessage(ResLocaleSet.REMOVE_MULTIPLE_REPEATING_TRACK_MESS, Map.of(
                 "track", Utilities.getRichTrackTitle(trackInfo),
                 "repeatingCmd", BotCommand.REPEAT_TRACK.parseWithPrefix(config)
             ));

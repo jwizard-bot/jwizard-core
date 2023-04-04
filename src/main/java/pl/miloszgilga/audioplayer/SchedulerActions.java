@@ -41,10 +41,10 @@ import java.util.concurrent.ScheduledFuture;
 
 import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.misc.Utilities;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.TrackPosition;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
-import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
@@ -158,7 +158,7 @@ public class SchedulerActions {
         infinitePlaylistRepeating = false;
 
         if (showMessage) {
-            final MessageEmbed messageEmbed = builder.createMessage(LocaleSet.LEAVE_EMPTY_CHANNEL_MESS);
+            final MessageEmbed messageEmbed = builder.createMessage(ResLocaleSet.LEAVE_EMPTY_CHANNEL_MESS);
             deliveryEvent.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
         }
         onClearing = false;
@@ -179,7 +179,7 @@ public class SchedulerActions {
         final int timeToLeaveChannel = config.getProperty(BotProperty.J_INACTIVITY_NO_TRACK_TIMEOUT, Integer.class);
         threadCountToLeave = config.getThreadPool().schedule(() -> {
             final MessageEmbed leaveMessageEmbed = builder
-                .createMessage(LocaleSet.LEAVE_END_PLAYBACK_QUEUE_MESS, Map.of(
+                .createMessage(ResLocaleSet.LEAVE_END_PLAYBACK_QUEUE_MESS, Map.of(
                     "elapsed", Utilities.convertSecondsToMinutes(timeToLeaveChannel)
                 ));
             clearAndDestroy(false);
@@ -193,7 +193,7 @@ public class SchedulerActions {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     String getTrackPositionInQueue() {
-        if (trackQueue.size() == 1) return config.getLocaleText(LocaleSet.NEXT_TRACK_INDEX_MESS);
+        if (trackQueue.size() == 1) return config.getLocaleText(ResLocaleSet.NEXT_TRACK_INDEX_MESS);
         return Integer.toString(trackQueue.size());
     }
 

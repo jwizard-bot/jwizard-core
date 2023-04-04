@@ -31,6 +31,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.Utilities;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.dto.CurrentPlayEmbedContent;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
@@ -38,7 +39,6 @@ import pl.miloszgilga.command.AbstractMusicCommand;
 import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.audioplayer.ExtendedAudioTrackInfo;
-import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -64,8 +64,8 @@ public class CurrentPausedCmd extends AbstractMusicCommand {
         final String trackMaxDuration = Utilities.convertMilisToDate(pausedTrack.getDuration());
 
         final CurrentPlayEmbedContent content = new CurrentPlayEmbedContent(
-            LocaleSet.CURRENT_PAUSED_TRACK_MESS,
-            LocaleSet.CURRENT_PAUSED_TIMESTAMP_MESS,
+            ResLocaleSet.CURRENT_PAUSED_TRACK_MESS,
+            ResLocaleSet.CURRENT_PAUSED_TIMESTAMP_MESS,
             Utilities.getRichTrackTitle(track),
             track.getThumbnailUrl(),
             ((Member) musicManager.getAudioPlayer().getPlayingTrack().getUserData()).getUser().getAsTag(),

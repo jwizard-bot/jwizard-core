@@ -31,13 +31,13 @@ import java.util.Objects;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.Utilities;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.audioplayer.SchedulerActions;
 import pl.miloszgilga.audioplayer.ExtendedAudioTrackInfo;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
-import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -64,11 +64,11 @@ public class StopClearQueueCmd extends AbstractDjCommand {
 
         MessageEmbed messageEmbed;
         if (!Objects.isNull(currentTrack)) {
-            messageEmbed = embedBuilder.createMessage(LocaleSet.SKIPPED_CURRENT_TRACK_AND_CLEAR_QUEUE_MESS, Map.of(
+            messageEmbed = embedBuilder.createMessage(ResLocaleSet.SKIPPED_CURRENT_TRACK_AND_CLEAR_QUEUE_MESS, Map.of(
                 "currentTrack", Utilities.getRichTrackTitle(currentTrack)
             ));
         } else {
-            messageEmbed = embedBuilder.createMessage(LocaleSet.CLEAR_QUEUE_MESS, Map.of(
+            messageEmbed = embedBuilder.createMessage(ResLocaleSet.CLEAR_QUEUE_MESS, Map.of(
                 "countOfTracks", countOfTracks
             ));
         }

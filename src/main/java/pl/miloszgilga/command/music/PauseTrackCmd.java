@@ -31,12 +31,12 @@ import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.Utilities;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.dto.PauseTrackEmbedContent;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
-import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -63,7 +63,7 @@ public class PauseTrackCmd extends AbstractMusicCommand {
 
         final AudioTrack track = playerManager.getMusicManager(event.getGuild()).getAudioPlayer().getPlayingTrack();
         final PauseTrackEmbedContent content = new PauseTrackEmbedContent(
-            LocaleSet.PAUSE_TRACK_MESS,
+            ResLocaleSet.PAUSE_TRACK_MESS,
             Map.of(
                 "track", Utilities.getRichTrackTitle(track.getInfo()),
                 "invoker", event.getAuthorTag(),

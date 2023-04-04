@@ -30,11 +30,11 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.HelpEmbedContent;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.embed.EmbedPaginationBuilder;
-import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.AbstractCommand;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
@@ -59,7 +59,7 @@ class HelpCmd extends AbstractCommand {
     @Override
     protected void doExecuteCommand(CommandEventWrapper event) {
         final HelpEmbedContent content = new HelpEmbedContent(
-            config.getLocaleText(LocaleSet.HELP_INFO_SOURCE_CODE_LINK_MESS,
+            config.getLocaleText(ResLocaleSet.HELP_INFO_SOURCE_CODE_LINK_MESS,
                 Map.of("sourceCodeLink", config.getProperty(BotProperty.J_SOURCE_CODE_PATH))),
             String.format("jre%s_%s", Runtime.version().feature(), config.getProjectVersion()),
             BotCommand.count()

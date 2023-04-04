@@ -30,7 +30,7 @@ import java.util.Map;
 
 import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.dto.CommandEventWrapper;
-import pl.miloszgilga.core.LocaleSet;
+import pl.miloszgilga.locale.ExceptionLocaleSet;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
@@ -40,7 +40,7 @@ public class AudioPlayerException {
 
     @Slf4j public static class ActiveMusicPlayingNotFoundException extends BotException {
         public ActiveMusicPlayingNotFoundException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, LocaleSet.ACTIVE_MUSIC_PLAYING_NOT_FOUND_EXC, BugTracker.ACTIVE_MUSIC_PLAYING_NOT_FOUND);
+            super(config, ExceptionLocaleSet.ACTIVE_MUSIC_PLAYING_NOT_FOUND, BugTracker.ACTIVE_MUSIC_PLAYING_NOT_FOUND);
             JDALog.error(log, event, "Attempt to invoke command while user is not in any voice channel");
         }
     }
@@ -49,7 +49,8 @@ public class AudioPlayerException {
 
     @Slf4j public static class UserOnVoiceChannelNotFoundException extends BotException {
         public UserOnVoiceChannelNotFoundException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, LocaleSet.USER_ON_VOICE_CHANNEL_NOT_FOUND_EXEC, BugTracker.USER_ON_VOICE_CHANNEL_NOT_FOUND);
+            super(config, ExceptionLocaleSet.USER_ON_VOICE_CHANNEL_NOT_FOUND,
+                BugTracker.USER_ON_VOICE_CHANNEL_NOT_FOUND);
             JDALog.error(log, event, "Attempt to invoke command while user is not in voice channel");
         }
     }
@@ -58,7 +59,8 @@ public class AudioPlayerException {
 
     @Slf4j public static class UserOnVoiceChannelWithBotNotFoundException extends BotException {
         public UserOnVoiceChannelWithBotNotFoundException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, LocaleSet.USER_ON_VOICE_CHANNEL_WITH_BOT_NOT_FOUND_EXEC, BugTracker.USER_ON_VOICE_CHANNEL_NOT_FOUND);
+            super(config, ExceptionLocaleSet.USER_ON_VOICE_CHANNEL_WITH_BOT_NOT_FOUND,
+                BugTracker.USER_ON_VOICE_CHANNEL_NOT_FOUND);
             JDALog.error(log, event, "Attempt to invoke command while user is not in voice channel with bot");
         }
     }
@@ -67,7 +69,7 @@ public class AudioPlayerException {
 
     @Slf4j public static class TrackIsNotPlayingException extends BotException {
         public TrackIsNotPlayingException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, LocaleSet.TRACK_IS_NOT_PLAYING_EXC, BugTracker.TRACK_IS_NOT_PLAYING);
+            super(config, ExceptionLocaleSet.TRACK_IS_NOT_PLAYING, BugTracker.TRACK_IS_NOT_PLAYING);
             JDALog.error(log, event, "Attempt to invoke command while current played track not existing");
         }
     }
@@ -76,7 +78,7 @@ public class AudioPlayerException {
 
     @Slf4j public static class TrackIsNotPausedException extends BotException {
         public TrackIsNotPausedException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, LocaleSet.TRACK_IS_NOT_PAUSED_EXC, BugTracker.TRACK_IS_NOT_PAUSED);
+            super(config, ExceptionLocaleSet.TRACK_IS_NOT_PAUSED, BugTracker.TRACK_IS_NOT_PAUSED);
             JDALog.error(log, event, "Attempt to invoke command while current played track is not paused");
         }
     }
@@ -85,7 +87,7 @@ public class AudioPlayerException {
 
     @Slf4j public static class InvokerIsNotTrackSenderOrAdminException extends BotException {
         public InvokerIsNotTrackSenderOrAdminException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, LocaleSet.INVOKER_IS_NOT_TRACK_SENDER_OR_ADMIN_EXC, BugTracker.INVOKE_FORBIDDEN_COMMAND);
+            super(config, ExceptionLocaleSet.INVOKER_IS_NOT_TRACK_SENDER_OR_ADMIN, BugTracker.INVOKE_FORBIDDEN_COMMAND);
             JDALog.error(log, event, "Attempt to invoke command while bot is used on another channel");
         }
     }
@@ -94,7 +96,7 @@ public class AudioPlayerException {
 
     @Slf4j public static class TrackRepeatsOutOfBoundsException extends BotException {
         public TrackRepeatsOutOfBoundsException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, LocaleSet.TRACK_REPEATS_OUT_OF_BOUNDS_EXC, Map.of(
+            super(config, ExceptionLocaleSet.TRACK_REPEATS_OUT_OF_BOUNDS, Map.of(
                 "topLimit", config.getProperty(BotProperty.J_MAX_REPEATS_SINGLE_TRACK)
             ), BugTracker.REPEATS_OUT_OF_BOUNDS);
             JDALog.error(log, event, "Attempt to set out of bounds current audio track repeats number");
@@ -105,7 +107,7 @@ public class AudioPlayerException {
 
     @Slf4j public static class LockCommandOnTemporaryHaltedException extends BotException {
         public LockCommandOnTemporaryHaltedException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, LocaleSet.LOCK_COMMAND_ON_TEMPORARY_HALTED_EXC, BugTracker.LOCK_COMMAND_TEMPORARY_HALTED);
+            super(config, ExceptionLocaleSet.LOCK_COMMAND_ON_TEMPORARY_HALTED, BugTracker.LOCK_COMMAND_TEMPORARY_HALTED);
             JDALog.error(log, event, "Attempt to use music command on halted (muted) bot");
         }
     }
@@ -114,7 +116,7 @@ public class AudioPlayerException {
 
     @Slf4j public static class VolumeUnitsOutOfBoundsException extends BotException {
         public VolumeUnitsOutOfBoundsException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, LocaleSet.VOLUME_UNITS_OUT_OF_BOUNDS_EXC, BugTracker.VOLUME_UNITS_OUT_OF_BOUNDS);
+            super(config, ExceptionLocaleSet.VOLUME_UNITS_OUT_OF_BOUNDS, BugTracker.VOLUME_UNITS_OUT_OF_BOUNDS);
             JDALog.error(log, event, "Attempt to set out of bounds audio player volume units");
         }
     }
@@ -123,7 +125,7 @@ public class AudioPlayerException {
 
     @Slf4j public static class TrackPositionOutOfBoundsException extends BotException {
         public TrackPositionOutOfBoundsException(BotConfiguration config, CommandEventWrapper event, int maxOffset) {
-            super(config, LocaleSet.TRACK_OFFSET_OUT_OF_BOUNDS_EXC, Map.of(
+            super(config, ExceptionLocaleSet.TRACK_OFFSET_OUT_OF_BOUNDS, Map.of(
                 "maxOffset", maxOffset
             ), BugTracker.TRACK_OFFSET_OUT_OF_BOUNDS);
             JDALog.error(log, event, "Attempt to offset to out of bounds track position in queue");
@@ -134,7 +136,7 @@ public class AudioPlayerException {
 
     @Slf4j public static class TrackQueueIsEmptyException extends BotException {
         public TrackQueueIsEmptyException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, LocaleSet.TRACK_QUEUE_IS_EMPTY_EXC, BugTracker.TRACK_QUEUE_IS_EMPTY);
+            super(config, ExceptionLocaleSet.TRACK_QUEUE_IS_EMPTY, BugTracker.TRACK_QUEUE_IS_EMPTY);
             JDALog.error(log, event, "Attempt to use command on empty track queue");
         }
     }
@@ -143,7 +145,7 @@ public class AudioPlayerException {
 
     @Slf4j public static class UserNotAddedTracksToQueueException extends BotException {
         public UserNotAddedTracksToQueueException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, LocaleSet.USER_NOT_ADDED_TRACKS_TO_QUEUE_EXC, BugTracker.USER_NOT_ADDED_TRACKS_TO_QUEUE);
+            super(config, ExceptionLocaleSet.USER_NOT_ADDED_TRACKS_TO_QUEUE, BugTracker.USER_NOT_ADDED_TRACKS_TO_QUEUE);
             JDALog.error(log, event, "Attempt to remove tracks from user which not added any track in queue");
         }
     }
@@ -152,7 +154,7 @@ public class AudioPlayerException {
 
     @Slf4j public static class TrackPositionsIsTheSameException extends BotException {
         public TrackPositionsIsTheSameException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, LocaleSet.TRACK_THE_SAME_POSITION_EXC, BugTracker.TRACK_THE_SAME_POSITIONS);
+            super(config, ExceptionLocaleSet.TRACK_THE_SAME_POSITION, BugTracker.TRACK_THE_SAME_POSITIONS);
             JDALog.error(log, event, "Attempt to move track to the same origin position");
         }
     }

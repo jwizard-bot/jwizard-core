@@ -33,12 +33,14 @@ import java.util.stream.Collectors;
 
 import pl.miloszgilga.misc.CommandCategory;
 import pl.miloszgilga.misc.CommandWithArgsCount;
-import pl.miloszgilga.core.LocaleSet;
+import pl.miloszgilga.locale.CommandLocaleSet;
+import pl.miloszgilga.locale.ArgSyntaxLocaleSet;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
-import static pl.miloszgilga.core.LocaleSet.*;
 import static pl.miloszgilga.misc.CommandCategory.*;
+import static pl.miloszgilga.locale.CommandLocaleSet.*;
+import static pl.miloszgilga.locale.ArgSyntaxLocaleSet.*;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -85,29 +87,24 @@ public enum BotCommand {
     private final boolean slashActive;
     private final String[] aliases;
     private final CommandCategory category;
-    private final LocaleSet descriptionHolder;
-    private final LocaleSet argSyntax;
+    private final CommandLocaleSet descriptionLocaleSet;
+    private final ArgSyntaxLocaleSet argSyntax;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    BotCommand(String name, boolean slashActive, String[] aliases, CommandCategory category, LocaleSet descriptionHolder) {
+    BotCommand(String name, boolean slashActive, String[] aliases, CommandCategory category, CommandLocaleSet descriptionLocaleSet) {
         this.name = name;
         this.slashActive = slashActive;
         this.aliases = aliases;
         this.category = category;
-        this.descriptionHolder = descriptionHolder;
+        this.descriptionLocaleSet = descriptionLocaleSet;
         this.argSyntax = null;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public String getArgSyntax() {
-        if (Objects.isNull(argSyntax)) return "";
-        return argSyntax.getHolder();
-    }
-
-    public String getDescriptionHolder() {
-        return descriptionHolder.getHolder();
+    public CommandLocaleSet getDescriptionLocaleSet() {
+        return descriptionLocaleSet;
     }
 
     public String parseWithPrefix(BotConfiguration config) {
@@ -162,7 +159,7 @@ public enum BotCommand {
                     builder.append(String.format(" %s", config.getLocaleText(command.argSyntax)));
                 }
                 builder.append("`\n");
-                builder.append(config.getLocaleText(command.descriptionHolder));
+                builder.append(config.getLocaleText(command.descriptionLocaleSet));
                 builder.append('\n');
                 commands.add(builder.toString());
             }

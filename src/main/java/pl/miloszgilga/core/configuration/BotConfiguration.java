@@ -40,6 +40,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 import org.hibernate.PropertyNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.vault.support.JsonMapFlattener;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.core.config.Configurator;
 
 import java.io.*;
@@ -49,7 +50,7 @@ import java.net.URLClassLoader;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import pl.miloszgilga.core.LocaleSet;
+import pl.miloszgilga.core.IEnumerableLocaleSet;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -247,7 +248,8 @@ public class BotConfiguration {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public String getLocaleText(LocaleSet localeSet, Map<String, Object> params) {
+    public String getLocaleText(IEnumerableLocaleSet localeSet, Map<String, Object> params) {
+        if (Objects.isNull(localeSet)) return StringUtils.EMPTY;
         try {
             String resourceText = localeBundle.getString(localeSet.getHolder());
             if (resourceText.isBlank()) {
@@ -264,11 +266,7 @@ public class BotConfiguration {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public String getLocaleText(LocaleSet localeSet) {
+    public String getLocaleText(IEnumerableLocaleSet localeSet) {
         return getLocaleText(localeSet, Map.of());
-    }
-
-    public String getLocaleText(String localeHolder) {
-        return getLocaleText(LocaleSet.findByHolder(localeHolder), Map.of());
     }
 }

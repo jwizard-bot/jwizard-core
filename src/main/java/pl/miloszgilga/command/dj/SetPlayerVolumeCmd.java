@@ -30,11 +30,11 @@ import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.BotCommandArgument;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
-import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -61,7 +61,7 @@ public class SetPlayerVolumeCmd extends AbstractDjCommand {
         }
         playerManager.setPlayerVolume(event, volumeUnits);
         final MessageEmbed messageEmbed = embedBuilder
-            .createMessage(LocaleSet.SET_CURRENT_AUDIO_PLAYER_VOLUME_MESS, Map.of(
+            .createMessage(ResLocaleSet.SET_CURRENT_AUDIO_PLAYER_VOLUME_MESS, Map.of(
                 "previousVolume", currentVolumeUnits,
                 "setVolume", volumeUnits
             ));

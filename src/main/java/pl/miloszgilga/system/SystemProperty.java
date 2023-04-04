@@ -27,33 +27,33 @@ package pl.miloszgilga.system;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import pl.miloszgilga.core.LocaleSet;
-import pl.miloszgilga.core.configuration.BotConfiguration;
-
 import java.util.List;
 import java.util.Arrays;
 import java.util.function.BiFunction;
+
+import pl.miloszgilga.locale.DebugLocaleSet;
+import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Getter
 @RequiredArgsConstructor
 public enum SystemProperty {
-    JVM_NAME                        ("java.vm.name",                    LocaleSet.JVM_NAME_JAVA_DEBUG),
-    JVM_VERSION                     ("java.version",                    LocaleSet.JVM_VERSION_JAVA_DEBUG),
-    JVM_SPEC_VERSION                ("java.vm.specification.version",   LocaleSet.JVM_SPEC_VERSION_JAVA_DEBUG),
+    JVM_NAME                        ("java.vm.name",                    DebugLocaleSet.JVM_NAME_JAVA_DEBUG),
+    JVM_VERSION                     ("java.version",                    DebugLocaleSet.JVM_VERSION_JAVA_DEBUG),
+    JVM_SPEC_VERSION                ("java.vm.specification.version",   DebugLocaleSet.JVM_SPEC_VERSION_JAVA_DEBUG),
 
-    JRE_NAME                        ("java.runtime.name",               LocaleSet.JRE_NAME_JAVA_DEBUG),
-    JRE_VERSION                     ("java.runtime.version",            LocaleSet.JRE_VERSION_JAVA_DEBUG),
-    JRE_SPEC_VERSION                ("java.specification.version",      LocaleSet.JRE_SPEC_VERSION_JAVA_DEBUG),
+    JRE_NAME                        ("java.runtime.name",               DebugLocaleSet.JRE_NAME_JAVA_DEBUG),
+    JRE_VERSION                     ("java.runtime.version",            DebugLocaleSet.JRE_VERSION_JAVA_DEBUG),
+    JRE_SPEC_VERSION                ("java.specification.version",      DebugLocaleSet.JRE_SPEC_VERSION_JAVA_DEBUG),
 
-    OS_NAME                         ("os.name",                         LocaleSet.OS_NAME_JAVA_DEBUG),
-    OS_ARCHITECTURE                 ("os.arch",                         LocaleSet.OS_ARCHITECTURE_JAVA_DEBUG);
+    OS_NAME                         ("os.name",                         DebugLocaleSet.OS_NAME_JAVA_DEBUG),
+    OS_ARCHITECTURE                 ("os.arch",                         DebugLocaleSet.OS_ARCHITECTURE_JAVA_DEBUG);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final String property;
-    private final LocaleSet localeSet;
+    private final DebugLocaleSet localeSet;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

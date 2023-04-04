@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.BotCommandArgument;
 import pl.miloszgilga.misc.Utilities;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.dto.MemberRemovedTracksInfo;
 import pl.miloszgilga.audioplayer.PlayerManager;
@@ -41,7 +42,6 @@ import pl.miloszgilga.audioplayer.ExtendedAudioTrackInfo;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.embed.EmbedPaginationBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
-import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -80,7 +80,7 @@ public class RemoveMemberTracksCmd extends AbstractDjCommand {
 
         final Paginator removedTracksList = pagination.createDefaultPaginator(pageableRemovedTracks);
         final MessageEmbed messageEmbed = embedBuilder
-            .createMessage(LocaleSet.REMOVED_TRACKS_FROM_SELECTED_MEMBER_MESS, Map.of(
+            .createMessage(ResLocaleSet.REMOVED_TRACKS_FROM_SELECTED_MEMBER_MESS, Map.of(
                 "countOfRemovedTracks", pageableRemovedTracks.size(),
                 "memberTag", removedTracksInfo.member().getUser().getAsTag()
             ));

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: JoinToChannelCmd.java
- * Last modified: 18/03/2023, 21:43
+ * File name: CommandLocale.java
+ * Last modified: 04/04/2023, 18:15
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -22,42 +22,27 @@
  * or other dealings in the software.
  */
 
-package pl.miloszgilga.command.dj;
+package pl.miloszgilga.locale;
 
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.VoiceChannel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-import java.util.Map;
-
-import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.locale.ResLocaleSet;
-import pl.miloszgilga.dto.CommandEventWrapper;
-import pl.miloszgilga.audioplayer.PlayerManager;
-import pl.miloszgilga.embed.EmbedMessageBuilder;
-import pl.miloszgilga.command.AbstractDjCommand;
-import pl.miloszgilga.core.configuration.BotConfiguration;
-import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
+import pl.miloszgilga.core.IEnumerableLocaleSet;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@JDAInjectableCommandLazyService
-public class JoinToChannelCmd extends AbstractDjCommand {
+@Getter
+@RequiredArgsConstructor
+public enum ArgSyntaxLocaleSet implements IEnumerableLocaleSet {
 
-    JoinToChannelCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
-        super(BotCommand.JOIN_TO_CHANNEL, config, playerManager, embedBuilder);
-        super.inPlayingMode = true;
-        super.allowAlsoForNormal = false;
-    }
+    PLAY_TRACK_ARG_SYNTAX                           ("jwizard.command.arguments.PlayTrack"),
+    REPEAT_TRACK_ARG_SYNTAX                         ("jwizard.command.arguments.RepeatTrack"),
+    AUDIO_PLAYER_SET_VOLUME_ARG_SYNTAX              ("jwizard.command.arguments.AudioPlayerSetVolume"),
+    REMOVE_MEMBER_TRACKS_ARG_SYNTAX                 ("jwizard.command.arguments.RemoveMemberTracks"),
+    SKIP_QUEUE_TO_TRACK_ARG_SYNTAX                  ("jwizard.command.arguments.SkipQueueToTrack"),
+    MOVE_TRACK_ARG_SYNTAX                           ("jwizard.command.arguments.MoveTrack");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override
-    protected void doExecuteDjCommand(CommandEventWrapper event) {
-        final VoiceChannel movedToVoiceChannel = playerManager.moveToMemberCurrentVoiceChannel(event);
-        final MessageEmbed messageEmbed = embedBuilder
-            .createMessage(ResLocaleSet.MOVE_BOT_TOO_SELECTED_CHANNEL_MESS, Map.of(
-                "movedChannel", movedToVoiceChannel.getName()
-            ));
-        event.sendEmbedMessage(messageEmbed);
-    }
+    private final String holder;
 }

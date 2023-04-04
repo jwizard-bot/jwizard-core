@@ -38,12 +38,14 @@ import java.util.function.Function;
 import java.util.function.BiFunction;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.locale.ResLocaleSet;
+import pl.miloszgilga.locale.DebugLocaleSet;
 import pl.miloszgilga.system.SystemProperty;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.embed.EmbedPaginationBuilder;
 import pl.miloszgilga.command.AbstractManagerCommand;
-import pl.miloszgilga.core.LocaleSet;
+import pl.miloszgilga.core.IEnumerableLocaleSet;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
@@ -55,10 +57,10 @@ public class DebugCmd extends AbstractManagerCommand {
 
     private final EmbedPaginationBuilder pagination;
 
-    private final Function<LocaleSet, String> formatHeader = key ->
+    private final Function<IEnumerableLocaleSet, String> formatHeader = key ->
         String.format("\n**%s**\n", config.getLocaleText(key).toUpperCase());
 
-    private final BiFunction<LocaleSet, String, String> formatProperty = (key, value) ->
+    private final BiFunction<IEnumerableLocaleSet, String, String> formatProperty = (key, value) ->
         String.format("  `%s` :: %s", config.getLocaleText(key), value);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,28 +85,28 @@ public class DebugCmd extends AbstractManagerCommand {
         final BiFunction<String, String, String> formatter = (key, value) -> String.format("  `%s` :: %s", key, value);
         final List<String> debugData = new ArrayList<>(SystemProperty.getAllFormatted(config, formatter));
 
-        debugData.add(formatHeader.apply(LocaleSet.JVM_HEADER_DEBUG));
-        debugData.add(formatProperty.apply(LocaleSet.JVM_XMX_MEMORY_DEBUG, String.format("%d MB", totalM)));
-        debugData.add(formatProperty.apply(LocaleSet.JVM_USED_MEMORY_DEBUG, String.format("%d MB", usedM)));
+        debugData.add(formatHeader.apply(DebugLocaleSet.JVM_HEADER_DEBUG));
+        debugData.add(formatProperty.apply(DebugLocaleSet.JVM_XMX_MEMORY_DEBUG, String.format("%d MB", totalM)));
+        debugData.add(formatProperty.apply(DebugLocaleSet.JVM_USED_MEMORY_DEBUG, String.format("%d MB", usedM)));
 
-        debugData.add(formatHeader.apply(LocaleSet.GENERAL_HEADER_DEBUG));
-        debugData.add(formatProperty.apply(LocaleSet.BOT_VERSION_DEBUG, config.getProjectVersion()));
-        debugData.add(formatProperty.apply(LocaleSet.BOT_LOCALE_DEBUG, config.getProperty(BotProperty.J_SELECTED_LOCALE)));
-        debugData.add(formatProperty.apply(LocaleSet.CURRENT_GUILD_OWNER_TAG_DEBUG, ownerTag));
-        debugData.add(formatProperty.apply(LocaleSet.CURRENT_GUILD_ID_DEBUG, event.getGuild().getId()));
+        debugData.add(formatHeader.apply(DebugLocaleSet.GENERAL_HEADER_DEBUG));
+        debugData.add(formatProperty.apply(DebugLocaleSet.BOT_VERSION_DEBUG, config.getProjectVersion()));
+        debugData.add(formatProperty.apply(DebugLocaleSet.BOT_LOCALE_DEBUG, config.getProperty(BotProperty.J_SELECTED_LOCALE)));
+        debugData.add(formatProperty.apply(DebugLocaleSet.CURRENT_GUILD_OWNER_TAG_DEBUG, ownerTag));
+        debugData.add(formatProperty.apply(DebugLocaleSet.CURRENT_GUILD_ID_DEBUG, event.getGuild().getId()));
 
-        debugData.add(formatHeader.apply(LocaleSet.CONFIGURATION_HEADER_DEBUG));
-        debugData.add(formatProperty.apply(LocaleSet.DEFAULT_PREFIX_DEBUG, config.getProperty(BotProperty.J_PREFIX)));
-        debugData.add(formatProperty.apply(LocaleSet.ENABLE_SLASH_COMMANDS_DEBUG, slashStatus));
-        debugData.add(formatProperty.apply(LocaleSet.VOTE_MAX_WAITING_TIME_DEBUG, votingInactivityTime));
-        debugData.add(formatProperty.apply(LocaleSet.LEAVE_CHANNEL_WAITING_TIME_DEBUG, noTracksInactivityTime));
+        debugData.add(formatHeader.apply(DebugLocaleSet.CONFIGURATION_HEADER_DEBUG));
+        debugData.add(formatProperty.apply(DebugLocaleSet.DEFAULT_PREFIX_DEBUG, config.getProperty(BotProperty.J_PREFIX)));
+        debugData.add(formatProperty.apply(DebugLocaleSet.ENABLE_SLASH_COMMANDS_DEBUG, slashStatus));
+        debugData.add(formatProperty.apply(DebugLocaleSet.VOTE_MAX_WAITING_TIME_DEBUG, votingInactivityTime));
+        debugData.add(formatProperty.apply(DebugLocaleSet.LEAVE_CHANNEL_WAITING_TIME_DEBUG, noTracksInactivityTime));
 
-        debugData.add(formatHeader.apply(LocaleSet.VERSIONS_HEADER_DEBUG));
-        debugData.add(formatProperty.apply(LocaleSet.JDA_VERSION_DEBUG, JDAInfo.VERSION));
-        debugData.add(formatProperty.apply(LocaleSet.JDA_UTILITIES_VERSION_DEBUG, JDAUtilitiesInfo.VERSION));
-        debugData.add(formatProperty.apply(LocaleSet.LAVAPLAYER_VERSION_DEBUG, PlayerLibrary.VERSION));
+        debugData.add(formatHeader.apply(DebugLocaleSet.VERSIONS_HEADER_DEBUG));
+        debugData.add(formatProperty.apply(DebugLocaleSet.JDA_VERSION_DEBUG, JDAInfo.VERSION));
+        debugData.add(formatProperty.apply(DebugLocaleSet.JDA_UTILITIES_VERSION_DEBUG, JDAUtilitiesInfo.VERSION));
+        debugData.add(formatProperty.apply(DebugLocaleSet.LAVAPLAYER_VERSION_DEBUG, PlayerLibrary.VERSION));
 
-        final MessageEmbed messageEmbed = embedBuilder.createMessage(LocaleSet.DEBUG_DATA_MESS);
+        final MessageEmbed messageEmbed = embedBuilder.createMessage(ResLocaleSet.DEBUG_DATA_MESS);
         final Paginator debugPagination = pagination.createDefaultPaginator(debugData);
         event.appendEmbedMessage(messageEmbed, () -> debugPagination.display(event.getTextChannel()));
     }

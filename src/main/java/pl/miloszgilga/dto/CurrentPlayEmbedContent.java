@@ -24,13 +24,13 @@
 
 package pl.miloszgilga.dto;
 
-import pl.miloszgilga.core.LocaleSet;
+import pl.miloszgilga.locale.ResLocaleSet;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 public record CurrentPlayEmbedContent(
-    LocaleSet playingPauseMessage,
-    LocaleSet playingVisualizationTrack,
+    ResLocaleSet playingPauseMessage,
+    ResLocaleSet playingVisualizationTrack,
     String trackUrl,
     String thumbnailUrl,
     String addedByTag,

@@ -31,11 +31,12 @@ import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.Utilities;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
-import pl.miloszgilga.core.LocaleSet;
+import pl.miloszgilga.core.IEnumerableLocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -55,9 +56,9 @@ public class InfiniteLoopTrackCmd extends AbstractMusicCommand {
     @Override
     protected void doExecuteMusicCommand(CommandEventWrapper event) {
         final boolean isRepeating = playerManager.toggleInfiniteLoopCurrentTrack(event);
-        LocaleSet messsage = LocaleSet.REMOVE_TRACK_FROM_INFINITE_LOOP_MESS;
+        IEnumerableLocaleSet messsage = ResLocaleSet.REMOVE_TRACK_FROM_INFINITE_LOOP_MESS;
         if (isRepeating) {
-            messsage = LocaleSet.ADD_TRACK_TO_INFINITE_LOOP_MESS;
+            messsage = ResLocaleSet.ADD_TRACK_TO_INFINITE_LOOP_MESS;
         }
         final AudioTrackInfo playingTrack = playerManager.getCurrentPlayingTrack(event);
         final MessageEmbed messageEmbed = embedBuilder.createMessage(messsage, Map.of(

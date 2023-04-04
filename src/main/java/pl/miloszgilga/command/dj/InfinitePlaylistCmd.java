@@ -29,11 +29,12 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
-import pl.miloszgilga.core.LocaleSet;
+import pl.miloszgilga.core.IEnumerableLocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -53,9 +54,9 @@ public class InfinitePlaylistCmd extends AbstractDjCommand {
     @Override
     protected void doExecuteDjCommand(CommandEventWrapper event) {
         final boolean isPlaylistRepeating = playerManager.toggleInfinitePlaylistLoop(event);
-        LocaleSet messsage = LocaleSet.REMOVE_PLAYLIST_FROM_INFINITE_LOOP_MESS;
+        IEnumerableLocaleSet messsage = ResLocaleSet.REMOVE_PLAYLIST_FROM_INFINITE_LOOP_MESS;
         if (isPlaylistRepeating) {
-            messsage = LocaleSet.ADD_PLAYLIST_TO_INFINITE_LOOP_MESS;
+            messsage = ResLocaleSet.ADD_PLAYLIST_TO_INFINITE_LOOP_MESS;
         }
         final MessageEmbed messageEmbed = embedBuilder.createMessage(messsage, Map.of(
             "playlistLoopCmd", BotCommand.INFINITE_PLAYLIST.parseWithPrefix(config)

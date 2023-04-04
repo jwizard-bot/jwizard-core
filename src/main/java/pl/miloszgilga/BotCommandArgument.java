@@ -67,7 +67,7 @@ public enum BotCommandArgument {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static List<OptionData> fabricateSlashOptions(BotConfiguration config, BotCommand originCmd) {
-        if (StringUtils.isBlank(originCmd.getArgSyntax())) return List.of();
+        if (Objects.isNull(originCmd.getArgSyntax())) return List.of();
         final String syntaxDesc = config.getLocaleText(originCmd.getArgSyntax());
         return Arrays.stream(values())
             .filter(v -> v.command.equals(originCmd))
@@ -117,6 +117,8 @@ public enum BotCommandArgument {
     public static int count(BotCommand command) {
         return getAllArgsForCommand(command).size();
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @SuppressWarnings("unchecked")
     public <T> T parse(Object rawArg) {

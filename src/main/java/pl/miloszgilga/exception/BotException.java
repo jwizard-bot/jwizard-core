@@ -27,7 +27,7 @@ package pl.miloszgilga.exception;
 import java.util.Map;
 import java.util.HashMap;
 
-import pl.miloszgilga.core.LocaleSet;
+import pl.miloszgilga.core.IEnumerableLocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,13 +35,13 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 public class BotException extends RuntimeException {
 
     private final BugTracker bugTracker;
-    private final LocaleSet langPattern;
+    private final IEnumerableLocaleSet langPattern;
     private final BotConfiguration config;
     private Map<String, Object> arguments = new HashMap<>();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public BotException(BotConfiguration config, LocaleSet langPattern, BugTracker bugTracker) {
+    public BotException(BotConfiguration config, IEnumerableLocaleSet langPattern, BugTracker bugTracker) {
         this.config = config;
         this.langPattern = langPattern;
         this.bugTracker = bugTracker;
@@ -49,7 +49,9 @@ public class BotException extends RuntimeException {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public BotException(BotConfiguration config, LocaleSet langPattern, Map<String, Object> arguments, BugTracker bugTracker) {
+    public BotException(
+        BotConfiguration config, IEnumerableLocaleSet langPattern, Map<String, Object> arguments, BugTracker bugTracker
+    ) {
         this.config = config;
         this.langPattern = langPattern;
         this.arguments = arguments;
@@ -60,7 +62,7 @@ public class BotException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return config.getLocaleText(LocaleSet.findByHolder(langPattern.getHolder()), arguments);
+        return config.getLocaleText(langPattern, arguments);
     }
 
     public BugTracker getBugTracker() {

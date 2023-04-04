@@ -25,13 +25,13 @@
 package pl.miloszgilga.command.vote;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.vote.VoteEmbedResponse;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.audioplayer.SchedulerActions;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractVoteMusicCommand;
-import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -52,14 +52,14 @@ public class VoteStopAndClearQueueCmd extends AbstractVoteMusicCommand {
         final SchedulerActions actions = playerManager.getMusicManager(event).getActions();
         return new VoteEmbedResponse(
             VoteStopAndClearQueueCmd.class,
-            embedBuilder.createInitialVoteMessage(event, LocaleSet.VOTE_STOP_CLEAR_QUEUE_MESS),
+            embedBuilder.createInitialVoteMessage(event, ResLocaleSet.VOTE_STOP_CLEAR_QUEUE_MESS),
             ed -> {
                 actions.clearAndDestroy(false);
                 actions.leaveAndSendMessageAfterInactivity();
-                return embedBuilder.createSuccessVoteMessage(LocaleSet.SUCCESS_VOTE_STOP_CLEAR_QUEUE_MESS, ed);
+                return embedBuilder.createSuccessVoteMessage(ResLocaleSet.SUCCESS_VOTE_STOP_CLEAR_QUEUE_MESS, ed);
             },
-            ed -> embedBuilder.createFailureVoteMessage(LocaleSet.FAILURE_VOTE_STOP_CLEAR_QUEUE_MESS, ed),
-            ed -> embedBuilder.createTimeoutVoteMessage(LocaleSet.FAILURE_VOTE_STOP_CLEAR_QUEUE_MESS, ed)
+            ed -> embedBuilder.createFailureVoteMessage(ResLocaleSet.FAILURE_VOTE_STOP_CLEAR_QUEUE_MESS, ed),
+            ed -> embedBuilder.createTimeoutVoteMessage(ResLocaleSet.FAILURE_VOTE_STOP_CLEAR_QUEUE_MESS, ed)
         );
     }
 }

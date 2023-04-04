@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: PauseTrackEmbedContent.java
- * Last modified: 16/03/2023, 19:32
+ * File name: IEnumerableLocaleSet.java
+ * Last modified: 04/04/2023, 18:15
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -22,20 +22,10 @@
  * or other dealings in the software.
  */
 
-package pl.miloszgilga.dto;
-
-import java.util.Map;
-
-import pl.miloszgilga.locale.ResLocaleSet;
+package pl.miloszgilga.core;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-public record PauseTrackEmbedContent(
-    ResLocaleSet localeSet,
-    Map<String, Object> localeVariables,
-    String pausedTimestamp,
-    String estimatedDuration,
-    String totalDuration,
-    String pausedVisualizationTrack
-) {
+public interface IEnumerableLocaleSet {
+    String getHolder();
 }

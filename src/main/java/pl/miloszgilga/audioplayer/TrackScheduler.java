@@ -43,11 +43,12 @@ import java.util.concurrent.TimeUnit;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.JDALog;
+import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.misc.QueueAfterParam;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.exception.BugTracker;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
-import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -107,14 +108,14 @@ public class TrackScheduler extends AudioEventAdapter {
         final MessageEmbed messageEmbed;
 
         if (audioPlayer.isPaused()) {
-            messageEmbed = builder.createTrackMessage(LocaleSet.ON_TRACK_START_ON_PAUSED_MESS, Map.of(
+            messageEmbed = builder.createTrackMessage(ResLocaleSet.ON_TRACK_START_ON_PAUSED_MESS, Map.of(
                 "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
                 "resumeCmd", BotCommand.RESUME_TRACK.parseWithPrefix(config)
             ), trackInfo.getThumbnailUrl());
             JDALog.info(log, deliveryEvent, "Staring playing audio track: '%s' when audio player is paused",
                 trackInfo.title);
         } else {
-            messageEmbed = builder.createTrackMessage(LocaleSet.ON_TRACK_START_MESS, Map.of(
+            messageEmbed = builder.createTrackMessage(ResLocaleSet.ON_TRACK_START_MESS, Map.of(
                 "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri)
             ), trackInfo.getThumbnailUrl());
             JDALog.info(log, deliveryEvent, "Staring playing audio track: '%s'", trackInfo.title);
@@ -130,7 +131,7 @@ public class TrackScheduler extends AudioEventAdapter {
         if (actions.isOnClearing()) return;
         final boolean isNoneRepeating = !actions.isInfiniteRepeating() && actions.getCountOfRepeats() == 0;
         if (Objects.isNull(audioPlayer.getPlayingTrack()) && actions.getTrackQueue().isEmpty() && isNoneRepeating) {
-            final MessageEmbed messageEmbed = builder.createMessage(LocaleSet.ON_END_PLAYBACK_QUEUE_MESS);
+            final MessageEmbed messageEmbed = builder.createMessage(ResLocaleSet.ON_END_PLAYBACK_QUEUE_MESS);
             deliveryEvent.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
             JDALog.info(log, deliveryEvent, "End of playing queue tracks");
 
@@ -153,9 +154,9 @@ public class TrackScheduler extends AudioEventAdapter {
             final int currentRepeat = actions.getCurrentRepeat();
 
             final MessageEmbed messageEmbed = builder
-                .createMessage(LocaleSet.MULTIPLE_REPEATING_TRACK_INFO_MESS, Map.of(
+                .createMessage(ResLocaleSet.MULTIPLE_REPEATING_TRACK_INFO_MESS, Map.of(
                     "currentRepeat", currentRepeat,
-                    "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
+                    "track", Utilities.getRichTrackTitle(trackInfo),
                     "elapsedRepeats", actions.decreaseCountOfRepeats()
                 ));
             audioPlayer.startTrack(track.makeClone(), false);
@@ -175,7 +176,7 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException ex) {
         final MessageEmbed messageEmbed = builder.createErrorMessage(deliveryEvent,
-            config.getLocaleText(LocaleSet.ISSUE_WHILE_PLAYING_TRACK_MESS), BugTracker.ISSUE_WHILE_PLAYING_TRACK);
+            config.getLocaleText(ResLocaleSet.ISSUE_WHILE_PLAYING_TRACK_MESS), BugTracker.ISSUE_WHILE_PLAYING_TRACK);
         deliveryEvent.sendEmbedMessage(messageEmbed);
         JDALog.error(log, deliveryEvent, "Unexpected issue while playing track: '%s'. Cause: %s", ex.getMessage());
     }

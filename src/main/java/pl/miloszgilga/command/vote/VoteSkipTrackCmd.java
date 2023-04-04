@@ -30,12 +30,12 @@ import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.Utilities;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.vote.VoteEmbedResponse;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractVoteMusicCommand;
-import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -61,13 +61,13 @@ public class VoteSkipTrackCmd extends AbstractVoteMusicCommand {
         );
         return new VoteEmbedResponse(
             VoteSkipTrackCmd.class,
-            embedBuilder.createInitialVoteMessage(event, LocaleSet.VOTE_SKIP_TRACK_MESS, attributes),
+            embedBuilder.createInitialVoteMessage(event, ResLocaleSet.VOTE_SKIP_TRACK_MESS, attributes),
             ed -> {
                 playerManager.skipCurrentTrack(event);
-                return embedBuilder.createSuccessVoteMessage(LocaleSet.SUCCESS_VOTE_SKIP_TRACK_MESS, attributes, ed);
+                return embedBuilder.createSuccessVoteMessage(ResLocaleSet.SUCCESS_VOTE_SKIP_TRACK_MESS, attributes, ed);
             },
-            ed -> embedBuilder.createFailureVoteMessage(LocaleSet.FAILURE_VOTE_SKIP_TRACK_MESS, attributes, ed),
-            ed -> embedBuilder.createTimeoutVoteMessage(LocaleSet.FAILURE_VOTE_SKIP_TRACK_MESS, attributes, ed)
+            ed -> embedBuilder.createFailureVoteMessage(ResLocaleSet.FAILURE_VOTE_SKIP_TRACK_MESS, attributes, ed),
+            ed -> embedBuilder.createTimeoutVoteMessage(ResLocaleSet.FAILURE_VOTE_SKIP_TRACK_MESS, attributes, ed)
         );
     }
 }

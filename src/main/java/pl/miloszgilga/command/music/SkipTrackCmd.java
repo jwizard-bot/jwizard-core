@@ -31,11 +31,11 @@ import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.Utilities;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
-import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -56,7 +56,7 @@ public class SkipTrackCmd extends AbstractMusicCommand {
     protected void doExecuteMusicCommand(CommandEventWrapper event) {
         final AudioTrackInfo skippedTrack = playerManager.skipCurrentTrack(event);
 
-        final MessageEmbed messageEmbed = embedBuilder.createMessage(LocaleSet.SKIP_TRACK_AND_PLAY_NEXT_MESS, Map.of(
+        final MessageEmbed messageEmbed = embedBuilder.createMessage(ResLocaleSet.SKIP_TRACK_AND_PLAY_NEXT_MESS, Map.of(
             "skippedTrack", Utilities.getRichTrackTitle(skippedTrack)
         ));
         event.appendEmbedMessage(messageEmbed);

@@ -57,12 +57,12 @@ public abstract class AbstractCommand extends SlashCommand {
 
     public AbstractCommand(BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder) {
         this.name = command.getName();
-        this.help = config.getLocaleText(command.getDescriptionHolder());
+        this.help = config.getLocaleText(command.getDescriptionLocaleSet());
         this.aliases = command.getAliases();
         this.command = command;
         this.config = config;
         this.embedBuilder = embedBuilder;
-        this.arguments = command.getArgSyntax();
+        this.arguments = config.getLocaleText(command.getArgSyntax());
         this.guildOnly = false;
         this.options = BotCommandArgument.fabricateSlashOptions(config, command);
     }

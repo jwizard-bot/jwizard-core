@@ -26,22 +26,22 @@ package pl.miloszgilga.misc;
 
 import lombok.RequiredArgsConstructor;
 
-import pl.miloszgilga.core.LocaleSet;
+import pl.miloszgilga.locale.CategoryLocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @RequiredArgsConstructor
 public enum CommandCategory {
-    MUSIC               (LocaleSet.COMMAND_CATEGORY_MUSIC),
-    DJ                  (LocaleSet.COMMAND_CATEGORY_DJ_ROLE),
-    STATISTICS          (LocaleSet.COMMAND_CATEGORY_STATISTICS),
-    OWNER_MANAGER       (LocaleSet.COMMAND_CATEGORY_OWNER_AND_MANAGER),
-    OTHERS              (LocaleSet.COMMAND_CATEGORY_OTHERS);
+    MUSIC               (CategoryLocaleSet.COMMAND_CATEGORY_MUSIC),
+    DJ                  (CategoryLocaleSet.COMMAND_CATEGORY_DJ_ROLE),
+    STATISTICS          (CategoryLocaleSet.COMMAND_CATEGORY_STATISTICS),
+    OWNER_MANAGER       (CategoryLocaleSet.COMMAND_CATEGORY_OWNER_AND_MANAGER),
+    OTHERS              (CategoryLocaleSet.COMMAND_CATEGORY_OTHERS);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private final LocaleSet localeSet;
+    private final CategoryLocaleSet localeSet;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
