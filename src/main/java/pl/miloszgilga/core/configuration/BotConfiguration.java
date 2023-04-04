@@ -24,6 +24,8 @@
 
 package pl.miloszgilga.core.configuration;
 
+import lombok.Getter;
+import lombok.AccessLevel;
 import lombok.extern.slf4j.Slf4j;
 
 import net.dv8tion.jda.api.JDA;
@@ -68,10 +70,13 @@ public class BotConfiguration {
     private final CommandLineParser commandLineParser = new DefaultParser();
     private final HelpFormatter helpFormatter = new HelpFormatter();
     private final Dotenv dotenv = Dotenv.configure().systemProperties().load();
-    private final EventWaiter eventWaiter = new EventWaiter();
+
+    @Getter(value = AccessLevel.PUBLIC)     private final EventWaiter eventWaiter = new EventWaiter();
+    @Getter(value = AccessLevel.PUBLIC)     private String projectVersion;
 
     private ResourceBundle localeBundle;
 
+    @Getter(value = AccessLevel.PUBLIC)
     private final ScheduledExecutorService threadPool = Executors.newSingleThreadScheduledExecutor(r -> {
         final Thread thread = new Thread(r);
         thread.setDaemon(true);
@@ -265,17 +270,5 @@ public class BotConfiguration {
 
     public String getLocaleText(String localeHolder) {
         return getLocaleText(LocaleSet.findByHolder(localeHolder), Map.of());
-    }
-
-    public String getProjectVersion() {
-        return projectVersion;
-    }
-
-    public ScheduledExecutorService getThreadPool() {
-        return threadPool;
-    }
-
-    public EventWaiter getEventWaiter() {
-        return eventWaiter;
     }
 }

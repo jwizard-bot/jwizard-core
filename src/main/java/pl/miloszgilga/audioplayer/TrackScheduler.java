@@ -24,6 +24,8 @@
 
 package pl.miloszgilga.audioplayer;
 
+import lombok.Getter;
+import lombok.AccessLevel;
 import lombok.extern.slf4j.Slf4j;
 
 import net.dv8tion.jda.api.entities.Member;
@@ -58,10 +60,11 @@ public class TrackScheduler extends AudioEventAdapter {
 
     private final BotConfiguration config;
     private final EmbedMessageBuilder builder;
-    private final AudioPlayer audioPlayer;
-    private final SchedulerActions actions;
 
-    private CommandEventWrapper deliveryEvent;
+    @Getter(value = AccessLevel.PUBLIC)     private CommandEventWrapper deliveryEvent;
+    @Getter(value = AccessLevel.PACKAGE)    private final AudioPlayer audioPlayer;
+    @Getter(value = AccessLevel.PACKAGE)    private final SchedulerActions actions;
+
     private ScheduledFuture<?> threadCountToLeave;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -195,19 +198,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public CommandEventWrapper getDeliveryEvent() {
-        return deliveryEvent;
-    }
-
     public void setDeliveryEvent(CommandEventWrapper event) {
         this.deliveryEvent = event;
-    }
-
-    AudioPlayer getAudioPlayer() {
-        return audioPlayer;
-    }
-
-    SchedulerActions getActions() {
-        return actions;
     }
 }

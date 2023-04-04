@@ -24,6 +24,8 @@
 
 package pl.miloszgilga.audioplayer;
 
+import lombok.Getter;
+import lombok.AccessLevel;
 import lombok.extern.slf4j.Slf4j;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -50,17 +52,18 @@ public class SchedulerActions {
     private final AudioPlayer audioPlayer;
     private final BotConfiguration config;
     private final EmbedMessageBuilder builder;
-
-    private final Queue<AudioQueueExtendedInfo> trackQueue = new LinkedList<>();
-
-    private AudioTrack pausedTrack;
     private final CommandEventWrapper deliveryEvent;
-    private int countOfRepeats = 0;
+
+    @Getter(value = AccessLevel.PACKAGE)    private final Queue<AudioQueueExtendedInfo> trackQueue = new LinkedList<>();
+
+    @Getter(value = AccessLevel.PUBLIC)     private AudioTrack pausedTrack;
+    @Getter(value = AccessLevel.PACKAGE)    private boolean onClearing = false;
+    @Getter(value = AccessLevel.PACKAGE)    private boolean infiniteRepeating = false;
+    @Getter(value = AccessLevel.PACKAGE)    private boolean infinitePlaylistRepeating = false;
+    @Getter(value = AccessLevel.PACKAGE)    private int countOfRepeats = 0;
+    @Getter(value = AccessLevel.PACKAGE)    private boolean nextTrackInfoDisabled = false;
+
     private int totalCountOfRepeats = 0;
-    private boolean onClearing = false;
-    private boolean nextTrackInfoDisabled = false;
-    private boolean infiniteRepeating = false;
-    private boolean infinitePlaylistRepeating = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -200,22 +203,11 @@ public class SchedulerActions {
         }
     }
 
-    public AudioTrack getPausedTrack()                              { return pausedTrack; }
-    boolean isOnClearing()                                          { return onClearing; }
-
-    Queue<AudioQueueExtendedInfo> getTrackQueue()                   { return trackQueue; }
     void addToQueue(AudioQueueExtendedInfo track)                   { trackQueue.add(track); }
     void setCurrentPausedTrack()                                    { pausedTrack = audioPlayer.getPlayingTrack(); }
     void clearPausedTrack()                                         { pausedTrack = null; }
-
-    boolean isInfiniteRepeating()                                   { return infiniteRepeating; }
-    boolean isInfinitePlaylistRepeating()                           { return infinitePlaylistRepeating; }
     void setInfiniteRepeating(boolean infiniteRepeating)            { this.infiniteRepeating = infiniteRepeating; }
-
     int decreaseCountOfRepeats()                                    { return --countOfRepeats; }
     int getCurrentRepeat()                                          { return (totalCountOfRepeats - countOfRepeats) + 1; }
-    int getCountOfRepeats()                                         { return countOfRepeats; }
-
-    boolean isNextTrackInfoDisabled()                               { return nextTrackInfoDisabled; }
     void setNextTrackInfoDisabled(boolean nextTrackInfoDisabled)    { this.nextTrackInfoDisabled = nextTrackInfoDisabled; }
 }

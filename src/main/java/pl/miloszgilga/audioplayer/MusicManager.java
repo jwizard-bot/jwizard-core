@@ -24,6 +24,8 @@
 
 package pl.miloszgilga.audioplayer;
 
+import lombok.Getter;
+import lombok.AccessLevel;
 import lombok.extern.slf4j.Slf4j;
 
 import net.dv8tion.jda.api.entities.Guild;
@@ -43,9 +45,10 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 public class MusicManager {
 
     private final BotConfiguration config;
-    private final AudioPlayer audioPlayer;
-    private final TrackScheduler trackScheduler;
-    private final AudioPlayerSendHandler audioPlayerSendHandler;
+
+    @Getter(value = AccessLevel.PUBLIC)     private final AudioPlayer audioPlayer;
+    @Getter(value = AccessLevel.PUBLIC)     private final TrackScheduler trackScheduler;
+    @Getter(value = AccessLevel.PUBLIC)     private final AudioPlayerSendHandler audioPlayerSendHandler;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -62,18 +65,6 @@ public class MusicManager {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public AudioPlayerSendHandler getAudioPlayerSendHandler() {
-        return audioPlayerSendHandler;
-    }
-
-    public AudioPlayer getAudioPlayer() {
-        return audioPlayer;
-    }
-
-    public TrackScheduler getTrackScheduler() {
-        return trackScheduler;
-    }
 
     public SchedulerActions getActions() {
         return trackScheduler.getActions();
