@@ -36,12 +36,16 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ScheduledFuture;
 
 import pl.miloszgilga.misc.JDALog;
+import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.TrackPosition;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.LocaleSet;
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,6 +66,7 @@ public class SchedulerActions {
     @Getter(value = AccessLevel.PACKAGE)    private boolean infinitePlaylistRepeating = false;
     @Getter(value = AccessLevel.PACKAGE)    private int countOfRepeats = 0;
     @Getter(value = AccessLevel.PACKAGE)    private boolean nextTrackInfoDisabled = false;
+    @Getter(value = AccessLevel.PACKAGE)    private ScheduledFuture<?> threadCountToLeave;
 
     private int totalCountOfRepeats = 0;
 
@@ -170,6 +175,23 @@ public class SchedulerActions {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public void leaveAndSendMessageAfterInactivity() {
+        final int timeToLeaveChannel = config.getProperty(BotProperty.J_INACTIVITY_NO_TRACK_TIMEOUT, Integer.class);
+        threadCountToLeave = config.getThreadPool().schedule(() -> {
+            final MessageEmbed leaveMessageEmbed = builder
+                .createMessage(LocaleSet.LEAVE_END_PLAYBACK_QUEUE_MESS, Map.of(
+                    "elapsed", Utilities.convertSecondsToMinutes(timeToLeaveChannel)
+                ));
+            clearAndDestroy(false);
+            closeAudioConnection();
+
+            deliveryEvent.getTextChannel().sendMessageEmbeds(leaveMessageEmbed).queue();
+            JDALog.info(log, deliveryEvent, "Leave voice channel after '%s' seconds of inactivity", timeToLeaveChannel);
+        }, timeToLeaveChannel, TimeUnit.SECONDS);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     String getTrackPositionInQueue() {
         if (trackQueue.size() == 1) return config.getLocaleText(LocaleSet.NEXT_TRACK_INDEX_MESS);
         return Integer.toString(trackQueue.size());
@@ -208,6 +230,7 @@ public class SchedulerActions {
         }
     }
 
+    void cancelIdleThread()                                         { threadCountToLeave.cancel(true); }
     void addToQueue(AudioQueueExtendedInfo track)                   { trackQueue.add(track); }
     void setCurrentPausedTrack()                                    { pausedTrack = audioPlayer.getPlayingTrack(); }
     void clearPausedTrack()                                         { pausedTrack = null; }

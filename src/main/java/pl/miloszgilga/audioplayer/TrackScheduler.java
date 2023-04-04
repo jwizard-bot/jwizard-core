@@ -40,17 +40,14 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.ScheduledFuture;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.JDALog;
-import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.misc.QueueAfterParam;
 import pl.miloszgilga.exception.BugTracker;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.LocaleSet;
-import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,8 +61,6 @@ public class TrackScheduler extends AudioEventAdapter {
     @Getter(value = AccessLevel.PUBLIC)     private CommandEventWrapper deliveryEvent;
     @Getter(value = AccessLevel.PACKAGE)    private final AudioPlayer audioPlayer;
     @Getter(value = AccessLevel.PACKAGE)    private final SchedulerActions actions;
-
-    private ScheduledFuture<?> threadCountToLeave;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -105,7 +100,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
-        if (!Objects.isNull(threadCountToLeave)) threadCountToLeave.cancel(true);
+        if (!Objects.isNull(actions.getThreadCountToLeave())) actions.cancelIdleThread();
         if (actions.isNextTrackInfoDisabled() || actions.isOnClearing()) return;
 
         final ExtendedAudioTrackInfo trackInfo = new ExtendedAudioTrackInfo(audioPlayer.getPlayingTrack());
@@ -140,18 +135,7 @@ public class TrackScheduler extends AudioEventAdapter {
             JDALog.info(log, deliveryEvent, "End of playing queue tracks");
 
             actions.setNextTrackInfoDisabled(false);
-            final int timeToLeaveChannel = config.getProperty(BotProperty.J_INACTIVITY_NO_TRACK_TIMEOUT, Integer.class);
-            threadCountToLeave = config.getThreadPool().schedule(() -> {
-                final MessageEmbed leaveMessageEmbed = builder
-                    .createMessage(LocaleSet.LEAVE_END_PLAYBACK_QUEUE_MESS, Map.of(
-                        "elapsed", Utilities.convertSecondsToMinutes(timeToLeaveChannel)
-                    ));
-                actions.clearAndDestroy(false);
-                actions.closeAudioConnection();
-
-                deliveryEvent.getTextChannel().sendMessageEmbeds(leaveMessageEmbed).queue();
-                JDALog.info(log, deliveryEvent, "Leave voice channel after '%s' seconds of inactivity", timeToLeaveChannel);
-            }, timeToLeaveChannel, TimeUnit.SECONDS);
+            actions.leaveAndSendMessageAfterInactivity();
             return;
         }
         if (actions.isInfiniteRepeating()) {

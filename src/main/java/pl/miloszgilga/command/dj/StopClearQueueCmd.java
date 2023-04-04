@@ -32,8 +32,8 @@ import java.util.Objects;
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.CommandEventWrapper;
-import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.audioplayer.PlayerManager;
+import pl.miloszgilga.audioplayer.SchedulerActions;
 import pl.miloszgilga.audioplayer.ExtendedAudioTrackInfo;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
@@ -55,9 +55,12 @@ public class StopClearQueueCmd extends AbstractDjCommand {
 
     @Override
     protected void doExecuteDjCommand(CommandEventWrapper event) {
-        final MusicManager musicManager = playerManager.getMusicManager(event);
+        final SchedulerActions actions = playerManager.getMusicManager(event).getActions();
         final ExtendedAudioTrackInfo currentTrack = playerManager.getCurrentPlayingTrack(event);
-        musicManager.getActions().clearAndDestroy(false);
+
+        actions.clearAndDestroy(false);
+        actions.leaveAndSendMessageAfterInactivity();
+
         MessageEmbed messageEmbed;
         if (!Objects.isNull(currentTrack)) {
             messageEmbed = embedBuilder.createMessage(LocaleSet.SKIPPED_CURRENT_TRACK_AND_CLEAR_QUEUE_MESS, Map.of(
