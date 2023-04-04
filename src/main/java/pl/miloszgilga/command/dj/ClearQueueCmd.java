@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: StopClearQueueCmd.java
- * Last modified: 19/03/2023, 14:55
+ * File name: ClearQueueCmd.java
+ * Last modified: 04/04/2023, 16:46
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -27,27 +27,26 @@ package pl.miloszgilga.command.dj;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.Map;
-import java.util.Objects;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.CommandEventWrapper;
+import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.audioplayer.PlayerManager;
-import pl.miloszgilga.audioplayer.SchedulerActions;
-import pl.miloszgilga.audioplayer.ExtendedAudioTrackInfo;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
 import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
+import static pl.miloszgilga.exception.AudioPlayerException.TrackQueueIsEmptyException;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @JDAInjectableCommandLazyService
-public class StopClearQueueCmd extends AbstractDjCommand {
+public class ClearQueueCmd extends AbstractDjCommand {
 
-    StopClearQueueCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
-        super(BotCommand.STOP_CLEAR_QUEUE, config, playerManager, embedBuilder);
+    ClearQueueCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
+        super(BotCommand.CLEAR_QUEUE, config, playerManager, embedBuilder);
         super.onSameChannelWithBot = true;
     }
 
@@ -55,23 +54,14 @@ public class StopClearQueueCmd extends AbstractDjCommand {
 
     @Override
     protected void doExecuteDjCommand(CommandEventWrapper event) {
-        final SchedulerActions actions = playerManager.getMusicManager(event).getActions();
-        final ExtendedAudioTrackInfo currentTrack = playerManager.getCurrentPlayingTrack(event);
-        final int countOfTracks = actions.getQueueSize();
-
-        actions.clearAndDestroy(false);
-        actions.leaveAndSendMessageAfterInactivity();
-
-        MessageEmbed messageEmbed;
-        if (!Objects.isNull(currentTrack)) {
-            messageEmbed = embedBuilder.createMessage(LocaleSet.SKIPPED_CURRENT_TRACK_AND_CLEAR_QUEUE_MESS, Map.of(
-                "currentTrack", Utilities.getRichTrackTitle(currentTrack)
-            ));
-        } else {
-            messageEmbed = embedBuilder.createMessage(LocaleSet.CLEAR_QUEUE_MESS, Map.of(
-                "countOfTracks", countOfTracks
-            ));
+        final MusicManager musicManager = playerManager.getMusicManager(event);
+        if (musicManager.getQueue().isEmpty()) {
+            throw new TrackQueueIsEmptyException(config, event);
         }
+        final int removedTracks = playerManager.clearQueue(event);
+        final MessageEmbed messageEmbed = embedBuilder.createMessage(LocaleSet.CLEAR_QUEUE_MESS, Map.of(
+            "countOfTracks", removedTracks
+        ));
         event.appendEmbedMessage(messageEmbed);
     }
 }

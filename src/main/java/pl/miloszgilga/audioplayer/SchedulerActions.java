@@ -230,6 +230,8 @@ public class SchedulerActions {
         }
     }
 
+    void clearQueue()                                               { trackQueue.clear(); }
+    public int getQueueSize()                                       { return trackQueue.size(); }
     void cancelIdleThread()                                         { threadCountToLeave.cancel(true); }
     void addToQueue(AudioQueueExtendedInfo track)                   { trackQueue.add(track); }
     void setCurrentPausedTrack()                                    { pausedTrack = audioPlayer.getPlayingTrack(); }

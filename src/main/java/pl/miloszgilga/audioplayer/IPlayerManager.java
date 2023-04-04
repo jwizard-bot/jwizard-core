@@ -48,4 +48,5 @@ interface IPlayerManager {
     boolean toggleInfinitePlaylistLoop(CommandEventWrapper event);
     VoiceChannel moveToMemberCurrentVoiceChannel(CommandEventWrapper event);
     AudioTrack moveTrackToSelectedPosition(CommandEventWrapper event, TrackPosition position);
+    int clearQueue(CommandEventWrapper event);
 }

@@ -273,6 +273,17 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    @Override
+    public int clearQueue(CommandEventWrapper event) {
+        final MusicManager musicManager = getMusicManager(event);
+        final int countOfTracksInQueue = musicManager.getQueue().size();
+        musicManager.getActions().clearQueue();
+        JDALog.info(log, event, "Queue was cleared. Removed '%d' audio tracks from queue.", countOfTracksInQueue);
+        return countOfTracksInQueue;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private MusicManager checkPermissions(CommandEventWrapper event) {
         final MusicManager musicManager = getMusicManager(event);
         final AudioTrack playingTrack = musicManager.getAudioPlayer().getPlayingTrack();

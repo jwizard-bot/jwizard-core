@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: StopClearQueueCmd.java
- * Last modified: 19/03/2023, 14:55
+ * File name: VoteClearQueueCmd.java
+ * Last modified: 04/04/2023, 17:10
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -22,56 +22,53 @@
  * or other dealings in the software.
  */
 
-package pl.miloszgilga.command.dj;
-
-import net.dv8tion.jda.api.entities.MessageEmbed;
+package pl.miloszgilga.command.vote;
 
 import java.util.Map;
-import java.util.Objects;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.CommandEventWrapper;
+import pl.miloszgilga.vote.VoteEmbedResponse;
+import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.audioplayer.PlayerManager;
-import pl.miloszgilga.audioplayer.SchedulerActions;
-import pl.miloszgilga.audioplayer.ExtendedAudioTrackInfo;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
-import pl.miloszgilga.command.AbstractDjCommand;
+import pl.miloszgilga.command.AbstractVoteMusicCommand;
 import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
+import static pl.miloszgilga.exception.AudioPlayerException.TrackQueueIsEmptyException;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @JDAInjectableCommandLazyService
-public class StopClearQueueCmd extends AbstractDjCommand {
+public class VoteClearQueueCmd extends AbstractVoteMusicCommand {
 
-    StopClearQueueCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
-        super(BotCommand.STOP_CLEAR_QUEUE, config, playerManager, embedBuilder);
+    VoteClearQueueCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
+        super(BotCommand.VOTE_CLEAR_QUEUE, config, playerManager, embedBuilder);
         super.onSameChannelWithBot = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected void doExecuteDjCommand(CommandEventWrapper event) {
-        final SchedulerActions actions = playerManager.getMusicManager(event).getActions();
-        final ExtendedAudioTrackInfo currentTrack = playerManager.getCurrentPlayingTrack(event);
-        final int countOfTracks = actions.getQueueSize();
-
-        actions.clearAndDestroy(false);
-        actions.leaveAndSendMessageAfterInactivity();
-
-        MessageEmbed messageEmbed;
-        if (!Objects.isNull(currentTrack)) {
-            messageEmbed = embedBuilder.createMessage(LocaleSet.SKIPPED_CURRENT_TRACK_AND_CLEAR_QUEUE_MESS, Map.of(
-                "currentTrack", Utilities.getRichTrackTitle(currentTrack)
-            ));
-        } else {
-            messageEmbed = embedBuilder.createMessage(LocaleSet.CLEAR_QUEUE_MESS, Map.of(
-                "countOfTracks", countOfTracks
-            ));
+    protected VoteEmbedResponse doExecuteVoteMusicCommand(CommandEventWrapper event) {
+        final MusicManager musicManager = playerManager.getMusicManager(event);
+        if (musicManager.getQueue().isEmpty()) {
+            throw new TrackQueueIsEmptyException(config, event);
         }
-        event.appendEmbedMessage(messageEmbed);
+        final Map<String, Object> attributes = Map.of(
+            "countOfTracks", musicManager.getQueue().size()
+        );
+        return new VoteEmbedResponse(
+            VoteClearQueueCmd.class,
+            embedBuilder.createInitialVoteMessage(event, LocaleSet.VOTE_CLEAR_QUEUE_MESS, attributes),
+            ed -> {
+                playerManager.clearQueue(event);
+                return embedBuilder.createSuccessVoteMessage(LocaleSet.SUCCESS_VOTE_CLEAR_QUEUE_MESS, attributes, ed);
+            },
+            ed -> embedBuilder.createFailureVoteMessage(LocaleSet.FAILURE_VOTE_CLEAR_QUEUE_MESS, attributes, ed),
+            ed -> embedBuilder.createTimeoutVoteMessage(LocaleSet.FAILURE_VOTE_CLEAR_QUEUE_MESS, attributes, ed)
+        );
     }
 }

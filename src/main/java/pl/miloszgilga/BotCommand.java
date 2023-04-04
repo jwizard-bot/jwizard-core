@@ -68,6 +68,7 @@ public enum BotCommand {
     SHUFFLE_QUEUE           ("shuffle",     true, new String[]{ "shq" },          DJ,     SHUFFLE_QUEUE_COMMAND_DESC),
     SKIP_TO_TRACK           ("skipto",      true, new String[]{ "skt" },          DJ,     SKIP_QUEUE_TO_TRACK_COMMAND_DESC,           SKIP_QUEUE_TO_TRACK_ARG_SYNTAX),
     SKIP_TRACK              ("skip",        true, new String[]{ "sk" },           DJ,     SKIP_TRACK_COMMAND_DESC),
+    CLEAR_QUEUE             ("clear",       true, new String[]{ "cl" },           DJ,     CLEAR_QUEUE_COMMAND_DESC),
     STOP_CLEAR_QUEUE        ("stop",        true, new String[]{ "st" },           DJ,     STOP_CLEAR_QUEUE_COMMAND_DESC),
     MOVE_TRACK              ("move",        true, new String[]{ "mv" },           DJ,     MOVE_TRACK_COMMAND_DESC,                    MOVE_TRACK_ARG_SYNTAX),
     INFINITE_PLAYLIST       ("infinite",    true, new String[]{ "inf" },          DJ,     INFINITE_PLAYLIST_COMMAND_DESC),
@@ -75,6 +76,7 @@ public enum BotCommand {
     VOTE_SHUFFLE_QUEUE      ("vshuffle",    true, new String[]{ "vshq" },         MUSIC,  VOTE_SHUFFLE_QUEUE_COMMAND_DESC),
     VOTE_SKIP_TRACK         ("vskip",       true, new String[]{ "vsk" },          MUSIC,  VOTE_SKIP_TRACK_COMMAND_DESC),
     VOTE_SKIP_TO_TRACK      ("vskipto",     true, new String[]{ "vsto" },         MUSIC,  VOTE_SKIP_TO_TRACK_COMMAND_DESC,            SKIP_QUEUE_TO_TRACK_ARG_SYNTAX),
+    VOTE_CLEAR_QUEUE        ("vclear",      true, new String[]{ "vcl" },          MUSIC,  VOTE_CLEAR_QUEUE_COMMAND_DESC),
     VOTE_STOP_CLEAR_QUEUE   ("vstop",       true, new String[]{ "vst" },          MUSIC,  VOTE_STOP_CLEAR_QUEUE_COMMAND_DESC);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
