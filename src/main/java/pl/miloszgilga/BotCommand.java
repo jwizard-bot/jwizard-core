@@ -69,8 +69,8 @@ public enum BotCommand {
     SKIP_TO_TRACK           ("skipto",      true, new String[]{ "skt" },          DJ,     SKIP_QUEUE_TO_TRACK_COMMAND_DESC,           SKIP_QUEUE_TO_TRACK_ARG_SYNTAX),
     SKIP_TRACK              ("skip",        true, new String[]{ "sk" },           DJ,     SKIP_TRACK_COMMAND_DESC),
     STOP_CLEAR_QUEUE        ("stop",        true, new String[]{ "st" },           DJ,     STOP_CLEAR_QUEUE_COMMAND_DESC),
-    MOVE_TRACK              ("move",        true, new String[]{ "mv" },           DJ,     MOVE_TRACK_DESC,                            MOVE_TRACK_ARG_SYNTAX),
-    INFINITE_PLAYLIST       ("infinite",    true, new String[]{ "inf" },          DJ,     INFINITE_PLAYLIST_DESC),
+    MOVE_TRACK              ("move",        true, new String[]{ "mv" },           DJ,     MOVE_TRACK_COMMAND_DESC,                    MOVE_TRACK_ARG_SYNTAX),
+    INFINITE_PLAYLIST       ("infinite",    true, new String[]{ "inf" },          DJ,     INFINITE_PLAYLIST_COMMAND_DESC),
 
     VOTE_SHUFFLE_QUEUE      ("vshuffle",    true, new String[]{ "vshq" },         MUSIC,  VOTE_SHUFFLE_QUEUE_COMMAND_DESC),
     VOTE_SKIP_TRACK         ("vskip",       true, new String[]{ "vsk" },          MUSIC,  VOTE_SKIP_TRACK_COMMAND_DESC),

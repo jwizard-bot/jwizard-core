@@ -137,7 +137,7 @@ public class CommandEventWrapper {
             .filter(a -> a.getKey().equals(argument))
             .map(Map.Entry::getValue)
             .findFirst()
-            .orElseThrow(() -> { throw new IllegalStateException("Command has no arguments"); });
+            .orElseThrow(() -> new IllegalStateException("Command has no arguments"));
         return argument.parse(argumentValue);
     }
 }

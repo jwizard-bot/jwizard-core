@@ -123,6 +123,6 @@ public enum BotCommandArgument {
             .filter(c -> c.typeClazz().isAssignableFrom(castingTypeClazz))
             .findFirst()
             .map(t -> t.cast().apply(StringUtils.trimToEmpty((String)rawArg)))
-            .orElseThrow(() -> { throw new RuntimeException("Unsupported casting type."); });
+            .orElseThrow(() -> new RuntimeException("Unsupported casting type."));
     }
 }

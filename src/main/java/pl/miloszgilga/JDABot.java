@@ -133,9 +133,8 @@ public class JDABot {
                 .setStatus(OnlineStatus.ONLINE)
                 .setBulkDeleteSplittingEnabled(true)
                 .addEventListeners(jClassLoader.getAllListeners(commandBuilder.build()))
-                .build();
-
-            jda.awaitReady();
+                .build()
+                .awaitReady();
 
             config.setTitleAndIcon(jda);
 

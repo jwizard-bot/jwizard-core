@@ -71,7 +71,6 @@ public class BotConfiguration {
     private final EventWaiter eventWaiter = new EventWaiter();
 
     private ResourceBundle localeBundle;
-    private String projectVersion;
 
     private final ScheduledExecutorService threadPool = Executors.newSingleThreadScheduledExecutor(r -> {
         final Thread thread = new Thread(r);
@@ -85,7 +84,8 @@ public class BotConfiguration {
         new CastType<>(Integer.class, Integer::valueOf),
         new CastType<>(Short.class, Short::valueOf),
         new CastType<>(Byte.class, Byte::valueOf),
-        new CastType<>(Float.class, Float::valueOf)
+        new CastType<>(Float.class, Float::valueOf),
+        new CastType<>(Long.class, Long::valueOf)
     );
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,6 +129,7 @@ public class BotConfiguration {
         log.info("Successfully loaded variables from '.env' file: {}", envProperties);
         log.info("Slash commands in application was turned {}. To change, set 'slash-commands.enabled' property.",
             getProperty(BotProperty.J_SLASH_COMMANDS_ENABLED, Boolean.class) ? "ON" : "OFF");
+        log.info("Instantiate application Spring Context Container...");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -228,9 +229,9 @@ public class BotConfiguration {
                 .filter(c -> c.typeClazz().isAssignableFrom(castClazz))
                 .findFirst()
                 .map(t -> t.cast().apply((String)p.getValue()))
-                .orElseThrow(() -> { throw new RuntimeException("Unsupported casting type."); })
+                .orElseThrow(() -> new RuntimeException("Unsupported casting type."))
             )
-            .orElseThrow(() -> { throw new RuntimeException("Property is not declared."); });
+            .orElseThrow(() -> new RuntimeException("Property is not declared."));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

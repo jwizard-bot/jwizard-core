@@ -34,6 +34,7 @@ import java.util.Arrays;
 @Getter
 @RequiredArgsConstructor
 public enum LocaleSet {
+
     HELP_COMMAND_DESC                               ("jwizard.command.description.Help"),
     HELPME_COMMAND_DESC                             ("jwizard.command.description.HelpMe"),
     DEBUG_COMMAND_DESC                              ("jwizard.command.description.Debug"),
@@ -55,8 +56,8 @@ public enum LocaleSet {
     SKIP_QUEUE_TO_TRACK_COMMAND_DESC                ("jwizard.command.description.SkipQueueToTrack"),
     SKIP_TRACK_COMMAND_DESC                         ("jwizard.command.description.SkipTrack"),
     STOP_CLEAR_QUEUE_COMMAND_DESC                   ("jwizard.command.description.StopClearQueue"),
-    MOVE_TRACK_DESC                                 ("jwizard.command.description.MoveTrack"),
-    INFINITE_PLAYLIST_DESC                          ("jwizard.command.description.InfinitePlaylist"),
+    MOVE_TRACK_COMMAND_DESC                         ("jwizard.command.description.MoveTrack"),
+    INFINITE_PLAYLIST_COMMAND_DESC                  ("jwizard.command.description.InfinitePlaylist"),
     VOTE_SHUFFLE_QUEUE_COMMAND_DESC                 ("jwizard.command.description.VoteShuffleQueue"),
     VOTE_SKIP_TRACK_COMMAND_DESC                    ("jwizard.command.description.VoteSkipTrack"),
     VOTE_STOP_CLEAR_QUEUE_COMMAND_DESC              ("jwizard.command.description.VoteStopClearQueue"),
@@ -194,6 +195,6 @@ public enum LocaleSet {
         return Arrays.stream(LocaleSet.values())
             .filter(v -> v.holder.equals(holder))
             .findFirst()
-            .orElseThrow(() -> { throw new IllegalArgumentException("Holder " + holder + " not exist in lang file"); });
+            .orElseThrow(() -> new IllegalArgumentException("Holder " + holder + " not exist in lang file"));
     }
 }

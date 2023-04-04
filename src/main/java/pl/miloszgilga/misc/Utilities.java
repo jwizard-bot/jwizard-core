@@ -106,7 +106,7 @@ public final class Utilities {
         return event.getGuild().getMembers().stream()
             .filter(m -> m.getId().equals(id))
             .findFirst()
-            .orElseThrow(() -> { throw new UserNotFoundInGuildException(config, event); });
+            .orElseThrow(() -> new UserNotFoundInGuildException(config, event));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

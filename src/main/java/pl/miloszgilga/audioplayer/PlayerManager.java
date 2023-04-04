@@ -239,7 +239,7 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
         final VoiceChannel voiceChannelWithMember = event.getGuild().getVoiceChannels().stream()
             .filter(c -> c.getMembers().contains(event.getMember()))
             .findFirst()
-            .orElseThrow(() -> { throw new UserOnVoiceChannelNotFoundException(config, event); });
+            .orElseThrow(() -> new UserOnVoiceChannelNotFoundException(config, event));
 
         final Member botMember = event.getGuild().getSelfMember();
         if (voiceChannelWithMember.getMembers().contains(botMember)) {

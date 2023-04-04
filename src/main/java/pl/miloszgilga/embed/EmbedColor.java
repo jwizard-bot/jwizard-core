@@ -44,7 +44,5 @@ public enum EmbedColor {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Color getColor() {
-        return Color.decode(hex);
-    }
+    public Color getColor() { return Color.decode(hex); }
 }
