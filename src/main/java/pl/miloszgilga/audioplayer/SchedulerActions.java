@@ -175,6 +175,11 @@ public class SchedulerActions {
         return Integer.toString(trackQueue.size());
     }
 
+    public AudioTrack getTrackByPosition(int position) {
+        final List<AudioQueueExtendedInfo> audioTracks = new ArrayList<>(trackQueue);
+        return audioTracks.get(position - 1).audioTrack();
+    }
+
     public long getAverageTrackDuration() {
         return (long) (trackQueue.stream().mapToLong(t -> t.audioTrack().getDuration()).average().orElse(0));
     }

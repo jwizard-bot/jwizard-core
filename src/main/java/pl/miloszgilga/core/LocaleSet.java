@@ -60,6 +60,7 @@ public enum LocaleSet {
     INFINITE_PLAYLIST_COMMAND_DESC                  ("jwizard.command.description.InfinitePlaylist"),
     VOTE_SHUFFLE_QUEUE_COMMAND_DESC                 ("jwizard.command.description.VoteShuffleQueue"),
     VOTE_SKIP_TRACK_COMMAND_DESC                    ("jwizard.command.description.VoteSkipTrack"),
+    VOTE_SKIP_TO_TRACK_COMMAND_DESC                 ("jwizard.command.description.VoteSkipToTrack"),
     VOTE_STOP_CLEAR_QUEUE_COMMAND_DESC              ("jwizard.command.description.VoteStopClearQueue"),
 
     PLAY_TRACK_ARG_SYNTAX                           ("jwizard.command.arguments.PlayTrack"),

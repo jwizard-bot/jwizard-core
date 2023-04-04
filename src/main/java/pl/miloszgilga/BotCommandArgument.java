@@ -51,6 +51,7 @@ public enum BotCommandArgument {
     VOLUME_POINTS                   (1, BotCommand.SET_PLAYER_VOLUME,      Integer.class,  OptionType.INTEGER,         "points",    true),
     MEMBER_TAG                      (1, BotCommand.REMOVE_MEMBER_TRACKS,   String.class,   OptionType.MENTIONABLE,     "member",    true),
     SKIP_TRACK_POSITION             (1, BotCommand.SKIP_TO_TRACK,          Integer.class,  OptionType.INTEGER,         "pos",       true),
+    VOTE_SKIP_TRACK_POSITION        (1, BotCommand.VOTE_SKIP_TO_TRACK,     Integer.class,  OptionType.INTEGER,         "pos",       true),
     MOVE_TRACK_POSITION_FROM        (1, BotCommand.MOVE_TRACK,             Integer.class,  OptionType.INTEGER,         "frompos",   true),
     MOVE_TRACK_POSITION_TO          (2, BotCommand.MOVE_TRACK,             Integer.class,  OptionType.INTEGER,         "topos",     true);
 
