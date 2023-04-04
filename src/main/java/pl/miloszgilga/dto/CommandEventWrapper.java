@@ -111,10 +111,10 @@ public class CommandEventWrapper {
     public void sendEmbedMessage(MessageEmbed messageEmbed, QueueAfterParam deffer) {
         if (isFromSlashCommand && !slashCommandEvent.getHook().isExpired()) {
             slashCommandEvent.getHook()
-                .sendMessageEmbeds(messageEmbed).completeAfter(deffer.duration(), deffer.timeUnit());
+                .sendMessageEmbeds(messageEmbed).queueAfter(deffer.duration(), deffer.timeUnit());
             return;
         }
-        textChannel.sendMessageEmbeds(messageEmbed).completeAfter(deffer.duration(), deffer.timeUnit());
+        textChannel.sendMessageEmbeds(messageEmbed).queueAfter(deffer.duration(), deffer.timeUnit());
     }
 
     public void sendEmbedMessage(MessageEmbed messageEmbed) {
