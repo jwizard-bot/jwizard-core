@@ -34,9 +34,12 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 import pl.miloszgilga.dto.*;
+import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.exception.BugTracker;
 import pl.miloszgilga.exception.BotException;
+import pl.miloszgilga.vote.VoteFinishEmbedData;
 import pl.miloszgilga.core.LocaleSet;
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -174,6 +177,34 @@ public class EmbedMessageBuilder {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public MessageEmbed createInitialVoteMessage(CommandEventWrapper wrapper, LocaleSet locale, Map<String, Object> attrs) {
+        final long maxVotingTime = config.getProperty(BotProperty.J_INACTIVITY_VOTING_TIMEOUT, Long.class);
+        return new EmbedBuilder()
+            .setAuthor(wrapper.getAuthorTag(), null, wrapper.getAuthorAvatarUrl())
+            .setDescription(config.getLocaleText(locale, attrs))
+            .setFooter(config.getLocaleText(LocaleSet.MAX_TIME_VOTING) + ": " + Utilities.convertSecondsToMinutes(maxVotingTime))
+            .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
+            .build();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public MessageEmbed createResponseVoteMessage(LocaleSet title, String desc, VoteFinishEmbedData res, EmbedColor color) {
+        final String yesNo = String.format("%d/%d", res.votesForYes(), res.votesForNo());
+        final String requredTotal = String.format("%d/%d", res.requredVotes(), res.totalVotes());
+        final byte votingRatio = config.getProperty(BotProperty.J_VOTING_PERCENTAGE_RATIO, Byte.class);
+        return new EmbedBuilder()
+            .setTitle(config.getLocaleText(title))
+            .setDescription(desc)
+            .addField(inlineField.apply(LocaleSet.VOTES_FOR_YES_NO_VOTING, yesNo))
+            .addField(inlineField.apply(LocaleSet.REQUIRED_TOTAL_VOTES_VOTING, requredTotal))
+            .addField(inlineField.apply(LocaleSet.VOTES_RATIO_VOTING, votingRatio + "%"))
+            .setColor(color.getColor())
+            .build();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public MessageEmbed createMessage(LocaleSet localeSet, Map<String, Object> attributes) {
         return new EmbedBuilder()
             .setDescription(config.getLocaleText(localeSet, attributes))
@@ -181,10 +212,46 @@ public class EmbedMessageBuilder {
             .build();
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     public MessageEmbed createMessage(LocaleSet localeSet) {
         return createMessage(localeSet, Map.of());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public MessageEmbed createInitialVoteMessage(CommandEventWrapper wrapper, LocaleSet locale) {
+        return createInitialVoteMessage(wrapper, locale, Map.of());
+    }
+
+    public MessageEmbed createSuccessVoteMessage(LocaleSet locale, Map<String, Object> attrs, VoteFinishEmbedData res) {
+        final String mess = config.getLocaleText(locale, attrs);
+        return createResponseVoteMessage(LocaleSet.ON_SUCCESS_VOTING, mess, res, EmbedColor.ANTIQUE_WHITE);
+    }
+
+    public MessageEmbed createSuccessVoteMessage(LocaleSet locale, VoteFinishEmbedData res) {
+        final String mess = config.getLocaleText(locale);
+        return createResponseVoteMessage(LocaleSet.ON_SUCCESS_VOTING, mess, res, EmbedColor.ANTIQUE_WHITE);
+    }
+
+    public MessageEmbed createFailureVoteMessage(LocaleSet locale, Map<String, Object> attrs, VoteFinishEmbedData res) {
+        final String mess = config.getLocaleText(LocaleSet.TOO_FEW_POSITIVE_VOTES_VOTING) + ". "
+            + config.getLocaleText(locale, attrs);
+        return createResponseVoteMessage(LocaleSet.ON_FAILURE_VOTING, mess, res, EmbedColor.PURPLE);
+    }
+
+    public MessageEmbed createFailureVoteMessage(LocaleSet locale, VoteFinishEmbedData res) {
+        final String mess = config.getLocaleText(LocaleSet.TOO_FEW_POSITIVE_VOTES_VOTING) + ". "
+            + config.getLocaleText(locale);
+        return createResponseVoteMessage(LocaleSet.ON_FAILURE_VOTING, mess, res, EmbedColor.PURPLE);
+    }
+
+    public MessageEmbed createTimeoutVoteMessage(LocaleSet locale, Map<String, Object> attrs, VoteFinishEmbedData res) {
+        final String mess = config.getLocaleText(locale, attrs);
+        return createResponseVoteMessage(LocaleSet.ON_TIMEOUT_VOTING, mess, res, EmbedColor.PURPLE);
+    }
+
+    public MessageEmbed createTimeoutVoteMessage(LocaleSet locale, VoteFinishEmbedData res) {
+        final String mess = config.getLocaleText(locale);
+        return createResponseVoteMessage(LocaleSet.ON_TIMEOUT_VOTING, mess, res, EmbedColor.PURPLE);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
