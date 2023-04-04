@@ -24,13 +24,20 @@
 
 package pl.miloszgilga.command.vote;
 
+import java.util.Map;
+
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.dto.CommandEventWrapper;
+import pl.miloszgilga.vote.VoteEmbedResponse;
+import pl.miloszgilga.audioplayer.MusicManager;
+import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractVoteMusicCommand;
+import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
+
+import static pl.miloszgilga.exception.AudioPlayerException.TrackQueueIsEmptyException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -45,7 +52,23 @@ public class VoteShuffleQueueCmd extends AbstractVoteMusicCommand {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected void doExecuteVoteMusicCommand(CommandEventWrapper event) {
-
+    protected VoteEmbedResponse doExecuteVoteMusicCommand(CommandEventWrapper event) {
+        final MusicManager musicManager = playerManager.getMusicManager(event);
+        if (musicManager.getQueue().isEmpty()) {
+            throw new TrackQueueIsEmptyException(config, event);
+        }
+        final Map<String, Object> attributes = Map.of(
+            "queueTracksCount", musicManager.getQueue().size()
+        );
+        return new VoteEmbedResponse(
+            VoteShuffleQueueCmd.class,
+            embedBuilder.createInitialVoteMessage(event, LocaleSet.VOTE_SUFFLE_QUEUE_MESS, attributes),
+            ed -> {
+                playerManager.shuffleQueue(event);
+                return embedBuilder.createSuccessVoteMessage(LocaleSet.SUCCESS_VOTE_SUFFLE_QUEUE_MESS, attributes, ed);
+            },
+            ed -> embedBuilder.createFailureVoteMessage(LocaleSet.FAILURE_VOTE_SUFFLE_QUEUE_MESS, attributes, ed),
+            ed -> embedBuilder.createTimeoutVoteMessage(LocaleSet.FAILURE_VOTE_SUFFLE_QUEUE_MESS, attributes, ed)
+        );
     }
 }

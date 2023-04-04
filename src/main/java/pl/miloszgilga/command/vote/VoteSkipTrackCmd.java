@@ -24,11 +24,18 @@
 
 package pl.miloszgilga.command.vote;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+
+import java.util.Map;
+
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.misc.Utilities;
+import pl.miloszgilga.vote.VoteEmbedResponse;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractVoteMusicCommand;
+import pl.miloszgilga.core.LocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -46,7 +53,21 @@ public class VoteSkipTrackCmd extends AbstractVoteMusicCommand {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    protected void doExecuteVoteMusicCommand(CommandEventWrapper event) {
+    protected VoteEmbedResponse doExecuteVoteMusicCommand(CommandEventWrapper event) {
+        final AudioTrack skippedCurrentPlaying = playerManager.getCurrentPlayingTrack(event).getAudioTrack();
 
+        final Map<String, Object> attributes = Map.of(
+            "audioTrack", Utilities.getRichTrackTitle(skippedCurrentPlaying.getInfo())
+        );
+        return new VoteEmbedResponse(
+            VoteSkipTrackCmd.class,
+            embedBuilder.createInitialVoteMessage(event, LocaleSet.VOTE_SKIP_TRACK_MESS, attributes),
+            ed -> {
+                playerManager.skipCurrentTrack(event);
+                return embedBuilder.createSuccessVoteMessage(LocaleSet.SUCCESS_VOTE_SKIP_TRACK_MESS, attributes, ed);
+            },
+            ed -> embedBuilder.createFailureVoteMessage(LocaleSet.FAILURE_VOTE_SKIP_TRACK_MESS, attributes, ed),
+            ed -> embedBuilder.createTimeoutVoteMessage(LocaleSet.FAILURE_VOTE_SKIP_TRACK_MESS, attributes, ed)
+        );
     }
 }
