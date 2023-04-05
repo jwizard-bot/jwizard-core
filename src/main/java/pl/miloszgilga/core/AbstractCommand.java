@@ -36,12 +36,12 @@ import java.util.Map;
 import java.util.Objects;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.BotCommandArgument;
 import pl.miloszgilga.misc.QueueAfterParam;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.configuration.BotConfiguration;
-import pl.miloszgilga.BotCommandArgument;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -126,19 +126,18 @@ public abstract class AbstractCommand extends SlashCommand {
         if (Objects.isNull(afterParam)) {
             if (Objects.isNull(wrapper.getAppendAfterEmbeds())) {
                 defferedMessages.queue();
-            } else {
-                defferedMessages.queue(v -> wrapper.getAppendAfterEmbeds().run());
+                return;
             }
-        } else {
-            if (Objects.isNull(wrapper.getAppendAfterEmbeds())) {
-                defferedMessages.queueAfter(afterParam.duration(), afterParam.timeUnit());
-            } else {
-                final var scheduledFuture = defferedMessages.queueAfter(afterParam.duration(), afterParam.timeUnit());
-                if (scheduledFuture.isDone()) {
-                    wrapper.getAppendAfterEmbeds().run();
-                }
-            }
+            defferedMessages.queue(v -> wrapper.getAppendAfterEmbeds().run());
+            return;
         }
+        if (Objects.isNull(wrapper.getAppendAfterEmbeds())) {
+            defferedMessages.queueAfter(afterParam.duration(), afterParam.timeUnit());
+            return;
+        }
+        final var scheduledFuture = defferedMessages.queueAfter(afterParam.duration(), afterParam.timeUnit());
+        if (!scheduledFuture.isDone()) return;
+        wrapper.getAppendAfterEmbeds().run();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -149,19 +148,18 @@ public abstract class AbstractCommand extends SlashCommand {
         if (Objects.isNull(afterParam)) {
             if (Objects.isNull(wrapper.getAppendAfterEmbeds())) {
                 defferedMessages.queue();
-            } else {
-                defferedMessages.queue(v -> wrapper.getAppendAfterEmbeds().run());
+                return;
             }
-        } else {
-            if (Objects.isNull(wrapper.getAppendAfterEmbeds())) {
-                defferedMessages.queueAfter(afterParam.duration(), afterParam.timeUnit());
-            } else {
-                final var scheduledFuture = defferedMessages.queueAfter(afterParam.duration(), afterParam.timeUnit());
-                if (scheduledFuture.isDone()) {
-                    wrapper.getAppendAfterEmbeds().run();
-                }
-            }
+            defferedMessages.queue(v -> wrapper.getAppendAfterEmbeds().run());
+            return;
         }
+        if (Objects.isNull(wrapper.getAppendAfterEmbeds())) {
+            defferedMessages.queueAfter(afterParam.duration(), afterParam.timeUnit());
+            return;
+        }
+        final var scheduledFuture = defferedMessages.queueAfter(afterParam.duration(), afterParam.timeUnit());
+        if (!scheduledFuture.isDone()) return;
+        wrapper.getAppendAfterEmbeds().run();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

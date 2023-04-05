@@ -2,7 +2,7 @@
   <configuration default="false" name="JWizard DEV" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="pl.miloszgilga.SpringAppLauncher" />
     <module name="jwizard-discord-bot.main" />
-    <option name="PROGRAM_PARAMETERS" value="--mode=dev" />
+    <option name="PROGRAM_PARAMETERS" value="--mode=dev -Dfile.encoding=UTF-8" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="pl.miloszgilga.*" />

@@ -135,7 +135,7 @@ public class BotConfiguration {
         log.info("Successfully loaded variables from '.env' file: {}", envProperties);
         log.info("Slash commands in application was turned {}. To change, set 'slash-commands.enabled' property.",
             getProperty(BotProperty.J_SLASH_COMMANDS_ENABLED, Boolean.class) ? "ON" : "OFF");
-        log.info("Instantiate application Spring Context Container...");
+        log.info("Instantiate Spring Context Container...");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
