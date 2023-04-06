@@ -39,7 +39,6 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.SpringAppLauncher;
 import pl.miloszgilga.core.AbstractCommand;
 import pl.miloszgilga.core.AbstractListenerAdapter;
 import pl.miloszgilga.core.configuration.BotProperty;
@@ -77,7 +76,7 @@ public class JClassLoader {
             .getTypesAnnotatedWith(JDAInjectableCommandLazyService.class);
         if (commandsClazz.isEmpty()) return;
         for (final Class<?> commandClazz : commandsClazz) {
-            loadedCommands.add((AbstractCommand) SpringAppLauncher.APP_CONTEXT.getBean(commandClazz));
+            //loadedCommands.add((AbstractCommand) SpringBootRunner.APP_CONTEXT.getBean(commandClazz));
         }
         log.info("Successfully loaded command interceptors ({}):", loadedCommands.size());
         loadedCommands.sort(Comparator.comparing(Command::getName));
@@ -96,7 +95,7 @@ public class JClassLoader {
             .getTypesAnnotatedWith(JDAInjectableListenerLazyService.class);
         if (listenersClazz.isEmpty()) return;
         for (final Class<?> listenerClazz : listenersClazz) {
-            loadedListeners.add((AbstractListenerAdapter) SpringAppLauncher.APP_CONTEXT.getBean(listenerClazz));
+            //loadedListeners.add((AbstractListenerAdapter) SpringBootRunner.APP_CONTEXT.getBean(listenerClazz));
         }
         log.info("Successfully loaded listener adapter interceptors ({}):", loadedListeners.size());
         for (final Object jdaListener : loadedListeners) {

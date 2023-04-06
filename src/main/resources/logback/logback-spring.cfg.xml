@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+  ~ Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
+  ~
+  ~ File name: logback-spring.cfg.xml
+  ~ Last modified: 06/04/2023, 12:53
+  ~ Project name: jwizard-discord-bot
+  ~
+  ~ Licensed under the MIT license; you may not use this file except in compliance with the License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+  ~ documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+  ~ rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+  ~ permit persons to whom the Software is furnished to do so, subject to the following conditions:
+  ~
+  ~ THE ABOVE COPYRIGHT NOTICE AND THIS PERMISSION NOTICE SHALL BE INCLUDED IN ALL COPIES OR
+  ~ SUBSTANTIAL PORTIONS OF THE SOFTWARE.
+  ~
+  ~ The software is provided "as is", without warranty of any kind, express or implied, including but not limited
+  ~ to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event
+  ~ shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an
+  ~ action of contract, tort or otherwise, arising from, out of or in connection with the software or the use
+  ~ or other dealings in the software.
+  -->
+
+<configuration>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="logback/logback-file-appenders.cfg.xml"/>
+    <include resource="logback/logback-console-appenders.cfg.xml"/>
+
+    <import class="ch.qos.logback.classic.AsyncAppender"/>
+
+    <property name="jdaLogsPath" value="logs/jda-api"/>
+    <property name="springLogsPath" value="logs/spring-api"/>
+    <property name="appLogsPath" value="logs"/>
+
+    <property name="jdaLogger" value="net.dv8tion.jda"/>
+    <property name="commandLogger" value="pl.miloszgilga.command"/>
+    <property name="audioplayerLogger" value="pl.miloszgilga.audioplayer"/>
+    <property name="exceptionLogger" value="pl.miloszgilga.exception"/>
+    <property name="listenerLogger" value="pl.miloszgilga.listener"/>
+    <property name="springFrameworkLogger" value="org.springframework"/>
+    <property name="logbackLogger" value="ch.qos.logback"/>
+
+    <!-- start of async appenders section -->
+
+    <appender name="async.appender.file.info-warn" class="AsyncAppender">
+        <appender-ref ref="appender.file.info-warn" />
+    </appender>
+
+    <appender name="async.appender.file.error" class="AsyncAppender">
+        <appender-ref ref="appender.file.error" />
+    </appender>
+
+    <appender name="async.appender.file.jda.debug" class="AsyncAppender">
+        <appender-ref ref="appender.file.jda.debug" />
+    </appender>
+
+    <appender name="async.appender.file.spring.debug" class="AsyncAppender">
+        <appender-ref ref="appender.file.spring.debug" />
+    </appender>
+
+    <!-- end of async appenders section -->
+    <!-- start of applying appenders section  -->
+
+    <logger name="${jdaLogger}" additivity="false">
+        <appender-ref ref="async.appender.file.info-warn"/>
+        <appender-ref ref="async.appender.file.error"/>
+        <appender-ref ref="async.appender.file.jda.debug"/>
+        <appender-ref ref="appender.console.major"/>
+    </logger>
+
+    <logger name="${commandLogger}" additivity="false">
+        <appender-ref ref="appender.file.perf"/>
+        <appender-ref ref="appender.console.major"/>
+    </logger>
+
+    <logger name="${audioplayerLogger}" additivity="false">
+        <appender-ref ref="appender.file.perf"/>
+        <appender-ref ref="appender.console.major"/>
+    </logger>
+
+    <logger name="${exceptionLogger}" additivity="false">
+        <appender-ref ref="appender.file.perf"/>
+        <appender-ref ref="appender.console.major"/>
+    </logger>
+
+    <logger name="${listenerLogger}" additivity="false">
+        <appender-ref ref="appender.file.perf"/>
+        <appender-ref ref="appender.console.major"/>
+    </logger>
+
+    <logger name="${springFrameworkLogger}" additivity="false">
+        <appender-ref ref="async.appender.file.info-warn"/>
+        <appender-ref ref="async.appender.file.error"/>
+        <appender-ref ref="async.appender.file.spring.debug"/>
+        <appender-ref ref="appender.console.major"/>
+    </logger>
+
+    <root additivity="false">
+        <appender-ref ref="async.appender.file.info-warn"/>
+        <appender-ref ref="async.appender.file.error"/>
+        <appender-ref ref="appender.console.major"/>
+    </root>
+
+    <!-- end of applying appenders section  -->
+
+</configuration>

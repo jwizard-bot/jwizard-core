@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+  ~ Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
+  ~
+  ~ File name: logback-console-appenders.cfg.xml
+  ~ Last modified: 06/04/2023, 12:56
+  ~ Project name: jwizard-discord-bot
+  ~
+  ~ Licensed under the MIT license; you may not use this file except in compliance with the License.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+  ~ documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+  ~ rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+  ~ permit persons to whom the Software is furnished to do so, subject to the following conditions:
+  ~
+  ~ THE ABOVE COPYRIGHT NOTICE AND THIS PERMISSION NOTICE SHALL BE INCLUDED IN ALL COPIES OR
+  ~ SUBSTANTIAL PORTIONS OF THE SOFTWARE.
+  ~
+  ~ The software is provided "as is", without warranty of any kind, express or implied, including but not limited
+  ~ to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event
+  ~ shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an
+  ~ action of contract, tort or otherwise, arising from, out of or in connection with the software or the use
+  ~ or other dealings in the software.
+  -->
+
+<included>
+    <import class="ch.qos.logback.classic.filter.LevelFilter"/>
+    <import class="ch.qos.logback.classic.filter.ThresholdFilter"/>
+    <import class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"/>
+    <import class="ch.qos.logback.core.rolling.RollingFileAppender"/>
+    <import class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"/>
+    <import class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy"/>
+
+    <property name="fileStacktracePattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} > [%-5p] \(%-35.35logger{39}\) : %m%n"/>
+    <property name="fileSpecificLogPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} \(%-35.35logger{39}\) : %m%n"/>
+    <property name="filePerfPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} > [%-5p] : %m%n"/>
+
+    <!-- start of file appenders  -->
+
+    <appender name="appender.file.error" class="RollingFileAppender">
+        <filter class="LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${appLogsPath}/error.log</file>
+        <immediateFlush>true</immediateFlush>
+        <rollingPolicy class="SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${appLogsPath}/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>30MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="PatternLayoutEncoder">
+            <pattern>${fileSpecificLogPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="appender.file.jda.debug" class="RollingFileAppender">
+        <filter class="LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${jdaLogsPath}/debug.log</file>
+        <immediateFlush>true</immediateFlush>
+        <rollingPolicy class="SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${jdaLogsPath}/debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>30MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="PatternLayoutEncoder">
+            <pattern>${fileSpecificLogPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="appender.file.spring.debug" class="RollingFileAppender">
+        <filter class="LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${springLogsPath}/debug.log</file>
+        <immediateFlush>true</immediateFlush>
+        <rollingPolicy class="SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${springLogsPath}/debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>30MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="PatternLayoutEncoder">
+            <pattern>${fileSpecificLogPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="appender.file.info-warn" class="RollingFileAppender">
+        <filter class="ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <file>${appLogsPath}/info.log</file>
+        <immediateFlush>true</immediateFlush>
+        <rollingPolicy class="SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${appLogsPath}/info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>30MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="PatternLayoutEncoder">
+            <pattern>${fileStacktracePattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="appender.file.perf" class="RollingFileAppender">
+        <file>${appLogsPath}/perf.log</file>
+        <immediateFlush>true</immediateFlush>
+        <rollingPolicy class="SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${appLogsPath}/perf.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>30MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="PatternLayoutEncoder">
+            <pattern>${filePerfPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- end of file appenders  -->
+</included>

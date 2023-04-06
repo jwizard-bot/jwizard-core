@@ -41,7 +41,6 @@ import org.hibernate.PropertyNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.vault.support.JsonMapFlattener;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.core.config.Configurator;
 
 import java.io.*;
 import java.util.*;
@@ -59,7 +58,6 @@ import pl.miloszgilga.core.IEnumerableLocaleSet;
 public class BotConfiguration {
 
     public static final String JPREFIX = "bot";
-    private static final String LOG4J_CFG = "logger/log4j2.cfg.xml";
     private static final String LOCALE_BUNDLE_DIR = "lang";
     private static final String LOCALE_BUNDLE_PROP = "messages";
     private static final String ARTIFACT_PROP = "/artifact.properties";
@@ -97,7 +95,6 @@ public class BotConfiguration {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void loadConfiguration(String[] args) {
-        Configurator.initialize(null, LOG4J_CFG);
         final AppMode appMode = extractModeFromArguments(args);
         String language;
         try {

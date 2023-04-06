@@ -24,21 +24,27 @@
 
 package pl.miloszgilga;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-public class SpringAppLauncher {
+@Slf4j
+@SpringBootApplication
+public class SpringBootRunner implements CommandLineRunner {
 
-    private static final String SPRING_CFG = "spring/spring-context.cfg.xml";
-    public static final ApplicationContext APP_CONTEXT = new ClassPathXmlApplicationContext(SPRING_CFG);
+    public static void main(String[] args) {
+        SpringApplication.run(SpringBootRunner.class);
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static void main(String[] args) {
-        APP_CONTEXT.getBean(JDABot.class).run(args);
-        ((ConfigurableApplicationContext)APP_CONTEXT).close();
+    @Override
+    public void run(String... args) {
+        //
+
     }
 }
