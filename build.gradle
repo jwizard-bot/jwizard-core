@@ -131,6 +131,24 @@ bootJar {
     launchScript()
 }
 
+tasks.register("bootRunDev") {
+    doFirst {
+        tasks.bootRun.configure {
+            systemProperty("spring.profiles.active", 'dev')
+        }
+    }
+    finalizedBy("bootRun")
+}
+
+tasks.register("bootRunProd") {
+    doFirst {
+        tasks.bootRun.configure {
+            systemProperty("spring.profiles.active", 'prod')
+        }
+    }
+    finalizedBy("bootRun")
+}
+
 tasks.register('moveConfigurationFiles', Copy) {
     from layout.projectDirectory.files([
         'properties-dev.yml',

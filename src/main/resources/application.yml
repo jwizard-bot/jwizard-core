@@ -46,8 +46,8 @@ spring:
 jmpsl:
     core:
         locale:
-            available-locales: en_US,pl_PL
-            default-locale: pl_PL
+            available-locales: en_US,pl
+            default-locale: pl
             messages-path: i18n-api/messages
     security:
         oauth2-active: false

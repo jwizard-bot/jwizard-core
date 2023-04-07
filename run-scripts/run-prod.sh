@@ -86,8 +86,8 @@ EXEC_SCRIPT="java
 -Xmx$MAX_JAVA_HEAP_SIZE -Xms$START_JAVA_HEAP_SIZE
 -Duser.timezone=UTC
 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/
+-Dspring.profiles.active=prod
 -jar $EXEC_JAR_FILE_NAME
---mode=prod
 "
 
 EXEC_SCRIPT=$(echo "$EXEC_SCRIPT" | tr '\n' ' ')

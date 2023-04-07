@@ -40,35 +40,38 @@ $ git clone https://github.com/Milosz08/jwizard jwizard-discord-bot
 ## Run from IDE
 1. Before run the application, change `.env.sample` file to `.env` and fill with the correct values:
 ```properties
-# discord integrations
+# production (for spring boot 'prod' profile)
+PROD_TOKEN                      = xxxxx
+PROD_APP_ID                     = xxxxx
+PROD_DB_JDBC                    = xxxxx <- ex. jdbc:[dbClient]://[dbServer]:[dbPort]/[dbName]
+PROD_DB_USERNAME                = xxxxx <- database username
+PROD_DB_PASSWORD                = xxxxx <- database password
+PROD_BASE_URL                   = <base backend (api) app url, ex. api.jwizard.com>
+PROD_FRONTEND_CORS_AGENT        = <base frontend app url, ex. jwizard.com>
+PROD_JWT_KEY                    = <JWT salt pseudogenerated random string>
+PROD_FRONTEND_WITH_JWT_ISSUER   = <JWT issuer, ex. jwizard.com>
+
+# development (for spring boot 'dev' profile)
 DEV_TOKEN           = xxxxx <- discord api token (available in discord api dashboard)
 DEV_APP_ID          = xxxxx <- discord application identifier (available in discord api dashboard)
-PROD_TOKEN          = xxxxx
-PROD_APP_ID         = xxxxx
-# database
-DEV_DB_JDBC         = xxxxx <- ex. jdbc:[dbClient]://[dbServer]:[dbPort]/[dbName]
-DEV_DB_USERNAME     = xxxxx <- database username
-DEV_DB_PASSWORD     = xxxxx <- database password
-PROD_DB_JDBC        = xxxxx
-PROD_DB_USERNAME    = xxxxx
-PROD_DB_PASSWORD    = xxxxx
+
 ```
 2. Optionally, you can change the bot's configuration values in the `properties-prod.yml` or `properties-dev.yml` file for the production or development version, respectively.
 3. To run application via gradle wrapper, type:
 ```
-$ ./gradlew run --args="--mode=dev"    # for development version
-$ ./gradlew run --args="--mode=prod"   # for production version
+$ ./gradlew bootRunDev    # for development version
+$ ./gradlew bootRunProd   # for production version
 ```
 
 <a name="run-from-jar"></a>
 ## Run from JAR
 > NOTE: At this moment, I don't provide the JAR archive. The JAR archive along with the configuration files will be made available in a stable release.
 1. Before creating JAR package, make sur, that `.env` file exist and has been filled with appropriet values. If isn't, do 1 task in `Run from IDE` section.
-2. To create fat JAR package via gradle script, run `shadowJar` task:
+2. To create fat JAR package via gradle script, run `bootJar` task:
 ```
-$ ./gradlew shadowJar
+$ ./gradlew bootJar
 ```
-3. All generated files should be located in `/build/shadow`. You can move this files into selected directory.
+3. All generated files should be located in `/build/jar`. You can move this files into selected directory.
 4. Optionally, you can change the bot's configuration values in the `properties-prod.yml` or `properties-dev.yml` file for the production or development version, respectively.
 5. To run JAR file, type:
    * (FOR UNIX SYSTEMS):
@@ -100,29 +103,37 @@ Java heap size configuration is the same for both configuration (development and
 
 <a name="internationalization-i18n"></a>
 ## Internationalization (i18n)
-1. To add a new language, create a new resource file in the `/lang` directory via command:
+1. To add a new language, create a new resource file in the `classpath:/i18n-api` or `classpath:/i18n-jda` directory 
+via command:
    * (FOR UNIX SYSTEMS):
     ```
-    $ cd lang/generator
+    $ cd generator
     $ ./lang-gen.sh --lang=[i18n tag]
     ```
    * (for WINDOWS/OTHERS):
     ```
-    $ cd lang/generator
+    $ cd generator
     $ python lang-gen.py --lang=[i18n tag]
     ```
     where `[i18n tag]` is one of the internationalization standards tag (ex. `en-US`, `fr`, `pl` etc.)
     > NOTE: To run the script, you must have installed Python interpreter 3.11.2 or above. To check Python version, type `python --version` in your command prompt.
 2. After successfully generated message resources file, fill keys with properly values.
 > NOTE: If you not provide parameter, application take key as value.
-3. To set the language, change this property in `properties-dev.yml` or `properties-prod.yml`:
+3. (FOR JDA INTERFACE) To set the language, change this property in `properties-dev.yml` or `properties-prod.yml`:
 ```yml
 bot:
   misc:
     locale:
       selected-locale: [i18n tag]
 ```
-
+4. (FOR WEB API INTERFACE) To set the language, change this property in `classpath:/application.yml`:
+```yml
+jmpsl:
+    core:
+        locale:
+            available-locales: en_US,pl,[i18n tag]
+            default-locale: [i18n tag]
+```
 <a name="author"></a>
 ## Author
 Created by Miłosz Gilga. If you have any questions about this application, send message: [personal@miloszgilga.pl](mailto:personal@miloszgilga.pl).
