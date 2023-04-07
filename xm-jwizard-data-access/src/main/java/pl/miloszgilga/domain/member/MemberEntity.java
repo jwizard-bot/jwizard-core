@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: AuditableEntity.java
- * Last modified: 03/03/2023, 00:07
+ * File name: Member.java
+ * Last modified: 07/04/2023, 01:13
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -22,71 +22,64 @@
  * or other dealings in the software.
  */
 
-package pl.miloszgilga.core.db;
+package pl.miloszgilga.domain.member;
 
 import lombok.NoArgsConstructor;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.CreationTimestamp;
+import jakarta.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Column;
 
+import java.util.Set;
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+
+import org.jmpsl.security.user.IAuthUserModel;
+import org.jmpsl.security.user.SimpleGrantedRole;
+import org.jmpsl.core.db.AbstractAuditableEntity;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@MappedSuperclass
+@Entity
 @NoArgsConstructor
-@ScannedHibernateEntity
-public abstract class AuditableEntity implements Serializable {
+@Table(name = "members")
+public class MemberEntity extends AbstractAuditableEntity implements Serializable, IAuthUserModel<SimpleGrantedRole> {
     @Serial private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-    @CreationTimestamp
-    @Column(name = "created_at") private ZonedDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at") private ZonedDateTime updatedAt;
+    @Column(name = "guild_nickname")            private String guildNickname;
+    @Column(name = "discord_id")                private String discordId;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    Long getId() {
-        return id;
+    String getGuildNickname() {
+        return guildNickname;
     }
 
-    void setId(Long id) {
-        this.id = id;
+    void setGuildNickname(String guildNickname) {
+        this.guildNickname = guildNickname;
     }
 
-    ZonedDateTime getCreatedAt() {
-        return createdAt;
+    String getDiscordId() {
+        return discordId;
     }
 
-    void setCreatedAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
+    void setDiscordId(String discordId) {
+        this.discordId = discordId;
     }
 
-    ZonedDateTime getUpdatedAt() {
-        return updatedAt;
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    void setUpdatedAt(ZonedDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    @Override public String getAuthUsername()                   { return discordId; }
+    @Override public String getAuthPassword()                   { return null; }
+    @Override public Set<SimpleGrantedRole> getAuthRoles()      { return SimpleGrantedRole.getSetCollection(); }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public String toString() {
         return "{" +
-            "id=" + id +
-            ", createdAt=" + createdAt +
-            ", updatedAt=" + updatedAt +
+            "guildNickname=" + guildNickname +
+            ", discordId=" + discordId +
             '}';
     }
 }
