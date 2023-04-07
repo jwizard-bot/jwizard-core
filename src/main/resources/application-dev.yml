@@ -23,3 +23,34 @@
 #
 
 # application-dev.yml
+
+spring:
+    devtools:
+        livereload:
+            port: 35731
+        restart:
+            log-condition-evaluation-delta: false
+    h2:
+        console:
+            enabled: true
+    liquibase:
+        contexts: lq_dev
+        drop-first: false
+    datasource:
+        url: jdbc:h2:file:./h2-db
+        username: dbuser
+        password: dbpass
+        driver-class-name: org.h2.Driver
+    jpa:
+        show-sql: true
+
+jmpsl:
+    security:
+        password-encoder-strength: 4
+        jwt:
+            secret: daw94289vndq98198nkejfnkaendwef93892fnskjdenfkjeiwefibiu32983fnskjdfn
+            issuer: localhost
+            expired-minutes: 5
+            refresh-token-expired-days: 1
+        cors:
+            client: http://localhost:4200

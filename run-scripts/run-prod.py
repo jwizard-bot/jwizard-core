@@ -85,8 +85,8 @@ executable_script = \
     f'-Xmx{max_java_heap_size} -Xms{start_java_heap_size} ' \
     f'-Duser.timezone=UTC ' \
     f'-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/ ' \
-    f'-jar {executable_jar_file_name} ' \
-    f'--mode=prod'
+    f'-Dspring.profiles.active=prod '\
+    f'-jar {executable_jar_file_name}'
 
 print('[python run script info] <> Executing JWizard bot JAR file in production mode...')
 print(f'[python run script info] <> {executable_script}')

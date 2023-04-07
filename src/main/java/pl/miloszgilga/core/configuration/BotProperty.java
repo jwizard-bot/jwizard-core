@@ -58,8 +58,6 @@ public enum BotProperty {
     J_MAX_REPEATS_SINGLE_TRACK      ("audio.max-repeats-single-track"),
     J_DEFAULT_PLAYER_VOLUME_UNITS   ("audio.default-player-volume-units"),
     J_DJ_ROLE_NAME                  ("misc.dj-role-name"),
-    J_SHOW_FANCY_TITLE              ("misc.fancy-title.show"),
-    J_FANCY_TITLE_PATH              ("misc.fancy-title.path-to-file"),
     J_SELECTED_LOCALE               ("misc.locale.selected-locale"),
     J_RR_ACTIVITY_ENABLED           ("misc.round-robin-activity.enable-sequencer"),
     J_RR_INTERVAL                   ("misc.round-robin-activity.sequencer-inverval-seconds"),
@@ -68,16 +66,7 @@ public enum BotProperty {
     J_RR_EXTERNAL_FILE_PATH         ("misc.round-robin-activity.show-from-external-file.path-to-file"),
     J_RR_COMMANDS_ENABLED           ("misc.round-robin-activity.show-commands.enabled"),
     J_PAGINATION_MAX                ("pagination.max-elements-per-page"),
-    J_PAGINATION_MENU_IS_ALIVE      ("pagination.menu-is-alive-seconds"),
-    J_DB_CONNECTION                 ("database.jdbc.connection",                                    true, EnvProperty.DB_JDBC),
-    J_DB_ENFORCE_SSL                ("database.jdbc.enforce-ssl"),
-    J_DB_USERNAME                   ("database.jdbc.username",                                      true, EnvProperty.DB_USERNAME),
-    J_DB_PASSWORD                   ("database.jdbc.password",                                      true, EnvProperty.DB_PASSWORD),
-    J_DB_CREATE                     ("database.jdbc.create-if-not-exist"),
-    J_HDB_SQL_OUT                   ("database.hibernate.sql-on-output"),
-    J_HDB_DRIVER                    ("database.hibernate.driver-package"),
-    J_HDB_DIALECT                   ("database.hibernate.dialect-package"),
-    J_HDB_HBM2DDL                   ("database.hibernate.hbm2ddl-auto-mode");
+    J_PAGINATION_MENU_IS_ALIVE      ("pagination.menu-is-alive-seconds");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -35,17 +35,15 @@ import net.dv8tion.jda.internal.managers.AccountManagerImpl;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 
 import org.yaml.snakeyaml.Yaml;
-import org.apache.commons.cli.*;
+import org.apache.commons.lang3.StringUtils;
 import io.github.cdimascio.dotenv.Dotenv;
-import org.hibernate.PropertyNotFoundException;
+
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.vault.support.JsonMapFlattener;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.util.*;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -58,22 +56,20 @@ import pl.miloszgilga.core.IEnumerableLocaleSet;
 public class BotConfiguration {
 
     public static final String JPREFIX = "bot";
-    private static final String LOCALE_BUNDLE_DIR = "lang";
-    private static final String LOCALE_BUNDLE_PROP = "messages";
+    private static final String LOCALE_BUNDLE_PROP = "i18n-jda/messages";
     private static final String ARTIFACT_PROP = "/artifact.properties";
 
     private final Map<BotProperty, Object> jProperties = new HashMap<>();
     private final Set<String> envProperties = new HashSet<>();
     private final Yaml yaml = new Yaml();
 
-    private final CommandLineParser commandLineParser = new DefaultParser();
-    private final HelpFormatter helpFormatter = new HelpFormatter();
     private final Dotenv dotenv = Dotenv.configure().systemProperties().load();
 
     @Getter(value = AccessLevel.PUBLIC)     private final EventWaiter eventWaiter = new EventWaiter();
     @Getter(value = AccessLevel.PUBLIC)     private String projectVersion;
 
     private ResourceBundle localeBundle;
+    private final Environment environment;
 
     @Getter(value = AccessLevel.PUBLIC)
     private final ScheduledExecutorService threadPool = Executors.newSingleThreadScheduledExecutor(r -> {
@@ -94,8 +90,14 @@ public class BotConfiguration {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void loadConfiguration(String[] args) {
-        final AppMode appMode = extractModeFromArguments(args);
+    BotConfiguration(Environment environment) {
+        this.environment = environment;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void loadConfiguration() {
+        final AppMode appMode = extractModeFromArguments();
         String language;
         try {
             final InputStream inputStream = new FileInputStream(appMode.getConfigFile());
@@ -121,9 +123,8 @@ public class BotConfiguration {
                 throw new IllegalArgumentException("Default player volume units must be between 0 and 150.");
             }
             language = getProperty(BotProperty.J_SELECTED_LOCALE);
+            localeBundle = ResourceBundle.getBundle(LOCALE_BUNDLE_PROP, new Locale(language));
 
-            final ClassLoader loader = new URLClassLoader(new URL[]{ new File(LOCALE_BUNDLE_DIR).toURI().toURL() });
-            localeBundle = ResourceBundle.getBundle(LOCALE_BUNDLE_PROP, new Locale(language), loader);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -133,26 +134,6 @@ public class BotConfiguration {
         log.info("Slash commands in application was turned {}. To change, set 'slash-commands.enabled' property.",
             getProperty(BotProperty.J_SLASH_COMMANDS_ENABLED, Boolean.class) ? "ON" : "OFF");
         log.info("Instantiate Spring Context Container...");
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public void printFancyTitle() {
-        if (!getProperty(BotProperty.J_SHOW_FANCY_TITLE, Boolean.class)) return;
-        try {
-            final InputStream fileStream = new FileInputStream(getProperty(BotProperty.J_FANCY_TITLE_PATH));
-            try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileStream))) {
-                String line;
-                while (!Objects.isNull(line = bufferedReader.readLine())) {
-                    System.out.println(line);
-                }
-                System.out.println();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        } catch (FileNotFoundException ex) {
-            throw new RuntimeException(ex);
-        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -168,7 +149,7 @@ public class BotConfiguration {
             properties.load(getClass().getResourceAsStream(ARTIFACT_PROP));
 
             final String versionProp = (String) properties.get("project.version");
-            if (Objects.isNull(versionProp)) throw new PropertyNotFoundException("Property project.version not found.");
+            if (Objects.isNull(versionProp)) throw new IllegalStateException("Property project.version not found.");
             projectVersion = versionProp;
             log.info("Application version: '{}'", versionProp);
 
@@ -201,24 +182,12 @@ public class BotConfiguration {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private AppMode extractModeFromArguments(String[] args) {
-        final Options options = new Options();
-        try {
-            final Option option = Option.builder("m").longOpt("mode").hasArg()
-                .required(true)
-                .desc("Select application mode (dev/prod)")
-                .build();
-            options.addOption(option);
-            final CommandLine commandLine = commandLineParser.parse(options, args, true);
-            if (commandLine.hasOption("m")) {
-                if (commandLine.getOptionValue("m").equalsIgnoreCase(AppMode.DEV.getMode())) return AppMode.DEV;
-                return AppMode.PROD;
-            }
-            return AppMode.DEV;
-        } catch (ParseException ex) {
-            helpFormatter.printHelp("Usage:", options);
-            throw new RuntimeException(ex);
+    private AppMode extractModeFromArguments() {
+        final String[] springProfile = environment.getActiveProfiles();
+        if (springProfile.length > 1) {
+            throw new IllegalStateException("Application only support one spring profile.");
         }
+        return AppMode.findModeBaseSpringProfile(springProfile[0]);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

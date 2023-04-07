@@ -25,118 +25,133 @@
 plugins {
     id 'java'
     id 'application'
-    id 'org.springframework.boot' version '3.0.2'
-    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-    alias libs.plugins.shadow.packager
+    alias libs.plugins.spring.boot.plugin
+    alias libs.plugins.spring.dept.plugin
 }
 
 def props = new Properties()
 file('src/main/resources/artifact.properties').withInputStream { props.load(it) }
 
-version         = props.getProperty("project.version")
-group           = 'pl.miloszgilga'
-mainClassName   = 'pl.miloszgilga.Bootloader'
+allprojects {
+    version         = props.getProperty("project.version")
+    group           = 'pl.miloszgilga'
+    mainClassName   = 'pl.miloszgilga.SpringBootRunner'
 
-repositories {
-    jcenter()
-    mavenCentral()
-    maven { url "https://m2.chew.pro/releases" }
-    maven { url "https://m2.dv8tion.net/releases" }
-    maven { url 'https://jitpack.io' }
+    repositories {
+        jcenter()
+        mavenLocal()
+        mavenCentral()
+        maven { url "https://m2.chew.pro/releases" }
+        maven { url "https://m2.dv8tion.net/releases" }
+        maven { url 'https://jitpack.io' }
+    }
+
+    compileJava.options.encoding = 'UTF-8'
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+    }
+
+    java.sourceCompatibility = JavaVersion.VERSION_17
+    java.targetCompatibility = JavaVersion.VERSION_17
+
+    configurations {
+        compileOnly.extendsFrom annotationProcessor
+        textCompileOnly.extendsFrom annotationProcessor
+        testAnnotationProcessor.extendsFrom annotationProcessor
+    }
+
+    test {
+        useJUnitPlatform()
+    }
 }
 
-compileJava.options.encoding = 'UTF-8'
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
-}
+subprojects {
+    apply plugin: 'java'
 
-java.sourceCompatibility = JavaVersion.VERSION_17
-java.targetCompatibility = JavaVersion.VERSION_17
+    dependencies {
+        implementation      libs.lombok
+
+        implementation      libs.commons.text
+        implementation      libs.commons.validator
+
+        annotationProcessor libs.lombok
+        testImplementation  libs.junit.api
+        testRuntimeOnly     libs.junit.engine
+    }
+}
 
 // NOTE: all 3rd part libraries in /gradle/libs.versions.toml file
-
 dependencies {
-    implementation      libs.jda
-    implementation      libs.lavaplayer
-    implementation      libs.jdautilities
+    implementation          libs.lombok
 
-    implementation      libs.mysql.driver
-    implementation      libs.hibernate
-    implementation      libs.c3p0pools
-    implementation      libs.liquibase
+    implementation          libs.h2.driver
+    implementation          libs.liquibase
+    implementation          libs.mysql.driver
 
-    implementation      libs.lombok
-    implementation      libs.spring.vault
-    implementation      libs.snakeyaml
-    implementation      libs.commons.text
-    implementation      libs.commons.validator
-    implementation      libs.commons.cli
-    implementation      libs.dotenv
-    implementation      libs.reflections
-    implementation      libs.apache.httpclient
+    implementation          libs.commons.text
+    implementation          libs.commons.validator
 
-    annotationProcessor libs.lombok
-    testImplementation  libs.junit.api
-    testRuntimeOnly     libs.junit.engine
+    developmentOnly         libs.spring.boot.devtools
+    implementation          libs.spring.boot.starter
+    runtimeOnly             libs.spring.boot.starter.web
+    runtimeOnly             libs.spring.boot.starter.security
+    implementation          libs.spring.boot.starter.data.jpa
+    runtimeOnly             libs.spring.boot.starter.validation
 
-    implementation 'org.springframework.boot:spring-boot-starter:3.0.5'
+    implementation          libs.jda
+    implementation          libs.lavaplayer
+    implementation          libs.jdautilities
 
+    runtimeOnly             libs.jmpsl.core
+    runtimeOnly             libs.jmpsl.security
+
+    implementation          libs.spring.vault
+    implementation          libs.snakeyaml
+    implementation          libs.dotenv
+    implementation          libs.reflections
+    implementation          libs.apache.httpclient
+    runtimeOnly             libs.jjwt.api
+    runtimeOnly             libs.jjwt.impl
+    runtimeOnly             libs.jjwt.jackson
+
+    annotationProcessor     libs.lombok
+    testImplementation      libs.junit.api
+    testRuntimeOnly         libs.junit.engine
+    testImplementation      libs.spring.boot.starter.test
+
+    implementation          project(':xm-jwizard-data-access')
+    implementation          project(':xm-jwizard-web-api')
 }
 
-shadowJar {
+bootJar {
     archiveFileName = "${props.getProperty("project.artifact")}-${project.version}.jar"
-    manifest {
-        attributes  'Main-Class':           project.mainClassName,
-                    'Specification-Title':  props.getProperty("project.name"),
-                    'Description':          props.getProperty("project.description"),
-                    'Multi-Release':        true
-    }
-    exclude(
-        '**/DEPENDENCIES*',
-        '**/LICENSE*',
-        '**/README*',
-        '**/AUTHORS*',
-        'changelog.txt',
-        'release-timestamp.txt',
-        'opus-java*.pom',
-        '**/*.html',
-        'META-INF/NOTICE*'
-    )
-    destinationDir(file("$rootDir/build/shadow"))
+    version =  project.version
+
+    destinationDir(file("$rootDir/build/jar"))
+    launchScript()
 }
 
 tasks.register('moveConfigurationFiles', Copy) {
     from layout.projectDirectory.files([
         'properties-dev.yml',
         'properties-prod.yml',
-        'fancy-title.txt',
         'activities-splashes.txt',
         '.env'
     ])
-    into layout.buildDirectory.dir("$rootDir/build/shadow")
+    into layout.buildDirectory.dir("$rootDir/build/jar")
 }
 
 tasks.register('moveExecutableFiles', Copy) {
     from layout.projectDirectory.dir('run-scripts')
-    into layout.buildDirectory.dir("$rootDir/build/shadow")
-}
-
-tasks.register('moveLangFiles', Copy) {
-    from layout.projectDirectory.dir('lang')
-    into layout.buildDirectory.dir("$rootDir/build/shadow/lang")
+    into layout.buildDirectory.dir("$rootDir/build/jar")
 }
 
 tasks.register('moveGfxFiles', Copy) {
     from layout.projectDirectory.dir('gfx')
     exclude 'github-logo.png'
-    into layout.buildDirectory.dir("$rootDir/build/shadow/gfx")
+    into layout.buildDirectory.dir("$rootDir/build/jar/gfx")
 }
 
-shadowJar.finalizedBy moveConfigurationFiles
-shadowJar.finalizedBy moveLangFiles
-shadowJar.finalizedBy moveGfxFiles
-shadowJar.finalizedBy moveExecutableFiles
-
-test {
-    useJUnitPlatform()
-}
+bootJar.finalizedBy moveConfigurationFiles
+bootJar.finalizedBy moveGfxFiles
+bootJar.finalizedBy moveExecutableFiles

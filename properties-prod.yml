@@ -60,9 +60,6 @@ bot:
         dj-role-name: 'DJwizard'
         locale:
             selected-locale: pl
-        fancy-title:
-            show: true
-            path-to-file: fancy-title.txt
         round-robin-activity:
             enable-sequencer: true
             sequencer-inverval-seconds: 6
@@ -75,15 +72,3 @@ bot:
     pagination:
         max-elements-per-page: 20
         menu-is-alive-seconds: 60
-    database:
-        jdbc:
-            connection: ${env:PROD_DB_JDBC}
-            enforce-ssl: true
-            username: ${env:PROD_DB_USERNAME}
-            password: ${env:PROD_DB_PASSWORD}
-            create-if-not-exist: true
-        hibernate:
-            sql-on-output: false
-            driver-package: com.mysql.cj.jdbc.Driver
-            dialect-package: org.hibernate.dialect.MySQLDialect
-            hbm2ddl-auto-mode: none

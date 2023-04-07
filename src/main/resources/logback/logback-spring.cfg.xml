@@ -43,6 +43,7 @@
     <property name="listenerLogger" value="pl.miloszgilga.listener"/>
     <property name="springFrameworkLogger" value="org.springframework"/>
     <property name="logbackLogger" value="ch.qos.logback"/>
+    <property name="reflectionsLogger" value="org.reflections.Reflections"/>
 
     <!-- start of async appenders section -->
 
@@ -96,6 +97,16 @@
         <appender-ref ref="async.appender.file.info-warn"/>
         <appender-ref ref="async.appender.file.error"/>
         <appender-ref ref="async.appender.file.spring.debug"/>
+        <appender-ref ref="appender.console.major"/>
+    </logger>
+
+    <logger name="${reflectionsLogger}" additivity="false" level="INFO">
+        <appender-ref ref="async.appender.file.info-warn"/>
+        <appender-ref ref="appender.console.major"/>
+    </logger>
+
+    <logger name="${reflectionsLogger}" additivity="false" level="ERROR">
+        <appender-ref ref="async.appender.file.error"/>
         <appender-ref ref="appender.console.major"/>
     </logger>
 

@@ -30,50 +30,60 @@ jda                 = '4.4.1_353'
 lavaPlayer          = '1.4.0'
 jdaUtilities        = '1.24.1'
 
+h2Driver            = '2.1.214'
 mysqlDriver         = '8.0.31'
-hibernate           = '6.1.6.Final'
-liquibase           = '3.10.3'
+liquibase           = '4.19.0'
 
 lombok              = '1.18.26'
-log4j               = '2.20.0'
 jUnit               = '5.8.1'
-springFramework     = '6.0.5'
+springBoot          = '3.0.2'
 springVault         = '3.0.0'
 snakeYaml           = '1.33'
 commonsText         = '1.10.0'
 commonsValidator    = '1.7'
 dotEnv              = '5.2.2'
-commonsCli          = '1.5.0'
 reflections         = '0.10.2'
 apacheHttpClient    = '4.5.14'
+jmpsl               = '1.0.2_03'
+jjwt                = '0.11.5'
 
-shadowJarPackager   = '7.1.2'
+springBootDep       = '1.0.15.RELEASE'
 
 [libraries]
-jda                     = { module = 'net.dv8tion:JDA',                             version.ref = 'jda' }
-lavaplayer              = { module = 'com.github.walkyst:lavaplayer-fork',          version.ref = 'lavaPlayer' }
-jdautilities            = { module = 'pw.chew:jda-chewtils',                        version.ref = 'jdaUtilities' }
+jda                                 = { module = 'net.dv8tion:JDA',                                             version.ref = 'jda' }
+lavaplayer                          = { module = 'com.github.walkyst:lavaplayer-fork',                          version.ref = 'lavaPlayer' }
+jdautilities                        = { module = 'pw.chew:jda-chewtils',                                        version.ref = 'jdaUtilities' }
 
-mysql-driver            = { module = 'mysql:mysql-connector-java',                  version.ref = 'mysqlDriver' }
-hibernate               = { module = 'org.hibernate:hibernate-core',                version.ref = 'hibernate' }
-c3p0pools               = { module = 'org.hibernate.orm:hibernate-c3p0',            version.ref = 'hibernate' }
-liquibase               = { module = 'org.liquibase:liquibase-core',                version.ref = 'liquibase' }
+h2-driver                           = { module = 'com.h2database:h2',                                           version.ref = 'h2Driver' }
+mysql-driver                        = { module = 'mysql:mysql-connector-java',                                  version.ref = 'mysqlDriver' }
+liquibase                           = { module = 'org.liquibase:liquibase-core',                                version.ref = 'liquibase' }
 
-lombok                  = { module = 'org.projectlombok:lombok',                    version.ref = 'lombok' }
-log4j-core              = { module = 'org.apache.logging.log4j:log4j-core',         version.ref = 'log4j' }
-log4j-api               = { module = 'org.apache.logging.log4j:log4j-api',          version.ref = 'log4j' }
-log4j-slf4j             = { module = 'org.apache.logging.log4j:log4j-slf4j-impl',   version.ref = 'log4j' }
-spring-context          = { module = 'org.springframework:spring-context',          version.ref = 'springFramework' }
-spring-vault            = { module = 'org.springframework.vault:spring-vault-core', version.ref = 'springVault' }
-snakeyaml               = { module = 'org.yaml:snakeyaml',                          version.ref = 'snakeYaml' }
-commons-text            = { module = 'org.apache.commons:commons-text',             version.ref = 'commonsText' }
-commons-validator       = { module = 'commons-validator:commons-validator',         version.ref = 'commonsValidator' }
-commons-cli             = { module = 'commons-cli:commons-cli',                     version.ref = 'commonsCli' }
-dotenv                  = { module = 'io.github.cdimascio:java-dotenv',             version.ref = 'dotEnv' }
-reflections             = { module = 'org.reflections:reflections',                 version.ref = 'reflections' }
-apache-httpclient       = { module = 'org.apache.httpcomponents:httpclient',        version.ref = 'apacheHttpClient' }
-junit-api               = { module = 'org.junit.jupiter:junit-jupiter-api',         version.ref = 'jUnit' }
-junit-engine            = { module = 'org.junit.jupiter:junit-jupiter-engine',      version.ref = 'jUnit' }
+spring-boot-starter                 = { module = 'org.springframework.boot:spring-boot-starter',                version.ref = 'springBoot' }
+spring-boot-devtools                = { module = 'org.springframework.boot:spring-boot-devtools',               version.ref = 'springBoot' }
+spring-boot-starter-web             = { module = 'org.springframework.boot:spring-boot-starter-web',            version.ref = 'springBoot' }
+spring-boot-starter-test            = { module = 'org.springframework.boot:spring-boot-starter-test',           version.ref = 'springBoot' }
+spring-boot-starter-data-jpa        = { module = 'org.springframework.boot:spring-boot-starter-data-jpa',       version.ref = 'springBoot' }
+spring-boot-starter-security        = { module = 'org.springframework.boot:spring-boot-starter-security',       version.ref = 'springBoot' }
+spring-boot-starter-validation      = { module = 'org.springframework.boot:spring-boot-starter-validation',     version.ref = 'springBoot' }
+
+#jmpsl-core                          = { module = 'pl.miloszgilga.jmpsl:jmpsl-core',                             version.ref = 'jmpsl' }
+jmpsl-core                          = { module = 'pl.miloszgilga:jmpsl-core',                                   version.ref = 'jmpsl' }
+jmpsl-security                      = { module = 'pl.miloszgilga:jmpsl-security',                               version.ref = 'jmpsl' }
+
+lombok                              = { module = 'org.projectlombok:lombok',                                    version.ref = 'lombok' }
+spring-vault                        = { module = 'org.springframework.vault:spring-vault-core',                 version.ref = 'springVault' }
+snakeyaml                           = { module = 'org.yaml:snakeyaml',                                          version.ref = 'snakeYaml' }
+commons-text                        = { module = 'org.apache.commons:commons-text',                             version.ref = 'commonsText' }
+commons-validator                   = { module = 'commons-validator:commons-validator',                         version.ref = 'commonsValidator' }
+dotenv                              = { module = 'io.github.cdimascio:java-dotenv',                             version.ref = 'dotEnv' }
+reflections                         = { module = 'org.reflections:reflections',                                 version.ref = 'reflections' }
+apache-httpclient                   = { module = 'org.apache.httpcomponents:httpclient',                        version.ref = 'apacheHttpClient' }
+junit-api                           = { module = 'org.junit.jupiter:junit-jupiter-api',                         version.ref = 'jUnit' }
+junit-engine                        = { module = 'org.junit.jupiter:junit-jupiter-engine',                      version.ref = 'jUnit' }
+jjwt-api                            = { module = 'io.jsonwebtoken:jjwt-api',                                    version.ref = 'jjwt' }
+jjwt-impl                           = { module = 'io.jsonwebtoken:jjwt-impl',                                   version.ref = 'jjwt' }
+jjwt-jackson                        = { module = 'io.jsonwebtoken:jjwt-jackson',                                version.ref = 'jjwt' }
 
 [plugins]
-shadow-packager         = { id     = 'com.github.johnrengelman.shadow',             version.ref = 'shadowJarPackager' }
+spring-boot-plugin                  = { id     = 'org.springframework.boot',                                    version.ref = 'springBoot' }
+spring-dept-plugin                  = { id     = 'io.spring.dependency-management',                             version.ref = 'springBootDep' }

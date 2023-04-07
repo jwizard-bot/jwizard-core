@@ -36,15 +36,22 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SpringBootRunner implements CommandLineRunner {
 
-    public static void main(String[] args) {
-        SpringApplication.run(SpringBootRunner.class);
+    private final JDABot jdaBot;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    SpringBootRunner(JDABot jdaBot) {
+        this.jdaBot = jdaBot;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public static void main(String[] args) {
+        SpringApplication.run(SpringBootRunner.class);
+    }
+
     @Override
     public void run(String... args) {
-        //
-
+        jdaBot.run();
     }
 }

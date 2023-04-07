@@ -34,6 +34,8 @@ import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
+
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -50,23 +52,23 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 @Component
 public class JClassLoader {
 
-    final org.reflections.Configuration commandsReflectionConfig = new ConfigurationBuilder()
-        .setUrls(ClasspathHelper.forPackage("pl.miloszgilga.command")).setScanners(Scanners.TypesAnnotated);
-    private final Reflections commandsReflections = new Reflections(commandsReflectionConfig);
+    private final org.reflections.Configuration reflectionConfig = new ConfigurationBuilder()
+        .setUrls(ClasspathHelper.forJavaClassPath()).setScanners(Scanners.TypesAnnotated);
 
-    final org.reflections.Configuration listenersReflectionsConfig = new ConfigurationBuilder()
-        .setUrls(ClasspathHelper.forPackage("pl.miloszgilga.listener")).setScanners(Scanners.TypesAnnotated);
-    private final Reflections listenersReflections = new Reflections(listenersReflectionsConfig);
+    private final Reflections commandsReflections = new Reflections(reflectionConfig);
+    private final Reflections listenersReflections = new Reflections(reflectionConfig);
 
     private final List<AbstractCommand> loadedCommands = new ArrayList<>();
     private final List<AbstractListenerAdapter> loadedListeners = new ArrayList<>();
 
     private final BotConfiguration config;
+    private final ApplicationContext context;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public JClassLoader(BotConfiguration config) {
+    public JClassLoader(BotConfiguration config, ApplicationContext context) {
         this.config = config;
+        this.context = context;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,7 +78,7 @@ public class JClassLoader {
             .getTypesAnnotatedWith(JDAInjectableCommandLazyService.class);
         if (commandsClazz.isEmpty()) return;
         for (final Class<?> commandClazz : commandsClazz) {
-            //loadedCommands.add((AbstractCommand) SpringBootRunner.APP_CONTEXT.getBean(commandClazz));
+            loadedCommands.add((AbstractCommand) context.getBean(commandClazz));
         }
         log.info("Successfully loaded command interceptors ({}):", loadedCommands.size());
         loadedCommands.sort(Comparator.comparing(Command::getName));
@@ -95,7 +97,7 @@ public class JClassLoader {
             .getTypesAnnotatedWith(JDAInjectableListenerLazyService.class);
         if (listenersClazz.isEmpty()) return;
         for (final Class<?> listenerClazz : listenersClazz) {
-            //loadedListeners.add((AbstractListenerAdapter) SpringBootRunner.APP_CONTEXT.getBean(listenerClazz));
+            loadedListeners.add((AbstractListenerAdapter) context.getBean(listenerClazz));
         }
         log.info("Successfully loaded listener adapter interceptors ({}):", loadedListeners.size());
         for (final Object jdaListener : loadedListeners) {

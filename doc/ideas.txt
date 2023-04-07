@@ -1,10 +1,32 @@
 guilds
   id
   discord_id
-  messsages_deleted
-  reactions_deleted
   updated_at
   created_at
+
+guild_settings
+  id
+  music_text_channel_id
+  bot_prefix
+  skip_ratio
+  slash_commands_enabled
+  time_to_leave_channel
+  time_to_end_voting
+  default_player_volume
+  max_repeats_single_track
+  dj_role_name
+  u18n_locale
+  guild_id
+  updated_at
+  created_at
+
+server_stats
+  id
+  messsages_deleted
+  reactions_deleted
+  guild_id
+  created_at
+  updated_at
 
 members
   id
@@ -19,6 +41,8 @@ member_stats
   reactions_added
   guild_id
   member_id
+  created_at
+  updated_at
 
 playlist_tracks
   id
@@ -40,6 +64,8 @@ playlists
 komendy do zbierania statystyk serwera:
   statystyki całego serwera
   statystyki pojedynczego użytkownika
+  odblokowanie/zablokowanie statystyk, po każdorazowym odblokowaniu/zablokowaniu statystyk na głównym kanale serwera wysyłanie wiadomości z informacją o zbieraniu danych
+
 
 sekcja obsługi playlist (komendy):
   ShowMyPlaylistsCmd - pokazywanie wszystkich playlist użytkownika, włącznie z prywatnymi
@@ -57,3 +83,8 @@ sekcja obsługi playlist (komendy):
   SaveCurrentTracksInPlaylistCmd [playlist name or id] - dodanie aktualnie wpisanych piosenek kolejki do istniejącej playlisty
   SaveCurrentTracksInNewPlaylistCmd [playlist name] - dodanie aktualnie wpisanych piosenek kolejki do nowej playlisty
   LoadAndPlayPlaylistTracksCmd [playlist name or id] - załadowanie i rozpoczęcie odtwarzania playlisty
+
+
+aplikacja webowa (Spring Boot, Angular):
+  możliwość zmiany ustawień bota na wybranym serwerze dla administratora serwera
+  możliwośc założenia konta w aplikacji, podglądanie playlist, dodawanie, usuwanie, modyfikowanie i dodawanie ścieżek audio (nazwa piosenki lub link lub plik audio)

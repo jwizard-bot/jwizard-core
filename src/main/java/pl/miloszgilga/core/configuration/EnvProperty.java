@@ -33,10 +33,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 enum EnvProperty {
     TOKEN           ("TOKEN"),
-    APP_ID          ("APP_ID"),
-    DB_JDBC         ("DB_JDBC"),
-    DB_USERNAME     ("DB_USERNAME"),
-    DB_PASSWORD     ("DB_PASSWORD");
+    APP_ID          ("APP_ID");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

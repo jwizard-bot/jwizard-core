@@ -41,7 +41,6 @@ import java.util.*;
 import javax.security.auth.login.LoginException;
 
 import pl.miloszgilga.core.loader.JClassLoader;
-import pl.miloszgilga.core.db.HibernateFactory;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.audioplayer.PlayerManager;
@@ -58,7 +57,6 @@ public class JDABot {
     private final BotConfiguration config;
     private final JClassLoader jClassLoader;
     private final ActivityStatusSequencer statusSequencer;
-    private final HibernateFactory hibernateFactory;
     private final PlayerManager playerManager;
     private final AloneOnChannelListener aloneOnChannelListener;
     private final DayNightBotThumbnailSequencer dayNightBotThumbnailSequencer;
@@ -89,13 +87,12 @@ public class JDABot {
 
     JDABot(
         BotConfiguration config, JClassLoader jClassLoader, ActivityStatusSequencer statusSequencer,
-        HibernateFactory hibernateFactory, PlayerManager playerManager, AloneOnChannelListener aloneOnChannelListener,
+        PlayerManager playerManager, AloneOnChannelListener aloneOnChannelListener,
         DayNightBotThumbnailSequencer dayNightBotThumbnailSequencer
     ) {
         this.config = config;
         this.jClassLoader = jClassLoader;
         this.statusSequencer = statusSequencer;
-        this.hibernateFactory = hibernateFactory;
         this.playerManager = playerManager;
         this.aloneOnChannelListener = aloneOnChannelListener;
         this.dayNightBotThumbnailSequencer = dayNightBotThumbnailSequencer;
@@ -103,16 +100,12 @@ public class JDABot {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    void run(String[] args) {
-        config.loadConfiguration(args);
-        config.printFancyTitle();
+    void run() {
+        config.loadConfiguration();
         config.printAdditionalInformations();
 
         jClassLoader.loadCommandsViaReflection();
         jClassLoader.loadListenersViaReflection();
-
-        hibernateFactory.loadConfiguration();
-        hibernateFactory.initializeComponent();
 
         final CommandClientBuilder commandBuilder = new CommandClientBuilder()
             .setPrefix(config.getProperty(BotProperty.J_PREFIX))

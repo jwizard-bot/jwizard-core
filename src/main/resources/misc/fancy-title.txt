@@ -10,3 +10,4 @@
 
  Created by Miłosz Gilga (https://miloszgilga.pl)
  Source code (https://github.com/Milosz08/JWizard_Discord_Bot)
+ Spring Boot version: ${spring-boot.formatted-version}

@@ -23,3 +23,6 @@
  */
 
 rootProject.name = 'jwizard-discord-bot'
+
+include 'xm-jwizard-data-access'
+include 'xm-jwizard-web-api'

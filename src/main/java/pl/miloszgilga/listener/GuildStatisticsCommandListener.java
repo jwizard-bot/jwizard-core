@@ -24,18 +24,13 @@
 
 package pl.miloszgilga.listener;
 
-import org.hibernate.Session;
-
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 
-import java.util.function.Consumer;
-
 import pl.miloszgilga.embed.EmbedMessageBuilder;
-import pl.miloszgilga.core.db.HibernateFactory;
 import pl.miloszgilga.core.AbstractListenerAdapter;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
@@ -45,77 +40,39 @@ import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
 @JDAInjectableListenerLazyService
 public class GuildStatisticsCommandListener extends AbstractListenerAdapter {
 
-    private final HibernateFactory hibernate;
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    GuildStatisticsCommandListener(HibernateFactory hibernate, BotConfiguration config, EmbedMessageBuilder embedBuilder) {
+    GuildStatisticsCommandListener(BotConfiguration config, EmbedMessageBuilder embedBuilder) {
         super(config, embedBuilder);
-        this.hibernate = hibernate;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        final Consumer<Session> onExecute = session -> {
-
-        };
-        final Consumer<RuntimeException> onException = ex -> {
-
-        };
-        hibernate.executeTrasactQuery(onExecute, onException);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onGuildMessageUpdate(GuildMessageUpdateEvent event) {
-        final Consumer<Session> onExecute = session -> {
-
-        };
-        final Consumer<RuntimeException> onException = ex -> {
-
-        };
-        hibernate.executeTrasactQuery(onExecute, onException);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onGuildMessageDelete(GuildMessageDeleteEvent event) {
-        final Consumer<Session> onExecute = session -> {
-
-        };
-        final Consumer<RuntimeException> onException = ex -> {
-
-        };
-        hibernate.executeTrasactQuery(onExecute, onException);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
-        final Consumer<Session> onExecute = session -> {
-
-        };
-        final Consumer<RuntimeException> onException = ex -> {
-
-        };
-        hibernate.executeTrasactQuery(onExecute, onException);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onGuildMessageReactionRemove(GuildMessageReactionRemoveEvent event) {
-        final Consumer<Session> onExecute = session -> {
-
-        };
-        final Consumer<RuntimeException> onException = ex -> {
-
-        };
-        hibernate.executeTrasactQuery(onExecute, onException);
     }
 }
