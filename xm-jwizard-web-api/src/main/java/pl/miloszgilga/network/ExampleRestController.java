@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: ScannedHibernateEntity.java
- * Last modified: 03/03/2023, 00:11
+ * File name: RestController.java
+ * Last modified: 07/04/2023, 02:07
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -22,17 +22,20 @@
  * or other dealings in the software.
  */
 
-package pl.miloszgilga.core.db;
+package pl.miloszgilga.network;
 
-import java.lang.annotation.Target;
-import java.lang.annotation.Retention;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.RetentionPolicy;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ScannedHibernateEntity {
+@RestController
+@RequestMapping("/api/v1")
+public class ExampleRestController {
+
+    @GetMapping("hello")
+    String hello() {
+        return "hello api!";
+    }
 }
