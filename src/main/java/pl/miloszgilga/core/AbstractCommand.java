@@ -27,7 +27,8 @@ package pl.miloszgilga.core;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.command.SlashCommand;
 
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import org.springframework.context.annotation.DependsOn;
@@ -106,7 +107,7 @@ public abstract class AbstractCommand extends SlashCommand {
 
     private void sendEmbedsFromCommand(CommandEvent event, CommandEventWrapper wrapper) {
         if (wrapper.getEmbeds().isEmpty()) return;
-        final var defferedMessages = event.getTextChannel().sendMessageEmbeds(wrapper.getEmbeds());
+        final RestAction<Message> defferedMessages = event.getTextChannel().sendMessageEmbeds(wrapper.getEmbeds());
         sendEmbedsFromAnyCommand(defferedMessages, wrapper);
     }
 
@@ -120,29 +121,13 @@ public abstract class AbstractCommand extends SlashCommand {
             sendEmbedsFromAnyCommand(defferedMessages, wrapper);
             return;
         }
-        final var defferedMessages = event.getHook().sendMessageEmbeds(wrapper.getEmbeds());
-        final QueueAfterParam afterParam = wrapper.getQueueAfterParam();
-
-        if (Objects.isNull(afterParam)) {
-            if (Objects.isNull(wrapper.getAppendAfterEmbeds())) {
-                defferedMessages.queue();
-                return;
-            }
-            defferedMessages.queue(v -> wrapper.getAppendAfterEmbeds().run());
-            return;
-        }
-        if (Objects.isNull(wrapper.getAppendAfterEmbeds())) {
-            defferedMessages.queueAfter(afterParam.duration(), afterParam.timeUnit());
-            return;
-        }
-        final var scheduledFuture = defferedMessages.queueAfter(afterParam.duration(), afterParam.timeUnit());
-        if (!scheduledFuture.isDone()) return;
-        wrapper.getAppendAfterEmbeds().run();
+        final RestAction<Message> defferedMessages = event.getHook().sendMessageEmbeds(wrapper.getEmbeds());
+        sendEmbedsFromAnyCommand(defferedMessages, wrapper);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void sendEmbedsFromAnyCommand(MessageAction defferedMessages, CommandEventWrapper wrapper) {
+    private void sendEmbedsFromAnyCommand(RestAction<Message> defferedMessages, CommandEventWrapper wrapper) {
         final QueueAfterParam afterParam = wrapper.getQueueAfterParam();
 
         if (Objects.isNull(afterParam)) {
