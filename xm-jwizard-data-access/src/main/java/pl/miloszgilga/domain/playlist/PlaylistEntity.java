@@ -51,6 +51,10 @@ public class PlaylistEntity extends AbstractAuditableEntity implements Serializa
     @Column(name = "is_private")            private Boolean isPrivate;
 
     @ManyToOne(cascade = { PERSIST, MERGE, REMOVE }, fetch = LAZY)
+    @JoinColumn(name = "guild_id", referencedColumnName = "id")
+    private GuildEntity guild;
+
+    @ManyToOne(cascade = { PERSIST, MERGE, REMOVE }, fetch = LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private MemberEntity member;
 
@@ -78,6 +82,14 @@ public class PlaylistEntity extends AbstractAuditableEntity implements Serializa
 
     void setMember(MemberEntity member) {
         this.member = member;
+    }
+
+    GuildEntity getGuild() {
+        return guild;
+    }
+
+    void setGuild(GuildEntity guild) {
+        this.guild = guild;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
