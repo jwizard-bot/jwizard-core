@@ -27,7 +27,6 @@
 bot:
     name: 'JWizard DEV'
     source-code-path: 'https://github.com/Milosz08/JWizard_Discord_Bot'
-    development-mode: true
     prefix: '?'
     slash-commands:
         enabled: true

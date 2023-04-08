@@ -38,7 +38,6 @@ import java.util.Arrays;
 public enum BotProperty {
     J_NAME                          ("name"),
     J_SOURCE_CODE_PATH              ("source-code-path"),
-    J_DEVELOPMENT_MODE              ("development-mode"),
     J_PREFIX                        ("prefix"),
     J_SLASH_COMMANDS_ENABLED        ("slash-commands.enabled"),
     J_HAS_AVATAR                    ("avatar.has-avatar"),

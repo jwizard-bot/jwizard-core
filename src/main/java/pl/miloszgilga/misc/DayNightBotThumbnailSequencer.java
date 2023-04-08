@@ -31,6 +31,7 @@ import net.dv8tion.jda.api.entities.Icon;
 import net.dv8tion.jda.api.managers.AccountManager;
 import net.dv8tion.jda.internal.managers.AccountManagerImpl;
 
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -42,6 +43,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import pl.miloszgilga.core.configuration.AppMode;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.AbstractConfigLoadableComponent;
@@ -53,6 +55,7 @@ import pl.miloszgilga.core.loader.AbstractConfigLoadableComponent;
 public class DayNightBotThumbnailSequencer extends AbstractConfigLoadableComponent {
 
     private final BotConfiguration config;
+    private final Environment environment;
 
     private JDA jda;
     private TimeZone timezone;
@@ -63,8 +66,9 @@ public class DayNightBotThumbnailSequencer extends AbstractConfigLoadableCompone
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    DayNightBotThumbnailSequencer(BotConfiguration config) {
+    DayNightBotThumbnailSequencer(BotConfiguration config, Environment environment) {
         this.config = config;
+        this.environment = environment;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -84,7 +88,7 @@ public class DayNightBotThumbnailSequencer extends AbstractConfigLoadableCompone
     @Override
     protected void abstractInitializeComponent() {
         if (!config.getProperty(BotProperty.J_AVATAR_DAY_NIGHT_ENABLED, Boolean.class)) return;
-        if (config.getProperty(BotProperty.J_DEVELOPMENT_MODE, Boolean.class)) return;
+        if (AppMode.isDevProfileActive(environment)) return;
 
         dayAvatarPath = config.getProperty(BotProperty.J_PATH_TO_AVATAR_DAY_MODE);
         nightAvatarPath = config.getProperty(BotProperty.J_PATH_TO_AVATAR_NIGHT_MODE);

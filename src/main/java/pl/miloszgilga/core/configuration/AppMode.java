@@ -27,13 +27,15 @@ package pl.miloszgilga.core.configuration;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.core.env.Environment;
+
 import java.util.Arrays;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Getter
 @RequiredArgsConstructor
-enum AppMode {
+public enum AppMode {
     PROD    ("PROD",    "properties-prod.yml",  "production",   "prod"),
     DEV     ("DEV",     "properties-dev.yml",   "development",  "dev");
 
@@ -46,10 +48,16 @@ enum AppMode {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static AppMode findModeBaseSpringProfile(String profile) {
+    static AppMode findModeBaseSpringProfile(String profile) {
         return Arrays.stream(values())
             .filter(p -> p.springAlias.equals(profile))
             .findFirst()
             .orElseThrow(() -> new IllegalStateException("App only support one spring profile: 'dev' or 'prod'."));
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static boolean isDevProfileActive(Environment environment) {
+        return environment.getActiveProfiles()[0].equals(DEV.springAlias);
     }
 }
