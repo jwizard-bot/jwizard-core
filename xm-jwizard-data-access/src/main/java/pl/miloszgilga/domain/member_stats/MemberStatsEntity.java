@@ -50,6 +50,7 @@ public class MemberStatsEntity extends AbstractAuditableEntity implements Serial
     @Column(name = "messages_sended")               private Long messagesSended;
     @Column(name = "messages_updated")              private Long messagesUpdated;
     @Column(name = "reactions_added")               private Long reactionsAdded;
+    @Column(name = "level")                         private Integer level;
 
     @ManyToOne(cascade = { PERSIST, MERGE, REMOVE }, fetch = LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id")
@@ -101,6 +102,14 @@ public class MemberStatsEntity extends AbstractAuditableEntity implements Serial
         this.guilds = guilds;
     }
 
+    Integer getLevel() {
+        return level;
+    }
+
+    void setLevel(Integer level) {
+        this.level = level;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
@@ -109,6 +118,7 @@ public class MemberStatsEntity extends AbstractAuditableEntity implements Serial
             "messagesSended=" + messagesSended +
             ", messagesUpdated=" + messagesUpdated +
             ", reactionsAdded=" + reactionsAdded +
+            ", level=" + level +
             '}';
     }
 }
