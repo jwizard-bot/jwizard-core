@@ -39,7 +39,7 @@ import org.jmpsl.core.db.AbstractAuditableEntity;
 
 @Entity
 @NoArgsConstructor
-@Table(name = "guild")
+@Table(name = "guilds")
 public class GuildEntity extends AbstractAuditableEntity implements Serializable {
     @Serial private static final long serialVersionUID = 1L;
 

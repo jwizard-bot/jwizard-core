@@ -33,10 +33,10 @@ import java.io.Serializable;
 
 import org.jmpsl.core.db.AbstractAuditableEntity;
 
-import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.CascadeType.*;
-import static jakarta.persistence.CascadeType.REMOVE;
+import static jakarta.persistence.FetchType.LAZY;
 
+import pl.miloszgilga.domain.guild.GuildEntity;
 import pl.miloszgilga.domain.member.MemberEntity;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
