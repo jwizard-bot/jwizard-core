@@ -5,5 +5,8 @@
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <!-- datatables migrations -->
+    <include file="migrations/2023-04-08_00000_create-statistics-tables.xml" relativeToChangelogFile="true"/>
+    <include file="migrations/2023-04-08_00001_create-playlist_tables.xml" relativeToChangelogFile="true"/>
+    <include file="migrations/2023-04-08_00002_create-guild-settings-table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
