@@ -41,7 +41,7 @@
     <property name="textType" value="text" dbms="mysql,postgresql"/>
     <property name="textType" value="varchar(1000000)" dbms="h2"/>
 
-    <changeSet id="2023-04-08_00001_create-playlist_tables" author="milosz08" context="lq_dev, lq_prod">
+    <changeSet id="2023-04-08_00001_create-playlist-tables" author="milosz08" context="lq_dev, lq_prod">
         
         <createTable tableName="playlist_tracks">
             <column name="id" autoIncrement="${autoIncrement}" type="${unsignedLongType}">

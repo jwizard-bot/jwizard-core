@@ -35,7 +35,7 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 public enum CommandCategory {
     MUSIC               (CategoryLocaleSet.COMMAND_CATEGORY_MUSIC),
     DJ                  (CategoryLocaleSet.COMMAND_CATEGORY_DJ_ROLE),
-    STATISTICS          (CategoryLocaleSet.COMMAND_CATEGORY_STATISTICS),
+    STATS               (CategoryLocaleSet.COMMAND_CATEGORY_STATISTICS),
     OWNER_MANAGER       (CategoryLocaleSet.COMMAND_CATEGORY_OWNER_AND_MANAGER),
     OTHERS              (CategoryLocaleSet.COMMAND_CATEGORY_OTHERS);
 

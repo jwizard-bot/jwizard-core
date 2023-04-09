@@ -52,11 +52,11 @@ public class MemberStatsEntity extends AbstractAuditableEntity implements Serial
     @Column(name = "reactions_added")               private Long reactionsAdded;
     @Column(name = "level")                         private Integer level;
 
-    @ManyToOne(cascade = { PERSIST, MERGE, REMOVE }, fetch = LAZY)
+    @ManyToOne(cascade = { MERGE, REMOVE }, fetch = LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private MemberEntity member;
 
-    @ManyToOne(cascade = { PERSIST, MERGE, REMOVE }, fetch = LAZY)
+    @ManyToOne(cascade = { MERGE, REMOVE }, fetch = LAZY)
     @JoinColumn(name = "guild_id", referencedColumnName = "id")
     private GuildEntity guilds;
 
@@ -90,16 +90,16 @@ public class MemberStatsEntity extends AbstractAuditableEntity implements Serial
         return member;
     }
 
-    void setMember(MemberEntity member) {
+    public void setMember(MemberEntity member) {
         this.member = member;
     }
 
-    GuildEntity getGuilds() {
-        return guilds;
+    GuildEntity getGuild() {
+        return guild;
     }
 
-    void setGuilds(GuildEntity guilds) {
-        this.guilds = guilds;
+    public void setGuild(GuildEntity guild) {
+        this.guild = guild;
     }
 
     Integer getLevel() {

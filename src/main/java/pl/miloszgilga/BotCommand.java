@@ -66,7 +66,7 @@ public enum BotCommand {
     SET_PLAYER_VOLUME       ("setvolume",   true, new String[]{ "svl" },          DJ,     AUDIO_PLAYER_SET_VOLUME_COMMAND_DESC,       AUDIO_PLAYER_SET_VOLUME_ARG_SYNTAX),
     RESET_PLAYER_VOLUME     ("volumecls",   true, new String[]{ "cvl" },          DJ,     AUDIO_PLAYER_RESET_VOLUME_COMMAND_DESC),
     JOIN_TO_CHANNEL         ("join",        true, new String[]{ "jch" },          DJ,     JOIN_TO_CHANNEL_COMMAND_DESC),
-    REMOVE_MEMBER_TRACKS    ("tracksrm",    true, new String[]{ "rtr" },          DJ,     REMOVE_MEMBER_TRACKS_COMMAND_DESC,          REMOVE_MEMBER_TRACKS_ARG_SYNTAX),
+    REMOVE_MEMBER_TRACKS    ("tracksrm",    true, new String[]{ "rtr" },          DJ,     REMOVE_MEMBER_TRACKS_COMMAND_DESC,          MEMBER_TAG_ARG_SYNTAX),
     SHUFFLE_QUEUE           ("shuffle",     true, new String[]{ "shq" },          DJ,     SHUFFLE_QUEUE_COMMAND_DESC),
     SKIP_TO_TRACK           ("skipto",      true, new String[]{ "skt" },          DJ,     SKIP_QUEUE_TO_TRACK_COMMAND_DESC,           SKIP_QUEUE_TO_TRACK_ARG_SYNTAX),
     SKIP_TRACK              ("skip",        true, new String[]{ "sk" },           DJ,     SKIP_TRACK_COMMAND_DESC),

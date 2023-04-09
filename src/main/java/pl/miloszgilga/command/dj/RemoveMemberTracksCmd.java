@@ -67,7 +67,7 @@ public class RemoveMemberTracksCmd extends AbstractDjCommand {
 
     @Override
     protected void doExecuteDjCommand(CommandEventWrapper event) {
-        String userId = event.getArgumentAndParse(BotCommandArgument.MEMBER_TAG);
+        String userId = event.getArgumentAndParse(BotCommandArgument.REMOVE_TRACK_MEMBER_TAG);
         if (userId.contains("@")) userId = userId.replaceAll("[@<>]", "");
 
         final MemberRemovedTracksInfo removedTracksInfo = playerManager.removeTracksFromMember(event, userId);

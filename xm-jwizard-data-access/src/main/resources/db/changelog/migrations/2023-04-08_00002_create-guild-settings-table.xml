@@ -48,7 +48,7 @@
                 <constraints nullable="false" primaryKey="true"/>
             </column>
 
-            <column name="music_text_channel_id" type="varchar(18)">
+            <column name="music_text_channel_id" type="varchar(20)">
                 <constraints nullable="true"/>
             </column>
             <column name="bot_prefix" type="varchar(3)">

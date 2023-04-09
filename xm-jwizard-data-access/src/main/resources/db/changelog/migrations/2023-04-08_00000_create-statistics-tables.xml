@@ -51,7 +51,7 @@
             <column name="name" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="discord_id" type="varchar(18)">
+            <column name="discord_id" type="varchar(20)">
                 <constraints nullable="false"/>
             </column>
 
@@ -95,7 +95,7 @@
             <column name="guild_nickname" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="discord_id" type="varchar(18)">
+            <column name="discord_id" type="varchar(20)">
                 <constraints nullable="false"/>
             </column>
 
@@ -126,7 +126,7 @@
             </column>
 
             <column name="member_id" type="${unsignedLongType}">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="guild_id" type="${unsignedLongType}">
                 <constraints nullable="false"/>

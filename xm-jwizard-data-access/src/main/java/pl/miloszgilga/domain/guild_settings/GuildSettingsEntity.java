@@ -147,7 +147,7 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
         return guild;
     }
 
-    void setGuild(GuildEntity guild) {
+    public void setGuild(GuildEntity guild) {
         this.guild = guild;
     }
 

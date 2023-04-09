@@ -102,7 +102,7 @@ dependencies {
     implementation          libs.lavaplayer
     implementation          libs.jdautilities
 
-    runtimeOnly             libs.jmpsl.core
+    implementation          libs.jmpsl.core
     runtimeOnly             libs.jmpsl.security
 
     implementation          libs.spring.vault
