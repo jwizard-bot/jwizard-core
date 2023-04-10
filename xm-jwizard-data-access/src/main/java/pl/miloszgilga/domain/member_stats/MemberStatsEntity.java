@@ -47,6 +47,7 @@ import pl.miloszgilga.domain.member.MemberEntity;
 public class MemberStatsEntity extends AbstractAuditableEntity implements Serializable {
     @Serial private static final long serialVersionUID = 1L;
 
+    @Column(name = "guild_nickname")                private String guildNickname;
     @Column(name = "messages_sended")               private Long messagesSended;
     @Column(name = "messages_updated")              private Long messagesUpdated;
     @Column(name = "reactions_added")               private Long reactionsAdded;
@@ -62,7 +63,15 @@ public class MemberStatsEntity extends AbstractAuditableEntity implements Serial
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    Long getMessagesSended() {
+    String getGuildNickname() {
+        return guildNickname;
+    }
+
+    public void setGuildNickname(String guildNickname) {
+        this.guildNickname = guildNickname;
+    }
+
+    public Long getMessagesSended() {
         return messagesSended;
     }
 
@@ -115,7 +124,8 @@ public class MemberStatsEntity extends AbstractAuditableEntity implements Serial
     @Override
     public String toString() {
         return "{" +
-            "messagesSended=" + messagesSended +
+            "guildNickname=" + guildNickname +
+            ", messagesSended=" + messagesSended +
             ", messagesUpdated=" + messagesUpdated +
             ", reactionsAdded=" + reactionsAdded +
             ", level=" + level +

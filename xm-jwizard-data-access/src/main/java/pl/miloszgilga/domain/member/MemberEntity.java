@@ -26,9 +26,7 @@ package pl.miloszgilga.domain.member;
 
 import lombok.NoArgsConstructor;
 
-import jakarta.persistence.Table;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
 
 import java.util.Set;
 import java.io.Serial;
@@ -46,18 +44,15 @@ import org.jmpsl.core.db.AbstractAuditableEntity;
 public class MemberEntity extends AbstractAuditableEntity implements Serializable, IAuthUserModel<SimpleGrantedRole> {
     @Serial private static final long serialVersionUID = 1L;
 
-    @Column(name = "guild_nickname")            private String guildNickname;
     @Column(name = "discord_id")                private String discordId;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    String getGuildNickname() {
-        return guildNickname;
+    public MemberEntity(String discordId) {
+        this.discordId = discordId;
     }
 
-    void setGuildNickname(String guildNickname) {
-        this.guildNickname = guildNickname;
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     String getDiscordId() {
         return discordId;
@@ -78,8 +73,7 @@ public class MemberEntity extends AbstractAuditableEntity implements Serializabl
     @Override
     public String toString() {
         return "{" +
-            "guildNickname=" + guildNickname +
-            ", discordId=" + discordId +
+            "discordId=" + discordId +
             '}';
     }
 }
