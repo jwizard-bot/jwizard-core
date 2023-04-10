@@ -48,6 +48,8 @@ public class CommandEventWrapper {
     private final String authorAvatarUrl;
     private final TextChannel textChannel;
     private final Member dataSender;
+    private final String memberId;
+    private final String guildId;
     private final User author;
     private final Member member;
     private CommandClient client;
@@ -71,6 +73,8 @@ public class CommandEventWrapper {
         dataSender = event.getGuild().getMember(event.getAuthor());
         author = event.getAuthor();
         member = event.getMember();
+        memberId = event.getMember().getId();
+        guildId = event.getGuild().getId();
         client = event.getClient();
         message = event.getMessage().getContentRaw();
     }
@@ -86,6 +90,8 @@ public class CommandEventWrapper {
         dataSender = event.getGuild().getMember(event.getAuthor());
         author = event.getAuthor();
         member = event.getMember();
+        memberId = Objects.isNull(event.getMember()) ? null : event.getMember().getId();
+        guildId = event.getGuild().getId();
         message = event.getMessage().getContentRaw();
         isFromSlashCommand = false;
     }
@@ -102,6 +108,8 @@ public class CommandEventWrapper {
         dataSender = event.getGuild().getMember(event.getMember().getUser());
         author = event.getMember().getUser();
         member = event.getMember();
+        memberId = event.getMember().getId();
+        guildId = event.getGuild().getId();
         isFromSlashCommand = true;
         slashCommandEvent = event;
     }
