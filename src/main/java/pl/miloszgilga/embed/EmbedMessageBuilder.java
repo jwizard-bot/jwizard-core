@@ -25,6 +25,7 @@
 package pl.miloszgilga.embed;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import org.apache.commons.lang3.StringUtils;
@@ -44,6 +45,9 @@ import pl.miloszgilga.core.IEnumerableLocaleSet;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
+import pl.miloszgilga.domain.guild_stats.GuildStatsEntity;
+import pl.miloszgilga.domain.member_stats.MemberStatsEntity;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Component
@@ -51,12 +55,15 @@ public class EmbedMessageBuilder {
 
     private final BotConfiguration config;
     private final BiFunction<IEnumerableLocaleSet, String, MessageEmbed.Field> inlineField;
+    private final BiFunction<IEnumerableLocaleSet, Number, MessageEmbed.Field> inlineNumField;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public EmbedMessageBuilder(BotConfiguration config) {
         this.config = config;
         this.inlineField  = (key, value) -> new MessageEmbed.Field(config.getLocaleText(key) + ":", value, true);
+        this.inlineNumField = (key, value) -> new MessageEmbed.Field(config.getLocaleText(key) + ":",
+            String.valueOf(value), true);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -202,6 +209,39 @@ public class EmbedMessageBuilder {
             .addField(inlineField.apply(VotingLocaleSet.REQUIRED_TOTAL_VOTES_VOTING, requredTotal))
             .addField(inlineField.apply(VotingLocaleSet.VOTES_RATIO_VOTING, votingRatio + "%"))
             .setColor(color.getColor())
+            .build();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public MessageEmbed createMemberStatsMessage(CommandEventWrapper wrapper, MemberStatsEntity stats) {
+        return new EmbedBuilder()
+            .setAuthor(wrapper.getAuthorTag(), null, wrapper.getAuthorAvatarUrl())
+            .addField(inlineNumField.apply(ResLocaleSet.MESSAGES_SENDED_MESS, stats.getMessagesSended()))
+            .addField(inlineNumField.apply(ResLocaleSet.MESSAGES_UPDATED_MESS, stats.getMessagesUpdated()))
+            .addField(inlineNumField.apply(ResLocaleSet.REACTIONS_ADDED_MESS, stats.getReactionsAdded()))
+            .addField(inlineNumField.apply(ResLocaleSet.LEVEL_MESS, stats.getLevel()))
+            .setFooter(config.getLocaleText(ResLocaleSet.GENERATED_DATE_MESS) + ": " + Utilities.getFormattedUTCNow())
+            .build();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public MessageEmbed createGuildStatsMessage(CommandEventWrapper wrapper, GuildStatsEntity stats, GuildMembersStatsDto dto) {
+        final Guild guild = wrapper.getGuild();
+        final long serverBotsCount = guild.getMembers().stream().filter(u -> u.getUser().isBot()).count();
+        return new EmbedBuilder()
+            .setAuthor(wrapper.getGuildName(), null, wrapper.getGuild().getIconUrl())
+            .addField(inlineNumField.apply(ResLocaleSet.GUILD_USERS_COUNT_MESS, guild.getMemberCount()))
+            .addField(inlineNumField.apply(ResLocaleSet.GUILD_BOTS_COUNT_MESS, serverBotsCount))
+            .addField(inlineNumField.apply(ResLocaleSet.GUILD_BOOSTERS_COUNT_MESS, guild.getBoosters().size()))
+            .addField(inlineNumField.apply(ResLocaleSet.GUILD_BOOSTING_LEVEL_MESS, guild.getBoostCount()))
+            .addField(inlineNumField.apply(ResLocaleSet.MESSAGES_SENDED_MESS, dto.messagesSended()))
+            .addField(inlineNumField.apply(ResLocaleSet.MESSAGES_UPDATED_MESS, dto.messagesUpdated()))
+            .addField(inlineNumField.apply(ResLocaleSet.REACTIONS_ADDED_MESS, dto.reactionsAdded()))
+            .addField(inlineNumField.apply(ResLocaleSet.MESSAGES_DELETED_MESS, stats.getMessagesDeleted()))
+            .addField(inlineNumField.apply(ResLocaleSet.REACTIONS_DELETED_MESS, stats.getReactionsDeleted()))
+            .setFooter(config.getLocaleText(ResLocaleSet.GENERATED_DATE_MESS) + ": " + Utilities.getFormattedUTCNow())
             .build();
     }
 
