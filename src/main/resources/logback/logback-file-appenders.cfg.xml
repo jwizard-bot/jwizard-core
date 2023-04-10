@@ -95,9 +95,11 @@
         </encoder>
     </appender>
 
-    <appender name="appender.file.info-warn" class="RollingFileAppender">
-        <filter class="ThresholdFilter">
+    <appender name="appender.file.info" class="RollingFileAppender">
+        <filter class="LevelFilter">
             <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
         </filter>
         <file>${appLogsPath}/info.log</file>
         <immediateFlush>true</immediateFlush>
@@ -112,11 +114,44 @@
         </encoder>
     </appender>
 
+    <appender name="appender.file.warn" class="RollingFileAppender">
+        <filter class="LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${appLogsPath}/warn.log</file>
+        <immediateFlush>true</immediateFlush>
+        <rollingPolicy class="SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${appLogsPath}/warn.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>30MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="PatternLayoutEncoder">
+            <pattern>${fileStacktracePattern}</pattern>
+        </encoder>
+    </appender>
+
     <appender name="appender.file.perf" class="RollingFileAppender">
         <file>${appLogsPath}/perf.log</file>
         <immediateFlush>true</immediateFlush>
         <rollingPolicy class="SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${appLogsPath}/perf.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>30MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="PatternLayoutEncoder">
+            <pattern>${filePerfPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="appender.file.hibernate.sql" class="RollingFileAppender">
+        <file>${hibernateSqlLogsPath}/hib-sql.log</file>
+        <immediateFlush>true</immediateFlush>
+        <rollingPolicy class="SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${hibernateSqlLogsPath}/hib-sql.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>30MB</maxFileSize>
             <maxHistory>30</maxHistory>
             <totalSizeCap>2GB</totalSizeCap>
