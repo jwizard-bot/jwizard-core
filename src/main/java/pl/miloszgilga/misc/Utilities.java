@@ -31,6 +31,9 @@ import net.dv8tion.jda.api.entities.Member;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
+import java.time.ZoneOffset;
+import java.time.OffsetDateTime;
+import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 
 import pl.miloszgilga.dto.CommandEventWrapper;
@@ -42,6 +45,8 @@ import static pl.miloszgilga.exception.CommandException.UserNotFoundInGuildExcep
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 public final class Utilities {
+
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
     private static final int MAX_EMBED_PLAYER_INDICATOR_LENGTH = 36;
     private static final char PLAYER_INDICATOR_FULL = '█';
@@ -121,5 +126,12 @@ public final class Utilities {
 
     public static String getRichTrackTitle(AudioTrackInfo audioTrackInfo) {
         return String.format("[%s](%s)", audioTrackInfo.title, audioTrackInfo.uri);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static String getFormattedUTCNow() {
+        final OffsetDateTime nowUtc = OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.UTC);
+        return SDF.format(nowUtc);
     }
 }
