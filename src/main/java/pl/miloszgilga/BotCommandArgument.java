@@ -53,7 +53,9 @@ public enum BotCommandArgument {
     SKIP_TRACK_POSITION             (1, BotCommand.SKIP_TO_TRACK,          Integer.class,  OptionType.INTEGER,         "pos",       true),
     VOTE_SKIP_TRACK_POSITION        (1, BotCommand.VOTE_SKIP_TO_TRACK,     Integer.class,  OptionType.INTEGER,         "pos",       true),
     MOVE_TRACK_POSITION_FROM        (1, BotCommand.MOVE_TRACK,             Integer.class,  OptionType.INTEGER,         "frompos",   true),
-    MOVE_TRACK_POSITION_TO          (2, BotCommand.MOVE_TRACK,             Integer.class,  OptionType.INTEGER,         "topos",     true);
+    MOVE_TRACK_POSITION_TO          (2, BotCommand.MOVE_TRACK,             Integer.class,  OptionType.INTEGER,         "topos",     true),
+    MEMBER_STATS_MEMBER_TAG         (1, BotCommand.MEMBER_STATS,           String.class,   OptionType.MENTIONABLE,     "member",    true),
+    RESET_MEMBER_STATS_MEMBER_TAG   (1, BotCommand.RESET_MEMBER_STATS,     String.class,   OptionType.MENTIONABLE,     "member",    true);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

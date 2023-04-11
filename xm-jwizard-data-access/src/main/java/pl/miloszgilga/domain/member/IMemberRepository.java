@@ -33,5 +33,5 @@ import java.util.Optional;
 
 @Repository
 public interface IMemberRepository extends JpaRepository<MemberEntity, Long> {
-    Optional<MemberEntity> findByDiscordId(String discordId);
+    Optional<MemberEntity> findByDiscordId(String guildDiscordId);
 }

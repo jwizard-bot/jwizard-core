@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: GuildStatsEntity.java
- * Last modified: 07/04/2023, 01:13
+ * File name: MemberSettingsEntity.java
+ * Last modified: 09/04/2023, 23:03
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -22,7 +22,9 @@
  * or other dealings in the software.
  */
 
-package pl.miloszgilga.domain.guild_stats;
+package pl.miloszgilga.domain.member_settings;
+
+import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
 
@@ -32,62 +34,72 @@ import java.io.Serializable;
 import org.jmpsl.core.db.AbstractAuditableEntity;
 
 import pl.miloszgilga.domain.guild.GuildEntity;
+import pl.miloszgilga.domain.member.MemberEntity;
 
-import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.LAZY;
+import static jakarta.persistence.CascadeType.MERGE;
+import static jakarta.persistence.CascadeType.REMOVE;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Entity
-@Table(name = "guild_stats")
-public class GuildStatsEntity extends AbstractAuditableEntity implements Serializable {
+@NoArgsConstructor
+@Table(name = "member_settings")
+public class MemberSettingsEntity extends AbstractAuditableEntity implements Serializable {
     @Serial private static final long serialVersionUID = 1L;
 
-    @Column(name = "messsages_deleted")             private Long messagesDeleted;
-    @Column(name = "reactions_deleted")             private Long reactionsDeleted;
+    @Column(name = "stats_disabled")            private Boolean statsDisabled;
+    @Column(name = "stats_private")             private Boolean statsPrivate;
 
-    @OneToOne(cascade = { PERSIST, MERGE, REMOVE }, fetch = LAZY)
+    @ManyToOne(cascade = { MERGE, REMOVE }, fetch = LAZY)
+    @JoinColumn(name = "member_id", referencedColumnName = "id")
+    private MemberEntity member;
+
+    @ManyToOne(cascade = { MERGE, REMOVE }, fetch = LAZY)
     @JoinColumn(name = "guild_id", referencedColumnName = "id")
     private GuildEntity guild;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public GuildStatsEntity() { resetStats(); }
+    public MemberSettingsEntity(MemberEntity member, GuildEntity guild) {
+        this.statsDisabled = false;
+        this.statsPrivate = false;
+        this.member = member;
+        this.guild = guild;
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Long getMessagesDeleted() {
-        return messagesDeleted;
+    Boolean getStatsDisabled() {
+        return statsDisabled;
     }
 
-    void setMessagesDeleted(Long messagesDeleted) {
-        this.messagesDeleted = messagesDeleted;
+    public void setStatsDisabled(Boolean statsDisabled) {
+        this.statsDisabled = statsDisabled;
     }
 
-    public Long getReactionsDeleted() {
-        return reactionsDeleted;
+    Boolean getStatsPrivate() {
+        return statsPrivate;
     }
 
-    void setReactionsDeleted(Long reactionsDeleted) {
-        this.reactionsDeleted = reactionsDeleted;
+    public void setStatsPrivate(Boolean statsPrivate) {
+        this.statsPrivate = statsPrivate;
+    }
+
+    MemberEntity getMember() {
+        return member;
+    }
+
+    void setMember(MemberEntity member) {
+        this.member = member;
     }
 
     GuildEntity getGuild() {
         return guild;
     }
 
-    public void setGuild(GuildEntity guild) {
+    void setGuild(GuildEntity guild) {
         this.guild = guild;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public void increaseMessagesDeleted() { messagesDeleted++; }
-    public void increaseReactionsDeleted() { reactionsDeleted++; }
-
-    public void resetStats() {
-        messagesDeleted = 0L;
-        reactionsDeleted = 0L;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,9 +107,8 @@ public class GuildStatsEntity extends AbstractAuditableEntity implements Seriali
     @Override
     public String toString() {
         return "{" +
-            "messagesDeleted=" + messagesDeleted +
-            ", reactionsDeleted=" + reactionsDeleted +
-            ", guild=" + guild +
+            "statsDisabled=" + statsDisabled +
+            ", statsPrivate=" + statsPrivate +
             '}';
     }
 }

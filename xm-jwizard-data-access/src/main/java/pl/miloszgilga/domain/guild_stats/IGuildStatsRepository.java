@@ -27,8 +27,11 @@ package pl.miloszgilga.domain.guild_stats;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Repository
 public interface IGuildStatsRepository extends JpaRepository<GuildStatsEntity, Long> {
+    Optional<GuildStatsEntity> findByGuild_DiscordId(String guildDiscordId);
 }

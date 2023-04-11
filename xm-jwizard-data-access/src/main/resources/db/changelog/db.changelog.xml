@@ -8,5 +8,7 @@
     <include file="migrations/2023-04-08_00000_create-statistics-tables.xml" relativeToChangelogFile="true"/>
     <include file="migrations/2023-04-08_00001_create-playlist-tables.xml" relativeToChangelogFile="true"/>
     <include file="migrations/2023-04-08_00002_create-guild-settings-table.xml" relativeToChangelogFile="true"/>
+    <include file="migrations/2023-04-09_00000_move-nickname-to-stats-table.xml" relativeToChangelogFile="true"/>
+    <include file="migrations/2023-04-09_00001_create-member-settings-table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

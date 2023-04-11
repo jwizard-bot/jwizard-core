@@ -26,14 +26,19 @@ package pl.miloszgilga.domain.guild;
 
 import lombok.NoArgsConstructor;
 
-import jakarta.persistence.Table;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
+import net.dv8tion.jda.api.entities.Guild;
 
 import java.io.Serial;
 import java.io.Serializable;
 
 import org.jmpsl.core.db.AbstractAuditableEntity;
+
+import pl.miloszgilga.domain.guild_stats.GuildStatsEntity;
+import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
+
+import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.FetchType.LAZY;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -46,13 +51,28 @@ public class GuildEntity extends AbstractAuditableEntity implements Serializable
     @Column(name = "name")          private String name;
     @Column(name = "discord_id")    private String discordId;
 
+    @OneToOne(cascade = { PERSIST, MERGE, REMOVE }, fetch = LAZY, mappedBy = "guild")
+    private GuildSettingsEntity guildSettings;
+
+    @OneToOne(cascade = { PERSIST, MERGE, REMOVE }, fetch = LAZY, mappedBy = "guild")
+    private GuildStatsEntity guildStats;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public GuildEntity(Guild guild, GuildStatsEntity guildStats, GuildSettingsEntity guildSettings) {
+        this.name = guild.getName();
+        this.discordId = guild.getId();
+        this.guildStats = guildStats;
+        this.guildSettings = guildSettings;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     String getName() {
         return name;
     }
 
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -62,6 +82,22 @@ public class GuildEntity extends AbstractAuditableEntity implements Serializable
 
     void setDiscordId(String discordId) {
         this.discordId = discordId;
+    }
+
+    GuildSettingsEntity getGuildSettings() {
+        return guildSettings;
+    }
+
+    void setGuildSettings(GuildSettingsEntity guildSettings) {
+        this.guildSettings = guildSettings;
+    }
+
+    GuildStatsEntity getGuildStats() {
+        return guildStats;
+    }
+
+    void setGuildStats(GuildStatsEntity guildStats) {
+        this.guildStats = guildStats;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -25,10 +25,29 @@
 package pl.miloszgilga.domain.member_stats;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+import pl.miloszgilga.dto.GuildMembersStatsDto;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Repository
 public interface IMemberStatsRepository extends JpaRepository<MemberStatsEntity, Long> {
+    Optional<MemberStatsEntity> findByMember_DiscordIdAndGuild_DiscordId(String memberDiscordId, String guildDiscordId);
+    boolean existsByMember_DiscordIdAndGuild_DiscordId(String memberDiscordId, String guildDiscordId);
+    void deleteAllByGuild_DiscordId(String guildDiscordId);
+    void deleteByMember_DiscordIdAndGuild_DiscordId(String memberDiscordId, String guildDiscordId);
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Query(value = """
+        select new pl.miloszgilga.dto.GuildMembersStatsDto(
+            sum(e.messagesSended), sum(e.messagesUpdated), sum(e.reactionsAdded), sum(e.slashInteractions)
+        ) from MemberStatsEntity e join e.guild g where g.discordId = :guildDiscordId group by g
+    """)
+    GuildMembersStatsDto getAllMemberStats(@Param("guildDiscordId") String guildDiscordId);
 }

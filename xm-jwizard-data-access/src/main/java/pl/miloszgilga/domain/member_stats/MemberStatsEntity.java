@@ -30,7 +30,9 @@ import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Objects;
 
+import net.dv8tion.jda.api.entities.Member;
 import org.jmpsl.core.db.AbstractAuditableEntity;
 
 import static jakarta.persistence.CascadeType.*;
@@ -51,6 +53,7 @@ public class MemberStatsEntity extends AbstractAuditableEntity implements Serial
     @Column(name = "messages_sended")               private Long messagesSended;
     @Column(name = "messages_updated")              private Long messagesUpdated;
     @Column(name = "reactions_added")               private Long reactionsAdded;
+    @Column(name = "slash_interactions")            private Long slashInteractions;
     @Column(name = "level")                         private Integer level;
 
     @ManyToOne(cascade = { MERGE, REMOVE }, fetch = LAZY)
@@ -59,7 +62,16 @@ public class MemberStatsEntity extends AbstractAuditableEntity implements Serial
 
     @ManyToOne(cascade = { MERGE, REMOVE }, fetch = LAZY)
     @JoinColumn(name = "guild_id", referencedColumnName = "id")
-    private GuildEntity guilds;
+    private GuildEntity guild;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public MemberStatsEntity(GuildEntity guildEntity, Member member, MemberEntity memberEntity) {
+        resetStats();
+        this.guildNickname = Objects.requireNonNullElse(member.getNickname(), member.getUser().getName());
+        this.guild = guildEntity;
+        this.member = memberEntity;
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -79,7 +91,7 @@ public class MemberStatsEntity extends AbstractAuditableEntity implements Serial
         this.messagesSended = messagesSended;
     }
 
-    Long getMessagesUpdated() {
+    public Long getMessagesUpdated() {
         return messagesUpdated;
     }
 
@@ -87,7 +99,7 @@ public class MemberStatsEntity extends AbstractAuditableEntity implements Serial
         this.messagesUpdated = messagesUpdated;
     }
 
-    Long getReactionsAdded() {
+    public Long getReactionsAdded() {
         return reactionsAdded;
     }
 
@@ -111,12 +123,35 @@ public class MemberStatsEntity extends AbstractAuditableEntity implements Serial
         this.guild = guild;
     }
 
-    Integer getLevel() {
+    public Long getSlashInteractions() {
+        return slashInteractions;
+    }
+
+    void setSlashInteractions(Long slashInteractions) {
+        this.slashInteractions = slashInteractions;
+    }
+
+    public Integer getLevel() {
         return level;
     }
 
     void setLevel(Integer level) {
         this.level = level;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void increaseMessagesSended() { messagesSended++; }
+    public void increaseMessagesUpdated() { messagesUpdated++; }
+    public void increaseReactionsAdded() { reactionsAdded++; }
+    public void increaseSlashInteractions() { slashInteractions++; }
+
+    public void resetStats() {
+        messagesSended = 0L;
+        messagesUpdated = 0L;
+        reactionsAdded = 0L;
+        level = 0;
+        slashInteractions = 0L;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

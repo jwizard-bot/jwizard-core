@@ -56,6 +56,7 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
     @Column(name = "max_repeats_single_track")          private Integer maxRepeatsSingleTrack;
     @Column(name = "dj_role_name")                      private Integer djRoleName;
     @Column(name = "i18n_locale")                       private Integer i18nLocale;
+    @Column(name = "stats_module_enabled")              private Boolean statsModuleEnabled;
 
     @OneToOne(cascade = { PERSIST, MERGE, REMOVE }, fetch = LAZY)
     @JoinColumn(name = "guild_id", referencedColumnName = "id")
@@ -151,6 +152,14 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
         this.guild = guild;
     }
 
+    Boolean getStatsModuleEnabled() {
+        return statsModuleEnabled;
+    }
+
+    void setStatsModuleEnabled(Boolean statsModuleEnabled) {
+        this.statsModuleEnabled = statsModuleEnabled;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
@@ -166,6 +175,7 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
             ", maxRepeatsSingleTrack=" + maxRepeatsSingleTrack +
             ", djRoleName=" + djRoleName +
             ", i18nLocale=" + i18nLocale +
+            ", statsModuleEnabled=" + statsModuleEnabled +
             '}';
     }
 }

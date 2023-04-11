@@ -71,3 +71,5 @@ bot:
     pagination:
         max-elements-per-page: 20
         menu-is-alive-seconds: 60
+    modules:
+        stats-module-enabled: true

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: IGuildRepository.java
- * Last modified: 07/04/2023, 01:15
+ * File name: GuildMembersStatsDto.java
+ * Last modified: 10/04/2023, 19:48
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -22,16 +22,16 @@
  * or other dealings in the software.
  */
 
-package pl.miloszgilga.domain.guild;
-
-import org.springframework.stereotype.Repository;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.Optional;
+package pl.miloszgilga.dto;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@Repository
-public interface IGuildRepository extends JpaRepository<GuildEntity, Long> {
-    Optional<GuildEntity> findByDiscordId(String guildDiscordId);
+public record GuildMembersStatsDto(
+    Long messagesSended,
+    Long messagesUpdated,
+    Long reactionsAdded,
+    Long slashInteractions
+) {
+    public GuildMembersStatsDto {
+    }
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: GuildStatisticsCommandListener.java
+ * File name: GuildStatsCommandListener.java
  * Last modified: 19/03/2023, 14:06
  * Project name: jwizard-discord-bot
  *
@@ -24,55 +24,56 @@
 
 package pl.miloszgilga.listener;
 
-import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
+import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.AbstractListenerAdapter;
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
+
+import pl.miloszgilga.domain.guild_stats.IGuildStatsRepository;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @JDAInjectableListenerLazyService
-public class GuildStatisticsCommandListener extends AbstractListenerAdapter {
+public class GuildStatsCommandListener extends AbstractListenerAdapter {
+
+    private final IGuildStatsRepository repository;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    GuildStatisticsCommandListener(BotConfiguration config, EmbedMessageBuilder embedBuilder) {
+    GuildStatsCommandListener(
+        BotConfiguration config, EmbedMessageBuilder embedBuilder, IGuildStatsRepository repository
+    ) {
         super(config, embedBuilder);
+        this.repository = repository;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override
-    public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+    private void deleteMessageIncCounter(GenericGuildEvent event) {
+        if (!config.getProperty(BotProperty.J_STATS_MODULE_ENABLED, Boolean.class)) return;
+        repository.findByGuild_DiscordId(event.getGuild().getId()).ifPresent(guildStats -> {
+            guildStats.increaseMessagesDeleted();
+            repository.save(guildStats);
+        });
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override
-    public void onGuildMessageUpdate(GuildMessageUpdateEvent event) {
+    private void deleteReactionIncCounter(GenericGuildEvent event) {
+        if (!config.getProperty(BotProperty.J_STATS_MODULE_ENABLED, Boolean.class)) return;
+        repository.findByGuild_DiscordId(event.getGuild().getId()).ifPresent(guildStats -> {
+            guildStats.increaseReactionsDeleted();
+            repository.save(guildStats);
+        });
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override
-    public void onGuildMessageDelete(GuildMessageDeleteEvent event) {
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public void onGuildMessageReactionRemove(GuildMessageReactionRemoveEvent event) {
-    }
+    @Override public void onGuildMessageDelete(GuildMessageDeleteEvent event)                   { deleteMessageIncCounter(event); }
+    @Override public void onGuildMessageReactionRemove(GuildMessageReactionRemoveEvent event)   { deleteReactionIncCounter(event); }
 }

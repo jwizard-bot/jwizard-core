@@ -56,7 +56,20 @@ public enum BugTracker {
     TRACK_OFFSET_OUT_OF_BOUNDS                              (113),
     TRACK_THE_SAME_POSITIONS                                (114),
     TRACK_QUEUE_IS_EMPTY                                    (115),
-    USER_NOT_ADDED_TRACKS_TO_QUEUE                          (116);
+    USER_NOT_ADDED_TRACKS_TO_QUEUE                          (116),
+
+    STATS_MODULE_IS_TURNED_OFF                              (200),
+    STATS_MODULE_IS_ALREADY_RUNNING                         (201),
+    MEMBER_HAS_NO_STATS_YET                                 (202),
+    YOU_HAS_NO_STATS_YET                                    (203),
+    GUILD_HAS_NO_STATS_YET                                  (204),
+    STATS_ALREADY_PUBLIC                                    (205),
+    STATS_ALREADY_PRIVATE                                   (206),
+    STATS_ALREADY_ENABLED                                   (207),
+    STATS_ALREADY_DISABLED                                  (208),
+    YOU_HAS_STATS_DISABLED                                  (209),
+    MEMBER_HAS_STATS_DISABLED                               (210),
+    MEMBER_HAS_STATS_PRIVATE                                (211);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

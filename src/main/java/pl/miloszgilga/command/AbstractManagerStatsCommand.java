@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: IGuildRepository.java
- * Last modified: 07/04/2023, 01:15
+ * File name: AbstractManagerStatsCommand.java
+ * Last modified: 09/04/2023, 21:59
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -22,16 +22,35 @@
  * or other dealings in the software.
  */
 
-package pl.miloszgilga.domain.guild;
+package pl.miloszgilga.command;
 
-import org.springframework.stereotype.Repository;
-import org.springframework.data.jpa.repository.JpaRepository;
+import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.dto.CommandEventWrapper;
+import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.core.configuration.BotProperty;
+import pl.miloszgilga.core.configuration.BotConfiguration;
 
-import java.util.Optional;
+import static pl.miloszgilga.exception.StatsException.StatsModuleIsTurnedOffException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@Repository
-public interface IGuildRepository extends JpaRepository<GuildEntity, Long> {
-    Optional<GuildEntity> findByDiscordId(String guildDiscordId);
+public abstract class AbstractManagerStatsCommand extends AbstractManagerCommand {
+
+    protected AbstractManagerStatsCommand(BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder) {
+        super(command, config, embedBuilder);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    protected void doExecuteManagerCommand(CommandEventWrapper event) {
+        if (!config.getProperty(BotProperty.J_STATS_MODULE_ENABLED, Boolean.class)) {
+            throw new StatsModuleIsTurnedOffException(config, event);
+        }
+        doExecuteManagerStatsCommand(event);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    protected abstract void doExecuteManagerStatsCommand(CommandEventWrapper event);
 }

@@ -75,6 +75,18 @@ public enum BotCommand {
     MOVE_TRACK              ("move",        true, new String[]{ "mv" },           DJ,     MOVE_TRACK_COMMAND_DESC,                    MOVE_TRACK_ARG_SYNTAX),
     INFINITE_PLAYLIST       ("infinite",    true, new String[]{ "inf" },          DJ,     INFINITE_PLAYLIST_COMMAND_DESC),
 
+    GUILD_STATS             ("gstats",      true, new String[]{ "mst" },          STATS,  GUILD_STATS_COMMAND_DESC),
+    MEMBER_STATS            ("mstats",      true, new String[]{ "gst" },          STATS,  MEMBER_STATS_COMMAND_DESC,                  MEMBER_TAG_ARG_SYNTAX),
+    MY_STATS                ("mystats",     true, new String[]{ "myst" },         STATS,  MY_STATS_COMMAND_DESC),
+    ENABLE_STATS            ("statson",     true, new String[]{ "ston" },         STATS,  ENABLE_STATS_COMMAND_DESC),
+    DISABLE_STATS           ("statsoff",    true, new String[]{ "stoff" },        STATS,  DISABLE_STATS_COMMAND_DESC),
+    PUBLIC_STATS            ("pubstats",    true, new String[]{ "pubst" },        STATS,  PUBLIC_STATS_COMMAND_DESC),
+    PRIVATE_STATS           ("privstats",   true, new String[]{ "privst" },       STATS,  PRIVATE_STATS_COMMAND_DESC),
+    TURN_ON_STATS_MODULE    ("onstats",     true, new String[]{ "onst" },         STATS,  TURN_ON_STATS_MODULE_COMMAND_DESC),
+    TURN_OFF_STATS_MODULE   ("offstats",    true, new String[]{ "offst" },        STATS,  TURN_OFF_STATS_MODULE_COMMAND_DESC),
+    RESET_MEMBER_STATS      ("resetmstats", true, new String[]{ "rsmst" },        STATS,  RESET_MEMBER_STATS_COMMAND_DESC,            MEMBER_TAG_ARG_SYNTAX),
+    RESET_GUILD_STATS       ("resetgstats", true, new String[]{ "rsgst" },        STATS,  RESET_GUILD_STATS_COMMAND_DESC),
+
     VOTE_SHUFFLE_QUEUE      ("vshuffle",    true, new String[]{ "vshq" },         MUSIC,  VOTE_SHUFFLE_QUEUE_COMMAND_DESC),
     VOTE_SKIP_TRACK         ("vskip",       true, new String[]{ "vsk" },          MUSIC,  VOTE_SKIP_TRACK_COMMAND_DESC),
     VOTE_SKIP_TO_TRACK      ("vskipto",     true, new String[]{ "vsto" },         MUSIC,  VOTE_SKIP_TO_TRACK_COMMAND_DESC,            SKIP_QUEUE_TO_TRACK_ARG_SYNTAX),

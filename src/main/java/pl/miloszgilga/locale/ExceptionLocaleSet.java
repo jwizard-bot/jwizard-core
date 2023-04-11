@@ -35,27 +35,41 @@ import pl.miloszgilga.core.IEnumerableLocaleSet;
 @RequiredArgsConstructor
 public enum ExceptionLocaleSet implements IEnumerableLocaleSet {
 
+    UNRECOGNIZED_COMMAND                            ("jwizard.exception.UnrecognizedCommandException"),
+    USED_COMM_ON_FORBIDDEN_CHANNEL                  ("jwizard.exception.UsedCommandOnForbiddenChannelException"),
+    MISMATCH_COMMAND_ARGS_COUNT                     ("jwizard.exception.MismatchCommandArgumentsCountException"),
+    UNAUTHORIZED_DJ                                 ("jwizard.exception.UnauthorizedDjException"),
+    UNAUTHORIZED_DJ_OR_SENDER                       ("jwizard.exception.UnauthorizedDjOrSenderException"),
+    UNAUTHORIZED_MANAGER                            ("jwizard.exception.UnauthorizedManagerException"),
+    USER_NOT_FOUND_IN_GUILD                         ("jwizard.exception.UserNotFoundInGuildException"),
+    USER_ID_ALREADY_WITH_BOT                        ("jwizard.exception.UserIsAlreadyWithBotException"),
+
+    STATS_MODULE_IS_TURNED_OFF                      ("jwizard.exception.StatsModuleIsTurnedOffException"),
+    STATS_MODULE_IS_ALREADY_RUNNING                 ("jwizard.exception.StatsModuleIsAlreadyRunningException"),
+    MEMBER_HAS_NO_STATS_YET_IN_GUILD                ("jwizard.exception.MemberHasNoStatsYetInGuildException"),
+    YOU_HAS_NO_STATS_YET_IN_GUILD                   ("jwizard.exception.YouHasNoStatsYetInGuildException"),
+    GUILD_HAS_NO_STATS_YET                          ("jwizard.exception.GuildHasNoStatsYetException"),
+    STATS_ALREADY_PUBLIC                            ("jwizard.exception.StatsAlreadyPublicException"),
+    STATS_ALREADY_PRIVATE                           ("jwizard.exception.StatsAlreadyPrivateException"),
+    STATS_ALREADY_ENABLED                           ("jwizard.exception.StatsAlreadyEnabledException"),
+    STATS_ALREADY_DISABLED                          ("jwizard.exception.StatsAlreadyDisabledException"),
+    YOU_HAS_DISABLED_STATS                          ("jwizard.exception.YouHasDisableStatsException"),
+    MEMBER_HAS_DISABLED_STATS                       ("jwizard.exception.MemberHasDisableStatsException"),
+    MEMBER_HAS_PRIVATE_STATS                        ("jwizard.exception.MemberHasPrivateStatsException"),
+
     TRACK_IS_NOT_PLAYING                            ("jwizard.exception.TrackIsNotPlayingException"),
     TRACK_IS_NOT_PAUSED                             ("jwizard.exception.TrackIsNotPausedException"),
     ACTIVE_MUSIC_PLAYING_NOT_FOUND                  ("jwizard.exception.ActiveMusicPlayingNotFoundException"),
     USER_ON_VOICE_CHANNEL_NOT_FOUND                 ("jwizard.exception.UserOnVoiceChannelNotFoundException"),
     USER_ON_VOICE_CHANNEL_WITH_BOT_NOT_FOUND        ("jwizard.exception.UserOnVoiceChannelWithBotNotFoundException"),
-    UNRECOGNIZED_COMMAND                            ("jwizard.exception.UnrecognizedCommandException"),
-    USED_COMM_ON_FORBIDDEN_CHANNEL                  ("jwizard.exception.UsedCommandOnForbiddenChannelException"),
-    MISMATCH_COMMAND_ARGS_COUNT                     ("jwizard.exception.MismatchCommandArgumentsCountException"),
     INVOKER_IS_NOT_TRACK_SENDER_OR_ADMIN            ("jwizard.exception.InvokerIsNotTrackSenderOrAdminException"),
     TRACK_REPEATS_OUT_OF_BOUNDS                     ("jwizard.exception.TrackRepeatsOutOfBoundsException"),
     LOCK_COMMAND_ON_TEMPORARY_HALTED                ("jwizard.exception.LockCommandOnTemporaryHaltedException"),
     VOLUME_UNITS_OUT_OF_BOUNDS                      ("jwizard.exception.VolumeUnitsOutOfBoundsException"),
     TRACK_OFFSET_OUT_OF_BOUNDS                      ("jwizard.exception.TrackOffsetOutOfBoundsException"),
     TRACK_THE_SAME_POSITION                         ("jwizard.exception.TrackTheSamePositionException"),
-    UNAUTHORIZED_DJ                                 ("jwizard.exception.UnauthorizedDjException"),
-    UNAUTHORIZED_DJ_OR_SENDER                       ("jwizard.exception.UnauthorizedDjOrSenderException"),
-    UNAUTHORIZED_MANAGER                            ("jwizard.exception.UnauthorizedManagerException"),
     TRACK_QUEUE_IS_EMPTY                            ("jwizard.exception.TrackQueueIsEmptyException"),
-    USER_NOT_FOUND_IN_GUILD                         ("jwizard.exception.UserNotFoundInGuildException"),
-    USER_NOT_ADDED_TRACKS_TO_QUEUE                  ("jwizard.exception.UserNotAddedTracksToQueueException"),
-    USER_ID_ALREADY_WITH_BOT                        ("jwizard.exception.UserIsAlreadyWithBotException");
+    USER_NOT_ADDED_TRACKS_TO_QUEUE                  ("jwizard.exception.UserNotAddedTracksToQueueException");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
