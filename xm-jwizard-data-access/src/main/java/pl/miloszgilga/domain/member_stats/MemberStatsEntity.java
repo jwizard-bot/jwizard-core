@@ -164,6 +164,7 @@ public class MemberStatsEntity extends AbstractAuditableEntity implements Serial
             ", messagesUpdated=" + messagesUpdated +
             ", reactionsAdded=" + reactionsAdded +
             ", level=" + level +
+            ", slashInteractions=" + slashInteractions +
             '}';
     }
 }
