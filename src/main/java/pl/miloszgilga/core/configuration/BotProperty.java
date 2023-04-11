@@ -66,7 +66,8 @@ public enum BotProperty {
     J_RR_EXTERNAL_FILE_PATH         ("misc.round-robin-activity.show-from-external-file.path-to-file"),
     J_RR_COMMANDS_ENABLED           ("misc.round-robin-activity.show-commands.enabled"),
     J_PAGINATION_MAX                ("pagination.max-elements-per-page"),
-    J_PAGINATION_MENU_IS_ALIVE      ("pagination.menu-is-alive-seconds");
+    J_PAGINATION_MENU_IS_ALIVE      ("pagination.menu-is-alive-seconds"),
+    J_STATS_MODULE_ENABLED          ("modules.stats-module-enabled");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
