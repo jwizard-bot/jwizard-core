@@ -32,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum BugTracker {
+
     UNRECOGNIZED_COMMAND                                    (1),
     USED_COMMAND_ON_FORBIDDEN_CHANNEL                       (2),
     MISMATCH_COMMAND_ARGUMENTS                              (3),

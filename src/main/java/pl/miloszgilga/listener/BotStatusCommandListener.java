@@ -53,24 +53,23 @@ public class BotStatusCommandListener extends AbstractListenerAdapter {
 
     private boolean shuttingDown = false;
 
-    private final AloneOnChannelListener aloneOnChannelListener;
+    private final AloneOnChannelListener aloneListener;
     private final PlayerManager playerManager;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     BotStatusCommandListener(
-        BotConfiguration config, EmbedMessageBuilder embedBuilder, AloneOnChannelListener aloneOnChannelListener,
+        BotConfiguration config, EmbedMessageBuilder embedBuilder, AloneOnChannelListener aloneListener,
         PlayerManager playerManager
     ) {
         super(config, embedBuilder);
-        this.aloneOnChannelListener = aloneOnChannelListener;
+        this.aloneListener = aloneListener;
         this.playerManager = playerManager;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override
-    public void onReady(ReadyEvent event) {
+    private void addDjRoleToGuilds(ReadyEvent event) {
         final String defaultDjRoleName = config.getProperty(BotProperty.J_DJ_ROLE_NAME);
         final List<String> addedDjRolesIntoGulds = new ArrayList<>();
         for (final Guild guild : event.getJDA().getGuilds()) {
@@ -83,13 +82,13 @@ public class BotStatusCommandListener extends AbstractListenerAdapter {
                 .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
                 .submit();
         }
+        if (addedDjRolesIntoGulds.isEmpty()) return;
         log.info("DJ role '{}' for guilds '{}' was successfully created", defaultDjRoleName, addedDjRolesIntoGulds);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override
-    public void onGuildVoiceJoin(GuildVoiceJoinEvent event) {
+    private void setBotDeafen(GuildVoiceJoinEvent event) {
         if (!event.getMember().getUser().isBot()) return;
         event.getGuild().getAudioManager().setSelfDeafened(true);
         event.getGuild().getSelfMember().deafen(true).complete();
@@ -97,15 +96,7 @@ public class BotStatusCommandListener extends AbstractListenerAdapter {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override
-    public void onGuildVoiceUpdate(GuildVoiceUpdateEvent event) {
-        aloneOnChannelListener.onEveryVoiceUpdate(event);
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public void onShutdown(ShutdownEvent event) {
+    private void shutdownBotInstance(ShutdownEvent event) {
         if (shuttingDown) return;
         shuttingDown = true;
         super.config.getThreadPool().shutdownNow();
@@ -118,4 +109,11 @@ public class BotStatusCommandListener extends AbstractListenerAdapter {
         event.getJDA().shutdown();
         System.exit(0);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override public void onReady(ReadyEvent event)                         { addDjRoleToGuilds(event); }
+    @Override public void onGuildVoiceJoin(GuildVoiceJoinEvent event)       { setBotDeafen(event); }
+    @Override public void onGuildVoiceUpdate(GuildVoiceUpdateEvent event)   { aloneListener.onEveryVoiceUpdate(event); }
+    @Override public void onShutdown(ShutdownEvent event)                   { shutdownBotInstance(event); }
 }

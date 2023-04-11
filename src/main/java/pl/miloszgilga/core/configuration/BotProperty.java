@@ -36,6 +36,7 @@ import java.util.Arrays;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public enum BotProperty {
+
     J_NAME                          ("name"),
     J_SOURCE_CODE_PATH              ("source-code-path"),
     J_PREFIX                        ("prefix"),

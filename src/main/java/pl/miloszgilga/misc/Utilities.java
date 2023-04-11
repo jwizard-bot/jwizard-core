@@ -33,7 +33,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
 import java.time.ZoneOffset;
 import java.time.OffsetDateTime;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 import pl.miloszgilga.dto.CommandEventWrapper;
@@ -46,7 +46,7 @@ import static pl.miloszgilga.exception.CommandException.UserNotFoundInGuildExcep
 
 public final class Utilities {
 
-    private static final SimpleDateFormat SDF = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+    private static final DateTimeFormatter SDF = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
     private static final int MAX_EMBED_PLAYER_INDICATOR_LENGTH = 36;
     private static final char PLAYER_INDICATOR_FULL = '█';

@@ -58,8 +58,7 @@ public class BotMuteCommandListener extends AbstractListenerAdapter {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override
-    public void onGuildVoiceMute(GuildVoiceMuteEvent event) {
+    private void stopPlayingContentAndFreeze(GuildVoiceMuteEvent event) {
         if (!event.getMember().getUser().isBot()) return;
 
         final Member botMember = event.getGuild().getSelfMember();
@@ -78,4 +77,8 @@ public class BotMuteCommandListener extends AbstractListenerAdapter {
         final MessageEmbed messageEmbed = embedBuilder.createMessage(message);
         musicManager.getTrackScheduler().getDeliveryEvent().getTextChannel().sendMessageEmbeds(messageEmbed).queue();
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override public void onGuildVoiceMute(GuildVoiceMuteEvent event) { stopPlayingContentAndFreeze(event); }
 }

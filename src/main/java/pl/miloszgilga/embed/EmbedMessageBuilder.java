@@ -218,10 +218,14 @@ public class EmbedMessageBuilder {
         return new EmbedBuilder()
             .setAuthor(wrapper.getAuthorTag(), null, wrapper.getAuthorAvatarUrl())
             .addField(inlineNumField.apply(ResLocaleSet.MESSAGES_SENDED_MESS, stats.getMessagesSended()))
+            .addBlankField(true)
             .addField(inlineNumField.apply(ResLocaleSet.MESSAGES_UPDATED_MESS, stats.getMessagesUpdated()))
             .addField(inlineNumField.apply(ResLocaleSet.REACTIONS_ADDED_MESS, stats.getReactionsAdded()))
+            .addBlankField(true)
             .addField(inlineNumField.apply(ResLocaleSet.LEVEL_MESS, stats.getLevel()))
+            .addField(inlineNumField.apply(ResLocaleSet.SLASH_INTERACTIONS_MESS, stats.getSlashInteractions()))
             .setFooter(config.getLocaleText(ResLocaleSet.GENERATED_DATE_MESS) + ": " + Utilities.getFormattedUTCNow())
+            .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
             .build();
     }
 
@@ -233,15 +237,22 @@ public class EmbedMessageBuilder {
         return new EmbedBuilder()
             .setAuthor(wrapper.getGuildName(), null, wrapper.getGuild().getIconUrl())
             .addField(inlineNumField.apply(ResLocaleSet.GUILD_USERS_COUNT_MESS, guild.getMemberCount()))
+            .addBlankField(true)
             .addField(inlineNumField.apply(ResLocaleSet.GUILD_BOTS_COUNT_MESS, serverBotsCount))
             .addField(inlineNumField.apply(ResLocaleSet.GUILD_BOOSTERS_COUNT_MESS, guild.getBoosters().size()))
+            .addBlankField(true)
             .addField(inlineNumField.apply(ResLocaleSet.GUILD_BOOSTING_LEVEL_MESS, guild.getBoostCount()))
             .addField(inlineNumField.apply(ResLocaleSet.MESSAGES_SENDED_MESS, dto.messagesSended()))
+            .addBlankField(true)
             .addField(inlineNumField.apply(ResLocaleSet.MESSAGES_UPDATED_MESS, dto.messagesUpdated()))
             .addField(inlineNumField.apply(ResLocaleSet.REACTIONS_ADDED_MESS, dto.reactionsAdded()))
+            .addBlankField(true)
             .addField(inlineNumField.apply(ResLocaleSet.MESSAGES_DELETED_MESS, stats.getMessagesDeleted()))
             .addField(inlineNumField.apply(ResLocaleSet.REACTIONS_DELETED_MESS, stats.getReactionsDeleted()))
+            .addBlankField(true)
+            .addField(inlineNumField.apply(ResLocaleSet.SLASH_INTERACTIONS_MESS, dto.slashInteractions()))
             .setFooter(config.getLocaleText(ResLocaleSet.GENERATED_DATE_MESS) + ": " + Utilities.getFormattedUTCNow())
+            .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
             .build();
     }
 
