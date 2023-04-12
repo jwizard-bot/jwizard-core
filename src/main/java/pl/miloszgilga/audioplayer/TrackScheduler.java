@@ -109,14 +109,14 @@ public class TrackScheduler extends AudioEventAdapter {
 
         if (audioPlayer.isPaused()) {
             messageEmbed = builder.createTrackMessage(ResLocaleSet.ON_TRACK_START_ON_PAUSED_MESS, Map.of(
-                "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri),
+                "track", Utilities.getRichTrackTitle(trackInfo),
                 "resumeCmd", BotCommand.RESUME_TRACK.parseWithPrefix(config)
             ), trackInfo.getThumbnailUrl());
             JDALog.info(log, deliveryEvent, "Staring playing audio track: '%s' when audio player is paused",
                 trackInfo.title);
         } else {
             messageEmbed = builder.createTrackMessage(ResLocaleSet.ON_TRACK_START_MESS, Map.of(
-                "track", String.format("[%s](%s)", trackInfo.title, trackInfo.uri)
+                "track", Utilities.getRichTrackTitle(trackInfo)
             ), trackInfo.getThumbnailUrl());
             JDALog.info(log, deliveryEvent, "Staring playing audio track: '%s'", trackInfo.title);
         }
