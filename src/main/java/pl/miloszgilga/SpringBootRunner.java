@@ -24,7 +24,7 @@
 
 package pl.miloszgilga;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -34,21 +34,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @Slf4j
 @SpringBootApplication
+@RequiredArgsConstructor
 public class SpringBootRunner implements CommandLineRunner {
 
     private final JDABot jdaBot;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    SpringBootRunner(JDABot jdaBot) {
-        this.jdaBot = jdaBot;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     public static void main(String[] args) {
         SpringApplication.run(SpringBootRunner.class);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void run(String... args) {
