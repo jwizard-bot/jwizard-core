@@ -42,6 +42,9 @@ spring:
     liquibase:
         enabled: true
         change-log: classpath:db/changelog/db.changelog.xml
+    cache:
+        jcache:
+            config: classpath:cache/ehcache.cfg.xml
 
 jmpsl:
     core:
