@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: build.gradle
- * Last modified: 23/03/2023, 19:12
+ * File name: AbstractCacheableDao.java
+ * Last modified: 25/04/2023, 15:51
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -22,15 +22,22 @@
  * or other dealings in the software.
  */
 
-dependencies {
-    implementation      libs.jda
-    implementation      libs.ehcache
-    implementation      libs.jaxb.api
-    implementation      libs.jaxb.impl
+package pl.miloszgilga.cacheable;
 
-    implementation      libs.jmpsl.core
-    implementation      libs.jmpsl.security
+import org.springframework.data.jpa.repository.JpaRepository;
+import pl.miloszgilga.core.configuration.BotConfiguration;
 
-    implementation      libs.spring.boot.starter.cache
-    implementation      libs.spring.boot.starter.data.jpa
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+abstract class AbstractCacheableDao<T, D extends JpaRepository<T, Long>> {
+
+    protected final BotConfiguration config;
+    protected final D cacheableRepository;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    AbstractCacheableDao(BotConfiguration config, D cacheableRepository) {
+        this.config = config;
+        this.cacheableRepository = cacheableRepository;
+    }
 }

@@ -46,6 +46,8 @@ reflections         = '0.10.2'
 apacheHttpClient    = '4.5.14'
 jmpsl               = '1.0.2_03'
 jjwt                = '0.11.5'
+ehCache             = '3.10.8'
+jaxb                = '2.3.1'
 
 springBootDep       = '1.0.15.RELEASE'
 
@@ -61,6 +63,7 @@ liquibase                           = { module = 'org.liquibase:liquibase-core',
 spring-boot-starter                 = { module = 'org.springframework.boot:spring-boot-starter',                version.ref = 'springBoot' }
 spring-boot-devtools                = { module = 'org.springframework.boot:spring-boot-devtools',               version.ref = 'springBoot' }
 spring-boot-starter-web             = { module = 'org.springframework.boot:spring-boot-starter-web',            version.ref = 'springBoot' }
+spring-boot-starter-cache           = { module = 'org.springframework.boot:spring-boot-starter-cache',          version.ref = 'springBoot' }
 spring-boot-starter-test            = { module = 'org.springframework.boot:spring-boot-starter-test',           version.ref = 'springBoot' }
 spring-boot-starter-data-jpa        = { module = 'org.springframework.boot:spring-boot-starter-data-jpa',       version.ref = 'springBoot' }
 spring-boot-starter-security        = { module = 'org.springframework.boot:spring-boot-starter-security',       version.ref = 'springBoot' }
@@ -83,6 +86,9 @@ junit-engine                        = { module = 'org.junit.jupiter:junit-jupite
 jjwt-api                            = { module = 'io.jsonwebtoken:jjwt-api',                                    version.ref = 'jjwt' }
 jjwt-impl                           = { module = 'io.jsonwebtoken:jjwt-impl',                                   version.ref = 'jjwt' }
 jjwt-jackson                        = { module = 'io.jsonwebtoken:jjwt-jackson',                                version.ref = 'jjwt' }
+ehcache                             = { module = 'org.ehcache:ehcache',                                         version.ref = 'ehCache' }
+jaxb-api                            = { module = 'javax.xml.bind:jaxb-api',                                     version.ref = 'jaxb' }
+jaxb-impl                           = { module = 'com.sun.xml.bind:jaxb-impl',                                  version.ref = 'jaxb' }
 
 [plugins]
 spring-boot-plugin                  = { id     = 'org.springframework.boot',                                    version.ref = 'springBoot' }

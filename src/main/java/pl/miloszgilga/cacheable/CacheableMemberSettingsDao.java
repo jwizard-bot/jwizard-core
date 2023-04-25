@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: StatsDao.java
- * Last modified: 10/04/2023, 14:09
+ * File name: CacheableSettingsDao.java
+ * Last modified: 25/04/2023, 03:43
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -22,56 +22,53 @@
  * or other dealings in the software.
  */
 
-package pl.miloszgilga.statistics;
+package pl.miloszgilga.cacheable;
 
 import org.springframework.stereotype.Component;
+import org.springframework.cache.annotation.CachePut;
+
+import java.util.function.Consumer;
 
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.core.configuration.BotConfiguration;
+
+import pl.miloszgilga.domain.member_settings.MemberSettingsEntity;
 import pl.miloszgilga.domain.member_settings.IMemberSettingsRepository;
 
-import static pl.miloszgilga.exception.StatsException.YouHasNoStatsYetInGuildException;
+import static pl.miloszgilga.exception.StatsException.MemberHasNoStatsYetInGuildException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Component
-public class StatsDao {
+public class CacheableMemberSettingsDao extends AbstractCacheableDao<MemberSettingsEntity, IMemberSettingsRepository> {
 
-    private final BotConfiguration config;
-    private final IMemberSettingsRepository settingsRepository;
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    StatsDao(BotConfiguration config, IMemberSettingsRepository settingsRepository) {
-        this.config = config;
-        this.settingsRepository = settingsRepository;
+    CacheableMemberSettingsDao(BotConfiguration config, IMemberSettingsRepository settingsRepository) {
+        super(config, settingsRepository);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void toggleMemberStatsVisibility(CommandEventWrapper event, boolean isPrivate) {
-        settingsRepository
+    @CachePut(cacheNames = "MemberSettingsCache", key = "#p0.member.id.concat(#p0.guild.id)")
+    public MemberSettingsEntity toggleStatsVisibility(CommandEventWrapper event, boolean isPrivate, Consumer<Boolean> exec) {
+        final MemberSettingsEntity settings = cacheableRepository
             .findByMember_DiscordIdAndGuild_DiscordId(event.getMemberId(), event.getGuildId())
-            .ifPresentOrElse(
-                memberSettingsEntity -> {
-                    memberSettingsEntity.setStatsPrivate(isPrivate);
-                    settingsRepository.save(memberSettingsEntity);
-                },
-                () -> { throw new YouHasNoStatsYetInGuildException(config, event); }
-            );
+            .orElseThrow(() -> new MemberHasNoStatsYetInGuildException(config, event, event.getMember().getUser()));
+
+        exec.accept(settings.getStatsPrivate());
+        settings.setStatsPrivate(isPrivate);
+        return settings;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void turnOnOffMemberStats(CommandEventWrapper event, boolean isTurnOff) {
-        settingsRepository
+    @CachePut(cacheNames = "MemberSettingsCache", key = "#p0.member.id.concat(#p0.guild.id)")
+    public MemberSettingsEntity toggleMemberStatsDisabled(CommandEventWrapper event, boolean isDisabled, Consumer<Boolean> exec) {
+        final MemberSettingsEntity settings = cacheableRepository
             .findByMember_DiscordIdAndGuild_DiscordId(event.getMemberId(), event.getGuildId())
-            .ifPresentOrElse(
-                memberSettingsEntity -> {
-                    memberSettingsEntity.setStatsDisabled(isTurnOff);
-                    settingsRepository.save(memberSettingsEntity);
-                },
-                () -> { throw new YouHasNoStatsYetInGuildException(config, event); }
-            );
+            .orElseThrow(() -> new MemberHasNoStatsYetInGuildException(config, event, event.getMember().getUser()));
+
+        exec.accept(settings.getStatsDisabled());
+        settings.setStatsDisabled(isDisabled);
+        return settings;
     }
 }
