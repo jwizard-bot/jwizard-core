@@ -33,10 +33,10 @@ import java.util.Map;
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.locale.ResLocaleSet;
-import pl.miloszgilga.statistics.StatsDao;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMyStatsCommand;
+import pl.miloszgilga.cacheable.CacheableMemberSettingsDao;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -51,29 +51,28 @@ import static pl.miloszgilga.exception.StatsException.StatsAlreadyDisabledExcept
 @JDAInjectableCommandLazyService
 public class DisableMyStatsCmd extends AbstractMyStatsCommand {
 
-    private final StatsDao statsDao;
-    private final IMemberSettingsRepository repository;
+    private final CacheableMemberSettingsDao cacheableMemberSettingsDao;
+    private final IMemberSettingsRepository settingsRepository;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     DisableMyStatsCmd(
-        BotConfiguration config, EmbedMessageBuilder embedBuilder, StatsDao statsDao,
-        IMemberStatsRepository statsRepository, IMemberSettingsRepository repository
+        BotConfiguration config, EmbedMessageBuilder embedBuilder, CacheableMemberSettingsDao cacheableMemberSettingsDao,
+        IMemberStatsRepository statsRepository, IMemberSettingsRepository settingsRepository
     ) {
         super(BotCommand.DISABLE_STATS, config, embedBuilder, statsRepository);
-        this.statsDao = statsDao;
-        this.repository = repository;
+        this.cacheableMemberSettingsDao = cacheableMemberSettingsDao;
+        this.settingsRepository = settingsRepository;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void doExecuteMyStatsCommand(CommandEventWrapper event) {
-        if (repository.isStatsDisabled(event.getMemberId(), event.getGuildId())) {
-            throw new StatsAlreadyDisabledException(config, event);
-        }
-        statsDao.turnOnOffMemberStats(event, true);
-
+        final var updatedSettings = cacheableMemberSettingsDao.toggleMemberStatsDisabled(event, true, isDisabled -> {
+            if (isDisabled) throw new StatsAlreadyDisabledException(config, event);
+        });
+        settingsRepository.save(updatedSettings);
         final String userTag = event.getMember().getUser().getAsTag();
         final MessageEmbed messageEmbed = embedBuilder.createMessage(ResLocaleSet.STATS_COLLECTOR_DISABLED_MESS, Map.of(
             "enableStatsCmd", BotCommand.ENABLE_STATS.parseWithPrefix(config)

@@ -25,10 +25,16 @@
 package pl.miloszgilga.domain.guild_settings;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Repository
 public interface IGuildSettingsRepository extends JpaRepository<GuildSettingsEntity, Long> {
+
+    @Cacheable(cacheNames = "GuildSettingsCache", key = "#p0", unless = "#result==null")
+    Optional<GuildSettingsEntity> findByGuild_DiscordId(String guildId);
 }

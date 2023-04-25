@@ -33,10 +33,10 @@ import java.util.Map;
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.locale.ResLocaleSet;
-import pl.miloszgilga.statistics.StatsDao;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMyStatsCommand;
+import pl.miloszgilga.cacheable.CacheableMemberSettingsDao;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -51,17 +51,17 @@ import static pl.miloszgilga.exception.StatsException.StatsAlreadyPrivateExcepti
 @JDAInjectableCommandLazyService
 public class PrivateStatsCmd extends AbstractMyStatsCommand {
 
-    private final StatsDao statsDao;
+    private final CacheableMemberSettingsDao cacheableMemberSettingsDao;
     private final IMemberSettingsRepository settingsRepository;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     PrivateStatsCmd(
-        BotConfiguration config, EmbedMessageBuilder embedBuilder, IMemberStatsRepository repository, StatsDao statsDao,
-        IMemberSettingsRepository settingsRepository
+        BotConfiguration config, EmbedMessageBuilder embedBuilder, IMemberStatsRepository repository,
+        CacheableMemberSettingsDao cacheableMemberSettingsDao, IMemberSettingsRepository settingsRepository
     ) {
         super(BotCommand.PRIVATE_STATS, config, embedBuilder, repository);
-        this.statsDao = statsDao;
+        this.cacheableMemberSettingsDao = cacheableMemberSettingsDao;
         this.settingsRepository = settingsRepository;
     }
 
@@ -69,11 +69,10 @@ public class PrivateStatsCmd extends AbstractMyStatsCommand {
 
     @Override
     protected void doExecuteMyStatsCommand(CommandEventWrapper event) {
-        if (settingsRepository.isStatsPrivate(event.getMemberId(), event.getGuildId())) {
-            throw new StatsAlreadyPrivateException(config, event);
-        }
-        statsDao.toggleMemberStatsVisibility(event, true);
-
+        final var updatedSettings = cacheableMemberSettingsDao.toggleStatsVisibility(event, true, isPrivate -> {
+            if (isPrivate) throw new StatsAlreadyPrivateException(config, event);
+        });
+        settingsRepository.save(updatedSettings);
         final String userTag = event.getMember().getUser().getAsTag();
         final MessageEmbed messageEmbed = embedBuilder.createMessage(ResLocaleSet.SET_STATS_TO_PRIVATE_MESS, Map.of(
             "statsPublicCmd", BotCommand.PUBLIC_STATS.parseWithPrefix(config)
