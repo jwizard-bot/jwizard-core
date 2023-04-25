@@ -34,4 +34,5 @@ import java.util.Optional;
 @Repository
 public interface IGuildRepository extends JpaRepository<GuildEntity, Long> {
     Optional<GuildEntity> findByDiscordId(String guildDiscordId);
+    void deleteGuildEntityByDiscordId(String guildDiscordId);
 }

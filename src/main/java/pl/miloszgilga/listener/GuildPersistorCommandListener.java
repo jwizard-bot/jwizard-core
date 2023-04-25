@@ -27,6 +27,8 @@ package pl.miloszgilga.listener;
 import net.dv8tion.jda.api.events.guild.*;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateNameEvent;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Optional;
 
 import pl.miloszgilga.embed.EmbedMessageBuilder;
@@ -73,7 +75,7 @@ public class GuildPersistorCommandListener extends AbstractListenerAdapter {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void deleteGuildTables(GenericGuildEvent event) {
-        guildRepository.findByDiscordId(event.getGuild().getId()).ifPresent(guildRepository::delete);
+        guildRepository.deleteGuildEntityByDiscordId(event.getGuild().getId());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -87,9 +89,9 @@ public class GuildPersistorCommandListener extends AbstractListenerAdapter {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override public void onGuildUpdateName(GuildUpdateNameEvent event)     { updateGuildName(event); }
-    @Override public void onGuildReady(GuildReadyEvent event)               { createOnlyIfGuildTableNotExist(event); }
-    @Override public void onGuildJoin(GuildJoinEvent event)                 { createOnlyIfGuildTableNotExist(event); }
-    @Override public void onGuildLeave(GuildLeaveEvent event)               { deleteGuildTables(event); }
-    @Override public void onGuildBan(GuildBanEvent event)                   { deleteGuildTables(event); }
+    @Override public void onGuildUpdateName(GuildUpdateNameEvent event)         { updateGuildName(event); }
+    @Override public void onGuildReady(GuildReadyEvent event)                   { createOnlyIfGuildTableNotExist(event); }
+    @Override public void onGuildJoin(GuildJoinEvent event)                     { createOnlyIfGuildTableNotExist(event); }
+    @Transactional @Override public void onGuildLeave(GuildLeaveEvent event)    { deleteGuildTables(event); }
+    @Transactional @Override public void onGuildBan(GuildBanEvent event)        { deleteGuildTables(event); }
 }
