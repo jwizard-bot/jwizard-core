@@ -10,5 +10,6 @@
     <include file="migrations/2023-04-08_00002_create-guild-settings-table.xml" relativeToChangelogFile="true"/>
     <include file="migrations/2023-04-09_00000_move-nickname-to-stats-table.xml" relativeToChangelogFile="true"/>
     <include file="migrations/2023-04-09_00001_create-member-settings-table.xml" relativeToChangelogFile="true"/>
+    <include file="migrations/2023-04-25_00000_change-guild-settings-col-pos.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

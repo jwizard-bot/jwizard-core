@@ -70,7 +70,7 @@ public class MemberSettingsEntity extends AbstractAuditableEntity implements Ser
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    Boolean getStatsDisabled() {
+    public Boolean getStatsDisabled() {
         return statsDisabled;
     }
 
@@ -78,7 +78,7 @@ public class MemberSettingsEntity extends AbstractAuditableEntity implements Ser
         this.statsDisabled = statsDisabled;
     }
 
-    Boolean getStatsPrivate() {
+    public Boolean getStatsPrivate() {
         return statsPrivate;
     }
 

@@ -33,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum BugTracker {
 
+    // common
     UNRECOGNIZED_COMMAND                                    (1),
     USED_COMMAND_ON_FORBIDDEN_CHANNEL                       (2),
     MISMATCH_COMMAND_ARGUMENTS                              (3),
@@ -42,6 +43,7 @@ public enum BugTracker {
     USER_NOT_FOUND_IN_GUILD                                 (7),
     USER_ID_ALREADY_WITH_BOT                                (8),
 
+    // music player
     ACTIVE_MUSIC_PLAYING_NOT_FOUND                          (101),
     USER_ON_VOICE_CHANNEL_NOT_FOUND                         (102),
     USER_ON_VOICE_CHANNEL_WITH_BOT_NOT_FOUND                (103),
@@ -59,6 +61,7 @@ public enum BugTracker {
     TRACK_QUEUE_IS_EMPTY                                    (115),
     USER_NOT_ADDED_TRACKS_TO_QUEUE                          (116),
 
+    // statistics
     STATS_MODULE_IS_TURNED_OFF                              (200),
     STATS_MODULE_IS_ALREADY_RUNNING                         (201),
     MEMBER_HAS_NO_STATS_YET                                 (202),

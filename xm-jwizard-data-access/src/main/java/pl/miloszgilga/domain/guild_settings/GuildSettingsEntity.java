@@ -152,11 +152,11 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
         this.guild = guild;
     }
 
-    Boolean getStatsModuleEnabled() {
+    public Boolean getStatsModuleEnabled() {
         return statsModuleEnabled;
     }
 
-    void setStatsModuleEnabled(Boolean statsModuleEnabled) {
+    public void setStatsModuleEnabled(Boolean statsModuleEnabled) {
         this.statsModuleEnabled = statsModuleEnabled;
     }
 

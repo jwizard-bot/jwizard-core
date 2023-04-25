@@ -72,7 +72,7 @@ public class ResetGuildStatsCmd extends AbstractManagerStatsCommand {
             guildStats -> {
                 guildStats.resetStats();
                 guildStatsRepository.save(guildStats);
-                memberStatsRepository.deleteAllByGuild_DiscordId(event.getGuildId());
+                memberStatsRepository.resetAllMembersStatsFromGuild(event.getGuildId());
 
                 final MessageEmbed messageEmbed = embedBuilder
                     .createMessage(ResLocaleSet.GUILD_STATS_CLEARED_MESS, Map.of(
