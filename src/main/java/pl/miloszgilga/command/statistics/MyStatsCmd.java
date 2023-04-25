@@ -34,6 +34,7 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
 import pl.miloszgilga.domain.member_stats.IMemberStatsRepository;
+import pl.miloszgilga.domain.member_settings.MemberSettingsEntity;
 import pl.miloszgilga.domain.member_settings.IMemberSettingsRepository;
 
 import static pl.miloszgilga.exception.StatsException.YouHasDisableStatsException;
@@ -62,7 +63,10 @@ public class MyStatsCmd extends AbstractMyStatsCommand {
 
     @Override
     protected void doExecuteMyStatsCommand(CommandEventWrapper event) {
-        if (settingsRepository.isStatsDisabled(event.getMemberId(), event.getGuildId())) {
+        final MemberSettingsEntity settings = settingsRepository
+            .findByMember_DiscordIdAndGuild_DiscordId(event.getMemberId(), event.getGuildId())
+            .orElseThrow(() -> new YouHasNoStatsYetInGuildException(config, event));
+        if (settings.getStatsDisabled()) {
             throw new YouHasDisableStatsException(config, event);
         }
         statsRepository.findByMember_DiscordIdAndGuild_DiscordId(event.getMemberId(), event.getGuildId())

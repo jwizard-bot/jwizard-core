@@ -33,13 +33,14 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
 
+import org.springframework.cache.annotation.CachePut;
+
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.AbstractListenerAdapter;
-import pl.miloszgilga.core.configuration.BotProperty;
+import pl.miloszgilga.core.configuration.RemoteProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
 
@@ -58,21 +59,21 @@ import pl.miloszgilga.domain.member_settings.IMemberSettingsRepository;
 public class MemberStatsCommandListener extends AbstractListenerAdapter {
 
     private final IMemberStatsRepository statsRepository;
-    private final IMemberSettingsRepository settingsRepository;
-    private final IMemberRepository memberRepository;
     private final IGuildRepository guildRepository;
+    private final IMemberRepository memberRepository;
+    private final IMemberSettingsRepository settingsRepository;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     MemberStatsCommandListener(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, IMemberStatsRepository statsRepository,
-        IMemberSettingsRepository settingsRepository, IMemberRepository memberRepository, IGuildRepository guildRepository
+        IMemberSettingsRepository settingsRepository, IGuildRepository guildRepository, IMemberRepository memberRepository
     ) {
         super(config, embedBuilder);
         this.statsRepository = statsRepository;
         this.settingsRepository = settingsRepository;
-        this.memberRepository = memberRepository;
         this.guildRepository = guildRepository;
+        this.memberRepository = memberRepository;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,14 +82,8 @@ public class MemberStatsCommandListener extends AbstractListenerAdapter {
         if (Objects.isNull(event.getMember())) return;
         if (checkIfStatsAreDisabled(event.getMember(), event.getGuild())) return;
 
-        findByMemberAndGuild(event.getMember(), event.getGuild()).ifPresentOrElse(
-            memberStats -> {
-                memberStats.increaseMessagesSended();
-                statsRepository.save(memberStats);
-            },
-            () -> createMemberStatsIfNotExist(event.getMember(), event.getGuild(),
-                MemberStatsEntity::increaseMessagesSended)
-        );
+        createMemberStatsIfNotExist(event.getMember(), event.getGuild());
+        statsRepository.increaseSendedMessages(event.getMember().getId(), event.getGuild().getId());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -97,14 +92,8 @@ public class MemberStatsCommandListener extends AbstractListenerAdapter {
         if (Objects.isNull(event.getMember())) return;
         if (checkIfStatsAreDisabled(event.getMember(), event.getGuild())) return;
 
-        findByMemberAndGuild(event.getMember(), event.getGuild()).ifPresentOrElse(
-            memberStats -> {
-                memberStats.increaseMessagesUpdated();
-                statsRepository.save(memberStats);
-            },
-            () -> createMemberStatsIfNotExist(event.getMember(), event.getGuild(),
-                MemberStatsEntity::increaseMessagesUpdated)
-        );
+        createMemberStatsIfNotExist(event.getMember(), event.getGuild());
+        statsRepository.increaseUpdatedMessages(event.getMember().getId(), event.getGuild().getId());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,14 +101,8 @@ public class MemberStatsCommandListener extends AbstractListenerAdapter {
     private void addedReactionsIncCouter(GuildMessageReactionAddEvent event) {
         if (checkIfStatsAreDisabled(event.getMember(), event.getGuild())) return;
 
-        findByMemberAndGuild(event.getMember(), event.getGuild()).ifPresentOrElse(
-            memberStats -> {
-                memberStats.increaseReactionsAdded();
-                statsRepository.save(memberStats);
-            },
-            () -> createMemberStatsIfNotExist(event.getMember(), event.getGuild(),
-                MemberStatsEntity::increaseReactionsAdded)
-        );
+        createMemberStatsIfNotExist(event.getMember(), event.getGuild());
+        statsRepository.increaseAddedReactions(event.getMember().getId(), event.getGuild().getId());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -128,14 +111,8 @@ public class MemberStatsCommandListener extends AbstractListenerAdapter {
         if (Objects.isNull(event.getMember()) || Objects.isNull(event.getGuild())) return;
         if (checkIfStatsAreDisabled(event.getMember(), event.getGuild())) return;
 
-        findByMemberAndGuild(event.getMember(), event.getGuild()).ifPresentOrElse(
-            memberStats -> {
-                memberStats.increaseSlashInteractions();
-                statsRepository.save(memberStats);
-            },
-            () -> createMemberStatsIfNotExist(event.getMember(), event.getGuild(),
-                MemberStatsEntity::increaseSlashInteractions)
-        );
+        createMemberStatsIfNotExist(event.getMember(), event.getGuild());
+        statsRepository.increaseSlashInteractions(event.getMember().getId(), event.getGuild().getId());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -143,14 +120,8 @@ public class MemberStatsCommandListener extends AbstractListenerAdapter {
     private void updateNickname(GuildMemberUpdateNicknameEvent event) {
         if (checkIfStatsAreDisabled(event.getMember(), event.getGuild())) return;
 
-        findByMemberAndGuild(event.getMember(), event.getGuild()).ifPresentOrElse(
-            memberStats -> {
-                memberStats.setGuildNickname(event.getNewNickname());
-                statsRepository.save(memberStats);
-            },
-            () -> createMemberStatsIfNotExist(event.getMember(), event.getGuild(), memberStats ->
-                memberStats.setGuildNickname(event.getNewNickname()))
-        );
+        createMemberStatsIfNotExist(event.getMember(), event.getGuild());
+        statsRepository.changeNickname(event.getMember().getId(), event.getGuild().getId(), event.getNewNickname());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -167,9 +138,12 @@ public class MemberStatsCommandListener extends AbstractListenerAdapter {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void createMemberStatsIfNotExist(Member member, Guild guild, Consumer<MemberStatsEntity> beforeSave) {
+    @CachePut(cacheNames = "MemberSettingsCache", key = "#p0.id.concat(#p1.id)")
+    public MemberSettingsEntity createMemberStatsIfNotExist(Member member, Guild guild) {
+        if (statsRepository.existsByMember_DiscordIdAndGuild_DiscordId(member.getId(), guild.getId())) return null;
+
         final Optional<GuildEntity> guildEntity = guildRepository.findByDiscordId(guild.getId());
-        if (guildEntity.isEmpty()) return;
+        if (guildEntity.isEmpty()) return null;
 
         final MemberEntity memberEntity = memberRepository.findByDiscordId(member.getId())
             .orElseGet(() -> memberRepository.save(new MemberEntity(member.getId())));
@@ -177,23 +151,21 @@ public class MemberStatsCommandListener extends AbstractListenerAdapter {
         final MemberStatsEntity memberStats = new MemberStatsEntity(guildEntity.get(), member, memberEntity);
         final MemberSettingsEntity memberSettings = new MemberSettingsEntity(memberEntity, guildEntity.get());
 
-        beforeSave.accept(memberStats);
-
         statsRepository.save(memberStats);
-        settingsRepository.save(memberSettings);
-    }
-
-    private Optional<MemberStatsEntity> findByMemberAndGuild(Member member, Guild guild) {
-        return statsRepository.findByMember_DiscordIdAndGuild_DiscordId(member.getId(), guild.getId());
+        return settingsRepository.save(memberSettings);
     }
 
     private boolean checkIfStatsAreDisabled(Member member, Guild guild) {
-        final boolean isTurnOff = !config.getProperty(BotProperty.J_STATS_MODULE_ENABLED, Boolean.class);
-        final Boolean isPrivate = settingsRepository.isStatsPrivate(member.getId(), guild.getId());
-        final Boolean isDisabled = settingsRepository.isStatsDisabled(member.getId(), guild.getId());
+        final Optional<MemberSettingsEntity> optionalSettings = settingsRepository
+            .findByMember_DiscordIdAndGuild_DiscordId(member.getId(), guild.getId());
+        if (optionalSettings.isEmpty()) {
+            return member.getUser().isBot();
+        }
+        final MemberSettingsEntity settings = optionalSettings.get();
+        final boolean isTurnOff = !config.getPossibleRemoteProperty(RemoteProperty.R_STATS_MODULE_ENABLED,
+            guild, Boolean.class);
 
-        if (Objects.isNull(isPrivate) || Objects.isNull(isDisabled)) return false;
-        return member.getUser().isBot() || isTurnOff || isPrivate || isDisabled;
+        return member.getUser().isBot() || isTurnOff || settings.getStatsDisabled();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

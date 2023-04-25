@@ -25,8 +25,8 @@
 package pl.miloszgilga.domain.member_settings;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.data.repository.query.Param;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -35,28 +35,10 @@ import java.util.Optional;
 
 @Repository
 public interface IMemberSettingsRepository extends JpaRepository<MemberSettingsEntity, Long> {
+
+    @Cacheable(cacheNames = "MemberSettingsCache", key = "#p0.concat(#p1)", unless = "#result==null")
     Optional<MemberSettingsEntity> findByMember_DiscordIdAndGuild_DiscordId(String memberDiscordId, String guildDiscordId);
+
+    @CacheEvict(cacheNames = "MemberSettingsCache", key = "#p0.concat(#p1)")
     void deleteByMember_DiscordIdAndGuild_DiscordId(String memberDiscordId, String guildDiscordId);
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Query(value = """
-        select e.statsPrivate from MemberSettingsEntity e join e.guild g join e.member m
-        where m.discordId = :memberDiscordId and g.discordId = :guildDiscordId
-    """)
-    Boolean isStatsPrivate(
-        @Param("memberDiscordId")   String memberDiscordId,
-        @Param("guildDiscordId")    String guildDiscordId
-    );
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Query(value = """
-        select e.statsDisabled from MemberSettingsEntity e join e.guild g join e.member m
-        where m.discordId = :memberDiscordId and g.discordId = :guildDiscordId
-    """)
-    Boolean isStatsDisabled(
-        @Param("memberDiscordId")   String memberDiscordId,
-        @Param("guildDiscordId")    String guildDiscordId
-    );
 }

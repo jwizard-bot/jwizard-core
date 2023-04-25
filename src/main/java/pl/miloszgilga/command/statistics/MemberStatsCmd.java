@@ -38,8 +38,10 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
 import pl.miloszgilga.domain.member_stats.IMemberStatsRepository;
+import pl.miloszgilga.domain.member_settings.MemberSettingsEntity;
 import pl.miloszgilga.domain.member_settings.IMemberSettingsRepository;
 
+import static pl.miloszgilga.exception.StatsException.GuildHasNoStatsYetException;
 import static pl.miloszgilga.exception.StatsException.MemberHasDisableStatsException;
 import static pl.miloszgilga.exception.StatsException.MemberHasPrivateStatsException;
 import static pl.miloszgilga.exception.StatsException.MemberHasNoStatsYetInGuildException;
@@ -74,12 +76,16 @@ public class MemberStatsCmd extends AbstractStatsCommand {
         final User user = Utilities.checkIfMemberInGuildExist(event, userId[0], config).getUser();
         statsRepository.findByMember_DiscordIdAndGuild_DiscordId(userId[0], event.getGuildId()).ifPresentOrElse(
             memberStats -> {
-                if (settingsRepository.isStatsDisabled(userId[0], event.getGuildId())) {
+                final MemberSettingsEntity settings = settingsRepository
+                    .findByMember_DiscordIdAndGuild_DiscordId(userId[0], event.getGuildId())
+                    .orElseThrow(() -> new GuildHasNoStatsYetException(config, event));
+
+                if (settings.getStatsDisabled()) {
                     throw new MemberHasDisableStatsException(config, event, user);
                 }
                 final boolean isNotOwner = !event.getAuthor().getId().equals(event.getGuild().getOwnerId());
                 final boolean isNotManager = !event.getMember().hasPermission(Permission.MANAGE_SERVER);
-                if (settingsRepository.isStatsPrivate(userId[0], event.getGuildId()) && (isNotOwner || isNotManager)) {
+                if (settings.getStatsPrivate() && (isNotOwner || isNotManager)) {
                     throw new MemberHasPrivateStatsException(config, event, user);
                 }
                 final MessageEmbed messageEmbed = embedBuilder.createMemberStatsMessage(event, memberStats);
