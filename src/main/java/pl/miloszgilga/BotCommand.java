@@ -82,8 +82,8 @@ public enum BotCommand {
     DISABLE_STATS           ("statsoff",    true, new String[]{ "stoff" },        STATS,  DISABLE_STATS_COMMAND_DESC),
     PUBLIC_STATS            ("pubstats",    true, new String[]{ "pubst" },        STATS,  PUBLIC_STATS_COMMAND_DESC),
     PRIVATE_STATS           ("privstats",   true, new String[]{ "privst" },       STATS,  PRIVATE_STATS_COMMAND_DESC),
-    TURN_ON_STATS_MODULE    ("onstats",     true, new String[]{ "onst" },         STATS,  TURN_ON_STATS_MODULE_COMMAND_DESC),
-    TURN_OFF_STATS_MODULE   ("offstats",    true, new String[]{ "offst" },        STATS,  TURN_OFF_STATS_MODULE_COMMAND_DESC),
+    TURN_ON_STATS_MODULE    ("onstatsm",    true, new String[]{ "onstm" },        STATS,  TURN_ON_STATS_MODULE_COMMAND_DESC),
+    TURN_OFF_STATS_MODULE   ("offstatsm",   true, new String[]{ "offstm" },       STATS,  TURN_OFF_STATS_MODULE_COMMAND_DESC),
     RESET_MEMBER_STATS      ("resetmstats", true, new String[]{ "rsmst" },        STATS,  RESET_MEMBER_STATS_COMMAND_DESC,            MEMBER_TAG_ARG_SYNTAX),
     RESET_GUILD_STATS       ("resetgstats", true, new String[]{ "rsgst" },        STATS,  RESET_GUILD_STATS_COMMAND_DESC),
 

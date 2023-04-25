@@ -100,6 +100,8 @@ public enum ResLocaleSet implements IEnumerableLocaleSet {
     STATS_COLLECTOR_DISABLED_MESS                   ("jwizard.message.response.StatsCollectorDisabled"),
     MEMBER_STATS_CLEARED_MESS                       ("jwizard.message.response.MemberStatsCleared"),
     GUILD_STATS_CLEARED_MESS                        ("jwizard.message.response.GuildStatsCleared"),
+    GUILD_STATS_MODULE_ENABLED_MESS                 ("jwizard.message.response.GuildStatsModuleEnabled"),
+    GUILD_STATS_MODULE_DISABLED_MESS                ("jwizard.message.response.GuildStatsModuleDisabled"),
     GENERATED_DATE_MESS                             ("jwizard.message.response.GeneratedDate"),
     MESSAGES_SENDED_MESS                            ("jwizard.message.response.MessagesSended"),
     MESSAGES_UPDATED_MESS                           ("jwizard.message.response.MessagesUpdated"),

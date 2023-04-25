@@ -24,9 +24,18 @@
 
 package pl.miloszgilga.command.manager;
 
+import lombok.extern.slf4j.Slf4j;
+
+import net.dv8tion.jda.api.entities.MessageEmbed;
+
+import java.util.Map;
+
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.misc.JDALog;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.cacheable.CacheableGuildSettingsDao;
 import pl.miloszgilga.command.AbstractManagerStatsCommand;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
@@ -35,24 +44,34 @@ import pl.miloszgilga.domain.guild_settings.IGuildSettingsRepository;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+@Slf4j
 @JDAInjectableCommandLazyService
 public class TurnOffStatsModuleCmd extends AbstractManagerStatsCommand {
 
     private final IGuildSettingsRepository settingsRepository;
+    private final CacheableGuildSettingsDao cacheableGuildSettingsDao;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     TurnOffStatsModuleCmd(
-        BotConfiguration config, EmbedMessageBuilder embedBuilder, IGuildSettingsRepository settingsRepository
+        BotConfiguration config, EmbedMessageBuilder embedBuilder, IGuildSettingsRepository settingsRepository,
+        CacheableGuildSettingsDao cacheableGuildSettingsDao
     ) {
         super(BotCommand.TURN_OFF_STATS_MODULE, config, embedBuilder);
         this.settingsRepository = settingsRepository;
+        this.cacheableGuildSettingsDao = cacheableGuildSettingsDao;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void doExecuteManagerStatsCommand(CommandEventWrapper event) {
-
+        final var updatedSettings = cacheableGuildSettingsDao.toggleGuildStatisticsModule(event, false, s -> {});
+        settingsRepository.save(updatedSettings);
+        final MessageEmbed messageEmbed = embedBuilder.createMessage(ResLocaleSet.GUILD_STATS_MODULE_DISABLED_MESS, Map.of(
+            "enableStatsModuleCmd", BotCommand.TURN_ON_STATS_MODULE.parseWithPrefix(config)
+        ));
+        JDALog.info(log, event, "Stats module for selected guild '%s' was successfully disabled", event.getGuildName());
+        event.sendEmbedMessage(messageEmbed);
     }
 }

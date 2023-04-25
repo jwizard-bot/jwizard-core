@@ -24,11 +24,19 @@
 
 package pl.miloszgilga.command.manager;
 
+import lombok.extern.slf4j.Slf4j;
+
+import net.dv8tion.jda.api.entities.MessageEmbed;
+
+import java.util.Map;
+
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.misc.JDALog;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractManagerCommand;
-import pl.miloszgilga.core.configuration.BotProperty;
+import pl.miloszgilga.cacheable.CacheableGuildSettingsDao;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -38,27 +46,36 @@ import static pl.miloszgilga.exception.StatsException.StatsModuleIsAlreadyRunnin
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+@Slf4j
 @JDAInjectableCommandLazyService
 public class TurnOnStatsModuleCmd extends AbstractManagerCommand {
 
     private final IGuildSettingsRepository settingsRepository;
+    private final CacheableGuildSettingsDao cacheableGuildSettingsDao;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     TurnOnStatsModuleCmd(
-        BotConfiguration config, EmbedMessageBuilder embedBuilder, IGuildSettingsRepository settingsRepository
+        BotConfiguration config, EmbedMessageBuilder embedBuilder, IGuildSettingsRepository settingsRepository,
+        CacheableGuildSettingsDao cacheableGuildSettingsDao
     ) {
         super(BotCommand.TURN_ON_STATS_MODULE, config, embedBuilder);
         this.settingsRepository = settingsRepository;
+        this.cacheableGuildSettingsDao = cacheableGuildSettingsDao;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void doExecuteManagerCommand(CommandEventWrapper event) {
-        if (config.getProperty(BotProperty.J_STATS_MODULE_ENABLED, Boolean.class)) {
-            throw new StatsModuleIsAlreadyRunningException(config, event);
-        }
-
+        final var updatedSettings = cacheableGuildSettingsDao.toggleGuildStatisticsModule(event, true, isActive -> {
+            if (isActive) throw new StatsModuleIsAlreadyRunningException(config, event);
+        });
+        settingsRepository.save(updatedSettings);
+        final MessageEmbed messageEmbed = embedBuilder.createMessage(ResLocaleSet.GUILD_STATS_MODULE_ENABLED_MESS, Map.of(
+            "disableStatsModuleCmd", BotCommand.TURN_OFF_STATS_MODULE.parseWithPrefix(config)
+        ));
+        JDALog.info(log, event, "Stats module for selected guild '%s' was successfully enabled", event.getGuildName());
+        event.sendEmbedMessage(messageEmbed);
     }
 }
