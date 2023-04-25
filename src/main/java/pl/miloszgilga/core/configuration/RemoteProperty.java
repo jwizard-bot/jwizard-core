@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: AbstractManagerStatsCommand.java
- * Last modified: 09/04/2023, 21:59
+ * File name: RemoteProperty.java
+ * Last modified: 25/04/2023, 16:21
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -22,35 +22,25 @@
  * or other dealings in the software.
  */
 
-package pl.miloszgilga.command;
+package pl.miloszgilga.core.configuration;
 
-import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.dto.CommandEventWrapper;
-import pl.miloszgilga.embed.EmbedMessageBuilder;
-import pl.miloszgilga.core.configuration.RemoteProperty;
-import pl.miloszgilga.core.configuration.BotConfiguration;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-import static pl.miloszgilga.exception.StatsException.StatsModuleIsTurnedOffException;
+import java.util.function.Function;
+
+import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-public abstract class AbstractManagerStatsCommand extends AbstractManagerCommand {
+@Getter
+@RequiredArgsConstructor
+public enum RemoteProperty {
 
-    protected AbstractManagerStatsCommand(BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder) {
-        super(command, config, embedBuilder);
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    protected void doExecuteManagerCommand(CommandEventWrapper event) {
-        if (!config.getPossibleRemoteProperty(RemoteProperty.R_STATS_MODULE_ENABLED, event.getGuild(), Boolean.class)) {
-            throw new StatsModuleIsTurnedOffException(config, event);
-        }
-        doExecuteManagerStatsCommand(event);
-    }
+    R_STATS_MODULE_ENABLED          (BotProperty.J_STATS_MODULE_ENABLED, GuildSettingsEntity::getStatsModuleEnabled);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    protected abstract void doExecuteManagerStatsCommand(CommandEventWrapper event);
+    private final BotProperty localProperty;
+    private final Function<GuildSettingsEntity, Object> remoteProp;
 }

@@ -24,13 +24,14 @@
 
 package pl.miloszgilga.listener;
 
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.AbstractListenerAdapter;
-import pl.miloszgilga.core.configuration.BotProperty;
+import pl.miloszgilga.core.configuration.RemoteProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
 
@@ -55,7 +56,8 @@ public class GuildStatsCommandListener extends AbstractListenerAdapter {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void deleteMessageIncCounter(GenericGuildEvent event) {
-        if (!config.getProperty(BotProperty.J_STATS_MODULE_ENABLED, Boolean.class)) return;
+        if (collectorIsDisabled(event.getGuild())) return;
+
         repository.findByGuild_DiscordId(event.getGuild().getId()).ifPresent(guildStats -> {
             guildStats.increaseMessagesDeleted();
             repository.save(guildStats);
@@ -65,11 +67,18 @@ public class GuildStatsCommandListener extends AbstractListenerAdapter {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void deleteReactionIncCounter(GenericGuildEvent event) {
-        if (!config.getProperty(BotProperty.J_STATS_MODULE_ENABLED, Boolean.class)) return;
+        if (collectorIsDisabled(event.getGuild())) return;
+
         repository.findByGuild_DiscordId(event.getGuild().getId()).ifPresent(guildStats -> {
             guildStats.increaseReactionsDeleted();
             repository.save(guildStats);
         });
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private boolean collectorIsDisabled(Guild guild) {
+        return !config.getPossibleRemoteProperty(RemoteProperty.R_STATS_MODULE_ENABLED, guild, Boolean.class);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -28,7 +28,7 @@ import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.AbstractCommand;
-import pl.miloszgilga.core.configuration.BotProperty;
+import pl.miloszgilga.core.configuration.RemoteProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 import static pl.miloszgilga.exception.StatsException.StatsModuleIsTurnedOffException;
@@ -45,7 +45,7 @@ public abstract class AbstractStatsCommand extends AbstractCommand {
 
     @Override
     protected void doExecuteCommand(CommandEventWrapper event) {
-        if (!config.getProperty(BotProperty.J_STATS_MODULE_ENABLED, Boolean.class)) {
+        if (!config.getPossibleRemoteProperty(RemoteProperty.R_STATS_MODULE_ENABLED, event.getGuild(), Boolean.class)) {
             throw new StatsModuleIsTurnedOffException(config, event);
         }
         doExecuteStatsCommand(event);
