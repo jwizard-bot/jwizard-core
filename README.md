@@ -13,6 +13,7 @@
 A multi-functional music bot (likely to be enhanced with additional features over time) that allows you to play, pause, repeat and queue songs on the popular VoIP Discord platform. Written entirely using Java SE 17 and Spring Framework IoC container.
 
 ## Table of content
+* [Contribute this project](#contribute-this-project)
 * [Multiple versions separation](#multiple-versions-separation)
 * [Clone script](#clone-script)
 * [Run from IDE](#run-from-ide)
@@ -22,9 +23,12 @@ A multi-functional music bot (likely to be enhanced with additional features ove
 * [Tech stack](#tech-stack)
 * [License](#license)
 * [Author](#author)
-* [Contribute this project](#contribute-this-project)
 * [Project status](#project-status)
 * [License](#license)
+
+<a name="contribute-this-project"></a>
+## Contribute this project
+If you have the desire and time to help me in writing this bot, you can write to me in a private message or at [personal@miloszgilga.pl](mailto:personal@miloszgilga.pl). However, please note that in order to be a contributor to this application, you must have knowledge in advanced object-oriented programming techniques and experienced in advanced Java programming (spring, rest, cache, multi modules and websockets). If you do not feel confident as a contributor, you can always submit a request for adding new functionality.
 
 <a name="multiple-versions-separation"></a>
 ## Multiple versions separation
@@ -150,10 +154,6 @@ jmpsl:
 <a name="author"></a>
 ## Author
 Created by Miłosz Gilga. If you have any questions about this application, send message: [personal@miloszgilga.pl](mailto:personal@miloszgilga.pl).
-
-<a name="contribute-this-project"></a>
-## Contribute this project
-If you have the desire and time to help me in writing this bot, you can write to me in a private message or at [personal@miloszgilga.pl](mailto:personal@miloszgilga.pl). However, please note that in order to be a contributor to this application, you must have knowledge in advanced object-oriented programming techniques and experienced in advanced Java programming (spring, rest, cache, multi modules and websockets). If you do not feel confident as a contributor, you can always submit a request for adding new functionality.
 
 <a name="project-status"></a>
 ## Project status
