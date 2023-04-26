@@ -22,7 +22,7 @@ A multi-functional music bot (likely to be enhanced with additional features ove
 * [Tech stack](#tech-stack)
 * [License](#license)
 * [Author](#author)
-* [Contribute this project](contribute-this-project)
+* [Contribute this project](#contribute-this-project)
 * [Project status](#project-status)
 * [License](#license)
 
