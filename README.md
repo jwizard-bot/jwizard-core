@@ -19,7 +19,10 @@ A multi-functional music bot (likely to be enhanced with additional features ove
 * [Run from JAR](#run-from-jar)
 * [Change Xmx and Xms parameters (JVM Heap Size)](#change-xmx-and-xms-parameters)
 * [Internationalization (i18n)](#internationalization-i18n)
+* [Tech stack](#tech-stack)
+* [License](#license)
 * [Author](#author)
+* [Contribute this project](contribute-this-project)
 * [Project status](#project-status)
 * [License](#license)
 
@@ -134,9 +137,23 @@ jmpsl:
             available-locales: en_US,pl,[i18n tag]
             default-locale: [i18n tag]
 ```
+<a name="tech-stack"></a>
+## Tech stack
+* Java 17
+* JDA, JDA Utilites, Lavaplayer
+* JMPSL (Core, Communication, Security, OAuth2)
+* Spring Boot (IoC container for DAPI runtime, WebAPI for web client interface)
+* Spring Data JPA (Hibernate, JPA, MySQL database)
+* Spring Cache (implemented by EhCache, DAPI runtime)
+* (soon) React (web client - guild modules management interface)
+
 <a name="author"></a>
 ## Author
 Created by Miłosz Gilga. If you have any questions about this application, send message: [personal@miloszgilga.pl](mailto:personal@miloszgilga.pl).
+
+<a name="contribute-this-project"></a>
+## Contribute this project
+If you have the desire and time to help me in writing this bot, you can write to me in a private message or at [personal@miloszgilga.pl](mailto:personal@miloszgilga.pl). However, please note that in order to be a contributor to this application, you must have knowledge in advanced object-oriented programming techniques and experienced in advanced Java programming (spring, rest, cache, multi modules and websockets). If you do not feel confident as a contributor, you can always submit a request for adding new functionality.
 
 <a name="project-status"></a>
 ## Project status
