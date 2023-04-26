@@ -74,17 +74,17 @@ $ ./gradlew bootJar
 3. All generated files should be located in `/build/jar`. You can move this files into selected directory.
 4. Optionally, you can change the bot's configuration values in the `properties-prod.yml` or `properties-dev.yml` file for the production or development version, respectively.
 5. To run JAR file, type:
-   * (FOR UNIX SYSTEMS):
-    ```
-    $ ./run-dev.sh   # for development version (loading configuration from properties-dev.yml file)
-    $ ./run-prod.sh  # for production version (loading configuration from properties-prod.yml file)
-    ```
-   * (FOR WINDOWS/OTHERS):
-    ```
-    $ python run-dev.py    # for development version (loading configuration from properties-dev.yml file)
-    $ python run-prod.py   # for production version (loading configuration from properties-prod.yml file)
-    ```
-    > NOTE: To run the script, you must have installed Python interpreter 3.11.2 or above. To check Python version, type `python --version` in your command prompt.
+* (FOR UNIX SYSTEMS):
+```
+$ ./run-dev.sh   # for development version (loading configuration from properties-dev.yml file)
+$ ./run-prod.sh  # for production version (loading configuration from properties-prod.yml file)
+```
+* (FOR WINDOWS/OTHERS):
+```
+$ python run-dev.py    # for development version (loading configuration from properties-dev.yml file)
+$ python run-prod.py   # for production version (loading configuration from properties-prod.yml file)
+```
+> NOTE: To run the script, you must have installed Python interpreter 3.11.2 or above. To check Python version, type `python --version` in your command prompt.
 
 <a name="change-xmx-and-xms-parameters"></a>
 ## Change Xmx and Xms parameters (JVM Heap Size)
@@ -105,18 +105,18 @@ Java heap size configuration is the same for both configuration (development and
 ## Internationalization (i18n)
 1. To add a new language, create a new resource file in the `classpath:/i18n-api` or `classpath:/i18n-jda` directory 
 via command:
-   * (FOR UNIX SYSTEMS):
-    ```
-    $ cd generator
-    $ ./lang-gen.sh --lang=[i18n tag]
-    ```
-   * (for WINDOWS/OTHERS):
-    ```
-    $ cd generator
-    $ python lang-gen.py --lang=[i18n tag]
-    ```
-    where `[i18n tag]` is one of the internationalization standards tag (ex. `en-US`, `fr`, `pl` etc.)
-    > NOTE: To run the script, you must have installed Python interpreter 3.11.2 or above. To check Python version, type `python --version` in your command prompt.
+* (FOR UNIX SYSTEMS):
+```
+$ cd generator
+$ ./lang-gen.sh --lang=[i18n tag]
+```
+* (for WINDOWS/OTHERS):
+```
+$ cd generator
+$ python lang-gen.py --lang=[i18n tag]
+```
+where `[i18n tag]` is one of the internationalization standards tag (ex. `en-US`, `fr`, `pl` etc.)
+> NOTE: To run the script, you must have installed Python interpreter 3.11.2 or above. To check Python version, type `python --version` in your command prompt.
 2. After successfully generated message resources file, fill keys with properly values.
 > NOTE: If you not provide parameter, application take key as value.
 3. (FOR JDA INTERFACE) To set the language, change this property in `properties-dev.yml` or `properties-prod.yml`:
