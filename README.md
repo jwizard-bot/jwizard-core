@@ -143,7 +143,7 @@ jmpsl:
 * JDA, JDA Utilites, Lavaplayer
 * JMPSL (Core, Communication, Security, OAuth2)
 * Spring Boot (IoC container for DAPI runtime, WebAPI for web client interface)
-* Spring Data JPA (Hibernate, JPA, MySQL database)
+* Spring Data JPA (Hibernate, JPA, MySQL database, H2 database)
 * Spring Cache (implemented by EhCache, DAPI runtime)
 * (soon) React (web client - guild modules management interface)
 
