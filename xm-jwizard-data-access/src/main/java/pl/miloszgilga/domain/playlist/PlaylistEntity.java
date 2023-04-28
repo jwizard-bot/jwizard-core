@@ -26,6 +26,8 @@ package pl.miloszgilga.domain.playlist;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+import java.util.HashSet;
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -36,6 +38,7 @@ import static jakarta.persistence.FetchType.LAZY;
 
 import pl.miloszgilga.domain.guild.GuildEntity;
 import pl.miloszgilga.domain.member.MemberEntity;
+import pl.miloszgilga.domain.playlist_track.PlaylistTrackEntity;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -54,6 +57,15 @@ public class PlaylistEntity extends AbstractAuditableEntity implements Serializa
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private MemberEntity member;
+
+    @OneToMany(cascade = ALL, mappedBy = "playlist", orphanRemoval = true)
+    private Set<PlaylistTrackEntity> tracks;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public PlaylistEntity() {
+        this.tracks = new HashSet<>();
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -87,6 +99,14 @@ public class PlaylistEntity extends AbstractAuditableEntity implements Serializa
 
     void setGuild(GuildEntity guild) {
         this.guild = guild;
+    }
+
+    Set<PlaylistTrackEntity> getTracks() {
+        return tracks;
+    }
+
+    void setTracks(Set<PlaylistTrackEntity> tracks) {
+        this.tracks = tracks;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

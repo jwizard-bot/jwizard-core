@@ -34,6 +34,7 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
 
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -134,6 +135,7 @@ public class MemberStatsCommandListener extends AbstractListenerAdapter {
 
         statsRepository.deleteByMember_DiscordIdAndGuild_DiscordId(memberId, guildId);
         settingsRepository.deleteByMember_DiscordIdAndGuild_DiscordId(memberId, guildId);
+        memberRepository.deleteOrphanMembers(memberId);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,17 +144,23 @@ public class MemberStatsCommandListener extends AbstractListenerAdapter {
     public MemberSettingsEntity createMemberStatsIfNotExist(Member member, Guild guild) {
         if (statsRepository.existsByMember_DiscordIdAndGuild_DiscordId(member.getId(), guild.getId())) return null;
 
-        final Optional<GuildEntity> guildEntity = guildRepository.findByDiscordId(guild.getId());
-        if (guildEntity.isEmpty()) return null;
+        final Optional<GuildEntity> optionalGuildEntity = guildRepository.getGuildByDiscordIdJoinLazy(guild.getId());
+        if (optionalGuildEntity.isEmpty()) return null;
 
-        final MemberEntity memberEntity = memberRepository.findByDiscordId(member.getId())
-            .orElseGet(() -> memberRepository.save(new MemberEntity(member.getId())));
+        final GuildEntity guildEntity = optionalGuildEntity.get();
+        final MemberEntity memberEntity = memberRepository.findByDiscordIdJoinSettingsAndStats(member.getId())
+            .orElseGet(() -> new MemberEntity(member.getId()));
 
-        final MemberStatsEntity memberStats = new MemberStatsEntity(guildEntity.get(), member, memberEntity);
-        final MemberSettingsEntity memberSettings = new MemberSettingsEntity(memberEntity, guildEntity.get());
+        final MemberStatsEntity memberStats = new MemberStatsEntity(member);
+        final MemberSettingsEntity memberSettings = new MemberSettingsEntity();
 
-        statsRepository.save(memberStats);
-        return settingsRepository.save(memberSettings);
+        memberEntity.addMemberStats(memberStats);
+        memberEntity.addMemberSettings(memberSettings);
+        guildEntity.addMemberGuildStats(memberStats);
+        guildEntity.addMemberGuildSettings(memberSettings);
+
+        memberRepository.save(memberEntity);
+        return memberSettings;
     }
 
     private boolean checkIfStatsAreDisabled(Member member, Guild guild) {
@@ -175,5 +183,5 @@ public class MemberStatsCommandListener extends AbstractListenerAdapter {
     @Override public void onGuildMessageUpdate(GuildMessageUpdateEvent event)                   { updatedMessagesIncCounter(event); }
     @Override public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event)         { addedReactionsIncCouter(event); }
     @Override public void onGuildMemberUpdateNickname(GuildMemberUpdateNicknameEvent event)     { updateNickname(event); }
-    @Override public void onGuildMemberRemove(GuildMemberRemoveEvent event)                     { deleteMemberStatsAndSettings(event); }
+    @Transactional @Override public void onGuildMemberRemove(GuildMemberRemoveEvent event)      { deleteMemberStatsAndSettings(event); }
 }

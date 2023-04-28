@@ -65,11 +65,9 @@ public class MemberStatsEntity extends AbstractAuditableEntity implements Serial
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public MemberStatsEntity(GuildEntity guildEntity, Member member, MemberEntity memberEntity) {
+    public MemberStatsEntity(Member member) {
         resetStats();
         this.guildNickname = Objects.requireNonNullElse(member.getNickname(), member.getUser().getName());
-        this.guild = guildEntity;
-        this.member = memberEntity;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

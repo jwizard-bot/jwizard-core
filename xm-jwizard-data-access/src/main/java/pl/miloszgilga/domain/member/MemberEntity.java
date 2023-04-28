@@ -29,12 +29,20 @@ import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 
 import java.util.Set;
+import java.util.HashSet;
 import java.io.Serial;
 import java.io.Serializable;
 
 import org.jmpsl.security.user.IAuthUserModel;
 import org.jmpsl.security.user.SimpleGrantedRole;
 import org.jmpsl.core.db.AbstractAuditableEntity;
+
+import pl.miloszgilga.domain.playlist.PlaylistEntity;
+import pl.miloszgilga.domain.member_stats.MemberStatsEntity;
+import pl.miloszgilga.domain.member_settings.MemberSettingsEntity;
+
+import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.FetchType.LAZY;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -46,10 +54,22 @@ public class MemberEntity extends AbstractAuditableEntity implements Serializabl
 
     @Column(name = "discord_id")                private String discordId;
 
+    @OneToMany(cascade = ALL, fetch = LAZY, mappedBy = "member", orphanRemoval = true)
+    private Set<MemberSettingsEntity> membersSettings;
+
+    @OneToMany(cascade = ALL, fetch = LAZY, mappedBy = "member", orphanRemoval = true)
+    private Set<MemberStatsEntity> membersStats;
+
+    @OneToMany(cascade = ALL, fetch = LAZY, mappedBy = "member", orphanRemoval = true)
+    private Set<PlaylistEntity> membersPlaylists;
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public MemberEntity(String discordId) {
         this.discordId = discordId;
+        this.membersSettings = new HashSet<>();
+        this.membersStats = new HashSet<>();
+        this.membersPlaylists = new HashSet<>();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,6 +80,42 @@ public class MemberEntity extends AbstractAuditableEntity implements Serializabl
 
     void setDiscordId(String discordId) {
         this.discordId = discordId;
+    }
+
+    Set<MemberSettingsEntity> getMembersSettings() {
+        return membersSettings;
+    }
+
+    void setMembersSettings(Set<MemberSettingsEntity> memberSettings) {
+        this.membersSettings = memberSettings;
+    }
+
+    Set<MemberStatsEntity> getMembersStats() {
+        return membersStats;
+    }
+
+    void setMembersStats(Set<MemberStatsEntity> memberStats) {
+        this.membersStats = memberStats;
+    }
+
+    Set<PlaylistEntity> getMembersPlaylists() {
+        return membersPlaylists;
+    }
+
+    void setMembersPlaylists(Set<PlaylistEntity> memberPlaylists) {
+        this.membersPlaylists = memberPlaylists;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void addMemberSettings(MemberSettingsEntity memberSettings) {
+        membersSettings.add(memberSettings);
+        memberSettings.setMember(this);
+    }
+
+    public void addMemberStats(MemberStatsEntity memberStats) {
+        membersStats.add(memberStats);
+        memberStats.setMember(this);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

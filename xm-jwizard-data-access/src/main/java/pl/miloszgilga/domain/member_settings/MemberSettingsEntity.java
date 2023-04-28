@@ -54,17 +54,11 @@ public class MemberSettingsEntity extends AbstractAuditableEntity implements Ser
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private MemberEntity member;
 
-    @ManyToOne(cascade = { MERGE, REMOVE }, fetch = LAZY)
-    @JoinColumn(name = "guild_id", referencedColumnName = "id")
-    private GuildEntity guild;
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public MemberSettingsEntity(MemberEntity member, GuildEntity guild) {
+    public MemberSettingsEntity() {
         this.statsDisabled = false;
         this.statsPrivate = false;
-        this.member = member;
-        this.guild = guild;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

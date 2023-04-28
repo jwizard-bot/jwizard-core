@@ -63,11 +63,9 @@ public class GuildPersistorCommandListener extends AbstractListenerAdapter {
         final Optional<GuildEntity> optionalGuildEntity = guildRepository.findByDiscordId(event.getGuild().getId());
         if (optionalGuildEntity.isPresent()) return;
 
-        final GuildStatsEntity guildStats = new GuildStatsEntity();
-        final GuildSettingsEntity guildSettings = new GuildSettingsEntity();
-        final GuildEntity guild = new GuildEntity(event.getGuild(), guildStats, guildSettings);
-        guildStats.setGuild(guild);
-        guildSettings.setGuild(guild);
+        final GuildEntity guild = new GuildEntity(event.getGuild());
+        guild.persistGuildStats(new GuildStatsEntity());
+        guild.persistGuildSettings(new GuildSettingsEntity());
 
         guildRepository.save(guild);
     }

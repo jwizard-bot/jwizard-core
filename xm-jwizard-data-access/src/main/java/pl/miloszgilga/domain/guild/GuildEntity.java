@@ -29,13 +29,18 @@ import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 import net.dv8tion.jda.api.entities.Guild;
 
+import java.util.Set;
+import java.util.HashSet;
 import java.io.Serial;
 import java.io.Serializable;
 
 import org.jmpsl.core.db.AbstractAuditableEntity;
 
+import pl.miloszgilga.domain.playlist.PlaylistEntity;
 import pl.miloszgilga.domain.guild_stats.GuildStatsEntity;
 import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
+import pl.miloszgilga.domain.member_stats.MemberStatsEntity;
+import pl.miloszgilga.domain.member_settings.MemberSettingsEntity;
 
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.LAZY;
@@ -57,13 +62,20 @@ public class GuildEntity extends AbstractAuditableEntity implements Serializable
     @OneToOne(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
     private GuildStatsEntity guildStats;
 
+    @OneToMany(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
+    private Set<MemberStatsEntity> memberGuildsStats = new HashSet<>();
+
+    @OneToMany(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
+    private Set<MemberSettingsEntity> memberGuildsSettings = new HashSet<>();
+
+    @OneToMany(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
+    private Set<PlaylistEntity> memberGuildsPlaylists = new HashSet<>();
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public GuildEntity(Guild guild, GuildStatsEntity guildStats, GuildSettingsEntity guildSettings) {
+    public GuildEntity(Guild guild) {
         this.name = guild.getName();
         this.discordId = guild.getId();
-        this.guildStats = guildStats;
-        this.guildSettings = guildSettings;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,6 +110,52 @@ public class GuildEntity extends AbstractAuditableEntity implements Serializable
 
     void setGuildStats(GuildStatsEntity guildStats) {
         this.guildStats = guildStats;
+    }
+
+    Set<MemberStatsEntity> getMemberGuildsStats() {
+        return memberGuildsStats;
+    }
+
+    void setMemberGuildsStats(Set<MemberStatsEntity> membersStats) {
+        this.memberGuildsStats = membersStats;
+    }
+
+    Set<MemberSettingsEntity> getMemberGuildsSettings() {
+        return memberGuildsSettings;
+    }
+
+    void setMemberGuildsSettings(Set<MemberSettingsEntity> membersSettings) {
+        this.memberGuildsSettings = membersSettings;
+    }
+
+    Set<PlaylistEntity> getMemberGuildsPlaylists() {
+        return memberGuildsPlaylists;
+    }
+
+    void setMemberGuildsPlaylists(Set<PlaylistEntity> memberPlaylists) {
+        this.memberGuildsPlaylists = memberPlaylists;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void persistGuildStats(GuildStatsEntity guildStats) {
+        this.guildStats = guildStats;
+        guildStats.setGuild(this);
+    }
+
+    public void persistGuildSettings(GuildSettingsEntity guildSettings) {
+        this.guildSettings = guildSettings;
+        guildSettings.setGuild(this);
+    }
+
+    public void addMemberGuildStats(MemberStatsEntity memberStats) {
+        memberGuildsStats.add(memberStats);
+        memberStats.setGuild(this);
+    }
+
+    public void addMemberGuildSettings(MemberSettingsEntity memberSettings) {
+        memberGuildsSettings.add(memberSettings);
+        memberSettings.setGuild(this);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

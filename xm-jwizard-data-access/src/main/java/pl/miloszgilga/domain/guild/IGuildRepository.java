@@ -25,6 +25,8 @@
 package pl.miloszgilga.domain.guild;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -35,4 +37,13 @@ import java.util.Optional;
 public interface IGuildRepository extends JpaRepository<GuildEntity, Long> {
     Optional<GuildEntity> findByDiscordId(String guildDiscordId);
     void deleteGuildEntityByDiscordId(String guildDiscordId);
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Query(value = """
+        from GuildEntity e
+        left join fetch e.memberGuildsSettings left join fetch e.memberGuildsStats
+        where e.discordId = :discordId
+    """)
+    Optional<GuildEntity> getGuildByDiscordIdJoinLazy(@Param("discordId") String discordId);
 }
