@@ -33,7 +33,6 @@ import java.io.Serializable;
 
 import org.jmpsl.core.db.AbstractAuditableEntity;
 
-import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.LAZY;
 
 import pl.miloszgilga.domain.playlist.PlaylistEntity;
@@ -49,7 +48,7 @@ public class PlaylistTrackEntity extends AbstractAuditableEntity implements Seri
     @Column(name = "name")               private String name;
     @Column(name = "query")              private String query;
 
-    @ManyToOne(cascade = { PERSIST, MERGE, REMOVE }, fetch = LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "playlist_id", referencedColumnName = "id")
     private PlaylistEntity playlist;
 

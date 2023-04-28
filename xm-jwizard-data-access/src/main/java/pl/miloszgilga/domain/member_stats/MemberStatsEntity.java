@@ -35,7 +35,6 @@ import java.util.Objects;
 import net.dv8tion.jda.api.entities.Member;
 import org.jmpsl.core.db.AbstractAuditableEntity;
 
-import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.LAZY;
 
 import pl.miloszgilga.domain.guild.GuildEntity;
@@ -56,11 +55,11 @@ public class MemberStatsEntity extends AbstractAuditableEntity implements Serial
     @Column(name = "slash_interactions")            private Long slashInteractions;
     @Column(name = "level")                         private Integer level;
 
-    @ManyToOne(cascade = { MERGE, REMOVE }, fetch = LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private MemberEntity member;
 
-    @ManyToOne(cascade = { MERGE, REMOVE }, fetch = LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "guild_id", referencedColumnName = "id")
     private GuildEntity guild;
 
