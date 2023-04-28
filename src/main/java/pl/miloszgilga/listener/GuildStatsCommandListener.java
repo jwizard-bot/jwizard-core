@@ -57,22 +57,18 @@ public class GuildStatsCommandListener extends AbstractListenerAdapter {
 
     private void deleteMessageIncCounter(GenericGuildEvent event) {
         if (collectorIsDisabled(event.getGuild())) return;
+        if (!repository.existsByGuild_DiscordId(event.getGuild().getId())) return;
 
-        repository.findByGuild_DiscordId(event.getGuild().getId()).ifPresent(guildStats -> {
-            guildStats.increaseMessagesDeleted();
-            repository.save(guildStats);
-        });
+        repository.increaseDeletedMessages(event.getGuild().getId());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void deleteReactionIncCounter(GenericGuildEvent event) {
         if (collectorIsDisabled(event.getGuild())) return;
+        if (!repository.existsByGuild_DiscordId(event.getGuild().getId())) return;
 
-        repository.findByGuild_DiscordId(event.getGuild().getId()).ifPresent(guildStats -> {
-            guildStats.increaseReactionsDeleted();
-            repository.save(guildStats);
-        });
+        repository.increaseDeletedReactions(event.getGuild().getId());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

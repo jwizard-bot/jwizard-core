@@ -25,7 +25,11 @@
 package pl.miloszgilga.domain.guild_stats;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -34,4 +38,25 @@ import java.util.Optional;
 @Repository
 public interface IGuildStatsRepository extends JpaRepository<GuildStatsEntity, Long> {
     Optional<GuildStatsEntity> findByGuild_DiscordId(String guildDiscordId);
+    boolean existsByGuild_DiscordId(String guildDiscordId);
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Transactional
+    @Modifying
+    @Query(value = """
+        update GuildStatsEntity e set e.messagesDeleted = e.messagesDeleted + 1 where
+        e.guild = (select g from GuildEntity g where g.discordId = :guildId)
+    """)
+    void increaseDeletedMessages(@Param("guildId") String guildId);
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Transactional
+    @Modifying
+    @Query(value = """
+        update GuildStatsEntity e set e.reactionsDeleted = e.reactionsDeleted + 1 where
+        e.guild = (select g from GuildEntity g where g.discordId = :guildId)
+    """)
+    void increaseDeletedReactions(@Param("guildId") String guildId);
 }

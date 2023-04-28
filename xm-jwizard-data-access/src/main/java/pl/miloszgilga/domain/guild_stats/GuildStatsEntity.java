@@ -82,9 +82,6 @@ public class GuildStatsEntity extends AbstractAuditableEntity implements Seriali
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void increaseMessagesDeleted() { messagesDeleted++; }
-    public void increaseReactionsDeleted() { reactionsDeleted++; }
-
     public void resetStats() {
         messagesDeleted = 0L;
         reactionsDeleted = 0L;
