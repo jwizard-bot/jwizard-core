@@ -97,7 +97,6 @@ public class GuildStatsEntity extends AbstractAuditableEntity implements Seriali
         return "{" +
             "messagesDeleted=" + messagesDeleted +
             ", reactionsDeleted=" + reactionsDeleted +
-            ", guild=" + guild +
             '}';
     }
 }

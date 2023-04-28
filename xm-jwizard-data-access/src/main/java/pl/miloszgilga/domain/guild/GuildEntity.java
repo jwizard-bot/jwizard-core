@@ -51,10 +51,10 @@ public class GuildEntity extends AbstractAuditableEntity implements Serializable
     @Column(name = "name")          private String name;
     @Column(name = "discord_id")    private String discordId;
 
-    @OneToOne(cascade = { PERSIST, MERGE, REMOVE }, fetch = LAZY, mappedBy = "guild")
+    @OneToOne(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
     private GuildSettingsEntity guildSettings;
 
-    @OneToOne(cascade = { PERSIST, MERGE, REMOVE }, fetch = LAZY, mappedBy = "guild")
+    @OneToOne(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
     private GuildStatsEntity guildStats;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

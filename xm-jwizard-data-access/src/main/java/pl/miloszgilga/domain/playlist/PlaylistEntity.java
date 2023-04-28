@@ -24,8 +24,6 @@
 
 package pl.miloszgilga.domain.playlist;
 
-import lombok.NoArgsConstructor;
-
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -42,7 +40,6 @@ import pl.miloszgilga.domain.member.MemberEntity;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Entity
-@NoArgsConstructor
 @Table(name = "playlists")
 public class PlaylistEntity extends AbstractAuditableEntity implements Serializable {
     @Serial private static final long serialVersionUID = 1L;

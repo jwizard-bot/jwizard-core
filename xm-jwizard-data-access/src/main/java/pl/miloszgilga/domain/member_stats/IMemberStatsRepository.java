@@ -38,7 +38,6 @@ import pl.miloszgilga.dto.GuildMembersStatsDto;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Repository
-@Transactional
 public interface IMemberStatsRepository extends JpaRepository<MemberStatsEntity, Long> {
     Optional<MemberStatsEntity> findByMember_DiscordIdAndGuild_DiscordId(String memberDiscordId, String guildDiscordId);
     boolean existsByMember_DiscordIdAndGuild_DiscordId(String memberDiscordId, String guildDiscordId);
@@ -46,6 +45,7 @@ public interface IMemberStatsRepository extends JpaRepository<MemberStatsEntity,
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    @Transactional
     @Modifying
     @Query(value = """
         update MemberStatsEntity e set e.messagesSended = e.messagesSended + 1
@@ -54,6 +54,7 @@ public interface IMemberStatsRepository extends JpaRepository<MemberStatsEntity,
     """)
     void increaseSendedMessages(@Param("memberId") String memberId, @Param("guildId") String guildId);
 
+    @Transactional
     @Modifying
     @Query(value = """
         update MemberStatsEntity e set e.messagesUpdated = e.messagesUpdated + 1
@@ -62,6 +63,7 @@ public interface IMemberStatsRepository extends JpaRepository<MemberStatsEntity,
     """)
     void increaseUpdatedMessages(@Param("memberId") String memberId, @Param("guildId") String guildId);
 
+    @Transactional
     @Modifying
     @Query(value = """
         update MemberStatsEntity e set e.reactionsAdded = e.reactionsAdded + 1
@@ -70,6 +72,7 @@ public interface IMemberStatsRepository extends JpaRepository<MemberStatsEntity,
     """)
     void increaseAddedReactions(@Param("memberId") String memberId, @Param("guildId") String guildId);
 
+    @Transactional
     @Modifying
     @Query(value = """
         update MemberStatsEntity e set e.slashInteractions = e.slashInteractions + 1
@@ -78,6 +81,7 @@ public interface IMemberStatsRepository extends JpaRepository<MemberStatsEntity,
     """)
     void increaseSlashInteractions(@Param("memberId") String memberId, @Param("guildId") String guildId);
 
+    @Transactional
     @Modifying
     @Query(value = """
         update MemberStatsEntity e set e.guildNickname = :nickname
@@ -96,6 +100,7 @@ public interface IMemberStatsRepository extends JpaRepository<MemberStatsEntity,
     """)
     GuildMembersStatsDto getAllMemberStats(@Param("guildDiscordId") String guildDiscordId);
 
+    @Transactional
     @Modifying
     @Query(value = """
         update MemberStatsEntity e set e.messagesSended = 0, e.messagesUpdated = 0, e.reactionsAdded = 0,

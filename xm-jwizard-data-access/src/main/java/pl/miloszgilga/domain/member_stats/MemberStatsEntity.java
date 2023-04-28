@@ -78,7 +78,7 @@ public class MemberStatsEntity extends AbstractAuditableEntity implements Serial
         return guildNickname;
     }
 
-    public void setGuildNickname(String guildNickname) {
+    void setGuildNickname(String guildNickname) {
         this.guildNickname = guildNickname;
     }
 
@@ -139,11 +139,6 @@ public class MemberStatsEntity extends AbstractAuditableEntity implements Serial
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public void increaseMessagesSended() { messagesSended++; }
-    public void increaseMessagesUpdated() { messagesUpdated++; }
-    public void increaseReactionsAdded() { reactionsAdded++; }
-    public void increaseSlashInteractions() { slashInteractions++; }
 
     public void resetStats() {
         messagesSended = 0L;

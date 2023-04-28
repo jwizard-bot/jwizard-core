@@ -85,7 +85,6 @@ public class PlaylistTrackEntity extends AbstractAuditableEntity implements Seri
         return "{" +
             "name=" + name +
             ", query=" + query +
-            ", playlist=" + playlist +
             '}';
     }
 }

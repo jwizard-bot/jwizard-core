@@ -24,8 +24,6 @@
 
 package pl.miloszgilga.domain.member_settings;
 
-import lombok.NoArgsConstructor;
-
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -37,13 +35,10 @@ import pl.miloszgilga.domain.guild.GuildEntity;
 import pl.miloszgilga.domain.member.MemberEntity;
 
 import static jakarta.persistence.FetchType.LAZY;
-import static jakarta.persistence.CascadeType.MERGE;
-import static jakarta.persistence.CascadeType.REMOVE;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Entity
-@NoArgsConstructor
 @Table(name = "member_settings")
 public class MemberSettingsEntity extends AbstractAuditableEntity implements Serializable {
     @Serial private static final long serialVersionUID = 1L;
@@ -51,7 +46,11 @@ public class MemberSettingsEntity extends AbstractAuditableEntity implements Ser
     @Column(name = "stats_disabled")            private Boolean statsDisabled;
     @Column(name = "stats_private")             private Boolean statsPrivate;
 
-    @ManyToOne(cascade = { MERGE, REMOVE }, fetch = LAZY)
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "guild_id", referencedColumnName = "id")
+    private GuildEntity guild;
+
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private MemberEntity member;
 
@@ -86,20 +85,20 @@ public class MemberSettingsEntity extends AbstractAuditableEntity implements Ser
         this.statsPrivate = statsPrivate;
     }
 
-    MemberEntity getMember() {
-        return member;
-    }
-
-    void setMember(MemberEntity member) {
-        this.member = member;
-    }
-
     GuildEntity getGuild() {
         return guild;
     }
 
-    void setGuild(GuildEntity guild) {
+    public void setGuild(GuildEntity guild) {
         this.guild = guild;
+    }
+
+    MemberEntity getMember() {
+        return member;
+    }
+
+    public void setMember(MemberEntity member) {
+        this.member = member;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

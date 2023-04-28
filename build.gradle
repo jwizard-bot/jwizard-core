@@ -104,7 +104,7 @@ dependencies {
     implementation          libs.jdautilities
 
     implementation          libs.jmpsl.core
-    runtimeOnly             libs.jmpsl.security
+    implementation          libs.jmpsl.security
 
     implementation          libs.spring.vault
     implementation          libs.snakeyaml
