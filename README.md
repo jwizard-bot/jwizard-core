@@ -13,15 +13,22 @@
 A multi-functional music bot (likely to be enhanced with additional features over time) that allows you to play, pause, repeat and queue songs on the popular VoIP Discord platform. Written entirely using Java SE 17 and Spring Framework IoC container.
 
 ## Table of content
+* [Contribute this project](#contribute-this-project)
 * [Multiple versions separation](#multiple-versions-separation)
 * [Clone script](#clone-script)
 * [Run from IDE](#run-from-ide)
 * [Run from JAR](#run-from-jar)
 * [Change Xmx and Xms parameters (JVM Heap Size)](#change-xmx-and-xms-parameters)
 * [Internationalization (i18n)](#internationalization-i18n)
+* [Tech stack](#tech-stack)
+* [License](#license)
 * [Author](#author)
 * [Project status](#project-status)
 * [License](#license)
+
+<a name="contribute-this-project"></a>
+## Contribute this project
+If you have the desire and time to help me in writing this bot, you can write to me in a private message or at [personal@miloszgilga.pl](mailto:personal@miloszgilga.pl). However, please note that in order to be a contributor to this application, you must have knowledge in advanced object-oriented programming techniques and experienced in advanced Java programming (spring, rest, cache, multi modules and websockets). If you do not feel confident as a contributor, you can always submit a request for adding new functionality.
 
 <a name="multiple-versions-separation"></a>
 ## Multiple versions separation
@@ -74,17 +81,17 @@ $ ./gradlew bootJar
 3. All generated files should be located in `/build/jar`. You can move this files into selected directory.
 4. Optionally, you can change the bot's configuration values in the `properties-prod.yml` or `properties-dev.yml` file for the production or development version, respectively.
 5. To run JAR file, type:
-   * (FOR UNIX SYSTEMS):
-    ```
-    $ ./run-dev.sh   # for development version (loading configuration from properties-dev.yml file)
-    $ ./run-prod.sh  # for production version (loading configuration from properties-prod.yml file)
-    ```
-   * (FOR WINDOWS/OTHERS):
-    ```
-    $ python run-dev.py    # for development version (loading configuration from properties-dev.yml file)
-    $ python run-prod.py   # for production version (loading configuration from properties-prod.yml file)
-    ```
-    > NOTE: To run the script, you must have installed Python interpreter 3.11.2 or above. To check Python version, type `python --version` in your command prompt.
+* (FOR UNIX SYSTEMS):
+```
+$ ./run-dev.sh   # for development version (loading configuration from properties-dev.yml file)
+$ ./run-prod.sh  # for production version (loading configuration from properties-prod.yml file)
+```
+* (FOR WINDOWS/OTHERS):
+```
+$ python run-dev.py    # for development version (loading configuration from properties-dev.yml file)
+$ python run-prod.py   # for production version (loading configuration from properties-prod.yml file)
+```
+> NOTE: To run the script, you must have installed Python interpreter 3.11.2 or above. To check Python version, type `python --version` in your command prompt.
 
 <a name="change-xmx-and-xms-parameters"></a>
 ## Change Xmx and Xms parameters (JVM Heap Size)
@@ -105,18 +112,18 @@ Java heap size configuration is the same for both configuration (development and
 ## Internationalization (i18n)
 1. To add a new language, create a new resource file in the `classpath:/i18n-api` or `classpath:/i18n-jda` directory 
 via command:
-   * (FOR UNIX SYSTEMS):
-    ```
-    $ cd generator
-    $ ./lang-gen.sh --lang=[i18n tag]
-    ```
-   * (for WINDOWS/OTHERS):
-    ```
-    $ cd generator
-    $ python lang-gen.py --lang=[i18n tag]
-    ```
-    where `[i18n tag]` is one of the internationalization standards tag (ex. `en-US`, `fr`, `pl` etc.)
-    > NOTE: To run the script, you must have installed Python interpreter 3.11.2 or above. To check Python version, type `python --version` in your command prompt.
+* (FOR UNIX SYSTEMS):
+```
+$ cd generator
+$ ./lang-gen.sh --lang=[i18n tag]
+```
+* (for WINDOWS/OTHERS):
+```
+$ cd generator
+$ python lang-gen.py --lang=[i18n tag]
+```
+where `[i18n tag]` is one of the internationalization standards tag (ex. `en-US`, `fr`, `pl` etc.)
+> NOTE: To run the script, you must have installed Python interpreter 3.11.2 or above. To check Python version, type `python --version` in your command prompt.
 2. After successfully generated message resources file, fill keys with properly values.
 > NOTE: If you not provide parameter, application take key as value.
 3. (FOR JDA INTERFACE) To set the language, change this property in `properties-dev.yml` or `properties-prod.yml`:
@@ -134,6 +141,16 @@ jmpsl:
             available-locales: en_US,pl,[i18n tag]
             default-locale: [i18n tag]
 ```
+<a name="tech-stack"></a>
+## Tech stack
+* Java 17
+* JDA, JDA Utilites, Lavaplayer
+* JMPSL (Core, Communication, Security, OAuth2)
+* Spring Boot (IoC container for DAPI runtime, WebAPI for web client interface)
+* Spring Data JPA (Hibernate, JPA, MySQL database, H2 database)
+* Spring Cache (implemented by EhCache, DAPI runtime)
+* (soon) React (web client - guild modules management interface)
+
 <a name="author"></a>
 ## Author
 Created by Miłosz Gilga. If you have any questions about this application, send message: [personal@miloszgilga.pl](mailto:personal@miloszgilga.pl).
