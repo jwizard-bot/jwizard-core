@@ -38,6 +38,7 @@ import org.jmpsl.core.db.AbstractAuditableEntity;
 
 import pl.miloszgilga.domain.playlist.PlaylistEntity;
 import pl.miloszgilga.domain.guild_stats.GuildStatsEntity;
+import pl.miloszgilga.domain.guild_modules.GuildModulesEntity;
 import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
 import pl.miloszgilga.domain.member_stats.MemberStatsEntity;
 import pl.miloszgilga.domain.member_settings.MemberSettingsEntity;
@@ -61,6 +62,9 @@ public class GuildEntity extends AbstractAuditableEntity implements Serializable
 
     @OneToOne(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
     private GuildStatsEntity guildStats;
+
+    @OneToOne(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
+    private GuildModulesEntity guildModules;
 
     @OneToMany(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
     private Set<MemberStatsEntity> memberGuildsStats = new HashSet<>();
@@ -112,6 +116,14 @@ public class GuildEntity extends AbstractAuditableEntity implements Serializable
         this.guildStats = guildStats;
     }
 
+    GuildModulesEntity getGuildModules() {
+        return guildModules;
+    }
+
+    void setGuildModules(GuildModulesEntity guildModules) {
+        this.guildModules = guildModules;
+    }
+
     Set<MemberStatsEntity> getMemberGuildsStats() {
         return memberGuildsStats;
     }
@@ -146,6 +158,11 @@ public class GuildEntity extends AbstractAuditableEntity implements Serializable
     public void persistGuildSettings(GuildSettingsEntity guildSettings) {
         this.guildSettings = guildSettings;
         guildSettings.setGuild(this);
+    }
+
+    public void persistGuildModules(GuildModulesEntity guildModules) {
+        this.guildModules = guildModules;
+        guildModules.setGuild(this);
     }
 
     public void addMemberGuildStats(MemberStatsEntity memberStats) {

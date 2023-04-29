@@ -39,5 +39,6 @@
 
     <cache alias="MemberSettingsCache" uses-template="cache-template"/>
     <cache alias="GuildSettingsCache" uses-template="cache-template"/>
+    <cache alias="GuildModulesCache" uses-template="cache-template"/>
 
 </config>

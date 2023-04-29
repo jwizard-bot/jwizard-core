@@ -39,6 +39,7 @@ import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
 import pl.miloszgilga.domain.guild.GuildEntity;
 import pl.miloszgilga.domain.guild.IGuildRepository;
 import pl.miloszgilga.domain.guild_stats.GuildStatsEntity;
+import pl.miloszgilga.domain.guild_modules.GuildModulesEntity;
 import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,6 +67,7 @@ public class GuildPersistorCommandListener extends AbstractListenerAdapter {
         final GuildEntity guild = new GuildEntity(event.getGuild());
         guild.persistGuildStats(new GuildStatsEntity());
         guild.persistGuildSettings(new GuildSettingsEntity());
+        guild.persistGuildModules(new GuildModulesEntity());
 
         guildRepository.save(guild);
     }
