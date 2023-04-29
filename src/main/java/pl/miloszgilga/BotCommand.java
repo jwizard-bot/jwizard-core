@@ -85,11 +85,20 @@ public enum BotCommand {
     RESET_MEMBER_STATS          ("resetmstats", true, new String[]{ "rsmst" },        STATS,  RESET_MEMBER_STATS_COMMAND_DESC,            MEMBER_TAG_ARG_SYNTAX),
     RESET_GUILD_STATS           ("resetgstats", true, new String[]{ "rsgst" },        STATS,  RESET_GUILD_STATS_COMMAND_DESC),
 
-    VOTE_SHUFFLE_QUEUE      ("vshuffle",    true, new String[]{ "vshq" },         MUSIC,  VOTE_SHUFFLE_QUEUE_COMMAND_DESC),
-    VOTE_SKIP_TRACK         ("vskip",       true, new String[]{ "vsk" },          MUSIC,  VOTE_SKIP_TRACK_COMMAND_DESC),
-    VOTE_SKIP_TO_TRACK      ("vskipto",     true, new String[]{ "vsto" },         MUSIC,  VOTE_SKIP_TO_TRACK_COMMAND_DESC,            SKIP_QUEUE_TO_TRACK_ARG_SYNTAX),
-    VOTE_CLEAR_QUEUE        ("vclear",      true, new String[]{ "vcl" },          MUSIC,  VOTE_CLEAR_QUEUE_COMMAND_DESC),
-    VOTE_STOP_CLEAR_QUEUE   ("vstop",       true, new String[]{ "vst" },          MUSIC,  VOTE_STOP_CLEAR_QUEUE_COMMAND_DESC);
+    TURN_ON_STATS_MODULE        ("onstatsm",    true, new String[]{ "onstm" },        OWNER,  TURN_ON_STATS_MODULE_COMMAND_DESC),
+    TURN_OFF_STATS_MODULE       ("offstatsm",   true, new String[]{ "offstm" },       OWNER,  TURN_OFF_STATS_MODULE_COMMAND_DESC),
+    TURN_ON_MUSIC_MODULE        ("onmusicm",    true, new String[]{ "onmsm" },        OWNER,  TURN_ON_MUSIC_MODULE_COMMAND_DESC),
+    TURN_OFF_MUSIC_MODULE       ("offmusicm",   true, new String[]{ "offmsm" },       OWNER,  TURN_OFF_MUSIC_MODULE_COMMAND_DESC),
+    TURN_ON_PLAYLISTS_MODULE    ("onplaylm",    true, new String[]{ "onplm" },        OWNER,  TURN_ON_PLAYLISTS_MODULE_COMMAND_DESC),
+    TURN_OFF_PLAYLISTS_MODULE   ("offplaylm",   true, new String[]{ "offplm" },       OWNER,  TURN_OFF_PLAYLISTS_MODULE_COMMAND_DESC),
+    TURN_ON_VOTING_MODULE       ("onvotingm",   true, new String[]{ "onvtm" },        OWNER,  TURN_ON_VOTING_MODULE_COMMAND_DESC),
+    TURN_OFF_VOTING_MODULE      ("offvotingm",  true, new String[]{ "offvtm" },       OWNER,  TURN_OFF_VOTING_MODULE_COMMAND_DESC),
+
+    VOTE_SHUFFLE_QUEUE          ("vshuffle",    true, new String[]{ "vshq" },         VOTE,   VOTE_SHUFFLE_QUEUE_COMMAND_DESC),
+    VOTE_SKIP_TRACK             ("vskip",       true, new String[]{ "vsk" },          VOTE,   VOTE_SKIP_TRACK_COMMAND_DESC),
+    VOTE_SKIP_TO_TRACK          ("vskipto",     true, new String[]{ "vsto" },         VOTE,   VOTE_SKIP_TO_TRACK_COMMAND_DESC,            SKIP_QUEUE_TO_TRACK_ARG_SYNTAX),
+    VOTE_CLEAR_QUEUE            ("vclear",      true, new String[]{ "vcl" },          VOTE,   VOTE_CLEAR_QUEUE_COMMAND_DESC),
+    VOTE_STOP_CLEAR_QUEUE       ("vstop",       true, new String[]{ "vst" },          VOTE,   VOTE_STOP_CLEAR_QUEUE_COMMAND_DESC);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

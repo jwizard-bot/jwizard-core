@@ -74,8 +74,13 @@ public enum CommandLocaleSet implements IEnumerableLocaleSet {
 
     TURN_ON_STATS_MODULE_COMMAND_DESC               ("jwizard.command.description.TurnOnStats"),
     TURN_OFF_STATS_MODULE_COMMAND_DESC              ("jwizard.command.description.TurnOffStats"),
-    RESET_MEMBER_STATS_COMMAND_DESC                 ("jwizard.command.description.ResetMemberStats"),
-    RESET_GUILD_STATS_COMMAND_DESC                  ("jwizard.command.description.ResetGuildStats"),
+    TURN_ON_MUSIC_MODULE_COMMAND_DESC               ("jwizard.command.description.TurnOnMusic"),
+    TURN_OFF_MUSIC_MODULE_COMMAND_DESC              ("jwizard.command.description.TurnOffMusic"),
+    TURN_ON_PLAYLISTS_MODULE_COMMAND_DESC           ("jwizard.command.description.TurnOnPlaylists"),
+    TURN_OFF_PLAYLISTS_MODULE_COMMAND_DESC          ("jwizard.command.description.TurnOffPlaylists"),
+    TURN_ON_VOTING_MODULE_COMMAND_DESC              ("jwizard.command.description.TurnOnVoting"),
+    TURN_OFF_VOTING_MODULE_COMMAND_DESC             ("jwizard.command.description.TurnOffVoting"),
+
     VOTE_SHUFFLE_QUEUE_COMMAND_DESC                 ("jwizard.command.description.VoteShuffleQueue"),
     VOTE_SKIP_TRACK_COMMAND_DESC                    ("jwizard.command.description.VoteSkipTrack"),
     VOTE_SKIP_TO_TRACK_COMMAND_DESC                 ("jwizard.command.description.VoteSkipToTrack"),
