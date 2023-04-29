@@ -28,7 +28,7 @@ A multi-functional music bot (likely to be enhanced with additional features ove
 
 <a name="contribute-this-project"></a>
 ## Contribute this project
-If you have the desire and time to help me in writing this bot, you can write to me in a private message or at [personal@miloszgilga.pl](mailto:personal@miloszgilga.pl). However, please note that in order to be a contributor to this application, you must have knowledge in advanced object-oriented programming techniques and experienced in advanced Java programming (spring, rest, cache, multi modules and websockets). If you do not feel confident as a contributor, you can always submit a request for adding new functionality.
+If you have the desire and time to help me in writing this bot, you can write to me in a private message or at [personal@miloszgilga.pl](mailto:personal@miloszgilga.pl). However, please note that in order to be a contributor to this application, you must have knowledge in advanced object-oriented programming techniques and experienced in advanced Java programming (lambda expressions and functional interfaces, spring, rest, cache, multi modules and websockets). If you do not feel confident as a contributor, you can always submit a request for adding new functionality.
 
 <a name="multiple-versions-separation"></a>
 ## Multiple versions separation
