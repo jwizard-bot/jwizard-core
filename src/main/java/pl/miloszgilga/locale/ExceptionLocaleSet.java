@@ -45,7 +45,10 @@ public enum ExceptionLocaleSet implements IEnumerableLocaleSet {
     USER_ID_ALREADY_WITH_BOT                        ("jwizard.exception.UserIsAlreadyWithBotException"),
 
     STATS_MODULE_IS_TURNED_OFF                      ("jwizard.exception.StatsModuleIsTurnedOffException"),
-    STATS_MODULE_IS_ALREADY_RUNNING                 ("jwizard.exception.StatsModuleIsAlreadyRunningException"),
+    MUSIC_MODULE_IS_TURNED_OFF                      ("jwizard.exception.MusicModuleIsTurnedOffException"),
+    PLAYLISTS_MODULE_IS_TURNED_OFF                  ("jwizard.exception.PlaylistsModuleIsTurnedOffException"),
+    VOTING_MODULE_IS_TURNED_OFF                     ("jwizard.exception.VotingModuleIsTurnedOffException"),
+
     MEMBER_HAS_NO_STATS_YET_IN_GUILD                ("jwizard.exception.MemberHasNoStatsYetInGuildException"),
     YOU_HAS_NO_STATS_YET_IN_GUILD                   ("jwizard.exception.YouHasNoStatsYetInGuildException"),
     GUILD_HAS_NO_STATS_YET                          ("jwizard.exception.GuildHasNoStatsYetException"),

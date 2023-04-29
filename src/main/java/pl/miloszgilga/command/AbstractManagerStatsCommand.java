@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: AbstractManagerStatsCommand.java
- * Last modified: 09/04/2023, 21:59
+ * File name: AbstractDjCommand.java
+ * Last modified: 19/03/2023, 22:25
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@
 package pl.miloszgilga.command;
 
 import pl.miloszgilga.BotCommand;
+
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.remote.RemoteModuleProperty;
