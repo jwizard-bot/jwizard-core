@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: RemoteProperty.java
- * Last modified: 25/04/2023, 16:21
+ * File name: CacheableModuleData.java
+ * Last modified: 28/04/2023, 21:38
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -22,25 +22,27 @@
  * or other dealings in the software.
  */
 
-package pl.miloszgilga.core.configuration;
+package pl.miloszgilga.cacheable;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Builder;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.BiConsumer;
 
-import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
+import pl.miloszgilga.dto.CommandEventWrapper;
+import pl.miloszgilga.core.configuration.BotProperty;
+
+import pl.miloszgilga.domain.guild_modules.GuildModulesEntity;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@Getter
-@RequiredArgsConstructor
-public enum RemoteProperty {
-
-    R_STATS_MODULE_ENABLED          (BotProperty.J_STATS_MODULE_ENABLED, GuildSettingsEntity::getStatsModuleEnabled);
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private final BotProperty localProperty;
-    private final Function<GuildSettingsEntity, Object> remoteProp;
+@Builder
+public record CacheableModuleData(
+    CommandEventWrapper event,
+    BotProperty settingModule,
+    Function<GuildModulesEntity, Boolean> modulePropGetter,
+    BiConsumer<GuildModulesEntity, Boolean> modulePropSetter,
+    Consumer<GuildModulesEntity> moduleRemoteSetter
+) {
 }

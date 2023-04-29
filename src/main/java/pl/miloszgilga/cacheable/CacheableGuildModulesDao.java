@@ -27,31 +27,38 @@ package pl.miloszgilga.cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.cache.annotation.CachePut;
 
-import pl.miloszgilga.dto.CommandEventWrapper;
+import java.util.Objects;
+
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
-import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
-import pl.miloszgilga.domain.guild_settings.IGuildSettingsRepository;
+import pl.miloszgilga.domain.guild_modules.GuildModulesEntity;
+import pl.miloszgilga.domain.guild_modules.IGuildModulesRepository;
 
 import static pl.miloszgilga.exception.CommandException.UnexpectedException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Component
-public class CacheableGuildSettingsDao extends AbstractCacheableDao<GuildSettingsEntity, IGuildSettingsRepository> {
+public class CacheableGuildModulesDao extends AbstractCacheableDao<GuildModulesEntity, IGuildModulesRepository> {
 
-    CacheableGuildSettingsDao(BotConfiguration config, IGuildSettingsRepository settingsRepository) {
-        super(config, settingsRepository);
+    CacheableGuildModulesDao(BotConfiguration config, IGuildModulesRepository modulesRepository) {
+        super(config, modulesRepository);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @CachePut(cacheNames = "GuildSettingsCache", key = "#p0.guild.id")
-    public GuildSettingsEntity setMusicBotTextChannel(CommandEventWrapper event, String newPrefix) {
-        final GuildSettingsEntity settings = cacheableRepository.findByGuild_DiscordId(event.getGuildId())
-            .orElseThrow(() -> new UnexpectedException(config, event));
+    @CachePut(cacheNames = "GuildModulesCache", key = "#p0.event.guild.id")
+    public GuildModulesEntity toggleGuildModule(CacheableModuleData data) {
+        final GuildModulesEntity modules = cacheableRepository
+            .findByGuild_DiscordId(data.event().getGuildId())
+            .orElseThrow(() -> new UnexpectedException(config, data.event()));
 
-        settings.setMusicTextChannelId(newPrefix);
-        return settings;
+        final Boolean propState = data.modulePropGetter().apply(modules);
+        if (Objects.isNull(propState)) {
+            final boolean settingProp = config.getProperty(data.settingModule(), Boolean.class);
+            data.modulePropSetter().accept(modules, settingProp);
+        }
+        data.moduleRemoteSetter().accept(modules);
+        return modules;
     }
 }

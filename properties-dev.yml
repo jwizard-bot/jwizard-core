@@ -73,3 +73,6 @@ bot:
         menu-is-alive-seconds: 60
     modules:
         stats-module-enabled: true
+        music-module-enabled: true
+        playlists-module-enabled: true
+        voting-module-enabled: true

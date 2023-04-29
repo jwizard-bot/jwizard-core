@@ -67,7 +67,10 @@ public enum BotProperty {
     J_RR_COMMANDS_ENABLED           ("misc.round-robin-activity.show-commands.enabled"),
     J_PAGINATION_MAX                ("pagination.max-elements-per-page"),
     J_PAGINATION_MENU_IS_ALIVE      ("pagination.menu-is-alive-seconds"),
-    J_STATS_MODULE_ENABLED          ("modules.stats-module-enabled");
+    J_STATS_MODULE_ENABLED          ("modules.stats-module-enabled"),
+    J_MUSIC_MODULE_ENABLED          ("modules.music-module-enabled"),
+    J_PLAYLISTS_MODULE_ENABLED      ("modules.playlists-module-enabled"),
+    J_VOTING_MODULE_ENABLED         ("modules.voting-module-enabled");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

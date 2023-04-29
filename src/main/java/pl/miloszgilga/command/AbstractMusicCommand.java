@@ -80,6 +80,9 @@ public abstract class AbstractMusicCommand extends AbstractCommand {
 
     @Override
     protected void doExecuteCommand(CommandEventWrapper event) {
+        if (!handler.getPossibleRemoteModuleProperty(RemoteModuleProperty.R_MUSIC_MODULE_ENABLED, event.getGuild())) {
+            throw new MusicModuleIsTurnedOffException(config, event);
+        }
         final var audioSendHandler = (AudioPlayerSendHandler) event.getGuild().getAudioManager().getSendingHandler();
 
         final GuildVoiceState guildVoiceState = event.getGuild().getSelfMember().getVoiceState();

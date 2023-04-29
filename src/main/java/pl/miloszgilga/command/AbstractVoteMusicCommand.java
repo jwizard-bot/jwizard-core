@@ -34,6 +34,8 @@ import pl.miloszgilga.core.remote.RemoteModuleProperty;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
+import static pl.miloszgilga.exception.ModuleException.VotingModuleIsTurnedOffException;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 public abstract class AbstractVoteMusicCommand extends AbstractMusicCommand {
@@ -49,6 +51,9 @@ public abstract class AbstractVoteMusicCommand extends AbstractMusicCommand {
 
     @Override
     protected void doExecuteMusicCommand(CommandEventWrapper event) {
+        if (!handler.getPossibleRemoteModuleProperty(RemoteModuleProperty.R_VOTING_MODULE_ENABLED, event.getGuild())) {
+            throw new VotingModuleIsTurnedOffException(config, event);
+        }
         final VoteEmbedResponse response = doExecuteVoteMusicCommand(event);
         final VotingSystemSequencer votingSystemSequencer = new VotingSystemSequencer(response, event, config);
         votingSystemSequencer.initializeAndStartVoting();

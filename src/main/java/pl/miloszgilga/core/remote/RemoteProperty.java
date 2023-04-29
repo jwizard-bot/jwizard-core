@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: CacheableGuildSettingsDao.java
- * Last modified: 25/04/2023, 15:45
+ * File name: RemoteProperty.java
+ * Last modified: 28/04/2023, 20:51
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -22,36 +22,26 @@
  * or other dealings in the software.
  */
 
-package pl.miloszgilga.cacheable;
+package pl.miloszgilga.core.remote;
 
-import org.springframework.stereotype.Component;
-import org.springframework.cache.annotation.CachePut;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-import pl.miloszgilga.dto.CommandEventWrapper;
-import pl.miloszgilga.core.configuration.BotConfiguration;
+import java.util.function.Function;
 
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
-import pl.miloszgilga.domain.guild_settings.IGuildSettingsRepository;
-
-import static pl.miloszgilga.exception.CommandException.UnexpectedException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@Component
-public class CacheableGuildSettingsDao extends AbstractCacheableDao<GuildSettingsEntity, IGuildSettingsRepository> {
+@Getter
+@RequiredArgsConstructor
+public enum RemoteProperty {
 
-    CacheableGuildSettingsDao(BotConfiguration config, IGuildSettingsRepository settingsRepository) {
-        super(config, settingsRepository);
-    }
+    R_TEXT_MUSIC_CHANNEL_ID             (null, GuildSettingsEntity::getMusicTextChannelId);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @CachePut(cacheNames = "GuildSettingsCache", key = "#p0.guild.id")
-    public GuildSettingsEntity setMusicBotTextChannel(CommandEventWrapper event, String newPrefix) {
-        final GuildSettingsEntity settings = cacheableRepository.findByGuild_DiscordId(event.getGuildId())
-            .orElseThrow(() -> new UnexpectedException(config, event));
-
-        settings.setMusicTextChannelId(newPrefix);
-        return settings;
-    }
+    private final BotProperty localProperty;
+    private final Function<GuildSettingsEntity, Object> remoteProp;
 }

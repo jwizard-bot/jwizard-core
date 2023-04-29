@@ -29,7 +29,6 @@ import lombok.AccessLevel;
 import lombok.extern.slf4j.Slf4j;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Icon;
 import net.dv8tion.jda.api.managers.AccountManager;
 import net.dv8tion.jda.internal.managers.AccountManagerImpl;
@@ -49,9 +48,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import pl.miloszgilga.core.IEnumerableLocaleSet;
-
-import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
-import pl.miloszgilga.domain.guild_settings.IGuildSettingsRepository;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -74,7 +70,6 @@ public class BotConfiguration {
 
     private ResourceBundle localeBundle;
     private final Environment environment;
-    private final IGuildSettingsRepository settingsRepository;
 
     @Getter(value = AccessLevel.PUBLIC)
     private final ScheduledExecutorService threadPool = Executors.newSingleThreadScheduledExecutor(r -> {
@@ -95,9 +90,8 @@ public class BotConfiguration {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    BotConfiguration(Environment environment, IGuildSettingsRepository settingsRepository) {
+    BotConfiguration(Environment environment) {
         this.environment = environment;
-        this.settingsRepository = settingsRepository;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -210,20 +204,6 @@ public class BotConfiguration {
                 .orElseThrow(() -> new RuntimeException("Unsupported casting type."))
             )
             .orElseThrow(() -> new RuntimeException("Property is not declared."));
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public <T> T getPossibleRemoteProperty(RemoteProperty property, Guild guild, Class<T> castClazz) {
-        final Optional<GuildSettingsEntity> settings = settingsRepository.findByGuild_DiscordId(guild.getId());
-        if (settings.isEmpty()) {
-            return getProperty(property.getLocalProperty(), castClazz);
-        }
-        final Object remoteProp = property.getRemoteProp().apply(settings.get());
-        if (Objects.isNull(remoteProp)) {
-            return getProperty(property.getLocalProperty(), castClazz);
-        }
-        return castClazz.cast(remoteProp);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
