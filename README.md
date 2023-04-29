@@ -21,7 +21,6 @@ A multi-functional music bot (likely to be enhanced with additional features ove
 * [Change Xmx and Xms parameters (JVM Heap Size)](#change-xmx-and-xms-parameters)
 * [Internationalization (i18n)](#internationalization-i18n)
 * [Tech stack](#tech-stack)
-* [License](#license)
 * [Author](#author)
 * [Project status](#project-status)
 * [License](#license)
