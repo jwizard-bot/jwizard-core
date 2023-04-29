@@ -38,7 +38,9 @@ public enum CategoryLocaleSet implements IEnumerableLocaleSet {
     COMMAND_CATEGORY_MUSIC                          ("jwizard.command.category.Music"),
     COMMAND_CATEGORY_DJ_ROLE                        ("jwizard.command.category.DjRole"),
     COMMAND_CATEGORY_STATISTICS                     ("jwizard.command.category.Statistics"),
+    COMMAND_CATEGORY_OWNER                          ("jwizard.command.category.Owner"),
     COMMAND_CATEGORY_OWNER_AND_MANAGER              ("jwizard.command.category.OwnerAndManager"),
+    COMMAND_CATEGORY_VOTE                           ("jwizard.command.category.Voting"),
     COMMAND_CATEGORY_OTHERS                         ("jwizard.command.category.Others");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

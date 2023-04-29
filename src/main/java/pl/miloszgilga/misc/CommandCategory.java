@@ -36,7 +36,9 @@ public enum CommandCategory {
     MUSIC               (CategoryLocaleSet.COMMAND_CATEGORY_MUSIC),
     DJ                  (CategoryLocaleSet.COMMAND_CATEGORY_DJ_ROLE),
     STATS               (CategoryLocaleSet.COMMAND_CATEGORY_STATISTICS),
+    OWNER               (CategoryLocaleSet.COMMAND_CATEGORY_OWNER),
     OWNER_MANAGER       (CategoryLocaleSet.COMMAND_CATEGORY_OWNER_AND_MANAGER),
+    VOTE                (CategoryLocaleSet.COMMAND_CATEGORY_VOTE),
     OTHERS              (CategoryLocaleSet.COMMAND_CATEGORY_OTHERS);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
