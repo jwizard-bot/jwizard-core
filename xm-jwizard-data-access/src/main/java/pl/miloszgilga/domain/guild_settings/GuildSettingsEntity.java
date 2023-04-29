@@ -47,7 +47,6 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
     @Serial private static final long serialVersionUID = 1L;
 
     @Column(name = "music_text_channel_id")             private String musicTextChannelId;
-    @Column(name = "bot_prefix")                        private String botPrefix;
     @Column(name = "skip_ratio")                        private Integer skipRatio;
     @Column(name = "slash_enabled")                     private Boolean slashEnabled;
     @Column(name = "time_to_leave_channel")             private Integer timeToLeaveChannel;
@@ -69,14 +68,6 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
 
     public void setMusicTextChannelId(String musicTextChannelId) {
         this.musicTextChannelId = musicTextChannelId;
-    }
-
-    String getBotPrefix() {
-        return botPrefix;
-    }
-
-    void setBotPrefix(String botPrefix) {
-        this.botPrefix = botPrefix;
     }
 
     Integer getSkipRatio() {
@@ -157,7 +148,6 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
     public String toString() {
         return "{" +
             "musicTextChannelId=" + musicTextChannelId +
-            ", botPrefix=" + botPrefix +
             ", skipRatio=" + skipRatio +
             ", slashEnabled=" + slashEnabled +
             ", timeToLeaveChannel=" + timeToLeaveChannel +
