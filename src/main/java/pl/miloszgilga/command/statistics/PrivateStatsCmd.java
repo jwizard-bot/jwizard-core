@@ -37,6 +37,7 @@ import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMyStatsCommand;
 import pl.miloszgilga.cacheable.CacheableMemberSettingsDao;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -58,9 +59,10 @@ public class PrivateStatsCmd extends AbstractMyStatsCommand {
 
     PrivateStatsCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, IMemberStatsRepository repository,
-        CacheableMemberSettingsDao cacheableMemberSettingsDao, IMemberSettingsRepository settingsRepository
+        CacheableMemberSettingsDao cacheableMemberSettingsDao, IMemberSettingsRepository settingsRepository,
+        RemotePropertyHandler handler
     ) {
-        super(BotCommand.PRIVATE_STATS, config, embedBuilder, repository);
+        super(BotCommand.PRIVATE_STATS, config, embedBuilder, repository, handler);
         this.cacheableMemberSettingsDao = cacheableMemberSettingsDao;
         this.settingsRepository = settingsRepository;
     }

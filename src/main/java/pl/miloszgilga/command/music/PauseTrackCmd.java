@@ -37,6 +37,7 @@ import pl.miloszgilga.dto.PauseTrackEmbedContent;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -49,8 +50,11 @@ public class PauseTrackCmd extends AbstractMusicCommand {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    PauseTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
-        super(BotCommand.PAUSE_TRACK, config, playerManager, embedBuilder);
+    PauseTrackCmd(
+        BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
+        RemotePropertyHandler handler
+    ) {
+        super(BotCommand.PAUSE_TRACK, config, playerManager, embedBuilder, handler);
         super.inPlayingMode = true;
         super.onSameChannelWithBot = true;
     }

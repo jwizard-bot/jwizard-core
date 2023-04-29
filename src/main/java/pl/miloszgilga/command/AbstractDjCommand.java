@@ -31,6 +31,7 @@ import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.audioplayer.SchedulerActions;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 import static pl.miloszgilga.exception.CommandException.UnauthorizedDjException;
@@ -45,9 +46,10 @@ public abstract class AbstractDjCommand extends AbstractMusicCommand {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     protected AbstractDjCommand(
-        BotCommand command, BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder
+        BotCommand command, BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
+        RemotePropertyHandler handler
     ) {
-        super(command, config, playerManager, embedBuilder);
+        super(command, config, playerManager, embedBuilder, handler);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

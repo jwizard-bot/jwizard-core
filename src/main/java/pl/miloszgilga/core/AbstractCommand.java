@@ -42,6 +42,7 @@ import pl.miloszgilga.misc.QueueAfterParam;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,16 +53,20 @@ public abstract class AbstractCommand extends SlashCommand {
     private final BotCommand command;
 
     protected final BotConfiguration config;
+    protected final RemotePropertyHandler handler;
     protected final EmbedMessageBuilder embedBuilder;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public AbstractCommand(BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder) {
+    public AbstractCommand(
+        BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler
+    ) {
         this.name = command.getName();
         this.help = config.getLocaleText(command.getDescriptionLocaleSet());
         this.aliases = command.getAliases();
         this.command = command;
         this.config = config;
+        this.handler = handler;
         this.embedBuilder = embedBuilder;
         this.arguments = config.getLocaleText(command.getArgSyntax());
         this.guildOnly = false;

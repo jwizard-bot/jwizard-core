@@ -34,6 +34,7 @@ import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractVoteMusicCommand;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -44,8 +45,11 @@ import static pl.miloszgilga.exception.AudioPlayerException.TrackQueueIsEmptyExc
 @JDAInjectableCommandLazyService
 public class VoteClearQueueCmd extends AbstractVoteMusicCommand {
 
-    VoteClearQueueCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
-        super(BotCommand.VOTE_CLEAR_QUEUE, config, playerManager, embedBuilder);
+    VoteClearQueueCmd(
+        BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
+        RemotePropertyHandler handler
+    ) {
+        super(BotCommand.VOTE_CLEAR_QUEUE, config, playerManager, embedBuilder, handler);
         super.onSameChannelWithBot = true;
     }
 

@@ -35,6 +35,7 @@ import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -45,8 +46,11 @@ import static pl.miloszgilga.exception.AudioPlayerException.VolumeUnitsOutOfBoun
 @JDAInjectableCommandLazyService
 public class SetPlayerVolumeCmd extends AbstractDjCommand {
 
-    SetPlayerVolumeCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
-        super(BotCommand.SET_PLAYER_VOLUME, config, playerManager, embedBuilder);
+    SetPlayerVolumeCmd(
+        BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
+        RemotePropertyHandler handler
+    ) {
+        super(BotCommand.SET_PLAYER_VOLUME, config, playerManager, embedBuilder, handler);
         super.inIdleMode = true;
     }
 

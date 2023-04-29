@@ -37,6 +37,7 @@ import pl.miloszgilga.command.AbstractMusicCommand;
 import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.audioplayer.ExtendedAudioTrackInfo;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -45,8 +46,11 @@ import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 @JDAInjectableCommandLazyService
 public class CurrentPlayingCmd extends AbstractMusicCommand {
 
-    CurrentPlayingCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
-        super(BotCommand.CURRENT_PLAYING, config, playerManager, embedBuilder);
+    CurrentPlayingCmd(
+        BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
+        RemotePropertyHandler handler
+    ) {
+        super(BotCommand.CURRENT_PLAYING, config, playerManager, embedBuilder, handler);
         super.inPlayingMode = true;
     }
 

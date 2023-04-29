@@ -37,6 +37,7 @@ import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
@@ -48,8 +49,11 @@ import static pl.miloszgilga.exception.AudioPlayerException.TrackRepeatsOutOfBou
 @JDAInjectableCommandLazyService
 public class RepeatTrackCmd extends AbstractMusicCommand {
 
-    RepeatTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
-        super(BotCommand.REPEAT_TRACK, config, playerManager, embedBuilder);
+    RepeatTrackCmd(
+        BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
+        RemotePropertyHandler handler
+    ) {
+        super(BotCommand.REPEAT_TRACK, config, playerManager, embedBuilder, handler);
         super.inPlayingMode = true;
         super.onSameChannelWithBot = true;
     }

@@ -38,6 +38,7 @@ import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractVoteMusicCommand;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -49,8 +50,11 @@ import static pl.miloszgilga.exception.AudioPlayerException.TrackPositionOutOfBo
 @JDAInjectableCommandLazyService
 public class VoteSkipQueueToTrackCmd extends AbstractVoteMusicCommand {
 
-    VoteSkipQueueToTrackCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
-        super(BotCommand.VOTE_SKIP_TO_TRACK, config, playerManager, embedBuilder);
+    VoteSkipQueueToTrackCmd(
+        BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
+        RemotePropertyHandler handler
+    ) {
+        super(BotCommand.VOTE_SKIP_TO_TRACK, config, playerManager, embedBuilder, handler);
         super.onSameChannelWithBot = true;
         super.inPlayingMode = true;
     }

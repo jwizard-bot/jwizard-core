@@ -41,7 +41,8 @@ import java.util.Optional;
 
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.AbstractListenerAdapter;
-import pl.miloszgilga.core.configuration.RemoteProperty;
+import pl.miloszgilga.core.remote.RemoteModuleProperty;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
 
@@ -63,18 +64,21 @@ public class MemberStatsCommandListener extends AbstractListenerAdapter {
     private final IGuildRepository guildRepository;
     private final IMemberRepository memberRepository;
     private final IMemberSettingsRepository settingsRepository;
+    private final RemotePropertyHandler handler;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     MemberStatsCommandListener(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, IMemberStatsRepository statsRepository,
-        IMemberSettingsRepository settingsRepository, IGuildRepository guildRepository, IMemberRepository memberRepository
+        IMemberSettingsRepository settingsRepository, IGuildRepository guildRepository, IMemberRepository memberRepository,
+        RemotePropertyHandler handler
     ) {
         super(config, embedBuilder);
         this.statsRepository = statsRepository;
         this.settingsRepository = settingsRepository;
         this.guildRepository = guildRepository;
         this.memberRepository = memberRepository;
+        this.handler = handler;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -170,8 +174,8 @@ public class MemberStatsCommandListener extends AbstractListenerAdapter {
             return member.getUser().isBot();
         }
         final MemberSettingsEntity settings = optionalSettings.get();
-        final boolean isTurnOff = !config.getPossibleRemoteProperty(RemoteProperty.R_STATS_MODULE_ENABLED,
-            guild, Boolean.class);
+        final boolean isTurnOff = !handler
+            .getPossibleRemoteModuleProperty(RemoteModuleProperty.R_STATS_MODULE_ENABLED, guild);
 
         return member.getUser().isBot() || isTurnOff || settings.getStatsDisabled();
     }

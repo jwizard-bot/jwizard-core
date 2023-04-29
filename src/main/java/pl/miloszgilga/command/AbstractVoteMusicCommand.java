@@ -30,6 +30,8 @@ import pl.miloszgilga.vote.VoteEmbedResponse;
 import pl.miloszgilga.vote.VotingSystemSequencer;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.core.remote.RemoteModuleProperty;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,9 +39,10 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 public abstract class AbstractVoteMusicCommand extends AbstractMusicCommand {
 
     protected AbstractVoteMusicCommand(
-        BotCommand command, BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder
+        BotCommand command, BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
+        RemotePropertyHandler handler
     ) {
-        super(command, config, playerManager, embedBuilder);
+        super(command, config, playerManager, embedBuilder, handler);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

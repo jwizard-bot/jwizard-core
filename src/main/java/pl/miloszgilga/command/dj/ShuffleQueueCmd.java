@@ -35,6 +35,7 @@ import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -45,8 +46,11 @@ import static pl.miloszgilga.exception.AudioPlayerException.TrackQueueIsEmptyExc
 @JDAInjectableCommandLazyService
 public class ShuffleQueueCmd extends AbstractDjCommand {
 
-    ShuffleQueueCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
-        super(BotCommand.SHUFFLE_QUEUE, config, playerManager, embedBuilder);
+    ShuffleQueueCmd(
+        BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
+        RemotePropertyHandler handler
+    ) {
+        super(BotCommand.SHUFFLE_QUEUE, config, playerManager, embedBuilder, handler);
         super.onSameChannelWithBot = true;
     }
 

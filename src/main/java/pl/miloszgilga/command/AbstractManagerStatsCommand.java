@@ -27,7 +27,8 @@ package pl.miloszgilga.command;
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
-import pl.miloszgilga.core.configuration.RemoteProperty;
+import pl.miloszgilga.core.remote.RemoteModuleProperty;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 import static pl.miloszgilga.exception.StatsException.StatsModuleIsTurnedOffException;
@@ -36,15 +37,17 @@ import static pl.miloszgilga.exception.StatsException.StatsModuleIsTurnedOffExce
 
 public abstract class AbstractManagerStatsCommand extends AbstractManagerCommand {
 
-    protected AbstractManagerStatsCommand(BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder) {
-        super(command, config, embedBuilder);
+    protected AbstractManagerStatsCommand(
+        BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler
+    ) {
+        super(command, config, embedBuilder, handler);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void doExecuteManagerCommand(CommandEventWrapper event) {
-        if (!config.getPossibleRemoteProperty(RemoteProperty.R_STATS_MODULE_ENABLED, event.getGuild(), Boolean.class)) {
+        if (!handler.getPossibleRemoteModuleProperty(RemoteModuleProperty.R_STATS_MODULE_ENABLED, event.getGuild())) {
             throw new StatsModuleIsTurnedOffException(config, event);
         }
         doExecuteManagerStatsCommand(event);

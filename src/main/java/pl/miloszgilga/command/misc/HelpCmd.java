@@ -38,6 +38,7 @@ import pl.miloszgilga.embed.EmbedPaginationBuilder;
 import pl.miloszgilga.core.AbstractCommand;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,8 +50,11 @@ class HelpCmd extends AbstractCommand {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    HelpCmd(BotConfiguration config, EmbedMessageBuilder embedBuilder, EmbedPaginationBuilder paginate) {
-        super(BotCommand.HELP, config, embedBuilder);
+    HelpCmd(
+        BotConfiguration config, EmbedMessageBuilder embedBuilder, EmbedPaginationBuilder paginate,
+        RemotePropertyHandler handler
+    ) {
+        super(BotCommand.HELP, config, embedBuilder, handler);
         this.paginate = paginate;
     }
 

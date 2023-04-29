@@ -33,14 +33,17 @@ import java.util.Objects;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.CommandEventWrapper;
-import pl.miloszgilga.exception.AudioPlayerException;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.exception.AudioPlayerException;
 import pl.miloszgilga.core.AbstractCommand;
+import pl.miloszgilga.core.remote.RemoteModuleProperty;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.audioplayer.AudioPlayerSendHandler;
 
+import static pl.miloszgilga.exception.ModuleException.MusicModuleIsTurnedOffException;
 import static pl.miloszgilga.exception.CommandException.UsedCommandOnForbiddenChannelException;
 import static pl.miloszgilga.exception.AudioPlayerException.ActiveMusicPlayingNotFoundException;
 import static pl.miloszgilga.exception.AudioPlayerException.UserOnVoiceChannelNotFoundException;
@@ -51,6 +54,7 @@ import static pl.miloszgilga.exception.AudioPlayerException.UserOnVoiceChannelWi
 
 public abstract class AbstractMusicCommand extends AbstractCommand {
 
+    protected final RemotePropertyHandler handler;
     protected final BotConfiguration config;
     protected final PlayerManager playerManager;
 
@@ -63,10 +67,12 @@ public abstract class AbstractMusicCommand extends AbstractCommand {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     protected AbstractMusicCommand(
-        BotCommand command, BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder
+        BotCommand command, BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
+        RemotePropertyHandler handler
     ) {
-        super(command, config, embedBuilder);
+        super(command, config, embedBuilder, handler);
         this.config = config;
+        this.handler = handler;
         this.playerManager = playerManager;
     }
 

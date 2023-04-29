@@ -30,6 +30,7 @@ import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.AbstractCommand;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 import static pl.miloszgilga.exception.CommandException.UnauthorizedManagerCommandExecutionException;
@@ -38,8 +39,10 @@ import static pl.miloszgilga.exception.CommandException.UnauthorizedManagerComma
 
 public abstract class AbstractManagerCommand extends AbstractCommand {
 
-    public AbstractManagerCommand(BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder) {
-        super(command, config, embedBuilder);
+    public AbstractManagerCommand(
+        BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler
+    ) {
+        super(command, config, embedBuilder, handler);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

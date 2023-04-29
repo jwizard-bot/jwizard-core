@@ -36,6 +36,7 @@ import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractManagerStatsCommand;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -57,9 +58,9 @@ public class ResetGuildStatsCmd extends AbstractManagerStatsCommand {
 
     ResetGuildStatsCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, IMemberStatsRepository memberStatsRepository,
-        IGuildStatsRepository guildStatsRepository
+        IGuildStatsRepository guildStatsRepository, RemotePropertyHandler handler
     ) {
-        super(BotCommand.RESET_GUILD_STATS, config, embedBuilder);
+        super(BotCommand.RESET_GUILD_STATS, config, embedBuilder, handler);
         this.memberStatsRepository = memberStatsRepository;
         this.guildStatsRepository = guildStatsRepository;
     }

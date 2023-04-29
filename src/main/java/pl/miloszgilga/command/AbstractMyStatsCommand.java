@@ -28,6 +28,7 @@ import pl.miloszgilga.BotCommand;
 
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 import pl.miloszgilga.domain.member_stats.IMemberStatsRepository;
@@ -43,9 +44,10 @@ public abstract class AbstractMyStatsCommand extends AbstractStatsCommand {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     protected AbstractMyStatsCommand(
-        BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder, IMemberStatsRepository repository
+        BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder, IMemberStatsRepository repository,
+        RemotePropertyHandler handler
     ) {
-        super(command, config, embedBuilder);
+        super(command, config, embedBuilder, handler);
         this.repository = repository;
     }
 

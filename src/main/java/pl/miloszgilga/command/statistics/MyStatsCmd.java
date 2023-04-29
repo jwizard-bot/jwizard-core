@@ -30,6 +30,7 @@ import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMyStatsCommand;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -52,9 +53,9 @@ public class MyStatsCmd extends AbstractMyStatsCommand {
 
     MyStatsCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, IMemberStatsRepository repository,
-        IMemberStatsRepository statsRepository, IMemberSettingsRepository settingsRepository
+        IMemberStatsRepository statsRepository, IMemberSettingsRepository settingsRepository, RemotePropertyHandler handler
     ) {
-        super(BotCommand.MY_STATS, config, embedBuilder, repository);
+        super(BotCommand.MY_STATS, config, embedBuilder, repository, handler);
         this.statsRepository = statsRepository;
         this.settingsRepository = settingsRepository;
     }

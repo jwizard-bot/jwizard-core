@@ -35,6 +35,7 @@ import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
 import pl.miloszgilga.core.IEnumerableLocaleSet;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -43,8 +44,11 @@ import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 @JDAInjectableCommandLazyService
 public class InfinitePlaylistCmd extends AbstractDjCommand {
 
-    InfinitePlaylistCmd(BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder) {
-        super(BotCommand.INFINITE_PLAYLIST, config, playerManager, embedBuilder);
+    InfinitePlaylistCmd(
+        BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
+        RemotePropertyHandler handler
+    ) {
+        super(BotCommand.INFINITE_PLAYLIST, config, playerManager, embedBuilder, handler);
         super.onSameChannelWithBot = true;
         super.inPlayingMode = true;
     }

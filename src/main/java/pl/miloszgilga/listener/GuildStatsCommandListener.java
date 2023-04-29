@@ -31,7 +31,8 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemove
 
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.AbstractListenerAdapter;
-import pl.miloszgilga.core.configuration.RemoteProperty;
+import pl.miloszgilga.core.remote.RemoteModuleProperty;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
 
@@ -42,15 +43,18 @@ import pl.miloszgilga.domain.guild_stats.IGuildStatsRepository;
 @JDAInjectableListenerLazyService
 public class GuildStatsCommandListener extends AbstractListenerAdapter {
 
+    private final RemotePropertyHandler handler;
     private final IGuildStatsRepository repository;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     GuildStatsCommandListener(
-        BotConfiguration config, EmbedMessageBuilder embedBuilder, IGuildStatsRepository repository
+        BotConfiguration config, EmbedMessageBuilder embedBuilder, IGuildStatsRepository repository,
+        RemotePropertyHandler handler
     ) {
         super(config, embedBuilder);
         this.repository = repository;
+        this.handler = handler;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,7 +78,7 @@ public class GuildStatsCommandListener extends AbstractListenerAdapter {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private boolean collectorIsDisabled(Guild guild) {
-        return !config.getPossibleRemoteProperty(RemoteProperty.R_STATS_MODULE_ENABLED, guild, Boolean.class);
+        return !handler.getPossibleRemoteModuleProperty(RemoteModuleProperty.R_STATS_MODULE_ENABLED, guild);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
