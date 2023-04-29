@@ -40,6 +40,7 @@ public enum BotProperty {
     J_NAME                          ("name"),
     J_SOURCE_CODE_PATH              ("source-code-path"),
     J_PREFIX                        ("prefix"),
+    J_HELP_EMAIL                    ("help-email"),
     J_SLASH_COMMANDS_ENABLED        ("slash-commands.enabled"),
     J_HAS_AVATAR                    ("avatar.has-avatar"),
     J_PATH_TO_AVATAR                ("avatar.path-to-avatar"),

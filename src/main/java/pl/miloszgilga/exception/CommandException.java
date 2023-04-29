@@ -29,9 +29,11 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.locale.ExceptionLocaleSet;
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,6 +113,17 @@ public class CommandException {
         public UserIsAlreadyWithBotException(BotConfiguration config, CommandEventWrapper event) {
             super(config, ExceptionLocaleSet.USER_ID_ALREADY_WITH_BOT, BugTracker.USER_ID_ALREADY_WITH_BOT);
             JDALog.error(log, event, "Attempt to invoke command, while user is together with bot");
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Slf4j public static class UnexpectedException extends BotException {
+        public UnexpectedException(BotConfiguration config, CommandEventWrapper event) {
+            super(config, ExceptionLocaleSet.UNEXPECTED_EXCEPTION, Map.of(
+                "helpEmail", Utilities.getRichEmailLink(config.getProperty(BotProperty.J_HELP_EMAIL))
+            ), BugTracker.UNEXPECTED_EXCEPTION);
+            JDALog.error(log, event, "Unexpected exception during executable.");
         }
     }
 }

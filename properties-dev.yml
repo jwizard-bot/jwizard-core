@@ -28,6 +28,7 @@ bot:
     name: 'JWizard DEV'
     source-code-path: 'https://github.com/Milosz08/JWizard_Discord_Bot'
     prefix: '?'
+    help-email: 'jwizard-help@miloszgilga.pl'
     slash-commands:
         enabled: true
     avatar:

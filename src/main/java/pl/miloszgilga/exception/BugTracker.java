@@ -34,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 public enum BugTracker {
 
     // common
+    UNEXPECTED_EXCEPTION                                    (0),
     UNRECOGNIZED_COMMAND                                    (1),
     USED_COMMAND_ON_FORBIDDEN_CHANNEL                       (2),
     MISMATCH_COMMAND_ARGUMENTS                              (3),

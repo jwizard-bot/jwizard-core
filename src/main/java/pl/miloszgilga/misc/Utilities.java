@@ -130,6 +130,12 @@ public final class Utilities {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public static String getRichEmailLink(String email) {
+        return String.format("[%s](mailto:%s)", email, email);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public static String getFormattedUTCNow() {
         final OffsetDateTime nowUtc = OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.UTC);
         return SDF.format(nowUtc);

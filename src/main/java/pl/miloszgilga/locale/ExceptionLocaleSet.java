@@ -35,6 +35,7 @@ import pl.miloszgilga.core.IEnumerableLocaleSet;
 @RequiredArgsConstructor
 public enum ExceptionLocaleSet implements IEnumerableLocaleSet {
 
+    UNEXPECTED_EXCEPTION                            ("jwizard.exception.UnexpectedException"),
     UNRECOGNIZED_COMMAND                            ("jwizard.exception.UnrecognizedCommandException"),
     USED_COMM_ON_FORBIDDEN_CHANNEL                  ("jwizard.exception.UsedCommandOnForbiddenChannelException"),
     MISMATCH_COMMAND_ARGS_COUNT                     ("jwizard.exception.MismatchCommandArgumentsCountException"),
