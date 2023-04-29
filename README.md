@@ -10,7 +10,15 @@
 &nbsp;&nbsp;
 <br>
 
-A multi-functional music bot (likely to be enhanced with additional features over time) that allows you to play, pause, repeat and queue songs on the popular VoIP Discord platform. Written entirely using Java SE 17 and Spring Framework IoC container.
+A multi-functional rich discord bot (likely to be enhanced with additional features over time). Modularity with the ability to add new functionality quite (not)easily (yeah, in case you forgot it's Java bro :), management through a web interface. 
+It is divided into several parts:
+* music module (online source player)
+* statistics collection system
+* music player playlist recording system
+* voting system.
+
+Written mostly in Java SE 17 together with JDA, Spring Context (DAPI), Spring Boot (WebAPI) and many others dependencies.<br>
+Runtime scripts prepared with Bash (for UNIX) and Python (for WINDOWS/OTHERS)
 
 ## Table of content
 * [Contribute this project](#contribute-this-project)
@@ -21,14 +29,13 @@ A multi-functional music bot (likely to be enhanced with additional features ove
 * [Change Xmx and Xms parameters (JVM Heap Size)](#change-xmx-and-xms-parameters)
 * [Internationalization (i18n)](#internationalization-i18n)
 * [Tech stack](#tech-stack)
-* [License](#license)
 * [Author](#author)
 * [Project status](#project-status)
 * [License](#license)
 
 <a name="contribute-this-project"></a>
 ## Contribute this project
-If you have the desire and time to help me in writing this bot, you can write to me in a private message or at [personal@miloszgilga.pl](mailto:personal@miloszgilga.pl). However, please note that in order to be a contributor to this application, you must have knowledge in advanced object-oriented programming techniques and experienced in advanced Java programming (spring, rest, cache, multi modules and websockets). If you do not feel confident as a contributor, you can always submit a request for adding new functionality.
+If you have the desire and time to help me in writing this bot, you can write to me in a private message or at [personal@miloszgilga.pl](mailto:personal@miloszgilga.pl). However, please note that in order to be a contributor to this application, you must have knowledge in advanced object-oriented programming techniques and experienced in advanced Java programming (lambda expressions and functional interfaces, spring, rest, cache, multi modules and websockets). If you do not feel confident as a contributor, you can always submit a request for adding new functionality.
 
 <a name="multiple-versions-separation"></a>
 ## Multiple versions separation
