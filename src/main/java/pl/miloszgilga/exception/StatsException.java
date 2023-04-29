@@ -40,26 +40,6 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 
 public class StatsException {
 
-    @Slf4j public static class StatsModuleIsTurnedOffException extends BotException {
-        public StatsModuleIsTurnedOffException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, ExceptionLocaleSet.STATS_MODULE_IS_TURNED_OFF, BugTracker.STATS_MODULE_IS_TURNED_OFF);
-            JDALog.error(log, event, "Attempt to invoke stats command, while stats module is disabled");
-        }
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Slf4j public static class StatsModuleIsAlreadyRunningException extends BotException {
-        public StatsModuleIsAlreadyRunningException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, ExceptionLocaleSet.STATS_MODULE_IS_ALREADY_RUNNING, Map.of(
-                "statsTurnOffCmd", BotCommand.TURN_OFF_STATS_MODULE.parseWithPrefix(config)
-            ), BugTracker.STATS_MODULE_IS_ALREADY_RUNNING);
-            JDALog.error(log, event, "Attempt to invoke stats command, while stats module is already running");
-        }
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     @Slf4j public static class MemberHasNoStatsYetInGuildException extends BotException {
         public MemberHasNoStatsYetInGuildException(BotConfiguration config, CommandEventWrapper event, User user) {
             super(config, ExceptionLocaleSet.MEMBER_HAS_NO_STATS_YET_IN_GUILD, Map.of(

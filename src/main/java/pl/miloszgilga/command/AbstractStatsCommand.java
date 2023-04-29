@@ -32,7 +32,7 @@ import pl.miloszgilga.core.remote.RemoteModuleProperty;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
-import static pl.miloszgilga.exception.StatsException.StatsModuleIsTurnedOffException;
+import static pl.miloszgilga.exception.ModuleException.StatsModuleIsTurnedOffException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
