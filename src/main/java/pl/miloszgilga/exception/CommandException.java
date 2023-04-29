@@ -94,7 +94,16 @@ public class CommandException {
     @Slf4j public static class UnauthorizedManagerCommandExecutionException extends BotException {
         public UnauthorizedManagerCommandExecutionException(BotConfiguration config, CommandEventWrapper event) {
             super(config, ExceptionLocaleSet.UNAUTHORIZED_MANAGER, BugTracker.UNAUTHORIZED_MANAGER);
-            JDALog.error(log, event, "Attempt to invoke DJ command without DJ guild role");
+            JDALog.error(log, event, "Attempt to invoke MANAGER role command without MANAGER guild role");
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Slf4j public static class UnauthorizedOwnerCommandExecutionException extends BotException {
+        public UnauthorizedOwnerCommandExecutionException(BotConfiguration config, CommandEventWrapper event) {
+            super(config, ExceptionLocaleSet.UNAUTHORIZED_OWNER, BugTracker.UNAUTHORIZED_OWNER);
+            JDALog.error(log, event, "Attempt to invoke OWNER role command without OWNER guild role");
         }
     }
 
