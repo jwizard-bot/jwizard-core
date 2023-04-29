@@ -10,7 +10,15 @@
 &nbsp;&nbsp;
 <br>
 
-A multi-functional music bot (likely to be enhanced with additional features over time) that allows you to play, pause, repeat and queue songs on the popular VoIP Discord platform. Written entirely using Java SE 17 and Spring Framework IoC container.
+A multi-functional rich discord bot (likely to be enhanced with additional features over time). Modularity with the ability to add new functionality quite (not)easily (yeah, in case you forgot it's Java bro :), management through a web interface. 
+It is divided into several parts:
+* music module (online source player)
+* statistics collection system
+* music player playlist recording system
+* voting system.
+
+Written mostly in Java SE 17 together with JDA, Spring Context (DAPI), Spring Boot (WebAPI) and many others dependencies.<br>
+Runtime scripts prepared with Bash (for UNIX) and Python (for WINDOWS/OTHERS)
 
 ## Table of content
 * [Contribute this project](#contribute-this-project)
