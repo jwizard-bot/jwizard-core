@@ -26,7 +26,7 @@
 
 bot:
     name: 'JWizard'
-    source-code-path: 'https://github.com/Milosz08/JWizard_Discord_Bot'
+    source-code-path: 'https://github.com/Milosz08/jwizard'
     prefix: '$'
     help-email: 'jwizard-help@miloszgilga.pl'
     slash-commands:
