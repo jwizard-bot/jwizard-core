@@ -38,6 +38,7 @@ public enum CommandLocaleSet implements IEnumerableLocaleSet {
     HELP_COMMAND_DESC                               ("jwizard.command.description.Help"),
     HELPME_COMMAND_DESC                             ("jwizard.command.description.HelpMe"),
     DEBUG_COMMAND_DESC                              ("jwizard.command.description.Debug"),
+    SET_AUDIO_CHANNEL_COMMAND_DESC                  ("jwizard.command.description.SetAudioChannel"),
 
     PLAY_TRACK_COMMAND_DESC                         ("jwizard.command.description.PlayTrack"),
     PAUSE_TRACK_COMMAND_DESC                        ("jwizard.command.description.PauseTrack"),

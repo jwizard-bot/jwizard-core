@@ -40,7 +40,8 @@ public enum ArgSyntaxLocaleSet implements IEnumerableLocaleSet {
     AUDIO_PLAYER_SET_VOLUME_ARG_SYNTAX              ("jwizard.command.arguments.AudioPlayerSetVolume"),
     MEMBER_TAG_ARG_SYNTAX                           ("jwizard.command.arguments.MemberTag"),
     SKIP_QUEUE_TO_TRACK_ARG_SYNTAX                  ("jwizard.command.arguments.SkipQueueToTrack"),
-    MOVE_TRACK_ARG_SYNTAX                           ("jwizard.command.arguments.MoveTrack");
+    MOVE_TRACK_ARG_SYNTAX                           ("jwizard.command.arguments.MoveTrack"),
+    OPTIONAL_CHANNEL_ID_ARG_SYNTAX                  ("jwizard.command.arguments.OptionalChannelId");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

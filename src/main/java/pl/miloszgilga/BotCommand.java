@@ -51,6 +51,7 @@ public enum BotCommand {
     HELP                        ("help",        true, new String[]{ "h", "hl" },      OTHERS, HELP_COMMAND_DESC),
     HELP_ME                     ("helpme",      true, new String[]{ "hm", "hlm" },    OTHERS, HELPME_COMMAND_DESC),
     DEBUG                       ("debug",       true, new String[]{ "db", "dbg" },    OTHERS, DEBUG_COMMAND_DESC),
+    SET_AUDIO_CHANNEL           ("setaudiochn", true, new String[]{ "sadch" },        OTHERS, SET_AUDIO_CHANNEL_COMMAND_DESC,             OPTIONAL_CHANNEL_ID_ARG_SYNTAX),
 
     PLAY_TRACK                  ("play",        true, new String[]{ "p", "pl" },      MUSIC,  PLAY_TRACK_COMMAND_DESC,                    PLAY_TRACK_ARG_SYNTAX),
     PAUSE_TRACK                 ("pause",       true, new String[]{ "ps" },           MUSIC,  PAUSE_TRACK_COMMAND_DESC),

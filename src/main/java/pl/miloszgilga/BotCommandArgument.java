@@ -46,16 +46,17 @@ import static pl.miloszgilga.core.configuration.BotConfiguration.CAST_TYPES;
 @Getter
 @RequiredArgsConstructor
 public enum BotCommandArgument {
-    TRACK_LINK_NAME_ARG             (1, BotCommand.PLAY_TRACK,             String.class,   OptionType.STRING,          "track",     true),
-    COUNT_OF_REPEATS                (1, BotCommand.REPEAT_TRACK,           Integer.class,  OptionType.STRING,          "count",     true),
-    VOLUME_POINTS                   (1, BotCommand.SET_PLAYER_VOLUME,      Integer.class,  OptionType.INTEGER,         "points",    true),
-    REMOVE_TRACK_MEMBER_TAG         (1, BotCommand.REMOVE_MEMBER_TRACKS,   String.class,   OptionType.MENTIONABLE,     "member",    true),
-    SKIP_TRACK_POSITION             (1, BotCommand.SKIP_TO_TRACK,          Integer.class,  OptionType.INTEGER,         "pos",       true),
-    VOTE_SKIP_TRACK_POSITION        (1, BotCommand.VOTE_SKIP_TO_TRACK,     Integer.class,  OptionType.INTEGER,         "pos",       true),
-    MOVE_TRACK_POSITION_FROM        (1, BotCommand.MOVE_TRACK,             Integer.class,  OptionType.INTEGER,         "frompos",   true),
-    MOVE_TRACK_POSITION_TO          (2, BotCommand.MOVE_TRACK,             Integer.class,  OptionType.INTEGER,         "topos",     true),
-    MEMBER_STATS_MEMBER_TAG         (1, BotCommand.MEMBER_STATS,           String.class,   OptionType.MENTIONABLE,     "member",    true),
-    RESET_MEMBER_STATS_MEMBER_TAG   (1, BotCommand.RESET_MEMBER_STATS,     String.class,   OptionType.MENTIONABLE,     "member",    true);
+    TRACK_LINK_NAME_ARG             (1, BotCommand.PLAY_TRACK,             String.class,   OptionType.STRING,          "track",         true),
+    COUNT_OF_REPEATS                (1, BotCommand.REPEAT_TRACK,           Integer.class,  OptionType.STRING,          "count",         true),
+    VOLUME_POINTS                   (1, BotCommand.SET_PLAYER_VOLUME,      Integer.class,  OptionType.INTEGER,         "points",        true),
+    REMOVE_TRACK_MEMBER_TAG         (1, BotCommand.REMOVE_MEMBER_TRACKS,   String.class,   OptionType.MENTIONABLE,     "member",        true),
+    SKIP_TRACK_POSITION             (1, BotCommand.SKIP_TO_TRACK,          Integer.class,  OptionType.INTEGER,         "pos",           true),
+    VOTE_SKIP_TRACK_POSITION        (1, BotCommand.VOTE_SKIP_TO_TRACK,     Integer.class,  OptionType.INTEGER,         "pos",           true),
+    MOVE_TRACK_POSITION_FROM        (1, BotCommand.MOVE_TRACK,             Integer.class,  OptionType.INTEGER,         "frompos",       true),
+    MOVE_TRACK_POSITION_TO          (2, BotCommand.MOVE_TRACK,             Integer.class,  OptionType.INTEGER,         "topos",         true),
+    MEMBER_STATS_MEMBER_TAG         (1, BotCommand.MEMBER_STATS,           String.class,   OptionType.MENTIONABLE,     "member",        true),
+    RESET_MEMBER_STATS_MEMBER_TAG   (1, BotCommand.RESET_MEMBER_STATS,     String.class,   OptionType.MENTIONABLE,     "member",        true),
+    SET_AUDIO_TEXT_CHANNEL_TAG      (1, BotCommand.SET_AUDIO_CHANNEL,      String.class,   OptionType.CHANNEL,         "text-channel",  false);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

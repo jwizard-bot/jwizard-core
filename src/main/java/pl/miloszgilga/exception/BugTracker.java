@@ -44,6 +44,7 @@ public enum BugTracker {
     UNAUTHORIZED_OWNER                                      (7),
     USER_NOT_FOUND_IN_GUILD                                 (8),
     USER_ID_ALREADY_WITH_BOT                                (9),
+    CHANNEL_IS_NOT_TEXT_CHANNEL                             (10),
 
     // music player
     ACTIVE_MUSIC_PLAYING_NOT_FOUND                          (100),
