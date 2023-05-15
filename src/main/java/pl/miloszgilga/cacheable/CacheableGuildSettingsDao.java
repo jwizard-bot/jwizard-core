@@ -47,11 +47,11 @@ public class CacheableGuildSettingsDao extends AbstractCacheableDao<GuildSetting
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @CachePut(cacheNames = "GuildSettingsCache", key = "#p0.guild.id")
-    public GuildSettingsEntity setMusicBotTextChannel(CommandEventWrapper event, String newPrefix) {
+    public GuildSettingsEntity setMusicBotTextChannel(CommandEventWrapper event, String newChannelId) {
         final GuildSettingsEntity settings = cacheableRepository.findByGuild_DiscordId(event.getGuildId())
             .orElseThrow(() -> new UnexpectedException(config, event));
 
-        settings.setMusicTextChannelId(newPrefix);
+        settings.setAudioTextChannelId(newChannelId);
         return settings;
     }
 }

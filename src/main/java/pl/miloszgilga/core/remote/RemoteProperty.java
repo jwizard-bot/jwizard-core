@@ -38,7 +38,7 @@ import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
 @RequiredArgsConstructor
 public enum RemoteProperty {
 
-    R_TEXT_MUSIC_CHANNEL_ID             (null, GuildSettingsEntity::getMusicTextChannelId);
+    R_TEXT_MUSIC_CHANNEL_ID             (null, GuildSettingsEntity::getAudioTextChannelId);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

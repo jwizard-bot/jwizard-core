@@ -46,7 +46,7 @@ import static jakarta.persistence.FetchType.LAZY;
 public class GuildSettingsEntity extends AbstractAuditableEntity implements Serializable {
     @Serial private static final long serialVersionUID = 1L;
 
-    @Column(name = "music_text_channel_id")             private String musicTextChannelId;
+    @Column(name = "audio_text_channel_id")             private String audioTextChannelId;
     @Column(name = "skip_ratio")                        private Integer skipRatio;
     @Column(name = "slash_enabled")                     private Boolean slashEnabled;
     @Column(name = "time_to_leave_channel")             private Integer timeToLeaveChannel;
@@ -62,12 +62,12 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public String getMusicTextChannelId() {
-        return musicTextChannelId;
+    public String getAudioTextChannelId() {
+        return audioTextChannelId;
     }
 
-    public void setMusicTextChannelId(String musicTextChannelId) {
-        this.musicTextChannelId = musicTextChannelId;
+    public void setAudioTextChannelId(String musicTextChannelId) {
+        this.audioTextChannelId = musicTextChannelId;
     }
 
     Integer getSkipRatio() {
@@ -147,7 +147,7 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
     @Override
     public String toString() {
         return "{" +
-            "musicTextChannelId=" + musicTextChannelId +
+            "audioTextChannelId=" + audioTextChannelId +
             ", skipRatio=" + skipRatio +
             ", slashEnabled=" + slashEnabled +
             ", timeToLeaveChannel=" + timeToLeaveChannel +
