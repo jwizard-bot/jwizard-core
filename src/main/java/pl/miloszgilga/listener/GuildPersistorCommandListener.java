@@ -24,14 +24,17 @@
 
 package pl.miloszgilga.listener;
 
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.guild.*;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateNameEvent;
+import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
 
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.cacheable.CacheableGuildSettingsDao;
 import pl.miloszgilga.core.AbstractListenerAdapter;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
@@ -41,6 +44,7 @@ import pl.miloszgilga.domain.guild.IGuildRepository;
 import pl.miloszgilga.domain.guild_stats.GuildStatsEntity;
 import pl.miloszgilga.domain.guild_modules.GuildModulesEntity;
 import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
+import pl.miloszgilga.domain.guild_settings.IGuildSettingsRepository;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -48,14 +52,19 @@ import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
 public class GuildPersistorCommandListener extends AbstractListenerAdapter {
 
     private final IGuildRepository guildRepository;
+    private final IGuildSettingsRepository settingsRepository;
+    private final CacheableGuildSettingsDao cacheableGuildSettingsDao;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     GuildPersistorCommandListener(
-        BotConfiguration config, EmbedMessageBuilder embedBuilder, IGuildRepository guildRepository
+        BotConfiguration config, EmbedMessageBuilder embedBuilder, IGuildRepository guildRepository,
+        IGuildSettingsRepository settingsRepository, CacheableGuildSettingsDao cacheableGuildSettingsDao
     ) {
         super(config, embedBuilder);
         this.guildRepository = guildRepository;
+        this.settingsRepository = settingsRepository;
+        this.cacheableGuildSettingsDao = cacheableGuildSettingsDao;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,9 +98,19 @@ public class GuildPersistorCommandListener extends AbstractListenerAdapter {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private void deleteTextChannel(TextChannelDeleteEvent event) {
+        final TextChannel removedChannel = event.getChannel();
+        final GuildSettingsEntity settings = cacheableGuildSettingsDao
+            .deleteMusicBotTextChannelOnRemoving(event.getGuild().getId(), removedChannel.getId());
+        settingsRepository.save(settings);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Override public void onGuildUpdateName(GuildUpdateNameEvent event)         { updateGuildName(event); }
     @Override public void onGuildReady(GuildReadyEvent event)                   { createOnlyIfGuildTableNotExist(event); }
     @Override public void onGuildJoin(GuildJoinEvent event)                     { createOnlyIfGuildTableNotExist(event); }
+    @Override public void onTextChannelDelete(TextChannelDeleteEvent event)     { deleteTextChannel(event); }
     @Transactional @Override public void onGuildLeave(GuildLeaveEvent event)    { deleteGuildTables(event); }
     @Transactional @Override public void onGuildBan(GuildBanEvent event)        { deleteGuildTables(event); }
 }

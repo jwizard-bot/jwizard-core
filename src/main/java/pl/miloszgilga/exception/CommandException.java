@@ -27,6 +27,7 @@ package pl.miloszgilga.exception;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
+import java.util.Objects;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.misc.Utilities;
@@ -141,7 +142,11 @@ public class CommandException {
             super(config, ExceptionLocaleSet.UNEXPECTED_EXCEPTION, Map.of(
                 "helpEmail", Utilities.getRichEmailLink(config.getProperty(BotProperty.J_HELP_EMAIL))
             ), BugTracker.UNEXPECTED_EXCEPTION);
-            JDALog.error(log, event, "Unexpected exception during executable.");
+            if (Objects.isNull(event)) {
+                log.error("Unexpected exception during executable.");
+            } else {
+                JDALog.error(log, event, "Unexpected exception during executable.");
+            }
         }
     }
 }

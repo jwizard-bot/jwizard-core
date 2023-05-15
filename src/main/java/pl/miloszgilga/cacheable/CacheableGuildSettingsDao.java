@@ -54,4 +54,16 @@ public class CacheableGuildSettingsDao extends AbstractCacheableDao<GuildSetting
         settings.setAudioTextChannelId(newChannelId);
         return settings;
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @CachePut(cacheNames = "GuildSettingsCache", key = "#p0")
+    public GuildSettingsEntity deleteMusicBotTextChannelOnRemoving(String guildId, String deletingChannelId) {
+        final GuildSettingsEntity settings = cacheableRepository.findByGuild_DiscordId(guildId)
+            .orElseThrow(() -> new UnexpectedException(config, null));
+        if (settings.getAudioTextChannelId().equals(deletingChannelId)) {
+            settings.setAudioTextChannelId(null);
+        }
+        return settings;
+    }
 }
