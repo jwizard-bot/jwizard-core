@@ -158,4 +158,15 @@ public class AudioPlayerException {
             JDALog.error(log, event, "Attempt to move track to the same origin position");
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Slf4j public static class ForbiddenTextChannelException extends BotException {
+        public ForbiddenTextChannelException(BotConfiguration config, CommandEventWrapper event, String textChannelName) {
+            super(config, ExceptionLocaleSet.FORBIDDEN_TEXT_CHANNEL, Map.of(
+                "acceptTextChannel", textChannelName
+            ), BugTracker.FORBIDDEN_TEXT_CHANNEL);
+            JDALog.error(log, event, "Attempt to use song request command on fobidden channel");
+        }
+    }
 }

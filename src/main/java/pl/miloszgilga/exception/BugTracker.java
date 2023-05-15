@@ -63,6 +63,7 @@ public enum BugTracker {
     TRACK_THE_SAME_POSITIONS                                (113),
     TRACK_QUEUE_IS_EMPTY                                    (114),
     USER_NOT_ADDED_TRACKS_TO_QUEUE                          (115),
+    FORBIDDEN_TEXT_CHANNEL                                  (116),
 
     // statistics
     MEMBER_HAS_NO_STATS_YET                                 (200),

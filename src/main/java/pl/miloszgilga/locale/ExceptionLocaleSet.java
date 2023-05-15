@@ -82,6 +82,7 @@ public enum ExceptionLocaleSet implements IEnumerableLocaleSet {
     VOLUME_UNITS_OUT_OF_BOUNDS                      ("jwizard.exception.VolumeUnitsOutOfBoundsException"),
     TRACK_OFFSET_OUT_OF_BOUNDS                      ("jwizard.exception.TrackOffsetOutOfBoundsException"),
     TRACK_THE_SAME_POSITION                         ("jwizard.exception.TrackTheSamePositionException"),
+    FORBIDDEN_TEXT_CHANNEL                          ("jwizard.exception.ForbiddenTextChannelException"),
     TRACK_QUEUE_IS_EMPTY                            ("jwizard.exception.TrackQueueIsEmptyException"),
     USER_NOT_ADDED_TRACKS_TO_QUEUE                  ("jwizard.exception.UserNotAddedTracksToQueueException");
 
