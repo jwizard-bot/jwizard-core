@@ -63,13 +63,17 @@ public class RemotePropertyHandler {
             if (settings.isEmpty()) throw new IllegalStateException();
 
             final Object remoteProp = property.getRemoteProp().apply(settings.get());
-            if (Objects.isNull(property.getLocalProperty())) return null;
+            if (Objects.isNull(remoteProp) && !property.isHasLocalProperty()) return null;
             if (Objects.isNull(remoteProp)) throw new IllegalStateException();
 
             return castClazz.cast(remoteProp);
         } catch (IllegalStateException ignore) {
             return config.getProperty(property.getLocalProperty(), castClazz);
         }
+    }
+
+    public String getPossibleRemoteProperty(RemoteProperty property, Guild guild) {
+        return getPossibleRemoteProperty(property, guild, String.class);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -38,10 +38,11 @@ import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
 @RequiredArgsConstructor
 public enum RemoteProperty {
 
-    R_TEXT_MUSIC_CHANNEL_ID             (null, GuildSettingsEntity::getAudioTextChannelId);
+    R_TEXT_MUSIC_CHANNEL_ID             (null, false, GuildSettingsEntity::getAudioTextChannelId);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final BotProperty localProperty;
+    private final boolean hasLocalProperty;
     private final Function<GuildSettingsEntity, Object> remoteProp;
 }
