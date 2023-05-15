@@ -36,10 +36,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 
 import pl.miloszgilga.dto.CommandEventWrapper;
-import pl.miloszgilga.exception.CommandException;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 import static pl.miloszgilga.core.configuration.BotConfiguration.CAST_TYPES;
+import static pl.miloszgilga.exception.CommandException.MismatchCommandArgumentsCountException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -83,27 +83,39 @@ public enum BotCommandArgument {
     public static Map<BotCommandArgument, String> extractForBaseCommand(
         String input, BotCommand rawCommand, BotConfiguration config, CommandEventWrapper wrapper
     ) {
-        final List<String> values = Arrays.stream(input.split("\\|")).filter(a -> a.length() > 0).toList();
+        final Queue<String> values = new LinkedList<>(Arrays.stream(input.split("\\|")).filter(a -> a.length() > 0).toList());
         final Map<BotCommandArgument, String> extractedArguments = new HashMap<>();
         final List<BotCommandArgument> allBotCommandArguments = getAllArgsForCommand(rawCommand);
 
-        if (values.size() != allBotCommandArguments.size()) {
-            throw new CommandException.MismatchCommandArgumentsCountException(config, wrapper, rawCommand);
-        }
-        for (int i = 0; i < values.size(); i++) {
-            extractedArguments.put(allBotCommandArguments.get(i), values.get(i));
+        for (BotCommandArgument allBotCommandArgument : allBotCommandArguments) {
+            final String value = values.poll();
+
+            if (Objects.isNull(value) && !allBotCommandArgument.isRequired) continue;
+            if (Objects.isNull(value)) {
+                throw new MismatchCommandArgumentsCountException(config, wrapper, allBotCommandArgument.command);
+            }
+            extractedArguments.put(allBotCommandArgument, value);
         }
         return extractedArguments;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static Map<BotCommandArgument, String> extractForSlashCommand(List<OptionMapping> options, BotCommand rawCommand) {
+    public static Map<BotCommandArgument, String> extractForSlashCommand(
+        BotConfiguration config, CommandEventWrapper wrapper, List<OptionMapping> options, BotCommand rawCommand
+    ) {
         final Map<BotCommandArgument, String> extractedArguments = new HashMap<>();
         final List<BotCommandArgument> allBotCommandArguments = getAllArgsForCommand(rawCommand);
+        final Queue<OptionMapping> optionMappingQueue = new LinkedList<>(options);
 
-        for (int i = 0; i < allBotCommandArguments.size(); i++) {
-            extractedArguments.put(allBotCommandArguments.get(i), options.get(i).getAsString());
+        for (BotCommandArgument allBotCommandArgument : allBotCommandArguments) {
+            final OptionMapping mapping = optionMappingQueue.poll();
+
+            if (Objects.isNull(mapping) && !allBotCommandArgument.isRequired) continue;
+            if (Objects.isNull(mapping)) {
+                throw new MismatchCommandArgumentsCountException(config, wrapper, allBotCommandArgument.command);
+            }
+            extractedArguments.put(allBotCommandArgument, mapping.getAsString());
         }
         return extractedArguments;
     }

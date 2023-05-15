@@ -95,7 +95,8 @@ public abstract class AbstractCommand extends SlashCommand {
     @Override
     protected void execute(SlashCommandEvent event) {
         final CommandEventWrapper commandEventWrapper = new CommandEventWrapper(event);
-        commandEventWrapper.setArgs(BotCommandArgument.extractForSlashCommand(event.getOptions(), command));
+        commandEventWrapper.setArgs(BotCommandArgument
+            .extractForSlashCommand(config, commandEventWrapper, event.getOptions(), command));
 
         event.deferReply().queue();
         try {

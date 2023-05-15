@@ -34,6 +34,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.command.CommandClient;
 
 import java.util.*;
+import org.apache.commons.lang3.StringUtils;
 
 import pl.miloszgilga.BotCommandArgument;
 import pl.miloszgilga.misc.QueueAfterParam;
@@ -145,7 +146,7 @@ public class CommandEventWrapper {
             .filter(a -> a.getKey().equals(argument))
             .map(Map.Entry::getValue)
             .findFirst()
-            .orElseThrow(() -> new IllegalStateException("Command has no arguments"));
+            .orElse(StringUtils.EMPTY);
         return argument.parse(argumentValue);
     }
 }
