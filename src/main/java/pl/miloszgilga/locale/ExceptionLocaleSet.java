@@ -45,7 +45,15 @@ public enum ExceptionLocaleSet implements IEnumerableLocaleSet {
     UNAUTHORIZED_OWNER                              ("jwizard.exception.UnauthorizedOwnerException"),
     USER_NOT_FOUND_IN_GUILD                         ("jwizard.exception.UserNotFoundInGuildException"),
     USER_ID_ALREADY_WITH_BOT                        ("jwizard.exception.UserIsAlreadyWithBotException"),
+
     CHANNEL_IS_NOT_TEXT_CHANNEL                     ("jwizard.exception.ChannelIsNotTextChannelException"),
+    ROLE_ALREADY_EXIST                              ("jwizard.exception.RoleAlreadyExistException"),
+    LOCALE_NOT_EXIST                                ("jwizard.exception.LocaleNotFoundException"),
+    MAX_REPEATS_OUT_OF_BOUNDS                       ("jwizard.exception.MaxRepeatsOutOfBoundsException"),
+    PERCENTAGE_OUT_OF_BOUNDS                        ("jwizard.exception.PercentageOutOfBoundsException"),
+    TIME_TO_END_VOTING_OUT_OF_BOUNDS                ("jwizard.exception.TimeToEndVotingOutOfBoundsException"),
+    TIME_TO_LEAVE_EMPTY_CHANNEL_OUT_OF_BOUNDS       ("jwizard.exception.TimeToLeaveEmptyChannelOutOfBoundsException"),
+    TIME_TO_LEAVE_NO_TRACKS_OUT_OF_BOUNDS           ("jwizard.exception.TimeToLeaveNoTracksOutOfBoundsException"),
 
     STATS_MODULE_IS_ALREADY_RUNNING                 ("jwizard.exception.StatsModuleIsAlreadyRunningException"),
     STATS_MODULE_IS_ALREADY_DISABLED                ("jwizard.exception.StatsModuleIsAlreadyDisabledException"),

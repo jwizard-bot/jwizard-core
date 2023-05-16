@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: SetAudioTextChannelCmd.java
- * Last modified: 15/05/2023, 14:27
+ * File name: SetTimeToEndVotingCmd.java
+ * Last modified: 16/05/2023, 10:09
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -26,13 +26,10 @@ package pl.miloszgilga.command.guild_settings;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.Map;
 import java.util.Objects;
-import org.apache.commons.lang3.StringUtils;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.BotCommandArgument;
@@ -43,57 +40,59 @@ import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.cacheable.CacheableGuildSettingsDao;
 import pl.miloszgilga.command.AbstractGuildSettingsCommand;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
 import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
 import pl.miloszgilga.domain.guild_settings.IGuildSettingsRepository;
 
-import static pl.miloszgilga.exception.SettingsException.ChannelIsNotTextChannelException;
+import static pl.miloszgilga.exception.SettingsException.TimeToEndVotingOutOfBoundsException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Slf4j
 @JDAInjectableCommandLazyService
-public class SetAudioTextChannelCmd extends AbstractGuildSettingsCommand {
+public class SetTimeToEndVotingCmd extends AbstractGuildSettingsCommand {
 
-    SetAudioTextChannelCmd(
+    SetTimeToEndVotingCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler,
         IGuildSettingsRepository repository, CacheableGuildSettingsDao cacheableGuildSettingsDao
     ) {
-        super(BotCommand.SET_AUDIO_CHANNEL, config, embedBuilder, handler, repository, cacheableGuildSettingsDao);
+        super(BotCommand.SET_TIME_VOTING, config, embedBuilder, handler, repository, cacheableGuildSettingsDao);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void doExecuteGuildSettingsCommand(CommandEventWrapper event) {
-        final String channel = event.getArgumentAndParse(BotCommandArgument.SET_AUDIO_TEXT_CHANNEL_TAG);
+        final Integer timeToEndVoting = event.getArgumentAndParse(BotCommandArgument.SET_TIME_VOTING_TAG);
+
+        final int defTimeToEndVoting = config.getProperty(BotProperty.J_INACTIVITY_VOTING_TIMEOUT, Integer.class);
+        final int maxTimeToEndVoting = config.getProperty(BotProperty.J_MAX_INACTIVITY_VOTING_TIME, Integer.class);
 
         GuildSettingsEntity settingsToSave;
         MessageEmbed messageEmbed;
 
-        if (Objects.isNull(channel) || channel.equals(StringUtils.EMPTY)) { // reset
+        if (Objects.isNull(timeToEndVoting)) { // reset
             settingsToSave = cacheableGuildSettingsDao.setCacheableProperty(event,
-                guildSettings -> guildSettings.setAudioTextChannelId(null));
-            messageEmbed = embedBuilder.createMessage(ResLocaleSet.AUDIO_CHANNEL_WAS_RESET_MESS, Map.of(
-                "setTextChannelCmd", BotCommand.SET_AUDIO_CHANNEL.parseWithPrefix(config)
+                guildSettings -> guildSettings.setTimeToEndVoting(null));
+            messageEmbed = embedBuilder.createMessage(ResLocaleSet.TIME_TO_END_VOTING_WAS_RESET_MESS, Map.of(
+                "setTimeVotingCmd", BotCommand.SET_TIME_VOTING.parseWithPrefix(config)
             ), event.getGuild());
-            JDALog.info(log, event, "Text channel for song request module was successfully reset");
+            JDALog.info(log, event, "Time to end voting was successfully reset to '%s' (default value)",
+                defTimeToEndVoting);
         } else {
-            final String filtered = channel.replaceAll("\\D", StringUtils.EMPTY);
-            final TextChannel textChannel = event.getGuild().getTextChannelById(filtered);
-            if (Objects.isNull(textChannel) || !textChannel.getType().equals(ChannelType.TEXT)) {
-                throw new ChannelIsNotTextChannelException(config, event);
+            if (timeToEndVoting < 5 || timeToEndVoting > maxTimeToEndVoting) {
+                throw new TimeToEndVotingOutOfBoundsException(config, event);
             }
             settingsToSave = cacheableGuildSettingsDao.setCacheableProperty(event,
-                guildSettings -> guildSettings.setAudioTextChannelId(filtered));
-            messageEmbed = embedBuilder.createMessage(ResLocaleSet.AUDIO_CHANNEL_WAS_SETTED_MESS, Map.of(
-                "channelName", textChannel.getName(),
-                "setTextChannelCmd", BotCommand.SET_AUDIO_CHANNEL.parseWithPrefix(config)
+                guildSettings -> guildSettings.setTimeToLeaveNoTracksChannel(timeToEndVoting));
+            messageEmbed = embedBuilder.createMessage(ResLocaleSet.TIME_TO_END_VOTING_WAS_SETTED_MESS, Map.of(
+                "timeToEndVoting", timeToEndVoting,
+                "setTimeVotingCmd", BotCommand.SET_TIME_VOTING.parseWithPrefix(config)
             ), event.getGuild());
-            JDALog.info(log, event, "Text channel for song request module was successfully setted: '%s'",
-                textChannel.getName());
+            JDALog.info(log, event, "Time to end voting was successfully setted to '%s'", timeToEndVoting);
         }
         repository.save(settingsToSave);
         event.sendEmbedMessage(messageEmbed);

@@ -49,7 +49,15 @@ public enum ArgSyntaxLocaleSet implements IEnumerableLocaleSet {
     MEMBER_TAG_ARG_SYNTAX                           ("jwizard.command.arguments.MemberTag"),
     SKIP_QUEUE_TO_TRACK_ARG_SYNTAX                  ("jwizard.command.arguments.SkipQueueToTrack"),
     MOVE_TRACK_ARG_SYNTAX                           ("jwizard.command.arguments.MoveTrack"),
-    OPTIONAL_CHANNEL_ID_ARG_SYNTAX                  ("jwizard.command.arguments.OptionalChannelId");
+    OPTIONAL_CHANNEL_ID_ARG_SYNTAX                  ("jwizard.command.arguments.OptionalChannelId"),
+    OPTIONAL_DJ_ROLE_NAME_ARG_SYNTAX                ("jwizard.command.arguments.OptionalDjRoleName"),
+    OPTIONAL_I18N_LOCALE_ARG_SYNTAX                 ("jwizard.command.arguments.OptionalI18nLocale",        Map.of("langsArray", J_AVAILABLE_LOCALES)),
+    OPTIONAL_TRACK_REPEATS_ARG_SYNTAX               ("jwizard.command.arguments.OptionalTrackRepeats",      Map.of("maxRepeats", J_MAX_REPEATS_SINGLE_TRACK)),
+    OPTIONAL_DEFAULT_VOLUME_ARG_SYNTAX              ("jwizard.command.arguments.OptionalDefaultVolume"),
+    OPTIONAL_SKIP_RATIO_ARG_SYNTAX                  ("jwizard.command.arguments.OptionalSkipRatio"),
+    OPTIONAL_TIME_VOTING_ARG_SYNTAX                 ("jwizard.command.arguments.OptionalTimeSeconds",       Map.of("maxSeconds", J_MAX_INACTIVITY_VOTING_TIME)),
+    OPTIONAL_TIME_LEAVE_EMPTY_ARG_SYNTAX            ("jwizard.command.arguments.OptionalTimeSeconds",       Map.of("maxSeconds", J_MAX_INACTIVITY_EMPTY_TIME)),
+    OPTIONAL_TIME_LEAVE_NO_TRACKS_ARG_SYNTAX        ("jwizard.command.arguments.OptionalTimeSeconds",       Map.of("maxSeconds", J_MAX_INACTIVITY_NO_TRACK_TIME));
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

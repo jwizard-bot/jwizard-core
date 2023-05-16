@@ -128,15 +128,6 @@ public class CommandException {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Slf4j public static class ChannelIsNotTextChannelException extends BotException {
-        public ChannelIsNotTextChannelException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, ExceptionLocaleSet.CHANNEL_IS_NOT_TEXT_CHANNEL, BugTracker.CHANNEL_IS_NOT_TEXT_CHANNEL);
-            JDALog.error(log, event, "Attempt to invoke command, while passed channel is not text channel");
-        }
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     @Slf4j public static class UnexpectedException extends BotException {
         public UnexpectedException(BotConfiguration config, CommandEventWrapper event) {
             super(config, Objects.isNull(event) ? null : event.getGuild(), ExceptionLocaleSet.UNEXPECTED_EXCEPTION, Map.of(

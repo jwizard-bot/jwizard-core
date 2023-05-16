@@ -27,6 +27,8 @@ package pl.miloszgilga.cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.cache.annotation.CachePut;
 
+import java.util.function.Consumer;
+
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
@@ -47,11 +49,11 @@ public class CacheableGuildSettingsDao extends AbstractCacheableDao<GuildSetting
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @CachePut(cacheNames = "GuildSettingsCache", key = "#p0.guild.id")
-    public GuildSettingsEntity setMusicBotTextChannel(CommandEventWrapper event, String newChannelId) {
+    public GuildSettingsEntity setCacheableProperty(CommandEventWrapper event, Consumer<GuildSettingsEntity> performAction) {
         final GuildSettingsEntity settings = cacheableRepository.findByGuild_DiscordId(event.getGuildId())
             .orElseThrow(() -> new UnexpectedException(config, event));
 
-        settings.setAudioTextChannelId(newChannelId);
+        performAction.accept(settings);
         return settings;
     }
 

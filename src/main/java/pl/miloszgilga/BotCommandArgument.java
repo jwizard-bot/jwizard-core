@@ -46,17 +46,26 @@ import static pl.miloszgilga.exception.CommandException.MismatchCommandArguments
 @Getter
 @RequiredArgsConstructor
 public enum BotCommandArgument {
-    TRACK_LINK_NAME_ARG             (1, BotCommand.PLAY_TRACK,             String.class,   OptionType.STRING,          "track",         true),
-    COUNT_OF_REPEATS                (1, BotCommand.REPEAT_TRACK,           Integer.class,  OptionType.STRING,          "count",         true),
-    VOLUME_POINTS                   (1, BotCommand.SET_PLAYER_VOLUME,      Integer.class,  OptionType.INTEGER,         "points",        true),
-    REMOVE_TRACK_MEMBER_TAG         (1, BotCommand.REMOVE_MEMBER_TRACKS,   String.class,   OptionType.MENTIONABLE,     "member",        true),
-    SKIP_TRACK_POSITION             (1, BotCommand.SKIP_TO_TRACK,          Integer.class,  OptionType.INTEGER,         "pos",           true),
-    VOTE_SKIP_TRACK_POSITION        (1, BotCommand.VOTE_SKIP_TO_TRACK,     Integer.class,  OptionType.INTEGER,         "pos",           true),
-    MOVE_TRACK_POSITION_FROM        (1, BotCommand.MOVE_TRACK,             Integer.class,  OptionType.INTEGER,         "frompos",       true),
-    MOVE_TRACK_POSITION_TO          (2, BotCommand.MOVE_TRACK,             Integer.class,  OptionType.INTEGER,         "topos",         true),
-    MEMBER_STATS_MEMBER_TAG         (1, BotCommand.MEMBER_STATS,           String.class,   OptionType.MENTIONABLE,     "member",        true),
-    RESET_MEMBER_STATS_MEMBER_TAG   (1, BotCommand.RESET_MEMBER_STATS,     String.class,   OptionType.MENTIONABLE,     "member",        true),
-    SET_AUDIO_TEXT_CHANNEL_TAG      (1, BotCommand.SET_AUDIO_CHANNEL,      String.class,   OptionType.CHANNEL,         "text-channel",  false);
+    TRACK_LINK_NAME_ARG             (1, BotCommand.PLAY_TRACK,                  String.class,   OptionType.STRING,          "track",         true),
+    COUNT_OF_REPEATS                (1, BotCommand.REPEAT_TRACK,                Integer.class,  OptionType.STRING,          "count",         true),
+    VOLUME_POINTS                   (1, BotCommand.SET_PLAYER_VOLUME,           Integer.class,  OptionType.INTEGER,         "points",        true),
+    REMOVE_TRACK_MEMBER_TAG         (1, BotCommand.REMOVE_MEMBER_TRACKS,        String.class,   OptionType.MENTIONABLE,     "member",        true),
+    SKIP_TRACK_POSITION             (1, BotCommand.SKIP_TO_TRACK,               Integer.class,  OptionType.INTEGER,         "pos",           true),
+    VOTE_SKIP_TRACK_POSITION        (1, BotCommand.VOTE_SKIP_TO_TRACK,          Integer.class,  OptionType.INTEGER,         "pos",           true),
+    MOVE_TRACK_POSITION_FROM        (1, BotCommand.MOVE_TRACK,                  Integer.class,  OptionType.INTEGER,         "frompos",       true),
+    MOVE_TRACK_POSITION_TO          (2, BotCommand.MOVE_TRACK,                  Integer.class,  OptionType.INTEGER,         "topos",         true),
+    MEMBER_STATS_MEMBER_TAG         (1, BotCommand.MEMBER_STATS,                String.class,   OptionType.MENTIONABLE,     "member",        true),
+    RESET_MEMBER_STATS_MEMBER_TAG   (1, BotCommand.RESET_MEMBER_STATS,          String.class,   OptionType.MENTIONABLE,     "member",        true),
+
+    SET_AUDIO_TEXT_CHANNEL_TAG      (1, BotCommand.SET_AUDIO_CHANNEL,           String.class,   OptionType.CHANNEL,         "text-channel",  false),
+    SET_DJ_ROLE_NAME_TAG            (1, BotCommand.SET_DJ_ROLE_NAME,            String.class,   OptionType.STRING,          "role-name",     false),
+    SET_I18N_LOCALE_TAG             (1, BotCommand.SET_I18N_LOCALE,             String.class,   OptionType.STRING,          "lang-code",     false),
+    SET_TRACK_REPEATS_TAG           (1, BotCommand.SET_TRACK_REPEATS,           Integer.class,  OptionType.INTEGER,         "repeats",       false),
+    SET_DEF_VOLUME_TAG              (1, BotCommand.SET_DEF_VOLUME,              Integer.class,  OptionType.INTEGER,         "volume",        false),
+    SET_SKIP_RATIO_TAG              (1, BotCommand.SET_SKIP_RATIO,              Integer.class,  OptionType.INTEGER,         "ratio",         false),
+    SET_TIME_VOTING_TAG             (1, BotCommand.SET_TIME_VOTING,             Integer.class,  OptionType.INTEGER,         "seconds",       false),
+    SET_TIME_LEAVE_EMPTY_TAG        (1, BotCommand.SET_TIME_LEAVE_EMPTY,        Integer.class,  OptionType.INTEGER,         "seconds",       false),
+    SET_TIME_LEAVE_NO_TRACKS_TAG    (1, BotCommand.SET_TIME_LEAVE_NO_TRACKS,    Integer.class,  OptionType.INTEGER,         "seconds",       false);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -48,13 +48,13 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
 
     @Column(name = "audio_text_channel_id")             private String audioTextChannelId;
     @Column(name = "skip_ratio")                        private Integer skipRatio;
-    @Column(name = "slash_enabled")                     private Boolean slashEnabled;
-    @Column(name = "time_to_leave_channel")             private Integer timeToLeaveChannel;
+    @Column(name = "time_to_leave_empty_channel")       private Integer timeToLeaveEmptyChannel;
+    @Column(name = "time_to_leave_no_tracks_channel")   private Integer timeToLeaveNoTracksChannel;
     @Column(name = "time_to_end_voting")                private Integer timeToEndVoting;
     @Column(name = "player_volume")                     private Integer playerVolume;
     @Column(name = "max_repeats_single_track")          private Integer maxRepeatsSingleTrack;
-    @Column(name = "dj_role_name")                      private Integer djRoleName;
-    @Column(name = "i18n_locale")                       private Integer i18nLocale;
+    @Column(name = "dj_role_name")                      private String djRoleName;
+    @Column(name = "i18n_locale")                       private String i18nLocale;
 
     @OneToOne(cascade = { PERSIST, MERGE, REMOVE }, fetch = LAZY)
     @JoinColumn(name = "guild_id", referencedColumnName = "id")
@@ -74,7 +74,7 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
         return skipRatio;
     }
 
-    void setSkipRatio(Integer skipRatio) {
+    public void setSkipRatio(Integer skipRatio) {
         this.skipRatio = skipRatio;
     }
 
@@ -82,23 +82,23 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
         return timeToLeaveEmptyChannel;
     }
 
-    void setSlashEnabled(Boolean slashEnabled) {
-        this.slashEnabled = slashEnabled;
+    public void setTimeToLeaveEmptyChannel(Integer timeToLeaveEmptyChannel) {
+        this.timeToLeaveEmptyChannel = timeToLeaveEmptyChannel;
     }
 
     public Integer getTimeToLeaveNoTracksChannel() {
         return timeToLeaveNoTracksChannel;
     }
 
-    void setTimeToLeaveChannel(Integer timeToLeaveChannel) {
-        this.timeToLeaveChannel = timeToLeaveChannel;
+    public void setTimeToLeaveNoTracksChannel(Integer timeToLeaveNoTracksChannel) {
+        this.timeToLeaveNoTracksChannel = timeToLeaveNoTracksChannel;
     }
 
     public Integer getTimeToEndVoting() {
         return timeToEndVoting;
     }
 
-    void setTimeToEndVoting(Integer timeToEndVoting) {
+    public void setTimeToEndVoting(Integer timeToEndVoting) {
         this.timeToEndVoting = timeToEndVoting;
     }
 
@@ -106,7 +106,7 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
         return playerVolume;
     }
 
-    void setPlayerVolume(Integer playerVolume) {
+    public void setPlayerVolume(Integer playerVolume) {
         this.playerVolume = playerVolume;
     }
 
@@ -114,7 +114,7 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
         return maxRepeatsSingleTrack;
     }
 
-    void setMaxRepeatsSingleTrack(Integer maxRepeatsSingleTrack) {
+    public void setMaxRepeatsSingleTrack(Integer maxRepeatsSingleTrack) {
         this.maxRepeatsSingleTrack = maxRepeatsSingleTrack;
     }
 
@@ -122,7 +122,7 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
         return djRoleName;
     }
 
-    void setDjRoleName(Integer djRoleName) {
+    public void setDjRoleName(String djRoleName) {
         this.djRoleName = djRoleName;
     }
 
@@ -130,7 +130,7 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
         return i18nLocale;
     }
 
-    void setI18nLocale(Integer i18nLocale) {
+    public void setI18nLocale(String i18nLocale) {
         this.i18nLocale = i18nLocale;
     }
 
@@ -149,8 +149,8 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
         return "{" +
             "audioTextChannelId=" + audioTextChannelId +
             ", skipRatio=" + skipRatio +
-            ", slashEnabled=" + slashEnabled +
-            ", timeToLeaveChannel=" + timeToLeaveChannel +
+            ", timeToLeaveEmptyChannel=" + timeToLeaveEmptyChannel +
+            ", timeToLeaveNoTracksChannel=" + timeToLeaveNoTracksChannel +
             ", timeToEndVoting=" + timeToEndVoting +
             ", playerVolume=" + playerVolume +
             ", maxRepeatsSingleTrack=" + maxRepeatsSingleTrack +

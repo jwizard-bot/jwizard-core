@@ -31,6 +31,9 @@ import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
+import net.dv8tion.jda.api.entities.Guild;
+import org.apache.commons.lang3.StringUtils;
+
 import pl.miloszgilga.misc.CommandCategory;
 import pl.miloszgilga.misc.CommandWithArgsCount;
 import pl.miloszgilga.locale.CommandLocaleSet;
@@ -51,7 +54,16 @@ public enum BotCommand {
     HELP                        ("help",        true, new String[]{ "h", "hl" },      OTHERS, HELP_COMMAND_DESC),
     HELP_ME                     ("helpme",      true, new String[]{ "hm", "hlm" },    OTHERS, HELPME_COMMAND_DESC),
     DEBUG                       ("debug",       true, new String[]{ "db", "dbg" },    OTHERS, DEBUG_COMMAND_DESC),
+
     SET_AUDIO_CHANNEL           ("setaudiochn", true, new String[]{ "sadch" },        OTHERS, SET_AUDIO_CHANNEL_COMMAND_DESC,             OPTIONAL_CHANNEL_ID_ARG_SYNTAX),
+    SET_DJ_ROLE_NAME            ("setdjrole",   true, new String[]{ "sdjr" },         OTHERS, SET_DJ_ROLE_NAME_COMMAND_DESC,              OPTIONAL_DJ_ROLE_NAME_ARG_SYNTAX),
+    SET_I18N_LOCALE             ("setlang",     true, new String[]{ "slng" },         OTHERS, SET_I18N_LOCALE_COMMAND_DESC,               OPTIONAL_I18N_LOCALE_ARG_SYNTAX),
+    SET_TRACK_REPEATS           ("settrackrep", true, new String[]{ "strrep" },       OTHERS, SET_TRACK_REPEATS_COMMAND_DESC,             OPTIONAL_TRACK_REPEATS_ARG_SYNTAX),
+    SET_DEF_VOLUME              ("setdefvol",   true, new String[]{ "sdfv" },         OTHERS, SET_DEF_VOLUME_COMMAND_DESC,                OPTIONAL_DEFAULT_VOLUME_ARG_SYNTAX),
+    SET_SKIP_RATIO              ("setskratio",  true, new String[]{ "ssrt" },         OTHERS, SET_SKIP_RATIO_COMMAND_DESC,                OPTIONAL_SKIP_RATIO_ARG_SYNTAX),
+    SET_TIME_VOTING             ("settimevot",  true, new String[]{ "stev" },         OTHERS, SET_TIME_VOTING_COMMAND_DESC,               OPTIONAL_TIME_VOTING_ARG_SYNTAX),
+    SET_TIME_LEAVE_EMPTY        ("settleavem",  true, new String[]{ "stlech" },       OTHERS, SET_TIME_LEAVE_EMPTY_COMMAND_DESC,          OPTIONAL_TIME_LEAVE_EMPTY_ARG_SYNTAX),
+    SET_TIME_LEAVE_NO_TRACKS    ("settleavetr", true, new String[]{ "stlntch" },      OTHERS, SET_TIME_LEAVE_TO_TRACKS_COMMAND_DESC,      OPTIONAL_TIME_LEAVE_NO_TRACKS_ARG_SYNTAX),
 
     PLAY_TRACK                  ("play",        true, new String[]{ "p", "pl" },      MUSIC,  PLAY_TRACK_COMMAND_DESC,                    PLAY_TRACK_ARG_SYNTAX),
     PAUSE_TRACK                 ("pause",       true, new String[]{ "ps" },           MUSIC,  PAUSE_TRACK_COMMAND_DESC),

@@ -44,7 +44,6 @@ public enum BugTracker {
     UNAUTHORIZED_OWNER                                      (7),
     USER_NOT_FOUND_IN_GUILD                                 (8),
     USER_ID_ALREADY_WITH_BOT                                (9),
-    CHANNEL_IS_NOT_TEXT_CHANNEL                             (10),
 
     // music player
     ACTIVE_MUSIC_PLAYING_NOT_FOUND                          (100),
@@ -77,19 +76,29 @@ public enum BugTracker {
     MEMBER_HAS_STATS_DISABLED                               (208),
     MEMBER_HAS_STATS_PRIVATE                                (209),
 
+    // settings
+    CHANNEL_IS_NOT_TEXT_CHANNEL                             (300),
+    ROLE_ALREADY_EXIST                                      (301),
+    LOCALE_NOT_EXIST                                        (302),
+    MAX_REPEATS_OUT_OF_BOUNDS                               (303),
+    PERCENTAGE_OUT_OF_BOUNDS                                (304),
+    TIME_TO_END_VOTING_OUT_OF_BOUNDS                        (305),
+    TIME_TO_LEAVE_EMPTY_OUT_OF_BOUNDS                       (306),
+    TIME_TO_LEAVE_NO_TRACKS_OUT_OF_BOUNDS                   (307),
+
     // modules
-    STATS_MODULE_IS_ALREADY_RUNNING                         (300),
-    STATS_MODULE_IS_ALREADY_DISABLED                        (301),
-    MUSIC_MODULE_IS_ALREADY_RUNNING                         (302),
-    MUSIC_MODULE_IS_ALREADY_DISABLED                        (303),
-    PLAYLISTS_MODULE_IS_ALREADY_RUNNING                     (304),
-    PLAYLISTS_MODULE_IS_ALREADY_DISABLED                    (305),
-    VOTING_MODULE_IS_ALREADY_RUNNING                        (306),
-    VOTING_MODULE_IS_ALREADY_DISABLED                       (307),
-    STATS_MODULE_IS_TURNED_OFF                              (308),
-    MUSIC_MODULE_IS_TURNED_OFF                              (309),
-    PLAYLISTS_MODULE_IS_TURNED_OFF                          (310),
-    VOTING_MODULE_IS_TURNED_OFF                             (311);
+    STATS_MODULE_IS_ALREADY_RUNNING                         (400),
+    STATS_MODULE_IS_ALREADY_DISABLED                        (401),
+    MUSIC_MODULE_IS_ALREADY_RUNNING                         (402),
+    MUSIC_MODULE_IS_ALREADY_DISABLED                        (403),
+    PLAYLISTS_MODULE_IS_ALREADY_RUNNING                     (404),
+    PLAYLISTS_MODULE_IS_ALREADY_DISABLED                    (405),
+    VOTING_MODULE_IS_ALREADY_RUNNING                        (406),
+    VOTING_MODULE_IS_ALREADY_DISABLED                       (407),
+    STATS_MODULE_IS_TURNED_OFF                              (408),
+    MUSIC_MODULE_IS_TURNED_OFF                              (409),
+    PLAYLISTS_MODULE_IS_TURNED_OFF                          (410),
+    VOTING_MODULE_IS_TURNED_OFF                             (411);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: SetAudioTextChannelCmd.java
- * Last modified: 15/05/2023, 14:27
+ * File name: SetTimeToLeaveChannelCmd.java
+ * Last modified: 16/05/2023, 10:09
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -26,13 +26,10 @@ package pl.miloszgilga.command.guild_settings;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.Map;
 import java.util.Objects;
-import org.apache.commons.lang3.StringUtils;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.BotCommandArgument;
@@ -43,57 +40,59 @@ import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.cacheable.CacheableGuildSettingsDao;
 import pl.miloszgilga.command.AbstractGuildSettingsCommand;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
 import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
 import pl.miloszgilga.domain.guild_settings.IGuildSettingsRepository;
 
-import static pl.miloszgilga.exception.SettingsException.ChannelIsNotTextChannelException;
+import static pl.miloszgilga.exception.SettingsException.TimeToLeaveEmptyChannelOutOfBoundsException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Slf4j
 @JDAInjectableCommandLazyService
-public class SetAudioTextChannelCmd extends AbstractGuildSettingsCommand {
+public class SetTimeToLeaveEmptyChannelCmd extends AbstractGuildSettingsCommand {
 
-    SetAudioTextChannelCmd(
+    SetTimeToLeaveEmptyChannelCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler,
         IGuildSettingsRepository repository, CacheableGuildSettingsDao cacheableGuildSettingsDao
     ) {
-        super(BotCommand.SET_AUDIO_CHANNEL, config, embedBuilder, handler, repository, cacheableGuildSettingsDao);
+        super(BotCommand.SET_TIME_LEAVE_EMPTY, config, embedBuilder, handler, repository, cacheableGuildSettingsDao);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void doExecuteGuildSettingsCommand(CommandEventWrapper event) {
-        final String channel = event.getArgumentAndParse(BotCommandArgument.SET_AUDIO_TEXT_CHANNEL_TAG);
+        final Integer timeToLeave = event.getArgumentAndParse(BotCommandArgument.SET_TIME_LEAVE_EMPTY_TAG);
+
+        final int defTimeToLeave = config.getProperty(BotProperty.J_INACTIVITY_EMPTY_TIMEOUT, Integer.class);
+        final int maxTimeToLeave = config.getProperty(BotProperty.J_MAX_INACTIVITY_EMPTY_TIME, Integer.class);
 
         GuildSettingsEntity settingsToSave;
         MessageEmbed messageEmbed;
 
-        if (Objects.isNull(channel) || channel.equals(StringUtils.EMPTY)) { // reset
+        if (Objects.isNull(timeToLeave)) { // reset
             settingsToSave = cacheableGuildSettingsDao.setCacheableProperty(event,
-                guildSettings -> guildSettings.setAudioTextChannelId(null));
-            messageEmbed = embedBuilder.createMessage(ResLocaleSet.AUDIO_CHANNEL_WAS_RESET_MESS, Map.of(
-                "setTextChannelCmd", BotCommand.SET_AUDIO_CHANNEL.parseWithPrefix(config)
+                guildSettings -> guildSettings.setTimeToLeaveEmptyChannel(null));
+            messageEmbed = embedBuilder.createMessage(ResLocaleSet.TIME_TO_LEAVE_EMPTY_CHANNEL_WAS_RESET_MESS, Map.of(
+                "setTimeLeaveEmptyCmd", BotCommand.SET_TIME_LEAVE_EMPTY.parseWithPrefix(config)
             ), event.getGuild());
-            JDALog.info(log, event, "Text channel for song request module was successfully reset");
+            JDALog.info(log, event, "Time after leave empty channel was successfully reset to '%s' (default value)",
+                defTimeToLeave);
         } else {
-            final String filtered = channel.replaceAll("\\D", StringUtils.EMPTY);
-            final TextChannel textChannel = event.getGuild().getTextChannelById(filtered);
-            if (Objects.isNull(textChannel) || !textChannel.getType().equals(ChannelType.TEXT)) {
-                throw new ChannelIsNotTextChannelException(config, event);
+            if (timeToLeave < 5 || timeToLeave > maxTimeToLeave) {
+                throw new TimeToLeaveEmptyChannelOutOfBoundsException(config, event);
             }
             settingsToSave = cacheableGuildSettingsDao.setCacheableProperty(event,
-                guildSettings -> guildSettings.setAudioTextChannelId(filtered));
-            messageEmbed = embedBuilder.createMessage(ResLocaleSet.AUDIO_CHANNEL_WAS_SETTED_MESS, Map.of(
-                "channelName", textChannel.getName(),
-                "setTextChannelCmd", BotCommand.SET_AUDIO_CHANNEL.parseWithPrefix(config)
+                guildSettings -> guildSettings.setTimeToLeaveEmptyChannel(timeToLeave));
+            messageEmbed = embedBuilder.createMessage(ResLocaleSet.TIME_TO_LEAVE_EMPTY_CHANNEL_WAS_SETTED_MESS, Map.of(
+                "timeToLeave", timeToLeave,
+                "setTimeLeaveEmptyCmd", BotCommand.SET_TIME_LEAVE_EMPTY.parseWithPrefix(config)
             ), event.getGuild());
-            JDALog.info(log, event, "Text channel for song request module was successfully setted: '%s'",
-                textChannel.getName());
+            JDALog.info(log, event, "Time after leave empty channel was successfully setted to '%s'", timeToLeave);
         }
         repository.save(settingsToSave);
         event.sendEmbedMessage(messageEmbed);

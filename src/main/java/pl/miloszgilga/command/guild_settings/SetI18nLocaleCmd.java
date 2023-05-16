@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: SetAudioTextChannelCmd.java
- * Last modified: 15/05/2023, 14:27
+ * File name: SetI18nLocaleCmd.java
+ * Last modified: 16/05/2023, 10:10
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -26,12 +26,12 @@ package pl.miloszgilga.command.guild_settings;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.Map;
+import java.util.List;
 import java.util.Objects;
+
 import org.apache.commons.lang3.StringUtils;
 
 import pl.miloszgilga.BotCommand;
@@ -43,57 +43,58 @@ import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.cacheable.CacheableGuildSettingsDao;
 import pl.miloszgilga.command.AbstractGuildSettingsCommand;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
 import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
 import pl.miloszgilga.domain.guild_settings.IGuildSettingsRepository;
 
-import static pl.miloszgilga.exception.SettingsException.ChannelIsNotTextChannelException;
+import static pl.miloszgilga.exception.SettingsException.LocaleNotFoundException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Slf4j
 @JDAInjectableCommandLazyService
-public class SetAudioTextChannelCmd extends AbstractGuildSettingsCommand {
+public class SetI18nLocaleCmd extends AbstractGuildSettingsCommand {
 
-    SetAudioTextChannelCmd(
+    SetI18nLocaleCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler,
         IGuildSettingsRepository repository, CacheableGuildSettingsDao cacheableGuildSettingsDao
     ) {
-        super(BotCommand.SET_AUDIO_CHANNEL, config, embedBuilder, handler, repository, cacheableGuildSettingsDao);
+        super(BotCommand.SET_I18N_LOCALE, config, embedBuilder, handler, repository, cacheableGuildSettingsDao);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void doExecuteGuildSettingsCommand(CommandEventWrapper event) {
-        final String channel = event.getArgumentAndParse(BotCommandArgument.SET_AUDIO_TEXT_CHANNEL_TAG);
+        final String i18locale = event.getArgumentAndParse(BotCommandArgument.SET_I18N_LOCALE_TAG);
+        final String defLocale = config.getProperty(BotProperty.J_SELECTED_LOCALE);
+        final String availableLocales = config.getProperty(BotProperty.J_AVAILABLE_LOCALES);
 
         GuildSettingsEntity settingsToSave;
         MessageEmbed messageEmbed;
 
-        if (Objects.isNull(channel) || channel.equals(StringUtils.EMPTY)) { // reset
+        if (Objects.isNull(i18locale) || i18locale.equals(StringUtils.EMPTY)) { // reset
             settingsToSave = cacheableGuildSettingsDao.setCacheableProperty(event,
-                guildSettings -> guildSettings.setAudioTextChannelId(null));
-            messageEmbed = embedBuilder.createMessage(ResLocaleSet.AUDIO_CHANNEL_WAS_RESET_MESS, Map.of(
-                "setTextChannelCmd", BotCommand.SET_AUDIO_CHANNEL.parseWithPrefix(config)
+                guildSettings -> guildSettings.setI18nLocale(null));
+            messageEmbed = embedBuilder.createMessage(ResLocaleSet.I18N_LOCALE_WAS_RESET_MESS, Map.of(
+                "setI18nLocaleCmd", BotCommand.SET_I18N_LOCALE.parseWithPrefix(config)
             ), event.getGuild());
-            JDALog.info(log, event, "Text channel for song request module was successfully reset");
+            JDALog.info(log, event, "i18n locale was successfully reset to '%s' (default value)", defLocale);
         } else {
-            final String filtered = channel.replaceAll("\\D", StringUtils.EMPTY);
-            final TextChannel textChannel = event.getGuild().getTextChannelById(filtered);
-            if (Objects.isNull(textChannel) || !textChannel.getType().equals(ChannelType.TEXT)) {
-                throw new ChannelIsNotTextChannelException(config, event);
+            final List<String> avLocales = List.of(availableLocales.split(","));
+            if (avLocales.stream().noneMatch(l -> l.equals(i18locale))) {
+                throw new LocaleNotFoundException(config, event);
             }
             settingsToSave = cacheableGuildSettingsDao.setCacheableProperty(event,
-                guildSettings -> guildSettings.setAudioTextChannelId(filtered));
-            messageEmbed = embedBuilder.createMessage(ResLocaleSet.AUDIO_CHANNEL_WAS_SETTED_MESS, Map.of(
-                "channelName", textChannel.getName(),
-                "setTextChannelCmd", BotCommand.SET_AUDIO_CHANNEL.parseWithPrefix(config)
+                guildSettings -> guildSettings.setI18nLocale(i18locale));
+            messageEmbed = embedBuilder.createMessage(ResLocaleSet.I18N_LOCALE_WAS_SETTED_MESS, Map.of(
+                "i18nLocale", i18locale,
+                "setI18nLocaleCmd", BotCommand.SET_I18N_LOCALE.parseWithPrefix(config)
             ), event.getGuild());
-            JDALog.info(log, event, "Text channel for song request module was successfully setted: '%s'",
-                textChannel.getName());
+            JDALog.info(log, event, "i18n locale was successfully setted to '%s'", i18locale);
         }
         repository.save(settingsToSave);
         event.sendEmbedMessage(messageEmbed);

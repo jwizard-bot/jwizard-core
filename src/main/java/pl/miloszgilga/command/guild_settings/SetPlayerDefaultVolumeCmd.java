@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: SetAudioTextChannelCmd.java
- * Last modified: 15/05/2023, 14:27
+ * File name: SetPlayerDefaultVolumeCmd.java
+ * Last modified: 16/05/2023, 10:10
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -26,13 +26,10 @@ package pl.miloszgilga.command.guild_settings;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.Map;
 import java.util.Objects;
-import org.apache.commons.lang3.StringUtils;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.BotCommandArgument;
@@ -43,57 +40,56 @@ import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.cacheable.CacheableGuildSettingsDao;
 import pl.miloszgilga.command.AbstractGuildSettingsCommand;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
 import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
 import pl.miloszgilga.domain.guild_settings.IGuildSettingsRepository;
 
-import static pl.miloszgilga.exception.SettingsException.ChannelIsNotTextChannelException;
+import static pl.miloszgilga.exception.AudioPlayerException.VolumeUnitsOutOfBoundsException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Slf4j
 @JDAInjectableCommandLazyService
-public class SetAudioTextChannelCmd extends AbstractGuildSettingsCommand {
+public class SetPlayerDefaultVolumeCmd extends AbstractGuildSettingsCommand {
 
-    SetAudioTextChannelCmd(
+    SetPlayerDefaultVolumeCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler,
         IGuildSettingsRepository repository, CacheableGuildSettingsDao cacheableGuildSettingsDao
     ) {
-        super(BotCommand.SET_AUDIO_CHANNEL, config, embedBuilder, handler, repository, cacheableGuildSettingsDao);
+        super(BotCommand.SET_DEF_VOLUME, config, embedBuilder, handler, repository, cacheableGuildSettingsDao);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void doExecuteGuildSettingsCommand(CommandEventWrapper event) {
-        final String channel = event.getArgumentAndParse(BotCommandArgument.SET_AUDIO_TEXT_CHANNEL_TAG);
+        final Integer defaultVolume = event.getArgumentAndParse(BotCommandArgument.SET_DEF_VOLUME_TAG);
+        final int defPlayerVolume = config.getProperty(BotProperty.J_DEFAULT_PLAYER_VOLUME_UNITS, Integer.class);
 
         GuildSettingsEntity settingsToSave;
         MessageEmbed messageEmbed;
 
-        if (Objects.isNull(channel) || channel.equals(StringUtils.EMPTY)) { // reset
+        if (Objects.isNull(defaultVolume)) { // reset
             settingsToSave = cacheableGuildSettingsDao.setCacheableProperty(event,
-                guildSettings -> guildSettings.setAudioTextChannelId(null));
-            messageEmbed = embedBuilder.createMessage(ResLocaleSet.AUDIO_CHANNEL_WAS_RESET_MESS, Map.of(
-                "setTextChannelCmd", BotCommand.SET_AUDIO_CHANNEL.parseWithPrefix(config)
+                guildSettings -> guildSettings.setPlayerVolume(null));
+            messageEmbed = embedBuilder.createMessage(ResLocaleSet.PLAYER_DEFAULT_VOLUME_WAS_RESET_MESS, Map.of(
+                "setDefVolumeCmd", BotCommand.SET_DEF_VOLUME.parseWithPrefix(config)
             ), event.getGuild());
-            JDALog.info(log, event, "Text channel for song request module was successfully reset");
+            JDALog.info(log, event, "Player volume was successfully reset to '%s' (default value)", defPlayerVolume);
         } else {
-            final String filtered = channel.replaceAll("\\D", StringUtils.EMPTY);
-            final TextChannel textChannel = event.getGuild().getTextChannelById(filtered);
-            if (Objects.isNull(textChannel) || !textChannel.getType().equals(ChannelType.TEXT)) {
-                throw new ChannelIsNotTextChannelException(config, event);
+            if (defaultVolume > 150 || defaultVolume < 0) {
+                throw new VolumeUnitsOutOfBoundsException(config, event);
             }
             settingsToSave = cacheableGuildSettingsDao.setCacheableProperty(event,
-                guildSettings -> guildSettings.setAudioTextChannelId(filtered));
-            messageEmbed = embedBuilder.createMessage(ResLocaleSet.AUDIO_CHANNEL_WAS_SETTED_MESS, Map.of(
-                "channelName", textChannel.getName(),
-                "setTextChannelCmd", BotCommand.SET_AUDIO_CHANNEL.parseWithPrefix(config)
+                guildSettings -> guildSettings.setPlayerVolume(defaultVolume));
+            messageEmbed = embedBuilder.createMessage(ResLocaleSet.PLAYER_DEFAULT_VOLUME_WAS_SETTED_MESS, Map.of(
+                "defVolume", defaultVolume,
+                "setDefVolumeCmd", BotCommand.SET_DEF_VOLUME.parseWithPrefix(config)
             ), event.getGuild());
-            JDALog.info(log, event, "Text channel for song request module was successfully setted: '%s'",
-                textChannel.getName());
+            JDALog.info(log, event, "Player volume was successfully setted to '%s'", defaultVolume);
         }
         repository.save(settingsToSave);
         event.sendEmbedMessage(messageEmbed);

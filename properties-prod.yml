@@ -48,10 +48,13 @@ bot:
         application-id: ${env:PROD_APP_ID}
     timeout:
         inactivity:
-            max-time-after-leave-empty-channel: 180
-            max-time-after-leave-no-track-channel: 180
+            time-after-leave-empty-channel: 180
+            time-after-leave-no-track-channel: 180
+            max-time-after-leave-empty-channel: 600
+            max-time-after-leave-no-track-channel: 600
     voting:
-        max-elapsed-time-after-finish: 180
+        elapsed-time-after-finish: 180
+        max-elapsed-time-after-finish: 600
         percentage-ratio: 50
     audio:
         max-repeats-single-track: 30
@@ -60,6 +63,7 @@ bot:
         dj-role-name: 'DJwizard'
         locale:
             selected-locale: pl
+            available-locales: en_us,pl
         round-robin-activity:
             enable-sequencer: true
             sequencer-inverval-seconds: 6

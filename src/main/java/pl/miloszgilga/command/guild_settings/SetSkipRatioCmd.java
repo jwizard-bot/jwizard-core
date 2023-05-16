@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: SetAudioTextChannelCmd.java
- * Last modified: 15/05/2023, 14:27
+ * File name: SetSkipRatioCmd.java
+ * Last modified: 16/05/2023, 10:09
  * Project name: jwizard-discord-bot
  *
  * Licensed under the MIT license; you may not use this file except in compliance with the License.
@@ -26,18 +26,16 @@ package pl.miloszgilga.command.guild_settings;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.Map;
 import java.util.Objects;
-import org.apache.commons.lang3.StringUtils;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.BotCommandArgument;
 import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.locale.ResLocaleSet;
+import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.cacheable.CacheableGuildSettingsDao;
@@ -49,51 +47,49 @@ import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
 import pl.miloszgilga.domain.guild_settings.IGuildSettingsRepository;
 
-import static pl.miloszgilga.exception.SettingsException.ChannelIsNotTextChannelException;
+import static pl.miloszgilga.exception.SettingsException.PercentageOutOfBoundsException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Slf4j
 @JDAInjectableCommandLazyService
-public class SetAudioTextChannelCmd extends AbstractGuildSettingsCommand {
+public class SetSkipRatioCmd extends AbstractGuildSettingsCommand {
 
-    SetAudioTextChannelCmd(
+    SetSkipRatioCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler,
         IGuildSettingsRepository repository, CacheableGuildSettingsDao cacheableGuildSettingsDao
     ) {
-        super(BotCommand.SET_AUDIO_CHANNEL, config, embedBuilder, handler, repository, cacheableGuildSettingsDao);
+        super(BotCommand.SET_SKIP_RATIO, config, embedBuilder, handler, repository, cacheableGuildSettingsDao);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     protected void doExecuteGuildSettingsCommand(CommandEventWrapper event) {
-        final String channel = event.getArgumentAndParse(BotCommandArgument.SET_AUDIO_TEXT_CHANNEL_TAG);
+        final Integer skipRatio = event.getArgumentAndParse(BotCommandArgument.SET_SKIP_RATIO_TAG);
+        final int defSkipRatio = config.getProperty(BotProperty.J_VOTING_PERCENTAGE_RATIO, Integer.class);
 
         GuildSettingsEntity settingsToSave;
         MessageEmbed messageEmbed;
 
-        if (Objects.isNull(channel) || channel.equals(StringUtils.EMPTY)) { // reset
+        if (Objects.isNull(skipRatio)) { // reset
             settingsToSave = cacheableGuildSettingsDao.setCacheableProperty(event,
-                guildSettings -> guildSettings.setAudioTextChannelId(null));
-            messageEmbed = embedBuilder.createMessage(ResLocaleSet.AUDIO_CHANNEL_WAS_RESET_MESS, Map.of(
-                "setTextChannelCmd", BotCommand.SET_AUDIO_CHANNEL.parseWithPrefix(config)
+                guildSettings -> guildSettings.setSkipRatio(null));
+            messageEmbed = embedBuilder.createMessage(ResLocaleSet.SKIP_RATIO_WAS_RESET_MESS, Map.of(
+                "setSkipRatioCmd", BotCommand.SET_SKIP_RATIO.parseWithPrefix(config)
             ), event.getGuild());
-            JDALog.info(log, event, "Text channel for song request module was successfully reset");
+            JDALog.info(log, event, "Skip ratio was successfully reset to '%s' (default value)", defSkipRatio);
         } else {
-            final String filtered = channel.replaceAll("\\D", StringUtils.EMPTY);
-            final TextChannel textChannel = event.getGuild().getTextChannelById(filtered);
-            if (Objects.isNull(textChannel) || !textChannel.getType().equals(ChannelType.TEXT)) {
-                throw new ChannelIsNotTextChannelException(config, event);
+            if (skipRatio < 1 || skipRatio > 100) {
+                throw new PercentageOutOfBoundsException(config, event);
             }
             settingsToSave = cacheableGuildSettingsDao.setCacheableProperty(event,
-                guildSettings -> guildSettings.setAudioTextChannelId(filtered));
-            messageEmbed = embedBuilder.createMessage(ResLocaleSet.AUDIO_CHANNEL_WAS_SETTED_MESS, Map.of(
-                "channelName", textChannel.getName(),
-                "setTextChannelCmd", BotCommand.SET_AUDIO_CHANNEL.parseWithPrefix(config)
+                guildSettings -> guildSettings.setSkipRatio(skipRatio));
+            messageEmbed = embedBuilder.createMessage(ResLocaleSet.SKIP_RATIO_WAS_SETTED_MESS, Map.of(
+                "skipRatio", skipRatio,
+                "setSkipRatioCmd", BotCommand.SET_SKIP_RATIO.parseWithPrefix(config)
             ), event.getGuild());
-            JDALog.info(log, event, "Text channel for song request module was successfully setted: '%s'",
-                textChannel.getName());
+            JDALog.info(log, event, "Skip ratio was successfully setted to '%s'", skipRatio);
         }
         repository.save(settingsToSave);
         event.sendEmbedMessage(messageEmbed);
