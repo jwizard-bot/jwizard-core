@@ -157,14 +157,14 @@ public enum BotCommand {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static List<String> getCommandsAsEmbedContent(BotConfiguration config) {
+    public static List<String> getCommandsAsEmbedContent(BotConfiguration config, Guild guild) {
         final List<String> commands = new ArrayList<>();
         final String prefix = config.getProperty(BotProperty.J_PREFIX);
 
         for (final CommandCategory commandCategory : CommandCategory.values()) {
             if (Arrays.stream(values()).noneMatch(v -> v.category.equals(commandCategory))) continue;
 
-            commands.add(String.format("**%s**\n", commandCategory.getHolder(config)).toUpperCase());
+            commands.add(String.format("**%s**\n", commandCategory.getHolder(config, guild)).toUpperCase());
             for (final BotCommand command : values()) {
                 if (!command.category.equals(commandCategory)) continue;
 
@@ -176,10 +176,10 @@ public enum BotCommand {
                 builder.append(prefix);
                 builder.append(String.format("%s [%s]", command.name, commandAliases));
                 if (!Objects.isNull(command.argSyntax)) {
-                    builder.append(String.format(" %s", config.getLocaleText(command.argSyntax)));
+                    builder.append(String.format(" %s", config.getLocaleText(command.argSyntax, guild)));
                 }
                 builder.append("`\n");
-                builder.append(config.getLocaleText(command.descriptionLocaleSet));
+                builder.append(config.getLocaleText(command.descriptionLocaleSet, guild));
                 builder.append('\n');
                 commands.add(builder.toString());
             }

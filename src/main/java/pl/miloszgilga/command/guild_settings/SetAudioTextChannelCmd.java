@@ -77,7 +77,7 @@ public class SetAudioTextChannelCmd extends AbstractGuildSettingsCommand {
             settingsToSave = cacheableGuildSettingsDao.setMusicBotTextChannel(event, null);
             messageEmbed = embedBuilder.createMessage(ResLocaleSet.AUDIO_CHANNEL_WAS_RESET_MESS, Map.of(
                 "setTextChannelCmd", BotCommand.SET_AUDIO_CHANNEL.parseWithPrefix(config)
-            ));
+            ), event.getGuild());
             JDALog.info(log, event, "Text channel for song request module was successfully reset");
         } else {
             final String filtered = channel.replaceAll("\\D", StringUtils.EMPTY);
@@ -89,7 +89,7 @@ public class SetAudioTextChannelCmd extends AbstractGuildSettingsCommand {
             messageEmbed = embedBuilder.createMessage(ResLocaleSet.AUDIO_CHANNEL_WAS_SETTED_MESS, Map.of(
                 "channelName", textChannel.getName(),
                 "setTextChannelCmd", BotCommand.SET_AUDIO_CHANNEL.parseWithPrefix(config)
-            ));
+            ), event.getGuild());
             JDALog.info(log, event, "Text channel for song request module was successfully setted: '%s'",
                 textChannel.getName());
         }

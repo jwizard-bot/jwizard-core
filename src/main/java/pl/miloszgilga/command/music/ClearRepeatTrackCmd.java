@@ -64,7 +64,7 @@ public class ClearRepeatTrackCmd extends AbstractMusicCommand {
             .createMessage(ResLocaleSet.REMOVE_MULTIPLE_REPEATING_TRACK_MESS, Map.of(
                 "track", Utilities.getRichTrackTitle(trackInfo),
                 "repeatingCmd", BotCommand.REPEAT_TRACK.parseWithPrefix(config)
-            ));
+            ), event.getGuild());
         event.appendEmbedMessage(messageEmbed);
     }
 }

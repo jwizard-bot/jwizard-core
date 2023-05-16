@@ -70,11 +70,11 @@ public class StopClearQueueCmd extends AbstractDjCommand {
         if (!Objects.isNull(currentTrack)) {
             messageEmbed = embedBuilder.createMessage(ResLocaleSet.SKIPPED_CURRENT_TRACK_AND_CLEAR_QUEUE_MESS, Map.of(
                 "currentTrack", Utilities.getRichTrackTitle(currentTrack)
-            ));
+            ), event.getGuild());
         } else {
             messageEmbed = embedBuilder.createMessage(ResLocaleSet.CLEAR_QUEUE_MESS, Map.of(
                 "countOfTracks", countOfTracks
-            ));
+            ), event.getGuild());
         }
         event.appendEmbedMessage(messageEmbed);
     }

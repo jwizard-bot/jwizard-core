@@ -42,7 +42,7 @@ public class StatsException {
 
     @Slf4j public static class MemberHasNoStatsYetInGuildException extends BotException {
         public MemberHasNoStatsYetInGuildException(BotConfiguration config, CommandEventWrapper event, User user) {
-            super(config, ExceptionLocaleSet.MEMBER_HAS_NO_STATS_YET_IN_GUILD, Map.of(
+            super(config, event.getGuild(), ExceptionLocaleSet.MEMBER_HAS_NO_STATS_YET_IN_GUILD, Map.of(
                 "memberTag", user.getAsTag()
             ), BugTracker.MEMBER_HAS_NO_STATS_YET);
             JDALog.error(log, event, "Attempt to invoke non existing stats from member: %s", user.getAsTag());
@@ -53,7 +53,7 @@ public class StatsException {
 
     @Slf4j public static class YouHasNoStatsYetInGuildException extends BotException {
         public YouHasNoStatsYetInGuildException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, ExceptionLocaleSet.YOU_HAS_NO_STATS_YET_IN_GUILD, BugTracker.YOU_HAS_NO_STATS_YET);
+            super(config, event.getGuild(), ExceptionLocaleSet.YOU_HAS_NO_STATS_YET_IN_GUILD, BugTracker.YOU_HAS_NO_STATS_YET);
             JDALog.error(log, event, "Attempt to invoke non existing stats by sender: %s",
                 event.getMember().getUser().getAsTag());
         }
@@ -63,7 +63,7 @@ public class StatsException {
 
     @Slf4j public static class GuildHasNoStatsYetException extends BotException {
         public GuildHasNoStatsYetException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, ExceptionLocaleSet.GUILD_HAS_NO_STATS_YET, Map.of(
+            super(config, event.getGuild(), ExceptionLocaleSet.GUILD_HAS_NO_STATS_YET, Map.of(
                 "guildName", event.getGuild().getName()
             ), BugTracker.GUILD_HAS_NO_STATS_YET);
             JDALog.error(log, event, "Attempt to invoke non existing stats in guild: %s", event.getGuild().getName());
@@ -74,7 +74,7 @@ public class StatsException {
 
     @Slf4j public static class StatsAlreadyPublicException extends BotException {
         public StatsAlreadyPublicException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, ExceptionLocaleSet.STATS_ALREADY_PUBLIC, Map.of(
+            super(config, event.getGuild(), ExceptionLocaleSet.STATS_ALREADY_PUBLIC, Map.of(
                 "statsPrivateCmd", BotCommand.PRIVATE_STATS.parseWithPrefix(config)
             ), BugTracker.STATS_ALREADY_PUBLIC);
             JDALog.error(log, event, "Attempt to change already public stats to public");
@@ -85,7 +85,7 @@ public class StatsException {
 
     @Slf4j public static class StatsAlreadyPrivateException extends BotException {
         public StatsAlreadyPrivateException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, ExceptionLocaleSet.STATS_ALREADY_PRIVATE, Map.of(
+            super(config, event.getGuild(), ExceptionLocaleSet.STATS_ALREADY_PRIVATE, Map.of(
                 "statsPublicCmd", BotCommand.PUBLIC_STATS.parseWithPrefix(config)
             ), BugTracker.STATS_ALREADY_PRIVATE);
             JDALog.error(log, event, "Attempt to change already private stats to private");
@@ -96,7 +96,7 @@ public class StatsException {
 
     @Slf4j public static class StatsAlreadyEnabledException extends BotException {
         public StatsAlreadyEnabledException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, ExceptionLocaleSet.STATS_ALREADY_ENABLED, Map.of(
+            super(config, event.getGuild(), ExceptionLocaleSet.STATS_ALREADY_ENABLED, Map.of(
                 "disableStatsCmd", BotCommand.DISABLE_STATS.parseWithPrefix(config)
             ), BugTracker.STATS_ALREADY_ENABLED);
             JDALog.error(log, event, "Attempt to change already enabled stats to enabled");
@@ -107,7 +107,7 @@ public class StatsException {
 
     @Slf4j public static class StatsAlreadyDisabledException extends BotException {
         public StatsAlreadyDisabledException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, ExceptionLocaleSet.STATS_ALREADY_DISABLED, Map.of(
+            super(config, event.getGuild(), ExceptionLocaleSet.STATS_ALREADY_DISABLED, Map.of(
                 "enableStatsCmd", BotCommand.ENABLE_STATS.parseWithPrefix(config)
             ), BugTracker.STATS_ALREADY_DISABLED);
             JDALog.error(log, event, "Attempt to change already disabled stats to disabled");
@@ -118,7 +118,7 @@ public class StatsException {
 
     @Slf4j public static class YouHasDisableStatsException extends BotException {
         public YouHasDisableStatsException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, ExceptionLocaleSet.YOU_HAS_DISABLED_STATS, Map.of(
+            super(config, event.getGuild(), ExceptionLocaleSet.YOU_HAS_DISABLED_STATS, Map.of(
                 "enableStatsCmd", BotCommand.ENABLE_STATS.parseWithPrefix(config)
             ), BugTracker.MEMBER_HAS_STATS_DISABLED);
             JDALog.error(log, event, "Attempt to get your stats, where is disabled");
@@ -129,7 +129,7 @@ public class StatsException {
 
     @Slf4j public static class MemberHasDisableStatsException extends BotException {
         public MemberHasDisableStatsException(BotConfiguration config, CommandEventWrapper event, User user) {
-            super(config, ExceptionLocaleSet.MEMBER_HAS_DISABLED_STATS, Map.of(
+            super(config, event.getGuild(), ExceptionLocaleSet.MEMBER_HAS_DISABLED_STATS, Map.of(
                 "memberTag", user.getAsTag()
             ), BugTracker.MEMBER_HAS_STATS_DISABLED);
             JDALog.error(log, event, "Attempt to get stats from member '%s' who has disabled stats", user.getAsTag());
@@ -140,7 +140,7 @@ public class StatsException {
 
     @Slf4j public static class MemberHasPrivateStatsException extends BotException {
         public MemberHasPrivateStatsException(BotConfiguration config, CommandEventWrapper event, User user) {
-            super(config, ExceptionLocaleSet.MEMBER_HAS_PRIVATE_STATS, Map.of(
+            super(config, event.getGuild(), ExceptionLocaleSet.MEMBER_HAS_PRIVATE_STATS, Map.of(
                 "memberTag", user.getAsTag()
             ), BugTracker.MEMBER_HAS_STATS_PRIVATE);
             JDALog.error(log, event, "Attempt to get stats from member '%s' who has private stats", user.getAsTag());

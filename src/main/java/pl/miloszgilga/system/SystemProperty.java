@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.function.BiFunction;
 
+import net.dv8tion.jda.api.entities.Guild;
 import pl.miloszgilga.locale.DebugLocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
@@ -57,9 +58,9 @@ public enum SystemProperty {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static List<String> getAllFormatted(BotConfiguration config, BiFunction<String, String, String> formatter) {
+    public static List<String> getAllFormatted(BotConfiguration config, BiFunction<String, String, String> formatter, Guild guild) {
         return Arrays.stream(values())
-            .map(v -> formatter.apply(config.getLocaleText(v.localeSet), System.getProperty(v.property)))
+            .map(v -> formatter.apply(config.getLocaleText(v.localeSet, guild), System.getProperty(v.property)))
             .toList();
     }
 }

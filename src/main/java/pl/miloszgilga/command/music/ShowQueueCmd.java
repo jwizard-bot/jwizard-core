@@ -95,7 +95,7 @@ public class ShowQueueCmd extends AbstractMusicCommand {
             Utilities.convertMilisToDate(musicManager.getActions().getAverageTrackDuration()),
             musicManager.isInfinitePlaylistActive() ? ResLocaleSet.TURN_ON_MESS : ResLocaleSet.TURN_OFF_MESS
         );
-        final MessageEmbed messageEmbed = embedBuilder.createQueueInfoMessage(content);
+        final MessageEmbed messageEmbed = embedBuilder.createQueueInfoMessage(content, event.getGuild());
         final Paginator paginator = pagination.createDefaultPaginator(pageableTracks);
 
         event.appendEmbedMessage(messageEmbed, () -> paginator.display(event.getTextChannel()));

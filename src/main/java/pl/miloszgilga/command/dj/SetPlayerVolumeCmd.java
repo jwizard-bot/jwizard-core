@@ -68,7 +68,7 @@ public class SetPlayerVolumeCmd extends AbstractDjCommand {
             .createMessage(ResLocaleSet.SET_CURRENT_AUDIO_PLAYER_VOLUME_MESS, Map.of(
                 "previousVolume", currentVolumeUnits,
                 "setVolume", volumeUnits
-            ));
+            ), event.getGuild());
         event.appendEmbedMessage(messageEmbed);
     }
 }

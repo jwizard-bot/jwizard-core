@@ -68,7 +68,7 @@ public class InfiniteLoopTrackCmd extends AbstractMusicCommand {
         final MessageEmbed messageEmbed = embedBuilder.createMessage(messsage, Map.of(
             "track", Utilities.getRichTrackTitle(playingTrack),
             "loopCmd", BotCommand.LOOP_TRACK.parseWithPrefix(config)
-        ));
+        ), event.getGuild());
         event.appendEmbedMessage(messageEmbed);
     }
 }

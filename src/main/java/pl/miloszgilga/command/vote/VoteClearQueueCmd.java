@@ -24,6 +24,8 @@
 
 package pl.miloszgilga.command.vote;
 
+import net.dv8tion.jda.api.entities.Guild;
+
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
@@ -64,15 +66,16 @@ public class VoteClearQueueCmd extends AbstractVoteMusicCommand {
         final Map<String, Object> attributes = Map.of(
             "countOfTracks", musicManager.getQueue().size()
         );
+        final Guild g = event.getGuild();
         return new VoteEmbedResponse(
             VoteClearQueueCmd.class,
             embedBuilder.createInitialVoteMessage(event, ResLocaleSet.VOTE_CLEAR_QUEUE_MESS, attributes),
             ed -> {
                 playerManager.clearQueue(event);
-                return embedBuilder.createSuccessVoteMessage(ResLocaleSet.SUCCESS_VOTE_CLEAR_QUEUE_MESS, attributes, ed);
+                return embedBuilder.createSuccessVoteMessage(ResLocaleSet.SUCCESS_VOTE_CLEAR_QUEUE_MESS, attributes, ed, g);
             },
-            ed -> embedBuilder.createFailureVoteMessage(ResLocaleSet.FAILURE_VOTE_CLEAR_QUEUE_MESS, attributes, ed),
-            ed -> embedBuilder.createTimeoutVoteMessage(ResLocaleSet.FAILURE_VOTE_CLEAR_QUEUE_MESS, attributes, ed)
+            ed -> embedBuilder.createFailureVoteMessage(ResLocaleSet.FAILURE_VOTE_CLEAR_QUEUE_MESS, attributes, ed, g),
+            ed -> embedBuilder.createTimeoutVoteMessage(ResLocaleSet.FAILURE_VOTE_CLEAR_QUEUE_MESS, attributes, ed, g)
         );
     }
 }

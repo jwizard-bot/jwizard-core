@@ -84,7 +84,7 @@ public class RemoveMemberTracksCmd extends AbstractDjCommand {
             .createMessage(ResLocaleSet.REMOVED_TRACKS_FROM_SELECTED_MEMBER_MESS, Map.of(
                 "countOfRemovedTracks", pageableRemovedTracks.size(),
                 "memberTag", removedTracksInfo.member().getUser().getAsTag()
-            ));
+            ), event.getGuild());
         event.appendEmbedMessage(messageEmbed, () -> removedTracksList.display(event.getTextChannel()));
     }
 }

@@ -78,7 +78,7 @@ public class PublicStatsCmd extends AbstractMyStatsCommand {
         final String userTag = event.getMember().getUser().getAsTag();
         final MessageEmbed messageEmbed = embedBuilder.createMessage(ResLocaleSet.SET_STATS_TO_PUBLIC_MESS, Map.of(
             "statsPrivateCmd", BotCommand.PRIVATE_STATS.parseWithPrefix(config)
-        ));
+        ), event.getGuild());
         JDALog.info(log, event, "Stats for selected memeber '%s' was successfully set to public", userTag);
         event.sendEmbedMessage(messageEmbed);
     }

@@ -65,7 +65,7 @@ public class ClearQueueCmd extends AbstractDjCommand {
         final int removedTracks = playerManager.clearQueue(event);
         final MessageEmbed messageEmbed = embedBuilder.createMessage(ResLocaleSet.CLEAR_QUEUE_MESS, Map.of(
             "countOfTracks", removedTracks
-        ));
+        ), event.getGuild());
         event.appendEmbedMessage(messageEmbed);
     }
 }

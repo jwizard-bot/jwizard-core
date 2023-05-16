@@ -74,7 +74,7 @@ public class BotMuteCommandListener extends AbstractListenerAdapter {
         } else {
             musicManager.getAudioPlayer().setPaused(false);
         }
-        final MessageEmbed messageEmbed = embedBuilder.createMessage(message);
+        final MessageEmbed messageEmbed = embedBuilder.createMessage(message, event.getGuild());
         musicManager.getTrackScheduler().getDeliveryEvent().getTextChannel().sendMessageEmbeds(messageEmbed).queue();
     }
 

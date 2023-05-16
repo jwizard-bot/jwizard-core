@@ -63,13 +63,14 @@ class HelpCmd extends AbstractCommand {
     @Override
     protected void doExecuteCommand(CommandEventWrapper event) {
         final HelpEmbedContent content = new HelpEmbedContent(
-            config.getLocaleText(ResLocaleSet.HELP_INFO_SOURCE_CODE_LINK_MESS,
+            config.getLocaleText(ResLocaleSet.HELP_INFO_SOURCE_CODE_LINK_MESS, event.getGuild(),
                 Map.of("sourceCodeLink", config.getProperty(BotProperty.J_SOURCE_CODE_PATH))),
             String.format("jre%s_%s", Runtime.version().feature(), config.getProjectVersion()),
             BotCommand.count()
         );
         final MessageEmbed messageEmbed = embedBuilder.createHelpMessage(event, content);
-        final Paginator paginator = paginate.createDefaultPaginator(BotCommand.getCommandsAsEmbedContent(config));
+        final Paginator paginator = paginate
+            .createDefaultPaginator(BotCommand.getCommandsAsEmbedContent(config, event.getGuild()));
 
         event.appendEmbedMessage(messageEmbed, () -> paginator.display(event.getTextChannel()));
     }

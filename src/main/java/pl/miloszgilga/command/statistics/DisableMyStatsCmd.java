@@ -77,7 +77,7 @@ public class DisableMyStatsCmd extends AbstractMyStatsCommand {
         final String userTag = event.getMember().getUser().getAsTag();
         final MessageEmbed messageEmbed = embedBuilder.createMessage(ResLocaleSet.STATS_COLLECTOR_DISABLED_MESS, Map.of(
             "enableStatsCmd", BotCommand.ENABLE_STATS.parseWithPrefix(config)
-        ));
+        ), event.getGuild());
         JDALog.info(log, event, "Stats for selected memeber '%s' was successfully disabled", userTag);
         event.sendEmbedMessage(messageEmbed);
     }

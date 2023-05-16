@@ -83,7 +83,7 @@ public class ResetMemberStatsCmd extends AbstractManagerStatsCommand {
                     .createMessage(ResLocaleSet.MEMBER_STATS_CLEARED_MESS, Map.of(
                         "memberTag", user.getAsTag(),
                         "guildName", event.getGuildName()
-                    ));
+                    ), event.getGuild());
                 JDALog.info(log, event, "Stats of selected memeber '%s' was successfully cleared", user.getAsTag());
                 event.sendEmbedMessage(messageEmbed);
             },

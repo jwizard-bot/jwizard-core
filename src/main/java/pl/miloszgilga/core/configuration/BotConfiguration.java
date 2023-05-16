@@ -29,11 +29,13 @@ import lombok.AccessLevel;
 import lombok.extern.slf4j.Slf4j;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Icon;
 import net.dv8tion.jda.api.managers.AccountManager;
 import net.dv8tion.jda.internal.managers.AccountManagerImpl;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 
+import org.springframework.context.annotation.Lazy;
 import org.yaml.snakeyaml.Yaml;
 import org.apache.commons.lang3.StringUtils;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -48,6 +50,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import pl.miloszgilga.core.IEnumerableLocaleSet;
+import pl.miloszgilga.core.remote.RemoteProperty;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -68,8 +72,8 @@ public class BotConfiguration {
     @Getter(value = AccessLevel.PUBLIC)     private final EventWaiter eventWaiter = new EventWaiter();
     @Getter(value = AccessLevel.PUBLIC)     private String projectVersion;
 
-    private ResourceBundle localeBundle;
     private final Environment environment;
+    private final RemotePropertyHandler handler;
 
     @Getter(value = AccessLevel.PUBLIC)
     private final ScheduledExecutorService threadPool = Executors.newSingleThreadScheduledExecutor(r -> {
@@ -90,15 +94,15 @@ public class BotConfiguration {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    BotConfiguration(Environment environment) {
+    BotConfiguration(Environment environment, @Lazy RemotePropertyHandler handler) {
         this.environment = environment;
+        this.handler = handler;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void loadConfiguration() {
         final AppMode appMode = extractModeFromArguments();
-        String language;
         try {
             final InputStream inputStream = new FileInputStream(appMode.getConfigFile());
 
@@ -122,13 +126,9 @@ public class BotConfiguration {
             if (defaultVolumeUnits < 0 || defaultVolumeUnits > 150) {
                 throw new IllegalArgumentException("Default player volume units must be between 0 and 150.");
             }
-            language = getProperty(BotProperty.J_SELECTED_LOCALE);
-            localeBundle = ResourceBundle.getBundle(LOCALE_BUNDLE_PROP, new Locale(language));
-
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-        log.info("Primary language for bot '{}' was successfully loaded", language);
         log.info("Bot configuration for '{}' version was successfully loaded", appMode.getAlias());
         log.info("Successfully loaded variables from '.env' file: {}", envProperties);
         log.info("Slash commands in application was turned {}. To change, set 'slash-commands.enabled' property.",
@@ -214,9 +214,15 @@ public class BotConfiguration {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public String getLocaleText(IEnumerableLocaleSet localeSet, Map<String, Object> params) {
+    public String getLocaleText(IEnumerableLocaleSet localeSet, Guild guild, Map<String, Object> params) {
         if (Objects.isNull(localeSet)) return StringUtils.EMPTY;
         try {
+            String language = getProperty(BotProperty.J_SELECTED_LOCALE);
+            if (!Objects.isNull(guild)) {
+                language = handler.getPossibleRemoteProperty(RemoteProperty.R_SELECTED_LOCALE, guild);
+            }
+            final ResourceBundle localeBundle = ResourceBundle.getBundle(LOCALE_BUNDLE_PROP, new Locale(language));
+
             String resourceText = localeBundle.getString(localeSet.getHolder());
             if (resourceText.isBlank()) {
                 return localeSet.getHolder();
@@ -232,7 +238,15 @@ public class BotConfiguration {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public String getLocaleText(IEnumerableLocaleSet localeSet, Guild guild) {
+        return getLocaleText(localeSet, guild, Map.of());
+    }
+
+    public String getLocaleText(IEnumerableLocaleSet localeSet, Map<String, Object> params) {
+        return getLocaleText(localeSet, null, params);
+    }
+
     public String getLocaleText(IEnumerableLocaleSet localeSet) {
-        return getLocaleText(localeSet, Map.of());
+        return getLocaleText(localeSet, null, Map.of());
     }
 }

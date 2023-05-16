@@ -89,7 +89,7 @@ public class TurnOffMusicModuleCmd extends AbstractOwnerCommand {
 
         final MessageEmbed messageEmbed = embedBuilder.createMessage(ResLocaleSet.GUILD_MUSIC_MODULE_DISABLED_MESS, Map.of(
             "enableMusicModuleCmd", BotCommand.TURN_ON_MUSIC_MODULE.parseWithPrefix(config)
-        ));
+        ), event.getGuild());
         JDALog.info(log, event, "Music module for selected guild '%s' was successfully disabled", event.getGuildName());
         event.sendEmbedMessage(messageEmbed);
     }

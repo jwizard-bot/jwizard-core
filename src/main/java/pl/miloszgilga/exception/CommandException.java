@@ -43,7 +43,7 @@ public class CommandException {
 
     @Slf4j public static class UnrecognizedCommandException extends BotException {
         public UnrecognizedCommandException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, ExceptionLocaleSet.UNRECOGNIZED_COMMAND, Map.of(
+            super(config, event.getGuild(), ExceptionLocaleSet.UNRECOGNIZED_COMMAND, Map.of(
                 "helpCmd", BotCommand.HELP.parseWithPrefix(config),
                 "helpmeCmd", BotCommand.HELP_ME.parseWithPrefix(config)
             ), BugTracker.UNRECOGNIZED_COMMAND);
@@ -55,7 +55,7 @@ public class CommandException {
 
     @Slf4j public static class UsedCommandOnForbiddenChannelException extends BotException {
         public UsedCommandOnForbiddenChannelException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, ExceptionLocaleSet.USED_COMM_ON_FORBIDDEN_CHANNEL,
+            super(config, event.getGuild(), ExceptionLocaleSet.USED_COMM_ON_FORBIDDEN_CHANNEL,
                 BugTracker.USED_COMMAND_ON_FORBIDDEN_CHANNEL);
             JDALog.error(log, event, "Attempt to invoke command on forbidden channel");
         }
@@ -65,7 +65,7 @@ public class CommandException {
 
     @Slf4j public static class MismatchCommandArgumentsCountException extends BotException {
         public MismatchCommandArgumentsCountException(BotConfiguration config, CommandEventWrapper event, BotCommand command) {
-            super(config, ExceptionLocaleSet.MISMATCH_COMMAND_ARGS_COUNT, Map.of(
+            super(config, event.getGuild(), ExceptionLocaleSet.MISMATCH_COMMAND_ARGS_COUNT, Map.of(
                 "syntax", command.getAvailableSyntax(config)
             ), BugTracker.MISMATCH_COMMAND_ARGUMENTS);
             JDALog.error(log, event, "Attempt to invoke command on with non-exact arguments count");
@@ -76,7 +76,7 @@ public class CommandException {
 
     @Slf4j public static class UnauthorizedDjException extends BotException {
         public UnauthorizedDjException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, ExceptionLocaleSet.UNAUTHORIZED_DJ, BugTracker.UNAUTHORIZED_DJ);
+            super(config, event.getGuild(), ExceptionLocaleSet.UNAUTHORIZED_DJ, BugTracker.UNAUTHORIZED_DJ);
             JDALog.error(log, event, "Attempt to invoke DJ command without DJ guild role");
         }
     }
@@ -85,7 +85,7 @@ public class CommandException {
 
     @Slf4j public static class UnauthorizedDjOrSenderException extends BotException {
         public UnauthorizedDjOrSenderException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, ExceptionLocaleSet.UNAUTHORIZED_DJ_OR_SENDER, BugTracker.UNAUTHORIZED_DJ_OR_SENDER);
+            super(config, event.getGuild(), ExceptionLocaleSet.UNAUTHORIZED_DJ_OR_SENDER, BugTracker.UNAUTHORIZED_DJ_OR_SENDER);
             JDALog.error(log, event, "Attempt to invoke DJ command without DJ guild role or without send all tracks");
         }
     }
@@ -94,7 +94,7 @@ public class CommandException {
 
     @Slf4j public static class UnauthorizedManagerCommandExecutionException extends BotException {
         public UnauthorizedManagerCommandExecutionException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, ExceptionLocaleSet.UNAUTHORIZED_MANAGER, BugTracker.UNAUTHORIZED_MANAGER);
+            super(config, event.getGuild(), ExceptionLocaleSet.UNAUTHORIZED_MANAGER, BugTracker.UNAUTHORIZED_MANAGER);
             JDALog.error(log, event, "Attempt to invoke MANAGER role command without MANAGER guild role");
         }
     }
@@ -103,7 +103,7 @@ public class CommandException {
 
     @Slf4j public static class UnauthorizedOwnerCommandExecutionException extends BotException {
         public UnauthorizedOwnerCommandExecutionException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, ExceptionLocaleSet.UNAUTHORIZED_OWNER, BugTracker.UNAUTHORIZED_OWNER);
+            super(config, event.getGuild(), ExceptionLocaleSet.UNAUTHORIZED_OWNER, BugTracker.UNAUTHORIZED_OWNER);
             JDALog.error(log, event, "Attempt to invoke OWNER role command without OWNER guild role");
         }
     }
@@ -112,7 +112,7 @@ public class CommandException {
 
     @Slf4j public static class UserNotFoundInGuildException extends BotException {
         public UserNotFoundInGuildException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, ExceptionLocaleSet.USER_NOT_FOUND_IN_GUILD, BugTracker.USER_NOT_FOUND_IN_GUILD);
+            super(config, event.getGuild(), ExceptionLocaleSet.USER_NOT_FOUND_IN_GUILD, BugTracker.USER_NOT_FOUND_IN_GUILD);
             JDALog.error(log, event, "Attempt to find not existing user in selected guild");
         }
     }
@@ -121,7 +121,7 @@ public class CommandException {
 
     @Slf4j public static class UserIsAlreadyWithBotException extends BotException {
         public UserIsAlreadyWithBotException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, ExceptionLocaleSet.USER_ID_ALREADY_WITH_BOT, BugTracker.USER_ID_ALREADY_WITH_BOT);
+            super(config, event.getGuild(), ExceptionLocaleSet.USER_ID_ALREADY_WITH_BOT, BugTracker.USER_ID_ALREADY_WITH_BOT);
             JDALog.error(log, event, "Attempt to invoke command, while user is together with bot");
         }
     }
@@ -139,7 +139,7 @@ public class CommandException {
 
     @Slf4j public static class UnexpectedException extends BotException {
         public UnexpectedException(BotConfiguration config, CommandEventWrapper event) {
-            super(config, ExceptionLocaleSet.UNEXPECTED_EXCEPTION, Map.of(
+            super(config, Objects.isNull(event) ? null : event.getGuild(), ExceptionLocaleSet.UNEXPECTED_EXCEPTION, Map.of(
                 "helpEmail", Utilities.getRichEmailLink(config.getProperty(BotProperty.J_HELP_EMAIL))
             ), BugTracker.UNEXPECTED_EXCEPTION);
             if (Objects.isNull(event)) {

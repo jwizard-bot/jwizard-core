@@ -24,6 +24,8 @@
 
 package pl.miloszgilga.command.vote;
 
+import net.dv8tion.jda.api.entities.Guild;
+
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.vote.VoteEmbedResponse;
@@ -54,16 +56,17 @@ public class VoteStopAndClearQueueCmd extends AbstractVoteMusicCommand {
     @Override
     protected VoteEmbedResponse doExecuteVoteMusicCommand(CommandEventWrapper event) {
         final SchedulerActions actions = playerManager.getMusicManager(event).getActions();
+        final Guild g = event.getGuild();
         return new VoteEmbedResponse(
             VoteStopAndClearQueueCmd.class,
             embedBuilder.createInitialVoteMessage(event, ResLocaleSet.VOTE_STOP_CLEAR_QUEUE_MESS),
             ed -> {
                 actions.clearAndDestroy(false);
                 actions.leaveAndSendMessageAfterInactivity();
-                return embedBuilder.createSuccessVoteMessage(ResLocaleSet.SUCCESS_VOTE_STOP_CLEAR_QUEUE_MESS, ed);
+                return embedBuilder.createSuccessVoteMessage(ResLocaleSet.SUCCESS_VOTE_STOP_CLEAR_QUEUE_MESS, ed, g);
             },
-            ed -> embedBuilder.createFailureVoteMessage(ResLocaleSet.FAILURE_VOTE_STOP_CLEAR_QUEUE_MESS, ed),
-            ed -> embedBuilder.createTimeoutVoteMessage(ResLocaleSet.FAILURE_VOTE_STOP_CLEAR_QUEUE_MESS, ed)
+            ed -> embedBuilder.createFailureVoteMessage(ResLocaleSet.FAILURE_VOTE_STOP_CLEAR_QUEUE_MESS, ed, g),
+            ed -> embedBuilder.createTimeoutVoteMessage(ResLocaleSet.FAILURE_VOTE_STOP_CLEAR_QUEUE_MESS, ed, g)
         );
     }
 }

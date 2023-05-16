@@ -89,7 +89,7 @@ public class TurnOffVotingModuleCmd extends AbstractOwnerCommand {
 
         final MessageEmbed messageEmbed = embedBuilder.createMessage(ResLocaleSet.GUILD_VOTING_MODULE_DISABLED_MESS, Map.of(
             "enableVotingModuleCmd", BotCommand.TURN_ON_VOTING_MODULE.parseWithPrefix(config)
-        ));
+        ), event.getGuild());
         JDALog.info(log, event, "Voting module for selected guild '%s' was successfully disabled", event.getGuildName());
         event.sendEmbedMessage(messageEmbed);
     }

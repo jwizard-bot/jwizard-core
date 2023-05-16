@@ -58,7 +58,7 @@ public class GetPlayerVolumeCmd extends AbstractMusicCommand {
         final MessageEmbed messageEmbed = embedBuilder
             .createMessage(ResLocaleSet.GET_CURRENT_AUDIO_PLAYER_VOLUME_MESS, Map.of(
                 "currentVolume", playerManager.getMusicManager(event).getPlayerVolume()
-            ));
+            ), event.getGuild());
         event.appendEmbedMessage(messageEmbed);
     }
 }

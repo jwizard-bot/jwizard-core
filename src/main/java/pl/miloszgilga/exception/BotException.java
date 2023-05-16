@@ -24,6 +24,8 @@
 
 package pl.miloszgilga.exception;
 
+import net.dv8tion.jda.api.entities.Guild;
+
 import java.util.Map;
 import java.util.HashMap;
 
@@ -35,14 +37,16 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 public class BotException extends RuntimeException {
 
     private final BugTracker bugTracker;
+    private final Guild guild;
     private final IEnumerableLocaleSet langPattern;
     private final BotConfiguration config;
     private Map<String, Object> arguments = new HashMap<>();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public BotException(BotConfiguration config, IEnumerableLocaleSet langPattern, BugTracker bugTracker) {
+    public BotException(BotConfiguration config, Guild guild, IEnumerableLocaleSet langPattern, BugTracker bugTracker) {
         this.config = config;
+        this.guild = guild;
         this.langPattern = langPattern;
         this.bugTracker = bugTracker;
     }
@@ -50,9 +54,11 @@ public class BotException extends RuntimeException {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public BotException(
-        BotConfiguration config, IEnumerableLocaleSet langPattern, Map<String, Object> arguments, BugTracker bugTracker
+        BotConfiguration config, Guild guild, IEnumerableLocaleSet langPattern, Map<String, Object> arguments,
+        BugTracker bugTracker
     ) {
         this.config = config;
+        this.guild = guild;
         this.langPattern = langPattern;
         this.arguments = arguments;
         this.bugTracker = bugTracker;
@@ -62,7 +68,7 @@ public class BotException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return config.getLocaleText(langPattern, arguments);
+        return config.getLocaleText(langPattern, guild, arguments);
     }
 
     public BugTracker getBugTracker() {

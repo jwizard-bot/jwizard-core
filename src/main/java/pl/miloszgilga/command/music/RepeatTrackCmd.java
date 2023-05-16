@@ -74,7 +74,7 @@ public class RepeatTrackCmd extends AbstractMusicCommand {
                 "track", Utilities.getRichTrackTitle(trackInfo),
                 "times", repeats,
                 "clearRepeatingCmd", BotCommand.CLEAR_REPEAT_TRACK.parseWithPrefix(config)
-            ));
+            ), event.getGuild());
         event.appendEmbedMessage(messageEmbed);
     }
 }

@@ -89,7 +89,7 @@ public class TurnOffStatsModuleCmd extends AbstractOwnerCommand {
 
         final MessageEmbed messageEmbed = embedBuilder.createMessage(ResLocaleSet.GUILD_STATS_MODULE_DISABLED_MESS, Map.of(
             "enableStatsModuleCmd", BotCommand.TURN_ON_STATS_MODULE.parseWithPrefix(config)
-        ));
+        ), event.getGuild());
         JDALog.info(log, event, "Stats module for selected guild '%s' was successfully disabled", event.getGuildName());
         event.sendEmbedMessage(messageEmbed);
     }

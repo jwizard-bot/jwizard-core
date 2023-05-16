@@ -65,7 +65,7 @@ public class ResumeTrackCmd extends AbstractMusicCommand {
             "track", Utilities.getRichTrackTitle(trackInfo),
             "invoker", event.getAuthorTag(),
             "pauseCmd", BotCommand.PAUSE_TRACK.parseWithPrefix(config)
-        ));
+        ), event.getGuild());
         event.appendEmbedMessage(messageEmbed);
     }
 }

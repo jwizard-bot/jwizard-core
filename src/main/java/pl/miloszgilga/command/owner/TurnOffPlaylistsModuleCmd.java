@@ -89,7 +89,7 @@ public class TurnOffPlaylistsModuleCmd extends AbstractOwnerCommand {
 
         final MessageEmbed messageEmbed = embedBuilder.createMessage(ResLocaleSet.GUILD_PLAYLISTS_MODULE_DISABLED_MESS, Map.of(
             "enablePlaylistsModuleCmd", BotCommand.TURN_ON_PLAYLISTS_MODULE.parseWithPrefix(config)
-        ));
+        ), event.getGuild());
         JDALog.info(log, event, "Playlists module for selected guild '%s' was successfully disabled", event.getGuildName());
         event.sendEmbedMessage(messageEmbed);
     }

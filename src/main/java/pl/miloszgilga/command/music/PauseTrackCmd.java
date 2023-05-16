@@ -78,7 +78,7 @@ public class PauseTrackCmd extends AbstractMusicCommand {
             Utilities.convertMilisToDate(track.getDuration()),
             Utilities.createPlayerPercentageTrack(track.getPosition(), track.getDuration(), MAX_VIS_BLOCKS_COUNT)
         );
-        final MessageEmbed messageEmbed = embedBuilder.createPauseTrackMessage(content);
+        final MessageEmbed messageEmbed = embedBuilder.createPauseTrackMessage(content, event.getGuild());
         event.appendEmbedMessage(messageEmbed);
     }
 }

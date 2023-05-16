@@ -26,6 +26,8 @@ package pl.miloszgilga.misc;
 
 import lombok.RequiredArgsConstructor;
 
+import net.dv8tion.jda.api.entities.Guild;
+
 import pl.miloszgilga.locale.CategoryLocaleSet;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
@@ -47,7 +49,7 @@ public enum CommandCategory {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public String getHolder(BotConfiguration config) {
-        return config.getLocaleText(localeSet);
+    public String getHolder(BotConfiguration config, Guild guild) {
+        return config.getLocaleText(localeSet, guild);
     }
 }

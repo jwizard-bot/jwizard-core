@@ -24,6 +24,7 @@
 
 package pl.miloszgilga.command.vote;
 
+import net.dv8tion.jda.api.entities.Guild;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import java.util.Map;
@@ -63,15 +64,16 @@ public class VoteSkipTrackCmd extends AbstractVoteMusicCommand {
         final Map<String, Object> attributes = Map.of(
             "audioTrack", Utilities.getRichTrackTitle(skippedCurrentPlaying.getInfo())
         );
+        final Guild g = event.getGuild();
         return new VoteEmbedResponse(
             VoteSkipTrackCmd.class,
             embedBuilder.createInitialVoteMessage(event, ResLocaleSet.VOTE_SKIP_TRACK_MESS, attributes),
             ed -> {
                 playerManager.skipCurrentTrack(event);
-                return embedBuilder.createSuccessVoteMessage(ResLocaleSet.SUCCESS_VOTE_SKIP_TRACK_MESS, attributes, ed);
+                return embedBuilder.createSuccessVoteMessage(ResLocaleSet.SUCCESS_VOTE_SKIP_TRACK_MESS, attributes, ed, g);
             },
-            ed -> embedBuilder.createFailureVoteMessage(ResLocaleSet.FAILURE_VOTE_SKIP_TRACK_MESS, attributes, ed),
-            ed -> embedBuilder.createTimeoutVoteMessage(ResLocaleSet.FAILURE_VOTE_SKIP_TRACK_MESS, attributes, ed)
+            ed -> embedBuilder.createFailureVoteMessage(ResLocaleSet.FAILURE_VOTE_SKIP_TRACK_MESS, attributes, ed, g),
+            ed -> embedBuilder.createTimeoutVoteMessage(ResLocaleSet.FAILURE_VOTE_SKIP_TRACK_MESS, attributes, ed, g)
         );
     }
 }

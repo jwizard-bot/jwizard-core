@@ -111,7 +111,7 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
     @Override
     public void noMatches() {
         final MessageEmbed messageEmbed = builder.createErrorMessage(deliveryEvent,
-            config.getLocaleText(ResLocaleSet.NOT_FOUND_TRACK_MESS), BugTracker.NOT_FOUND_TRACK);
+            config.getLocaleText(ResLocaleSet.NOT_FOUND_TRACK_MESS, deliveryEvent.getGuild()), BugTracker.NOT_FOUND_TRACK);
         deliveryEvent.sendEmbedMessage(messageEmbed);
 
         JDALog.info(log, deliveryEvent, "Not available to find provided audio track/playlist");
@@ -122,7 +122,8 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
     @Override
     public void loadFailed(FriendlyException exception) {
         final MessageEmbed messageEmbed = builder.createErrorMessage(deliveryEvent,
-            config.getLocaleText(ResLocaleSet.ISSUE_WHILE_LOADING_TRACK_MESS), BugTracker.ISSUE_ON_LOAD_TRACK);
+            config.getLocaleText(ResLocaleSet.ISSUE_WHILE_LOADING_TRACK_MESS, deliveryEvent.getGuild()),
+            BugTracker.ISSUE_ON_LOAD_TRACK);
         deliveryEvent.sendEmbedMessage(messageEmbed);
 
         JDALog.error(log, deliveryEvent, "Unexpected exception during load audio track/playlist: %s",

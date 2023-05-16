@@ -78,7 +78,7 @@ public class ResetGuildStatsCmd extends AbstractManagerStatsCommand {
                 final MessageEmbed messageEmbed = embedBuilder
                     .createMessage(ResLocaleSet.GUILD_STATS_CLEARED_MESS, Map.of(
                         "guildName", event.getGuildName()
-                    ));
+                    ), event.getGuild());
                 event.sendEmbedMessage(messageEmbed);
                 JDALog.info(log, event, "Stats of current guild was successfully cleared");
                 },

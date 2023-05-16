@@ -70,7 +70,7 @@ public class MoveTrackCmd extends AbstractDjCommand {
                 "movedTrack", Utilities.getRichTrackTitle(movedTrack.getInfo()),
                 "previousPosition", String.valueOf(previousPosition),
                 "requestedPosition", String.valueOf(requestedPosition)
-            ));
+            ), event.getGuild());
         event.sendEmbedMessage(messageEmbed);
     }
 }

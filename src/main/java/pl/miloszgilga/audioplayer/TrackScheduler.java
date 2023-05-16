@@ -111,13 +111,13 @@ public class TrackScheduler extends AudioEventAdapter {
             messageEmbed = builder.createTrackMessage(ResLocaleSet.ON_TRACK_START_ON_PAUSED_MESS, Map.of(
                 "track", Utilities.getRichTrackTitle(trackInfo),
                 "resumeCmd", BotCommand.RESUME_TRACK.parseWithPrefix(config)
-            ), trackInfo.getThumbnailUrl());
+            ), trackInfo.getThumbnailUrl(), deliveryEvent.getGuild());
             JDALog.info(log, deliveryEvent, "Staring playing audio track: '%s' when audio player is paused",
                 trackInfo.title);
         } else {
             messageEmbed = builder.createTrackMessage(ResLocaleSet.ON_TRACK_START_MESS, Map.of(
                 "track", Utilities.getRichTrackTitle(trackInfo)
-            ), trackInfo.getThumbnailUrl());
+            ), trackInfo.getThumbnailUrl(), deliveryEvent.getGuild());
             JDALog.info(log, deliveryEvent, "Staring playing audio track: '%s'", trackInfo.title);
         }
         deliveryEvent.sendEmbedMessage(messageEmbed, new QueueAfterParam(1, TimeUnit.SECONDS));
@@ -131,7 +131,8 @@ public class TrackScheduler extends AudioEventAdapter {
         if (actions.isOnClearing()) return;
         final boolean isNoneRepeating = !actions.isInfiniteRepeating() && actions.getCountOfRepeats() == 0;
         if (Objects.isNull(audioPlayer.getPlayingTrack()) && actions.getTrackQueue().isEmpty() && isNoneRepeating) {
-            final MessageEmbed messageEmbed = builder.createMessage(ResLocaleSet.ON_END_PLAYBACK_QUEUE_MESS);
+            final MessageEmbed messageEmbed = builder.createMessage(ResLocaleSet.ON_END_PLAYBACK_QUEUE_MESS,
+                deliveryEvent.getGuild());
             deliveryEvent.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
             JDALog.info(log, deliveryEvent, "End of playing queue tracks");
 
@@ -158,7 +159,7 @@ public class TrackScheduler extends AudioEventAdapter {
                     "currentRepeat", currentRepeat,
                     "track", Utilities.getRichTrackTitle(trackInfo),
                     "elapsedRepeats", actions.decreaseCountOfRepeats()
-                ));
+                ), deliveryEvent.getGuild());
             audioPlayer.startTrack(track.makeClone(), false);
             deliveryEvent.getTextChannel().sendMessageEmbeds(messageEmbed).queue();
             actions.setNextTrackInfoDisabled(true);
@@ -176,7 +177,8 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException ex) {
         final MessageEmbed messageEmbed = builder.createErrorMessage(deliveryEvent,
-            config.getLocaleText(ResLocaleSet.ISSUE_WHILE_PLAYING_TRACK_MESS), BugTracker.ISSUE_WHILE_PLAYING_TRACK);
+            config.getLocaleText(ResLocaleSet.ISSUE_WHILE_PLAYING_TRACK_MESS, deliveryEvent.getGuild()),
+            BugTracker.ISSUE_WHILE_PLAYING_TRACK);
         deliveryEvent.sendEmbedMessage(messageEmbed);
         JDALog.error(log, deliveryEvent, "Unexpected issue while playing track: '%s'. Cause: %s", ex.getMessage());
     }

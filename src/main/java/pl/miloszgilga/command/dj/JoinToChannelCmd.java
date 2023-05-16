@@ -61,7 +61,7 @@ public class JoinToChannelCmd extends AbstractDjCommand {
         final MessageEmbed messageEmbed = embedBuilder
             .createMessage(ResLocaleSet.MOVE_BOT_TOO_SELECTED_CHANNEL_MESS, Map.of(
                 "movedChannel", movedToVoiceChannel.getName()
-            ));
+            ), event.getGuild());
         event.sendEmbedMessage(messageEmbed);
     }
 }

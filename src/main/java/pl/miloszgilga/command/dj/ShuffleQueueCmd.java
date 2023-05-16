@@ -66,7 +66,7 @@ public class ShuffleQueueCmd extends AbstractDjCommand {
 
         final MessageEmbed messageEmbed = embedBuilder.createMessage(ResLocaleSet.QUEUE_WAS_SHUFFLED_MESS, Map.of(
             "showQueueCmd", BotCommand.QUEUE.parseWithPrefix(config)
-        ));
+        ), event.getGuild());
         event.appendEmbedMessage(messageEmbed);
     }
 }

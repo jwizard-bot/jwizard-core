@@ -74,7 +74,7 @@ public class SkipQueueToTrackCmd extends AbstractDjCommand {
             .createMessage(ResLocaleSet.SKIP_TO_SELECT_TRACK_POSITION_MESS, Map.of(
                 "countOfSkippedTracks", String.valueOf(trackPos - 1),
                 "currentTrack", Utilities.getRichTrackTitle(currentPlaying.getInfo())
-            ));
+            ), event.getGuild());
         event.appendEmbedMessage(messageEmbed);
     }
 }

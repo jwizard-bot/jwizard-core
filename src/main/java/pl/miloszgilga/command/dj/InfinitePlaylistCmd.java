@@ -64,7 +64,7 @@ public class InfinitePlaylistCmd extends AbstractDjCommand {
         }
         final MessageEmbed messageEmbed = embedBuilder.createMessage(messsage, Map.of(
             "playlistLoopCmd", BotCommand.INFINITE_PLAYLIST.parseWithPrefix(config)
-        ));
+        ), event.getGuild());
         event.appendEmbedMessage(messageEmbed);
     }
 }
