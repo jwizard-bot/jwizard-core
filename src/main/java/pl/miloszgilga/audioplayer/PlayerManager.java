@@ -50,6 +50,7 @@ import pl.miloszgilga.dto.TrackPosition;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.dto.MemberRemovedTracksInfo;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
@@ -72,13 +73,15 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
 
     private final BotConfiguration config;
     private final EmbedMessageBuilder builder;
+    private final RemotePropertyHandler handler;
     private final Map<Long, MusicManager> musicManagers = new HashMap<>();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    PlayerManager(BotConfiguration config, EmbedMessageBuilder builder) {
+    PlayerManager(BotConfiguration config, EmbedMessageBuilder builder, RemotePropertyHandler handler) {
         this.config = config;
         this.builder = builder;
+        this.handler = handler;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -303,7 +306,7 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
         final Member messageSender = event.getGuild().getMember(event.getAuthor());
         if (Objects.isNull(messageSender)) return true;
 
-        final ValidateUserDetails details =  Utilities.validateUserDetails(event, config);
+        final ValidateUserDetails details = Utilities.validateUserDetails(event, handler);
         return !(dataSender.getAsTag().equals(event.getAuthor().getAsTag()) || !details.isNotOwner()
             || !details.isNotManager() || !details.isNotDj());
     }
@@ -312,7 +315,7 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
 
     public MusicManager getMusicManager(CommandEventWrapper event) {
         return musicManagers.computeIfAbsent(event.getGuild().getIdLong(), guildId -> {
-            final MusicManager musicManager = new MusicManager(this, builder, config, event.getGuild(), event);
+            final MusicManager musicManager = new MusicManager(this, builder, config, event.getGuild(), event, handler);
             event.getGuild().getAudioManager().setSendingHandler(musicManager.getAudioPlayerSendHandler());
             return musicManager;
         });

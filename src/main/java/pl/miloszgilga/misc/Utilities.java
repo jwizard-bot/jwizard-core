@@ -37,7 +37,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 import pl.miloszgilga.dto.CommandEventWrapper;
-import pl.miloszgilga.core.configuration.BotProperty;
+import pl.miloszgilga.core.remote.RemoteProperty;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 import static pl.miloszgilga.exception.CommandException.UserNotFoundInGuildException;
@@ -95,8 +96,8 @@ public final class Utilities {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static ValidateUserDetails validateUserDetails(CommandEventWrapper event, BotConfiguration config) {
-        final String djRoleName = config.getProperty(BotProperty.J_DJ_ROLE_NAME);
+    public static ValidateUserDetails validateUserDetails(CommandEventWrapper event, RemotePropertyHandler handler) {
+        final String djRoleName = handler.getPossibleRemoteProperty(RemoteProperty.R_DJ_ROLE_NAME, event.getGuild());
 
         final boolean isNotOwner = !event.getAuthor().getId().equals(event.getGuild().getOwnerId());
         final boolean isNotManager = !event.getMember().hasPermission(Permission.MANAGE_SERVER);

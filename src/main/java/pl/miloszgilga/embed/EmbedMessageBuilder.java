@@ -193,7 +193,8 @@ public class EmbedMessageBuilder {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public MessageEmbed createInitialVoteMessage(CommandEventWrapper wrapper, ResLocaleSet locale, Map<String, Object> attrs) {
-        final long maxVotingTime = config.getProperty(BotProperty.J_INACTIVITY_VOTING_TIMEOUT, Long.class);
+        final long maxVotingTime = handler.getPossibleRemoteProperty(RemoteProperty.R_INACTIVITY_VOTING_TIMEOUT,
+            wrapper.getGuild(), Long.class);
         return new EmbedBuilder()
             .setAuthor(wrapper.getAuthorTag(), null, wrapper.getAuthorAvatarUrl())
             .setDescription(config.getLocaleText(locale, wrapper.getGuild(), attrs))
@@ -210,7 +211,7 @@ public class EmbedMessageBuilder {
     ) {
         final String yesNo = String.format("%d/%d", res.votesForYes(), res.votesForNo());
         final String requredTotal = String.format("%d/%d", res.requredVotes(), res.totalVotes());
-        final byte votingRatio = config.getProperty(BotProperty.J_VOTING_PERCENTAGE_RATIO, Byte.class);
+        final byte votingRatio = handler.getPossibleRemoteProperty(RemoteProperty.R_VOTING_PERCENTAGE_RATIO, guild, Byte.class);
         return new EmbedBuilder()
             .setTitle(config.getLocaleText(title, guild))
             .setDescription(desc)

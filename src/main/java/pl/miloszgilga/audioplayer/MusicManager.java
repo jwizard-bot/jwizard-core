@@ -36,7 +36,8 @@ import java.util.Queue;
 import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
-import pl.miloszgilga.core.configuration.BotProperty;
+import pl.miloszgilga.core.remote.RemoteProperty;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,7 +45,7 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 @Slf4j
 public class MusicManager {
 
-    private final BotConfiguration config;
+    private final RemotePropertyHandler handler;
 
     @Getter(value = AccessLevel.PUBLIC)     private final AudioPlayer audioPlayer;
     @Getter(value = AccessLevel.PUBLIC)     private final TrackScheduler trackScheduler;
@@ -54,12 +55,13 @@ public class MusicManager {
 
     MusicManager(
         PlayerManager playerManager, EmbedMessageBuilder builder, BotConfiguration config, Guild guild,
-        CommandEventWrapper eventWrapper
+        CommandEventWrapper eventWrapper, RemotePropertyHandler handler
     ) {
-        this.config = config;
+        this.handler = handler;
         this.audioPlayer = playerManager.createPlayer();
-        this.trackScheduler = new TrackScheduler(config, builder, audioPlayer, eventWrapper);
-        this.audioPlayer.setVolume(config.getProperty(BotProperty.J_DEFAULT_PLAYER_VOLUME_UNITS, Short.class));
+        this.trackScheduler = new TrackScheduler(config, builder, audioPlayer, eventWrapper, handler);
+        this.audioPlayer.setVolume(handler.getPossibleRemoteProperty(RemoteProperty.R_DEFAULT_PLAYER_VOLUME_UNITS,
+            guild, Short.class));
         this.audioPlayer.addListener(trackScheduler);
         this.audioPlayerSendHandler = new AudioPlayerSendHandler(audioPlayer, guild);
     }
@@ -85,7 +87,8 @@ public class MusicManager {
     }
 
     public short resetPlayerVolume(CommandEventWrapper eventWrapper) {
-        final short defVolume = config.getProperty(BotProperty.J_DEFAULT_PLAYER_VOLUME_UNITS, Short.class);
+        final short defVolume = handler.getPossibleRemoteProperty(RemoteProperty.R_DEFAULT_PLAYER_VOLUME_UNITS,
+            eventWrapper.getGuild(), Short.class);
         audioPlayer.setVolume(defVolume);
         JDALog.info(log, eventWrapper, "Audio player volume was reset to default value (%s points)", defVolume);
         return defVolume;

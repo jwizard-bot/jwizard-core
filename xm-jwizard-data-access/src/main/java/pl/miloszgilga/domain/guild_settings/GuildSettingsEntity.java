@@ -70,7 +70,7 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
         this.audioTextChannelId = musicTextChannelId;
     }
 
-    Integer getSkipRatio() {
+    public Integer getSkipRatio() {
         return skipRatio;
     }
 
@@ -78,23 +78,23 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
         this.skipRatio = skipRatio;
     }
 
-    Boolean getSlashEnabled() {
-        return slashEnabled;
+    public Integer getTimeToLeaveEmptyChannel() {
+        return timeToLeaveEmptyChannel;
     }
 
     void setSlashEnabled(Boolean slashEnabled) {
         this.slashEnabled = slashEnabled;
     }
 
-    Integer getTimeToLeaveChannel() {
-        return timeToLeaveChannel;
+    public Integer getTimeToLeaveNoTracksChannel() {
+        return timeToLeaveNoTracksChannel;
     }
 
     void setTimeToLeaveChannel(Integer timeToLeaveChannel) {
         this.timeToLeaveChannel = timeToLeaveChannel;
     }
 
-    Integer getTimeToEndVoting() {
+    public Integer getTimeToEndVoting() {
         return timeToEndVoting;
     }
 
@@ -102,7 +102,7 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
         this.timeToEndVoting = timeToEndVoting;
     }
 
-    Integer getPlayerVolume() {
+    public Integer getPlayerVolume() {
         return playerVolume;
     }
 
@@ -110,7 +110,7 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
         this.playerVolume = playerVolume;
     }
 
-    Integer getMaxRepeatsSingleTrack() {
+    public Integer getMaxRepeatsSingleTrack() {
         return maxRepeatsSingleTrack;
     }
 
@@ -118,7 +118,7 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
         this.maxRepeatsSingleTrack = maxRepeatsSingleTrack;
     }
 
-    Integer getDjRoleName() {
+    public String getDjRoleName() {
         return djRoleName;
     }
 
@@ -126,7 +126,7 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
         this.djRoleName = djRoleName;
     }
 
-    Integer getI18nLocale() {
+    public String getI18nLocale() {
         return i18nLocale;
     }
 

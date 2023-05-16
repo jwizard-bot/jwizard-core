@@ -37,8 +37,8 @@ import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
+import pl.miloszgilga.core.remote.RemoteProperty;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
-import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
 
@@ -62,9 +62,11 @@ public class RepeatTrackCmd extends AbstractMusicCommand {
 
     @Override
     protected void doExecuteMusicCommand(CommandEventWrapper event) {
-        final int repeats = event.getArgumentAndParse(BotCommandArgument.COUNT_OF_REPEATS);
-        if (repeats < 1 || repeats > config.getProperty(BotProperty.J_MAX_REPEATS_SINGLE_TRACK, Integer.class)) {
-            throw new TrackRepeatsOutOfBoundsException(config, event);
+        final Integer repeats = event.getArgumentAndParse(BotCommandArgument.COUNT_OF_REPEATS);
+        final Integer maxRepeats = handler.getPossibleRemoteProperty(RemoteProperty.R_MAX_REPEATS_SINGLE_TRACK,
+            event.getGuild(), Integer.class);
+        if (repeats < 1 || repeats > maxRepeats) {
+            throw new TrackRepeatsOutOfBoundsException(config, handler, event);
         }
         playerManager.repeatCurrentTrack(event, repeats);
 

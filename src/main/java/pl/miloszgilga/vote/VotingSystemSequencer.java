@@ -40,7 +40,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.misc.UnicodeEmoji;
 import pl.miloszgilga.dto.CommandEventWrapper;
-import pl.miloszgilga.core.configuration.BotProperty;
+import pl.miloszgilga.core.remote.RemoteProperty;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 import static pl.miloszgilga.exception.AudioPlayerException.UserOnVoiceChannelWithBotNotFoundException;
@@ -60,6 +61,7 @@ public class VotingSystemSequencer {
     private final VoteEmbedResponse response;
     private final CommandEventWrapper event;
     private final BotConfiguration config;
+    private final RemotePropertyHandler handler;
 
     private final Function<Message, RestAction<List<Void>>> emojisFunctor = message -> RestAction.allOf(
         message.addReaction(UnicodeEmoji.THUMBS_UP.getCode()),
@@ -68,10 +70,13 @@ public class VotingSystemSequencer {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public VotingSystemSequencer(VoteEmbedResponse response, CommandEventWrapper event, BotConfiguration config) {
+    public VotingSystemSequencer(
+        VoteEmbedResponse response, CommandEventWrapper event, BotConfiguration config, RemotePropertyHandler handler
+    ) {
         this.response = response;
         this.event = event;
         this.config = config;
+        this.handler = handler;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,7 +100,8 @@ public class VotingSystemSequencer {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void fabricateEventWaiter(VotePredictorData predictorData) {
-        final long elapsedTimeInSec = config.getProperty(BotProperty.J_INACTIVITY_VOTING_TIMEOUT, Long.class);
+        final long elapsedTimeInSec = handler
+            .getPossibleRemoteProperty(RemoteProperty.R_INACTIVITY_VOTING_TIMEOUT, event.getGuild(), Long.class);
         config.getEventWaiter().waitForEvent(
             GuildMessageReactionAddEvent.class,
             e -> onAfterVotedPredicate(e, predictorData),
@@ -155,7 +161,8 @@ public class VotingSystemSequencer {
             .count();
         if (totalMembersOnChannel == 0) return false;
 
-        final byte percentageRatio = config.getProperty(BotProperty.J_VOTING_PERCENTAGE_RATIO, Byte.class); // 0 - 100
+        final byte percentageRatio = handler // 0 - 100
+            .getPossibleRemoteProperty(RemoteProperty.R_VOTING_PERCENTAGE_RATIO, event.getGuild(), Byte.class);
         final double differentYesRatio = (1.0 * predictorData.votesForYes().get() / totalMembersOnChannel) * 100;
         final double differentNoRatio = (1.0 * predictorData.votesForNo().get() / totalMembersOnChannel) * 100;
 

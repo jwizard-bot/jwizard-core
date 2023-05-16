@@ -56,7 +56,7 @@ public abstract class AbstractDjCommand extends AbstractMusicCommand {
 
     @Override
     protected void doExecuteMusicCommand(CommandEventWrapper event) {
-        final ValidateUserDetails details = Utilities.validateUserDetails(event, config);
+        final ValidateUserDetails details = Utilities.validateUserDetails(event, handler);
         final SchedulerActions actions = playerManager.getMusicManager(event).getActions();
         if (allowAlsoForNormal) {
             final boolean allFromOne = actions.checkIfAllTrackOrTracksIsFromSelectedMember(event.getMember());

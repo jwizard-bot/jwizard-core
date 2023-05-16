@@ -55,7 +55,7 @@ public abstract class AbstractVoteMusicCommand extends AbstractMusicCommand {
             throw new VotingModuleIsTurnedOffException(config, event);
         }
         final VoteEmbedResponse response = doExecuteVoteMusicCommand(event);
-        final VotingSystemSequencer votingSystemSequencer = new VotingSystemSequencer(response, event, config);
+        final VotingSystemSequencer votingSystemSequencer = new VotingSystemSequencer(response, event, config, handler);
         votingSystemSequencer.initializeAndStartVoting();
     }
 

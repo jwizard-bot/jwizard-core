@@ -45,7 +45,8 @@ import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.TrackPosition;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
-import pl.miloszgilga.core.configuration.BotProperty;
+import pl.miloszgilga.core.remote.RemoteProperty;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,6 +58,7 @@ public class SchedulerActions {
     private final BotConfiguration config;
     private final EmbedMessageBuilder builder;
     private final CommandEventWrapper deliveryEvent;
+    private final RemotePropertyHandler handler;
 
     @Getter(value = AccessLevel.PACKAGE)    private final Queue<AudioQueueExtendedInfo> trackQueue = new LinkedList<>();
 
@@ -72,11 +74,14 @@ public class SchedulerActions {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    SchedulerActions(TrackScheduler trackScheduler, BotConfiguration config, EmbedMessageBuilder builder) {
+    SchedulerActions(
+        TrackScheduler trackScheduler, BotConfiguration config, EmbedMessageBuilder builder, RemotePropertyHandler handler
+    ) {
         this.audioPlayer = trackScheduler.getAudioPlayer();
         this.deliveryEvent = trackScheduler.getDeliveryEvent();
         this.config = config;
         this.builder = builder;
+        this.handler = handler;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

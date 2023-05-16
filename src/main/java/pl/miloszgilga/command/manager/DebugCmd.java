@@ -47,6 +47,7 @@ import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.embed.EmbedPaginationBuilder;
 import pl.miloszgilga.command.AbstractManagerCommand;
 import pl.miloszgilga.core.IEnumerableLocaleSet;
+import pl.miloszgilga.core.remote.RemoteProperty;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
@@ -80,10 +81,12 @@ public class DebugCmd extends AbstractManagerCommand {
     @Override
     protected void doExecuteManagerCommand(CommandEventWrapper event) {
         final String slashStatus = config.getProperty(BotProperty.J_SLASH_COMMANDS_ENABLED, Boolean.class) ? "ON" : "OFF";
-        final String votingInactivityTime = config.getProperty(BotProperty.J_INACTIVITY_VOTING_TIMEOUT) + "s";
-        final String noTracksInactivityTime = config.getProperty(BotProperty.J_INACTIVITY_EMPTY_TIMEOUT) + "s";
+        final String votingInactivityTime = handler
+            .getPossibleRemoteProperty(RemoteProperty.R_INACTIVITY_VOTING_TIMEOUT, event.getGuild()) + "s";
+        final String noTracksInactivityTime = handler
+            .getPossibleRemoteProperty(RemoteProperty.R_INACTIVITY_NO_TRACK_TIMEOUT, event.getGuild()) + "s";
         final String ownerTag = Objects.requireNonNull(event.getGuild().getOwner()).getUser().getAsTag();
-
+        final String selectedLang = handler.getPossibleRemoteProperty(RemoteProperty.R_SELECTED_LOCALE, event.getGuild());
         final long totalM = Runtime.getRuntime().totalMemory() / 1024 / 1024;
         final long usedM = totalM - (Runtime.getRuntime().freeMemory() / 1024 / 1024);
 

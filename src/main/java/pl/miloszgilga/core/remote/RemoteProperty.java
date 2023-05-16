@@ -38,7 +38,15 @@ import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
 @RequiredArgsConstructor
 public enum RemoteProperty {
 
-    R_TEXT_MUSIC_CHANNEL_ID             (null, false, GuildSettingsEntity::getAudioTextChannelId);
+    R_TEXT_MUSIC_CHANNEL_ID             (null, false, GuildSettingsEntity::getAudioTextChannelId),
+    R_DJ_ROLE_NAME                      (BotProperty.J_DJ_ROLE_NAME, true, GuildSettingsEntity::getDjRoleName),
+    R_SELECTED_LOCALE                   (BotProperty.J_SELECTED_LOCALE, true, GuildSettingsEntity::getI18nLocale),
+    R_VOTING_PERCENTAGE_RATIO           (BotProperty.J_VOTING_PERCENTAGE_RATIO, true, GuildSettingsEntity::getSkipRatio),
+    R_DEFAULT_PLAYER_VOLUME_UNITS       (BotProperty.J_DEFAULT_PLAYER_VOLUME_UNITS, true, GuildSettingsEntity::getPlayerVolume),
+    R_MAX_REPEATS_SINGLE_TRACK          (BotProperty.J_MAX_REPEATS_SINGLE_TRACK, true, GuildSettingsEntity::getMaxRepeatsSingleTrack),
+    R_INACTIVITY_VOTING_TIMEOUT         (BotProperty.J_INACTIVITY_VOTING_TIMEOUT, true, GuildSettingsEntity::getTimeToEndVoting),
+    R_INACTIVITY_EMPTY_TIMEOUT          (BotProperty.J_INACTIVITY_EMPTY_TIMEOUT, true, GuildSettingsEntity::getTimeToLeaveEmptyChannel),
+    R_INACTIVITY_NO_TRACK_TIMEOUT       (BotProperty.J_INACTIVITY_NO_TRACK_TIMEOUT, true, GuildSettingsEntity::getTimeToLeaveNoTracksChannel);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

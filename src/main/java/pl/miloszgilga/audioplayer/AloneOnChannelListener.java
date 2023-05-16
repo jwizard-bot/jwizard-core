@@ -36,7 +36,8 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import pl.miloszgilga.core.configuration.BotProperty;
+import pl.miloszgilga.core.remote.RemoteProperty;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,16 +47,17 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 public class AloneOnChannelListener {
 
     private final BotConfiguration config;
+    private final RemotePropertyHandler handler;
     private final PlayerManager playerManager;
 
     private JDA jda;
-    private int maxInactivitySeconds;
     private final Map<Long, Instant> aloneFromTime = new HashMap<>();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    AloneOnChannelListener(BotConfiguration config, PlayerManager playerManager) {
+    AloneOnChannelListener(BotConfiguration config, RemotePropertyHandler handler, PlayerManager playerManager) {
         this.config = config;
+        this.handler = handler;
         this.playerManager = playerManager;
     }
 
@@ -63,15 +65,15 @@ public class AloneOnChannelListener {
 
     public void initialize(JDA jda) {
         this.jda = jda;
-        maxInactivitySeconds = config.getProperty(BotProperty.J_INACTIVITY_EMPTY_TIMEOUT, Integer.class);
-        if (maxInactivitySeconds < 1) return;
         config.getThreadPool().scheduleWithFixedDelay(this::coccurentAloneCheck, 0, 5, TimeUnit.SECONDS);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void onEveryVoiceUpdate(GuildVoiceUpdateEvent event) {
-        if (maxInactivitySeconds < 1) return;
+        final Integer maxInactivity = handler.getPossibleRemoteProperty(RemoteProperty.R_INACTIVITY_EMPTY_TIMEOUT,
+            event.getGuild(), Integer.class);
+        if (maxInactivity < 1) return;
 
         final Guild guild = event.getGuild();
         if (Objects.isNull(guild.getAudioManager().getSendingHandler())) return;
@@ -91,12 +93,15 @@ public class AloneOnChannelListener {
     private void coccurentAloneCheck() {
         final Set<Long> removeFromGuild = new HashSet<>();
         for (final Map.Entry<Long, Instant> entry : aloneFromTime.entrySet()) {
-            if (entry.getValue().getEpochSecond() > (Instant.now().getEpochSecond() - maxInactivitySeconds)) {
-                continue;
-            }
             final Guild guild = jda.getGuildById(entry.getKey());
             if (Objects.isNull(guild)) {
                 removeFromGuild.add(entry.getKey());
+                continue;
+            }
+            final Integer maxInactivity = handler.getPossibleRemoteProperty(RemoteProperty.R_INACTIVITY_EMPTY_TIMEOUT,
+                guild, Integer.class);
+            if (maxInactivity < 1) continue;
+            if (entry.getValue().getEpochSecond() > (Instant.now().getEpochSecond() - maxInactivity)) {
                 continue;
             }
             final MusicManager musicManager = playerManager.getMusicManager(guild);

@@ -49,6 +49,7 @@ import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.exception.BugTracker;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,13 +67,14 @@ public class TrackScheduler extends AudioEventAdapter {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     TrackScheduler(
-        BotConfiguration config, EmbedMessageBuilder builder, AudioPlayer audioPlayer, CommandEventWrapper deliveryEvent
+        BotConfiguration config, EmbedMessageBuilder builder, AudioPlayer audioPlayer, CommandEventWrapper deliveryEvent,
+        RemotePropertyHandler handler
     ) {
         this.config = config;
         this.builder = builder;
         this.audioPlayer = audioPlayer;
         this.deliveryEvent = deliveryEvent;
-        this.actions = new SchedulerActions(this, config, builder);
+        this.actions = new SchedulerActions(this, config, builder, handler);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
