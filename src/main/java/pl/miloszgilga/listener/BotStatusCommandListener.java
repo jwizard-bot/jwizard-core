@@ -27,21 +27,20 @@ package pl.miloszgilga.listener;
 import lombok.extern.slf4j.Slf4j;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.ShutdownEvent;
+import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
-
-import java.util.List;
-import java.util.ArrayList;
 
 import pl.miloszgilga.embed.EmbedColor;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.audioplayer.AloneOnChannelListener;
+import pl.miloszgilga.core.remote.RemoteProperty;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.AbstractListenerAdapter;
-import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
 
@@ -55,35 +54,18 @@ public class BotStatusCommandListener extends AbstractListenerAdapter {
 
     private final AloneOnChannelListener aloneListener;
     private final PlayerManager playerManager;
+    private final RemotePropertyHandler handler;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     BotStatusCommandListener(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, AloneOnChannelListener aloneListener,
-        PlayerManager playerManager
+        PlayerManager playerManager, RemotePropertyHandler handler
     ) {
         super(config, embedBuilder);
         this.aloneListener = aloneListener;
         this.playerManager = playerManager;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private void addDjRoleToGuilds(ReadyEvent event) {
-        final String defaultDjRoleName = config.getProperty(BotProperty.J_DJ_ROLE_NAME);
-        final List<String> addedDjRolesIntoGulds = new ArrayList<>();
-        for (final Guild guild : event.getJDA().getGuilds()) {
-            final boolean roleAlreadyExist = guild.getRoles().stream()
-                .anyMatch(r -> r.getName().equals(defaultDjRoleName));
-            if (roleAlreadyExist) continue;
-            addedDjRolesIntoGulds.add(guild.getName());
-            guild.createRole()
-                .setName(defaultDjRoleName)
-                .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
-                .submit();
-        }
-        if (addedDjRolesIntoGulds.isEmpty()) return;
-        log.info("DJ role '{}' for guilds '{}' was successfully created", defaultDjRoleName, addedDjRolesIntoGulds);
+        this.handler = handler;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,7 +94,22 @@ public class BotStatusCommandListener extends AbstractListenerAdapter {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override public void onReady(ReadyEvent event)                         { addDjRoleToGuilds(event); }
+    private void createDjRoleOnDelete(RoleDeleteEvent event) {
+        final Role deletedRole = event.getRole();
+        final Guild guild = event.getGuild();
+        final String defaultDjRoleName = handler.getPossibleRemoteProperty(RemoteProperty.R_DJ_ROLE_NAME, guild);
+
+        if (!deletedRole.getName().equals(defaultDjRoleName)) return;
+        guild.createRole()
+            .setName(defaultDjRoleName)
+            .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
+            .submit();
+        log.info("Created removed DJ role '{}' for guild '{}'", defaultDjRoleName, guild.getName());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override public void onRoleDelete(RoleDeleteEvent event)               { createDjRoleOnDelete(event); }
     @Override public void onGuildVoiceJoin(GuildVoiceJoinEvent event)       { setBotDeafen(event); }
     @Override public void onGuildVoiceUpdate(GuildVoiceUpdateEvent event)   { aloneListener.onEveryVoiceUpdate(event); }
     @Override public void onShutdown(ShutdownEvent event)                   { shutdownBotInstance(event); }
