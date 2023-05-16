@@ -63,7 +63,7 @@ public class SkipQueueToTrackCmd extends AbstractDjCommand {
     @Override
     protected void doExecuteDjCommand(CommandEventWrapper event) {
         final MusicManager musicManager = playerManager.getMusicManager(event);
-        final int trackPos = event.getArgumentAndParse(BotCommandArgument.SKIP_TRACK_POSITION);
+        final Integer trackPos = event.getArgumentAndParse(BotCommandArgument.SKIP_TRACK_POSITION);
 
         if (musicManager.getActions().checkInvTrackPosition(trackPos)) {
             throw new TrackPositionOutOfBoundsException(config, event, musicManager.getQueue().size());

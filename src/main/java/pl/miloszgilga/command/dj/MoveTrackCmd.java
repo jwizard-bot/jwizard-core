@@ -59,8 +59,8 @@ public class MoveTrackCmd extends AbstractDjCommand {
 
     @Override
     protected void doExecuteDjCommand(CommandEventWrapper event) {
-        final int previousPosition = event.getArgumentAndParse(BotCommandArgument.MOVE_TRACK_POSITION_FROM);
-        final int requestedPosition = event.getArgumentAndParse(BotCommandArgument.MOVE_TRACK_POSITION_TO);
+        final Integer previousPosition = event.getArgumentAndParse(BotCommandArgument.MOVE_TRACK_POSITION_FROM);
+        final Integer requestedPosition = event.getArgumentAndParse(BotCommandArgument.MOVE_TRACK_POSITION_TO);
 
         final TrackPosition trackPositions = new TrackPosition(previousPosition, requestedPosition);
         final AudioTrack movedTrack = playerManager.moveTrackToSelectedPosition(event, trackPositions);

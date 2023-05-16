@@ -65,7 +65,7 @@ public class VoteSkipQueueToTrackCmd extends AbstractVoteMusicCommand {
     @Override
     protected VoteEmbedResponse doExecuteVoteMusicCommand(CommandEventWrapper event) {
         final MusicManager musicManager = playerManager.getMusicManager(event);
-        final int trackPos = event.getArgumentAndParse(BotCommandArgument.VOTE_SKIP_TRACK_POSITION);
+        final Integer trackPos = event.getArgumentAndParse(BotCommandArgument.VOTE_SKIP_TRACK_POSITION);
 
         if (musicManager.getQueue().isEmpty()) {
             throw new TrackQueueIsEmptyException(config, event);

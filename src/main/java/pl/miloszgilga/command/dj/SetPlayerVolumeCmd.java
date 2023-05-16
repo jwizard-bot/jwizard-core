@@ -59,7 +59,7 @@ public class SetPlayerVolumeCmd extends AbstractDjCommand {
     @Override
     protected void doExecuteDjCommand(CommandEventWrapper event) {
         final short currentVolumeUnits = playerManager.getMusicManager(event).getPlayerVolume();
-        final short volumeUnits = event.getArgumentAndParse(BotCommandArgument.VOLUME_POINTS);
+        final Short volumeUnits = event.getArgumentAndParse(BotCommandArgument.VOLUME_POINTS);
         if (volumeUnits < 0 || volumeUnits > 150) {
             throw new VolumeUnitsOutOfBoundsException(config, event);
         }
