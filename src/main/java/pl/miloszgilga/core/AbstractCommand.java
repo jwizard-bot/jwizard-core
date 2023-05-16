@@ -68,8 +68,7 @@ public abstract class AbstractCommand extends SlashCommand {
         this.config = config;
         this.handler = handler;
         this.embedBuilder = embedBuilder;
-        this.arguments = config.getLocaleText(command.getArgSyntax());
-        this.guildOnly = false;
+        this.arguments = command.prepareArgs(config);
         this.options = BotCommandArgument.fabricateSlashOptions(config, command);
     }
 

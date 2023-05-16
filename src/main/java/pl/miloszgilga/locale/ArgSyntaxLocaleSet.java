@@ -25,14 +25,22 @@
 package pl.miloszgilga.locale;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Objects;
 
 import pl.miloszgilga.core.IEnumerableLocaleSet;
+import pl.miloszgilga.core.configuration.BotProperty;
+import pl.miloszgilga.core.configuration.BotConfiguration;
+
+import static pl.miloszgilga.core.configuration.BotProperty.*;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
 public enum ArgSyntaxLocaleSet implements IEnumerableLocaleSet {
 
     PLAY_TRACK_ARG_SYNTAX                           ("jwizard.command.arguments.PlayTrack"),
@@ -46,4 +54,24 @@ public enum ArgSyntaxLocaleSet implements IEnumerableLocaleSet {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final String holder;
+    private Map<String, BotProperty> placeholders;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    ArgSyntaxLocaleSet(String holder) {
+        this.holder = holder;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public String parse(BotConfiguration config) {
+        if (Objects.isNull(placeholders)) {
+            return config.getLocaleText(this);
+        }
+        final Map<String, Object> replacedPlaceholders = new HashMap<>();
+        for (final Map.Entry<String, BotProperty> placeholder : placeholders.entrySet()) {
+            replacedPlaceholders.put(placeholder.getKey(), config.getProperty(placeholder.getValue()));
+        }
+        return config.getLocaleText(this, replacedPlaceholders);
+    }
 }

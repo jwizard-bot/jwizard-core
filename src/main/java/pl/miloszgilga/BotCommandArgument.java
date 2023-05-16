@@ -71,7 +71,8 @@ public enum BotCommandArgument {
 
     public static List<OptionData> fabricateSlashOptions(BotConfiguration config, BotCommand originCmd) {
         if (Objects.isNull(originCmd.getArgSyntax())) return List.of();
-        final String syntaxDesc = config.getLocaleText(originCmd.getArgSyntax());
+
+        final String syntaxDesc = originCmd.getArgSyntax().parse(config);
         return Arrays.stream(values())
             .filter(v -> v.command.equals(originCmd))
             .map(c -> new OptionData(c.slashOption, c.slashDesc, syntaxDesc, c.isRequired()))

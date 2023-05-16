@@ -196,4 +196,8 @@ public enum BotCommand {
     public static boolean checkIfSlashExist(String commandName) {
         return Arrays.stream(values()).anyMatch(v -> v.getName().equals(commandName) && v.slashActive);
     }
+
+    public String prepareArgs(BotConfiguration config) {
+        return Objects.isNull(argSyntax) ? StringUtils.EMPTY : argSyntax.parse(config);
+    }
 }

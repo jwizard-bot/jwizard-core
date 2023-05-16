@@ -34,7 +34,6 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.command.CommandClient;
 
 import java.util.*;
-import org.apache.commons.lang3.StringUtils;
 
 import pl.miloszgilga.BotCommandArgument;
 import pl.miloszgilga.misc.QueueAfterParam;
@@ -146,7 +145,8 @@ public class CommandEventWrapper {
             .filter(a -> a.getKey().equals(argument))
             .map(Map.Entry::getValue)
             .findFirst()
-            .orElse(StringUtils.EMPTY);
+            .orElse(null);
+        if (Objects.isNull(argumentValue)) return null;
         return argument.parse(argumentValue);
     }
 }
