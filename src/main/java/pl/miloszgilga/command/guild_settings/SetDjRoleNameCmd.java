@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.exceptions.HierarchyException;
 
 import java.util.Map;
 import java.util.List;
@@ -53,6 +54,7 @@ import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
 import pl.miloszgilga.domain.guild_settings.IGuildSettingsRepository;
 
 import static pl.miloszgilga.exception.SettingsException.RoleAlreadyExistException;
+import static pl.miloszgilga.exception.SettingsException.InsufficientPermissionRoleHierarchyException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -74,37 +76,43 @@ public class SetDjRoleNameCmd extends AbstractGuildSettingsCommand {
         final String djRoleName = event.getArgumentAndParse(BotCommandArgument.SET_DJ_ROLE_NAME_TAG);
         final String defDjRoleName = config.getProperty(BotProperty.J_DJ_ROLE_NAME);
         final String roleName = handler.getPossibleRemoteProperty(RemoteProperty.R_DJ_ROLE_NAME, event.getGuild());
+        final List<Role> existingRoles = event.getGuild().getRolesByName(roleName, true);
 
         GuildSettingsEntity settingsToSave;
         MessageEmbed messageEmbed;
-
-        if (Objects.isNull(djRoleName) || djRoleName.equals(StringUtils.EMPTY)) { // reset
-            settingsToSave = cacheableGuildSettingsDao.setCacheableProperty(event,
-                guildSettings -> guildSettings.setDjRoleName(null));
-            messageEmbed = embedBuilder.createMessage(ResLocaleSet.DJ_ROLE_NAME_WAS_RESET_MESS, Map.of(
-                "setDjRoleNameCmd", BotCommand.SET_DJ_ROLE_NAME.parseWithPrefix(config)
-            ), event.getGuild());
-            JDALog.info(log, event, "DJ role name was successfully reset to '%s' (default value)", defDjRoleName);
-        } else {
-            final String abbreviateRole = djRoleName.substring(0, Math.min(djRoleName.length(), 20));
-            if (!(event.getGuild().getRolesByName(abbreviateRole, true).isEmpty())) {
-                throw new RoleAlreadyExistException(config, event);
+        try {
+            if (Objects.isNull(djRoleName) || djRoleName.equals(StringUtils.EMPTY)) { // reset
+                for (final Role role : existingRoles) {
+                    role.getManager().setName(defDjRoleName).complete();
+                }
+                settingsToSave = cacheableGuildSettingsDao.setCacheableProperty(event,
+                    guildSettings -> guildSettings.setDjRoleName(null));
+                messageEmbed = embedBuilder.createMessage(ResLocaleSet.DJ_ROLE_NAME_WAS_RESET_MESS, Map.of(
+                    "setDjRoleNameCmd", BotCommand.SET_DJ_ROLE_NAME.parseWithPrefix(config)
+                ), event.getGuild());
+                JDALog.info(log, event, "DJ role name was successfully reset to '%s' (default value)", defDjRoleName);
+            } else {
+                final String abbreviateRole = djRoleName.substring(0, Math.min(djRoleName.length(), 20));
+                if (!(event.getGuild().getRolesByName(abbreviateRole, true).isEmpty())) {
+                    throw new RoleAlreadyExistException(config, event);
+                }
+                for (final Role role : existingRoles) {
+                    role.getManager().setName(abbreviateRole).complete();
+                }
+                settingsToSave = cacheableGuildSettingsDao.setCacheableProperty(event,
+                    guildSettings -> guildSettings.setDjRoleName(abbreviateRole));
+                messageEmbed = embedBuilder.createMessage(ResLocaleSet.DJ_ROLE_NAME_WAS_SETTED_MESS, Map.of(
+                    "djRoleName", djRoleName,
+                    "setDjRoleNameCmd", BotCommand.SET_DJ_ROLE_NAME.parseWithPrefix(config)
+                ), event.getGuild());
+                JDALog.info(log, event, "DJ role name was successfully setted to '%s'", djRoleName);
             }
-            settingsToSave = cacheableGuildSettingsDao.setCacheableProperty(event,
-                guildSettings -> guildSettings.setDjRoleName(abbreviateRole));
-            messageEmbed = embedBuilder.createMessage(ResLocaleSet.DJ_ROLE_NAME_WAS_SETTED_MESS, Map.of(
-                "djRoleName", djRoleName,
-                "setDjRoleNameCmd", BotCommand.SET_DJ_ROLE_NAME.parseWithPrefix(config)
-            ), event.getGuild());
-            JDALog.info(log, event, "DJ role name was successfully setted to '%s'", djRoleName);
+            repository.save(settingsToSave);
+            event.sendEmbedMessage(messageEmbed);
+        } catch (HierarchyException ex) {
+            final String botRoleName = Objects.isNull(event.getGuild().getBotRole())
+                ? StringUtils.EMPTY : event.getGuild().getBotRole().getName();
+            throw new InsufficientPermissionRoleHierarchyException(config, event, botRoleName);
         }
-        final GuildSettingsEntity savedSettings = repository.save(settingsToSave);
-        final List<Role> existingRoles = event.getGuild().getRolesByName(roleName, true);
-        for (final Role role : existingRoles) {
-            role.getManager()
-                .setName(Objects.isNull(savedSettings.getDjRoleName()) ? defDjRoleName : savedSettings.getDjRoleName())
-                .queue();
-        }
-        event.sendEmbedMessage(messageEmbed);
     }
 }

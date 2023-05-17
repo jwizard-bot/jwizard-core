@@ -118,4 +118,17 @@ public class SettingsException {
             JDALog.error(log, event, "Attempt to assign time to leave no tracks seconds value below 5 or greater than default");
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Slf4j public static class InsufficientPermissionRoleHierarchyException extends BotException {
+        public InsufficientPermissionRoleHierarchyException(
+            BotConfiguration config, CommandEventWrapper event, String botRoleName
+        ) {
+            super(config, event.getGuild(), ExceptionLocaleSet.INSUFFICIENT_PERMISSION_ROLE_HIERARCHY, Map.of(
+                "botRole", botRoleName
+            ), BugTracker.INSUFFICIENT_PERMISSION_ROLE_HIERARCHY);
+            JDALog.error(log, event, "Attempt to change role name with insufficient permissions (hierarchy)");
+        }
+    }
 }

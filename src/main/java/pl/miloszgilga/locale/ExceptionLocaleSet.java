@@ -54,6 +54,7 @@ public enum ExceptionLocaleSet implements IEnumerableLocaleSet {
     TIME_TO_END_VOTING_OUT_OF_BOUNDS                ("jwizard.exception.TimeToEndVotingOutOfBoundsException"),
     TIME_TO_LEAVE_EMPTY_CHANNEL_OUT_OF_BOUNDS       ("jwizard.exception.TimeToLeaveEmptyChannelOutOfBoundsException"),
     TIME_TO_LEAVE_NO_TRACKS_OUT_OF_BOUNDS           ("jwizard.exception.TimeToLeaveNoTracksOutOfBoundsException"),
+    INSUFFICIENT_PERMISSION_ROLE_HIERARCHY          ("jwizard.exception.InsufficientPermissionRoleHierarchyException"),
 
     STATS_MODULE_IS_ALREADY_RUNNING                 ("jwizard.exception.StatsModuleIsAlreadyRunningException"),
     STATS_MODULE_IS_ALREADY_DISABLED                ("jwizard.exception.StatsModuleIsAlreadyDisabledException"),
