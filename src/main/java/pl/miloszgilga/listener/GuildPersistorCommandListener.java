@@ -24,6 +24,10 @@
 
 package pl.miloszgilga.listener;
 
+import lombok.extern.slf4j.Slf4j;
+
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.guild.*;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateNameEvent;
@@ -31,10 +35,13 @@ import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.*;
 
+import pl.miloszgilga.embed.EmbedColor;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.cacheable.CacheableGuildSettingsDao;
+import pl.miloszgilga.core.remote.RemoteProperty;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.AbstractListenerAdapter;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
@@ -48,23 +55,27 @@ import pl.miloszgilga.domain.guild_settings.IGuildSettingsRepository;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+@Slf4j
 @JDAInjectableListenerLazyService
 public class GuildPersistorCommandListener extends AbstractListenerAdapter {
 
     private final IGuildRepository guildRepository;
     private final IGuildSettingsRepository settingsRepository;
     private final CacheableGuildSettingsDao cacheableGuildSettingsDao;
+    private final RemotePropertyHandler handler;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     GuildPersistorCommandListener(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, IGuildRepository guildRepository,
-        IGuildSettingsRepository settingsRepository, CacheableGuildSettingsDao cacheableGuildSettingsDao
+        IGuildSettingsRepository settingsRepository, CacheableGuildSettingsDao cacheableGuildSettingsDao,
+        RemotePropertyHandler handler
     ) {
         super(config, embedBuilder);
         this.guildRepository = guildRepository;
         this.settingsRepository = settingsRepository;
         this.cacheableGuildSettingsDao = cacheableGuildSettingsDao;
+        this.handler = handler;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,6 +89,23 @@ public class GuildPersistorCommandListener extends AbstractListenerAdapter {
         guild.persistGuildModules(new GuildModulesEntity());
 
         guildRepository.save(guild);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void createDjRole(GenericGuildEvent event) {
+        final Guild guild = event.getGuild();
+        final String defaultDjRoleName = handler.getPossibleRemoteProperty(RemoteProperty.R_DJ_ROLE_NAME, guild);
+        final List<Role> djRoles = event.getGuild().getRolesByName(defaultDjRoleName, false);
+        if (djRoles.isEmpty()) {
+            final Role djRole = guild.createRole()
+                .setName(defaultDjRoleName)
+                .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
+                .complete();
+            guild.modifyRolePositions().selectPosition(djRole).moveTo(0).queue();
+            log.info("Create and modified DJ role position for guild '{}'", guild.getName());
+        }
+        createOnlyIfGuildTableNotExist(event);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,7 +136,7 @@ public class GuildPersistorCommandListener extends AbstractListenerAdapter {
 
     @Override public void onGuildUpdateName(GuildUpdateNameEvent event)         { updateGuildName(event); }
     @Override public void onGuildReady(GuildReadyEvent event)                   { createOnlyIfGuildTableNotExist(event); }
-    @Override public void onGuildJoin(GuildJoinEvent event)                     { createOnlyIfGuildTableNotExist(event); }
+    @Override public void onGuildJoin(GuildJoinEvent event)                     { createDjRole(event); }
     @Override public void onTextChannelDelete(TextChannelDeleteEvent event)     { deleteTextChannel(event); }
     @Transactional @Override public void onGuildLeave(GuildLeaveEvent event)    { deleteGuildTables(event); }
     @Transactional @Override public void onGuildBan(GuildBanEvent event)        { deleteGuildTables(event); }
