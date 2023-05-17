@@ -29,11 +29,18 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.ISnowflake;
+import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 
+import java.util.List;
+import java.util.Collections;
+import java.util.stream.Stream;
+
+import org.springframework.transaction.annotation.Transactional;
 import pl.miloszgilga.embed.EmbedColor;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.audioplayer.PlayerManager;
@@ -43,6 +50,8 @@ import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.AbstractListenerAdapter;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableListenerLazyService;
+
+import pl.miloszgilga.domain.guild.IGuildRepository;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -55,17 +64,19 @@ public class BotStatusCommandListener extends AbstractListenerAdapter {
     private final AloneOnChannelListener aloneListener;
     private final PlayerManager playerManager;
     private final RemotePropertyHandler handler;
+    private final IGuildRepository guildRepository;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     BotStatusCommandListener(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, AloneOnChannelListener aloneListener,
-        PlayerManager playerManager, RemotePropertyHandler handler
+        PlayerManager playerManager, RemotePropertyHandler handler, IGuildRepository guildRepository
     ) {
         super(config, embedBuilder);
         this.aloneListener = aloneListener;
         this.playerManager = playerManager;
         this.handler = handler;
+        this.guildRepository = guildRepository;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,6 +85,21 @@ public class BotStatusCommandListener extends AbstractListenerAdapter {
         if (!event.getMember().getUser().isBot()) return;
         event.getGuild().getAudioManager().setSelfDeafened(true);
         event.getGuild().getSelfMember().deafen(true).complete();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void removeUnusedTables(ReadyEvent event) {
+        final List<String> guildDcIds = event.getJDA().getGuilds().stream().map(ISnowflake::getId).toList();
+        final List<String> guildDcIdsInDb = guildRepository.findAllGuilds();
+
+        final List<String> guildsToDelete = Stream.concat(guildDcIds.stream(), guildDcIdsInDb.stream())
+            .filter(item -> Collections.frequency(guildDcIds, item) + Collections.frequency(guildDcIdsInDb, item) == 1)
+            .toList();
+        for (final String guildId : guildsToDelete) {
+            guildRepository.deleteGuildEntityByDiscordId(guildId);
+            log.info("Remove unused guild tables from guild '{}'", guildId);
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -109,6 +135,7 @@ public class BotStatusCommandListener extends AbstractListenerAdapter {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    @Transactional @Override public void onReady(ReadyEvent event)          { removeUnusedTables(event); }
     @Override public void onRoleDelete(RoleDeleteEvent event)               { createDjRoleOnDelete(event); }
     @Override public void onGuildVoiceJoin(GuildVoiceJoinEvent event)       { setBotDeafen(event); }
     @Override public void onGuildVoiceUpdate(GuildVoiceUpdateEvent event)   { aloneListener.onEveryVoiceUpdate(event); }
