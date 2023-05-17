@@ -104,7 +104,7 @@ public class BotStatusCommandListener extends AbstractListenerAdapter {
             .setName(defaultDjRoleName)
             .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
             .submit();
-        log.info("Created removed DJ role '{}' for guild '{}'", defaultDjRoleName, guild.getName());
+        log.info("Re-created removed DJ role '{}' for guild '{}'", defaultDjRoleName, guild.getName());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

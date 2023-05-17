@@ -30,6 +30,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,4 +50,10 @@ public interface IGuildRepository extends JpaRepository<GuildEntity, Long> {
         where e.discordId = :discordId
     """)
     Optional<GuildEntity> getGuildByDiscordIdJoinLazy(@Param("discordId") String discordId);
+
+    @Query(value = "select e.discordId from GuildEntity e")
+    List<String> findAllGuilds();
+
+    @Query(value = "select count(e.id) > 0 from GuildEntity e where e.discordId = :discordId")
+    boolean guildEntityExist(@Param("discordId") String discordId);
 }

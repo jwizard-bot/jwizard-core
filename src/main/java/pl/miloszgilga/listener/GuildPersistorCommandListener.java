@@ -70,8 +70,7 @@ public class GuildPersistorCommandListener extends AbstractListenerAdapter {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void createOnlyIfGuildTableNotExist(GenericGuildEvent event) {
-        final Optional<GuildEntity> optionalGuildEntity = guildRepository.findByDiscordId(event.getGuild().getId());
-        if (optionalGuildEntity.isPresent()) return;
+        if (guildRepository.guildEntityExist(event.getGuild().getId())) return;
 
         final GuildEntity guild = new GuildEntity(event.getGuild());
         guild.persistGuildStats(new GuildStatsEntity());
