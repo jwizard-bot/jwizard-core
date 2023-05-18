@@ -28,6 +28,8 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.BotCommandArgument;
 import pl.miloszgilga.misc.Utilities;
@@ -70,15 +72,16 @@ public class MemberStatsCmd extends AbstractStatsCommand {
 
     @Override
     protected void doExecuteStatsCommand(CommandEventWrapper event) {
-        final String[] userId = new String[1];
-        userId[0] = event.getArgumentAndParse(BotCommandArgument.MEMBER_STATS_MEMBER_TAG);
-        if (userId[0].contains("@")) userId[0] = userId[0].replaceAll("[@<>]", "");
-
-        final User user = Utilities.checkIfMemberInGuildExist(event, userId[0], config).getUser();
-        statsRepository.findByMember_DiscordIdAndGuild_DiscordId(userId[0], event.getGuildId()).ifPresentOrElse(
+        final AtomicReference<String> userId = new AtomicReference<>();
+        userId.set(event.getArgumentAndParse(BotCommandArgument.MEMBER_STATS_MEMBER_TAG));
+        if (userId.get().contains("@")) {
+            userId.set(userId.get().replaceAll("[@<>]", ""));
+        }
+        final User user = Utilities.checkIfMemberInGuildExist(event, userId.get(), config).getUser();
+        statsRepository.findByMember_DiscordIdAndGuild_DiscordId(userId.get(), event.getGuildId()).ifPresentOrElse(
             memberStats -> {
                 final MemberSettingsEntity settings = settingsRepository
-                    .findByMember_DiscordIdAndGuild_DiscordId(userId[0], event.getGuildId())
+                    .findByMember_DiscordIdAndGuild_DiscordId(userId.get(), event.getGuildId())
                     .orElseThrow(() -> new GuildHasNoStatsYetException(config, event));
 
                 if (settings.getStatsDisabled()) {
