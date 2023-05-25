@@ -9,6 +9,8 @@
 ![](https://img.shields.io/badge/Packaging-Fat%20jar-brown.svg)
 &nbsp;&nbsp;
 <br>
+<br>
+> More info about this project you will find [on my personal website](https://miloszgilga.pl/project/jwizard).
 
 A multi-functional rich discord bot (likely to be enhanced with additional features over time). Modularity with the ability to add new functionality quite (not)easily (yeah, in case you forgot it's Java bro :), management through a web interface. 
 It is divided into several parts:
