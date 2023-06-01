@@ -97,8 +97,8 @@ $ ./run-prod.sh  # for production version (loading configuration from properties
 ```
 * (FOR WINDOWS/OTHERS):
 ```
-$ python run-dev.py    # for development version (loading configuration from properties-dev.yml file)
-$ python run-prod.py   # for production version (loading configuration from properties-prod.yml file)
+> python run-dev.py    # for development version (loading configuration from properties-dev.yml file)
+> python run-prod.py   # for production version (loading configuration from properties-prod.yml file)
 ```
 > NOTE: To run the script, you must have installed Python interpreter 3.11.2 or above. To check Python version, type `python --version` in your command prompt.
 
@@ -123,13 +123,13 @@ Java heap size configuration is the same for both configuration (development and
 via command:
 * (FOR UNIX SYSTEMS):
 ```
-$ cd generator
+$ cd run-scripts
 $ ./lang-gen.sh --lang=[i18n tag]
 ```
 * (for WINDOWS/OTHERS):
 ```
-$ cd generator
-$ python lang-gen.py --lang=[i18n tag]
+> cd run-scripts
+> python lang-gen.py --lang=[i18n tag]
 ```
 where `[i18n tag]` is one of the internationalization standards tag (ex. `en-US`, `fr`, `pl` etc.)
 > NOTE: To run the script, you must have installed Python interpreter 3.11.2 or above. To check Python version, type `python --version` in your command prompt.
