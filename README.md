@@ -119,7 +119,7 @@ Java heap size configuration is the same for both configuration (development and
 
 <a name="internationalization-i18n"></a>
 ## Internationalization (i18n)
-1. To add a new language, create a new resource file in the `classpath:/i18n-api` or `classpath:/i18n-jda` directory 
+1. To add a new language, create a new resource file in the `classpath:/i18n-api` and `classpath:/i18n-jda` directories
 via command:
 * (FOR UNIX SYSTEMS):
 ```
