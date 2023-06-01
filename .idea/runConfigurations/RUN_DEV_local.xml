@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="RUN DEV local" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ACTIVE_PROFILES" value="dev" />
-    <module name="jwizard-discord-bot.main" />
+    <module name="pl.miloszgilga.jwizard-discord-bot.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="pl.miloszgilga.SpringBootRunner" />
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
