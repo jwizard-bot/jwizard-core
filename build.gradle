@@ -159,6 +159,8 @@ tasks.register('moveConfigurationFiles', Copy) {
 
 tasks.register('moveExecutableFiles', Copy) {
     from layout.projectDirectory.dir('run-scripts')
+    exclude 'lang-gen.sh'
+    exclude 'lang-gen.py'
     into layout.buildDirectory.dir("$rootDir/build/jar")
 }
 
