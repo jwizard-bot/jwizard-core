@@ -82,17 +82,25 @@ if [ ! -f ".env" ]; then
     exit 6
 fi
 
-EXEC_SCRIPT="java
--Xmx$MAX_JAVA_HEAP_SIZE -Xms$START_JAVA_HEAP_SIZE
+EXEC_SCRIPT="nohup java
+-XX:+UseSerialGC
+-Xss512k
+-XX:MaxRAM=$MAX_JAVA_HEAP_SIZE
+-Xms$START_JAVA_HEAP_SIZE
+-Xmx$MAX_JAVA_HEAP_SIZE
 -Duser.timezone=UTC
--XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/
 -Dspring.profiles.active=dev
+-XX:NativeMemoryTracking=summary
 -jar $EXEC_JAR_FILE_NAME
 "
 
 EXEC_SCRIPT=$(echo "$EXEC_SCRIPT" | tr '\n' ' ')
 
-echo "[bash run script info] <> Executing JWizard bot JAR file in development mode..."
-echo "[bash run script info] <> $EXEC_SCRIPT"
+echo "[bash run script info] <> Executing JWizard bot JAR file in development silent mode..."
+echo "[bash run script info] <> $EXEC_SCRIPT > /dev/null 2>&1 &"
 
-$EXEC_SCRIPT
+export JAVA_VERSION="17"
+$EXEC_SCRIPT > /dev/null 2>&1 &
+
+JVM_PID=$!
+echo "[bash run script info] <> Started daemon with PID: '$JVM_PID'. To kill, type '$ kill $JVM_PID'"
