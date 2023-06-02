@@ -40,7 +40,7 @@
         <dropColumn tableName="guild_settings" columnName="music_text_channel_id"/>
 
         <addColumn tableName="guild_settings">
-            <column name="audio_text_channel_id" type="varchar(20)" beforeColumn="skip_ratio">
+            <column name="audio_text_channel_id" type="varchar(20)" afterColumn="id">
                 <constraints nullable="true"/>
             </column>
         </addColumn>

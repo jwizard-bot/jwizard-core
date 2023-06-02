@@ -71,7 +71,7 @@
         </addColumn>
 
         <addColumn tableName="member_stats">
-            <column name="slash_interactions" type="${unsignedLongType}" beforeColumn="level">
+            <column name="slash_interactions" type="${unsignedLongType}" afterColumn="reactions_added">
                 <constraints nullable="false"/>
             </column>
         </addColumn>

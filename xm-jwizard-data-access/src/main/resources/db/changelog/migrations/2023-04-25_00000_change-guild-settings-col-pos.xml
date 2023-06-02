@@ -39,7 +39,7 @@
 
         <dropColumn tableName="guild_settings" columnName="stats_module_enabled"/>
         <addColumn tableName="guild_settings">
-            <column name="stats_module_enabled" type="boolean" beforeColumn="guild_id">
+            <column name="stats_module_enabled" type="boolean">
                 <constraints nullable="true"/>
             </column>
         </addColumn>

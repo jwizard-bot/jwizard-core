@@ -39,7 +39,7 @@
 
         <dropColumn tableName="members" columnName="guild_nickname"/>
         <addColumn tableName="member_stats">
-            <column name="guild_nickname" type="varchar(255)" beforeColumn="member_id">
+            <column name="guild_nickname" type="varchar(255)" afterColumn="level">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
