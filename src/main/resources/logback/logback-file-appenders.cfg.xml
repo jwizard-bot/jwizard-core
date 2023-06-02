@@ -51,44 +51,6 @@
         </encoder>
     </appender>
 
-    <appender name="appender.file.jda.debug" class="RollingFileAppender">
-        <filter class="LevelFilter">
-            <level>DEBUG</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
-        </filter>
-        <file>${jdaLogsPath}/debug.log</file>
-        <immediateFlush>true</immediateFlush>
-        <rollingPolicy class="SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${jdaLogsPath}/debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>30MB</maxFileSize>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>2GB</totalSizeCap>
-        </rollingPolicy>
-        <encoder class="PatternLayoutEncoder">
-            <pattern>${fileSpecificLogPattern}</pattern>
-        </encoder>
-    </appender>
-
-    <appender name="appender.file.spring.debug" class="RollingFileAppender">
-        <filter class="LevelFilter">
-            <level>DEBUG</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
-        </filter>
-        <file>${springLogsPath}/debug.log</file>
-        <immediateFlush>true</immediateFlush>
-        <rollingPolicy class="SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${springLogsPath}/debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>30MB</maxFileSize>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>2GB</totalSizeCap>
-        </rollingPolicy>
-        <encoder class="PatternLayoutEncoder">
-            <pattern>${fileSpecificLogPattern}</pattern>
-        </encoder>
-    </appender>
-
     <appender name="appender.file.info" class="RollingFileAppender">
         <filter class="LevelFilter">
             <level>INFO</level>
@@ -141,19 +103,59 @@
         </encoder>
     </appender>
 
-    <appender name="appender.file.hibernate.sql" class="RollingFileAppender">
-        <file>${hibernateSqlLogsPath}/hib-sql.log</file>
-        <immediateFlush>true</immediateFlush>
-        <rollingPolicy class="SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${hibernateSqlLogsPath}/hib-sql.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>30MB</maxFileSize>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>2GB</totalSizeCap>
-        </rollingPolicy>
-        <encoder class="PatternLayoutEncoder">
-            <pattern>${filePerfPattern}</pattern>
-        </encoder>
-    </appender>
+    <springProfile name="dev">
+        <appender name="appender.file.jda.debug" class="RollingFileAppender">
+            <filter class="LevelFilter">
+                <level>DEBUG</level>
+                <onMatch>ACCEPT</onMatch>
+                <onMismatch>DENY</onMismatch>
+            </filter>
+            <file>${jdaLogsPath}/debug.log</file>
+            <immediateFlush>true</immediateFlush>
+            <rollingPolicy class="SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${jdaLogsPath}/debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>30MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>2GB</totalSizeCap>
+            </rollingPolicy>
+            <encoder class="PatternLayoutEncoder">
+                <pattern>${fileSpecificLogPattern}</pattern>
+            </encoder>
+        </appender>
+
+        <appender name="appender.file.spring.debug" class="RollingFileAppender">
+            <filter class="LevelFilter">
+                <level>DEBUG</level>
+                <onMatch>ACCEPT</onMatch>
+                <onMismatch>DENY</onMismatch>
+            </filter>
+            <file>${springLogsPath}/debug.log</file>
+            <immediateFlush>true</immediateFlush>
+            <rollingPolicy class="SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${springLogsPath}/debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>30MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>2GB</totalSizeCap>
+            </rollingPolicy>
+            <encoder class="PatternLayoutEncoder">
+                <pattern>${fileSpecificLogPattern}</pattern>
+            </encoder>
+        </appender>
+
+        <appender name="appender.file.hibernate.sql" class="RollingFileAppender">
+            <file>${hibernateSqlLogsPath}/hib-sql.log</file>
+            <immediateFlush>true</immediateFlush>
+            <rollingPolicy class="SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${hibernateSqlLogsPath}/hib-sql.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>30MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>2GB</totalSizeCap>
+            </rollingPolicy>
+            <encoder class="PatternLayoutEncoder">
+                <pattern>${filePerfPattern}</pattern>
+            </encoder>
+        </appender>
+    </springProfile>
 
     <!-- end of file appenders  -->
 </included>

@@ -52,15 +52,18 @@
     <appender name="async.appender.file.error" class="AsyncAppender">
         <appender-ref ref="appender.file.error" />
     </appender>
-    <appender name="async.appender.file.jda.debug" class="AsyncAppender">
-        <appender-ref ref="appender.file.jda.debug" />
-    </appender>
-    <appender name="async.appender.file.spring.debug" class="AsyncAppender">
-        <appender-ref ref="appender.file.spring.debug" />
-    </appender>
-    <appender name="async.appender.file.hibernate.sql" class="AsyncAppender">
-        <appender-ref ref="appender.file.hibernate.sql" />
-    </appender>
+
+    <springProfile name="dev">
+        <appender name="async.appender.file.jda.debug" class="AsyncAppender">
+            <appender-ref ref="appender.file.jda.debug" />
+        </appender>
+        <appender name="async.appender.file.spring.debug" class="AsyncAppender">
+            <appender-ref ref="appender.file.spring.debug" />
+        </appender>
+        <appender name="async.appender.file.hibernate.sql" class="AsyncAppender">
+            <appender-ref ref="appender.file.hibernate.sql" />
+        </appender>
+    </springProfile>
 
     <!-- end of async appenders section -->
     <!-- start of applying appenders section  -->
@@ -72,13 +75,24 @@
         </logger>
     </springProfile>
 
-    <logger name="${jdaLogger}" additivity="false">
-        <appender-ref ref="async.appender.file.info"/>
-        <appender-ref ref="async.appender.file.warn"/>
-        <appender-ref ref="async.appender.file.error"/>
-        <appender-ref ref="async.appender.file.jda.debug"/>
-        <appender-ref ref="appender.console.major"/>
-    </logger>
+    <springProfile name="dev">
+        <logger name="${jdaLogger}" additivity="false">
+            <appender-ref ref="async.appender.file.info"/>
+            <appender-ref ref="async.appender.file.warn"/>
+            <appender-ref ref="async.appender.file.error"/>
+            <appender-ref ref="async.appender.file.jda.debug"/>
+            <appender-ref ref="appender.console.major"/>
+        </logger>
+    </springProfile>
+
+    <springProfile name="prod">
+        <logger name="${jdaLogger}" additivity="false">
+            <appender-ref ref="async.appender.file.info"/>
+            <appender-ref ref="async.appender.file.warn"/>
+            <appender-ref ref="async.appender.file.error"/>
+            <appender-ref ref="appender.console.major"/>
+        </logger>
+    </springProfile>
 
     <logger name="${commandLogger}" additivity="false">
         <appender-ref ref="appender.file.perf"/>
@@ -100,13 +114,24 @@
         <appender-ref ref="appender.console.major"/>
     </logger>
 
-    <logger name="${springFrameworkLogger}" additivity="false">
-        <appender-ref ref="async.appender.file.info"/>
-        <appender-ref ref="async.appender.file.warn"/>
-        <appender-ref ref="async.appender.file.error"/>
-        <appender-ref ref="async.appender.file.spring.debug"/>
-        <appender-ref ref="appender.console.major"/>
-    </logger>
+    <springProfile name="dev">
+        <logger name="${springFrameworkLogger}" additivity="false">
+            <appender-ref ref="async.appender.file.info"/>
+            <appender-ref ref="async.appender.file.warn"/>
+            <appender-ref ref="async.appender.file.error"/>
+            <appender-ref ref="async.appender.file.spring.debug"/>
+            <appender-ref ref="appender.console.major"/>
+        </logger>
+    </springProfile>
+
+    <springProfile name="prod">
+        <logger name="${springFrameworkLogger}" additivity="false">
+            <appender-ref ref="async.appender.file.info"/>
+            <appender-ref ref="async.appender.file.warn"/>
+            <appender-ref ref="async.appender.file.error"/>
+            <appender-ref ref="appender.console.major"/>
+        </logger>
+    </springProfile>
 
     <logger name="${reflectionsLogger}" additivity="false" level="INFO">
         <appender-ref ref="async.appender.file.info"/>
