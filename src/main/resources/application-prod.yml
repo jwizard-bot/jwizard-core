@@ -26,18 +26,18 @@ spring:
         database-change-log-lock-table: _liquibase_changelog_lock
         database-change-log-table: _liquibase_changelog
     datasource:
-        url: ${env.PROD_DB_JDBC}
-        username: ${env.PROD_DB_USERNAME}
-        password: ${env.PROD_DB_PASSWORD}
+        url: ${PROD_DB_JDBC}
+        username: ${PROD_DB_USERNAME}
+        password: ${PROD_DB_PASSWORD}
         driver-class-name: com.mysql.cj.jdbc.Driver
 
 jmpsl:
     security:
         password-encoder-strength: 10
         jwt:
-            secret: ${env.PROD_JWT_KEY}
-            issuer: ${env.PROD_FRONTEND_WITH_JWT_ISSUER}
+            secret: ${PROD_JWT_KEY}
+            issuer: ${PROD_FRONTEND_WITH_JWT_ISSUER}
             expired-minutes: 5
             refresh-token-expired-days: 90
         cors:
-            client: ${env.PROD_FRONTEND_CORS_AGENT}
+            client: ${PROD_FRONTEND_CORS_AGENT}
