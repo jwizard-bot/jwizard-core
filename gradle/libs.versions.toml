@@ -38,7 +38,7 @@ commonsValidator    = '1.7'
 dotEnv              = '5.2.2'
 reflections         = '0.10.2'
 apacheHttpClient    = '4.5.14'
-jmpsl               = '1.0.2_04'
+jmpsl               = '1.0.2_05'
 jjwt                = '0.11.5'
 ehCache             = '3.10.8'
 jaxb                = '2.3.1'
@@ -63,8 +63,8 @@ spring-boot-starter-data-jpa        = { module = 'org.springframework.boot:sprin
 spring-boot-starter-security        = { module = 'org.springframework.boot:spring-boot-starter-security',       version.ref = 'springBoot' }
 spring-boot-starter-validation      = { module = 'org.springframework.boot:spring-boot-starter-validation',     version.ref = 'springBoot' }
 
-jmpsl-core                          = { module = 'pl.miloszgilga.jmpsl:jmpsl-core',                             version.ref = 'jmpsl' }
-jmpsl-security                      = { module = 'pl.miloszgilga.jmpsl:jmpsl-security',                         version.ref = 'jmpsl' }
+jmpsl-core                          = { module = 'pl.miloszgilga:jmpsl-core',                                   version.ref = 'jmpsl' }
+jmpsl-security                      = { module = 'pl.miloszgilga:jmpsl-security',                               version.ref = 'jmpsl' }
 
 lombok                              = { module = 'org.projectlombok:lombok',                                    version.ref = 'lombok' }
 spring-vault                        = { module = 'org.springframework.vault:spring-vault-core',                 version.ref = 'springVault' }

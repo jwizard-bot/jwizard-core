@@ -29,6 +29,7 @@ import java.io.Serializable;
 
 import org.jmpsl.security.user.IAuthUserModel;
 import org.jmpsl.security.user.SimpleGrantedRole;
+import org.jmpsl.security.user.IEnumerableUserRole;
 import org.jmpsl.core.db.AbstractAuditableEntity;
 
 import pl.miloszgilga.domain.playlist.PlaylistEntity;
@@ -43,7 +44,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @NoArgsConstructor
 @Table(name = "members")
-public class MemberEntity extends AbstractAuditableEntity implements Serializable, IAuthUserModel<SimpleGrantedRole> {
+public class MemberEntity extends AbstractAuditableEntity implements Serializable, IAuthUserModel {
     @Serial private static final long serialVersionUID = 1L;
 
     @Column(name = "discord_id")                private String discordId;
@@ -116,7 +117,7 @@ public class MemberEntity extends AbstractAuditableEntity implements Serializabl
 
     @Override public String getAuthUsername()                   { return discordId; }
     @Override public String getAuthPassword()                   { return null; }
-    @Override public Set<SimpleGrantedRole> getAuthRoles()      { return SimpleGrantedRole.getSetCollection(); }
+    @Override public Set<IEnumerableUserRole> getAuthRoles()    { return SimpleGrantedRole.getSetCollection(); }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

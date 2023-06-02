@@ -27,7 +27,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import org.jmpsl.security.SecurityUtil;
 import org.jmpsl.security.user.AuthUser;
-import org.jmpsl.security.user.SimpleGrantedRole;
 
 import pl.miloszgilga.domain.member.MemberEntity;
 import pl.miloszgilga.domain.member.IMemberRepository;
@@ -46,7 +45,7 @@ public class AuthUserDetailsService implements UserDetailsService {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public AuthUser<SimpleGrantedRole> loadUserByUsername(String discordId) throws UsernameNotFoundException {
+    public AuthUser loadUserByUsername(String discordId) throws UsernameNotFoundException {
         final MemberEntity member = repository.findByDiscordId(discordId).orElseThrow(() -> {
             log.error("Unable to load user with credentials data (discordId): {}", discordId);
             return new UserNotFoundException();
