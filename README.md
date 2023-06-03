@@ -92,7 +92,7 @@ jmpsl-security      = { module = 'pl.miloszgilga:jmpsl-security',       version.
 ```
 * Create `.env` file and put necessary values (from `.env.sample` file) (you must be in ROOT of project context):
 ```
-$ grep -v '^#' .env.sample | cp .env
+$ grep -vE '^\s*$|^#' .env.sample > .env
 $ nano .env
 ```
 Example `.env` file:
