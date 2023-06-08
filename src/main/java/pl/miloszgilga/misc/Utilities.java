@@ -22,13 +22,14 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.Member;
 
+import org.apache.commons.lang3.StringUtils;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
 import java.time.ZoneOffset;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
+import java.time.format.DateTimeFormatter;
 
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.core.remote.RemoteProperty;
@@ -120,7 +121,7 @@ public final class Utilities {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static String getRichTrackTitle(AudioTrackInfo audioTrackInfo) {
-        return String.format("[%s](%s)", audioTrackInfo.title, audioTrackInfo.uri);
+        return String.format("[%s](%s)", audioTrackInfo.title.replace("*", StringUtils.EMPTY), audioTrackInfo.uri);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
