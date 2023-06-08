@@ -9,7 +9,6 @@
 ![](https://img.shields.io/badge/Packaging-Fat%20jar-brown.svg)
 &nbsp;&nbsp;
 <br>
-<br>
 > More info about this project you will find [on my personal website](https://miloszgilga.pl/project/jwizard).
 
 A multi-functional rich discord bot (likely to be enhanced with additional features over time). Modularity with the ability
@@ -93,7 +92,7 @@ jmpsl-security      = { module = 'pl.miloszgilga:jmpsl-security',       version.
 ```
 * Create `.env` file and put necessary values (from `.env.sample` file) (you must be in ROOT of project context):
 ```
-$ grep -v '^#' .env.sample | cp .env
+$ grep -vE '^\s*$|^#' .env.sample > .env
 $ nano .env
 ```
 Example `.env` file:
