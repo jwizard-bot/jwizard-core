@@ -30,11 +30,12 @@ import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Collections;
 import java.util.stream.Stream;
 
-import org.springframework.transaction.annotation.Transactional;
 import pl.miloszgilga.embed.EmbedColor;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.audioplayer.PlayerManager;
@@ -101,14 +102,16 @@ public class BotStatusCommandListener extends AbstractListenerAdapter {
     private void shutdownBotInstance(ShutdownEvent event) {
         if (shuttingDown) return;
         shuttingDown = true;
-        super.config.getThreadPool().shutdownNow();
         if (event.getJDA().getStatus() == JDA.Status.SHUTTING_DOWN) return;
 
+        log.info("Shutting down Bot instance...");
         for (final Guild guild : event.getJDA().getGuilds()) {
-            guild.getAudioManager().closeAudioConnection();
             playerManager.getMusicManager(guild).getActions().clearAndDestroy(false);
+            guild.getAudioManager().closeAudioConnection();
         }
+        config.getThreadPool().shutdownNow();
         event.getJDA().shutdown();
+        log.info("Threadpool was cleared and Bot instance was terminated");
         System.exit(0);
     }
 
