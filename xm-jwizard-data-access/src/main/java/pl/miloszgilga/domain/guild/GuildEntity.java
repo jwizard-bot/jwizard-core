@@ -37,6 +37,13 @@ import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
 import pl.miloszgilga.domain.member_stats.MemberStatsEntity;
 import pl.miloszgilga.domain.member_settings.MemberSettingsEntity;
 
+import pl.miloszgilga.domain.vote_commands.VoteCommandEntity;
+import pl.miloszgilga.domain.stats_commands.StatsCommandEntity;
+import pl.miloszgilga.domain.dj_commands.DjCommandEntity;
+import pl.miloszgilga.domain.owner_commands.OwnerCommandEntity;
+import pl.miloszgilga.domain.music_commands.MusicCommandEntity;
+import pl.miloszgilga.domain.other_commands.OtherCommandEntity;
+
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -59,6 +66,24 @@ public class GuildEntity extends AbstractAuditableEntity implements Serializable
 
     @OneToOne(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
     private GuildModulesEntity guildModules;
+
+    @OneToOne(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
+    private VoteCommandEntity voteCommand;
+
+    @OneToOne(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
+    private StatsCommandEntity statsCommand;
+
+    @OneToOne(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
+    private DjCommandEntity djCommand;
+
+    @OneToOne(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
+    private OwnerCommandEntity ownerCommand;
+
+    @OneToOne(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
+    private MusicCommandEntity musicCommand;
+
+    @OneToOne(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
+    private OtherCommandEntity otherCommand;
 
     @OneToMany(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
     private Set<MemberStatsEntity> memberGuildsStats = new HashSet<>();
@@ -118,6 +143,54 @@ public class GuildEntity extends AbstractAuditableEntity implements Serializable
         this.guildModules = guildModules;
     }
 
+    VoteCommandEntity getVoteCommand() {
+        return voteCommand;
+    }
+
+    void setVoteCommand(VoteCommandEntity voteCommand) {
+        this.voteCommand = voteCommand;
+    }
+
+    StatsCommandEntity getStatsCommand() {
+        return statsCommand;
+    }
+
+    void setStatsCommand(StatsCommandEntity statsCommand) {
+        this.statsCommand = statsCommand;
+    }
+
+    DjCommandEntity getDjCommand() {
+        return djCommand;
+    }
+
+    void setDjCommand(DjCommandEntity djCommand) {
+        this.djCommand = djCommand;
+    }
+
+    OwnerCommandEntity getOwnerCommand() {
+        return ownerCommand;
+    }
+
+    void setOwnerCommand(OwnerCommandEntity ownerCommand) {
+        this.ownerCommand = ownerCommand;
+    }
+
+    MusicCommandEntity getMusicCommand() {
+        return musicCommand;
+    }
+
+    void setMusicCommand(MusicCommandEntity musicCommand) {
+        this.musicCommand = musicCommand;
+    }
+
+    OtherCommandEntity getOtherCommand() {
+        return otherCommand;
+    }
+
+    void setOtherCommand(OtherCommandEntity otherCommand) {
+        this.otherCommand = otherCommand;
+    }
+
     Set<MemberStatsEntity> getMemberGuildsStats() {
         return memberGuildsStats;
     }
@@ -157,6 +230,36 @@ public class GuildEntity extends AbstractAuditableEntity implements Serializable
     public void persistGuildModules(GuildModulesEntity guildModules) {
         this.guildModules = guildModules;
         guildModules.setGuild(this);
+    }
+
+    public void persistVoteCommand(VoteCommandEntity voteCommand) {
+        this.voteCommand = voteCommand;
+        voteCommand.setGuild(this);
+    }
+
+    public void persistStatsCommand(StatsCommandEntity statsCommand) {
+        this.statsCommand = statsCommand;
+        statsCommand.setGuild(this);
+    }
+
+    public void persistDjCommand(DjCommandEntity djCommand) {
+        this.djCommand = djCommand;
+        djCommand.setGuild(this);
+    }
+
+    public void persistOwnerCommand(OwnerCommandEntity ownerCommand) {
+        this.ownerCommand = ownerCommand;
+        ownerCommand.setGuild(this);
+    }
+
+    public void persistMusicCommand(MusicCommandEntity musicCommand) {
+        this.musicCommand = musicCommand;
+        musicCommand.setGuild(this);
+    }
+
+    public void persistOtherCommand(OtherCommandEntity otherCommand) {
+        this.otherCommand = otherCommand;
+        otherCommand.setGuild(this);
     }
 
     public void addMemberGuildStats(MemberStatsEntity memberStats) {

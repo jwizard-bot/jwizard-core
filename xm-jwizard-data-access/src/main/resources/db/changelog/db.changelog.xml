@@ -35,4 +35,11 @@
     <include file="migrations/2023-05-15_00000_change-music-channel-column-name.xml" relativeToChangelogFile="true"/>
     <include file="migrations/2023-05-16_00000_add-time-to-leave-no-tracks-column.xml" relativeToChangelogFile="true"/>
 
+    <include file="migrations/2023-06-08_00000_create-vote-commands-table.xml" relativeToChangelogFile="true"/>
+    <include file="migrations/2023-06-08_00001_create-stats-commands-table.xml" relativeToChangelogFile="true"/>
+    <include file="migrations/2023-06-08_00002_create-dj-commands-table.xml" relativeToChangelogFile="true"/>
+    <include file="migrations/2023-06-08_00003_create-owner-commands-table.xml" relativeToChangelogFile="true"/>
+    <include file="migrations/2023-06-08_00004_create-music-commands-table.xml" relativeToChangelogFile="true"/>
+    <include file="migrations/2023-06-08_00005_create-other-commands-table.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>

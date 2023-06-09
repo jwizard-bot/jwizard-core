@@ -47,6 +47,13 @@ import pl.miloszgilga.domain.guild_modules.GuildModulesEntity;
 import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
 import pl.miloszgilga.domain.guild_settings.IGuildSettingsRepository;
 
+import pl.miloszgilga.domain.vote_commands.VoteCommandEntity;
+import pl.miloszgilga.domain.dj_commands.DjCommandEntity;
+import pl.miloszgilga.domain.stats_commands.StatsCommandEntity;
+import pl.miloszgilga.domain.owner_commands.OwnerCommandEntity;
+import pl.miloszgilga.domain.music_commands.MusicCommandEntity;
+import pl.miloszgilga.domain.other_commands.OtherCommandEntity;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Slf4j
@@ -81,6 +88,13 @@ public class GuildPersistorCommandListener extends AbstractListenerAdapter {
         guild.persistGuildStats(new GuildStatsEntity());
         guild.persistGuildSettings(new GuildSettingsEntity());
         guild.persistGuildModules(new GuildModulesEntity());
+
+        guild.persistVoteCommand(new VoteCommandEntity());
+        guild.persistStatsCommand(new StatsCommandEntity());
+        guild.persistDjCommand(new DjCommandEntity());
+        guild.persistOwnerCommand(new OwnerCommandEntity());
+        guild.persistMusicCommand(new MusicCommandEntity());
+        guild.persistOtherCommand(new OtherCommandEntity());
 
         guildRepository.save(guild);
     }
