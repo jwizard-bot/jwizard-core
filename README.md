@@ -248,6 +248,7 @@ parameter.
 * Spring Data JPA (Hibernate, JPA, MySQL database, H2 database)
 * Spring Cache (implemented by EhCache, DAPI runtime)
 * (soon) React (web client - guild modules management interface)
+* Docker technology
 
 <a name="author"></a>
 ## Author
