@@ -35,7 +35,7 @@ import static pl.miloszgilga.BotCommand.*;
 public enum BotMusicCommandProxy implements IBotCommandProxy {
 
     PX__PLAY_TRACK          (PLAY_TRACK,            MusicCommandEntity::getPlayEnabled,         MusicCommandEntity::setPlayEnabled),
-    PX__PAUSE_TRACK         (PAUSE_TRACK,           MusicCommandEntity::getPauseEnabled,       MusicCommandEntity::setPauseEnabled),
+    PX__PAUSE_TRACK         (PAUSE_TRACK,           MusicCommandEntity::getPauseEnabled,        MusicCommandEntity::setPauseEnabled),
     PX__RESUME_TRACK        (RESUME_TRACK,          MusicCommandEntity::getResumeEnabled,       MusicCommandEntity::setResumeEnabled),
     PX__REPEAT_TRACK        (REPEAT_TRACK,          MusicCommandEntity::getRepeatEnabled,       MusicCommandEntity::setRepeatEnabled),
     PX__CLEAR_REPEAT_TRACK  (CLEAR_REPEAT_TRACK,    MusicCommandEntity::getRepeatclsEnabled,    MusicCommandEntity::setRepeatclsEnabled),
