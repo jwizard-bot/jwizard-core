@@ -1,7 +1,7 @@
 #
 # Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
 #
-# File name: application-dev.yml
+# File name: application-prod.yml
 # Last modified: 28/03/2023, 23:49
 # Project name: jwizard-discord-bot
 #
@@ -16,35 +16,28 @@
 # governing permissions and limitations under the license.
 #
 
-# application-dev.yml
+# application-docker.yml
 
 spring:
-    devtools:
-        livereload:
-            port: 35731
-        restart:
-            log-condition-evaluation-delta: false
-    h2:
-        console:
-            enabled: true
+    h2.console.enabled: false
     liquibase:
-        contexts: lq_dev
         drop-first: false
+        contexts: lq_prod
+        database-change-log-lock-table: _liquibase_changelog_lock
+        database-change-log-table: _liquibase_changelog
     datasource:
-        url: jdbc:h2:file:./h2-db;DB_CLOSE_ON_EXIT=FALSE
-        username: dbuser
-        password: dbpass
-        driver-class-name: org.h2.Driver
-    jpa:
-        show-sql: true
+        url: jdbc:mysql://mysqldb:3306/${DOCKER_DB_NAME}
+        username: ${DOCKER_DB_USERNAME}
+        password: ${DOCKER_DB_PASSWORD}
+        driver-class-name: com.mysql.cj.jdbc.Driver
 
 jmpsl:
     security:
-        password-encoder-strength: 4
+        password-encoder-strength: 10
         jwt:
-            secret: daw94289vndq98198nkejfnkaendwef93892fnskjdenfkjeiwefibiu32983fnskjdfn
-            issuer: localhost
+            secret: ${PROD_JWT_KEY}
+            issuer: ${PROD_FRONTEND_WITH_JWT_ISSUER}
             expired-minutes: 5
-            refresh-token-expired-days: 1
+            refresh-token-expired-days: 90
         cors:
-            client: http://localhost:4200
+            client: ${PROD_FRONTEND_CORS_AGENT}

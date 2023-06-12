@@ -31,7 +31,8 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public enum AppMode {
     PROD    ("PROD",    "properties-prod.yml",  "production",   "prod"),
-    DEV     ("DEV",     "properties-dev.yml",   "development",  "dev");
+    DEV     ("DEV",     "properties-dev.yml",   "development",  "dev"),
+    DOCKER  ("PROD",    "properties-prod.yml",  "docker",       "docker");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -46,7 +47,7 @@ public enum AppMode {
         return Arrays.stream(values())
             .filter(p -> p.springAlias.equals(profile))
             .findFirst()
-            .orElseThrow(() -> new IllegalStateException("App only support one spring profile: 'dev' or 'prod'."));
+            .orElseThrow(() -> new IllegalStateException("App only support one spring profile: 'dev', 'prod' or 'docker'."));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

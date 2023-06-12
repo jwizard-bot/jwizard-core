@@ -1,0 +1,63 @@
+#
+# Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
+#
+# File name: docker-compose-prod.yml
+# Last modified: 6/12/23, 5:08 AM
+# Project name: jwizard-discord-bot
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
+# file except in compliance with the License. You may obtain a copy of the License at
+#
+#     <http://www.apache.org/license/LICENSE-2.0>
+#
+# Unless required by applicable law or agreed to in writing, software distributed under
+# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
+# OF ANY KIND, either express or implied. See the License for the specific language
+# governing permissions and limitations under the license.
+#
+
+# docker-compose-prod.yml
+
+version: '3.8'
+
+services:
+    jwizard-prod:
+        container_name: jwizard-bot-prod
+        ports:
+            - '9095:8080'
+        build:
+            context: .
+            cache_from:
+                - amazoncorretto:17
+            dockerfile: ./docker/backend/prod/Dockerfile
+        image: jwizard-prod:${BUILD_DATE}
+        env_file:
+            - .env
+        environment:
+            - SPRING_PROFILES_ACTIVE=docker
+        depends_on:
+            - mysqldb
+            - phpmyadmin
+    mysqldb:
+        image: mysql:8.0.32
+        ports:
+            - '3306:3306'
+        env_file:
+            - .env
+        restart: always
+        environment:
+            - MYSQL_ROOT_PASSWORD=${DOCKER_DB_MYSQL_ROOT_PASSWORD}
+            - MYSQL_DATABASE=${DOCKER_DB_NAME}
+        healthcheck:
+            test: "mysqladmin ping -u root -p$${DOCKER_DB_MYSQL_ROOT_PASSWORD}"
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        restart: always
+        env_file:
+            - .env
+        environment:
+            PMA_HOST: mysqldb
+            PMA_USER: ${DOCKER_DB_USERNAME}
+            PMA_PASSWORD: ${DOCKER_DB_PASSWORD}
+        ports:
+            - '8080:80'

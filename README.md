@@ -31,6 +31,7 @@ library yourself in your local maven repository (see below).
 * [Multiple versions separation](#multiple-versions-separation)
 * [Clone script](#clone-script)
 * [Prepare project](#prepare-project)
+* [Run with Docker containers](#run-with-docker-containers)
 * [Run from IDE](#run-from-ide)
 * [Run from JAR](#run-from-jar)
 * [Change Xmx and Xms parameters (JVM Heap Size)](#change-xmx-and-xms-parameters)
@@ -65,7 +66,7 @@ $ git clone https://github.com/Milosz08/jwizard jwizard-discord-bot
 ```
 
 <a name="prepare-project"></a>
-## Prepare projkect
+## Prepare project
 Before run the project you must download and build the latest version of the JMPS library. To do this, follow the steps below:
 * Clone the latest version of JMPS library from my GitHub:
 ```
@@ -121,6 +122,27 @@ for the production or development version, respectively.
 ./gradlew build
 ```
 If it fails, make sure the paths specified are correct and that the `.jar` JMPSL files exist in the local maven repository.
+
+<a name="run-with-docker-containers"></a>
+## Run with Docker containers
+* Before run application with Docker containers technology, insert these environment variables in `.env` file:
+```properties
+DOCKER_DB_NAME                          = xxxxx <- docker database name
+DOCKER_DB_USERNAME                      = xxxxx <- docker database user (by default 'root')
+DOCKER_DB_PASSWORD                      = xxxxx <- docker database password (must be set)
+DOCKER_DB_MYSQL_ROOT_PASSWORD           = xxxxx <- root password for MySQL service
+```
+* Build and dockerized application in `development` mode (embed H2 database) via:
+```
+$ ./docker-assembly.sh --mode=dev
+```
+By default, application should be available on `http://127.0.0.1:8085`.
+* Build and dockerized application in `production` mode (additional containers: mysql and phpmyadmin) via:
+```
+$ ./docker-assembly.sh --mode=prod
+```
+By default, application should be available on `http://127.0.0.1:9095`.
+Phpmyadmin should be available on `http://127.0.0.1:8080`.
 
 <a name="run-from-ide"></a>
 ## Run from IDE
