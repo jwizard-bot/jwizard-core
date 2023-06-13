@@ -53,10 +53,13 @@ export START_JAVA_HEAP_SIZE
 export MAX_JAVA_HEAP_SIZE
 
 echo "[bash docker script info] <> Preparing bootable JAR directory..."
-./gradlew clean --warning-mode none || return 3
+./gradlew --parallel --max-workers=4 clean --warning-mode none
 
 echo "[bash docker script info] <> Creating bootable JAR directory..."
-./gradlew bootJar --warning-mode none || return 4
+./gradlew --parallel --max-workers=8 bootJar --warning-mode none
+
+echo "[bash docker script info] <> Clearing..."
+docker image prune -a -f
 
 echo "[bash docker script info] <> Running Docker cluster in '$MODE' mode..."
 docker-compose -f "docker-compose-$MODE.yml" up
