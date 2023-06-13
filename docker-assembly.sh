@@ -59,4 +59,4 @@ echo "[bash docker script info] <> Creating bootable JAR directory..."
 ./gradlew bootJar --warning-mode none || return 4
 
 echo "[bash docker script info] <> Running Docker cluster in '$MODE' mode..."
-docker-compose -f "docker-compose-$MODE.yml" up || return 5
+docker-compose -f "docker-compose-$MODE.yml" up

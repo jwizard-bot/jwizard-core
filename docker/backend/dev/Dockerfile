@@ -20,8 +20,6 @@
 
 FROM amazoncorretto:17
 
-ENV CACHEBUST=$CACHEBUST
-
 ENV BUILD_DIR /build/jar
 ENV ENTRY_DIR /jwizard-container
 

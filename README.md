@@ -141,7 +141,7 @@ By default, application should be available on `http://127.0.0.1:8085`.
 ```
 $ ./docker-assembly.sh -Dmode=prod
 ```
-By default, application should be available on `http://127.0.0.1:9095`.
+By default, application should be available on `http://127.0.0.1:9095`.<br>
 Phpmyadmin should be available on `http://127.0.0.1:8080`.
 
 You can optionally provide `-Dxms` and `-Dxmx` parameters for controlling JVM heap. By default it's: Xms=512m, Xmx=1024m.
