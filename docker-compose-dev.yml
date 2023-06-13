@@ -35,6 +35,8 @@ services:
             - .env
         environment:
             - SPRING_PROFILES_ACTIVE=dev
+            - XMS=${START_JAVA_HEAP_SIZE}
+            - XMX=${MAX_JAVA_HEAP_SIZE}
         volumes:
             - ./h2-db.mv.db:/jwizard-container/h2-db.mv.db
             - ./h2-db.trace.db:/jwizard-container/h2-db.trace.db

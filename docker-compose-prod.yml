@@ -35,6 +35,8 @@ services:
             - .env
         environment:
             - SPRING_PROFILES_ACTIVE=docker
+            - XMS=${START_JAVA_HEAP_SIZE}
+            - XMX=${MAX_JAVA_HEAP_SIZE}
         depends_on:
             - mysqldb
             - phpmyadmin

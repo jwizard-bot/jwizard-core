@@ -134,15 +134,17 @@ DOCKER_DB_MYSQL_ROOT_PASSWORD           = xxxxx <- root password for MySQL servi
 ```
 * Build and dockerized application in `development` mode (embed H2 database) via:
 ```
-$ ./docker-assembly.sh --mode=dev
+$ ./docker-assembly.sh -Dmode=dev
 ```
 By default, application should be available on `http://127.0.0.1:8085`.
 * Build and dockerized application in `production` mode (additional containers: mysql and phpmyadmin) via:
 ```
-$ ./docker-assembly.sh --mode=prod
+$ ./docker-assembly.sh -Dmode=prod
 ```
 By default, application should be available on `http://127.0.0.1:9095`.
 Phpmyadmin should be available on `http://127.0.0.1:8080`.
+
+You can optionally provide `-Dxms` and `-Dxmx` parameters for controlling JVM heap. By default it's: Xms=512m, Xmx=1024m.
 
 <a name="run-from-ide"></a>
 ## Run from IDE

@@ -18,31 +18,39 @@
 # governing permissions and limitations under the license.
 #
 
-ARG_KEY="--mode"
-IS_ARG_NOT_EXIST=false
+MODE_ARG_KEY="-Dmode"
+XMS_ARG_KEY="-Dxms"
+XMX_ARG_KEY="-Dxmx"
 
-if [ "$#" -eq 0 ]; then
-    IS_ARG_NOT_EXIST=true
-fi
+START_JAVA_HEAP_SIZE="512m"
+MAX_JAVA_HEAP_SIZE="1024m"
+MODE="dev"
 
-IFS="=" read -r key value <<< "$@"
-if [ "$key" == "$ARG_KEY" ]; then
-    if [[ "$value" != "dev" && "$value" != "prod" ]]; then
-        echo "[bash docker script err] <> Available only argument: --mode=<dev|prod>"
-        exit 1
+for arg in "$@"; do
+    if [[ $arg == -D* ]]; then
+        VALUE="${arg#*=}"
+        if [[ $arg == "$XMS_ARG_KEY"* ]]; then
+            START_JAVA_HEAP_SIZE="$VALUE"
+        fi
+        if [[ $arg == "$XMX_ARG_KEY"* ]]; then
+            MAX_JAVA_HEAP_SIZE="$VALUE"
+        fi
+        if [[ $arg == "$MODE_ARG_KEY"* ]]; then
+            MODE="$VALUE"
+        fi
     fi
-    MODE=$value
-else
-    IS_ARG_NOT_EXIST=true
-fi
+done
 
-if [ $IS_ARG_NOT_EXIST == true ]; then
-    echo "[bash docker script err] <> Available only argument: --mode=<dev|prod>"
+if [[ "$MODE" != "dev" &&  "$MODE" != "prod" ]]; then
+    echo "[bash docker script err] <> Available values: -Dmode=<dev|prod>"
     exit 2
 fi
 
 BUILD_DATE=$(date +%Y%m%d%H%M%S)
 export BUILD_DATE
+
+export START_JAVA_HEAP_SIZE
+export MAX_JAVA_HEAP_SIZE
 
 echo "[bash docker script info] <> Preparing bootable JAR directory..."
 ./gradlew clean --warning-mode none || return 3
