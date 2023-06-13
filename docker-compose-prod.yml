@@ -38,8 +38,10 @@ services:
             - XMS=${START_JAVA_HEAP_SIZE}
             - XMX=${MAX_JAVA_HEAP_SIZE}
         depends_on:
-            - mysqldb
-            - phpmyadmin
+            mysqldb:
+                condition: service_healthy
+            phpmyadmin:
+                condition: service_healthy
     mysqldb:
         image: mysql:8.0.32
         ports:
@@ -63,3 +65,5 @@ services:
             PMA_PASSWORD: ${DOCKER_DB_PASSWORD}
         ports:
             - '8080:80'
+        healthcheck:
+            test: "exit 0"
