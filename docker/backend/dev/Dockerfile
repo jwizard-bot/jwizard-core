@@ -29,10 +29,13 @@ COPY $BUILD_DIR/gfx $ENTRY_DIR/gfx
 COPY $BUILD_DIR/.env $ENTRY_DIR
 COPY $BUILD_DIR/*.txt $ENTRY_DIR
 COPY $BUILD_DIR/*.jar $ENTRY_DIR
+COPY $BUILD_DIR/entrypoint.sh $ENTRY_DIR
 COPY $BUILD_DIR/properties-dev.yml $ENTRY_DIR
 
 WORKDIR $ENTRY_DIR
+
 RUN mv *.jar jwizard-embeddable.jar
+RUN chmod +x entrypoint.sh
 
 EXPOSE 8080
-ENTRYPOINT [ "java", "-Dspring.profiles.active=dev", "-jar", "jwizard-embeddable.jar" ]
+ENTRYPOINT [ "./entrypoint.sh" ]

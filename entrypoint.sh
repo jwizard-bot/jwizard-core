@@ -1,8 +1,10 @@
+#!/bin/bash
+
 #
 # Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
 #
-# File name: Dockerfile
-# Last modified: 6/12/23, 5:08 AM
+# File name: entrypoint.sh
+# Last modified: 6/13/23, 12:58 AM
 # Project name: jwizard-discord-bot
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -16,26 +18,13 @@
 # governing permissions and limitations under the license.
 #
 
-# /backend/prod/Dockerfile
-
-FROM amazoncorretto:17
-
-ENV CACHEBUST=$CACHEBUST
-
-ENV BUILD_DIR /build/jar
-ENV ENTRY_DIR /jwizard-container
-
-COPY $BUILD_DIR/gfx $ENTRY_DIR/gfx
-COPY $BUILD_DIR/.env $ENTRY_DIR
-COPY $BUILD_DIR/*.txt $ENTRY_DIR
-COPY $BUILD_DIR/*.jar $ENTRY_DIR
-COPY $BUILD_DIR/entrypoint.sh $ENTRY_DIR
-COPY $BUILD_DIR/properties-prod.yml $ENTRY_DIR
-
-WORKDIR $ENTRY_DIR
-
-RUN mv *.jar jwizard-embeddable.jar
-RUN chmod +x entrypoint.sh
-
-EXPOSE 8080
-ENTRYPOINT [ "./entrypoint.sh" ]
+java \
+    -XX:+UseSerialGC \
+    -Xss512k \
+    -XX:MaxRAM="$XMX" \
+    -Xms"$XMS" \
+    -Xmx"$XMX" \
+    -Dspring.profiles.active="$SPRING_PROFILES_ACTIVE" \
+    -XX:NativeMemoryTracking=summary \
+    -jar \
+    jwizard-embeddable.jar

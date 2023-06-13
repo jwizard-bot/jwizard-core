@@ -152,7 +152,8 @@ tasks.register('moveConfigurationFiles', Copy) {
         'properties-dev.yml',
         'properties-prod.yml',
         'activities-splashes.txt',
-        '.env'
+        '.env',
+        'entrypoint.sh',
     ])
     into layout.buildDirectory.dir("$rootDir/build/jar")
 }
