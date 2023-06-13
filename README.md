@@ -137,7 +137,7 @@ DOCKER_DB_MYSQL_ROOT_PASSWORD           = xxxxx <- root password for MySQL servi
 $ ./docker-assembly.sh -Dmode=dev
 ```
 By default, application should be available on `http://127.0.0.1:8085`.
-* Build and dockerized application in `production` mode (additional containers: mysql and phpmyadmin) via:
+* Build and dockerize application in `production` mode (additional containers: mysql and phpmyadmin) via:
 ```
 $ ./docker-assembly.sh -Dmode=prod
 ```
