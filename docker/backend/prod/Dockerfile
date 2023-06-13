@@ -23,6 +23,8 @@ FROM amazoncorretto:17
 ENV BUILD_DIR /build/jar
 ENV ENTRY_DIR /jwizard-container
 
+RUN mkdir $ENTRY_DIR
+
 COPY $BUILD_DIR/gfx $ENTRY_DIR/gfx
 COPY $BUILD_DIR/.env $ENTRY_DIR
 COPY $BUILD_DIR/*.txt $ENTRY_DIR
