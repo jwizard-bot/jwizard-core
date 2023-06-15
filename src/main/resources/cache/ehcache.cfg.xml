@@ -35,4 +35,11 @@
     <cache alias="GuildSettingsCache" uses-template="cache-template"/>
     <cache alias="GuildModulesCache" uses-template="cache-template"/>
 
+    <cache alias="GuildDjCommandsStateCache" uses-template="cache-template"/>
+    <cache alias="GuildMusicCommandsStateCache" uses-template="cache-template"/>
+    <cache alias="GuildOtherCommandsStateCache" uses-template="cache-template"/>
+    <cache alias="GuildOwnerCommandsStateCache" uses-template="cache-template"/>
+    <cache alias="GuildStatsCommandsStateCache" uses-template="cache-template"/>
+    <cache alias="GuildVoteCommandsStateCache" uses-template="cache-template"/>
+
 </config>

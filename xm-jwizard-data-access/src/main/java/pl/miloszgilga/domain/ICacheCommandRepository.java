@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: IModulesCommandRepository.java
- * Last modified: 6/8/23, 8:48 PM
+ * File name: ICacheCommandRepository.java
+ * Last modified: 6/15/23, 6:10 PM
  * Project name: jwizard-discord-bot
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -16,22 +16,12 @@
  * governing permissions and limitations under the license.
  */
 
-package pl.miloszgilga.domain.owner_commands;
-
-import org.springframework.stereotype.Repository;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.jpa.repository.JpaRepository;
+package pl.miloszgilga.domain;
 
 import java.util.Optional;
 
-import pl.miloszgilga.domain.ICacheCommandRepository;
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@Repository
-public interface IOwnerCommandRepository extends JpaRepository<OwnerCommandEntity, Long>,
-    ICacheCommandRepository<OwnerCommandEntity> {
-
-    @Cacheable(cacheNames = "GuildOwnerCommandsStateCache", key = "#p0", unless = "#result==null")
-    Optional<OwnerCommandEntity> findByGuild_DiscordId(String discordId);
+public interface ICacheCommandRepository<T> {
+    Optional<T> findByGuild_DiscordId(String discordId);
 }

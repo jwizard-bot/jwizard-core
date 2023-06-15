@@ -19,10 +19,19 @@
 package pl.miloszgilga.domain.dj_commands;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+import pl.miloszgilga.domain.ICacheCommandRepository;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Repository
-public interface IDjCommandRepository extends JpaRepository<DjCommandEntity, Long> {
+public interface IDjCommandRepository extends JpaRepository<DjCommandEntity, Long>,
+    ICacheCommandRepository<DjCommandEntity> {
+
+    @Cacheable(cacheNames = "GuildDjCommandsStateCache", key = "#p0", unless = "#result==null")
+    Optional<DjCommandEntity> findByGuild_DiscordId(String discordId);
 }

@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 import net.dv8tion.jda.api.entities.Guild;
 import org.apache.commons.lang3.StringUtils;
 
+import pl.miloszgilga.dto.CommandEventWrapper;
+import pl.miloszgilga.dto.CommandWithProxyDto;
 import pl.miloszgilga.misc.CommandCategory;
 import pl.miloszgilga.misc.CommandWithArgsCount;
 import pl.miloszgilga.locale.CommandLocaleSet;
@@ -38,6 +40,7 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 import static pl.miloszgilga.misc.CommandCategory.*;
 import static pl.miloszgilga.locale.CommandLocaleSet.*;
 import static pl.miloszgilga.locale.ArgSyntaxLocaleSet.*;
+import static pl.miloszgilga.exception.CommandStateException.FollowedCommandArgumentNotExistException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -196,6 +199,16 @@ public enum BotCommand {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static CommandWithProxyDto getCategoryFromRawCommand(
+        String cmdNameOrAlias, BotConfiguration config, CommandEventWrapper event
+    ) {
+        return Arrays.stream(values())
+            .filter(c -> c.name.equalsIgnoreCase(cmdNameOrAlias) || c.aliases.contains(cmdNameOrAlias.toLowerCase()))
+            .findFirst()
+            .map(c -> new CommandWithProxyDto(c, c.category))
+            .orElseThrow(() -> new FollowedCommandArgumentNotExistException(config, event, cmdNameOrAlias));
+    }
 
     public static String count() {
         return Integer.toString(values().length);

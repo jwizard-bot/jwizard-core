@@ -19,10 +19,19 @@
 package pl.miloszgilga.domain.stats_commands;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+import pl.miloszgilga.domain.ICacheCommandRepository;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Repository
-public interface IStatsCommandRepository extends JpaRepository<StatsCommandEntity, Long> {
+public interface IStatsCommandRepository extends JpaRepository<StatsCommandEntity, Long>,
+    ICacheCommandRepository<StatsCommandEntity> {
+
+    @Cacheable(cacheNames = "GuildStatsCommandsStateCache", key = "#p0", unless = "#result==null")
+    Optional<StatsCommandEntity> findByGuild_DiscordId(String discordId);
 }

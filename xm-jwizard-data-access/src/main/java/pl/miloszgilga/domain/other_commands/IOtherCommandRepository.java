@@ -19,11 +19,19 @@
 package pl.miloszgilga.domain.other_commands;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+import pl.miloszgilga.domain.ICacheCommandRepository;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Repository
-public interface IOtherCommandRepository extends JpaRepository<OtherCommandEntity, Long> {
+public interface IOtherCommandRepository extends JpaRepository<OtherCommandEntity, Long>,
+    ICacheCommandRepository<OtherCommandEntity> {
 
+    @Cacheable(cacheNames = "GuildOtherCommandsStateCache", key = "#p0", unless = "#result==null")
+    Optional<OtherCommandEntity> findByGuild_DiscordId(String discordId);
 }

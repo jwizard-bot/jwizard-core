@@ -18,11 +18,19 @@
 
 package pl.miloszgilga.domain.music_commands;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
+import pl.miloszgilga.domain.ICacheCommandRepository;
+
+import java.util.Optional;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Repository
-public interface IMusicCommandRepository extends JpaRepository<MusicCommandEntity, Long> {
+public interface IMusicCommandRepository extends JpaRepository<MusicCommandEntity, Long>,
+    ICacheCommandRepository<MusicCommandEntity> {
+
+    @Cacheable(cacheNames = "GuildMusicCommandsStateCache", key = "#p0", unless = "#result==null")
+    Optional<MusicCommandEntity> findByGuild_DiscordId(String discordId);
 }
