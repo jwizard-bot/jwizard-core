@@ -32,7 +32,7 @@ import static pl.miloszgilga.BotCommand.*;
 
 @Getter
 @RequiredArgsConstructor
-public enum BotMusicCommandProxy implements IBotCommandProxy {
+public enum BotMusicCommandProxy implements IBotCommandProxy<MusicCommandEntity> {
 
     PX__PLAY_TRACK          (PLAY_TRACK,            MusicCommandEntity::getPlayEnabled,         MusicCommandEntity::setPlayEnabled),
     PX__PAUSE_TRACK         (PAUSE_TRACK,           MusicCommandEntity::getPauseEnabled,        MusicCommandEntity::setPauseEnabled),

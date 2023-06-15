@@ -18,8 +18,17 @@
 
 package pl.miloszgilga.command_proxy;
 
+import java.util.function.Function;
+
+import org.jmpsl.core.db.AbstractAuditableEntity;
+
+import pl.miloszgilga.BotCommand;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-public interface IBotCommandProxy {
+public interface IBotCommandProxy<T extends AbstractAuditableEntity> {
+    BotCommand getCommand();
     String getUid();
+    Function<T, Boolean> getIsEnabled();
+    IBiSupplier<T, Boolean> getSetValue();
 }

@@ -32,7 +32,7 @@ import static pl.miloszgilga.BotCommand.*;
 
 @Getter
 @RequiredArgsConstructor
-public enum BotVoteCommandProxy implements IBotCommandProxy {
+public enum BotVoteCommandProxy implements IBotCommandProxy<VoteCommandEntity> {
 
     PX__VOTE_SHUFFLE_QUEUE      (VOTE_SHUFFLE_QUEUE,        VoteCommandEntity::getVshuffleEnabled,  VoteCommandEntity::setVshuffleEnabled),
     PX__SKIP_TRACK              (SKIP_TRACK,                VoteCommandEntity::getVskipEnabled,     VoteCommandEntity::setVskipEnabled),

@@ -32,7 +32,7 @@ import static pl.miloszgilga.BotCommand.*;
 
 @Getter
 @RequiredArgsConstructor
-public enum BotDjCommandProxy implements IBotCommandProxy {
+public enum BotDjCommandProxy implements IBotCommandProxy<DjCommandEntity> {
 
     PX__SET_PLAYER_VOLUME       (SET_PLAYER_VOLUME,     DjCommandEntity::getSetvolumeEnabled,   DjCommandEntity::setSetvolumeEnabled),
     PX__RESET_PLAYER_VOLUME     (RESET_PLAYER_VOLUME,   DjCommandEntity::getVolumeclsEnabled,   DjCommandEntity::setVolumeclsEnabled),

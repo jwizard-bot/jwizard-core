@@ -32,7 +32,7 @@ import static pl.miloszgilga.BotCommand.*;
 
 @Getter
 @RequiredArgsConstructor
-public enum BotOwnerCommandProxy implements IBotCommandProxy {
+public enum BotOwnerCommandProxy implements IBotCommandProxy<OwnerCommandEntity> {
 
     PX__TURN_ON_STATS_MODULE        (TURN_ON_STATS_MODULE,      OwnerCommandEntity::getOnstatsmEnabled,     OwnerCommandEntity::setOnstatsmEnabled),
     PX__TURN_OFF_STATS_MODULE       (TURN_OFF_STATS_MODULE,     OwnerCommandEntity::getOffstatsmEnabled,    OwnerCommandEntity::setOffstatsmEnabled),

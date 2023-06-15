@@ -32,7 +32,7 @@ import static pl.miloszgilga.BotCommand.*;
 
 @Getter
 @RequiredArgsConstructor
-public enum BotOtherCommandProxy implements IBotCommandProxy {
+public enum BotOtherCommandProxy implements IBotCommandProxy<OtherCommandEntity> {
 
     PX__HELP                        (HELP,                      OtherCommandEntity::getHelpEnabled,         OtherCommandEntity::setHelpEnabled),
     PX__HELP_ME                     (HELP_ME,                   OtherCommandEntity::getHelpmeEnabled,       OtherCommandEntity::setHelpmeEnabled),
