@@ -41,7 +41,9 @@ public enum BotOwnerCommandProxy implements IBotCommandProxy {
     PX__TURN_ON_PLAYLISTS_MODULE    (TURN_ON_PLAYLISTS_MODULE,  OwnerCommandEntity::getOnplaylmEnabled,     OwnerCommandEntity::setOnplaylmEnabled),
     PX__TURN_OFF_PLAYLISTS_MODULE   (TURN_OFF_PLAYLISTS_MODULE, OwnerCommandEntity::getOffplaylmEnabled,    OwnerCommandEntity::setOffplaylmEnabled),
     PX__TURN_ON_VOTING_MODULE       (TURN_ON_VOTING_MODULE,     OwnerCommandEntity::getOnvotingmEnabled,    OwnerCommandEntity::setOnvotingmEnabled),
-    PX__TURN_OFF_VOTING_MODULE      (TURN_OFF_VOTING_MODULE,    OwnerCommandEntity::getOffvotingmEnabled,   OwnerCommandEntity::setOffvotingmEnabled);
+    PX__TURN_OFF_VOTING_MODULE      (TURN_OFF_VOTING_MODULE,    OwnerCommandEntity::getOffvotingmEnabled,   OwnerCommandEntity::setOffvotingmEnabled),
+    PX__TURN_ON_COMMAND             (TURN_ON_COMMAND,           OwnerCommandEntity::getCommandonEnabled,    OwnerCommandEntity::setCommandonEnabled),
+    PX__TURN_OFF_COMMAND            (TURN_OFF_COMMAND,          OwnerCommandEntity::getCommandoffEnabled,   OwnerCommandEntity::setCommandoffEnabled);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

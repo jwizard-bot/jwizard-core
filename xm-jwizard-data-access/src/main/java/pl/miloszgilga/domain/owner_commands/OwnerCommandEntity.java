@@ -47,6 +47,8 @@ public class OwnerCommandEntity extends AbstractAuditableEntity implements Seria
     @Column(name = "offplaylm_enabled", insertable = false)     private Boolean offplaylmEnabled;
     @Column(name = "onvotingm_enabled", insertable = false)     private Boolean onvotingmEnabled;
     @Column(name = "offvotingm_enabled", insertable = false)    private Boolean offvotingmEnabled;
+    @Column(name = "commandon_enabled", insertable = false)     private Boolean commandonEnabled;
+    @Column(name = "commandoff_enabled", insertable = false)    private Boolean commandoffEnabled;
 
     @OneToOne(cascade = { PERSIST, MERGE, REMOVE }, fetch = LAZY)
     @JoinColumn(name = "guild_id", referencedColumnName = "id")
@@ -118,6 +120,22 @@ public class OwnerCommandEntity extends AbstractAuditableEntity implements Seria
         this.offvotingmEnabled = offvotingmEnabled;
     }
 
+    public Boolean getCommandonEnabled() {
+        return commandonEnabled;
+    }
+
+    public void setCommandonEnabled(Boolean commandonEnabled) {
+        this.commandonEnabled = commandonEnabled;
+    }
+
+    public Boolean getCommandoffEnabled() {
+        return commandoffEnabled;
+    }
+
+    public void setCommandoffEnabled(Boolean commandoffEnabled) {
+        this.commandoffEnabled = commandoffEnabled;
+    }
+
     GuildEntity getGuild() {
         return guild;
     }
@@ -139,6 +157,8 @@ public class OwnerCommandEntity extends AbstractAuditableEntity implements Seria
             ", offplaylmEnabled=" + offplaylmEnabled +
             ", onvotingmEnabled=" + onvotingmEnabled +
             ", offvotingmEnabled=" + offvotingmEnabled +
+            ", commandonEnabled=" + commandonEnabled +
+            ", commandoffEnabled=" + commandoffEnabled +
             '}';
     }
 }

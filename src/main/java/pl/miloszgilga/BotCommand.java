@@ -100,6 +100,8 @@ public enum BotCommand {
     TURN_OFF_PLAYLISTS_MODULE   ("offplaylm",   true, List.of("offplm"),       OWNER,  TURN_OFF_PLAYLISTS_MODULE_COMMAND_DESC),
     TURN_ON_VOTING_MODULE       ("onvotingm",   true, List.of("onvtm"),        OWNER,  TURN_ON_VOTING_MODULE_COMMAND_DESC),
     TURN_OFF_VOTING_MODULE      ("offvotingm",  true, List.of("offvtm"),       OWNER,  TURN_OFF_VOTING_MODULE_COMMAND_DESC),
+    TURN_ON_COMMAND             ("commandon",   true, List.of("cmdon"),        OWNER,  TURN_ON_COMMAND_COMMAND_DESC,               COMMAND_NAME_OR_ALIAS_ARG_SYNTAX),
+    TURN_OFF_COMMAND            ("commandoff",  true, List.of("cmdoff"),       OWNER,  TURN_OFF_COMMAND_COMMAND_DESC,              COMMAND_NAME_OR_ALIAS_ARG_SYNTAX),
 
     VOTE_SHUFFLE_QUEUE          ("vshuffle",    true, List.of("vshq"),         VOTE,   VOTE_SHUFFLE_QUEUE_COMMAND_DESC),
     VOTE_SKIP_TRACK             ("vskip",       true, List.of("vsk"),          VOTE,   VOTE_SKIP_TRACK_COMMAND_DESC),

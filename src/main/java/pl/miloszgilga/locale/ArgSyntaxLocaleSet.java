@@ -43,6 +43,7 @@ public enum ArgSyntaxLocaleSet implements IEnumerableLocaleSet {
     MEMBER_TAG_ARG_SYNTAX                           ("jwizard.command.arguments.MemberTag"),
     SKIP_QUEUE_TO_TRACK_ARG_SYNTAX                  ("jwizard.command.arguments.SkipQueueToTrack"),
     MOVE_TRACK_ARG_SYNTAX                           ("jwizard.command.arguments.MoveTrack"),
+    COMMAND_NAME_OR_ALIAS_ARG_SYNTAX                ("jwizard.command.arguments.CommandNameOrAlias"),
     OPTIONAL_CHANNEL_ID_ARG_SYNTAX                  ("jwizard.command.arguments.OptionalChannelId"),
     OPTIONAL_DJ_ROLE_NAME_ARG_SYNTAX                ("jwizard.command.arguments.OptionalDjRoleName"),
     OPTIONAL_I18N_LOCALE_ARG_SYNTAX                 ("jwizard.command.arguments.OptionalI18nLocale",        Map.of("langsArray", J_AVAILABLE_LOCALES)),

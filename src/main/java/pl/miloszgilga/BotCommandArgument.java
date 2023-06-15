@@ -50,6 +50,8 @@ public enum BotCommandArgument {
     MOVE_TRACK_POSITION_TO          (2, BotCommand.MOVE_TRACK,                  Integer.class,  OptionType.INTEGER,         "topos",         true),
     MEMBER_STATS_MEMBER_TAG         (1, BotCommand.MEMBER_STATS,                String.class,   OptionType.MENTIONABLE,     "member",        true),
     RESET_MEMBER_STATS_MEMBER_TAG   (1, BotCommand.RESET_MEMBER_STATS,          String.class,   OptionType.MENTIONABLE,     "member",        true),
+    TURN_ON_COMMAND_COMMAND_TAG     (1, BotCommand.TURN_ON_COMMAND,             String.class,   OptionType.STRING,          "command",        true),
+    TURN_OFF_COMMAND_COMMAND_TAG    (1, BotCommand.TURN_OFF_COMMAND,            String.class,   OptionType.STRING,          "command",        true),
 
     SET_AUDIO_TEXT_CHANNEL_TAG      (1, BotCommand.SET_AUDIO_CHANNEL,           String.class,   OptionType.CHANNEL,         "text-channel",  false),
     SET_DJ_ROLE_NAME_TAG            (1, BotCommand.SET_DJ_ROLE_NAME,            String.class,   OptionType.STRING,          "role-name",     false),
