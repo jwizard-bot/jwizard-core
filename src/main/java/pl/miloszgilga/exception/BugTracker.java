@@ -93,7 +93,13 @@ public enum BugTracker {
     STATS_MODULE_IS_TURNED_OFF                              (408),
     MUSIC_MODULE_IS_TURNED_OFF                              (409),
     PLAYLISTS_MODULE_IS_TURNED_OFF                          (410),
-    VOTING_MODULE_IS_TURNED_OFF                             (411);
+    VOTING_MODULE_IS_TURNED_OFF                             (411),
+
+    // command states
+    COMMAND_IS_ALREADY_TURNED_ON                            (500),
+    COMMAND_IS_ALREADY_TURNED_OFF                           (501),
+    COMMAND_IS_TURNED_OFF                                   (502),
+    FOLLOWED_COMMAND_ARGUMENT_NOT_EXIST                     (503);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
