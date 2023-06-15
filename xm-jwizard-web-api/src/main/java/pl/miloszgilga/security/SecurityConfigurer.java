@@ -72,7 +72,7 @@ public class SecurityConfigurer {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/v1/hello").permitAll()
                 .requestMatchers("/").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
