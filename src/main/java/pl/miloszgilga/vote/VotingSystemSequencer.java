@@ -186,7 +186,7 @@ public class VotingSystemSequencer {
             JDALog.info(log, predictorData.wrapper(), "Voting execution was ended with failure result");
             sendEmbed(predictorData, predictorData.response().onFailureVotingAction().apply(embedData));
         }
-        clearCoccurentAtomicValues(predictorData);
+        clearConcurentAtomicValues(predictorData);
     }
 
     private void onAfterTimeoutVotingRunnable(VotePredictorData predictorData) {
@@ -197,7 +197,7 @@ public class VotingSystemSequencer {
 
         sendEmbed(predictorData, predictorData.response().onTimeoutVotingAction().apply(embedData));
 
-        clearCoccurentAtomicValues(predictorData);
+        clearConcurentAtomicValues(predictorData);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -207,7 +207,7 @@ public class VotingSystemSequencer {
         predictorData.votedUsers().clear();
     }
 
-    private void clearCoccurentAtomicValues(VotePredictorData predictorData) {
+    private void clearConcurentAtomicValues(VotePredictorData predictorData) {
         predictorData.votesForYes().set(0);
         predictorData.votesForNo().set(0);
         predictorData.succeed().set(false);
