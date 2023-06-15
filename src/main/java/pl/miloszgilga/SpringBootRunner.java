@@ -22,13 +22,15 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @EnableCaching
 @SpringBootApplication
+@EnableJpaRepositories
 @RequiredArgsConstructor
 public class SpringBootRunner implements CommandLineRunner {
 
@@ -37,7 +39,7 @@ public class SpringBootRunner implements CommandLineRunner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringBootRunner.class);
+        SpringApplication.run(SpringBootRunner.class, args);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
