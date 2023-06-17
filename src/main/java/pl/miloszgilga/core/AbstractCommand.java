@@ -57,7 +57,7 @@ public abstract class AbstractCommand extends SlashCommand {
     ) {
         this.name = command.getName();
         this.help = config.getLocaleText(command.getDescriptionLocaleSet());
-        this.aliases = command.getAliases().toArray(String[]::new);
+        this.aliases = command.getAliasesAsStringArray();
         this.command = command;
         this.config = config;
         this.handler = handler;

@@ -210,6 +210,10 @@ public enum BotCommand {
             .orElseThrow(() -> new FollowedCommandArgumentNotExistException(config, event, cmdNameOrAlias));
     }
 
+    public String[] getAliasesAsStringArray() {
+        return aliases.toArray(String[]::new);
+    }
+
     public static String count() {
         return Integer.toString(values().length);
     }
