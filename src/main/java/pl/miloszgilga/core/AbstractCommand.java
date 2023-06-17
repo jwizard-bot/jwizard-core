@@ -32,12 +32,16 @@ import java.util.Objects;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.BotCommandArgument;
+import pl.miloszgilga.dto.CommandWithProxyDto;
 import pl.miloszgilga.misc.QueueAfterParam;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.exception.BotException;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
+
+import static pl.miloszgilga.exception.CommandStateException.CommandIsTurnedOffException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -49,11 +53,13 @@ public abstract class AbstractCommand extends SlashCommand {
     protected final BotConfiguration config;
     protected final RemotePropertyHandler handler;
     protected final EmbedMessageBuilder embedBuilder;
+    private final CacheableCommandStateDao cacheableCommandStateDao;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public AbstractCommand(
-        BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler
+        BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler,
+        CacheableCommandStateDao cacheableCommandStateDao
     ) {
         this.name = command.getName();
         this.help = config.getLocaleText(command.getDescriptionLocaleSet());
@@ -64,6 +70,7 @@ public abstract class AbstractCommand extends SlashCommand {
         this.embedBuilder = embedBuilder;
         this.arguments = command.prepareArgs(config);
         this.options = BotCommandArgument.fabricateSlashOptions(config, command);
+        this.cacheableCommandStateDao = cacheableCommandStateDao;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,6 +79,7 @@ public abstract class AbstractCommand extends SlashCommand {
     protected void execute(CommandEvent event) {
         final CommandEventWrapper commandEventWrapper = new CommandEventWrapper(event);
         try {
+            checkIfCommandIsDisabled(commandEventWrapper);
             final Map<BotCommandArgument, String> arguments = BotCommandArgument
                 .extractForBaseCommand(event.getArgs(), command, config, commandEventWrapper);
             commandEventWrapper.setArgs(arguments);
@@ -93,6 +101,7 @@ public abstract class AbstractCommand extends SlashCommand {
 
         event.deferReply().queue();
         try {
+            checkIfCommandIsDisabled(commandEventWrapper);
             doExecuteCommand(commandEventWrapper);
             sendEmbedsFromSlashCommand(event, commandEventWrapper);
         } catch (BotException ex) {
@@ -144,6 +153,15 @@ public abstract class AbstractCommand extends SlashCommand {
         final var scheduledFuture = defferedMessages.queueAfter(afterParam.duration(), afterParam.timeUnit());
         if (!scheduledFuture.isDone()) return;
         wrapper.getAppendAfterEmbeds().run();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void checkIfCommandIsDisabled(CommandEventWrapper event) {
+        final var proxyDto = new CommandWithProxyDto(command, command.getCategory());
+        if (!cacheableCommandStateDao.checkIfCommandIsEnabledAndReturn(proxyDto, event)) {
+            throw new CommandIsTurnedOffException(config, event, command);
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
