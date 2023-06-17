@@ -40,6 +40,7 @@ import static pl.miloszgilga.exception.CommandException.MismatchCommandArguments
 @Getter
 @RequiredArgsConstructor
 public enum BotCommandArgument {
+
     TRACK_LINK_NAME_ARG             (1, BotCommand.PLAY_TRACK,                  String.class,   OptionType.STRING,          "track",         true),
     COUNT_OF_REPEATS                (1, BotCommand.REPEAT_TRACK,                Integer.class,  OptionType.STRING,          "count",         true),
     VOLUME_POINTS                   (1, BotCommand.SET_PLAYER_VOLUME,           Integer.class,  OptionType.INTEGER,         "points",        true),

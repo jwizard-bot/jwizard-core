@@ -26,7 +26,7 @@ import pl.miloszgilga.domain.ICacheCommandRepository;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-record CachedCommandStateData<T extends AbstractAuditableEntity>(
+record CachedCmdStateData<T extends AbstractAuditableEntity>(
     ICacheCommandRepository<T> commandRepository,
     BotCommand passedCommand,
     IBotCommandProxy<T>[] allValues
