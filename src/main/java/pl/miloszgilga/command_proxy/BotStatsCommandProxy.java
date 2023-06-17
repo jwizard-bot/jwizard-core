@@ -56,4 +56,9 @@ public enum BotStatsCommandProxy implements IBotCommandProxy<StatsCommandEntity>
     public String getUid() {
         return String.format("SIDC-%03d", ordinal() + 1);
     }
+
+    @Override
+    public String getCacheProxyName() {
+        return "GuildStatsCommandsStateCache";
+    }
 }

@@ -29,6 +29,7 @@ import pl.miloszgilga.BotCommand;
 public interface IBotCommandProxy<T extends AbstractAuditableEntity> {
     BotCommand getCommand();
     String getUid();
+    String getCacheProxyName();
     Function<T, Boolean> getIsEnabled();
     IBiSupplier<T, Boolean> getSetValue();
 }
