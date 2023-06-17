@@ -133,6 +133,8 @@ public enum ResLocaleSet implements IEnumerableLocaleSet {
     TIME_TO_LEAVE_EMPTY_CHANNEL_WAS_RESET_MESS      ("jwizard.message.response.TimeToLeaveEmptyChannelWasReset"),
     TIME_TO_LEAVE_NO_TRACKS_WAS_SETTED_MESS         ("jwizard.message.response.TimeToLeaveNoTracksWasSetted"),
     TIME_TO_LEAVE_NO_TRACKS_WAS_RESET_MESS          ("jwizard.message.response.TimeToLeaveNoTracksWasReset"),
+    SUCCESS_TURN_ON_COMMAND_MESS                    ("jwizard.message.response.SuccessTurnOnCommandMess"),
+    SUCCESS_TURN_OFF_COMMAND_MESS                   ("jwizard.message.response.SuccessTurnOffCommandMess"),
 
     VOTE_SUFFLE_QUEUE_MESS                          ("jwizard.message.response.VoteShuffleQueue"),
     SUCCESS_VOTE_SUFFLE_QUEUE_MESS                  ("jwizard.message.response.SuccessVoteShuffleQueue"),

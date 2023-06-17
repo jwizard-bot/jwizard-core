@@ -142,6 +142,10 @@ public enum BotCommand {
         return "`" + config.getProperty(BotProperty.J_PREFIX) + name + "`";
     }
 
+    public String parseWithPrefix(BotConfiguration config, String suffix) {
+        return "`" + config.getProperty(BotProperty.J_PREFIX) + name + " " + suffix + "`";
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public String getAvailableSyntax(BotConfiguration config) {
