@@ -36,6 +36,7 @@ import pl.miloszgilga.audioplayer.ExtendedAudioTrackInfo;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.embed.EmbedPaginationBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
@@ -51,9 +52,9 @@ public class RemoveMemberTracksCmd extends AbstractDjCommand {
 
     RemoveMemberTracksCmd(
         BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
-        EmbedPaginationBuilder pagination, RemotePropertyHandler handler
+        EmbedPaginationBuilder pagination, RemotePropertyHandler handler, CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.REMOVE_MEMBER_TRACKS, config, playerManager, embedBuilder, handler);
+        super(BotCommand.REMOVE_MEMBER_TRACKS, config, playerManager, embedBuilder, handler, cacheableCommandStateDao);
         super.onSameChannelWithBot = true;
         this.pagination = pagination;
     }

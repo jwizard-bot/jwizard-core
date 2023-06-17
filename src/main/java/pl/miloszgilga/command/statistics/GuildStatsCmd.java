@@ -25,6 +25,7 @@ import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.dto.GuildMembersStatsDto;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractStatsCommand;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
@@ -46,9 +47,10 @@ public class GuildStatsCmd extends AbstractStatsCommand {
 
     GuildStatsCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, IGuildStatsRepository statsRepository,
-        IMemberStatsRepository memberStatsRepository, RemotePropertyHandler handler
+        IMemberStatsRepository memberStatsRepository, RemotePropertyHandler handler,
+        CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.GUILD_STATS, config, embedBuilder, handler);
+        super(BotCommand.GUILD_STATS, config, embedBuilder, handler, cacheableCommandStateDao);
         this.statsRepository = statsRepository;
         this.memberStatsRepository = memberStatsRepository;
     }

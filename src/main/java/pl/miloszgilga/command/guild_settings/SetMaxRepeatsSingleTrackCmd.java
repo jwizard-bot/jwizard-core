@@ -31,6 +31,7 @@ import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.cacheable.CacheableGuildSettingsDao;
 import pl.miloszgilga.command.AbstractGuildSettingsCommand;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
@@ -51,9 +52,11 @@ public class SetMaxRepeatsSingleTrackCmd extends AbstractGuildSettingsCommand {
 
     SetMaxRepeatsSingleTrackCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler,
-        IGuildSettingsRepository repository, CacheableGuildSettingsDao cacheableGuildSettingsDao
+        IGuildSettingsRepository repository, CacheableGuildSettingsDao cacheableGuildSettingsDao,
+        CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.SET_TRACK_REPEATS, config, embedBuilder, handler, repository, cacheableGuildSettingsDao);
+        super(BotCommand.SET_TRACK_REPEATS, config, embedBuilder, handler, repository, cacheableGuildSettingsDao,
+            cacheableCommandStateDao);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

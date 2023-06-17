@@ -31,6 +31,7 @@ import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractOwnerCommand;
 import pl.miloszgilga.cacheable.CacheableModuleData;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.cacheable.CacheableGuildModulesDao;
 import pl.miloszgilga.core.remote.RemoteModuleProperty;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
@@ -56,9 +57,10 @@ public class TurnOnMusicModuleCmd extends AbstractOwnerCommand {
 
     TurnOnMusicModuleCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, IGuildModulesRepository modulesRepository,
-        CacheableGuildModulesDao cacheableGuildModulesDao, RemotePropertyHandler handler
+        CacheableGuildModulesDao cacheableGuildModulesDao, RemotePropertyHandler handler,
+        CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.TURN_ON_MUSIC_MODULE, config, embedBuilder, handler);
+        super(BotCommand.TURN_ON_MUSIC_MODULE, config, embedBuilder, handler, cacheableCommandStateDao);
         this.modulesRepository = modulesRepository;
         this.cacheableGuildModulesDao = cacheableGuildModulesDao;
     }

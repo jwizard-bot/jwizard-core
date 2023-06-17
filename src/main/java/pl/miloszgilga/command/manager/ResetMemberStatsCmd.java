@@ -33,6 +33,7 @@ import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractManagerStatsCommand;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
@@ -53,9 +54,9 @@ public class ResetMemberStatsCmd extends AbstractManagerStatsCommand {
 
     ResetMemberStatsCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, IMemberStatsRepository statsRepository,
-        RemotePropertyHandler handler
+        RemotePropertyHandler handler, CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.RESET_MEMBER_STATS, config, embedBuilder, handler);
+        super(BotCommand.RESET_MEMBER_STATS, config, embedBuilder, handler, cacheableCommandStateDao);
         this.statsRepository = statsRepository;
     }
 

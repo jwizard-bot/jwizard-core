@@ -32,6 +32,7 @@ import pl.miloszgilga.audioplayer.SchedulerActions;
 import pl.miloszgilga.audioplayer.ExtendedAudioTrackInfo;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
@@ -43,9 +44,9 @@ public class StopClearQueueCmd extends AbstractDjCommand {
 
     StopClearQueueCmd(
         BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
-        RemotePropertyHandler handler
+        RemotePropertyHandler handler, CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.STOP_CLEAR_QUEUE, config, playerManager, embedBuilder, handler);
+        super(BotCommand.STOP_CLEAR_QUEUE, config, playerManager, embedBuilder, handler, cacheableCommandStateDao);
         super.onSameChannelWithBot = true;
     }
 

@@ -31,6 +31,7 @@ import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.remote.RemoteProperty;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
@@ -45,9 +46,9 @@ public class RepeatTrackCmd extends AbstractMusicCommand {
 
     RepeatTrackCmd(
         BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
-        RemotePropertyHandler handler
+        RemotePropertyHandler handler, CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.REPEAT_TRACK, config, playerManager, embedBuilder, handler);
+        super(BotCommand.REPEAT_TRACK, config, playerManager, embedBuilder, handler, cacheableCommandStateDao);
         super.inPlayingMode = true;
         super.onSameChannelWithBot = true;
     }

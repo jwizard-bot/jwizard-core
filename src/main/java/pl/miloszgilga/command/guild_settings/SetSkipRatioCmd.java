@@ -32,6 +32,7 @@ import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.cacheable.CacheableGuildSettingsDao;
 import pl.miloszgilga.command.AbstractGuildSettingsCommand;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
@@ -51,9 +52,11 @@ public class SetSkipRatioCmd extends AbstractGuildSettingsCommand {
 
     SetSkipRatioCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler,
-        IGuildSettingsRepository repository, CacheableGuildSettingsDao cacheableGuildSettingsDao
+        IGuildSettingsRepository repository, CacheableGuildSettingsDao cacheableGuildSettingsDao,
+        CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.SET_SKIP_RATIO, config, embedBuilder, handler, repository, cacheableGuildSettingsDao);
+        super(BotCommand.SET_SKIP_RATIO, config, embedBuilder, handler, repository, cacheableGuildSettingsDao,
+            cacheableCommandStateDao);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -30,6 +30,7 @@ import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMyStatsCommand;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.cacheable.CacheableMemberSettingsDao;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
@@ -54,9 +55,9 @@ public class PublicStatsCmd extends AbstractMyStatsCommand {
     PublicStatsCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, IMemberStatsRepository repository,
         CacheableMemberSettingsDao cacheableMemberSettingsDao, IMemberSettingsRepository settingsRepository,
-        RemotePropertyHandler handler
+        RemotePropertyHandler handler, CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.PUBLIC_STATS, config, embedBuilder, repository, handler);
+        super(BotCommand.PUBLIC_STATS, config, embedBuilder, repository, handler, cacheableCommandStateDao);
         this.cacheableMemberSettingsDao = cacheableMemberSettingsDao;
         this.settingsRepository = settingsRepository;
     }

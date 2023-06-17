@@ -40,6 +40,7 @@ import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.embed.EmbedPaginationBuilder;
 import pl.miloszgilga.command.AbstractManagerCommand;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.IEnumerableLocaleSet;
 import pl.miloszgilga.core.remote.RemoteProperty;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
@@ -64,9 +65,9 @@ public class DebugCmd extends AbstractManagerCommand {
 
     DebugCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, EmbedPaginationBuilder pagination,
-        RemotePropertyHandler handler
+        RemotePropertyHandler handler, CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.DEBUG, config, embedBuilder, handler);
+        super(BotCommand.DEBUG, config, embedBuilder, handler, cacheableCommandStateDao);
         this.pagination = pagination;
     }
 
