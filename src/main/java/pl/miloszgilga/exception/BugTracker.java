@@ -79,7 +79,9 @@ public enum BugTracker {
     TIME_TO_END_VOTING_OUT_OF_BOUNDS                        (305),
     TIME_TO_LEAVE_EMPTY_OUT_OF_BOUNDS                       (306),
     TIME_TO_LEAVE_NO_TRACKS_OUT_OF_BOUNDS                   (307),
-    INSUFFICIENT_PERMISSION_ROLE_HIERARCHY                  (308),
+    SONG_CHOOSER_COUNT_OUT_OF_BOUNDS                        (308),
+    SONG_CHOOSER_TIME_OUT_OF_BOUNDS                         (308),
+    INSUFFICIENT_PERMISSION_ROLE_HIERARCHY                  (309),
 
     // modules
     STATS_MODULE_IS_ALREADY_RUNNING                         (400),

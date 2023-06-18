@@ -41,6 +41,9 @@ public enum CommandLocaleSet implements IEnumerableLocaleSet {
     SET_TIME_VOTING_COMMAND_DESC                    ("jwizard.command.description.SetTimeVoting"),
     SET_TIME_LEAVE_EMPTY_COMMAND_DESC               ("jwizard.command.description.SetTimeToLeaveEmptyChannel"),
     SET_TIME_LEAVE_TO_TRACKS_COMMAND_DESC           ("jwizard.command.description.SetTimeToLeaveNoTracksChannel"),
+    SET_TIME_CHOOSE_SONG_COMMAND_DESC               ("jwizard.command.description.SetTimeChooseSong"),
+    SET_SONG_CHOOSER_RANDOM_COMMAND_DESC            ("jwizard.command.description.SetSongChooserRandomActive"),
+    SET_SONG_CHOOSER_COUNT_COMMAND_DESC             ("jwizard.command.description.SetSongChooserCount"),
 
     PLAY_TRACK_COMMAND_DESC                         ("jwizard.command.description.PlayTrack"),
     PAUSE_TRACK_COMMAND_DESC                        ("jwizard.command.description.PauseTrack"),

@@ -62,7 +62,10 @@ public enum BotCommandArgument {
     SET_SKIP_RATIO_TAG              (1, BotCommand.SET_SKIP_RATIO,              Integer.class,  OptionType.INTEGER,         "ratio",         false),
     SET_TIME_VOTING_TAG             (1, BotCommand.SET_TIME_VOTING,             Integer.class,  OptionType.INTEGER,         "seconds",       false),
     SET_TIME_LEAVE_EMPTY_TAG        (1, BotCommand.SET_TIME_LEAVE_EMPTY,        Integer.class,  OptionType.INTEGER,         "seconds",       false),
-    SET_TIME_LEAVE_NO_TRACKS_TAG    (1, BotCommand.SET_TIME_LEAVE_NO_TRACKS,    Integer.class,  OptionType.INTEGER,         "seconds",       false);
+    SET_TIME_LEAVE_NO_TRACKS_TAG    (1, BotCommand.SET_TIME_LEAVE_NO_TRACKS,    Integer.class,  OptionType.INTEGER,         "seconds",       false),
+    SET_TIME_CHOOSE_SONG_TAG        (1, BotCommand.SET_TIME_CHOOSE_SONG,        Integer.class,  OptionType.INTEGER,         "seconds",       false),
+    SET_RANDOM_CHOOSE_SONG_TAG      (1, BotCommand.SET_RANDOM_CHOOSE_SONG,      Boolean.class,  OptionType.BOOLEAN,         "logic",         false),
+    SET_COUNT_CHOOSE_SONG_TAG       (1, BotCommand.SET_COUNT_CHOOSE_SONG,       Integer.class,  OptionType.INTEGER,         "count",         false);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

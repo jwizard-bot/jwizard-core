@@ -52,7 +52,10 @@ public enum ArgSyntaxLocaleSet implements IEnumerableLocaleSet {
     OPTIONAL_SKIP_RATIO_ARG_SYNTAX                  ("jwizard.command.arguments.OptionalSkipRatio"),
     OPTIONAL_TIME_VOTING_ARG_SYNTAX                 ("jwizard.command.arguments.OptionalTimeSeconds",       Map.of("maxSeconds", J_MAX_INACTIVITY_VOTING_TIME)),
     OPTIONAL_TIME_LEAVE_EMPTY_ARG_SYNTAX            ("jwizard.command.arguments.OptionalTimeSeconds",       Map.of("maxSeconds", J_MAX_INACTIVITY_EMPTY_TIME)),
-    OPTIONAL_TIME_LEAVE_NO_TRACKS_ARG_SYNTAX        ("jwizard.command.arguments.OptionalTimeSeconds",       Map.of("maxSeconds", J_MAX_INACTIVITY_NO_TRACK_TIME));
+    OPTIONAL_TIME_LEAVE_NO_TRACKS_ARG_SYNTAX        ("jwizard.command.arguments.OptionalTimeSeconds",       Map.of("maxSeconds", J_MAX_INACTIVITY_NO_TRACK_TIME)),
+    OPTIONAL_TIME_CHOOSE_SONG_ARG_SYNTAX            ("jwizard.command.arguments.OptionalTimeSeconds",       Map.of("maxSeconds", J_MAX_SONG_CHOOSER_SELECT_TIME)),
+    OPTIONAL_SONG_CHOOSER_RANDOM_ARG_SYNTAX         ("jwizard.command.arguments.OptionalTrueFalse"),
+    OPTIONAL_SONG_CHOOSER_COUNT_ARG_SYNTAX          ("jwizard.command.arguments.OptionalSongCount");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

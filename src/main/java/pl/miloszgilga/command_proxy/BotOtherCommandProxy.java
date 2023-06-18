@@ -45,7 +45,10 @@ public enum BotOtherCommandProxy implements IBotCommandProxy<OtherCommandEntity>
     PX__SET_SKIP_RATIO              (SET_SKIP_RATIO,            OtherCommandEntity::getSetskratioEnabled,   OtherCommandEntity::setSetskratioEnabled),
     PX__SET_TIME_VOTING             (SET_TIME_VOTING,           OtherCommandEntity::getSettimevotEnabled,   OtherCommandEntity::setSettimevotEnabled),
     PX__SET_TIME_LEAVE_EMPTY        (SET_TIME_LEAVE_EMPTY,      OtherCommandEntity::getSettleavemEnabled,   OtherCommandEntity::setSettleavemEnabled),
-    PX__SET_TIME_LEAVE_NO_TRACKS    (SET_TIME_LEAVE_NO_TRACKS,  OtherCommandEntity::getSettleavetrEnabled,  OtherCommandEntity::setSettleavetrEnabled);
+    PX__SET_TIME_LEAVE_NO_TRACKS    (SET_TIME_LEAVE_NO_TRACKS,  OtherCommandEntity::getSettleavetrEnabled,  OtherCommandEntity::setSettleavetrEnabled),
+    PX__SET_TIME_CHOOSE_SONG        (SET_TIME_CHOOSE_SONG,      OtherCommandEntity::getSettchossngEnabled,  OtherCommandEntity::setSettchossngEnabled),
+    PX__SET_RANDOM_CHOOSE_SONG      (SET_RANDOM_CHOOSE_SONG,    OtherCommandEntity::getSetrchossngEnabled,  OtherCommandEntity::setSetrchossngEnabled),
+    PX__SET_COUNT_CHOOSE_SONG       (SET_COUNT_CHOOSE_SONG,     OtherCommandEntity::getSetcchossngEnabled,  OtherCommandEntity::setSetcchossngEnabled);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -40,7 +40,10 @@ public enum RemoteProperty {
     R_MAX_REPEATS_SINGLE_TRACK          (BotProperty.J_MAX_REPEATS_SINGLE_TRACK, true, GuildSettingsEntity::getMaxRepeatsSingleTrack),
     R_INACTIVITY_VOTING_TIMEOUT         (BotProperty.J_INACTIVITY_VOTING_TIMEOUT, true, GuildSettingsEntity::getTimeToEndVoting),
     R_INACTIVITY_EMPTY_TIMEOUT          (BotProperty.J_INACTIVITY_EMPTY_TIMEOUT, true, GuildSettingsEntity::getTimeToLeaveEmptyChannel),
-    R_INACTIVITY_NO_TRACK_TIMEOUT       (BotProperty.J_INACTIVITY_NO_TRACK_TIMEOUT, true, GuildSettingsEntity::getTimeToLeaveNoTracksChannel);
+    R_INACTIVITY_NO_TRACK_TIMEOUT       (BotProperty.J_INACTIVITY_NO_TRACK_TIMEOUT, true, GuildSettingsEntity::getTimeToLeaveNoTracksChannel),
+    R_SONG_CHOOSER_SELECT_TIME          (BotProperty.J_SONG_CHOOSER_SELECT_TIME, true, GuildSettingsEntity::getTimeToSelectSong),
+    R_SONG_CHOOSER_RANDOM_ACTIVE        (BotProperty.J_SONG_CHOOSER_RANDOM_ACTIVE, true, GuildSettingsEntity::getSongSelectIsRandom),
+    R_SONG_CHOOSER_COUNT                (BotProperty.J_SONG_CHOOSER_COUNT, true, GuildSettingsEntity::getSongChoicesCount);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

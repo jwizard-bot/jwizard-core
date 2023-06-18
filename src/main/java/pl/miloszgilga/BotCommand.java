@@ -61,6 +61,9 @@ public enum BotCommand {
     SET_TIME_VOTING             ("settimevot",  true, List.of("stev"),         OTHERS, SET_TIME_VOTING_COMMAND_DESC,               OPTIONAL_TIME_VOTING_ARG_SYNTAX),
     SET_TIME_LEAVE_EMPTY        ("settleavem",  true, List.of("stlech"),       OTHERS, SET_TIME_LEAVE_EMPTY_COMMAND_DESC,          OPTIONAL_TIME_LEAVE_EMPTY_ARG_SYNTAX),
     SET_TIME_LEAVE_NO_TRACKS    ("settleavetr", true, List.of("stlntch"),      OTHERS, SET_TIME_LEAVE_TO_TRACKS_COMMAND_DESC,      OPTIONAL_TIME_LEAVE_NO_TRACKS_ARG_SYNTAX),
+    SET_TIME_CHOOSE_SONG        ("settchossng", true, List.of("sttcs"),        OTHERS, SET_TIME_CHOOSE_SONG_COMMAND_DESC,          OPTIONAL_TIME_CHOOSE_SONG_ARG_SYNTAX),
+    SET_RANDOM_CHOOSE_SONG      ("setrchossng", true, List.of("srtcs"),        OTHERS, SET_SONG_CHOOSER_RANDOM_COMMAND_DESC,       OPTIONAL_SONG_CHOOSER_RANDOM_ARG_SYNTAX),
+    SET_COUNT_CHOOSE_SONG       ("setcchossng", true, List.of("sctcs"),        OTHERS, SET_SONG_CHOOSER_COUNT_COMMAND_DESC,        OPTIONAL_SONG_CHOOSER_COUNT_ARG_SYNTAX),
 
     PLAY_TRACK                  ("play",        true, List.of("p", "pl"),      MUSIC,  PLAY_TRACK_COMMAND_DESC,                    PLAY_TRACK_ARG_SYNTAX),
     PAUSE_TRACK                 ("pause",       true, List.of("ps"),           MUSIC,  PAUSE_TRACK_COMMAND_DESC),

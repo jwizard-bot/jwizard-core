@@ -115,6 +115,27 @@ public class SettingsException {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    @Slf4j public static class SongChooserTimeOutOfBoundsException extends BotException {
+        public SongChooserTimeOutOfBoundsException(BotConfiguration config, CommandEventWrapper event) {
+            super(config, event.getGuild(), ExceptionLocaleSet.SONG_CHOOSER_TIME_OUT_OF_BOUNDS, Map.of(
+                "maxSeconds", config.getProperty(BotProperty.J_MAX_SONG_CHOOSER_SELECT_TIME)
+            ), BugTracker.SONG_CHOOSER_TIME_OUT_OF_BOUNDS);
+            JDALog.error(log, event, "Attempt to assign song chooser time of voting value below 5 or greater than default");
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Slf4j public static class SongChooserCountOutOfBoundsException extends BotException {
+        public SongChooserCountOutOfBoundsException(BotConfiguration config, CommandEventWrapper event) {
+            super(config, event.getGuild(), ExceptionLocaleSet.SONG_CHOOSER_COUNT_OUT_OF_BOUNDS,
+                BugTracker.SONG_CHOOSER_COUNT_OUT_OF_BOUNDS);
+            JDALog.error(log, event, "Attempt to assign count of songs value below 2 or greater than 10");
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Slf4j public static class InsufficientPermissionRoleHierarchyException extends BotException {
         public InsufficientPermissionRoleHierarchyException(
             BotConfiguration config, CommandEventWrapper event, String botRoleName
