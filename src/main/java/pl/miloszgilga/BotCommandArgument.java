@@ -151,6 +151,6 @@ public enum BotCommandArgument {
             .filter(c -> c.typeClazz().isAssignableFrom(castingTypeClazz))
             .findFirst()
             .map(t -> t.cast().apply(StringUtils.trimToEmpty((String)rawArg)))
-            .orElseThrow(() -> new RuntimeException("Unsupported casting type."));
+            .orElseThrow(RuntimeException::new);
     }
 }
