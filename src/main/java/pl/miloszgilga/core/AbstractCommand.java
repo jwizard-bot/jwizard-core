@@ -42,6 +42,7 @@ import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 import static pl.miloszgilga.exception.CommandStateException.CommandIsTurnedOffException;
+import static pl.miloszgilga.exception.CommandException.MismatchCommandArgumentsCountException;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -83,8 +84,11 @@ public abstract class AbstractCommand extends SlashCommand {
             final Map<BotCommandArgument, String> arguments = BotCommandArgument
                 .extractForBaseCommand(event.getArgs(), command, config, commandEventWrapper);
             commandEventWrapper.setArgs(arguments);
-
-            doExecuteCommand(commandEventWrapper);
+            try {
+                doExecuteCommand(commandEventWrapper);
+            } catch (NumberFormatException ex) {
+                throw new MismatchCommandArgumentsCountException(config, commandEventWrapper, command);
+            }
             sendEmbedsFromCommand(event, commandEventWrapper);
         } catch (BotException ex) {
             event.reply(embedBuilder.createErrorMessage(commandEventWrapper, ex));
