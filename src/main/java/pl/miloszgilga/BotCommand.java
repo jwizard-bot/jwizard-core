@@ -150,7 +150,7 @@ public enum BotCommand {
 
     public String getAvailableSyntax(BotConfiguration config) {
         final StringBuilder stringBuilder = new StringBuilder();
-        final String argLocaleSyntax = config.getLocaleText(argSyntax);
+        final String argLocaleSyntax = Objects.isNull(argSyntax) ? StringUtils.EMPTY : argSyntax.parse(config);
         final String botPrefix = config.getProperty(BotProperty.J_PREFIX);
         stringBuilder.append("\n\n");
         stringBuilder.append(String.format("\t`%s%s %s`", botPrefix, name, argLocaleSyntax));
