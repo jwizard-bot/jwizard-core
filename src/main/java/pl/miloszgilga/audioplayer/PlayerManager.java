@@ -93,7 +93,7 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     @Override
     public void loadAndPlay(CommandEventWrapper event, String trackUrl, boolean isUrlPattern) {
         final MusicManager musicManager = getMusicManager(event);
-        final AudioLoadResultHandler audioLoadResultHandler = new AudioLoaderResultImpl(musicManager, config,
+        final AudioLoadResultHandler audioLoadResultHandler = new AudioLoaderResultImpl(musicManager, config, handler,
             builder, event, isUrlPattern);
         event.getGuild().getAudioManager().setSelfDeafened(true);
         loadItemOrdered(musicManager, trackUrl, audioLoadResultHandler);

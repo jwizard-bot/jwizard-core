@@ -124,10 +124,10 @@ public final class Utilities {
         return String.format("[%s](%s)", audioTrackInfo.title.replace("*", StringUtils.EMPTY), audioTrackInfo.uri);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static String getRichEmailLink(String email) {
-        return String.format("[%s](mailto:%s)", email, email);
+    public static String getRichTrackTitle(AudioTrack audioTrack) {
+        final AudioTrackInfo info = audioTrack.getInfo();
+        return String.format("[ %s ] : [%s](%s)", convertMilisToDate(audioTrack.getDuration()),
+            info.title.replace("*", StringUtils.EMPTY), info.uri);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
