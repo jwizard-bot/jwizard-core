@@ -19,9 +19,10 @@
 package pl.miloszgilga.command;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.dto.CommandEventWrapper;
+import pl.miloszgilga.vote.IVoteSequencer;
 import pl.miloszgilga.vote.VoteEmbedResponse;
 import pl.miloszgilga.vote.VotingSystemSequencer;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.cacheable.CacheableCommandStateDao;
@@ -50,8 +51,8 @@ public abstract class AbstractVoteMusicCommand extends AbstractMusicCommand {
             throw new VotingModuleIsTurnedOffException(config, event);
         }
         final VoteEmbedResponse response = doExecuteVoteMusicCommand(event);
-        final VotingSystemSequencer votingSystemSequencer = new VotingSystemSequencer(response, event, config, handler);
-        votingSystemSequencer.initializeAndStartVoting();
+        final IVoteSequencer votingSystemSequencer = new VotingSystemSequencer(response, event, config, handler);
+        votingSystemSequencer.initializeAndStart();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
