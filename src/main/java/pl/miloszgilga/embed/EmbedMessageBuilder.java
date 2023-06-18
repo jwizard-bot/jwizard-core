@@ -269,6 +269,14 @@ public class EmbedMessageBuilder {
             .build();
     }
 
+    public MessageEmbed createMessage(String description, CommandEventWrapper wrapper) {
+        return new EmbedBuilder()
+            .setAuthor(wrapper.getAuthorTag(), null, wrapper.getAuthorAvatarUrl())
+            .setDescription(description)
+            .setColor(EmbedColor.ANTIQUE_WHITE.getColor())
+            .build();
+    }
+
     public MessageEmbed createMessage(IEnumerableLocaleSet localeSet, Guild guild) {
         return createMessage(localeSet, Map.of(), guild);
     }

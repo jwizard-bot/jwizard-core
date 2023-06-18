@@ -39,6 +39,10 @@ import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.dto.PlaylistEmbedContent;
 import pl.miloszgilga.exception.BugTracker;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.vote.IVoteSequencer;
+import pl.miloszgilga.vote.SongChooserConfigData;
+import pl.miloszgilga.vote.SongChooserSystemSequencer;
+import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,16 +55,18 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
 
     private final BotConfiguration config;
     private final MusicManager musicManager;
+    private final RemotePropertyHandler handler;
     private final EmbedMessageBuilder builder;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     AudioLoaderResultImpl(
-        MusicManager musicManager, BotConfiguration config, EmbedMessageBuilder builder, CommandEventWrapper deliveryEvent,
-        boolean isUrlPattern
+        MusicManager musicManager, BotConfiguration config, RemotePropertyHandler handler, EmbedMessageBuilder builder,
+        CommandEventWrapper deliveryEvent, boolean isUrlPattern
     ) {
         this.musicManager = musicManager;
         this.config = config;
+        this.handler = handler;
         this.builder = builder;
         this.deliveryEvent = deliveryEvent;
         this.isUrlPattern = isUrlPattern;
@@ -96,7 +102,10 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
 
             JDALog.info(log, deliveryEvent, "New audio playlist: '%s' was added to queue", flattedTrackList(trackList));
         } else {
-            addNewAudioTrackToQueue(dataSender, trackList.get(0));
+            final var configData = new SongChooserConfigData(config, deliveryEvent, handler, builder,
+                track -> addNewAudioTrackToQueue(dataSender, track));
+            final IVoteSequencer sequencer = new SongChooserSystemSequencer(trackList, configData);
+            sequencer.initializeAndStart();
         }
     }
 

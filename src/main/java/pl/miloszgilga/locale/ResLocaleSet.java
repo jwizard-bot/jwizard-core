@@ -114,6 +114,9 @@ public enum ResLocaleSet implements IEnumerableLocaleSet {
     GUILD_BOTS_COUNT_MESS                           ("jwizard.message.response.GuildBotsCount"),
     GUILD_BOOSTERS_COUNT_MESS                       ("jwizard.message.response.GuildBoostersCount"),
     GUILD_BOOSTING_LEVEL_MESS                       ("jwizard.message.response.GuildBoostingLevel"),
+    FIRST_RESULT_MESS                               ("jwizard.message.response.FirstResult"),
+    RANDOM_RESULT_MESS                              ("jwizard.message.response.RandomResult"),
+    SELECT_SONG_SEQUENCER_MESS                      ("jwizard.message.response.SelectSongSequencer"),
 
     AUDIO_CHANNEL_WAS_SETTED_MESS                   ("jwizard.message.response.AudioTextChannelWasSetted"),
     AUDIO_CHANNEL_WAS_RESET_MESS                    ("jwizard.message.response.AudioTextChannelWasReset"),
