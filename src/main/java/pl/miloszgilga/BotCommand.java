@@ -207,6 +207,10 @@ public enum BotCommand {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public static List<BotCommand> getBasicCommands() {
+        return List.of(PLAY_TRACK, SKIP_TRACK, CURRENT_PLAYING);
+    }
+
     public static CommandWithProxyDto getCategoryFromRawCommand(
         String cmdNameOrAlias, BotConfiguration config, CommandEventWrapper event
     ) {

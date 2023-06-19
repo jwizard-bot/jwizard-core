@@ -43,5 +43,6 @@
     <include file="migrations/2023-06-08_00005_create-other-commands-table.xml" relativeToChangelogFile="true"/>
     <include file="migrations/2023-06-15_00000_add-command-on-off-fields.xml" relativeToChangelogFile="true"/>
     <include file="migrations/2023-06-18_00000_add-columns-for-song-chooser.xml" relativeToChangelogFile="true"/>
+    <include file="migrations/2023-06-19_00000_create-message-memory-table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

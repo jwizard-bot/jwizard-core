@@ -20,7 +20,9 @@ package pl.miloszgilga.misc;
 
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 import org.apache.commons.lang3.StringUtils;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -28,6 +30,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
 import java.time.ZoneOffset;
 import java.time.OffsetDateTime;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.time.format.DateTimeFormatter;
 
@@ -128,6 +131,16 @@ public final class Utilities {
         final AudioTrackInfo info = audioTrack.getInfo();
         return String.format("[ %s ] : [%s](%s)", convertMilisToDate(audioTrack.getDuration()),
             info.title.replace("*", StringUtils.EMPTY), info.uri);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static TextChannel getSystemTextChannel(Guild guild) {
+        final TextChannel systemChannel = guild.getSystemChannel();
+        if (Objects.isNull(systemChannel)) {
+            return guild.getTextChannels().get(0);
+        }
+        return systemChannel;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

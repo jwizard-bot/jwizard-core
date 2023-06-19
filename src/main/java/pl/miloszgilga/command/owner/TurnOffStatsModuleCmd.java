@@ -25,6 +25,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.embed.EmbedInteractionsOnJoin;
 import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
@@ -51,6 +52,7 @@ import static pl.miloszgilga.exception.ModuleException.StatsModuleIsAlreadyDisab
 public class TurnOffStatsModuleCmd extends AbstractOwnerCommand {
 
     private final IGuildModulesRepository modulesRepository;
+    private final EmbedInteractionsOnJoin embedInteractionsOnJoin;
     private final CacheableGuildModulesDao cacheableGuildModulesDao;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,10 +60,11 @@ public class TurnOffStatsModuleCmd extends AbstractOwnerCommand {
     TurnOffStatsModuleCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, IGuildModulesRepository modulesRepository,
         CacheableGuildModulesDao cacheableGuildModulesDao, RemotePropertyHandler handler,
-        CacheableCommandStateDao cacheableCommandStateDao
+        CacheableCommandStateDao cacheableCommandStateDao, EmbedInteractionsOnJoin embedInteractionsOnJoin
     ) {
         super(BotCommand.TURN_OFF_STATS_MODULE, config, embedBuilder, handler, cacheableCommandStateDao);
         this.modulesRepository = modulesRepository;
+        this.embedInteractionsOnJoin = embedInteractionsOnJoin;
         this.cacheableGuildModulesDao = cacheableGuildModulesDao;
     }
 
@@ -81,6 +84,7 @@ public class TurnOffStatsModuleCmd extends AbstractOwnerCommand {
             .build();
 
         final var updatedSettings = cacheableGuildModulesDao.toggleGuildModule(data);
+        embedInteractionsOnJoin.modifyStatsModuleInteractionMessage(event.getGuild(), false);
         modulesRepository.save(updatedSettings);
 
         final MessageEmbed messageEmbed = embedBuilder.createMessage(ResLocaleSet.GUILD_STATS_MODULE_DISABLED_MESS, Map.of(

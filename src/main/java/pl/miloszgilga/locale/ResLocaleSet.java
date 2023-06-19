@@ -159,7 +159,15 @@ public enum ResLocaleSet implements IEnumerableLocaleSet {
     FAILURE_VOTE_CLEAR_QUEUE_MESS                   ("jwizard.message.response.FailureVoteClearQueue"),
     VOTE_STOP_CLEAR_QUEUE_MESS                      ("jwizard.message.response.VoteStopClearQueue"),
     SUCCESS_VOTE_STOP_CLEAR_QUEUE_MESS              ("jwizard.message.response.SuccessVoteStopClearQueue"),
-    FAILURE_VOTE_STOP_CLEAR_QUEUE_MESS              ("jwizard.message.response.FailureVoteStopClearQueue");
+    FAILURE_VOTE_STOP_CLEAR_QUEUE_MESS              ("jwizard.message.response.FailureVoteStopClearQueue"),
+
+    WELCOME_MESSAGE_WELCOME_HEADER                  ("jwizard.message.response.WelcomeMessageWelcomeHeader"),
+    WELCOME_MESSAGE_BASE_CONTENT                    ("jwizard.message.response.WelcomeMessageBaseContent"),
+    WELCOME_MESSAGE_COMMANDS_HEADER                 ("jwizard.message.response.WelcomeMessageCommandsHeader"),
+    WELCOME_MESSAGE_COMMANDS_CONTENT                ("jwizard.message.response.WelcomeMessageCommandsContent"),
+    WELCOME_MESSAGE_CONTRIBUTE_CONTENT              ("jwizard.message.response.WelcomeMessageContributeContent"),
+    STATS_MESSAGE_STATS_HEADER                      ("jwizard.message.response.StatsMessageStatsHeader"),
+    STATS_MESSAGE_STATS_CONTENT                     ("jwizard.message.response.StatsMessageStatsContent");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

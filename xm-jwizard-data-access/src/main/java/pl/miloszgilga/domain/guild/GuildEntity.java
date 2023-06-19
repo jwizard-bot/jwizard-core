@@ -36,6 +36,7 @@ import pl.miloszgilga.domain.guild_modules.GuildModulesEntity;
 import pl.miloszgilga.domain.guild_settings.GuildSettingsEntity;
 import pl.miloszgilga.domain.member_stats.MemberStatsEntity;
 import pl.miloszgilga.domain.member_settings.MemberSettingsEntity;
+import pl.miloszgilga.domain.memory_messages.MemoryMessageEntity;
 
 import pl.miloszgilga.domain.vote_commands.VoteCommandEntity;
 import pl.miloszgilga.domain.stats_commands.StatsCommandEntity;
@@ -93,6 +94,9 @@ public class GuildEntity extends AbstractAuditableEntity implements Serializable
 
     @OneToMany(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
     private Set<PlaylistEntity> memberGuildsPlaylists = new HashSet<>();
+
+    @OneToMany(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
+    private Set<MemoryMessageEntity> memoryMessages = new HashSet<>();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -215,6 +219,14 @@ public class GuildEntity extends AbstractAuditableEntity implements Serializable
         this.memberGuildsPlaylists = memberPlaylists;
     }
 
+    Set<MemoryMessageEntity> getMemoryMessages() {
+        return memoryMessages;
+    }
+
+    void setMemoryMessages(Set<MemoryMessageEntity> memoryMessages) {
+        this.memoryMessages = memoryMessages;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void persistGuildStats(GuildStatsEntity guildStats) {
@@ -270,6 +282,11 @@ public class GuildEntity extends AbstractAuditableEntity implements Serializable
     public void addMemberGuildSettings(MemberSettingsEntity memberSettings) {
         memberGuildsSettings.add(memberSettings);
         memberSettings.setGuild(this);
+    }
+
+    public void addMemoryMessage(MemoryMessageEntity memoryMessage) {
+        memoryMessages.add(memoryMessage);
+        memoryMessage.setGuild(this);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -30,6 +30,7 @@ import com.jagrosh.jdautilities.command.CommandClient;
 import java.util.*;
 
 import pl.miloszgilga.BotCommandArgument;
+import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.misc.QueueAfterParam;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,6 +47,7 @@ public class CommandEventWrapper {
     private final String guildId;
     private final User author;
     private final Member member;
+    private final TextChannel systemTextChannel;
     private CommandClient client;
     private String message;
     private Map<BotCommandArgument, String> args = new HashMap<>();
@@ -67,6 +69,7 @@ public class CommandEventWrapper {
         dataSender = event.getGuild().getMember(event.getAuthor());
         author = event.getAuthor();
         member = event.getMember();
+        systemTextChannel = Utilities.getSystemTextChannel(event.getGuild());
         memberId = event.getMember().getId();
         guildId = event.getGuild().getId();
         client = event.getClient();
@@ -84,6 +87,7 @@ public class CommandEventWrapper {
         dataSender = event.getGuild().getMember(event.getAuthor());
         author = event.getAuthor();
         member = event.getMember();
+        systemTextChannel = Utilities.getSystemTextChannel(event.getGuild());
         memberId = Objects.isNull(event.getMember()) ? null : event.getMember().getId();
         guildId = event.getGuild().getId();
         message = event.getMessage().getContentRaw();
@@ -102,6 +106,7 @@ public class CommandEventWrapper {
         dataSender = event.getGuild().getMember(event.getMember().getUser());
         author = event.getMember().getUser();
         member = event.getMember();
+        systemTextChannel = Utilities.getSystemTextChannel(event.getGuild());
         memberId = event.getMember().getId();
         guildId = event.getGuild().getId();
         isFromSlashCommand = true;

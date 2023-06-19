@@ -21,6 +21,8 @@
 bot:
     name: 'JWizard DEV'
     source-code-path: 'https://github.com/Milosz08/jwizard'
+    website-link: 'http://localhost:3000'
+    contribute-email: 'contribute@jwizard.pl'
     prefix: '?'
     help-email: 'jwizard-help@miloszgilga.pl'
     slash-commands:
