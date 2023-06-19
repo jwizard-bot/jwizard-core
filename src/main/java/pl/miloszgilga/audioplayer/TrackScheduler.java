@@ -53,6 +53,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     private final BotConfiguration config;
     private final EmbedMessageBuilder builder;
+    private final List<Long> lockedGuilds;
 
     @Getter(value = AccessLevel.PUBLIC)     private CommandEventWrapper deliveryEvent;
     @Getter(value = AccessLevel.PACKAGE)    private final AudioPlayer audioPlayer;
@@ -62,12 +63,13 @@ public class TrackScheduler extends AudioEventAdapter {
 
     TrackScheduler(
         BotConfiguration config, EmbedMessageBuilder builder, AudioPlayer audioPlayer, CommandEventWrapper deliveryEvent,
-        RemotePropertyHandler handler
+        RemotePropertyHandler handler, List<Long> lockedGuilds
     ) {
         this.config = config;
         this.builder = builder;
         this.audioPlayer = audioPlayer;
         this.deliveryEvent = deliveryEvent;
+        this.lockedGuilds = lockedGuilds;
         this.actions = new SchedulerActions(this, config, builder, handler);
     }
 
@@ -133,7 +135,9 @@ public class TrackScheduler extends AudioEventAdapter {
             JDALog.info(log, deliveryEvent, "End of playing queue tracks");
 
             actions.setNextTrackInfoDisabled(false);
-            actions.leaveAndSendMessageAfterInactivity();
+            if (!lockedGuilds.contains(deliveryEvent.getGuild().getIdLong())) {
+                actions.leaveAndSendMessageAfterInactivity();
+            }
             return;
         }
         if (actions.isInfiniteRepeating()) {

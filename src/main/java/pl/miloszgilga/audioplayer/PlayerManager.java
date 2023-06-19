@@ -69,6 +69,7 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     private final EmbedMessageBuilder builder;
     private final RemotePropertyHandler handler;
     private final Map<Long, MusicManager> musicManagers = new HashMap<>();
+    private final List<Long> lockedGuilds = new ArrayList<>();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -94,7 +95,7 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
     public void loadAndPlay(CommandEventWrapper event, String trackUrl, boolean isUrlPattern) {
         final MusicManager musicManager = getMusicManager(event);
         final AudioLoadResultHandler audioLoadResultHandler = new AudioLoaderResultImpl(musicManager, config, handler,
-            builder, event, isUrlPattern);
+            builder, event, isUrlPattern, lockedGuilds);
         event.getGuild().getAudioManager().setSelfDeafened(true);
         loadItemOrdered(musicManager, trackUrl, audioLoadResultHandler);
     }
@@ -309,7 +310,8 @@ public class PlayerManager extends DefaultAudioPlayerManager implements IPlayerM
 
     public MusicManager getMusicManager(CommandEventWrapper event) {
         return musicManagers.computeIfAbsent(event.getGuild().getIdLong(), guildId -> {
-            final MusicManager musicManager = new MusicManager(this, builder, config, event.getGuild(), event, handler);
+            final MusicManager musicManager = new MusicManager(this, builder, config, event.getGuild(), event, handler,
+                lockedGuilds);
             event.getGuild().getAudioManager().setSendingHandler(musicManager.getAudioPlayerSendHandler());
             return musicManager;
         });

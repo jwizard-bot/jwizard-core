@@ -30,9 +30,7 @@ import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
-import java.util.Map;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.concurrent.TimeUnit;
@@ -61,6 +59,7 @@ public class SongChooserSystemSequencer implements IVoteSequencer {
     private final Consumer<AudioTrack> onSelectTrack;
 
     private final AtomicInteger selectedIndex = new AtomicInteger();
+    private final List<Long> lockedGuilds;
 
     int elapsedTimeInSec;
     int countOfMaxTracks;
@@ -70,13 +69,14 @@ public class SongChooserSystemSequencer implements IVoteSequencer {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public SongChooserSystemSequencer(List<AudioTrack> loadedTracks, SongChooserConfigData data) {
+    public SongChooserSystemSequencer(List<AudioTrack> loadedTracks, SongChooserConfigData data, List<Long> lockedGuilds) {
         this.event = data.event();
         this.config = data.config();
         this.handler = data.handler();
         this.builder = data.builder();
         this.onSelectTrack = data.onSelectTrack();
         this.loadedTracks = trimSongsList(loadedTracks);
+        this.lockedGuilds = lockedGuilds;
         initRemoteElements();
     }
 
@@ -84,6 +84,7 @@ public class SongChooserSystemSequencer implements IVoteSequencer {
 
     @Override
     public void initializeAndStart() {
+        lockedGuilds.add(event.getGuild().getIdLong());
         JDALog.info(log, event, "Initialized voting for select song from results list: %s", loadedTracks);
 
         final StringBuilder stringBuilder = new StringBuilder();
@@ -121,7 +122,10 @@ public class SongChooserSystemSequencer implements IVoteSequencer {
         config.getEventWaiter().waitForEvent(
             GuildMessageReactionAddEvent.class,
             e -> onAfterSelectPredicate(e, message),
-            e -> onSelectTrack.accept(loadedTracks.get(selectedIndex.get())),
+            e -> {
+                lockedGuilds.remove(event.getGuild().getIdLong());
+                onSelectTrack.accept(loadedTracks.get(selectedIndex.get()));
+            },
             elapsedTimeInSec,
             TimeUnit.SECONDS,
             () -> onAfterTimeoutVotingRunnable(message)
@@ -165,6 +169,7 @@ public class SongChooserSystemSequencer implements IVoteSequencer {
         JDALog.info(log, event, "Selecting track from results is ended. Selected track (%s): %s", selectedIndex,
             loadedTracks.get(selectedIndex));
         message.clearReactions().queue();
+        lockedGuilds.remove(event.getGuild().getIdLong());
         onSelectTrack.accept(loadedTracks.get(selectedIndex));
     }
 

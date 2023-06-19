@@ -51,6 +51,7 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 class AudioLoaderResultImpl implements AudioLoadResultHandler {
 
     private final boolean isUrlPattern;
+    private final List<Long> lockedGuilds;
     private final CommandEventWrapper deliveryEvent;
 
     private final BotConfiguration config;
@@ -62,7 +63,7 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
 
     AudioLoaderResultImpl(
         MusicManager musicManager, BotConfiguration config, RemotePropertyHandler handler, EmbedMessageBuilder builder,
-        CommandEventWrapper deliveryEvent, boolean isUrlPattern
+        CommandEventWrapper deliveryEvent, boolean isUrlPattern, List<Long> lockedGuilds
     ) {
         this.musicManager = musicManager;
         this.config = config;
@@ -70,6 +71,7 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
         this.builder = builder;
         this.deliveryEvent = deliveryEvent;
         this.isUrlPattern = isUrlPattern;
+        this.lockedGuilds = lockedGuilds;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -104,7 +106,7 @@ class AudioLoaderResultImpl implements AudioLoadResultHandler {
         } else {
             final var configData = new SongChooserConfigData(config, deliveryEvent, handler, builder,
                 track -> addNewAudioTrackToQueue(dataSender, track));
-            final IVoteSequencer sequencer = new SongChooserSystemSequencer(trackList, configData);
+            final IVoteSequencer sequencer = new SongChooserSystemSequencer(trackList, configData, lockedGuilds);
             sequencer.initializeAndStart();
         }
     }
