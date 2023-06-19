@@ -34,8 +34,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.stream.Stream;
 
+import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.embed.EmbedColor;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.audioplayer.PlayerManager;
@@ -106,7 +108,10 @@ public class BotStatusCommandListener extends AbstractListenerAdapter {
 
         log.info("Shutting down Bot instance...");
         for (final Guild guild : event.getJDA().getGuilds()) {
-            playerManager.getMusicManager(guild).getActions().clearAndDestroy(false);
+            final MusicManager musicManager = playerManager.getMusicManager(guild);
+            if (!Objects.isNull(musicManager)) {
+                musicManager.getActions().clearAndDestroy(false);
+            }
             guild.getAudioManager().closeAudioConnection();
         }
         config.getThreadPool().shutdownNow();
