@@ -92,7 +92,7 @@ public interface IMemberStatsRepository extends JpaRepository<MemberStatsEntity,
             sum(e.messagesSended), sum(e.messagesUpdated), sum(e.reactionsAdded), sum(e.slashInteractions)
         ) from MemberStatsEntity e join e.guild g where g.discordId = :guildDiscordId group by g
     """)
-    GuildMembersStatsDto getAllMemberStats(@Param("guildDiscordId") String guildDiscordId);
+    Optional<GuildMembersStatsDto> getAllMemberStats(@Param("guildDiscordId") String guildDiscordId);
 
     @Transactional
     @Modifying

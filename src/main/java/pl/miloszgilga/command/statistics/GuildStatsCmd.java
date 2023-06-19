@@ -22,7 +22,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.CommandEventWrapper;
-import pl.miloszgilga.dto.GuildMembersStatsDto;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractStatsCommand;
 import pl.miloszgilga.cacheable.CacheableCommandStateDao;
@@ -60,11 +59,13 @@ public class GuildStatsCmd extends AbstractStatsCommand {
     @Override
     protected void doExecuteStatsCommand(CommandEventWrapper event) {
         statsRepository.findByGuild_DiscordId(event.getGuildId()).ifPresentOrElse(
-            guildStats -> {
-                final GuildMembersStatsDto statsDto = memberStatsRepository.getAllMemberStats(event.getGuildId());
-                final MessageEmbed messageEmbed = embedBuilder.createGuildStatsMessage(event, guildStats, statsDto);
-                event.sendEmbedMessage(messageEmbed);
-            },
+            guildStats -> memberStatsRepository.getAllMemberStats(event.getGuildId()).ifPresentOrElse(
+                statsDto -> {
+                    final MessageEmbed messageEmbed = embedBuilder.createGuildStatsMessage(event, guildStats, statsDto);
+                    event.sendEmbedMessage(messageEmbed);
+                },
+                () -> { throw new GuildHasNoStatsYetException(config, event); }
+            ),
             () -> { throw new GuildHasNoStatsYetException(config, event); }
         );
     }
