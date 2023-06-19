@@ -1,4 +1,3 @@
-
 sekcja obsługi playlist (komendy):
   ShowMyPlaylistsCmd - pokazywanie wszystkich playlist użytkownika, włącznie z prywatnymi
   ShowMemberPlaylistsCmd [member id] - pokazywanie playlist wybranego użytkownika, bez playlist prywatnych
@@ -17,6 +16,6 @@ sekcja obsługi playlist (komendy):
   LoadAndPlayPlaylistTracksCmd [playlist name or id] - załadowanie i rozpoczęcie odtwarzania playlisty
 
 
-aplikacja webowa (Spring Boot, Angular):
+aplikacja webowa (Spring Boot, React):
   możliwość zmiany ustawień bota na wybranym serwerze dla administratora serwera
   możliwośc założenia konta w aplikacji, podglądanie playlist, dodawanie, usuwanie, modyfikowanie i dodawanie ścieżek audio (nazwa piosenki lub link lub plik audio)
