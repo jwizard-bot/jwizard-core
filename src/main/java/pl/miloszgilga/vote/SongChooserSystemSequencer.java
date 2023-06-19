@@ -139,7 +139,10 @@ public class SongChooserSystemSequencer implements IVoteSequencer {
         if (e.getUser().isBot()) return false;
 
         final MessageReaction.ReactionEmote emote = e.getReactionEmote();
-        if (!e.getUser().getId().equals(event.getAuthor().getId())) return false;
+        if (!e.getUser().getId().equals(event.getAuthor().getId())) {
+            message.removeReaction(emote.getEmoji(), e.getUser()).queue();
+            return false;
+        }
         if (!emote.isEmoji()) return false;
 
         final Optional<UnicodeEmoji> selectedEmoji = UnicodeEmoji.getNumbers(countOfMaxTracks).stream()
