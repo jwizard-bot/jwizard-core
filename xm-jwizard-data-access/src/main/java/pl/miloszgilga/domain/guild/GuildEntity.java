@@ -41,6 +41,7 @@ import pl.miloszgilga.domain.memory_messages.MemoryMessageEntity;
 import pl.miloszgilga.domain.vote_commands.VoteCommandEntity;
 import pl.miloszgilga.domain.stats_commands.StatsCommandEntity;
 import pl.miloszgilga.domain.dj_commands.DjCommandEntity;
+import pl.miloszgilga.domain.playlist_commands.PlaylistCommandEntity;
 import pl.miloszgilga.domain.owner_commands.OwnerCommandEntity;
 import pl.miloszgilga.domain.music_commands.MusicCommandEntity;
 import pl.miloszgilga.domain.other_commands.OtherCommandEntity;
@@ -85,6 +86,9 @@ public class GuildEntity extends AbstractAuditableEntity implements Serializable
 
     @OneToOne(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
     private OtherCommandEntity otherCommand;
+
+    @OneToOne(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
+    private PlaylistCommandEntity playlistCommand;
 
     @OneToMany(cascade = ALL, fetch = LAZY, mappedBy = "guild", orphanRemoval = true)
     private Set<MemberStatsEntity> memberGuildsStats = new HashSet<>();
@@ -195,6 +199,14 @@ public class GuildEntity extends AbstractAuditableEntity implements Serializable
         this.otherCommand = otherCommand;
     }
 
+    PlaylistCommandEntity getPlaylistCommand() {
+        return playlistCommand;
+    }
+
+    void setPlaylistCommand(PlaylistCommandEntity playlistCommand) {
+        this.playlistCommand = playlistCommand;
+    }
+
     Set<MemberStatsEntity> getMemberGuildsStats() {
         return memberGuildsStats;
     }
@@ -272,6 +284,11 @@ public class GuildEntity extends AbstractAuditableEntity implements Serializable
     public void persistOtherCommand(OtherCommandEntity otherCommand) {
         this.otherCommand = otherCommand;
         otherCommand.setGuild(this);
+    }
+
+    public void persistPlaylistCommand(PlaylistCommandEntity playlistCommand) {
+        this.playlistCommand = playlistCommand;
+        playlistCommand.setGuild(this);
     }
 
     public void addMemberGuildStats(MemberStatsEntity memberStats) {

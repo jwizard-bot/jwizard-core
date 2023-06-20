@@ -50,6 +50,7 @@ import pl.miloszgilga.domain.guild_settings.IGuildSettingsRepository;
 
 import pl.miloszgilga.domain.vote_commands.VoteCommandEntity;
 import pl.miloszgilga.domain.dj_commands.DjCommandEntity;
+import pl.miloszgilga.domain.playlist_commands.PlaylistCommandEntity;
 import pl.miloszgilga.domain.stats_commands.StatsCommandEntity;
 import pl.miloszgilga.domain.owner_commands.OwnerCommandEntity;
 import pl.miloszgilga.domain.music_commands.MusicCommandEntity;
@@ -97,6 +98,7 @@ public class GuildPersistorCommandListener extends AbstractListenerAdapter {
             guild.persistOwnerCommand(new OwnerCommandEntity());
             guild.persistMusicCommand(new MusicCommandEntity());
             guild.persistOtherCommand(new OtherCommandEntity());
+            guild.persistPlaylistCommand(new PlaylistCommandEntity());
 
             guildRepository.save(guild);
         }
