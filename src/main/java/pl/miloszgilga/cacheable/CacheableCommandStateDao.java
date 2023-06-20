@@ -39,6 +39,7 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 
 import pl.miloszgilga.domain.dj_commands.IDjCommandRepository;
 import pl.miloszgilga.domain.music_commands.IMusicCommandRepository;
+import pl.miloszgilga.domain.playlist_commands.IPlaylistCommandRepository;
 import pl.miloszgilga.domain.other_commands.IOtherCommandRepository;
 import pl.miloszgilga.domain.owner_commands.IOwnerCommandRepository;
 import pl.miloszgilga.domain.stats_commands.IStatsCommandRepository;
@@ -60,6 +61,7 @@ public class CacheableCommandStateDao {
 
     private final IDjCommandRepository djCommandRepository;
     private final IMusicCommandRepository musicCommandRepository;
+    private final IPlaylistCommandRepository playlistCommandRepository;
     private final IOtherCommandRepository otherCommandRepository;
     private final IOwnerCommandRepository ownerCommandRepository;
     private final IStatsCommandRepository statsCommandRepository;
@@ -126,6 +128,8 @@ public class CacheableCommandStateDao {
                 djCommandRepository, cmd, BotDjCommandProxy.values()), event, enabled));
             case MUSIC -> musicCommandRepository.save(setCachedValue(new CachedCmdStateData<>(
                 musicCommandRepository, cmd, BotMusicCommandProxy.values()), event, enabled));
+            case PLAYLIST -> playlistCommandRepository.save(setCachedValue(new CachedCmdStateData<>(
+                playlistCommandRepository, cmd, BotPlaylistCommandProxy.values()), event, enabled));
             case OTHERS -> otherCommandRepository.save(setCachedValue(new CachedCmdStateData<>(
                 otherCommandRepository, cmd, BotOtherCommandProxy.values()), event, enabled));
             case OWNER -> ownerCommandRepository.save(setCachedValue(new CachedCmdStateData<>(
@@ -146,6 +150,8 @@ public class CacheableCommandStateDao {
                 djCommandRepository, cmd, BotDjCommandProxy.values()), event);
             case MUSIC -> checkIfCommandIsEnabled(new CachedCmdStateData<>(
                 musicCommandRepository, cmd, BotMusicCommandProxy.values()), event);
+            case PLAYLIST -> checkIfCommandIsEnabled(new CachedCmdStateData<>(
+                playlistCommandRepository, cmd, BotPlaylistCommandProxy.values()), event);
             case OTHERS -> checkIfCommandIsEnabled(new CachedCmdStateData<>(
                 otherCommandRepository, cmd, BotOtherCommandProxy.values()), event);
             case OWNER -> checkIfCommandIsEnabled(new CachedCmdStateData<>(

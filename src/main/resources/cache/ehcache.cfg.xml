@@ -37,6 +37,7 @@
 
     <cache alias="GuildDjCommandsStateCache" uses-template="cache-template"/>
     <cache alias="GuildMusicCommandsStateCache" uses-template="cache-template"/>
+    <cache alias="GuildPlaylistsCommandsStateCache" uses-template="cache-template"/>
     <cache alias="GuildOtherCommandsStateCache" uses-template="cache-template"/>
     <cache alias="GuildOwnerCommandsStateCache" uses-template="cache-template"/>
     <cache alias="GuildStatsCommandsStateCache" uses-template="cache-template"/>
