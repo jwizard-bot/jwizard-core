@@ -2,7 +2,7 @@
   <configuration default="false" name="RUN PROD local" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ACTIVE_PROFILES" value="prod" />
     <option name="ALTERNATIVE_JRE_PATH" value="corretto-11" />
-    <module name="pl.miloszgilga.jwizard-discord-bot.main" />
+    <module name="jwizard-discord-bot.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="pl.miloszgilga.SpringBootRunner" />
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
