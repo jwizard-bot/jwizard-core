@@ -114,6 +114,9 @@ public enum ResLocaleSet implements IEnumerableLocaleSet {
     GUILD_BOTS_COUNT_MESS                           ("jwizard.message.response.GuildBotsCount"),
     GUILD_BOOSTERS_COUNT_MESS                       ("jwizard.message.response.GuildBoostersCount"),
     GUILD_BOOSTING_LEVEL_MESS                       ("jwizard.message.response.GuildBoostingLevel"),
+    FIRST_RESULT_MESS                               ("jwizard.message.response.FirstResult"),
+    RANDOM_RESULT_MESS                              ("jwizard.message.response.RandomResult"),
+    SELECT_SONG_SEQUENCER_MESS                      ("jwizard.message.response.SelectSongSequencer"),
 
     AUDIO_CHANNEL_WAS_SETTED_MESS                   ("jwizard.message.response.AudioTextChannelWasSetted"),
     AUDIO_CHANNEL_WAS_RESET_MESS                    ("jwizard.message.response.AudioTextChannelWasReset"),
@@ -133,6 +136,14 @@ public enum ResLocaleSet implements IEnumerableLocaleSet {
     TIME_TO_LEAVE_EMPTY_CHANNEL_WAS_RESET_MESS      ("jwizard.message.response.TimeToLeaveEmptyChannelWasReset"),
     TIME_TO_LEAVE_NO_TRACKS_WAS_SETTED_MESS         ("jwizard.message.response.TimeToLeaveNoTracksWasSetted"),
     TIME_TO_LEAVE_NO_TRACKS_WAS_RESET_MESS          ("jwizard.message.response.TimeToLeaveNoTracksWasReset"),
+    SUCCESS_TURN_ON_COMMAND_MESS                    ("jwizard.message.response.SuccessTurnOnCommandMess"),
+    SUCCESS_TURN_OFF_COMMAND_MESS                   ("jwizard.message.response.SuccessTurnOffCommandMess"),
+    SONG_CHOOSER_TIME_WAS_SETTED_MESS               ("jwizard.message.response.SongChooserTimeWasSetted"),
+    SONG_CHOOSER_TIME_WAS_RESET_MESS                ("jwizard.message.response.SongChooserTimeWasReset"),
+    SONG_CHOOSER_RANDOM_ACTIVE_WAS_SETTED_MESS      ("jwizard.message.response.SongChooserRandomActiveWasSetted"),
+    SONG_CHOOSER_RANDOM_ACTIVE_WAS_RESET_MESS       ("jwizard.message.response.SongChooserRandomActiveWasReset"),
+    SONG_CHOOSER_COUNT_WAS_SETTED_MESS              ("jwizard.message.response.SongChooserCountWasSetted"),
+    SONG_CHOOSER_COUNT_WAS_RESET_MESS               ("jwizard.message.response.SongChooserCountWasReset"),
 
     VOTE_SUFFLE_QUEUE_MESS                          ("jwizard.message.response.VoteShuffleQueue"),
     SUCCESS_VOTE_SUFFLE_QUEUE_MESS                  ("jwizard.message.response.SuccessVoteShuffleQueue"),
@@ -148,7 +159,15 @@ public enum ResLocaleSet implements IEnumerableLocaleSet {
     FAILURE_VOTE_CLEAR_QUEUE_MESS                   ("jwizard.message.response.FailureVoteClearQueue"),
     VOTE_STOP_CLEAR_QUEUE_MESS                      ("jwizard.message.response.VoteStopClearQueue"),
     SUCCESS_VOTE_STOP_CLEAR_QUEUE_MESS              ("jwizard.message.response.SuccessVoteStopClearQueue"),
-    FAILURE_VOTE_STOP_CLEAR_QUEUE_MESS              ("jwizard.message.response.FailureVoteStopClearQueue");
+    FAILURE_VOTE_STOP_CLEAR_QUEUE_MESS              ("jwizard.message.response.FailureVoteStopClearQueue"),
+
+    WELCOME_MESSAGE_WELCOME_HEADER                  ("jwizard.message.response.WelcomeMessageWelcomeHeader"),
+    WELCOME_MESSAGE_BASE_CONTENT                    ("jwizard.message.response.WelcomeMessageBaseContent"),
+    WELCOME_MESSAGE_COMMANDS_HEADER                 ("jwizard.message.response.WelcomeMessageCommandsHeader"),
+    WELCOME_MESSAGE_COMMANDS_CONTENT                ("jwizard.message.response.WelcomeMessageCommandsContent"),
+    WELCOME_MESSAGE_CONTRIBUTE_CONTENT              ("jwizard.message.response.WelcomeMessageContributeContent"),
+    STATS_MESSAGE_STATS_HEADER                      ("jwizard.message.response.StatsMessageStatsHeader"),
+    STATS_MESSAGE_STATS_CONTENT                     ("jwizard.message.response.StatsMessageStatsContent");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

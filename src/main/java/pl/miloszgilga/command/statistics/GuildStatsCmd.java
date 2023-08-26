@@ -22,9 +22,9 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.CommandEventWrapper;
-import pl.miloszgilga.dto.GuildMembersStatsDto;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractStatsCommand;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
@@ -46,9 +46,10 @@ public class GuildStatsCmd extends AbstractStatsCommand {
 
     GuildStatsCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, IGuildStatsRepository statsRepository,
-        IMemberStatsRepository memberStatsRepository, RemotePropertyHandler handler
+        IMemberStatsRepository memberStatsRepository, RemotePropertyHandler handler,
+        CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.GUILD_STATS, config, embedBuilder, handler);
+        super(BotCommand.GUILD_STATS, config, embedBuilder, handler, cacheableCommandStateDao);
         this.statsRepository = statsRepository;
         this.memberStatsRepository = memberStatsRepository;
     }
@@ -58,11 +59,13 @@ public class GuildStatsCmd extends AbstractStatsCommand {
     @Override
     protected void doExecuteStatsCommand(CommandEventWrapper event) {
         statsRepository.findByGuild_DiscordId(event.getGuildId()).ifPresentOrElse(
-            guildStats -> {
-                final GuildMembersStatsDto statsDto = memberStatsRepository.getAllMemberStats(event.getGuildId());
-                final MessageEmbed messageEmbed = embedBuilder.createGuildStatsMessage(event, guildStats, statsDto);
-                event.sendEmbedMessage(messageEmbed);
-            },
+            guildStats -> memberStatsRepository.getAllMemberStats(event.getGuildId()).ifPresentOrElse(
+                statsDto -> {
+                    final MessageEmbed messageEmbed = embedBuilder.createGuildStatsMessage(event, guildStats, statsDto);
+                    event.sendEmbedMessage(messageEmbed);
+                },
+                () -> { throw new GuildHasNoStatsYetException(config, event); }
+            ),
             () -> { throw new GuildHasNoStatsYetException(config, event); }
         );
     }

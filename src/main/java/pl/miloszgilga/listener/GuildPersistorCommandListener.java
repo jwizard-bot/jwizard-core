@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 import pl.miloszgilga.embed.EmbedColor;
+import pl.miloszgilga.embed.EmbedInteractionsOnJoin;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.cacheable.CacheableGuildSettingsDao;
 import pl.miloszgilga.core.remote.RemoteProperty;
@@ -49,6 +50,7 @@ import pl.miloszgilga.domain.guild_settings.IGuildSettingsRepository;
 
 import pl.miloszgilga.domain.vote_commands.VoteCommandEntity;
 import pl.miloszgilga.domain.dj_commands.DjCommandEntity;
+import pl.miloszgilga.domain.playlist_commands.PlaylistCommandEntity;
 import pl.miloszgilga.domain.stats_commands.StatsCommandEntity;
 import pl.miloszgilga.domain.owner_commands.OwnerCommandEntity;
 import pl.miloszgilga.domain.music_commands.MusicCommandEntity;
@@ -63,6 +65,7 @@ public class GuildPersistorCommandListener extends AbstractListenerAdapter {
     private final IGuildRepository guildRepository;
     private final IGuildSettingsRepository settingsRepository;
     private final CacheableGuildSettingsDao cacheableGuildSettingsDao;
+    private final EmbedInteractionsOnJoin embedInteractionsOnJoin;
     private final RemotePropertyHandler handler;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,33 +73,36 @@ public class GuildPersistorCommandListener extends AbstractListenerAdapter {
     GuildPersistorCommandListener(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, IGuildRepository guildRepository,
         IGuildSettingsRepository settingsRepository, CacheableGuildSettingsDao cacheableGuildSettingsDao,
-        RemotePropertyHandler handler
+        EmbedInteractionsOnJoin embedInteractionsOnJoin, RemotePropertyHandler handler
     ) {
         super(config, embedBuilder);
         this.guildRepository = guildRepository;
         this.settingsRepository = settingsRepository;
         this.cacheableGuildSettingsDao = cacheableGuildSettingsDao;
+        this.embedInteractionsOnJoin = embedInteractionsOnJoin;
         this.handler = handler;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void createOnlyIfGuildTableNotExist(GenericGuildEvent event) {
-        if (guildRepository.guildEntityExist(event.getGuild().getId())) return;
+        if (!guildRepository.guildEntityExist(event.getGuild().getId())) {
+            final GuildEntity guild = new GuildEntity(event.getGuild());
+            guild.persistGuildStats(new GuildStatsEntity());
+            guild.persistGuildSettings(new GuildSettingsEntity());
+            guild.persistGuildModules(new GuildModulesEntity());
 
-        final GuildEntity guild = new GuildEntity(event.getGuild());
-        guild.persistGuildStats(new GuildStatsEntity());
-        guild.persistGuildSettings(new GuildSettingsEntity());
-        guild.persistGuildModules(new GuildModulesEntity());
+            guild.persistVoteCommand(new VoteCommandEntity());
+            guild.persistStatsCommand(new StatsCommandEntity());
+            guild.persistDjCommand(new DjCommandEntity());
+            guild.persistOwnerCommand(new OwnerCommandEntity());
+            guild.persistMusicCommand(new MusicCommandEntity());
+            guild.persistOtherCommand(new OtherCommandEntity());
+            guild.persistPlaylistCommand(new PlaylistCommandEntity());
 
-        guild.persistVoteCommand(new VoteCommandEntity());
-        guild.persistStatsCommand(new StatsCommandEntity());
-        guild.persistDjCommand(new DjCommandEntity());
-        guild.persistOwnerCommand(new OwnerCommandEntity());
-        guild.persistMusicCommand(new MusicCommandEntity());
-        guild.persistOtherCommand(new OtherCommandEntity());
-
-        guildRepository.save(guild);
+            guildRepository.save(guild);
+        }
+        embedInteractionsOnJoin.addInitialInteractions(event.getGuild());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -25,12 +25,14 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import java.util.Map;
 
 import pl.miloszgilga.BotCommand;
+import pl.miloszgilga.embed.EmbedInteractionsOnJoin;
 import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractOwnerCommand;
 import pl.miloszgilga.cacheable.CacheableModuleData;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.cacheable.CacheableGuildModulesDao;
 import pl.miloszgilga.core.remote.RemoteModuleProperty;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
@@ -50,16 +52,19 @@ import static pl.miloszgilga.exception.ModuleException.StatsModuleIsAlreadyRunni
 public class TurnOnStatsModuleCmd extends AbstractOwnerCommand {
 
     private final IGuildModulesRepository modulesRepository;
+    private final EmbedInteractionsOnJoin embedInteractionsOnJoin;
     private final CacheableGuildModulesDao cacheableGuildModulesDao;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     TurnOnStatsModuleCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler,
-        IGuildModulesRepository modulesRepository, CacheableGuildModulesDao cacheableGuildModulesDao
+        IGuildModulesRepository modulesRepository, CacheableGuildModulesDao cacheableGuildModulesDao,
+        CacheableCommandStateDao cacheableCommandStateDao, EmbedInteractionsOnJoin embedInteractionsOnJoin
     ) {
-        super(BotCommand.TURN_ON_STATS_MODULE, config, embedBuilder, handler);
+        super(BotCommand.TURN_ON_STATS_MODULE, config, embedBuilder, handler, cacheableCommandStateDao);
         this.modulesRepository = modulesRepository;
+        this.embedInteractionsOnJoin = embedInteractionsOnJoin;
         this.cacheableGuildModulesDao = cacheableGuildModulesDao;
     }
 
@@ -79,6 +84,7 @@ public class TurnOnStatsModuleCmd extends AbstractOwnerCommand {
             .build();
 
         final var updatedSettings = cacheableGuildModulesDao.toggleGuildModule(data);
+        embedInteractionsOnJoin.modifyStatsModuleInteractionMessage(event.getGuild(), true);
         modulesRepository.save(updatedSettings);
 
         final MessageEmbed messageEmbed = embedBuilder.createMessage(ResLocaleSet.GUILD_STATS_MODULE_ENABLED_MESS, Map.of(

@@ -22,6 +22,7 @@ import pl.miloszgilga.BotCommand;
 
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 
@@ -39,9 +40,9 @@ public abstract class AbstractMyStatsCommand extends AbstractStatsCommand {
 
     protected AbstractMyStatsCommand(
         BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder, IMemberStatsRepository repository,
-        RemotePropertyHandler handler
+        RemotePropertyHandler handler, CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(command, config, embedBuilder, handler);
+        super(command, config, embedBuilder, handler, cacheableCommandStateDao);
         this.repository = repository;
     }
 

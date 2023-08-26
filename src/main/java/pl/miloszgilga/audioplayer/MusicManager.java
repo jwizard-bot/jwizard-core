@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 
+import java.util.List;
 import java.util.Queue;
 
 import pl.miloszgilga.misc.JDALog;
@@ -49,11 +50,11 @@ public class MusicManager {
 
     MusicManager(
         PlayerManager playerManager, EmbedMessageBuilder builder, BotConfiguration config, Guild guild,
-        CommandEventWrapper eventWrapper, RemotePropertyHandler handler
+        CommandEventWrapper eventWrapper, RemotePropertyHandler handler, List<Long> lockedGuilds
     ) {
         this.handler = handler;
         this.audioPlayer = playerManager.createPlayer();
-        this.trackScheduler = new TrackScheduler(config, builder, audioPlayer, eventWrapper, handler);
+        this.trackScheduler = new TrackScheduler(config, builder, audioPlayer, eventWrapper, handler, lockedGuilds);
         this.audioPlayer.setVolume(handler.getPossibleRemoteProperty(RemoteProperty.R_DEFAULT_PLAYER_VOLUME_UNITS,
             guild, Short.class));
         this.audioPlayer.addListener(trackScheduler);

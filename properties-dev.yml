@@ -21,6 +21,8 @@
 bot:
     name: 'JWizard DEV'
     source-code-path: 'https://github.com/Milosz08/jwizard'
+    website-link: 'http://localhost:3000'
+    contribute-email: 'contribute@jwizard.pl'
     prefix: '?'
     help-email: 'jwizard-help@miloszgilga.pl'
     slash-commands:
@@ -50,6 +52,11 @@ bot:
         elapsed-time-after-finish: 30
         max-elapsed-time-after-finish: 600
         percentage-ratio: 50
+    song-chooser:
+        elapse-time-after-autochoose: 20
+        max-elapse-time-after-autochoose: 60
+        random-autochoose: true
+        count-songs-manualchoose: 10
     audio:
         max-repeats-single-track: 30
         default-player-volume-units: 50

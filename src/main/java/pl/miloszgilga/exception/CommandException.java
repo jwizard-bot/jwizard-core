@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.locale.ExceptionLocaleSet;
@@ -125,7 +124,7 @@ public class CommandException {
     @Slf4j public static class UnexpectedException extends BotException {
         public UnexpectedException(BotConfiguration config, CommandEventWrapper event) {
             super(config, Objects.isNull(event) ? null : event.getGuild(), ExceptionLocaleSet.UNEXPECTED_EXCEPTION, Map.of(
-                "helpEmail", Utilities.getRichEmailLink(config.getProperty(BotProperty.J_HELP_EMAIL))
+                "helpEmail", config.getProperty(BotProperty.J_HELP_EMAIL)
             ), BugTracker.UNEXPECTED_EXCEPTION);
             if (Objects.isNull(event)) {
                 log.error("Unexpected exception during executable.");

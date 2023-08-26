@@ -49,6 +49,9 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
     @Column(name = "max_repeats_single_track")          private Integer maxRepeatsSingleTrack;
     @Column(name = "dj_role_name")                      private String djRoleName;
     @Column(name = "i18n_locale")                       private String i18nLocale;
+    @Column(name = "time_to_select_song")               private Integer timeToSelectSong;
+    @Column(name = "song_select_is_random")             private Boolean songSelectIsRandom;
+    @Column(name = "song_choices_count")                private Integer songChoicesCount;
 
     @OneToOne(cascade = { PERSIST, MERGE, REMOVE }, fetch = LAZY)
     @JoinColumn(name = "guild_id", referencedColumnName = "id")
@@ -128,6 +131,30 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
         this.i18nLocale = i18nLocale;
     }
 
+    public Integer getTimeToSelectSong() {
+        return timeToSelectSong;
+    }
+
+    public void setTimeToSelectSong(Integer timeToSelectSong) {
+        this.timeToSelectSong = timeToSelectSong;
+    }
+
+    public Boolean getSongSelectIsRandom() {
+        return songSelectIsRandom;
+    }
+
+    public void setSongSelectIsRandom(Boolean songSelectIsRandom) {
+        this.songSelectIsRandom = songSelectIsRandom;
+    }
+
+    public Integer getSongChoicesCount() {
+        return songChoicesCount;
+    }
+
+    public void setSongChoicesCount(Integer songChoicesCount) {
+        this.songChoicesCount = songChoicesCount;
+    }
+
     GuildEntity getGuild() {
         return guild;
     }
@@ -150,6 +177,9 @@ public class GuildSettingsEntity extends AbstractAuditableEntity implements Seri
             ", maxRepeatsSingleTrack=" + maxRepeatsSingleTrack +
             ", djRoleName=" + djRoleName +
             ", i18nLocale=" + i18nLocale +
+            ", timeToSelectSong=" + timeToSelectSong +
+            ", songSelectIsRandom=" + songSelectIsRandom +
+            ", songChoicesCount=" + songChoicesCount +
             '}';
     }
 }

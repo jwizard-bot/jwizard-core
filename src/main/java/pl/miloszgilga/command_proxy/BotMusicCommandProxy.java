@@ -57,4 +57,9 @@ public enum BotMusicCommandProxy implements IBotCommandProxy<MusicCommandEntity>
     public String getUid() {
         return String.format("MIDC-%03d", ordinal() + 1);
     }
+
+    @Override
+    public String getCacheProxyName() {
+        return "GuildMusicCommandsStateCache";
+    }
 }

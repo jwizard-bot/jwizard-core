@@ -34,6 +34,8 @@ import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.embed.EmbedInteractionsOnJoin;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.cacheable.CacheableGuildSettingsDao;
 import pl.miloszgilga.command.AbstractGuildSettingsCommand;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
@@ -52,11 +54,18 @@ import static pl.miloszgilga.exception.SettingsException.LocaleNotFoundException
 @JDAInjectableCommandLazyService
 public class SetI18nLocaleCmd extends AbstractGuildSettingsCommand {
 
+    private final EmbedInteractionsOnJoin embedInteractionsOnJoin;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     SetI18nLocaleCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler,
-        IGuildSettingsRepository repository, CacheableGuildSettingsDao cacheableGuildSettingsDao
+        IGuildSettingsRepository repository, CacheableGuildSettingsDao cacheableGuildSettingsDao,
+        CacheableCommandStateDao cacheableCommandStateDao, EmbedInteractionsOnJoin embedInteractionsOnJoin
     ) {
-        super(BotCommand.SET_I18N_LOCALE, config, embedBuilder, handler, repository, cacheableGuildSettingsDao);
+        super(BotCommand.SET_I18N_LOCALE, config, embedBuilder, handler, repository, cacheableGuildSettingsDao,
+            cacheableCommandStateDao);
+        this.embedInteractionsOnJoin = embedInteractionsOnJoin;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,6 +100,7 @@ public class SetI18nLocaleCmd extends AbstractGuildSettingsCommand {
             JDALog.info(log, event, "i18n locale was successfully setted to '%s'", i18locale);
         }
         repository.save(settingsToSave);
+        embedInteractionsOnJoin.updateAllInteractions(event.getGuild());
         event.sendEmbedMessage(messageEmbed);
     }
 }

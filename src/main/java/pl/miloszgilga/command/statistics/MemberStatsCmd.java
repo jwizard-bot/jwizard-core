@@ -30,6 +30,7 @@ import pl.miloszgilga.misc.Utilities;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractStatsCommand;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
@@ -55,9 +56,10 @@ public class MemberStatsCmd extends AbstractStatsCommand {
 
     MemberStatsCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, IMemberStatsRepository statsRepository,
-        IMemberSettingsRepository settingsRepository, RemotePropertyHandler handler
+        IMemberSettingsRepository settingsRepository, RemotePropertyHandler handler,
+        CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.MEMBER_STATS, config, embedBuilder, handler);
+        super(BotCommand.MEMBER_STATS, config, embedBuilder, handler, cacheableCommandStateDao);
         this.statsRepository = statsRepository;
         this.settingsRepository = settingsRepository;
     }

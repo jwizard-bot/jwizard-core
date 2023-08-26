@@ -31,6 +31,7 @@ import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.exception.AudioPlayerException;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.AbstractCommand;
 import pl.miloszgilga.core.remote.RemoteProperty;
 import pl.miloszgilga.core.remote.RemoteModuleProperty;
@@ -66,9 +67,9 @@ public abstract class AbstractMusicCommand extends AbstractCommand {
 
     protected AbstractMusicCommand(
         BotCommand command, BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
-        RemotePropertyHandler handler
+        RemotePropertyHandler handler, CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(command, config, embedBuilder, handler);
+        super(command, config, embedBuilder, handler, cacheableCommandStateDao);
         this.config = config;
         this.handler = handler;
         this.playerManager = playerManager;

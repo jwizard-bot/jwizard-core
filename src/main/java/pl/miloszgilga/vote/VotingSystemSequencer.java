@@ -43,7 +43,7 @@ import static pl.miloszgilga.exception.AudioPlayerException.UserOnVoiceChannelWi
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @Slf4j
-public class VotingSystemSequencer {
+public class VotingSystemSequencer implements IVoteSequencer {
 
     private final AtomicInteger forYes = new AtomicInteger();
     private final AtomicInteger forNo = new AtomicInteger();
@@ -75,7 +75,8 @@ public class VotingSystemSequencer {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void initializeAndStartVoting() {
+    @Override
+    public void initializeAndStart() {
         final Function<Message, VotePredictorData> fabricatePredicateData = message ->
             new VotePredictorData(forYes, forNo, requredVotes, succeed, voters, response, message, event);
         JDALog.info(log, event, "Initialized voting from: '%s'", response.initializedClazz().getName());

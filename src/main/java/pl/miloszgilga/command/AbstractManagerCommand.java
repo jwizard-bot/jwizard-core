@@ -23,6 +23,7 @@ import net.dv8tion.jda.api.Permission;
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.AbstractCommand;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
@@ -34,9 +35,10 @@ import static pl.miloszgilga.exception.CommandException.UnauthorizedManagerComma
 public abstract class AbstractManagerCommand extends AbstractCommand {
 
     public AbstractManagerCommand(
-        BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler
+        BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler,
+        CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(command, config, embedBuilder, handler);
+        super(command, config, embedBuilder, handler, cacheableCommandStateDao);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

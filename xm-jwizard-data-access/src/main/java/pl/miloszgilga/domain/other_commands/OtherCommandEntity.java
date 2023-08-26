@@ -52,6 +52,9 @@ public class OtherCommandEntity extends AbstractAuditableEntity implements Seria
     @Column(name = "settimevot_enabled", insertable = false)        private Boolean settimevotEnabled;
     @Column(name = "settleavem_enabled", insertable = false)        private Boolean settleavemEnabled;
     @Column(name = "settleavetr_enabled", insertable = false)       private Boolean settleavetrEnabled;
+    @Column(name = "settchossng_enabled", insertable = false)       private Boolean settchossngEnabled;
+    @Column(name = "setrchossng_enabled", insertable = false)       private Boolean setrchossngEnabled;
+    @Column(name = "setcchossng_enabled", insertable = false)       private Boolean setcchossngEnabled;
 
     @OneToOne(cascade = { PERSIST, MERGE, REMOVE }, fetch = LAZY)
     @JoinColumn(name = "guild_id", referencedColumnName = "id")
@@ -155,6 +158,30 @@ public class OtherCommandEntity extends AbstractAuditableEntity implements Seria
         this.settleavetrEnabled = settleavetrEnabled;
     }
 
+    public Boolean getSettchossngEnabled() {
+        return settchossngEnabled;
+    }
+
+    public void setSettchossngEnabled(Boolean settchossngEnabled) {
+        this.settchossngEnabled = settchossngEnabled;
+    }
+
+    public Boolean getSetrchossngEnabled() {
+        return setrchossngEnabled;
+    }
+
+    public void setSetrchossngEnabled(Boolean setrchossngEnabled) {
+        this.setrchossngEnabled = setrchossngEnabled;
+    }
+
+    public Boolean getSetcchossngEnabled() {
+        return setcchossngEnabled;
+    }
+
+    public void setSetcchossngEnabled(Boolean setcchossngEnabled) {
+        this.setcchossngEnabled = setcchossngEnabled;
+    }
+
     GuildEntity getGuild() {
         return guild;
     }
@@ -180,6 +207,9 @@ public class OtherCommandEntity extends AbstractAuditableEntity implements Seria
             ", settimevotEnabled=" + settimevotEnabled +
             ", settleavemEnabled=" + settleavemEnabled +
             ", settleavetrEnabled=" + settleavetrEnabled +
+            ", settchossngEnabled=" + settchossngEnabled +
+            ", setrchossngEnabled=" + setrchossngEnabled +
+            ", setcchossngEnabled=" + setcchossngEnabled +
             '}';
     }
 }

@@ -33,6 +33,7 @@ import pl.miloszgilga.command.AbstractMusicCommand;
 import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.audioplayer.ExtendedAudioTrackInfo;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
@@ -44,9 +45,9 @@ public class CurrentPausedCmd extends AbstractMusicCommand {
 
     CurrentPausedCmd(
         BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
-        RemotePropertyHandler handler
+        RemotePropertyHandler handler, CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.CURRENT_PAUSED, config, playerManager, embedBuilder, handler);
+        super(BotCommand.CURRENT_PAUSED, config, playerManager, embedBuilder, handler, cacheableCommandStateDao);
         super.isPaused = true;
     }
 

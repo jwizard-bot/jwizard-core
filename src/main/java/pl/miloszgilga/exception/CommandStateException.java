@@ -36,7 +36,7 @@ public class CommandStateException {
         public CommandIsAlreadyTurnedOnException(BotConfiguration config, CommandEventWrapper event, BotCommand command) {
             super(config, event.getGuild(), ExceptionLocaleSet.COMMAND_IS_ALREADY_TURNED_ON, Map.of(
                 "command", command.parseWithPrefix(config),
-                "turnOffCmd", BotCommand.TURN_OFF_COMMAND.parseWithPrefix(config)
+                "turnOffCmd", BotCommand.TURN_OFF_COMMAND.parseWithPrefix(config, command.getName())
             ), BugTracker.COMMAND_IS_ALREADY_TURNED_ON);
             JDALog.error(log, event, "Attempt to turn on already turned on command. Command: {}", command.getName());
         }
@@ -48,7 +48,7 @@ public class CommandStateException {
         public CommandIsAlreadyTurnedOffException(BotConfiguration config, CommandEventWrapper event, BotCommand command) {
             super(config, event.getGuild(), ExceptionLocaleSet.COMMAND_IS_ALREADY_TURNED_OFF, Map.of(
                 "command", command.parseWithPrefix(config),
-                "turnOnCmd", BotCommand.TURN_ON_COMMAND.parseWithPrefix(config)
+                "turnOnCmd", BotCommand.TURN_ON_COMMAND.parseWithPrefix(config, command.getName())
             ), BugTracker.COMMAND_IS_ALREADY_TURNED_OFF);
             JDALog.error(log, event, "Attempt to turn off already turned off command. Command: {}", command.getName());
         }

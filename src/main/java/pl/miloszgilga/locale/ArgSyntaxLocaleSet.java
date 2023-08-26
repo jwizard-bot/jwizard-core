@@ -41,6 +41,13 @@ public enum ArgSyntaxLocaleSet implements IEnumerableLocaleSet {
     REPEAT_TRACK_ARG_SYNTAX                         ("jwizard.command.arguments.RepeatTrack"),
     AUDIO_PLAYER_SET_VOLUME_ARG_SYNTAX              ("jwizard.command.arguments.AudioPlayerSetVolume"),
     MEMBER_TAG_ARG_SYNTAX                           ("jwizard.command.arguments.MemberTag"),
+    PLAYLIST_NAME_ARG_SYNTAX                        ("jwizard.command.arguments.PlaylistName"),
+    PLAYLIST_ID_OR_NAME_WITH_NEW_NAME_ARG_SYNTAX    ("jwizard.command.arguments.PlaylistIdOrNameWithNewName"),
+    PLAYLIST_ID_OR_NAME_WITH_TRACK_URL_SYNTAX       ("jwizard.command.arguments.PlaylistIdOrNameWithTrackUrl"),
+    PLAYLIST_ID_OR_NAME_ARG_SYNTAX                  ("jwizard.command.arguments.PlaylistIdOrName"),
+    PLAYLIST_ID_OR_NAME_WITH_POS_ARG_SYNTAX         ("jwizard.command.arguments.PlaylistIdOrNameWithPos"),
+    PLAYLIST_ID_OR_NAME_WITH_VISIBILITY_ARG_SYNTAX  ("jwizard.command.arguments.PlaylistIdOrNameWithVisibility"),
+    PLAYLIST_ID_OR_NAME_WITH_TRACK_ID_ARG_SYNTAX    ("jwizard.command.arguments.PlaylistIdOrNameWithTrackId"),
     SKIP_QUEUE_TO_TRACK_ARG_SYNTAX                  ("jwizard.command.arguments.SkipQueueToTrack"),
     MOVE_TRACK_ARG_SYNTAX                           ("jwizard.command.arguments.MoveTrack"),
     COMMAND_NAME_OR_ALIAS_ARG_SYNTAX                ("jwizard.command.arguments.CommandNameOrAlias"),
@@ -52,7 +59,10 @@ public enum ArgSyntaxLocaleSet implements IEnumerableLocaleSet {
     OPTIONAL_SKIP_RATIO_ARG_SYNTAX                  ("jwizard.command.arguments.OptionalSkipRatio"),
     OPTIONAL_TIME_VOTING_ARG_SYNTAX                 ("jwizard.command.arguments.OptionalTimeSeconds",       Map.of("maxSeconds", J_MAX_INACTIVITY_VOTING_TIME)),
     OPTIONAL_TIME_LEAVE_EMPTY_ARG_SYNTAX            ("jwizard.command.arguments.OptionalTimeSeconds",       Map.of("maxSeconds", J_MAX_INACTIVITY_EMPTY_TIME)),
-    OPTIONAL_TIME_LEAVE_NO_TRACKS_ARG_SYNTAX        ("jwizard.command.arguments.OptionalTimeSeconds",       Map.of("maxSeconds", J_MAX_INACTIVITY_NO_TRACK_TIME));
+    OPTIONAL_TIME_LEAVE_NO_TRACKS_ARG_SYNTAX        ("jwizard.command.arguments.OptionalTimeSeconds",       Map.of("maxSeconds", J_MAX_INACTIVITY_NO_TRACK_TIME)),
+    OPTIONAL_TIME_CHOOSE_SONG_ARG_SYNTAX            ("jwizard.command.arguments.OptionalTimeSeconds",       Map.of("maxSeconds", J_MAX_SONG_CHOOSER_SELECT_TIME)),
+    OPTIONAL_SONG_CHOOSER_RANDOM_ARG_SYNTAX         ("jwizard.command.arguments.OptionalTrueFalse"),
+    OPTIONAL_SONG_CHOOSER_COUNT_ARG_SYNTAX          ("jwizard.command.arguments.OptionalSongCount");
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

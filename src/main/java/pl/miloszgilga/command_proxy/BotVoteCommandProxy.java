@@ -52,4 +52,9 @@ public enum BotVoteCommandProxy implements IBotCommandProxy<VoteCommandEntity> {
     public String getUid() {
         return String.format("VIDC-%03d", ordinal() + 1);
     }
+
+    @Override
+    public String getCacheProxyName() {
+        return "GuildVoteCommandsStateCache";
+    }
 }

@@ -19,11 +19,13 @@
 package pl.miloszgilga.command;
 
 import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.dto.CommandEventWrapper;
+import pl.miloszgilga.vote.IVoteSequencer;
 import pl.miloszgilga.vote.VoteEmbedResponse;
 import pl.miloszgilga.vote.VotingSystemSequencer;
+import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.remote.RemoteModuleProperty;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
@@ -36,9 +38,9 @@ public abstract class AbstractVoteMusicCommand extends AbstractMusicCommand {
 
     protected AbstractVoteMusicCommand(
         BotCommand command, BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
-        RemotePropertyHandler handler
+        RemotePropertyHandler handler, CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(command, config, playerManager, embedBuilder, handler);
+        super(command, config, playerManager, embedBuilder, handler, cacheableCommandStateDao);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,8 +51,8 @@ public abstract class AbstractVoteMusicCommand extends AbstractMusicCommand {
             throw new VotingModuleIsTurnedOffException(config, event);
         }
         final VoteEmbedResponse response = doExecuteVoteMusicCommand(event);
-        final VotingSystemSequencer votingSystemSequencer = new VotingSystemSequencer(response, event, config, handler);
-        votingSystemSequencer.initializeAndStartVoting();
+        final IVoteSequencer votingSystemSequencer = new VotingSystemSequencer(response, event, config, handler);
+        votingSystemSequencer.initializeAndStart();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

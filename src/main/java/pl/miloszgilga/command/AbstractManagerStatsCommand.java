@@ -22,6 +22,7 @@ import pl.miloszgilga.BotCommand;
 
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.remote.RemoteModuleProperty;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
@@ -33,9 +34,10 @@ import static pl.miloszgilga.exception.ModuleException.StatsModuleIsTurnedOffExc
 public abstract class AbstractManagerStatsCommand extends AbstractManagerCommand {
 
     protected AbstractManagerStatsCommand(
-        BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler
+        BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler,
+        CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(command, config, embedBuilder, handler);
+        super(command, config, embedBuilder, handler, cacheableCommandStateDao);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: CachedCommandStateData.java
- * Last modified: 6/15/23, 6:45 PM
+ * File name: IVoteSequencer.java
+ * Last modified: 18/06/2023, 17:42
  * Project name: jwizard-discord-bot
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -16,19 +16,10 @@
  * governing permissions and limitations under the license.
  */
 
-package pl.miloszgilga.cacheable;
-
-import org.jmpsl.core.db.AbstractAuditableEntity;
-
-import pl.miloszgilga.BotCommand;
-import pl.miloszgilga.command_proxy.IBotCommandProxy;
-import pl.miloszgilga.domain.ICacheCommandRepository;
+package pl.miloszgilga.vote;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-record CachedCommandStateData<T extends AbstractAuditableEntity>(
-    ICacheCommandRepository<T> commandRepository,
-    BotCommand passedCommand,
-    IBotCommandProxy<T>[] allValues
-) {
+public interface IVoteSequencer {
+    void initializeAndStart();
 }

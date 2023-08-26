@@ -29,6 +29,7 @@ import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
@@ -40,9 +41,9 @@ public class PlayTrackCmd extends AbstractMusicCommand {
 
     PlayTrackCmd(
         BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
-        RemotePropertyHandler handler
+        RemotePropertyHandler handler, CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.PLAY_TRACK, config, playerManager, embedBuilder, handler);
+        super(BotCommand.PLAY_TRACK, config, playerManager, embedBuilder, handler, cacheableCommandStateDao);
         super.onSameChannelWithBot = true;
         super.selfJoinable = true;
     }

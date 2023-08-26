@@ -28,6 +28,7 @@ import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractDjCommand;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.IEnumerableLocaleSet;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
@@ -40,9 +41,9 @@ public class InfinitePlaylistCmd extends AbstractDjCommand {
 
     InfinitePlaylistCmd(
         BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
-        RemotePropertyHandler handler
+        RemotePropertyHandler handler, CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.INFINITE_PLAYLIST, config, playerManager, embedBuilder, handler);
+        super(BotCommand.INFINITE_PLAYLIST, config, playerManager, embedBuilder, handler, cacheableCommandStateDao);
         super.onSameChannelWithBot = true;
         super.inPlayingMode = true;
     }

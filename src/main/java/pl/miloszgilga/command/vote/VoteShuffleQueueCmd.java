@@ -30,6 +30,7 @@ import pl.miloszgilga.audioplayer.MusicManager;
 import pl.miloszgilga.audioplayer.PlayerManager;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.command.AbstractVoteMusicCommand;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
@@ -43,9 +44,9 @@ public class VoteShuffleQueueCmd extends AbstractVoteMusicCommand {
 
     VoteShuffleQueueCmd(
         BotConfiguration config, PlayerManager playerManager, EmbedMessageBuilder embedBuilder,
-        RemotePropertyHandler handler
+        RemotePropertyHandler handler, CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.VOTE_SHUFFLE_QUEUE, config, playerManager, embedBuilder, handler);
+        super(BotCommand.VOTE_SHUFFLE_QUEUE, config, playerManager, embedBuilder, handler, cacheableCommandStateDao);
         super.onSameChannelWithBot = true;
     }
 

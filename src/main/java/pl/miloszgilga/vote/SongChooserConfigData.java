@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
  *
- * File name: AbstractOwnerStatsCommand.java
- * Last modified: 29/04/2023, 01:22
+ * File name: SongChooserConfigData.java
+ * Last modified: 18/06/2023, 17:59
  * Project name: jwizard-discord-bot
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -16,9 +16,12 @@
  * governing permissions and limitations under the license.
  */
 
-package pl.miloszgilga.command;
+package pl.miloszgilga.vote;
 
-import pl.miloszgilga.BotCommand;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+
+import java.util.function.Consumer;
+
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
@@ -26,23 +29,11 @@ import pl.miloszgilga.core.configuration.BotConfiguration;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-public abstract class AbstractOwnerStatsCommand extends AbstractOwnerCommand {
-
-    protected AbstractOwnerStatsCommand(
-        BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler
-    ) {
-        super(command, config, embedBuilder, handler);
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    protected void doExecuteOwnerCommand(CommandEventWrapper event) {
-
-        doExecuteOwnerStatsCommand(event);
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    protected abstract void doExecuteOwnerStatsCommand(CommandEventWrapper event);
+public record SongChooserConfigData(
+    BotConfiguration config,
+    CommandEventWrapper event,
+    RemotePropertyHandler handler,
+    EmbedMessageBuilder builder,
+    Consumer<AudioTrack> onSelectTrack
+) {
 }

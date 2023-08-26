@@ -34,6 +34,7 @@ import pl.miloszgilga.misc.JDALog;
 import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.cacheable.CacheableGuildSettingsDao;
 import pl.miloszgilga.command.AbstractGuildSettingsCommand;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
@@ -53,9 +54,11 @@ public class SetAudioTextChannelCmd extends AbstractGuildSettingsCommand {
 
     SetAudioTextChannelCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler,
-        IGuildSettingsRepository repository, CacheableGuildSettingsDao cacheableGuildSettingsDao
+        IGuildSettingsRepository repository, CacheableGuildSettingsDao cacheableGuildSettingsDao,
+        CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.SET_AUDIO_CHANNEL, config, embedBuilder, handler, repository, cacheableGuildSettingsDao);
+        super(BotCommand.SET_AUDIO_CHANNEL, config, embedBuilder, handler, repository, cacheableGuildSettingsDao,
+            cacheableCommandStateDao);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

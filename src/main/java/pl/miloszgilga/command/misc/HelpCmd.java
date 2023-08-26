@@ -29,6 +29,7 @@ import pl.miloszgilga.dto.HelpEmbedContent;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.embed.EmbedPaginationBuilder;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.AbstractCommand;
 import pl.miloszgilga.core.configuration.BotProperty;
 import pl.miloszgilga.core.configuration.BotConfiguration;
@@ -46,9 +47,9 @@ class HelpCmd extends AbstractCommand {
 
     HelpCmd(
         BotConfiguration config, EmbedMessageBuilder embedBuilder, EmbedPaginationBuilder paginate,
-        RemotePropertyHandler handler
+        RemotePropertyHandler handler, CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.HELP, config, embedBuilder, handler);
+        super(BotCommand.HELP, config, embedBuilder, handler, cacheableCommandStateDao);
         this.paginate = paginate;
     }
 
@@ -57,9 +58,9 @@ class HelpCmd extends AbstractCommand {
     @Override
     protected void doExecuteCommand(CommandEventWrapper event) {
         final HelpEmbedContent content = new HelpEmbedContent(
-            config.getLocaleText(ResLocaleSet.HELP_INFO_SOURCE_CODE_LINK_MESS, event.getGuild(),
-                Map.of("sourceCodeLink", config.getProperty(BotProperty.J_SOURCE_CODE_PATH))),
-            String.format("jre%s_%s", Runtime.version().feature(), config.getProjectVersion()),
+            config.getLocaleText(ResLocaleSet.HELP_INFO_SOURCE_CODE_LINK_MESS, event.getGuild(), Map.of(
+                "sourceCodeLink", config.getProperty(BotProperty.J_SOURCE_CODE_PATH)
+            )), String.format("jre%s_%s", Runtime.version().feature(), config.getProjectVersion()),
             BotCommand.count()
         );
         final MessageEmbed messageEmbed = embedBuilder.createHelpMessage(event, content);

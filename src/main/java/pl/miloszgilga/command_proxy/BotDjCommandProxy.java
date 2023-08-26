@@ -58,4 +58,9 @@ public enum BotDjCommandProxy implements IBotCommandProxy<DjCommandEntity> {
     public String getUid() {
         return String.format("DIDC-%03d", ordinal() + 1);
     }
+
+    @Override
+    public String getCacheProxyName() {
+        return "GuildDjCommandsStateCache";
+    }
 }

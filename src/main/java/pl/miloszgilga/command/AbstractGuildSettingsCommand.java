@@ -21,9 +21,10 @@ package pl.miloszgilga.command;
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
+import pl.miloszgilga.cacheable.CacheableGuildSettingsDao;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
-import pl.miloszgilga.cacheable.CacheableGuildSettingsDao;
 
 import pl.miloszgilga.domain.guild_settings.IGuildSettingsRepository;
 
@@ -38,9 +39,10 @@ public abstract class AbstractGuildSettingsCommand extends AbstractManagerComman
 
     public AbstractGuildSettingsCommand(
         BotCommand command, BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler,
-        IGuildSettingsRepository repository, CacheableGuildSettingsDao cacheableGuildSettingsDao
+        IGuildSettingsRepository repository, CacheableGuildSettingsDao cacheableGuildSettingsDao,
+        CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(command, config, embedBuilder, handler);
+        super(command, config, embedBuilder, handler, cacheableCommandStateDao);
         this.repository = repository;
         this.cacheableGuildSettingsDao = cacheableGuildSettingsDao;
     }

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (c) 2023 by MILOSZ GILGA <http://miloszgilga.pl>
+  ~
+  ~ File name: 2023-06-19_00000_create-message-memory-table.xml
+  ~ Last modified: 16/05/2023, 12:13
+  ~ Project name: jwizard-discord-bot
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
+  ~ file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~     <http://www.apache.org/license/LICENSE-2.0>
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under
+  ~ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
+  ~ OF ANY KIND, either express or implied. See the License for the specific language
+  ~ governing permissions and limitations under the license.
+  -->
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <property name="now" value="now()" dbms="mysql,h2"/>
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+    <property name="now" value="sysdate" dbms="oracle"/>
+
+    <property name="autoIncrement" value="true" dbms="mysql,h2,postgresql,oracle"/>
+
+    <property name="unsignedLongType" value="bigint unsigned" dbms="mysql,h2"/>
+    <property name="floatType" value="float4" dbms="postgresql,h2"/>
+    <property name="floatType" value="float" dbms="mysql,oracle"/>
+    <property name="textType" value="text" dbms="mysql,postgresql"/>
+    <property name="textType" value="varchar(1000000)" dbms="h2"/>
+
+    <changeSet id="2023-06-19_00000_create-message-memory-table" author="milosz08" context="lq_dev, lq_prod">
+
+        <createTable tableName="memory_messages">
+            <column name="id" autoIncrement="${autoIncrement}" type="${unsignedLongType}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="message_id" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="channel_id" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="enum('WELCOME', 'COMMANDS', 'STATISTICS')">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="guild_id" type="${unsignedLongType}">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="timestamp" defaultValue="${now}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp" defaultValueComputed="${now} ON UPDATE ${now}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="memory_messages" baseColumnNames="guild_id"
+                constraintName="fk_memory_messages_guild_id"
+                referencedTableName="guilds" referencedColumnNames="id"
+                onUpdate="CASCADE" onDelete="CASCADE"/>
+    </changeSet>
+</databaseChangeLog>

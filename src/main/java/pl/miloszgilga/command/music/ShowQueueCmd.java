@@ -36,6 +36,7 @@ import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
 import pl.miloszgilga.embed.EmbedPaginationBuilder;
 import pl.miloszgilga.command.AbstractMusicCommand;
+import pl.miloszgilga.cacheable.CacheableCommandStateDao;
 import pl.miloszgilga.core.remote.RemotePropertyHandler;
 import pl.miloszgilga.core.configuration.BotConfiguration;
 import pl.miloszgilga.core.loader.JDAInjectableCommandLazyService;
@@ -53,9 +54,9 @@ public class ShowQueueCmd extends AbstractMusicCommand {
 
     ShowQueueCmd(
         BotConfiguration config, EmbedPaginationBuilder pagination, PlayerManager playerManager,
-        EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler
+        EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler, CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.QUEUE, config, playerManager, embedBuilder, handler);
+        super(BotCommand.QUEUE, config, playerManager, embedBuilder, handler, cacheableCommandStateDao);
         this.pagination = pagination;
         super.onSameChannelWithBot = true;
     }

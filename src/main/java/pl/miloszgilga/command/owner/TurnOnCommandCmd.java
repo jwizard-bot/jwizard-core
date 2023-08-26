@@ -18,8 +18,13 @@
 
 package pl.miloszgilga.command.owner;
 
+import net.dv8tion.jda.api.entities.MessageEmbed;
+
+import java.util.Map;
+
 import pl.miloszgilga.BotCommand;
 import pl.miloszgilga.BotCommandArgument;
+import pl.miloszgilga.locale.ResLocaleSet;
 import pl.miloszgilga.dto.CommandEventWrapper;
 import pl.miloszgilga.dto.CommandWithProxyDto;
 import pl.miloszgilga.embed.EmbedMessageBuilder;
@@ -42,7 +47,7 @@ public class TurnOnCommandCmd extends AbstractOwnerCommand {
         BotConfiguration config, EmbedMessageBuilder embedBuilder, RemotePropertyHandler handler,
         CacheableCommandStateDao cacheableCommandStateDao
     ) {
-        super(BotCommand.TURN_ON_COMMAND, config, embedBuilder, handler);
+        super(BotCommand.TURN_ON_COMMAND, config, embedBuilder, handler, cacheableCommandStateDao);
         this.cacheableCommandStateDao = cacheableCommandStateDao;
     }
 
@@ -55,6 +60,12 @@ public class TurnOnCommandCmd extends AbstractOwnerCommand {
         final CommandWithProxyDto payload = BotCommand.getCategoryFromRawCommand(commandNameOrAlias, config, event);
         cacheableCommandStateDao.findCategoryWithCommandAndSave(payload, event, true);
 
-        // TODO: sending embed message
+        final String cmdName = payload.command().getName();
+        final MessageEmbed messageEmbed = embedBuilder.createMessage(ResLocaleSet.SUCCESS_TURN_ON_COMMAND_MESS, Map.of(
+            "command", cmdName,
+            "turnOffCmd", BotCommand.TURN_OFF_COMMAND.parseWithPrefix(config, cmdName)
+        ), event.getGuild());
+
+        event.sendEmbedMessage(messageEmbed);
     }
 }
