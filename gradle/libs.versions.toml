@@ -21,7 +21,7 @@
 
 [versions]
 jda                 = '4.4.1_353'
-lavaPlayer          = '1.4.0'
+lavaPlayer          = '2.0.1'
 jdaUtilities        = '1.24.1'
 
 h2Driver            = '2.1.214'
@@ -47,7 +47,7 @@ springBootDep       = '1.0.15.RELEASE'
 
 [libraries]
 jda                                 = { module = 'net.dv8tion:JDA',                                             version.ref = 'jda' }
-lavaplayer                          = { module = 'com.github.walkyst:lavaplayer-fork',                          version.ref = 'lavaPlayer' }
+lavaplayer                          = { module = 'dev.arbjerg:lavaplayer',                                      version.ref = 'lavaPlayer' }
 jdautilities                        = { module = 'pw.chew:jda-chewtils',                                        version.ref = 'jdaUtilities' }
 
 h2-driver                           = { module = 'com.h2database:h2',                                           version.ref = 'h2Driver' }
