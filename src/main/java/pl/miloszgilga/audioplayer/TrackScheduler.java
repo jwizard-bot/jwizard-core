@@ -176,7 +176,7 @@ public class TrackScheduler extends AudioEventAdapter {
             config.getLocaleText(ResLocaleSet.ISSUE_WHILE_PLAYING_TRACK_MESS, deliveryEvent.getGuild()),
             BugTracker.ISSUE_WHILE_PLAYING_TRACK);
         deliveryEvent.sendEmbedMessage(messageEmbed);
-        JDALog.error(log, deliveryEvent, "Unexpected issue while playing track: '%s'. Cause: %s", ex.getMessage());
+        JDALog.error(log, deliveryEvent, "Unexpected issue while playing track: '%s'. Cause: %s", track, ex.getMessage());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
