@@ -1,5 +1,5 @@
 #  !!!! IMPORTANT !!!!
-## This project will soon be moved to the organization's repository and rewritten progressively to the Kotlin language.
+## This project will soon be rewritten progressively to Kotlin.
 
 <img align="right" src="https://raw.githubusercontent.com/Milosz08/JWizard_Discord_Bot/master/gfx/github-logo.png" height="160">
 
