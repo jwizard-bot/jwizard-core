@@ -1,0 +1,6 @@
+<component name="CopyrightManager">
+  <copyright>
+    <option name="notice" value="Copyright (c) &amp;#36;originalComment.match(&quot;Copyright (\d+)&quot;, 1, &quot;-&quot;)&amp;#36;today.year by JWizard&#10;Originally developed by Miłosz Gilga &lt;https://miloszgilga.pl&gt;" />
+    <option name="myName" value="custom" />
+  </copyright>
+</component>

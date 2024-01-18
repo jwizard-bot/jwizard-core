@@ -1,6 +1,0 @@
-<component name="CopyrightManager">
-  <copyright>
-    <option name="notice" value="Copyright (c) &amp;#36;originalComment.match(&quot;Copyright (\d+)&quot;, 1, &quot;-&quot;)&amp;#36;today.year by MILOSZ GILGA &lt;http://miloszgilga.pl&gt;&#10;&#10;File name: &amp;#36;file.fileName&#10;Last modified: &amp;#36;file.lastModified&#10;Project name: &amp;#36;project.name&#10;&#10;Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this&#10;file except in compliance with the License. You may obtain a copy of the License at&#10;&#10;    &lt;http://www.apache.org/license/LICENSE-2.0&gt;&#10;&#10;Unless required by applicable law or agreed to in writing, software distributed under&#10;the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS&#10;OF ANY KIND, either express or implied. See the License for the specific language&#10;governing permissions and limitations under the license." />
-    <option name="myName" value="Apache" />
-  </copyright>
-</component>
