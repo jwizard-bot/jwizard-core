@@ -2,5 +2,5 @@
 
 Core & command listener repo.
 
-> [!NOTE]  
+> [!NOTE]
 > For legacy java version source code, check `legacy-java` branch.
