@@ -8,5 +8,5 @@ ${AnsiColor.GREEN} :: Spring Boot version :: ${AnsiStyle.NORMAL} ${spring-boot.f
 ╭─────────────────────────────────────────────────────────────────────╮
 │ Source code repository: https://github.com/jwizard-bot/jwizard-core │
 │ Originally developed by: Miłosz Gilga (https://miloszgilga.pl)      │
-│ Application license you will found in LICENSE file                  │
+│ Application license you will find in the LICENSE file               │
 ╰─────────────────────────────────────────────────────────────────────╯
