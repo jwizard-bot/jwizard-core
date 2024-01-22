@@ -15,17 +15,26 @@ plugins {
 
 group = "pl.jwizard.core"
 version = "1.0.0"
+
 java.sourceCompatibility = jvmVersion
+java.targetCompatibility = jvmVersion
 
 repositories {
 	mavenCentral()
 	maven { url = uri("https://repo.spring.io/milestone") }
 	maven { url = uri("https://repo.spring.io/snapshot") }
+	maven { url = uri("https://m2.dv8tion.net/releases") }
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter")
+	implementation("net.dv8tion:JDA:4.4.1_353")
+	implementation("dev.arbjerg:lavaplayer:2.1.0")
 	implementation("org.slf4j:slf4j-api:2.0.11")
+	implementation("org.springframework.boot:spring-boot-starter")
+	implementation("com.squareup.okhttp3:okhttp:4.12.0")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+	runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
 
 	testImplementation("org.jetbrains.kotlin:kotlin-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
