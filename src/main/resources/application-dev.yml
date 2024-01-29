@@ -1,2 +1,5 @@
 jwizard:
   api-host: http://localhost:8670
+  instance:
+    auth-token: ${V_JDA_DEV_APP_ID}
+    app-id: ${V_JDA_DEV_SECRET}

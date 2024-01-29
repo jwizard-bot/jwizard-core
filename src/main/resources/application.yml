@@ -1,8 +1,17 @@
 spring:
+  application:
+    name: jwizard-core
   banner:
     location: classpath:spring/banner.txt
-
-jwizard:
-  instance:
-    auth-token: ${JDA_AUTH_TOKEN}
-    app-id: ${JDA_APP_ID}
+  config:
+    import:
+      - optional:vault://
+  cloud:
+    vault:
+      uri: ${ENV_VAULT_URI:http://localhost:8761}
+      token: ${ENV_VAULT_TOKEN}
+      authentication: TOKEN
+      kv:
+        backend: jwizard
+        default-context: common
+        application-name: ${spring.application.name}

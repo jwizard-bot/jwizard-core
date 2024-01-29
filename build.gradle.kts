@@ -28,9 +28,11 @@ repositories {
 
 dependencies {
 	implementation("net.dv8tion:JDA:4.4.1_353")
-	implementation("dev.arbjerg:lavaplayer:2.1.0")
-	implementation("org.slf4j:slf4j-api:2.0.11")
+	implementation("dev.arbjerg:lavaplayer:2.1.0") {
+		exclude(group = "commons-logging", module = "commons-logging")
+	}
 	implementation("org.springframework.boot:spring-boot-starter")
+	implementation("org.springframework.cloud:spring-cloud-vault-config:4.1.0")
 	implementation("com.squareup.okhttp3:okhttp:4.12.0")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
