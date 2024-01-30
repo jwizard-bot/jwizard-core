@@ -1,5 +1,5 @@
 jwizard:
   api-host: http://localhost:8670
   instance:
-    auth-token: ${V_JDA_PROD_APP_ID}
-    app-id: ${V_JDA_PROD_SECRET}
+    auth-token: ${V_JDA_PROD_SECRET}
+    app-id: ${V_JDA_PROD_APP_ID}
