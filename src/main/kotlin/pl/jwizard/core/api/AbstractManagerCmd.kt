@@ -4,7 +4,7 @@
  */
 package pl.jwizard.core.api
 
-import pl.jwizard.core.bean.BotConfiguration
+import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.AbstractCompositeCmd
 import pl.jwizard.core.command.CompoundCommandEvent
 

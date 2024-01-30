@@ -5,7 +5,7 @@
 package pl.jwizard.core.api
 
 import pl.jwizard.core.audio.PlayerManager
-import pl.jwizard.core.bean.BotConfiguration
+import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.CompoundCommandEvent
 
 abstract class AbstractVoteMusicCmd(

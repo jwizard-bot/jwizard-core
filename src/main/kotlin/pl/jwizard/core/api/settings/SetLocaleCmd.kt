@@ -5,7 +5,7 @@
 package pl.jwizard.core.api.settings
 
 import pl.jwizard.core.api.AbstractSettingsCmd
-import pl.jwizard.core.bean.BotConfiguration
+import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.command.reflect.CommandListenerBean
 

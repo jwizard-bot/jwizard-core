@@ -4,7 +4,7 @@
  */
 package pl.jwizard.core
 
-import pl.jwizard.core.bean.BotInstance
+import pl.jwizard.core.bot.BotInstance
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

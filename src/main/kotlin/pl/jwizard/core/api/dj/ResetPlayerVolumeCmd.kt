@@ -6,7 +6,7 @@ package pl.jwizard.core.api.dj
 
 import pl.jwizard.core.api.AbstractDjCmd
 import pl.jwizard.core.audio.PlayerManager
-import pl.jwizard.core.bean.BotConfiguration
+import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.command.reflect.CommandListenerBean
 

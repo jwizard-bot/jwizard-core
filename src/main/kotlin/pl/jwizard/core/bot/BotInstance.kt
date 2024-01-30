@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.core.bean
+package pl.jwizard.core.bot
 
 import javax.security.auth.login.LoginException
 import kotlin.system.exitProcess
