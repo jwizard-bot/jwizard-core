@@ -3,3 +3,7 @@ jwizard:
   instance:
     auth-token: ${V_JDA_DEV_SECRET}
     app-id: ${V_JDA_DEV_APP_ID}
+
+logging:
+  file:
+    path: .log/dev
