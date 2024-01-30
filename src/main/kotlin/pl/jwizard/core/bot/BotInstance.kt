@@ -10,8 +10,8 @@ import pl.jwizard.core.audio.AloneOnChannelListener
 import pl.jwizard.core.command.CommandProxyListener
 import pl.jwizard.core.command.SlashCommandRegisterer
 import pl.jwizard.core.command.reflect.CommandLoader
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import pl.jwizard.core.http.AuthSessionHandler
+import pl.jwizard.core.utils.AbstractLoggingBean
 import org.springframework.stereotype.Component
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
@@ -35,10 +35,10 @@ class BotInstance(
 	private lateinit var jda: JDA
 
 	fun start() {
-		LOG.info("Bot instance is warming up...")
+		log.info("Bot instance is warming up...")
 		try {
-			_commandLoader.fetchCommandsFromApi()
-			_commandLoader.reflectAndLoadCommands()
+			authSessionHandler.loginAndCreateSession()
+
 			commandLoader.fetchCommandsFromApi()
 			commandLoader.reflectAndLoadCommands()
 
@@ -75,12 +75,11 @@ class BotInstance(
 	}
 
 	private fun printErrorAndExit(message: String) {
-		LOG.error(message)
+		log.error(message)
 		exitProcess(-1)
 	}
 
 	companion object {
-		private val LOG: Logger = LoggerFactory.getLogger(BotInstance::class.java)
 		private val GATEWAY_INTENTS = arrayListOf(
 			GatewayIntent.DIRECT_MESSAGES,
 			GatewayIntent.GUILD_MESSAGES,
