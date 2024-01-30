@@ -12,8 +12,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 
 @Component
 class CommandProxyListener(
-	private val _commandLoader: CommandLoader
+	private val commandLoader: CommandLoader
 ) : ListenerAdapter() {
+
 	override fun onGuildMessageReceived(event: GuildMessageReceivedEvent) {
 		if (event.author.isBot) {
 			return // skipping bot messages
@@ -23,7 +24,7 @@ class CommandProxyListener(
 			return // skipping non-command message
 		}
 		val commandName = messageContentWithPrefix.substring(1)
-		val command = _commandLoader.commandsProxyContainer[commandName] ?: return
+		val command = commandLoader.commandsProxyContainer[commandName] ?: return
 
 		val compoundCommandEvent = CompoundCommandEvent(event)
 		val instance = command.instance ?: return
@@ -33,7 +34,7 @@ class CommandProxyListener(
 	}
 
 	override fun onSlashCommand(event: SlashCommandEvent) {
-		val command = _commandLoader.commandsProxyContainer[event.commandString.substring(1)] ?: return
+		val command = commandLoader.commandsProxyContainer[event.commandString.substring(1)] ?: return
 		event.deferReply().queue()
 
 		val compoundCommandEvent = CompoundCommandEvent(event)

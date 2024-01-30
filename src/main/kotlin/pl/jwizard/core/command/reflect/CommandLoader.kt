@@ -4,77 +4,91 @@
  */
 package pl.jwizard.core.command.reflect
 
+import java.io.IOException
 import kotlin.system.exitProcess
+import pl.jwizard.core.bot.BotProperties
 import pl.jwizard.core.command.AbstractCompositeCmd
+import pl.jwizard.core.http.ApiUrl
 import pl.jwizard.core.http.HttpClient
-import org.slf4j.LoggerFactory
+import pl.jwizard.core.utils.AbstractLoggingBean
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider
 import org.springframework.core.type.filter.AnnotationTypeFilter
 import org.springframework.stereotype.Component
+import okhttp3.Request
 
 @Component
 class CommandLoader(
-	private val _applicationContext: ApplicationContext,
-	private val _httpClient: HttpClient,
-) {
-	private final val _commandsProxyContainer = mutableMapOf<String, CommandProxyData>()
-	private final val _categoriesProxyContainer = mutableMapOf<String, String>()
+	private val applicationContext: ApplicationContext,
+	private val botProperties: BotProperties,
+	private val httpClient: HttpClient,
+) : AbstractLoggingBean(CommandLoader::class) {
 
-	private var _scanner = ClassPathScanningCandidateComponentProvider(false)
+	final val commandsProxyContainer = mutableMapOf<String, CommandProxyData>()
+	private final val categoriesProxyContainer = mutableMapOf<String, String>()
+	private var scanner = ClassPathScanningCandidateComponentProvider(false)
 
 	init {
-		_scanner.addIncludeFilter(AnnotationTypeFilter(CommandListenerBean::class.java))
+		scanner.addIncludeFilter(AnnotationTypeFilter(CommandListenerBean::class.java))
 	}
 
 	fun fetchCommandsFromApi() {
-		val urlSuffix = "command/all"
-		val (categories, commands) = _httpClient
-			.makeGetRequest(urlSuffix, CommandsResDto::class.java, true) ?: return
+		val url = ApiUrl.ALL_COMMANDS_WITH_CATEGORIES.getUrl(botProperties)
+		val request = Request.Builder()
+			.url(url)
+			.build()
+		try {
+			val response = httpClient.makeSecureBlockCall(request)
+			if (response.code != 200) {
+				throw IOException(response.body?.string())
+			}
+			val (categories, commands) = httpClient
+				.mapResponseObject(response, CommandsResDto::class)
+				?: throw IOException()
+			categories.forEach { (key, value) -> categoriesProxyContainer[key] = value }
+			commands.forEach { (key, value) -> commandsProxyContainer[key] = CommandProxyData(value) }
 
-		categories.forEach { (key, value) -> _categoriesProxyContainer[key] = value }
-		commands.forEach { (key, value) -> _commandsProxyContainer[key] = CommandProxyData(value) }
-
-		LOG.info("Fetched {} command categories from API: {}", categories.size, _httpClient.mergeWithHostUrl(urlSuffix))
-		LOG.info("Fetched {} commands from API: {}", commands.size, _httpClient.mergeWithHostUrl(urlSuffix))
+			log.info("Fetched {} command categories from API: {}", categories.size, url)
+			log.info("Fetched {} commands from API: {}", commands.size, url)
+		} catch (ex: IOException) {
+			log.error("Unable to load command categories and commands. Cause: {}", ex.message)
+			exitProcess(-1)
+		}
 	}
 
 	fun reflectAndLoadCommands() {
-		val reflectCommands = _scanner
+		val reflectCommands = scanner
 			.findCandidateComponents(SCANNING_BASE_PACKAGE)
 			.map {
 				val clazz = Class.forName(it.beanClassName)
 				val annotation = clazz.getAnnotation(CommandListenerBean::class.java)
 				annotation to clazz
 			}
-			.filter { (annotation, _) -> _commandsProxyContainer.containsKey(annotation.id) }
+			.filter { (annotation, _) -> commandsProxyContainer.containsKey(annotation.id) }
 			.associate { (annotation, clazz) ->
-				annotation.id to _applicationContext.getBean(clazz) as AbstractCompositeCmd
+				annotation.id to applicationContext.getBean(clazz) as AbstractCompositeCmd
 			}
-		val beansIntersect = reflectCommands.keys.all { it in _commandsProxyContainer.keys }
-		val apiListIntersect = _commandsProxyContainer.keys.all { it in reflectCommands.keys }
+		val beansIntersect = reflectCommands.keys.all { it in commandsProxyContainer.keys }
+		val apiListIntersect = commandsProxyContainer.keys.all { it in reflectCommands.keys }
 
 		if (!(beansIntersect && apiListIntersect)) {
-			val intersectKeys = _commandsProxyContainer.keys
+			val intersectKeys = commandsProxyContainer.keys
 				.union(reflectCommands.keys)
-				.subtract(_commandsProxyContainer.keys.intersect(reflectCommands.keys))
-			LOG.error("Contract between API and beans volated by at least one command. Cause by: {}", intersectKeys)
+				.subtract(commandsProxyContainer.keys.intersect(reflectCommands.keys))
+			log.error("Contract between API and beans volated by at least one command. Cause by: {}", intersectKeys)
 			exitProcess(-1)
 		}
 		reflectCommands.forEach { (commandName, beanDefinition) ->
-			val commandProxyData = _commandsProxyContainer[commandName] ?: return
+			val commandProxyData = commandsProxyContainer[commandName] ?: return
 			commandProxyData.instance = beanDefinition
-			LOG.info(
+			log.info(
 				"{}, {} ({}) - bean loaded via reflection",
 				commandName, commandProxyData.aliases, beanDefinition.javaClass.name
 			)
 		}
 	}
 
-	val commandsProxyContainer: Map<String, CommandProxyData> get() = _commandsProxyContainer
-
 	companion object {
-		private val LOG = LoggerFactory.getLogger(CommandLoader::class.java)
 		private const val SCANNING_BASE_PACKAGE = "pl.jwizard.core.api"
 	}
 }
