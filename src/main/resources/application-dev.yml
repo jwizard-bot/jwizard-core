@@ -1,3 +1,10 @@
+spring:
+  devtools:
+    livereload:
+      port: 35732
+    restart:
+      log-condition-evaluation-delta: false
+
 jwizard:
   api-host: http://localhost:8670
   instance:
