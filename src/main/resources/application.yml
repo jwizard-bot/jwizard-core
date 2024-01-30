@@ -15,3 +15,21 @@ spring:
         backend: jwizard
         default-context: common
         application-name: ${spring.application.name}
+
+jwizard:
+  default-activity: tracks
+  splashes:
+    enabled: true
+    interval-sec: 5
+    list:
+      - Welcome!
+      - I am
+      - a magic
+      - Discord
+      - bot
+      - and I can
+      - play
+      - songs
+      - and
+      - much
+      - more...

@@ -12,9 +12,17 @@ import org.springframework.context.annotation.Configuration
 data class BotProperties(
 	var instance: InstanceProperties? = null,
 	var apiHost: String = "",
+	var defaultActivity: String = "",
+	var splashes: SplashesProperties = SplashesProperties(),
 )
 
 data class InstanceProperties(
 	var authToken: String? = "",
 	var appId: String? = "",
+)
+
+data class SplashesProperties(
+	var enabled: Boolean = true,
+	var intervalSec: Long = 5,
+	var list: List<String> = emptyList(),
 )

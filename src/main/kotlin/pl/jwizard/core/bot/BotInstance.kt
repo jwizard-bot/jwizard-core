@@ -11,6 +11,7 @@ import pl.jwizard.core.command.CommandProxyListener
 import pl.jwizard.core.command.SlashCommandRegisterer
 import pl.jwizard.core.command.reflect.CommandLoader
 import pl.jwizard.core.http.AuthSessionHandler
+import pl.jwizard.core.seq.ActivityStatusSequencer
 import pl.jwizard.core.utils.AbstractLoggingBean
 import org.springframework.stereotype.Component
 import net.dv8tion.jda.api.JDA
@@ -30,6 +31,7 @@ class BotInstance(
 	private val botStatusEventHandler: BotStatusEventHandler,
 	private val aloneOnChannelListener: AloneOnChannelListener,
 	private val authSessionHandler: AuthSessionHandler,
+	private val activityStatusSequencer: ActivityStatusSequencer,
 ) : AbstractLoggingBean(BotInstance::class) {
 
 	private lateinit var jda: JDA
@@ -61,6 +63,9 @@ class BotInstance(
 			}
 			jda.awaitReady()
 
+			activityStatusSequencer.loadSplashes()
+			activityStatusSequencer.initFixedDelay(jda)
+			
 			aloneOnChannelListener.initialize(jda)
 
 			log.info("Add bot into Discord server via link: {}", jda.getInviteUrl(PERMISSIONS))
