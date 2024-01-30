@@ -50,7 +50,7 @@ class BotInstance(
 				slashCommandRegisterer
 			)
 			jda = JDABuilder
-				.create(botProperties.instance?.authToken, GATEWAY_INTENTS)
+				.create(botProperties.instance.authToken, GATEWAY_INTENTS)
 				.enableCache(ENABLED_CACHE_FLAGS)
 				.disableCache(DISABLED_CACHE_FLAGS)
 				.setActivity(Activity.listening("Loading..."))

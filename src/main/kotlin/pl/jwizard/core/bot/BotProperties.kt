@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @ConfigurationProperties(prefix = "jwizard")
 data class BotProperties(
-	var instance: InstanceProperties? = null,
+	var instance: InstanceProperties = InstanceProperties(),
 	var apiHost: String = "",
 	var defaultActivity: String = "",
 	var splashes: SplashesProperties = SplashesProperties(),
