@@ -23,28 +23,32 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag
 
 @Component
 class BotInstance(
-	private val _botProperties: BotProperties,
-	private val _commandLoader: CommandLoader,
-	private val _commandProxyListener: CommandProxyListener,
-	private val _slashCommandRegisterer: SlashCommandRegisterer,
-	private val _botStatusEventHandler: BotStatusEventHandler,
-	private val _aloneOnChannelListener: AloneOnChannelListener,
-) {
-	private lateinit var _jda: JDA
+	private val botProperties: BotProperties,
+	private val commandLoader: CommandLoader,
+	private val commandProxyListener: CommandProxyListener,
+	private val slashCommandRegisterer: SlashCommandRegisterer,
+	private val botStatusEventHandler: BotStatusEventHandler,
+	private val aloneOnChannelListener: AloneOnChannelListener,
+	private val authSessionHandler: AuthSessionHandler,
+) : AbstractLoggingBean(BotInstance::class) {
+
+	private lateinit var jda: JDA
 
 	fun start() {
 		LOG.info("Bot instance is warming up...")
 		try {
 			_commandLoader.fetchCommandsFromApi()
 			_commandLoader.reflectAndLoadCommands()
+			commandLoader.fetchCommandsFromApi()
+			commandLoader.reflectAndLoadCommands()
 
 			val eventListeners = listOf(
-				_botStatusEventHandler,
-				_commandProxyListener,
-				_slashCommandRegisterer
+				botStatusEventHandler,
+				commandProxyListener,
+				slashCommandRegisterer
 			)
-			_jda = JDABuilder
-				.create(_botProperties.instance?.authToken, GATEWAY_INTENTS)
+			jda = JDABuilder
+				.create(botProperties.instance?.authToken, GATEWAY_INTENTS)
 				.enableCache(ENABLED_CACHE_FLAGS)
 				.disableCache(DISABLED_CACHE_FLAGS)
 				.setActivity(Activity.listening("Loading..."))
@@ -52,17 +56,17 @@ class BotInstance(
 				.setBulkDeleteSplittingEnabled(true)
 				.build()
 			for (listener in eventListeners) {
-				_jda.addEventListener(listener)
-				LOG.info("Adding event listener: {} to JDA instance", listener::class.simpleName)
+				jda.addEventListener(listener)
+				log.info("Adding event listener: {} to JDA instance", listener::class.simpleName)
 			}
-			_jda.awaitReady()
+			jda.awaitReady()
 
-			_aloneOnChannelListener.initialize(_jda)
+			aloneOnChannelListener.initialize(jda)
 
-			LOG.info("Add bot into Discord server via link: {}", _jda.getInviteUrl(PERMISSIONS))
-			LOG.info("Started listening incoming requests...")
+			log.info("Add bot into Discord server via link: {}", jda.getInviteUrl(PERMISSIONS))
+			log.info("Started listening incoming requests...")
 		} catch (ex: LoginException) {
-			printErrorAndExit("Unable to login via passed token and application id parameters.")
+			printErrorAndExit("Unable to login via passed token and application id parameters. Cause: ${ex.message}")
 		} catch (ex: RuntimeException) {
 			printErrorAndExit("Unexpected error occured. Cause: ${ex.message}")
 		} catch (ex: InterruptedException) {

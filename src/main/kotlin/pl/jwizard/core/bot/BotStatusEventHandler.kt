@@ -18,11 +18,12 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 
 @Component
 class BotStatusEventHandler(
-	private val _botConfiguration: BotConfiguration,
-	private val _aloneOnChannelListener: AloneOnChannelListener,
-	private val _playerManager: PlayerManager,
+	private val botConfiguration: BotConfiguration,
+	private val aloneOnChannelListener: AloneOnChannelListener,
+	private val playerManager: PlayerManager,
 ) : ListenerAdapter() {
-	private var _shuttingDown = false
+
+	private var shuttingDown = false
 
 	private fun setBotDeafen(event: GuildVoiceJoinEvent) {
 		val guild = event.guild
@@ -33,41 +34,43 @@ class BotStatusEventHandler(
 	}
 
 	private fun stopPlayingContentAndFreeze(event: GuildVoiceMuteEvent) {
-		if (event.member.user.isBot) {
-			val botMember = event.guild.selfMember
-			if (botMember.voiceState != null) {
-				val musicManager = _playerManager.findMusicManager(event.guild)
-				val isMuted = botMember.voiceState!!.isMuted
-				
+		if (!event.member.user.isBot) {
+			return
+		}
+		val botMember = event.guild.selfMember
+		if (botMember.voiceState != null) {
+			val musicManager = playerManager.findMusicManager(event.guild)
+			val isMuted = botMember.voiceState!!.isMuted
 
-				musicManager?.audioPlayer?.isPaused = isMuted
-			}
+
+			musicManager?.audioPlayer?.isPaused = isMuted
 		}
 	}
 
 	private fun shutdownBotInstance(event: ShutdownEvent) {
-		if (!_shuttingDown) {
-			_shuttingDown = true
-			if (event.jda.status != JDA.Status.SHUTTING_DOWN) {
-				LOG.info("Shutting down bot instance...")
-				for (guild in event.jda.guilds) {
-					_playerManager.findMusicManager(guild)?.actions?.clearAndDestroy(false)
-					guild.audioManager.closeAudioConnection()
-				}
-				_botConfiguration.threadPool.shutdownNow()
-				event.jda.shutdown()
-				LOG.info("Threadpool was cleared and current bot instance was terminated")
-				exitProcess(0)
+		if (shuttingDown) {
+			return
+		}
+		shuttingDown = true
+		if (event.jda.status == JDA.Status.SHUTTING_DOWN) {
+			log.info("Shutting down bot instance...")
+			for (guild in event.jda.guilds) {
+				playerManager.findMusicManager(guild)?.actions?.clearAndDestroy(false)
+				guild.audioManager.closeAudioConnection()
 			}
+			botConfiguration.threadPool.shutdownNow()
+			event.jda.shutdown()
+			log.info("Threadpool was cleared and current bot instance was terminated")
+			exitProcess(0)
 		}
 	}
 
 	override fun onGuildVoiceJoin(event: GuildVoiceJoinEvent) = setBotDeafen(event)
-	override fun onGuildVoiceUpdate(event: GuildVoiceUpdateEvent) = _aloneOnChannelListener.onEveryVoiceUpdate(event)
+	override fun onGuildVoiceUpdate(event: GuildVoiceUpdateEvent) = aloneOnChannelListener.onEveryVoiceUpdate(event)
 	override fun onGuildVoiceMute(event: GuildVoiceMuteEvent) = stopPlayingContentAndFreeze(event)
 	override fun onShutdown(event: ShutdownEvent) = shutdownBotInstance(event)
 
 	companion object {
-		private val LOG = LoggerFactory.getLogger(BotStatusEventHandler::class.java)
+		private val log = LoggerFactory.getLogger(BotStatusEventHandler::class.java)
 	}
 }
