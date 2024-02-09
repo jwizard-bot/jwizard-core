@@ -4,12 +4,10 @@
  */
 package pl.jwizard.core.http
 
-import com.fasterxml.jackson.annotation.JsonCreator
+import pl.jwizard.core.config.annotation.NoArgConstructor
 
+@NoArgConstructor
 data class TokenResDto(
 	val accessToken: String,
 	val refreshToken: String
-) {
-	@JsonCreator
-	constructor() : this("", "")
-}
+)
