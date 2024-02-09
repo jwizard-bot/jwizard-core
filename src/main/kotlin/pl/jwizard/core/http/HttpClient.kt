@@ -44,6 +44,13 @@ class HttpClient(
 		return objectMapper.readValue(response.body?.string(), clazz.java)
 	}
 
+	fun <T : Any> mapResponseObject(response: Response, typeReference: TypeReference<T>): T? {
+		if (response.body == null) {
+			return null
+		}
+		return objectMapper.readValue(response.body?.string(), typeReference)
+	}
+
 	fun makeBlockCall(req: Request): Response = makeBlockCall(req, okHttpClient)
 
 	fun makeSecureBlockCall(req: Request): Response = makeBlockCall(req, secureOkHttpClient!!)
