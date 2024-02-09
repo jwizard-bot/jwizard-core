@@ -9,7 +9,7 @@ import pl.jwizard.core.bot.BotProperties
 import pl.jwizard.core.log.AbstractLoggingBean
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Component
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -17,7 +17,7 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 
-@Service
+@Component
 class HttpClient(
 	private val objectMapper: ObjectMapper,
 	private val okHttpClient: OkHttpClient,

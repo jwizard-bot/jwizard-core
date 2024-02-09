@@ -11,6 +11,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.4"
 	kotlin("jvm") version "1.9.21"
 	kotlin("plugin.spring") version "2.0.0-Beta3"
+	kotlin("plugin.noarg") version "1.9.22"
 }
 
 group = "pl.jwizard.core"
@@ -24,17 +25,27 @@ repositories {
 	maven { url = uri("https://repo.spring.io/milestone") }
 	maven { url = uri("https://repo.spring.io/snapshot") }
 	maven { url = uri("https://m2.dv8tion.net/releases") }
+	maven { url = uri("https://m2.chew.pro/releases") }
+}
+
+noArg {
+	annotation("pl.jwizard.core.config.annotation.NoArgConstructor")
+}
+
+configurations.all {
+	exclude(group = "commons-logging", module = "commons-logging")
 }
 
 dependencies {
 	implementation("net.dv8tion:JDA:4.4.1_353")
-	implementation("dev.arbjerg:lavaplayer:2.1.0") {
-		exclude(group = "commons-logging", module = "commons-logging")
-	}
+	implementation("pw.chew:jda-chewtils:1.24.1")
+	implementation("dev.arbjerg:lavaplayer:2.1.0")
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.cloud:spring-cloud-vault-config:4.1.0")
 	implementation("com.squareup.okhttp3:okhttp:4.12.0")
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.1")
+	implementation("com.fasterxml.jackson.module:jackson-module-parameter-names:2.16.1")
+	implementation("commons-validator:commons-validator:1.8.0")
 
 	runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -49,7 +60,7 @@ tasks.withType<Test> {
 
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
-		freeCompilerArgs = listOf("-Xjsr305=strict")
+		freeCompilerArgs = listOf("-Xjsr305=strict") // set JSR-305 annotations policy
 		jvmTarget = jvmVersion.toString()
 	}
 }

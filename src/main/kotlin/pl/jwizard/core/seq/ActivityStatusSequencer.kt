@@ -7,7 +7,7 @@ package pl.jwizard.core.seq
 import java.util.concurrent.TimeUnit
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.bot.BotProperties
-import pl.jwizard.core.utils.AbstractLoggingBean
+import pl.jwizard.core.log.AbstractLoggingBean
 import org.springframework.stereotype.Component
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.Activity

@@ -19,10 +19,10 @@ class AuthSessionHandler(
 	private var sessionTokens: TokenResDto? = null
 
 	fun loginAndCreateSession() {
-		val instance = botProperties.instance ?: throw LoginException()
+		val instance = botProperties.instance
 		val requestBody = httpClient.prepareRequestObject(
-			Pair("appId", instance.appId ?: ""),
-			Pair("appSecret", instance.authToken ?: ""),
+			Pair("appId", instance.appId),
+			Pair("appSecret", instance.authToken),
 		)
 		val request = Request.Builder()
 			.url(ApiUrl.STANDALONE_LOGIN.getUrl(botProperties))
