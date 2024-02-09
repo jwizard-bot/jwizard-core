@@ -6,7 +6,7 @@ package pl.jwizard.core.http
 
 import javax.security.auth.login.LoginException
 import pl.jwizard.core.bot.BotProperties
-import pl.jwizard.core.utils.AbstractLoggingBean
+import pl.jwizard.core.log.AbstractLoggingBean
 import org.springframework.stereotype.Component
 import okhttp3.Request
 

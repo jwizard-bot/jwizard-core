@@ -6,7 +6,8 @@ package pl.jwizard.core.http
 
 import kotlin.reflect.KClass
 import pl.jwizard.core.bot.BotProperties
-import pl.jwizard.core.utils.AbstractLoggingBean
+import pl.jwizard.core.log.AbstractLoggingBean
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.stereotype.Service
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

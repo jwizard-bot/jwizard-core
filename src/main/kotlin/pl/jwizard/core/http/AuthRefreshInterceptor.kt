@@ -5,7 +5,7 @@
 package pl.jwizard.core.http
 
 import pl.jwizard.core.bot.BotProperties
-import pl.jwizard.core.utils.AbstractLoggingBean
+import pl.jwizard.core.log.AbstractLoggingBean
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
