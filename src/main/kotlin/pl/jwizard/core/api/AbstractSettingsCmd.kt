@@ -5,6 +5,7 @@
 package pl.jwizard.core.api
 
 import pl.jwizard.core.bot.BotConfiguration
+import pl.jwizard.core.command.CommandModule
 import pl.jwizard.core.command.CompoundCommandEvent
 
 abstract class AbstractSettingsCmd(
@@ -13,6 +14,7 @@ abstract class AbstractSettingsCmd(
 	botConfiguration,
 ) {
 	override fun executeManagerCmd(event: CompoundCommandEvent) {
+		checkIfCommandModuleIsEnabled(event, CommandModule.SETTINGS)
 		executeSettingsCmd(event)
 	}
 

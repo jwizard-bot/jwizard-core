@@ -5,19 +5,45 @@
 package pl.jwizard.core.api.music
 
 import pl.jwizard.core.api.AbstractMusicCmd
-import pl.jwizard.core.audio.PlayerManager
+import pl.jwizard.core.audio.player.PlayerManagerFacade
 import pl.jwizard.core.bot.BotConfiguration
+import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
+import pl.jwizard.core.command.embed.CustomEmbedBuilder
 import pl.jwizard.core.command.reflect.CommandListenerBean
+import pl.jwizard.core.i18n.I18nResLocale
+import pl.jwizard.core.util.Formatter
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo
 
-@CommandListenerBean(id = "loop")
+@CommandListenerBean(id = BotCommand.LOOP)
 class LoopTrackCmd(
 	botConfiguration: BotConfiguration,
-	playerManager: PlayerManager
+	playerManagerFacade: PlayerManagerFacade
 ) : AbstractMusicCmd(
 	botConfiguration,
-	playerManager
+	playerManagerFacade
 ) {
+	init {
+		inPlayingMode = true
+		onSameChannelWithBot = true
+	}
+
 	override fun executeMusicCmd(event: CompoundCommandEvent) {
+		val isRepeating = playerManagerFacade.toggleInfiniteLoopTrack(event)
+		val playingTrack = playerManagerFacade.currentPlayingTrack(event)
+
+		val messagePlaceholder = if (isRepeating) {
+			I18nResLocale.ADD_TRACK_TO_INFINITE_LOOP
+		} else {
+			I18nResLocale.REMOVED_TRACK_FROM_INFINITE_LOOP
+		}
+		val embedMessage = CustomEmbedBuilder(event, botConfiguration).buildBaseMessage(
+			placeholder = messagePlaceholder,
+			params = mapOf(
+				"track" to Formatter.createRichTrackTitle(playingTrack as AudioTrackInfo),
+				"loopCmd" to BotCommand.LOOP.parseWithPrefix(botConfiguration, event),
+			),
+		)
+		event.appendEmbedMessage(embedMessage)
 	}
 }

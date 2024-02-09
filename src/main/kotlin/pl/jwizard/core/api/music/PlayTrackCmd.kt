@@ -5,19 +5,39 @@
 package pl.jwizard.core.api.music
 
 import pl.jwizard.core.api.AbstractMusicCmd
-import pl.jwizard.core.audio.PlayerManager
+import pl.jwizard.core.audio.player.PlayerManagerFacade
 import pl.jwizard.core.bot.BotConfiguration
+import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
+import pl.jwizard.core.command.arg.CommandArgument
 import pl.jwizard.core.command.reflect.CommandListenerBean
+import org.apache.commons.validator.routines.UrlValidator
 
-@CommandListenerBean(id = "play")
+@CommandListenerBean(id = BotCommand.PLAY)
 class PlayTrackCmd(
 	botConfiguration: BotConfiguration,
-	playerManager: PlayerManager
+	playerManagerFacade: PlayerManagerFacade
 ) : AbstractMusicCmd(
 	botConfiguration,
-	playerManager
+	playerManagerFacade
 ) {
+	init {
+		onSameChannelWithBot = true
+		selfJoinable = true
+	}
+
 	override fun executeMusicCmd(event: CompoundCommandEvent) {
+		var searchPhrase = getArg<String>(CommandArgument.TRACK, event)
+
+		val urlValidator = UrlValidator()
+		val isUrlPattern = urlValidator.isValid(searchPhrase)
+		searchPhrase = if (isUrlPattern) {
+			searchPhrase.replace(" ", "")
+		} else {
+			"ytsearch: $searchPhrase audio"
+		}
+		val musicManager = playerManagerFacade.findMusicManager(event)
+		musicManager.trackScheduler.setCompoundEvent(event)
+		playerManagerFacade.loadAndPlay(event, searchPhrase, isUrlPattern)
 	}
 }

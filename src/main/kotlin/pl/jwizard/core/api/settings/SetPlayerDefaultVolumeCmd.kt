@@ -6,10 +6,11 @@ package pl.jwizard.core.api.settings
 
 import pl.jwizard.core.api.AbstractSettingsCmd
 import pl.jwizard.core.bot.BotConfiguration
+import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.command.reflect.CommandListenerBean
 
-@CommandListenerBean(id = "setdefvol")
+@CommandListenerBean(id = BotCommand.SETDEFVOL)
 class SetPlayerDefaultVolumeCmd(
 	botConfiguration: BotConfiguration,
 ) : AbstractSettingsCmd(
