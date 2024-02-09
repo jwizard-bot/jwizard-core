@@ -3,6 +3,7 @@
     <option name="myName" value="Project Default" />
     <inspection_tool class="GrazieInspection" enabled="false" level="GRAMMAR_ERROR" enabled_by_default="false" />
     <inspection_tool class="LanguageDetectionInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="SameParameterValue" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false">
       <option name="processCode" value="true" />
       <option name="processLiterals" value="true" />
@@ -13,15 +14,18 @@
       <option name="ignoredModules">
         <list>
           <option value="jwizard-core" />
+          <option value="jwizard-core" />
         </list>
       </option>
       <option name="ignoredPackages">
         <list>
           <option value="org.apache.commons:commons-collections4:4.1" />
+          <option value="commons-collections:commons-collections:3.2.2" />
         </list>
       </option>
       <option name="ignoredReasons">
         <list>
+          <option value="Not exploitable" />
           <option value="Not exploitable" />
         </list>
       </option>
