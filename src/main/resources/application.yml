@@ -33,3 +33,9 @@ jwizard:
       - and
       - much
       - more...
+  pagination:
+    max-elements-per-page: 20
+    menu-alive-sec: 60
+  i18n:
+    locale-bundles:
+      - i18n-res/messages
