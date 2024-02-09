@@ -8,9 +8,13 @@ import java.io.IOException
 import kotlin.system.exitProcess
 import pl.jwizard.core.bot.BotProperties
 import pl.jwizard.core.command.AbstractCompositeCmd
+import pl.jwizard.core.command.CommandModule
+import pl.jwizard.core.exception.UtilException
 import pl.jwizard.core.http.ApiUrl
 import pl.jwizard.core.http.HttpClient
-import pl.jwizard.core.utils.AbstractLoggingBean
+import pl.jwizard.core.log.AbstractLoggingBean
+import pl.jwizard.core.settings.GuildSettings
+import com.fasterxml.jackson.core.type.TypeReference
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider
 import org.springframework.core.type.filter.AnnotationTypeFilter
@@ -22,10 +26,12 @@ class CommandLoader(
 	private val applicationContext: ApplicationContext,
 	private val botProperties: BotProperties,
 	private val httpClient: HttpClient,
+	private val guildSettings: GuildSettings,
 ) : AbstractLoggingBean(CommandLoader::class) {
 
-	final val commandsProxyContainer = mutableMapOf<String, CommandProxyData>()
-	private final val categoriesProxyContainer = mutableMapOf<String, String>()
+	final val commandsProxyContainer = mutableMapOf<String, AbstractCompositeCmd?>()
+	private final var localizedCommands = mapOf<String, CommandsResDto>()
+
 	private var scanner = ClassPathScanningCandidateComponentProvider(false)
 
 	init {
@@ -42,14 +48,18 @@ class CommandLoader(
 			if (response.code != 200) {
 				throw IOException(response.body?.string())
 			}
-			val (categories, commands) = httpClient
-				.mapResponseObject(response, CommandsResDto::class)
+			localizedCommands = httpClient
+				.mapResponseObject(response, object : TypeReference<Map<String, CommandsResDto>>() {})
 				?: throw IOException()
-			categories.forEach { (key, value) -> categoriesProxyContainer[key] = value }
-			commands.forEach { (key, value) -> commandsProxyContainer[key] = CommandProxyData(value) }
 
-			log.info("Fetched {} command categories from API: {}", categories.size, url)
-			log.info("Fetched {} commands from API: {}", commands.size, url)
+			val langs = localizedCommands.keys
+			val (categories, commands, modules) = localizedCommands.entries.first().value
+
+			CommandModule.checkContractWithApi(modules)
+			commands.forEach { commandsProxyContainer[it.key] = null }
+
+			log.info("Fetched {} command categories from API (langs: {}): {}", categories.size, langs, url)
+			log.info("Fetched {} commands from API (langs: {}): {}", commands.size, langs, url)
 		} catch (ex: IOException) {
 			log.error("Unable to load command categories and commands. Cause: {}", ex.message)
 			exitProcess(-1)
@@ -64,12 +74,12 @@ class CommandLoader(
 				val annotation = clazz.getAnnotation(CommandListenerBean::class.java)
 				annotation to clazz
 			}
-			.filter { (annotation, _) -> commandsProxyContainer.containsKey(annotation.id) }
+			.filter { (annotation, _) -> commandsProxyContainer.containsKey(annotation.id.commandName) }
 			.associate { (annotation, clazz) ->
 				annotation.id to applicationContext.getBean(clazz) as AbstractCompositeCmd
 			}
-		val beansIntersect = reflectCommands.keys.all { it in commandsProxyContainer.keys }
-		val apiListIntersect = commandsProxyContainer.keys.all { it in reflectCommands.keys }
+		val beansIntersect = reflectCommands.keys.all { it.commandName in commandsProxyContainer.keys }
+		val apiListIntersect = commandsProxyContainer.keys.all { it in reflectCommands.keys.map { c -> c.commandName } }
 
 		if (!(beansIntersect && apiListIntersect)) {
 			val intersectKeys = commandsProxyContainer.keys
@@ -78,14 +88,27 @@ class CommandLoader(
 			log.error("Contract between API and beans volated by at least one command. Cause by: {}", intersectKeys)
 			exitProcess(-1)
 		}
-		reflectCommands.forEach { (commandName, beanDefinition) ->
-			val commandProxyData = commandsProxyContainer[commandName] ?: return
-			commandProxyData.instance = beanDefinition
-			log.info(
-				"{}, {} ({}) - bean loaded via reflection",
-				commandName, commandProxyData.aliases, beanDefinition.javaClass.name
-			)
+		reflectCommands.forEach { (command, beanDefinition) ->
+			commandsProxyContainer[command.commandName] = beanDefinition
+			log.info("{} ({}) - bean loaded via reflection", command.commandName, beanDefinition.javaClass.name)
 		}
+	}
+
+	fun getCommandsBaseLang(lang: String): CommandsResDto =
+		localizedCommands[lang] ?: throw UtilException
+			.UnexpectedException("Unsupported lang: $lang during getting commands data")
+
+	fun getCommandBaseLang(command: String, lang: String): CommandDetailsDto? {
+		val (_, commands) = getCommandsBaseLang(lang)
+		return commands[command]
+	}
+
+	fun getModuleBaseLangInGuildId(guildId: String, module: CommandModule): String {
+		val guildDetails = guildSettings.getGuildProperties(guildId)
+		val lang = guildDetails.locale
+		val selectedModule = localizedCommands[lang] ?: throw UtilException
+			.UnexpectedException("Unsupported lang: $lang during getting modules data")
+		return selectedModule.modules[module.moduleName] ?: "unknow"
 	}
 
 	companion object {

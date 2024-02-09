@@ -11,4 +11,6 @@ data class DefferedEmbed(
 	val unit: TimeUnit
 ) {
 	constructor() : this(0, TimeUnit.MICROSECONDS)
+	
+	fun isDefault(): Boolean = duration == 0L && unit == TimeUnit.MICROSECONDS
 }
