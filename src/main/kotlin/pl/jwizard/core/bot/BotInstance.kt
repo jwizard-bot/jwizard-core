@@ -7,18 +7,19 @@ package pl.jwizard.core.bot
 import javax.security.auth.login.LoginException
 import kotlin.system.exitProcess
 import pl.jwizard.core.audio.AloneOnChannelListener
-import pl.jwizard.core.command.CommandProxyListener
-import pl.jwizard.core.command.SlashCommandRegisterer
+import pl.jwizard.core.audio.player.AudioPlayerManager
+import pl.jwizard.core.audio.player.PlayerManagerFacade
 import pl.jwizard.core.command.reflect.CommandLoader
 import pl.jwizard.core.http.AuthSessionHandler
+import pl.jwizard.core.log.AbstractLoggingBean
 import pl.jwizard.core.seq.ActivityStatusSequencer
-import pl.jwizard.core.utils.AbstractLoggingBean
 import org.springframework.stereotype.Component
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Activity
+import net.dv8tion.jda.api.events.ShutdownEvent
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 
@@ -26,15 +27,17 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag
 class BotInstance(
 	private val botProperties: BotProperties,
 	private val commandLoader: CommandLoader,
-	private val commandProxyListener: CommandProxyListener,
-	private val slashCommandRegisterer: SlashCommandRegisterer,
-	private val botStatusEventHandler: BotStatusEventHandler,
+	private val botEventHandler: BotEventHandler,
 	private val aloneOnChannelListener: AloneOnChannelListener,
 	private val authSessionHandler: AuthSessionHandler,
 	private val activityStatusSequencer: ActivityStatusSequencer,
+	private val audioPlayerManager: AudioPlayerManager,
+	private val playerManagerFacade: PlayerManagerFacade,
+	private val botConfiguration: BotConfiguration,
 ) : AbstractLoggingBean(BotInstance::class) {
 
 	private lateinit var jda: JDA
+	private var shuttingDown = false
 
 	fun start() {
 		log.info("Bot instance is warming up...")
@@ -44,28 +47,23 @@ class BotInstance(
 			commandLoader.fetchCommandsFromApi()
 			commandLoader.reflectAndLoadCommands()
 
-			val eventListeners = listOf(
-				botStatusEventHandler,
-				commandProxyListener,
-				slashCommandRegisterer
-			)
 			jda = JDABuilder
 				.create(botProperties.instance.authToken, GATEWAY_INTENTS)
 				.enableCache(ENABLED_CACHE_FLAGS)
 				.disableCache(DISABLED_CACHE_FLAGS)
 				.setActivity(Activity.listening("Loading..."))
 				.setStatus(OnlineStatus.ONLINE)
+				.addEventListeners(botEventHandler, botConfiguration.eventWaiter)
 				.setBulkDeleteSplittingEnabled(true)
 				.build()
-			for (listener in eventListeners) {
-				jda.addEventListener(listener)
-				log.info("Adding event listener: {} to JDA instance", listener::class.simpleName)
-			}
-			jda.awaitReady()
+				.awaitReady()
+
+			botConfiguration.setTitleAndIcon(jda)
 
 			activityStatusSequencer.loadSplashes()
 			activityStatusSequencer.initFixedDelay(jda)
-			
+
+			audioPlayerManager.initialize()
 			aloneOnChannelListener.initialize(jda)
 
 			log.info("Add bot into Discord server via link: {}", jda.getInviteUrl(PERMISSIONS))
@@ -76,6 +74,23 @@ class BotInstance(
 			printErrorAndExit("Unexpected error occured. Cause: ${ex.message}")
 		} catch (ex: InterruptedException) {
 			printErrorAndExit("JDA Websocket threadpool connecting was interrupted. Cause: ${ex.message}")
+		}
+	}
+
+	fun shutdown(event: ShutdownEvent) {
+		if (!shuttingDown) {
+			shuttingDown = true
+			if (event.jda.status == JDA.Status.SHUTTING_DOWN) {
+				log.info("Shutting down bot instance...")
+				for (guild in event.jda.guilds) {
+					playerManagerFacade.findMusicManager(guild)?.actions?.clearAndDestroy(false)
+					guild.audioManager.closeAudioConnection()
+				}
+				botConfiguration.threadPool.shutdownNow()
+				event.jda.shutdown()
+				log.info("Threadpool was cleared and current bot instance was terminated")
+				exitProcess(0)
+			}
 		}
 	}
 
