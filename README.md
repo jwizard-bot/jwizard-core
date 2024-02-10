@@ -1,5 +1,5 @@
 <p align="center">
-    <img src=".github/gh-banner.png" alt="">
+    <img src=".github/banner.png" alt="">
 </p>
 
 This repo contains music bot core (JDA handler), music client (provided by Lavaplayer) and command listener repo with
