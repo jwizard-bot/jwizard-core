@@ -59,7 +59,7 @@ class AudioPlayerActivityEventsHandler(
 
 	fun setBotDeafen(event: GuildVoiceJoinEvent) {
 		val guild = event.guild
-		if (event.member.user.isBot) {
+		if (event.member.id == guild.selfMember.id) {
 			guild.audioManager.isSelfDeafened = true
 			guild.selfMember.deafen(true).complete()
 		}
