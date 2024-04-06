@@ -9,7 +9,6 @@ import pl.jwizard.core.audio.ExtendedAudioTrackInfo
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.DefferedEmbed
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
-import pl.jwizard.core.command.embed.EmbedColor
 import pl.jwizard.core.exception.I18nExceptionLocale
 import pl.jwizard.core.i18n.I18nResLocale
 import pl.jwizard.core.log.AbstractLoggingBean
@@ -17,7 +16,6 @@ import pl.jwizard.core.util.Formatter
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
-import net.dv8tion.jda.api.entities.MessageEmbed
 
 class TrackSchedulerFacade(
 	private val trackScheduler: TrackScheduler
@@ -50,8 +48,8 @@ class TrackSchedulerFacade(
 		}
 		val event = trackScheduler.event
 		val audioTrackInfo = ExtendedAudioTrackInfo(audioPlayer.playingTrack)
-		val messageEmbed: MessageEmbed = if (audioPlayer.isPaused) {
-			val messageEmbed = createTrackMessage(
+		if (audioPlayer.isPaused) {
+			val messageEmbed = CustomEmbedBuilder(event, botConfiguration).buildTrackMessage(
 				placeholder = I18nResLocale.ON_TRACK_START_ON_PAUSED,
 				params = mapOf(
 					"track" to Formatter.createRichTrackTitle(audioTrackInfo),
@@ -60,19 +58,14 @@ class TrackSchedulerFacade(
 				thumbnailUrl = audioTrackInfo.thumbnailUrl
 			)
 			jdaLog.info(event, "Staring playing audio track: ${audioTrackInfo.title} when audio player is paused")
-			messageEmbed
-		} else {
-			val messageEmbed = createTrackMessage(
-				placeholder = I18nResLocale.ON_TRACK_START,
-				params = mapOf(
-					"track" to Formatter.createRichTrackTitle(audioTrackInfo),
-				),
-				thumbnailUrl = audioTrackInfo.thumbnailUrl
+			trackScheduler.event.instantlySendEmbedMessage(
+				messageEmbed,
+				DefferedEmbed(1, TimeUnit.SECONDS),
+				legacyTransport = true
 			)
+		} else {
 			jdaLog.info(event, "Staring playing audio track: ${audioTrackInfo.title}")
-			messageEmbed
 		}
-		trackScheduler.event.instantlySendEmbedMessage(messageEmbed, DefferedEmbed(1, TimeUnit.SECONDS))
 		if (actions.infiniteRepeating) {
 			actions.nextTrackInfoDisabled = true
 		}
@@ -149,14 +142,4 @@ class TrackSchedulerFacade(
 		}
 		jdaLog.error(event, "Unexpected issue while playing track: ${track.info.title}. Cause: ${ex.message}")
 	}
-
-	private fun createTrackMessage(
-		placeholder: I18nResLocale,
-		params: Map<String, Any>,
-		thumbnailUrl: String?,
-	) = CustomEmbedBuilder(trackScheduler.event, botConfiguration)
-		.addDescription(placeholder, params)
-		.addColor(EmbedColor.WHITE)
-		.addThumbnail(thumbnailUrl)
-		.build()
 }

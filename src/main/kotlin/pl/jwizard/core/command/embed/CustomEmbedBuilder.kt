@@ -9,6 +9,7 @@ import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.exception.AbstractBotException
 import pl.jwizard.core.exception.I18nExceptionLocale
 import pl.jwizard.core.i18n.I18nLocale
+import pl.jwizard.core.i18n.I18nResLocale
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 
@@ -112,4 +113,14 @@ class CustomEmbedBuilder(
 		.build()
 
 	fun buildBaseMessage(placeholder: I18nLocale): MessageEmbed = buildBaseMessage(placeholder, emptyMap())
+
+	fun buildTrackMessage(
+		placeholder: I18nResLocale,
+		params: Map<String, Any>,
+		thumbnailUrl: String?,
+	) = this
+		.addDescription(placeholder, params)
+		.addColor(EmbedColor.WHITE)
+		.addThumbnail(thumbnailUrl)
+		.build()
 }

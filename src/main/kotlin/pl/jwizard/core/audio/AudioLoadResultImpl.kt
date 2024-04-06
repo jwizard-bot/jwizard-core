@@ -88,16 +88,25 @@ class AudioLoadResultImpl(
 	private fun addNewAudioTrackToQueue(member: Member, track: AudioTrack) {
 		track.userData = member
 		musicManager.actions.addToQueueAndOffer(track)
-		if (!musicManager.queue.isEmpty()) {
+		val messageEmbed = if (!musicManager.queue.isEmpty()) {
 			val trackPosition = if (musicManager.queue.size == 1) {
 				botConfiguration.i18nService.getMessage(I18nMiscLocale.NEXT_TRACK_INDEX_MESS, event.guildId)
 			} else {
 				musicManager.queue.size.toString()
 			}
-			val messageEmbed = createSingleTrackMessage(track, trackPosition)
-			event.instantlySendEmbedMessage(messageEmbed)
 			jdaLog.info(event, "New audio track: ${track.info.title} was added to queue")
+			createSingleTrackMessage(track, trackPosition)
+		} else {
+			val audioTrackInfo = ExtendedAudioTrackInfo(track)
+			CustomEmbedBuilder(event, botConfiguration).buildTrackMessage(
+				placeholder = I18nResLocale.ON_TRACK_START,
+				params = mapOf(
+					"track" to Formatter.createRichTrackTitle(audioTrackInfo),
+				),
+				thumbnailUrl = audioTrackInfo.thumbnailUrl
+			)
 		}
+		event.instantlySendEmbedMessage(messageEmbed)
 	}
 
 	private fun createSingleTrackMessage(track: AudioTrack, trackPosition: String): MessageEmbed {
