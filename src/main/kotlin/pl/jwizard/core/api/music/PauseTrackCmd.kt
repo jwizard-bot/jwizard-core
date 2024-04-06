@@ -53,7 +53,6 @@ class PauseTrackCmd(
 			placeholder = I18nResLocale.PAUSED_TRACK,
 			params = mapOf(
 				"track" to Formatter.createRichTrackTitle(track),
-				"invoker" to event.authorTag,
 				"resumeCmd" to BotCommand.RESUME.parseWithPrefix(botConfiguration, event),
 			),
 		)
