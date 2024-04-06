@@ -64,19 +64,25 @@ class AudioLoadResultImpl(
 	}
 
 	override fun noMatches() {
-		val messageEmbed = CustomEmbedBuilder(event, botConfiguration).buildErrorMessage(
-			placeholder = I18nExceptionLocale.NOT_FOUND_TRACK
-		)
-		event.instantlySendEmbedMessage(messageEmbed)
-		jdaLog.info(event, "Not available to find provided audio track/playlist")
+		onError(I18nExceptionLocale.NOT_FOUND_TRACK, "Not available to find provided audio track/playlist")
 	}
 
 	override fun loadFailed(ex: FriendlyException?) {
-		val messageEmbed = CustomEmbedBuilder(event, botConfiguration).buildErrorMessage(
-			placeholder = I18nExceptionLocale.ISSUE_WHILE_LOADING_TRACK
+		onError(
+			I18nExceptionLocale.ISSUE_WHILE_LOADING_TRACK,
+			"Unexpected exception during load audio track/playlist. Cause ${ex?.message}"
 		)
+	}
+
+	private fun onError(placeholder: I18nExceptionLocale, log: String) {
+		val messageEmbed = CustomEmbedBuilder(event, botConfiguration).buildErrorMessage(placeholder)
+		val actions = musicManager.trackScheduler.schedulerActions
+		if (musicManager.queue.isEmpty() && musicManager.audioPlayer.playingTrack == null) {
+			actions.leaveAndSendMessageAfterInactivity()
+		}
 		event.instantlySendEmbedMessage(messageEmbed)
-		jdaLog.info(event, "Unexpected exception during load audio track/playlist. Cause ${ex?.message}")
+		jdaLog.error(event, log)
+
 	}
 
 	private fun addNewAudioTrackToQueue(member: Member, track: AudioTrack) {

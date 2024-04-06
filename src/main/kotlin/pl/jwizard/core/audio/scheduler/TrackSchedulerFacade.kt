@@ -142,6 +142,11 @@ class TrackSchedulerFacade(
 			placeholder = I18nExceptionLocale.ISSUE_WHILE_PLAYING_TRACK,
 		)
 		event.instantlySendEmbedMessage(messageEmbed)
+		// clear queue after unexpected exception
+		val actions = trackScheduler.schedulerActions
+		if (actions.trackQueue.isEmpty() && audioPlayer.playingTrack == null) {
+			actions.leaveAndSendMessageAfterInactivity()
+		}
 		jdaLog.error(event, "Unexpected issue while playing track: ${track.info.title}. Cause: ${ex.message}")
 	}
 
