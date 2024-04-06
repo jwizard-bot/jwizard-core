@@ -12,6 +12,7 @@ import pl.jwizard.core.util.BotUtils
 import net.dv8tion.jda.api.entities.*
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.interactions.components.Component
 
 data class CompoundCommandEvent(
 	val guild: Guild?,
@@ -26,7 +27,7 @@ data class CompoundCommandEvent(
 	val textChannel: TextChannel,
 	val commandArgs: MutableMap<CommandArgument, CommandArgumentData>,
 	val systemTextChannel: TextChannel,
-	val messageEmbeds: MutableList<MessageEmbed>,
+	var interactiveMessage: InteractiveMessage,
 	val slashCommandEvent: SlashCommandEvent?,
 	var appendAfterEmbeds: (() -> Unit)?,
 ) {
@@ -45,7 +46,7 @@ data class CompoundCommandEvent(
 		textChannel = event.channel,
 		commandArgs = mutableMapOf(),
 		systemTextChannel = BotUtils.getSystemTextChannel(event.guild),
-		messageEmbeds = mutableListOf(),
+		interactiveMessage = InteractiveMessage(),
 		slashCommandEvent = null,
 		appendAfterEmbeds = null,
 	)
@@ -63,14 +64,19 @@ data class CompoundCommandEvent(
 		textChannel = event.textChannel,
 		commandArgs = mutableMapOf(),
 		systemTextChannel = BotUtils.getSystemTextChannel(event.guild!!),
-		messageEmbeds = mutableListOf(),
+		interactiveMessage = InteractiveMessage(),
 		slashCommandEvent = event,
 		appendAfterEmbeds = null,
 	)
 
+	fun addWebhookActions(vararg components: Component) {
+		components.forEach { interactiveMessage.actionComponents.add(it) }
+	}
+
 	fun appendEmbedMessage(messageEmbed: MessageEmbed) {
-		if (messageEmbeds.size < 10) {
-			messageEmbeds.add(messageEmbed)
+		val (embedMessages) = interactiveMessage
+		if (embedMessages.size < 10) {
+			embedMessages.add(messageEmbed)
 		}
 	}
 
@@ -79,17 +85,35 @@ data class CompoundCommandEvent(
 		this.appendAfterEmbeds = appendAfterEmbeds
 	}
 
-	fun instantlySendEmbedMessage(messageEmbed: MessageEmbed, delay: DefferedEmbed) {
+	fun instantlySendEmbedMessage(
+		messageEmbed: MessageEmbed,
+		delay: DefferedEmbed,
+		legacyTransport: Boolean = false,
+	) {
+		instantlySendEmbedMessage(messageEmbed, delay, emptyList(), legacyTransport)
+	}
+
+	fun instantlySendEmbedMessage(messageEmbed: MessageEmbed, legacyTransport: Boolean = false) =
+		instantlySendEmbedMessage(messageEmbed, DefferedEmbed(), emptyList(), legacyTransport)
+	
+	private fun instantlySendEmbedMessage(
+		messageEmbed: MessageEmbed,
+		delay: DefferedEmbed,
+		actionComponents: List<Component>,
+		legacyTransport: Boolean = false,
+	) {
 		val (duration, unit) = delay
-		val deferredMessage = if (slashCommandEvent?.hook?.isExpired == false) {
-			slashCommandEvent.hook.sendMessageEmbeds(messageEmbed)
+		val deferredMessage = if (slashCommandEvent?.hook?.isExpired == false && !legacyTransport) {
+			val message = slashCommandEvent.hook.sendMessageEmbeds(messageEmbed)
+			if (actionComponents.isNotEmpty()) {
+				message.addActionRow(actionComponents)
+			}
+			message
 		} else {
 			textChannel.sendMessageEmbeds(messageEmbed)
 		}
 		deferredMessage.queueAfter(duration, unit)
 	}
-
-	fun instantlySendEmbedMessage(messageEmbed: MessageEmbed) = instantlySendEmbedMessage(messageEmbed, DefferedEmbed())
 
 	fun checkIfInvokerIsNotSenderOrAdmin(guildSettings: GuildSettings, track: ExtendedAudioTrackInfo): Boolean {
 		val trackSender = (track.audioTrack.userData as Member).user

@@ -142,7 +142,7 @@ class GeneralVotingSystemHandler(
 			predictorData.response.onFailure
 		}
 		val voteFinishData = VoteFinishData(predictorData)
-		event.instantlySendEmbedMessage(endingCallback(voteFinishData))
+		event.instantlySendEmbedMessage(endingCallback(voteFinishData), legacyTransport = true)
 		clearVotingState(predictorData)
 	}
 
@@ -152,7 +152,7 @@ class GeneralVotingSystemHandler(
 		val voteFinishData = VoteFinishData(predictorData)
 		jdaLog.info(event, "Voting execution was timeouted")
 
-		event.instantlySendEmbedMessage(predictorData.response.onTimeout(voteFinishData))
+		event.instantlySendEmbedMessage(predictorData.response.onTimeout(voteFinishData), legacyTransport = true)
 		clearVotingState(predictorData)
 	}
 

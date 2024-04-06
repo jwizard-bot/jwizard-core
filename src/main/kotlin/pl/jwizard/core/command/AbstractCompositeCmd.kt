@@ -14,7 +14,6 @@ import pl.jwizard.core.command.embed.EmbedColor
 import pl.jwizard.core.exception.AbstractBotException
 import pl.jwizard.core.exception.UtilException
 import com.jagrosh.jdautilities.menu.Paginator
-import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.exceptions.PermissionException
 
 abstract class AbstractCompositeCmd(
@@ -24,18 +23,18 @@ abstract class AbstractCompositeCmd(
 	protected val i18nService = botConfiguration.i18nService
 	protected val commandLoader = botConfiguration.commandLoader
 
-	internal fun performCommand(event: CompoundCommandEvent): MutableList<MessageEmbed> {
+	internal fun performCommand(event: CompoundCommandEvent): InteractiveMessage {
 		try {
 			execute(event)
 		} catch (ex: AbstractBotException) {
-			event.messageEmbeds.clear()
+			event.interactiveMessage.messageEmbeds.clear()
 			val embedMessage = CustomEmbedBuilder(event, botConfiguration).buildErrorMessage(
 				placeholder = ex.i18nLocale,
 				params = ex.variables
 			)
 			event.appendEmbedMessage(embedMessage)
 		}
-		return event.messageEmbeds
+		return event.interactiveMessage
 	}
 
 	protected fun checkIfCommandModuleIsEnabled(

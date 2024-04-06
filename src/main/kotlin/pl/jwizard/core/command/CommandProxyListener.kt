@@ -18,7 +18,6 @@ import pl.jwizard.core.settings.GuildSettings
 import pl.jwizard.core.util.Formatter
 import org.springframework.stereotype.Component
 import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.interactions.commands.OptionMapping
@@ -76,15 +75,16 @@ class CommandProxyListener(
 				}
 				compoundCommandEvent.commandArgs[argKey!!] = CommandArgumentData(optionMapping, arg.type)
 			}
-			var messages = mutableListOf<MessageEmbed>()
+			var interactiveMessage = InteractiveMessage()
 			try {
 				val command = commandLoader.commandsProxyContainer[commandName]
-				messages = command?.performCommand(compoundCommandEvent) ?: return
+				interactiveMessage = command?.performCommand(compoundCommandEvent) ?: return
 			} catch (ex: NumberFormatException) {
 				throwSyntaxException(compoundCommandEvent, commandName, commandDetails, false)
 			}
-			if (messages.isNotEmpty()) {
-				val defferedSender = event.channel.sendMessageEmbeds(messages)
+			val (messageEmbeds) = interactiveMessage
+			if (messageEmbeds.isNotEmpty()) {
+				val defferedSender = event.channel.sendMessageEmbeds(messageEmbeds)
 				sendEmbeds(defferedSender, compoundCommandEvent)
 			}
 		} catch (ex: AbstractBotException) {
@@ -116,20 +116,25 @@ class CommandProxyListener(
 				}
 				compoundCommandEvent.commandArgs[argKey!!] = CommandArgumentData(optionMapping.asString, arg.type)
 			}
-			var messages = mutableListOf<MessageEmbed>()
+			var interactiveMessage = InteractiveMessage()
 			try {
 				val command = commandLoader.commandsProxyContainer[commandName] ?: return
-				messages = command.performCommand(compoundCommandEvent)
+				interactiveMessage = command.performCommand(compoundCommandEvent)
 			} catch (ex: NumberFormatException) {
 				throwSyntaxException(compoundCommandEvent, commandName, commandDetails, true)
 			}
 			event.deferReply().queue()
 
-			if (compoundCommandEvent.messageEmbeds.isNotEmpty()) {
+			val (messageEmbeds, actionComponents) = interactiveMessage
+			if (compoundCommandEvent.interactiveMessage.messageEmbeds.isNotEmpty()) {
 				val defferedSender = if (!event.hook.isExpired) {
-					event.hook.sendMessageEmbeds(compoundCommandEvent.messageEmbeds)
+					val message = event.hook.sendMessageEmbeds(messageEmbeds)
+					if (actionComponents.isNotEmpty()) {
+						message.addActionRow(actionComponents)
+					}
+					message
 				} else {
-					event.channel.sendMessageEmbeds(messages)
+					event.channel.sendMessageEmbeds(messageEmbeds)
 				}
 				sendEmbeds(defferedSender, compoundCommandEvent)
 			}

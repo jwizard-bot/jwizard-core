@@ -83,7 +83,7 @@ class TrackSchedulerFacade(
 			val messageEmbed = CustomEmbedBuilder(event, botConfiguration).buildBaseMessage(
 				placeholder = I18nResLocale.ON_END_PLAYBACK_QUEUE,
 			)
-			event.instantlySendEmbedMessage(messageEmbed)
+			event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)
 
 			jdaLog.info(event, "End of playing queue tracks")
 			if (!trackScheduler.lockedGuilds.contains(event.guildId)) {
@@ -117,7 +117,7 @@ class TrackSchedulerFacade(
 					"elapsedRepeats" to actions.countOfRepeats,
 				)
 			)
-			event.textChannel.sendMessageEmbeds(messageEmbed).queue()
+			event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)
 			jdaLog.info(
 				event, "Repeat $currentRepeat times of track: ${track.info.title} from elapsed " +
 					"${actions.countOfRepeats} repeats"
@@ -134,7 +134,7 @@ class TrackSchedulerFacade(
 		val messageEmbed = CustomEmbedBuilder(event, botConfiguration).buildErrorMessage(
 			placeholder = I18nExceptionLocale.ISSUE_WHILE_PLAYING_TRACK,
 		)
-		event.instantlySendEmbedMessage(messageEmbed)
+		event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)
 		// clear queue after unexpected exception
 		val actions = trackScheduler.schedulerActions
 		if (actions.trackQueue.isEmpty() && audioPlayer.playingTrack == null) {

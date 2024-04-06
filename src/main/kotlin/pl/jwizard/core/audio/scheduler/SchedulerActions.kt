@@ -106,7 +106,7 @@ class SchedulerActions(
 			val messageEmbed = CustomEmbedBuilder(trackScheduler.event, botConfiguration).buildBaseMessage(
 				placeholder = I18nResLocale.LEAVE_EMPTY_CHANNEL
 			)
-			trackScheduler.event.instantlySendEmbedMessage(messageEmbed)
+			trackScheduler.event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)
 		}
 		onClearing = false
 		jdaLog.info(trackScheduler.event, "Remove playing track and clear queue")
@@ -127,7 +127,7 @@ class SchedulerActions(
 				botConfiguration.threadPool.submit { guild?.audioManager?.closeAudioConnection() }
 				log.info("Audio connection threadpool for guild: {} was closed", Formatter.guildTag(guild))
 
-				trackScheduler.event.instantlySendEmbedMessage(messageEmbed)
+				trackScheduler.event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)
 				jdaLog.info(
 					trackScheduler.event,
 					"Leaved voice channel after $timeToLeaveChannel seconds of inactivity"
