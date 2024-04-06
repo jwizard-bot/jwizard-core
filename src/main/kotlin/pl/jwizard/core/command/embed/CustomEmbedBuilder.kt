@@ -111,11 +111,5 @@ class CustomEmbedBuilder(
 		.setColor(EmbedColor.WHITE.color())
 		.build()
 
-	fun buildBaseMessage(rawMessage: String): MessageEmbed = this
-		.addAuthor()
-		.setDescription(rawMessage)
-		.setColor(EmbedColor.WHITE.color())
-		.build()
-
 	fun buildBaseMessage(placeholder: I18nLocale): MessageEmbed = buildBaseMessage(placeholder, emptyMap())
 }

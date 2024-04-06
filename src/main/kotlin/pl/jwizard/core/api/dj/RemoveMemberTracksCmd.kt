@@ -11,6 +11,7 @@ import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.command.arg.CommandArgument
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
+import pl.jwizard.core.command.embed.EmbedColor
 import pl.jwizard.core.command.reflect.CommandListenerBean
 import pl.jwizard.core.i18n.I18nResLocale
 import pl.jwizard.core.util.Formatter
@@ -35,13 +36,17 @@ class RemoveMemberTracksCmd(
 			.mapIndexed { index, track -> Formatter.createRichPageableTrackInfo(index, track) }
 
 		val removedTracksListPaginator = createDefaultPaginator(pageableRemovedTracks)
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration).buildBaseMessage(
-			placeholder = I18nResLocale.REMOVED_TRACKS_FROM_SELECTED_MEMBER,
-			params = mapOf(
-				"countOfRemovedTracks" to pageableRemovedTracks.size,
-				"memberTag" to removedTrackInfo.member.user.asTag,
-			),
-		)
+		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+			.addAuthor()
+			.addDescription(
+				placeholder = I18nResLocale.REMOVED_TRACKS_FROM_SELECTED_MEMBER,
+				params = mapOf(
+					"countOfRemovedTracks" to pageableRemovedTracks.size,
+					"memberTag" to removedTrackInfo.member.user.asTag,
+				)
+			)
+			.addColor(EmbedColor.WHITE)
+			.build()
 		event.appendEmbedMessage(embedMessage) { removedTracksListPaginator.display(event.textChannel) }
 	}
 }

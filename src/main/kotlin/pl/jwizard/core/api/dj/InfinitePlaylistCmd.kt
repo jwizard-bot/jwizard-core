@@ -10,6 +10,7 @@ import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
+import pl.jwizard.core.command.embed.EmbedColor
 import pl.jwizard.core.command.reflect.CommandListenerBean
 import pl.jwizard.core.i18n.I18nResLocale
 
@@ -28,16 +29,20 @@ class InfinitePlaylistCmd(
 
 	override fun executeDjCmd(event: CompoundCommandEvent) {
 		val isInfiniteRepeating = playerManagerFacade.toggleInfiniteLoopPlaylist(event)
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration).buildBaseMessage(
-			placeholder = if (isInfiniteRepeating) {
-				I18nResLocale.ADD_PLAYLIST_TO_INFINITE_LOOP
-			} else {
-				I18nResLocale.REMOVED_PLAYLIST_FROM_INFINITE_LOOP
-			},
-			params = mapOf(
-				"playlistLoopCmd" to BotCommand.INFINITE.parseWithPrefix(botConfiguration, event),
-			),
-		)
+		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+			.addAuthor()
+			.addDescription(
+				placeholder = if (isInfiniteRepeating) {
+					I18nResLocale.ADD_PLAYLIST_TO_INFINITE_LOOP
+				} else {
+					I18nResLocale.REMOVED_PLAYLIST_FROM_INFINITE_LOOP
+				},
+				params = mapOf(
+					"playlistLoopCmd" to BotCommand.INFINITE.parseWithPrefix(botConfiguration, event),
+				)
+			)
+			.addColor(EmbedColor.WHITE)
+			.build()
 		event.appendEmbedMessage(embedMessage)
 	}
 }

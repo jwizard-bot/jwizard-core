@@ -9,6 +9,7 @@ import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
+import pl.jwizard.core.command.embed.EmbedColor
 import pl.jwizard.core.command.reflect.CommandListenerBean
 import pl.jwizard.core.i18n.I18nLocale
 import pl.jwizard.core.i18n.I18nMiscLocale
@@ -88,9 +89,12 @@ class DebugCmd(
 		propertiesData.add(propertyFormatter(I18nMiscLocale.JDA_UTILITIES_VERSION, JDAUtilitiesInfo.VERSION, guildId))
 		propertiesData.add(propertyFormatter(I18nMiscLocale.LAVAPLAYER_VERSION, PlayerLibrary.VERSION, guildId))
 
-		val messageEmbed = CustomEmbedBuilder(event, botConfiguration).buildBaseMessage(
-			placeholder = I18nResLocale.SYSTEM_DATA
-		)
+		val messageEmbed = CustomEmbedBuilder(event, botConfiguration)
+			.addAuthor()
+			.addDescription(placeholder = I18nResLocale.SYSTEM_DATA)
+			.addColor(EmbedColor.WHITE)
+			.build()
+
 		val propertiesDataPaginator = createDefaultPaginator(propertiesData)
 		event.appendEmbedMessage(messageEmbed) { propertiesDataPaginator.display(event.textChannel) }
 	}

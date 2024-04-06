@@ -10,6 +10,7 @@ import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
+import pl.jwizard.core.command.embed.EmbedColor
 import pl.jwizard.core.command.reflect.CommandListenerBean
 import pl.jwizard.core.i18n.I18nResLocale
 
@@ -27,12 +28,16 @@ class ResetPlayerVolumeCmd(
 
 	override fun executeDjCmd(event: CompoundCommandEvent) {
 		val defaultVolume = playerManagerFacade.findMusicManager(event).resetPlayerVolume()
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration).buildBaseMessage(
-			placeholder = I18nResLocale.RESET_AUDIO_PLAYER_VOLUME,
-			params = mapOf(
-				"defVolume" to defaultVolume,
-			),
-		)
+		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+			.addAuthor()
+			.addDescription(
+				placeholder = I18nResLocale.RESET_AUDIO_PLAYER_VOLUME,
+				params = mapOf(
+					"defVolume" to defaultVolume,
+				)
+			)
+			.addColor(EmbedColor.WHITE)
+			.build()
 		event.appendEmbedMessage(embedMessage)
 	}
 }

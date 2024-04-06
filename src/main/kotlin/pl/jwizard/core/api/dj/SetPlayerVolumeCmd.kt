@@ -11,6 +11,7 @@ import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.command.arg.CommandArgument
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
+import pl.jwizard.core.command.embed.EmbedColor
 import pl.jwizard.core.command.reflect.CommandListenerBean
 import pl.jwizard.core.exception.CommandException
 import pl.jwizard.core.i18n.I18nResLocale
@@ -35,13 +36,17 @@ class SetPlayerVolumeCmd(
 			throw CommandException.VolumeUnitsOutOfBoundsException(event, 0, 150)
 		}
 		playerManagerFacade.setPlayerVolume(event, newVolumeUnits)
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration).buildBaseMessage(
-			placeholder = I18nResLocale.SET_CURRENT_AUDIO_PLAYER_VOLUME,
-			params = mapOf(
-				"previousVolume" to currentVolume,
-				"setVolume" to newVolumeUnits,
-			),
-		)
+		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+			.addAuthor()
+			.addDescription(
+				placeholder = I18nResLocale.SET_CURRENT_AUDIO_PLAYER_VOLUME,
+				params = mapOf(
+					"previousVolume" to currentVolume,
+					"setVolume" to newVolumeUnits,
+				)
+			)
+			.addColor(EmbedColor.WHITE)
+			.build()
 		event.appendEmbedMessage(embedMessage)
 	}
 }

@@ -10,11 +10,11 @@ import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
+import pl.jwizard.core.command.embed.EmbedColor
 import pl.jwizard.core.command.reflect.CommandListenerBean
 import pl.jwizard.core.i18n.I18nResLocale
 import pl.jwizard.core.util.Formatter
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo
-import net.dv8tion.jda.api.entities.MessageEmbed
 
 @CommandListenerBean(id = BotCommand.STOP)
 class StopClearQueueCmd(
@@ -35,21 +35,25 @@ class StopClearQueueCmd(
 		actions.clearAndDestroy(false)
 		actions.leaveAndSendMessageAfterInactivity()
 
-		val messageEmbed: MessageEmbed = if (currentTrack == null) {
-			CustomEmbedBuilder(event, botConfiguration).buildBaseMessage(
+		val messageEmbedBuilder = CustomEmbedBuilder(event, botConfiguration)
+			.addAuthor()
+			.addColor(EmbedColor.WHITE)
+
+		val messageEmbed: CustomEmbedBuilder = if (currentTrack == null) {
+			messageEmbedBuilder.addDescription(
 				placeholder = I18nResLocale.CLEAR_QUEUE,
 				params = mapOf(
 					"countOfTracks" to actions.trackQueue.size,
-				),
+				)
 			)
 		} else {
-			CustomEmbedBuilder(event, botConfiguration).buildBaseMessage(
+			messageEmbedBuilder.addDescription(
 				placeholder = I18nResLocale.SKIPPED_CURRENT_TRACK_AND_CLEAR_QUEUE,
 				params = mapOf(
 					"currentTrack" to Formatter.createRichTrackTitle(currentTrack as AudioTrackInfo),
-				),
+				)
 			)
 		}
-		event.appendEmbedMessage(messageEmbed)
+		event.appendEmbedMessage(messageEmbed.build())
 	}
 }

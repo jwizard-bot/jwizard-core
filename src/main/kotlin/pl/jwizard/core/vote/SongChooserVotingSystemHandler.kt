@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
+import pl.jwizard.core.command.embed.EmbedColor
 import pl.jwizard.core.command.embed.UnicodeEmoji
 import pl.jwizard.core.i18n.I18nMiscLocale
 import pl.jwizard.core.i18n.I18nResLocale
@@ -68,7 +69,11 @@ class SongChooserVotingSystemHandler(
 			joiner.add(Formatter.createRichTrackTitle(trimmedTracks[index]))
 			joiner.add("\n")
 		}
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration).buildBaseMessage(joiner.toString())
+		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+			.addAuthor()
+			.setDescription(joiner.toString())
+			.setColor(EmbedColor.WHITE.color())
+			.build()
 
 		val hook = event.slashCommandEvent?.hook
 		val messageAction = if (hook?.isExpired == false) {

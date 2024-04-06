@@ -48,6 +48,7 @@ class PauseTrackCmd(
 		event: CompoundCommandEvent,
 		track: ExtendedAudioTrackInfo,
 	) = CustomEmbedBuilder(event, botConfiguration)
+		.addAuthor()
 		.addDescription(
 			placeholder = I18nResLocale.PAUSED_TRACK,
 			params = mapOf(
@@ -67,6 +68,7 @@ class PauseTrackCmd(
 			DateUtils.convertMilisToDTF(track.maxDuration)
 		)
 		.addColor(EmbedColor.WHITE)
+		.addThumbnail(track.thumbnailUrl)
 		.build()
 
 	companion object {
