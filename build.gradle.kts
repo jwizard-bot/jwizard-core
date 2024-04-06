@@ -26,6 +26,7 @@ repositories {
 	maven { url = uri("https://repo.spring.io/snapshot") }
 	maven { url = uri("https://m2.dv8tion.net/releases") }
 	maven { url = uri("https://m2.chew.pro/releases") }
+	maven { url = uri("https://maven.lavalink.dev/snapshots") }
 }
 
 noArg {
@@ -39,7 +40,7 @@ configurations.all {
 dependencies {
 	implementation("net.dv8tion:JDA:4.4.1_353")
 	implementation("pw.chew:jda-chewtils:1.24.1")
-	implementation("dev.arbjerg:lavaplayer:2.1.1")
+	implementation("dev.arbjerg:lavaplayer:0eaeee195f0315b2617587aa3537fa202df07ddc-SNAPSHOT")
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.cloud:spring-cloud-vault-config:4.1.0")
 	implementation("com.squareup.okhttp3:okhttp:4.12.0")

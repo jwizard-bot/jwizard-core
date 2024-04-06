@@ -16,6 +16,7 @@
           <option value="jwizard-core" />
           <option value="jwizard-core" />
           <option value="jwizard-core" />
+          <option value="jwizard-core" />
         </list>
       </option>
       <option name="ignoredPackages">
@@ -23,10 +24,12 @@
           <option value="org.apache.commons:commons-collections4:4.1" />
           <option value="commons-collections:commons-collections:3.2.2" />
           <option value="org.springframework:spring-web:6.1.2" />
+          <option value="org.apache.httpcomponents:httpclient:4.5.10" />
         </list>
       </option>
       <option name="ignoredReasons">
         <list>
+          <option value="Not exploitable" />
           <option value="Not exploitable" />
           <option value="Not exploitable" />
           <option value="Not exploitable" />
