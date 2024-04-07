@@ -57,14 +57,23 @@ class TrackSchedulerFacade(
 				),
 				thumbnailUrl = audioTrackInfo.thumbnailUrl
 			)
+			trackScheduler.event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)
 			jdaLog.info(event, "Staring playing audio track: ${audioTrackInfo.title} when audio player is paused")
+		} else {
+			val messageEmbed = CustomEmbedBuilder(event, botConfiguration).buildTrackMessage(
+				placeholder = I18nResLocale.ON_TRACK_START,
+				params = mapOf(
+					"track" to Formatter.createRichTrackTitle(audioTrackInfo),
+				),
+				thumbnailUrl = audioTrackInfo.thumbnailUrl
+			)
+			jdaLog.info(event, "Staring playing audio track: ${audioTrackInfo.title}")
 			trackScheduler.event.instantlySendEmbedMessage(
 				messageEmbed,
-				DefferedEmbed(1, TimeUnit.SECONDS),
-				legacyTransport = true
+				delay = DefferedEmbed(if (actions.isFirstTrack) 0 else 1, TimeUnit.SECONDS),
+				legacyTransport = !actions.isFirstTrack
 			)
-		} else {
-			jdaLog.info(event, "Staring playing audio track: ${audioTrackInfo.title}")
+			actions.isFirstTrack = false
 		}
 		if (actions.infiniteRepeating) {
 			actions.nextTrackInfoDisabled = true

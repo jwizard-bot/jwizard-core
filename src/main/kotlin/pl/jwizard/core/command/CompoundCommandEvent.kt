@@ -69,7 +69,7 @@ data class CompoundCommandEvent(
 		appendAfterEmbeds = null,
 	)
 
-	fun addWebhookActions(vararg components: Component) {
+	fun addWebhookActionComponents(vararg components: Component) {
 		components.forEach { interactiveMessage.actionComponents.add(it) }
 	}
 
@@ -87,20 +87,9 @@ data class CompoundCommandEvent(
 
 	fun instantlySendEmbedMessage(
 		messageEmbed: MessageEmbed,
-		delay: DefferedEmbed,
-		legacyTransport: Boolean = false,
-	) {
-		instantlySendEmbedMessage(messageEmbed, delay, emptyList(), legacyTransport)
-	}
-
-	fun instantlySendEmbedMessage(messageEmbed: MessageEmbed, legacyTransport: Boolean = false) =
-		instantlySendEmbedMessage(messageEmbed, DefferedEmbed(), emptyList(), legacyTransport)
-	
-	private fun instantlySendEmbedMessage(
-		messageEmbed: MessageEmbed,
-		delay: DefferedEmbed,
-		actionComponents: List<Component>,
-		legacyTransport: Boolean = false,
+		actionComponents: List<Component> = emptyList(),
+		delay: DefferedEmbed = DefferedEmbed(),
+		legacyTransport: Boolean = false
 	) {
 		val (duration, unit) = delay
 		val deferredMessage = if (slashCommandEvent?.hook?.isExpired == false && !legacyTransport) {

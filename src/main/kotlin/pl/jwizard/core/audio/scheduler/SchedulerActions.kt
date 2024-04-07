@@ -39,6 +39,7 @@ class SchedulerActions(
 	var pausedTrack: AudioTrack? = null
 	var countOfRepeats = 0
 	var nextTrackInfoDisabled = false
+	var isFirstTrack = true
 
 	internal fun addToQueueAndOffer(audioTrack: AudioTrack) {
 		if (!trackScheduler.audioPlayer.startTrack(audioTrack, true)) {
@@ -101,6 +102,7 @@ class SchedulerActions(
 		infiniteRepeating = false
 		nextTrackInfoDisabled = false
 		infinitePlaylistRepeating = false
+		isFirstTrack = true
 
 		if (showMessage) {
 			val messageEmbed = CustomEmbedBuilder(trackScheduler.event, botConfiguration).buildBaseMessage(
