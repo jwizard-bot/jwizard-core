@@ -75,6 +75,9 @@ enum class I18nMiscLocale(
 	JDA_VERSION("pl.jwizard.system.jdaVersion"),
 	JDA_UTILITIES_VERSION("pl.jwizard.system.jdaUtilitiesVersion"),
 	LAVAPLAYER_VERSION("pl.jwizard.system.lavaplayerVersion"),
+
+	// action elements
+	REFRESH_BUTTON("pl.jwizard.action.refreshButton")
 	;
 
 	override fun getPlaceholder() = placeholder

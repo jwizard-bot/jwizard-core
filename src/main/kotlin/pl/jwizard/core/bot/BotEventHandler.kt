@@ -8,6 +8,7 @@ import pl.jwizard.core.audio.AloneOnChannelListener
 import pl.jwizard.core.audio.AudioPlayerActivityEventsHandler
 import pl.jwizard.core.command.CommandProxyListener
 import pl.jwizard.core.command.SlashCommandRegisterer
+import pl.jwizard.core.command.action.ActionProxyListener
 import pl.jwizard.core.settings.GuildSettings
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
@@ -20,6 +21,7 @@ import net.dv8tion.jda.api.events.guild.GuildReadyEvent
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMuteEvent
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
+import net.dv8tion.jda.api.events.interaction.ButtonClickEvent
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent
@@ -32,12 +34,15 @@ class BotEventHandler(
 	private val guildSettings: GuildSettings,
 	private val audioPlayerActivityEventsHandler: AudioPlayerActivityEventsHandler,
 	private val commandProxyListener: CommandProxyListener,
+	private val actionProxyListener: ActionProxyListener,
 	private val slashCommandRegisterer: SlashCommandRegisterer,
 ) : ListenerAdapter() {
 
 	override fun onGuildMessageReceived(event: GuildMessageReceivedEvent) = commandProxyListener.onRegularCommand(event)
 
 	override fun onSlashCommand(event: SlashCommandEvent) = commandProxyListener.onSlashCommand(event)
+
+	override fun onButtonClick(event: ButtonClickEvent) = actionProxyListener.onPressButton(event)
 
 	override fun onGuildVoiceJoin(event: GuildVoiceJoinEvent) = audioPlayerActivityEventsHandler.setBotDeafen(event)
 

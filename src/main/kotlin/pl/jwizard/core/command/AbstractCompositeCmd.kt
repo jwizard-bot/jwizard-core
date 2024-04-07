@@ -7,14 +7,19 @@ package pl.jwizard.core.command
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.cast
 import pl.jwizard.core.bot.BotConfiguration
+import pl.jwizard.core.command.action.ActionComponent
 import pl.jwizard.core.command.arg.ArgumentTypeCaster
 import pl.jwizard.core.command.arg.CommandArgument
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
 import pl.jwizard.core.command.embed.EmbedColor
 import pl.jwizard.core.exception.AbstractBotException
 import pl.jwizard.core.exception.UtilException
+import pl.jwizard.core.i18n.I18nLocale
 import com.jagrosh.jdautilities.menu.Paginator
 import net.dv8tion.jda.api.exceptions.PermissionException
+import net.dv8tion.jda.api.interactions.components.Button
+import net.dv8tion.jda.api.interactions.components.ButtonStyle
+import net.dv8tion.jda.internal.interactions.ButtonImpl
 
 abstract class AbstractCompositeCmd(
 	protected val botConfiguration: BotConfiguration,
@@ -76,6 +81,31 @@ abstract class AbstractCompositeCmd(
 		.wrapPageEnds(true)
 		.setItems(*items.toTypedArray())
 		.build()
+
+	private fun createButton(
+		event: CompoundCommandEvent,
+		actionComponent: ActionComponent,
+		style: ButtonStyle,
+		placeholder: I18nLocale,
+		params: Map<String, Any>
+	): Button {
+		return ButtonImpl(
+			actionComponent.name,
+			i18nService.getMessage(placeholder, params, event.guildId),
+			style,
+			false,
+			null
+		)
+	}
+
+	protected fun createButton(
+		event: CompoundCommandEvent,
+		actionComponent: ActionComponent,
+		style: ButtonStyle,
+		placeholder: I18nLocale,
+	): Button {
+		return createButton(event, actionComponent, style, placeholder, emptyMap())
+	}
 
 	abstract fun execute(event: CompoundCommandEvent)
 }

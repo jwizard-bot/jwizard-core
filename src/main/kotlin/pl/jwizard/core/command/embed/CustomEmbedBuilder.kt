@@ -12,6 +12,7 @@ import pl.jwizard.core.i18n.I18nLocale
 import pl.jwizard.core.i18n.I18nResLocale
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
+import net.dv8tion.jda.api.entities.User
 
 class CustomEmbedBuilder(
 	private val event: CompoundCommandEvent?,
@@ -34,6 +35,11 @@ class CustomEmbedBuilder(
 
 	fun addAuthor(): CustomEmbedBuilder {
 		setAuthor(event?.authorTag, null, event?.authorAvatarUrl)
+		return this
+	}
+
+	fun addAuthor(user: User): CustomEmbedBuilder {
+		setAuthor(user.asTag, null, user.avatarUrl ?: user.defaultAvatarUrl)
 		return this
 	}
 

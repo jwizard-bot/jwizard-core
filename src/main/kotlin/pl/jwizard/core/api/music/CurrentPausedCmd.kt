@@ -32,8 +32,7 @@ class CurrentPausedCmd(
 			event,
 			i18nDescription = I18nMiscLocale.CURRENT_PAUSED_TRACK,
 			i18nTimestampText = I18nMiscLocale.CURRENT_PAUSED_TIMESTAMP,
-			track = pausedTrackInfo,
-			musicManager
+			track = pausedTrackInfo
 		)
 		event.appendEmbedMessage(messageEmbed)
 	}
