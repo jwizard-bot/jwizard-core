@@ -31,6 +31,11 @@ object Formatter {
 		audioTrack.info.uri,
 	)
 
+	fun createTrackCurrentAndMaxDuration(audioTrack: ExtendedAudioTrackInfo) = "%s / %s".format(
+		DateUtils.convertMilisToDTF(audioTrack.timestamp),
+		DateUtils.convertMilisToDTF(audioTrack.maxDuration)
+	)
+	
 	fun createRichPageableTrackInfo(index: Int, audioTrack: AudioTrack): String = "`%d` [ %s ] %s\n**%s**".format(
 		index + 1,
 		DateUtils.convertMilisToDTF(audioTrack.duration),
@@ -71,7 +76,7 @@ object Formatter {
 		return stringJoiner.toString()
 	}
 
-	fun trackStr(audioTrack: AudioTrack) = audioTrack.info.title
+	fun trackStr(audioTrack: AudioTrack): String = audioTrack.info.title
 
 	fun boolStr(value: Boolean) = if (value) "ON" else "OFF"
 

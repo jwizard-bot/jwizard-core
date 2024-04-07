@@ -6,6 +6,7 @@ package pl.jwizard.core.audio
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo
+import net.dv8tion.jda.api.entities.Member
 
 class ExtendedAudioTrackInfo(
 	val audioTrack: AudioTrack
@@ -25,4 +26,5 @@ class ExtendedAudioTrackInfo(
 	val approximateTime get() = audioTrack.duration - audioTrack.position
 	val timestamp get() = audioTrack.position
 	val maxDuration get() = audioTrack.duration
+	val sender get() = (audioTrack.userData as Member).user
 }

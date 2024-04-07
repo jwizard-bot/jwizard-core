@@ -6,7 +6,6 @@ package pl.jwizard.core.api
 
 import pl.jwizard.core.audio.AudioPlayerSendHandler
 import pl.jwizard.core.audio.ExtendedAudioTrackInfo
-import pl.jwizard.core.audio.player.MusicManager
 import pl.jwizard.core.audio.player.PlayerManagerFacade
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.AbstractCompositeCmd
@@ -22,7 +21,6 @@ import pl.jwizard.core.i18n.I18nMiscLocale
 import pl.jwizard.core.util.BotUtils
 import pl.jwizard.core.util.DateUtils
 import pl.jwizard.core.util.Formatter
-import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.MessageEmbed
 
 abstract class AbstractMusicCmd(
@@ -87,21 +85,14 @@ abstract class AbstractMusicCmd(
 		i18nDescription: I18nLocale,
 		i18nTimestampText: I18nLocale,
 		track: ExtendedAudioTrackInfo,
-		musicManager: MusicManager,
 	): MessageEmbed = CustomEmbedBuilder(event, botConfiguration)
 		.addAuthor()
 		.addDescription(i18nDescription)
 		.appendKeyValueField(I18nMiscLocale.TRACK_NAME, Formatter.createRichTrackTitle(track))
 		.addSpace()
-		.appendKeyValueField(
-			I18nMiscLocale.TRACK_ADDDED_BY,
-			(musicManager.audioPlayer.playingTrack.userData as Member).user.asTag
-		)
+		.appendKeyValueField(I18nMiscLocale.TRACK_ADDDED_BY, track.sender.asTag)
 		.appendValueField(Formatter.createPercentageRepresentation(track), false)
-		.appendKeyValueField(
-			i18nTimestampText,
-			"${DateUtils.convertMilisToDTF(track.timestamp)} / ${DateUtils.convertMilisToDTF(track.maxDuration)}"
-		)
+		.appendKeyValueField(i18nTimestampText, Formatter.createTrackCurrentAndMaxDuration(track))
 		.addSpace()
 		.appendKeyValueField(
 			I18nMiscLocale.CURRENT_TRACK_LEFT_TO_NEXT,

@@ -60,7 +60,7 @@ class CommandProxyListener(
 				?: return // skipping, not existing command
 
 			val commandOptions: Queue<String> = LinkedList(cmdWithArguments
-				.substring(commandName.length + 1)
+				.substring(commandName.length)
 				.trim()
 				.split("\\|")
 				.filter { it.isNotEmpty() })
