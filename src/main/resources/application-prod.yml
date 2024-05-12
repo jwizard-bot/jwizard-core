@@ -4,7 +4,7 @@ jwizard:
     auth-token: ${V_JDA_PROD_SECRET}
     app-id: ${V_JDA_PROD_APP_ID}
   app-name: JWizard
-  app-icon-path: classpath:assets/logo/blue-white.png
+  app-icon-path: classpath:assets/logo/light.png
 
 logging:
   file:
