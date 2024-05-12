@@ -1,3 +1,19 @@
+spring:
+  devtools:
+    add-properties: false
+  cloud:
+    vault:
+      uri: https://vault.miloszgilga.pl
+      token: ${ENV_VAULT_TOKEN}
+      authentication: TOKEN
+      kv:
+        backend: jwizard
+        default-context: common
+        application-name: core
+  config:
+    import:
+      - optional:vault://
+
 jwizard:
   api-host: http://localhost:6061
   app-name: JWizard

@@ -3,18 +3,6 @@ spring:
     name: jwizard-core
   banner:
     location: classpath:spring/banner.txt
-  config:
-    import:
-      - optional:vault://
-  cloud:
-    vault:
-      uri: ${ENV_VAULT_URI:http://localhost:8761}
-      token: ${ENV_VAULT_TOKEN}
-      authentication: TOKEN
-      kv:
-        backend: jwizard
-        default-context: common
-        application-name: ${spring.application.name}
 
 jwizard:
   default-activity: tracks
