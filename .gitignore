@@ -3,6 +3,7 @@
 .idea/compiler.xml
 .idea/workspace.xml
 .idea/libraries/
+.idea/discord.xml
 
 .gradle
 build/
