@@ -4,6 +4,8 @@
  */
 package pl.jwizard.core.command.action
 
+import net.dv8tion.jda.api.events.interaction.ButtonClickEvent
+import org.springframework.stereotype.Component
 import pl.jwizard.core.audio.ExtendedAudioTrackInfo
 import pl.jwizard.core.audio.player.PlayerManagerFacade
 import pl.jwizard.core.bot.BotConfiguration
@@ -13,8 +15,6 @@ import pl.jwizard.core.i18n.I18nMiscLocale
 import pl.jwizard.core.log.AbstractLoggingBean
 import pl.jwizard.core.util.DateUtils
 import pl.jwizard.core.util.Formatter
-import org.springframework.stereotype.Component
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent
 
 @Component
 class ActionCommandListener(
@@ -47,7 +47,7 @@ class ActionCommandListener(
 					I18nMiscLocale.CURRENT_TRACK_LEFT_TO_NEXT,
 					DateUtils.convertMilisToDTF(playingTrack.approximateTime)
 				)
-				.addThumbnail(playingTrack.thumbnailUrl)
+				.addThumbnail(playingTrack.artworkUrl)
 				.addColor(EmbedColor.WHITE)
 				.build()
 		}

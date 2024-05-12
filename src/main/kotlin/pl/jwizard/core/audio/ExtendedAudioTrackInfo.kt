@@ -17,12 +17,9 @@ class ExtendedAudioTrackInfo(
 	audioTrack.info.identifier,
 	audioTrack.info.isStream,
 	audioTrack.info.uri,
+	audioTrack.info.artworkUrl,
+	null
 ) {
-	val thumbnailUrl = ThumbnailParserData.entries
-		.filter { it.clazz.isInstance(audioTrack) }
-		.map { it.callback(audioTrack) }
-		.firstOrNull()
-
 	val approximateTime get() = audioTrack.duration - audioTrack.position
 	val timestamp get() = audioTrack.position
 	val maxDuration get() = audioTrack.duration

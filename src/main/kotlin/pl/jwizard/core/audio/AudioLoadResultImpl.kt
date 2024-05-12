@@ -4,6 +4,12 @@
  */
 package pl.jwizard.core.audio
 
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack
+import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.core.audio.player.MusicManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -16,12 +22,6 @@ import pl.jwizard.core.log.AbstractLoggingBean
 import pl.jwizard.core.util.DateUtils
 import pl.jwizard.core.util.Formatter
 import pl.jwizard.core.vote.SongChooserVotingSystemHandler
-import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import net.dv8tion.jda.api.entities.Member
-import net.dv8tion.jda.api.entities.MessageEmbed
 
 class AudioLoadResultImpl(
 	private val musicManager: MusicManager,
@@ -112,7 +112,7 @@ class AudioLoadResultImpl(
 			.appendKeyValueField(I18nMiscLocale.TRACK_POSITION_IN_QUEUE, trackPosition)
 			.addSpace()
 			.appendField("${addedByMessage}:", event.authorTag, true)
-			.addThumbnail(trackInfo.thumbnailUrl)
+			.addThumbnail(trackInfo.artworkUrl)
 			.addColor(EmbedColor.WHITE)
 			.build()
 	}
@@ -127,7 +127,7 @@ class AudioLoadResultImpl(
 			.addSpace()
 			.appendKeyValueField(I18nMiscLocale.TRACKS_TOTAL_DURATION_TIME, durationTime)
 			.appendKeyValueField(I18nMiscLocale.TRACK_ADDDED_BY, event.authorTag)
-			.addThumbnail(trackInfo.thumbnailUrl)
+			.addThumbnail(trackInfo.artworkUrl)
 			.addColor(EmbedColor.WHITE)
 			.build()
 	}

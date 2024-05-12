@@ -4,6 +4,7 @@
  */
 package pl.jwizard.core.api
 
+import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.core.audio.AudioPlayerSendHandler
 import pl.jwizard.core.audio.ExtendedAudioTrackInfo
 import pl.jwizard.core.audio.player.PlayerManagerFacade
@@ -21,7 +22,6 @@ import pl.jwizard.core.i18n.I18nMiscLocale
 import pl.jwizard.core.util.BotUtils
 import pl.jwizard.core.util.DateUtils
 import pl.jwizard.core.util.Formatter
-import net.dv8tion.jda.api.entities.MessageEmbed
 
 abstract class AbstractMusicCmd(
 	botConfiguration: BotConfiguration,
@@ -98,7 +98,7 @@ abstract class AbstractMusicCmd(
 			I18nMiscLocale.CURRENT_TRACK_LEFT_TO_NEXT,
 			DateUtils.convertMilisToDTF(track.approximateTime)
 		)
-		.addThumbnail(track.thumbnailUrl)
+		.addThumbnail(track.artworkUrl)
 		.addColor(EmbedColor.WHITE)
 		.build()
 

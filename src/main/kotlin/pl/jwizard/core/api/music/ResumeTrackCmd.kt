@@ -4,6 +4,7 @@
  */
 package pl.jwizard.core.api.music
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo
 import pl.jwizard.core.api.AbstractMusicCmd
 import pl.jwizard.core.audio.player.PlayerManagerFacade
 import pl.jwizard.core.bot.BotConfiguration
@@ -14,7 +15,6 @@ import pl.jwizard.core.command.embed.EmbedColor
 import pl.jwizard.core.command.reflect.CommandListenerBean
 import pl.jwizard.core.i18n.I18nResLocale
 import pl.jwizard.core.util.Formatter
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo
 
 @CommandListenerBean(id = BotCommand.RESUME)
 class ResumeTrackCmd(
@@ -43,7 +43,7 @@ class ResumeTrackCmd(
 					"pauseCmd" to BotCommand.PAUSE.parseWithPrefix(botConfiguration, event),
 				)
 			)
-			.addThumbnail(currentTrack.thumbnailUrl)
+			.addThumbnail(currentTrack.artworkUrl)
 			.addColor(EmbedColor.WHITE)
 			.build()
 		event.appendEmbedMessage(embedMessage)

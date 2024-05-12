@@ -49,7 +49,7 @@ class MoveTrackCmd(
 				)
 			)
 			.addColor(EmbedColor.WHITE)
-			.addThumbnail(ExtendedAudioTrackInfo(movedTrack).thumbnailUrl)
+			.addThumbnail(ExtendedAudioTrackInfo(movedTrack).artworkUrl)
 			.build()
 		event.appendEmbedMessage(embedMessage)
 	}

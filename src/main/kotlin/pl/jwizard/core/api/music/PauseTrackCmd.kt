@@ -67,7 +67,7 @@ class PauseTrackCmd(
 			DateUtils.convertMilisToDTF(track.maxDuration)
 		)
 		.addColor(EmbedColor.WHITE)
-		.addThumbnail(track.thumbnailUrl)
+		.addThumbnail(track.artworkUrl)
 		.build()
 
 	companion object {

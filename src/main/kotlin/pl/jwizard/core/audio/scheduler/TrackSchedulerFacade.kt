@@ -4,7 +4,9 @@
  */
 package pl.jwizard.core.audio.scheduler
 
-import java.util.concurrent.TimeUnit
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import pl.jwizard.core.audio.ExtendedAudioTrackInfo
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.DefferedEmbed
@@ -13,9 +15,7 @@ import pl.jwizard.core.exception.I18nExceptionLocale
 import pl.jwizard.core.i18n.I18nResLocale
 import pl.jwizard.core.log.AbstractLoggingBean
 import pl.jwizard.core.util.Formatter
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
+import java.util.concurrent.TimeUnit
 
 class TrackSchedulerFacade(
 	private val trackScheduler: TrackScheduler
@@ -55,7 +55,7 @@ class TrackSchedulerFacade(
 					"track" to Formatter.createRichTrackTitle(audioTrackInfo),
 					"resumeCmd" to BotCommand.RESUME.parseWithPrefix(botConfiguration, event),
 				),
-				thumbnailUrl = audioTrackInfo.thumbnailUrl
+				thumbnailUrl = audioTrackInfo.artworkUrl
 			)
 			trackScheduler.event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)
 			jdaLog.info(event, "Staring playing audio track: ${audioTrackInfo.title} when audio player is paused")
@@ -65,7 +65,7 @@ class TrackSchedulerFacade(
 				params = mapOf(
 					"track" to Formatter.createRichTrackTitle(audioTrackInfo),
 				),
-				thumbnailUrl = audioTrackInfo.thumbnailUrl
+				thumbnailUrl = audioTrackInfo.artworkUrl
 			)
 			jdaLog.info(event, "Staring playing audio track: ${audioTrackInfo.title}")
 			trackScheduler.event.instantlySendEmbedMessage(

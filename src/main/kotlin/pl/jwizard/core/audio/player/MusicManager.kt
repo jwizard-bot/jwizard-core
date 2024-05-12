@@ -4,12 +4,12 @@
  */
 package pl.jwizard.core.audio.player
 
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import pl.jwizard.core.audio.AudioPlayerSendHandler
 import pl.jwizard.core.audio.scheduler.TrackScheduler
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.log.AbstractLoggingBean
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 
 class MusicManager(
 	private val botConfiguration: BotConfiguration,

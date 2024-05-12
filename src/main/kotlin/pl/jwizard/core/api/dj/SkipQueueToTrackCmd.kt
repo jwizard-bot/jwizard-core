@@ -49,7 +49,7 @@ class SkipQueueToTrackCmd(
 				)
 			)
 			.addColor(EmbedColor.WHITE)
-			.addThumbnail(ExtendedAudioTrackInfo(currentPlayingTrack).thumbnailUrl)
+			.addThumbnail(ExtendedAudioTrackInfo(currentPlayingTrack).artworkUrl)
 			.build()
 		event.appendEmbedMessage(embedMessage)
 	}
