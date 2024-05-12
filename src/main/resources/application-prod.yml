@@ -1,8 +1,5 @@
 jwizard:
-  api-host: http://localhost:8670
-  instance:
-    auth-token: ${V_JDA_PROD_SECRET}
-    app-id: ${V_JDA_PROD_APP_ID}
+  api-host: http://localhost:6061
   app-name: JWizard
   app-icon-path: classpath:assets/logo/light.png
 

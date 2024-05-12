@@ -18,6 +18,9 @@ spring:
 
 jwizard:
   default-activity: tracks
+  instance:
+    auth-token: ${V_JDA_SECRET}
+    app-id: ${V_JDA_APP_ID}
   splashes:
     enabled: true
     interval-sec: 5
