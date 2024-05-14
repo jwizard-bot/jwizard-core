@@ -9,8 +9,20 @@ defaults:
     shell: bash
 
 jobs:
+  pre-build:
+    runs-on: self-hosted
+
+    steps:
+      - name: Kill existing process
+        env:
+          JAR_PATH: ${{ vars.GH_CORE_JAR_PATH }}
+        run: |
+          JWIZARD_CORE_PID=$(pgrep -f "$JAR_PATH") && [ -n "$JWIZARD_CORE_PID" ] && \
+          sudo kill -9 $JWIZARD_CORE_PID || echo "Process not running."
+
   build:
     runs-on: self-hosted
+    needs: pre-build
 
     steps:
       - uses: actions/checkout@v3
@@ -21,11 +33,6 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
           cache: gradle
-
-      - name: Kill existing process
-        run: |
-          JWIZARD_CORE_PID=$(pgrep -f "$JAR_PATH") && [ -n "$JWIZARD_CORE_PID" ] && \
-          sudo kill -9 $JWIZARD_CORE_PID || echo "Process not running."
 
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
@@ -43,7 +50,7 @@ jobs:
       ACT_VAULT_ADDR: ${{ vars.GH_VAULT_ADDR }}
       ACT_VAULT_TOKEN: ${{ secrets.GH_VAULT_TOKEN }}
       ENV_PATH: /opt/gh-action-runners/jwizard/.env
-      JAR_PATH: /opt/gh-action-runners/jwizard/_work/jwizard-core/jwizard-core/build/libs/jwizard-core.jar
+      JAR_PATH: ${{ vars.GH_CORE_JAR_PATH }}
 
     steps:
       - name: Revoke Vault key
