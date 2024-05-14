@@ -15,8 +15,6 @@ jobs:
       JAR_PATH: ${{ vars.GH_CORE_JAR_PATH }}
 
     steps:
-      - uses: actions/checkout@v3
-
       - name: Kill existing process
         run: |
           JWIZARD_CORE_PID=$(pgrep -f "$JAR_PATH") && [ -n "$JWIZARD_CORE_PID" ] && \
@@ -32,7 +30,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-          cache: gradle
 
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
