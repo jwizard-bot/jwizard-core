@@ -9,22 +9,8 @@ defaults:
     shell: bash
 
 jobs:
-  pre-build:
-    runs-on: self-hosted
-
-    steps:
-      - uses: actions/checkout@v3
-        
-      - name: Kill existing process
-        env:
-          JAR_PATH: ${{ vars.GH_CORE_JAR_PATH }}
-        run: |
-          JWIZARD_CORE_PID=$(pgrep -f "$JAR_PATH") && [ -n "$JWIZARD_CORE_PID" ] && \
-          sudo kill -9 $JWIZARD_CORE_PID || echo "Process not running."
-
   build:
     runs-on: self-hosted
-    needs: pre-build
 
     steps:
       - uses: actions/checkout@v3
@@ -45,9 +31,21 @@ jobs:
       - name: Package to JAR
         run: ./gradlew bootJar --no-daemon
 
-  deploy:
+  post-build:
     runs-on: self-hosted
     needs: build
+    env:
+      JAR_PATH: ${{ vars.GH_CORE_JAR_PATH }}
+
+    steps:
+      - name: Kill existing process
+        run: |
+          JWIZARD_CORE_PID=$(pgrep -f "$JAR_PATH") && [ -n "$JWIZARD_CORE_PID" ] && \
+          sudo kill -9 $JWIZARD_CORE_PID || echo "Process not running."
+
+  deploy:
+    runs-on: self-hosted
+    needs: post-build
     env:
       ACT_VAULT_ADDR: ${{ vars.GH_VAULT_ADDR }}
       ACT_VAULT_TOKEN: ${{ secrets.GH_VAULT_TOKEN }}
