@@ -13,6 +13,8 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      - uses: actions/checkout@v3
+        
       - name: Kill existing process
         env:
           JAR_PATH: ${{ vars.GH_CORE_JAR_PATH }}
