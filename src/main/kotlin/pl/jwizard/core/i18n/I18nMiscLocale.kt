@@ -56,6 +56,7 @@ enum class I18nMiscLocale(
 	VERSIONS_HEADER("pl.jwizard.system.header.versions"),
 	JVM_HEADER("pl.jwizard.system.header.javaVirtualMachine"),
 	BOT_LOCALE("pl.jwizard.system.botLocale"),
+	DEPLOYMENT_DATE("pl.jwizard.system.deploymentDate"),
 	DEFAULT_PREFIX("pl.jwizard.system.defaultPrefix"),
 	ENABLE_SLASH_COMMANDS("pl.jwizard.system.enableSlashCommands"),
 	VOTE_MAX_WAITING_TIME("pl.jwizard.system.voteMaxWaitingTime"),

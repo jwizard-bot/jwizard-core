@@ -3,6 +3,7 @@
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 var jvmVersion = JavaVersion.VERSION_17
 
@@ -50,16 +51,18 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.1")
 	implementation("com.fasterxml.jackson.module:jackson-module-parameter-names:2.16.1")
 	implementation("commons-validator:commons-validator:1.8.0")
-
 	runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
-
 	testImplementation("org.jetbrains.kotlin:kotlin-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.withType<BootJar> {
+	archiveFileName = "jwizard-core.jar"
 }
 
 tasks.withType<KotlinCompile> {

@@ -4,7 +4,7 @@ spring:
   cloud:
     vault:
       uri: https://vault.miloszgilga.pl
-      token: ${ENV_VAULT_TOKEN}
+      token: ${JWIZARD_CORE_VAULT_TOKEN}
       authentication: TOKEN
       kv:
         backend: jwizard

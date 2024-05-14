@@ -11,6 +11,7 @@ import org.springframework.core.io.Resource
 @Configuration
 @ConfigurationProperties(prefix = "jwizard")
 data class BotProperties(
+	var deployment: DeploymentProperties = DeploymentProperties(),
 	var appName: String = "JWizard",
 	var appIconPath: Resource? = null,
 	var instance: InstanceProperties = InstanceProperties(),
@@ -18,6 +19,11 @@ data class BotProperties(
 	var defaultActivity: String = "",
 	var splashes: SplashesProperties = SplashesProperties(),
 	var pagination: PaginationProperties = PaginationProperties(),
+)
+
+data class DeploymentProperties(
+	var buildVersion: String = "UNKNOWN",
+	var lastBuildDate: String = "UNKNOWN",
 )
 
 data class InstanceProperties(

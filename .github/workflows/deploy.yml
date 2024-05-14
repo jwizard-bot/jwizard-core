@@ -1,0 +1,83 @@
+name: Deploy CORE
+
+on:
+  push:
+    branches: [ "master" ]
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: gradle
+
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
+
+      - name: Clean build dir
+        run: ./gradlew clean --no-daemon
+
+      - name: Package to JAR
+        run: ./gradlew bootJar --no-daemon
+
+  deploy:
+    runs-on: self-hosted
+    needs: build
+    env:
+      ACT_VAULT_ADDR: ${{ vars.GH_VAULT_ADDR }}
+      ACT_VAULT_TOKEN: ${{ secrets.GH_VAULT_TOKEN }}
+      ENV_PATH: /opt/gh-action-runners/jwizard/.env
+      JAR_PATH: /opt/gh-action-runners/jwizard/_work/jwizard-core/jwizard-core/build/libs/jwizard-core.jar
+
+    steps:
+      - name: Revoke Vault key
+        run: |
+          export VAULT_ADDR=$ACT_VAULT_ADDR && echo "Set vault url as $ACT_VAULT_ADDR"
+          export VAULT_TOKEN=$ACT_VAULT_TOKEN
+          VAULT_CORE_TOKEN=$(grep '^ENV_CORE_VAULT_TOKEN=' $ENV_PATH | cut -d '=' -f 2-) && [ -n "VAULT_CORE_TOKEN" ] && \
+            vault token revoke $VAULT_CORE_TOKEN || echo "Token not exist."
+
+      - name: Generate and export Vault key
+        id: vault-keygen
+        run: |
+          export VAULT_ADDR=$ACT_VAULT_ADDR && echo "Set vault url as $ACT_VAULT_ADDR"
+          export VAULT_TOKEN=$ACT_VAULT_TOKEN
+          export JWIZARD_TOKEN=$(vault token create -policy=jwizard-readonly -ttl=30d -renewable=false --format=json | jq -r '.auth.client_token')
+          sed -i "s/^ENV_CORE_VAULT_TOKEN=.*$/ENV_CORE_VAULT_TOKEN=$JWIZARD_TOKEN/" $ENV_PATH
+          echo "::add-mask::$JWIZARD_TOKEN"
+          echo "vault-key=$JWIZARD_TOKEN" >> "$GITHUB_OUTPUT"
+
+      - name: Kill existing process
+        run: |
+          JWIZARD_CORE_PID=$(pgrep -f "$JAR_PATH") && [ -n "$JWIZARD_CORE_PID" ] && \
+          sudo kill -9 $JWIZARD_CORE_PID || echo "Process not running."
+
+      - name: Determinate build version
+        id: deployment
+        run: |
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "build_date=$(date +'%Y-%m-%dT%H:%M:%S%z %Z')" >> $GITHUB_OUTPUT
+
+      - name: Re-run process
+        env:
+          VM_CORE_XMX: ${{ vars.GH_XMX_CORE }}
+        run: |
+          sudo java \
+            -Xmx$VM_CORE_XMX \
+            -XX:MaxRAM=$VM_CORE_XMX \
+            -Dspring.profiles.active=prod \
+            -DJWIZARD_CORE_VAULT_TOKEN=${{ steps.vault-keygen.outputs.vault-key }} \
+            -DJWIZARD_CORE_BUILD_VERSION=${{ steps.vars.outputs.sha_short }}_${{ github.run_number }} \
+            -DJWIZARD_CORE_BUILD_DATE=${{ steps.deployment.outputs.build_date }} \
+            -jar $JAR_PATH &

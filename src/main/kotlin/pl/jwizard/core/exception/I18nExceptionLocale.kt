@@ -4,11 +4,10 @@
  */
 package pl.jwizard.core.exception
 
-import java.util.*
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.i18n.I18nLocale
 import pl.jwizard.core.i18n.I18nMiscLocale
-import pl.jwizard.core.util.BotUtils
+import java.util.*
 
 enum class I18nExceptionLocale(
 	private val placeholder: String,
@@ -56,10 +55,11 @@ enum class I18nExceptionLocale(
 
 	fun createBugTrackerMessage(botConfiguration: BotConfiguration, guildId: String): String {
 		val createMessage: (holder: I18nLocale) -> String = { botConfiguration.i18nService.getMessage(it, guildId) }
+		val (buildVersion) = botConfiguration.botProperties.deployment
 		return StringJoiner("")
 			.add("${createMessage(I18nMiscLocale.BUG_TRACKER)}: `$bugTracker`")
 			.add("\n")
-			.add("${createMessage(I18nMiscLocale.COMPILATION_VERSION)}: `${BotUtils.getCompilationVersion()}`")
+			.add("${createMessage(I18nMiscLocale.COMPILATION_VERSION)}: `${buildVersion}`")
 			.toString()
 	}
 }

@@ -5,6 +5,9 @@ spring:
     location: classpath:spring/banner.txt
 
 jwizard:
+  deployment:
+    build-version: ${JWIZARD_CORE_BUILD_VERSION:UNKNOWN}
+    last-build-date: ${JWIZARD_CORE_BUILD_DATE:UNKNOWN}
   default-activity: tracks
   instance:
     auth-token: ${V_JDA_SECRET}

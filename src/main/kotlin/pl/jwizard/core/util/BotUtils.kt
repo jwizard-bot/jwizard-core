@@ -4,14 +4,13 @@
  */
 package pl.jwizard.core.util
 
-import pl.jwizard.core.bot.BotInstance
-import pl.jwizard.core.command.CompoundCommandEvent
-import pl.jwizard.core.exception.UserException
-import pl.jwizard.core.settings.GuildSettings
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.TextChannel
+import pl.jwizard.core.command.CompoundCommandEvent
+import pl.jwizard.core.exception.UserException
+import pl.jwizard.core.settings.GuildSettings
 
 object BotUtils {
 	fun validateUserDetails(
@@ -31,6 +30,4 @@ object BotUtils {
 		?: throw UserException.UserNotFoundInGuildException(event)
 
 	fun getSystemTextChannel(guild: Guild): TextChannel = guild.systemChannel ?: guild.textChannels[0]
-
-	fun getCompilationVersion() = BotInstance::class.java.`package`.implementationVersion ?: "DEVELOPMENT"
 }

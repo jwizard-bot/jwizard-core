@@ -4,8 +4,12 @@
  */
 package pl.jwizard.core.api.manager
 
+import com.jagrosh.jdautilities.commons.JDAUtilitiesInfo
+import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
+import net.dv8tion.jda.api.JDAInfo
 import pl.jwizard.core.api.AbstractManagerCmd
 import pl.jwizard.core.bot.BotConfiguration
+import pl.jwizard.core.bot.BotProperties
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
@@ -16,13 +20,11 @@ import pl.jwizard.core.i18n.I18nMiscLocale
 import pl.jwizard.core.i18n.I18nResLocale
 import pl.jwizard.core.util.Formatter
 import pl.jwizard.core.util.SystemProperty
-import com.jagrosh.jdautilities.commons.JDAUtilitiesInfo
-import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
-import net.dv8tion.jda.api.JDAInfo
 
 @CommandListenerBean(id = BotCommand.DEBUG)
 class DebugCmd(
 	botConfiguration: BotConfiguration,
+	private val botProperties: BotProperties,
 ) : AbstractManagerCmd(
 	botConfiguration
 ) {
@@ -37,6 +39,7 @@ class DebugCmd(
 
 	override fun executeManagerCmd(event: CompoundCommandEvent) {
 		val guildDetails = botConfiguration.guildSettings.getGuildProperties(event.guildId)
+		val (buildVersion, buildDate) = botProperties.deployment
 
 		val totalMemoryHeap = Runtime.getRuntime().totalMemory() / 1024 / 1024
 		val usedMemoryHeap = totalMemoryHeap - (Runtime.getRuntime().freeMemory() / 1024 / 1024)
@@ -50,6 +53,8 @@ class DebugCmd(
 		propertiesData.add(propertyFormatter(I18nMiscLocale.JVM_USED_MEMORY, "$usedMemoryHeap MB", guildId))
 
 		propertiesData.add(headerFromatter(I18nMiscLocale.GENERAL_HEADER, guildId))
+		propertiesData.add(propertyFormatter(I18nMiscLocale.COMPILATION_VERSION, buildVersion, guildId))
+		propertiesData.add(propertyFormatter(I18nMiscLocale.DEPLOYMENT_DATE, buildDate, guildId))
 		propertiesData.add(propertyFormatter(I18nMiscLocale.BOT_LOCALE, guildDetails.locale, guildId))
 		propertiesData.add(
 			propertyFormatter(
