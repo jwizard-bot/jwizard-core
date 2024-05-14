@@ -79,5 +79,5 @@ jobs:
             -Dspring.profiles.active=prod \
             -DJWIZARD_CORE_VAULT_TOKEN=${{ steps.vault-keygen.outputs.vault-key }} \
             -DJWIZARD_CORE_BUILD_VERSION=${{ steps.vars.outputs.sha_short }}_${{ github.run_number }} \
-            -DJWIZARD_CORE_BUILD_DATE=${{ steps.deployment.outputs.build_date }} \
+            -DJWIZARD_CORE_BUILD_DATE="${{ steps.deployment.outputs.build_date }}" \
             -jar $JAR_PATH &
