@@ -68,7 +68,7 @@ jobs:
           export JWIZARD_TOKEN=$(vault token create -policy=jwizard-readonly -ttl=30d -renewable=false --format=json | jq -r '.auth.client_token')
           sed -i "s/^ENV_CORE_VAULT_TOKEN=.*$/ENV_CORE_VAULT_TOKEN=$JWIZARD_TOKEN/" $ENV_PATH
           echo "::add-mask::$JWIZARD_TOKEN"
-          echo "vault-key=$JWIZARD_TOKEN" >> "$GITHUB_OUTPUT"
+          echo "vault_key=$JWIZARD_TOKEN" >> "$GITHUB_OUTPUT"
 
       - name: Determinate build version
         id: deployment
@@ -84,7 +84,7 @@ jobs:
             -Xmx$VM_CORE_XMX \
             -XX:MaxRAM=$VM_CORE_XMX \
             -Dspring.profiles.active=prod \
-            -DJWIZARD_CORE_VAULT_TOKEN=${{ steps.vault-keygen.outputs.vault-key }} \
+            -DJWIZARD_CORE_VAULT_TOKEN=${{ steps.vault-keygen.outputs.vault_key }} \
             -DJWIZARD_CORE_BUILD_VERSION=${{ steps.deployment.outputs.sha_short }}_${{ github.run_number }} \
             -DJWIZARD_CORE_BUILD_DATE="${{ steps.deployment.outputs.build_date }}" \
             -jar $JAR_PATH &
