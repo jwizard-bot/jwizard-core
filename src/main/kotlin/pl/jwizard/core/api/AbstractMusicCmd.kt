@@ -58,7 +58,7 @@ abstract class AbstractMusicCmd(
 				musicManager.actions.getPausedTrackInfo()
 			}
 			val userVoiceState = event.member.voiceState
-			if (userVoiceState == null || !userVoiceState.inVoiceChannel() || userVoiceState.isDeafened) {
+			if (userVoiceState == null || !userVoiceState.inVoiceChannel()) {
 				throw UserException.UserOnVoiceChannelNotFoundException(event)
 			}
 			val afkChannel = event.guild?.afkChannel

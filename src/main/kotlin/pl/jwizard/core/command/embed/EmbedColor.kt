@@ -8,7 +8,7 @@ import java.awt.Color
 
 enum class EmbedColor(private val hex: Int) {
 	TINT(0x505050), // gray
-	DOMINATE(0x4338CA), // blue
+	DOMINATE(0x000000), // black
 	WHITE(0xFFFFFF), // white
 	ERROR(0xEF4444), // red
 	;
