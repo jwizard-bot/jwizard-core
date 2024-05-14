@@ -75,11 +75,13 @@ jobs:
 
       - name: Re-run process
         env:
-          VM_CORE_XMX: ${{ vars.GH_XMX_CORE }}
+          VM_CORE_MEM_MIN: ${{ vars.GH_XMS_CORE }}
+          VM_CORE_MEM_MAX: ${{ vars.GH_XMX_CORE }}
         run: |
-          sudo java \
-            -Xmx$VM_CORE_XMX \
-            -XX:MaxRAM=$VM_CORE_XMX \
+          sudo nohup java \
+            -Xms$VM_CORE_MEM_MIN \
+            -Xmx$VM_CORE_MEM_MAX \
+            -XX:MaxRAM=$VM_CORE_MEM_MAX \
             -Dspring.profiles.active=prod \
             -DJWIZARD_CORE_VAULT_TOKEN=${{ steps.vault-keygen.outputs.vault_key }} \
             -DJWIZARD_CORE_BUILD_VERSION=${{ steps.deployment.outputs.sha_short }}_${{ github.run_number }} \
