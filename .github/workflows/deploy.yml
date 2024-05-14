@@ -22,6 +22,11 @@ jobs:
           distribution: 'adopt'
           cache: gradle
 
+      - name: Kill existing process
+        run: |
+          JWIZARD_CORE_PID=$(pgrep -f "$JAR_PATH") && [ -n "$JWIZARD_CORE_PID" ] && \
+          sudo kill -9 $JWIZARD_CORE_PID || echo "Process not running."
+
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
 
@@ -57,11 +62,6 @@ jobs:
           sed -i "s/^ENV_CORE_VAULT_TOKEN=.*$/ENV_CORE_VAULT_TOKEN=$JWIZARD_TOKEN/" $ENV_PATH
           echo "::add-mask::$JWIZARD_TOKEN"
           echo "vault-key=$JWIZARD_TOKEN" >> "$GITHUB_OUTPUT"
-
-      - name: Kill existing process
-        run: |
-          JWIZARD_CORE_PID=$(pgrep -f "$JAR_PATH") && [ -n "$JWIZARD_CORE_PID" ] && \
-          sudo kill -9 $JWIZARD_CORE_PID || echo "Process not running."
 
       - name: Determinate build version
         id: deployment
