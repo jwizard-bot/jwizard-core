@@ -58,7 +58,7 @@ class TrackSchedulerFacade(
 				thumbnailUrl = audioTrackInfo.artworkUrl
 			)
 			trackScheduler.event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)
-			jdaLog.info(event, "Staring playing audio track: ${audioTrackInfo.title} when audio player is paused")
+			jdaLog.info(event, "Starting playing audio track: ${audioTrackInfo.title} when audio player is paused")
 		} else {
 			val messageEmbed = CustomEmbedBuilder(event, botConfiguration).buildTrackMessage(
 				placeholder = I18nResLocale.ON_TRACK_START,
@@ -67,7 +67,7 @@ class TrackSchedulerFacade(
 				),
 				thumbnailUrl = audioTrackInfo.artworkUrl
 			)
-			jdaLog.info(event, "Staring playing audio track: ${audioTrackInfo.title}")
+			jdaLog.info(event, "Starting playing audio track: ${audioTrackInfo.title}")
 			trackScheduler.event.instantlySendEmbedMessage(
 				messageEmbed,
 				delay = DefferedEmbed(if (actions.isFirstTrack) 0 else 1, TimeUnit.SECONDS),
@@ -75,9 +75,7 @@ class TrackSchedulerFacade(
 			)
 			actions.isFirstTrack = false
 		}
-		if (actions.infiniteRepeating) {
-			actions.nextTrackInfoDisabled = true
-		}
+		actions.nextTrackInfoDisabled = actions.infiniteRepeating
 	}
 
 	override fun onEnd(track: AudioTrack, endReason: AudioTrackEndReason) {
