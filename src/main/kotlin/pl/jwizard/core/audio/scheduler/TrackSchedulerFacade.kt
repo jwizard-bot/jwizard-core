@@ -44,6 +44,9 @@ class TrackSchedulerFacade(
 	override fun onStart() {
 		actions.threadsCountToLeave?.cancel(false)
 		if (actions.nextTrackInfoDisabled || actions.onClearing) {
+			if (!actions.infiniteRepeating) {
+				actions.nextTrackInfoDisabled = false
+			}
 			return
 		}
 		val event = trackScheduler.event
