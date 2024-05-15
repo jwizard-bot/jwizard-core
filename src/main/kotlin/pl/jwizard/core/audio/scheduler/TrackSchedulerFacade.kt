@@ -43,10 +43,7 @@ class TrackSchedulerFacade(
 
 	override fun onStart() {
 		actions.threadsCountToLeave?.cancel(false)
-		if (actions.nextTrackInfoDisabled || actions.onClearing) {
-			if (!actions.infiniteRepeating) {
-				actions.nextTrackInfoDisabled = false
-			}
+		if (actions.onClearing) {
 			return
 		}
 		val event = trackScheduler.event
@@ -71,11 +68,16 @@ class TrackSchedulerFacade(
 				thumbnailUrl = audioTrackInfo.artworkUrl
 			)
 			jdaLog.info(event, "Starting playing audio track: ${audioTrackInfo.title}")
-			trackScheduler.event.instantlySendEmbedMessage(
-				messageEmbed,
-				delay = DefferedEmbed(if (actions.isFirstTrack) 0 else 1, TimeUnit.SECONDS),
-				legacyTransport = !actions.isFirstTrack
-			)
+			if (actions.nextTrackInfoDisabled && !actions.infiniteRepeating) {
+				actions.nextTrackInfoDisabled = false
+			}
+			if (!actions.nextTrackInfoDisabled) {
+				trackScheduler.event.instantlySendEmbedMessage(
+					messageEmbed,
+					delay = DefferedEmbed(if (actions.isFirstTrack) 0 else 1, TimeUnit.SECONDS),
+					legacyTransport = !actions.isFirstTrack
+				)
+			}
 			actions.isFirstTrack = false
 		}
 		actions.nextTrackInfoDisabled = actions.infiniteRepeating
