@@ -35,8 +35,8 @@ class AudioPlayerManager(
 	fun registerCustomYoutubeSourceManager() {
 		val manager = YoutubeAudioSourceManager(
 			MusicWithThumbnail(),
-			WebWithThumbnail(),
 			TvHtml5EmbeddedWithThumbnail(),
+			WebWithThumbnail(),
 			AndroidWithThumbnail()
 		)
 		registerSourceManager(manager)
