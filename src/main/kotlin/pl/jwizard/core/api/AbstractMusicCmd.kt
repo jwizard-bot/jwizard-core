@@ -86,7 +86,7 @@ abstract class AbstractMusicCmd(
 		i18nTimestampText: I18nLocale,
 		track: ExtendedAudioTrackInfo,
 	): MessageEmbed = CustomEmbedBuilder(event, botConfiguration)
-		.addAuthor()
+		.addAuthor(track.sender)
 		.addDescription(i18nDescription)
 		.appendKeyValueField(I18nMiscLocale.TRACK_NAME, Formatter.createRichTrackTitle(track))
 		.addSpace()
