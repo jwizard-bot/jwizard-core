@@ -56,7 +56,7 @@ class PauseTrackCmd(
 				"resumeCmd" to BotCommand.RESUME.parseWithPrefix(botConfiguration, event),
 			),
 		)
-		.appendValueField(Formatter.createPercentageRepresentation(track, MAX_VIS_BLOCKS_COUNT), false)
+		.appendValueField(Formatter.createPercentageRepresentation(track), false)
 		.appendKeyValueField(I18nMiscLocale.PAUSED_TRACK_TIME, DateUtils.convertMilisToDTF(track.timestamp))
 		.appendKeyValueField(
 			I18nMiscLocale.PAUSED_TRACK_ESTIMATE_TIME,
@@ -69,8 +69,4 @@ class PauseTrackCmd(
 		.addColor(EmbedColor.WHITE)
 		.addThumbnail(track.artworkUrl)
 		.build()
-
-	companion object {
-		private const val MAX_VIS_BLOCKS_COUNT = 48 // embed max length
-	}
 }
