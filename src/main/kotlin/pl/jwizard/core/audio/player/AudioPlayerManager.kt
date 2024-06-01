@@ -9,6 +9,7 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
 import dev.lavalink.youtube.YoutubeAudioSourceManager
 import dev.lavalink.youtube.clients.AndroidWithThumbnail
 import dev.lavalink.youtube.clients.MusicWithThumbnail
+import dev.lavalink.youtube.clients.TvHtml5EmbeddedWithThumbnail
 import dev.lavalink.youtube.clients.WebWithThumbnail
 import org.apache.http.client.config.RequestConfig
 import org.springframework.stereotype.Component
@@ -32,7 +33,12 @@ class AudioPlayerManager(
 	}
 
 	fun registerCustomYoutubeSourceManager() {
-		val manager = YoutubeAudioSourceManager(MusicWithThumbnail(), WebWithThumbnail(), AndroidWithThumbnail())
+		val manager = YoutubeAudioSourceManager(
+			MusicWithThumbnail(),
+			WebWithThumbnail(),
+			TvHtml5EmbeddedWithThumbnail(),
+			AndroidWithThumbnail()
+		)
 		registerSourceManager(manager)
 	}
 
