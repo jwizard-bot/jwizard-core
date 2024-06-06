@@ -10,7 +10,6 @@ enum class CommandModule(val moduleName: String) {
 	MUSIC("music"),
 	PLAYLIST("playlist"),
 	VOTING("voting"),
-	SETTINGS("settings"),
 	;
 
 	companion object {

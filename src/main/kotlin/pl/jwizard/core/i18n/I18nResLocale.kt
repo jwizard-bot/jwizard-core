@@ -52,8 +52,6 @@ enum class I18nResLocale(
 
 	// playlist commands
 
-	// settings commands
-
 	// vote commands
 	VOTE_SUFFLE_QUEUE("pl.jwizard.response.voteShuffleQueue"),
 	SUCCESS_VOTE_SUFFLE_QUEUE("pl.jwizard.response.successVoteShuffleQueue"),

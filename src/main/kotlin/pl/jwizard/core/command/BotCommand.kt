@@ -50,20 +50,6 @@ enum class BotCommand(
 	SHOWMYPL("showmypl"),
 	SHOWPLSONGS("showplsongs"),
 
-	// settings
-	SETAUDIOCHN("setaudiochn"),
-	SETDJROLE("setdjrole"),
-	SETLOCALE("setlocale"),
-	SETTRACKREP("settrackrep"),
-	SETDEFVOL("setdefvol"),
-	SETSKRATIO("setskratio"),
-	SETCCHOSSNG("setcchossng"),
-	SETRCHOSSNG("setrchossng"),
-	SETTCHOSSNG("settchossng"),
-	SETTIMEVOT("settimevot"),
-	SETTLEAVEM("settleavem"),
-	SETTLEAVETR("settleavetr"),
-
 	// vote
 	VCLEAR("vclear"),
 	VSHUFFLE("vshuffle"),
