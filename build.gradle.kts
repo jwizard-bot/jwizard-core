@@ -47,7 +47,6 @@ dependencies {
 	implementation("dev.lavalink.youtube:v2:1.2.0")
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.cloud:spring-cloud-vault-config:4.1.0")
-	implementation("com.squareup.okhttp3:okhttp:4.12.0")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.1")
 	implementation("com.fasterxml.jackson.module:jackson-module-parameter-names:2.16.1")
 	implementation("commons-validator:commons-validator:1.8.0")
