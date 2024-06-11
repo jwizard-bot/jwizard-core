@@ -4,19 +4,15 @@
  */
 package pl.jwizard.core.command
 
-import java.io.IOException
-
 enum class CommandModule(val moduleName: String) {
 	MUSIC("music"),
+	DJ("dj"),
 	PLAYLIST("playlist"),
-	VOTING("voting"),
+	VOTE("vote"),
+	OTHER("other"),
 	;
 
 	companion object {
-		fun checkContractWithApi(modules: Map<String, String>) {
-			if (entries.map { it.moduleName } != modules.keys.toList()) {
-				throw IOException("Contract between modules is not persisted. Check CommandModule implementation")
-			}
-		}
+		fun getAllModuleNames(): List<String> = entries.map { it.moduleName }
 	}
 }

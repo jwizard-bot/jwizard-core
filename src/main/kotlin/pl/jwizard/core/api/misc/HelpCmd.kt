@@ -4,7 +4,7 @@
  */
 package pl.jwizard.core.api.misc
 
-import java.util.*
+import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.AbstractCompositeCmd
 import pl.jwizard.core.command.BotCommand
@@ -13,7 +13,8 @@ import pl.jwizard.core.command.embed.CustomEmbedBuilder
 import pl.jwizard.core.command.embed.EmbedColor
 import pl.jwizard.core.command.reflect.CommandListenerBean
 import pl.jwizard.core.i18n.I18nResLocale
-import net.dv8tion.jda.api.entities.MessageEmbed
+import pl.jwizard.core.util.BotUtils
+import java.util.*
 
 @CommandListenerBean(id = BotCommand.HELP)
 class HelpCmd(
@@ -31,34 +32,35 @@ class HelpCmd(
 
 	private fun createFormattedCommands(event: CompoundCommandEvent): MutableList<String> {
 		val commands = mutableListOf<String>()
+		val commandModules = commandReflectLoader.getCommandModules()
+		val botCommands = commandReflectLoader.getBotCommands()
 
-		val guildDetails = guildSettings.getGuildProperties(event.guildId)
-		val commandDetails = commandLoader.getCommandsBaseLang(guildDetails.locale)
-		val prefix = if (event.slashCommandEvent == null) guildDetails.legacyPrefix else "/"
+		val prefix = if (event.slashCommandEvent == null) event.legacyPrefix else "/"
+		val enabledCommands = getAvailableGuildCommands(event)
 
-		for ((key, translation) in commandDetails.categories) {
-			val enabledCommands = getAvailableGuildCommands(event)
-			val categoryCommands = commandDetails.commmands
-				.filter { it.value.category == key && enabledCommands.contains(it.key) }
+		for ((_, moduleData) in commandModules) {
+			val categoryCommands = botCommands
+				.filter { (name, data) -> data.module == name && enabledCommands.contains(name) }
 			if (categoryCommands.isEmpty()) {
 				continue
 			}
-			commands.add("**${translation.uppercase()}**\n")
+			commands.add("**${BotUtils.getLang(event.lang, moduleData.name).uppercase()}**\n")
 			for ((commandKey, commandData) in categoryCommands) {
 				val joiner = StringJoiner("")
-				val aliases = commandData.aliases.joinToString(", ") { prefix + it }
-
 				joiner.add("`")
 				joiner.add(prefix)
 				joiner.add(commandKey)
 				if (event.slashCommandEvent == null) {
-					joiner.add(" [$aliases]")
+					joiner.add(" [$prefix${commandData.alias}]")
 				}
-				if (commandData.argsDesc != null) {
-					joiner.add(" ${commandData.argsDesc}")
+				val descTranslations: Map<String, String> = commandData.argsDesc.entries
+					.filter { it.value != null }
+					.associate { (key, value) -> key to value as String }
+				if (descTranslations.size == commandData.argsDesc.size) {
+					joiner.add(" ${BotUtils.getLang(event.lang, descTranslations)}")
 				}
 				joiner.add("`\n")
-				joiner.add(commandData.desc)
+				joiner.add(BotUtils.getLang(event.lang, commandData.commandDesc))
 				joiner.add("\n")
 
 				commands.add(joiner.toString())
@@ -67,21 +69,14 @@ class HelpCmd(
 		return commands
 	}
 
-	private fun getAvailableGuildCommands(
-		event: CompoundCommandEvent
-	): List<String> {
-		val guildDetails = guildSettings.getGuildProperties(event.guildId)
-		return if (event.slashCommandEvent != null) {
-			guildDetails.enabledSlashCommands
-		} else {
-			guildDetails.enabledCommands
-		}
+	private fun getAvailableGuildCommands(event: CompoundCommandEvent): List<String> {
+		return commandsSupplier.fetchEnabledGuildCommands(event.guildDbId, event.slashCommandEvent != null)
 	}
 
 	private fun createEmbedMessage(
 		event: CompoundCommandEvent,
 		countOfCommands: Int,
-	): MessageEmbed = CustomEmbedBuilder(event, botConfiguration)
+	): MessageEmbed = CustomEmbedBuilder(botConfiguration, event)
 		.addAuthor()
 		.addDescription(
 			placeholder = I18nResLocale.COUNT_OF_AVAIALBLE_COMMANDS,
