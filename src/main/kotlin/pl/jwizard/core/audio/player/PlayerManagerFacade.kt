@@ -38,6 +38,7 @@ class PlayerManagerFacade(
 			isUrlPattern,
 			lockedGuilds
 		)
+		event.invokedBySender = true // set hook to inform, that sending of this message was invoked by user
 		event.guild?.audioManager?.isSelfDeafened = true
 		audioPlayerManager.loadItemOrdered(musicManager, trackUrl, audioLoadResultHandler)
 	}

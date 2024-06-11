@@ -74,11 +74,11 @@ class TrackSchedulerFacade(
 			if (!actions.nextTrackInfoDisabled) {
 				trackScheduler.event.instantlySendEmbedMessage(
 					messageEmbed,
-					delay = DefferedEmbed(if (actions.isFirstTrack) 0 else 1, TimeUnit.SECONDS),
-					legacyTransport = !actions.isFirstTrack
+					delay = DefferedEmbed(if (event.invokedBySender) 0 else 1, TimeUnit.SECONDS),
+					legacyTransport = !event.invokedBySender
 				)
 			}
-			actions.isFirstTrack = false
+			event.invokedBySender = false // reset invoking hook, start sending bot messages via legacy transport
 		}
 		actions.nextTrackInfoDisabled = actions.infiniteRepeating
 	}

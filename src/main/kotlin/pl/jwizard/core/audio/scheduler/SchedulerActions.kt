@@ -25,7 +25,7 @@ class SchedulerActions(
 	private val trackScheduler: TrackScheduler,
 ) : AbstractLoggingBean(SchedulerActions::class) {
 
-	val trackQueue: Queue<AudioTrack> = ConcurrentLinkedQueue()
+	val trackQueue: Queue<AudioTrack> = LinkedList()
 	private var totalCountOfRepeats = 0
 
 	var threadsCountToLeave: ScheduledFuture<*>? = null
@@ -39,7 +39,6 @@ class SchedulerActions(
 	var pausedTrack: AudioTrack? = null
 	var countOfRepeats = 0
 	var nextTrackInfoDisabled = false
-	var isFirstTrack = true
 
 	internal fun addToQueueAndOffer(audioTrack: AudioTrack) {
 		if (!trackScheduler.audioPlayer.startTrack(audioTrack, true)) {
@@ -102,7 +101,6 @@ class SchedulerActions(
 		infiniteRepeating = false
 		nextTrackInfoDisabled = false
 		infinitePlaylistRepeating = false
-		isFirstTrack = true
 
 		if (showMessage) {
 			val messageEmbed = CustomEmbedBuilder(botConfiguration, trackScheduler.event).buildBaseMessage(

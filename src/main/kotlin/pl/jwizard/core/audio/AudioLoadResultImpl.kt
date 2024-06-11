@@ -50,6 +50,7 @@ class AudioLoadResultImpl(
 			val messageEmbed = createPlaylistTracksMessage(trackList)
 			event.instantlySendEmbedMessage(messageEmbed)
 
+			event.invokedBySender = false // reset invoking hook, start sending bot messages via legacy transport
 			jdaLog.info(event, "New audio playlist: $flattedTracks was added to queue")
 		} else {
 			val songChooserVotingSystemHandler = SongChooserVotingSystemHandler(
