@@ -104,7 +104,7 @@ class GuildSettingsSqlSupplier(
 		)
 		val nullableProp = jdbcTemplate.queryForObject(sql, jClazz, guildId) as T?
 		if (nullableProp == null) {
-			log.warn(
+			log.debug(
 				"Property for column: {} not found. Returning default value: {}.", property.columnName,
 				property.defaultValue
 			)
