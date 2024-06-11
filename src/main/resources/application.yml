@@ -3,6 +3,9 @@ spring:
     name: jwizard-core
   banner:
     location: classpath:spring/banner.txt
+  datasource:
+    username: ${V_MYSQL_USERNAME}
+    password: ${V_MYSQL_PASSWORD}
 
 jwizard:
   deployment:
@@ -12,6 +15,7 @@ jwizard:
   instance:
     auth-token: ${V_JDA_SECRET}
     app-id: ${V_JDA_APP_ID}
+    default-language: 'pl'
   splashes:
     enabled: true
     interval-sec: 5

@@ -1,6 +1,8 @@
 spring:
   devtools:
     add-properties: false
+  datasource:
+    url: jdbc:mysql://mysql2.small.pl:3306/m1486_jwizard
   cloud:
     vault:
       uri: https://vault.miloszgilga.pl

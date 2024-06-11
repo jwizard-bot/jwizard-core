@@ -4,6 +4,8 @@ spring:
       port: 35732
     restart:
       log-condition-evaluation-delta: false
+  datasource:
+    url: jdbc:mysql://localhost:${ENV_MYSQL_PORT:8762}/jwizard-db
   cloud:
     vault:
       uri: ${ENV_VAULT_URI:http://localhost:8761}
