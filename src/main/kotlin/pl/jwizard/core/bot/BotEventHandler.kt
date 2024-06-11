@@ -4,14 +4,6 @@
  */
 package pl.jwizard.core.bot
 
-import pl.jwizard.core.audio.AloneOnChannelListener
-import pl.jwizard.core.audio.AudioPlayerActivityEventsHandler
-import pl.jwizard.core.command.CommandProxyListener
-import pl.jwizard.core.command.SlashCommandRegisterer
-import pl.jwizard.core.command.action.ActionProxyListener
-import pl.jwizard.core.settings.GuildSettings
-import org.springframework.context.annotation.Lazy
-import org.springframework.stereotype.Component
 import net.dv8tion.jda.api.events.ShutdownEvent
 import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent
 import net.dv8tion.jda.api.events.guild.GuildBanEvent
@@ -26,12 +18,20 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
+import org.springframework.context.annotation.Lazy
+import org.springframework.stereotype.Component
+import pl.jwizard.core.audio.AloneOnChannelListener
+import pl.jwizard.core.audio.AudioPlayerActivityEventsHandler
+import pl.jwizard.core.command.CommandProxyListener
+import pl.jwizard.core.command.SlashCommandRegisterer
+import pl.jwizard.core.command.action.ActionProxyListener
+import pl.jwizard.core.db.GuildSettingsSupplier
 
 @Component
 class BotEventHandler(
 	@Lazy private val botInstance: BotInstance,
 	private val aloneOnChannelListener: AloneOnChannelListener,
-	private val guildSettings: GuildSettings,
+	private val guildSettingsSupplier: GuildSettingsSupplier,
 	private val audioPlayerActivityEventsHandler: AudioPlayerActivityEventsHandler,
 	private val commandProxyListener: CommandProxyListener,
 	private val actionProxyListener: ActionProxyListener,
@@ -57,19 +57,19 @@ class BotEventHandler(
 		audioPlayerActivityEventsHandler.unsetMusicTextChannelOnDelete(event)
 
 	override fun onGuildJoin(event: GuildJoinEvent) {
-		guildSettings.getAndPersistGuildSettings(event.guild.id)
+		guildSettingsSupplier.persistGuildSettings(event.guild)
 		audioPlayerActivityEventsHandler.createDjRoleOnJoin(event)
 		slashCommandRegisterer.registerGuildCommands(event.guild)
 	}
 
 	override fun onGuildReady(event: GuildReadyEvent) {
-		guildSettings.getAndPersistGuildSettings(event.guild.id)
+		guildSettingsSupplier.persistGuildSettings(event.guild)
 		slashCommandRegisterer.registerGuildCommands(event.guild)
 	}
 
-	override fun onGuildLeave(event: GuildLeaveEvent) = guildSettings.deleteGuildSettings(event.guild.id)
+	override fun onGuildLeave(event: GuildLeaveEvent) = guildSettingsSupplier.deleteGuildSettings(event.guild)
 
-	override fun onGuildBan(event: GuildBanEvent) = guildSettings.deleteGuildSettings(event.guild.id)
+	override fun onGuildBan(event: GuildBanEvent) = guildSettingsSupplier.deleteGuildSettings(event.guild)
 
 	override fun onShutdown(event: ShutdownEvent) = botInstance.shutdown(event)
 }

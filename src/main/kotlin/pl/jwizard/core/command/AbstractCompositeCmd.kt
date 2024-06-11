@@ -4,8 +4,11 @@
  */
 package pl.jwizard.core.command
 
-import java.util.concurrent.TimeUnit
-import kotlin.reflect.cast
+import com.jagrosh.jdautilities.menu.Paginator
+import net.dv8tion.jda.api.exceptions.PermissionException
+import net.dv8tion.jda.api.interactions.components.Button
+import net.dv8tion.jda.api.interactions.components.ButtonStyle
+import net.dv8tion.jda.internal.interactions.ButtonImpl
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.action.ActionComponent
 import pl.jwizard.core.command.arg.ArgumentTypeCaster
@@ -15,18 +18,16 @@ import pl.jwizard.core.command.embed.EmbedColor
 import pl.jwizard.core.exception.AbstractBotException
 import pl.jwizard.core.exception.UtilException
 import pl.jwizard.core.i18n.I18nLocale
-import com.jagrosh.jdautilities.menu.Paginator
-import net.dv8tion.jda.api.exceptions.PermissionException
-import net.dv8tion.jda.api.interactions.components.Button
-import net.dv8tion.jda.api.interactions.components.ButtonStyle
-import net.dv8tion.jda.internal.interactions.ButtonImpl
+import java.util.concurrent.TimeUnit
+import kotlin.reflect.cast
 
 abstract class AbstractCompositeCmd(
 	protected val botConfiguration: BotConfiguration,
 ) {
-	protected val guildSettings = botConfiguration.guildSettings
+	protected val guildSettings = botConfiguration.guildSettingsSupplier
 	protected val i18nService = botConfiguration.i18nService
-	protected val commandLoader = botConfiguration.commandLoader
+	protected val commandsSupplier = botConfiguration.commandsSupplier
+	protected val commandReflectLoader = botConfiguration.commandReflectLoader
 
 	internal fun performCommand(event: CompoundCommandEvent): InteractiveMessage {
 		try {
@@ -46,12 +47,9 @@ abstract class AbstractCompositeCmd(
 		event: CompoundCommandEvent,
 		module: CommandModule,
 	) {
-		val guildDetails = guildSettings.getGuildProperties(event.guildId)
-		if (!guildDetails.enabledModules.contains(module.moduleName)) {
-			throw UtilException.ModuleIsTurnedOffException(
-				event,
-				moduleName = botConfiguration.commandLoader.getModuleBaseLangInGuildId(event.guildId, module),
-			)
+		val moduleState = commandReflectLoader.checkIfModuleIsEnabled(module, event)
+		if (!moduleState.isEnabled) {
+			throw UtilException.ModuleIsTurnedOffException(event, moduleState.name)
 		}
 	}
 

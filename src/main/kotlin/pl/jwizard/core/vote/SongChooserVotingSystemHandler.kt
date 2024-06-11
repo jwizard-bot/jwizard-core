@@ -4,9 +4,11 @@
  */
 package pl.jwizard.core.vote
 
-import java.util.*
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicInteger
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack
+import net.dv8tion.jda.api.entities.Message
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent
+import net.dv8tion.jda.api.requests.RestAction
+import org.apache.commons.lang3.StringUtils
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
@@ -16,10 +18,9 @@ import pl.jwizard.core.i18n.I18nMiscLocale
 import pl.jwizard.core.i18n.I18nResLocale
 import pl.jwizard.core.log.AbstractLoggingBean
 import pl.jwizard.core.util.Formatter
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent
-import net.dv8tion.jda.api.requests.RestAction
+import java.util.*
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
 
 class SongChooserVotingSystemHandler(
 	private val loadedTracks: List<AudioTrack>,
@@ -39,17 +40,17 @@ class SongChooserVotingSystemHandler(
 	override fun initAndStart() {
 		lockedGuilds.add(event.guildId)
 
-		val guildDetails = botConfiguration.guildSettings.getGuildProperties(event.guildId)
-		isRandom = guildDetails.audioPlayer.randomAutoChoose
-		elapsedTimeInSec = guildDetails.audioPlayer.timeAfterAutoChooseSec
-		countOfMaxTracks = guildDetails.audioPlayer.tracksNumberChoose.toInt()
+		val guildDetails = botConfiguration.guildSettingsSupplier.fetchVotingSongChooserSettings(event.guildDbId)
+		isRandom = guildDetails.randomAutoChooseTrack
+		elapsedTimeInSec = guildDetails.timeAfterAutoChooseSec.toLong()
+		countOfMaxTracks = guildDetails.trackToChooseMax
 
 		trimmedTracks = loadedTracks.subList(0, countOfMaxTracks)
 		jdaLog.info(
 			event,
 			"Initialized voting for select song from results list: ${trimmedTracks.joinToString { it.info.title }}"
 		)
-		val joiner = StringJoiner("")
+		val joiner = StringJoiner(StringUtils.EMPTY)
 		val initEmbedMessage = botConfiguration.i18nService.getMessage(
 			i18nLocale = I18nResLocale.SELECT_SONG_SEQUENCER,
 			params = mapOf(
@@ -57,10 +58,10 @@ class SongChooserVotingSystemHandler(
 				"elapsedTime" to elapsedTimeInSec,
 				"afterTimeResult" to botConfiguration.i18nService.getMessage(
 					if (isRandom) I18nMiscLocale.RANDOM_RESULT else I18nMiscLocale.FIRST_RESULT,
-					event.guildId
+					event.lang
 				),
 			),
-			guildId = event.guildId
+			event.lang,
 		)
 		joiner.add(initEmbedMessage)
 		joiner.add("\n\n")
@@ -69,7 +70,7 @@ class SongChooserVotingSystemHandler(
 			joiner.add(Formatter.createRichTrackTitle(trimmedTracks[index]))
 			joiner.add("\n")
 		}
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.setDescription(joiner.toString())
 			.setColor(EmbedColor.WHITE.color())

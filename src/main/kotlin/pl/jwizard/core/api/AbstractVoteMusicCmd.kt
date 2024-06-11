@@ -4,19 +4,20 @@
  */
 package pl.jwizard.core.api
 
+import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.core.audio.player.PlayerManagerFacade
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.CommandModule
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
 import pl.jwizard.core.command.embed.EmbedColor
+import pl.jwizard.core.db.GuildDbProperty
 import pl.jwizard.core.i18n.I18nLocale
 import pl.jwizard.core.i18n.I18nMiscLocale
 import pl.jwizard.core.util.DateUtils
 import pl.jwizard.core.vote.GeneralVotingSystemHandler
 import pl.jwizard.core.vote.VoteFinishData
 import pl.jwizard.core.vote.VoteResponseData
-import net.dv8tion.jda.api.entities.MessageEmbed
 
 abstract class AbstractVoteMusicCmd(
 	botConfiguration: BotConfiguration,
@@ -42,13 +43,16 @@ abstract class AbstractVoteMusicCmd(
 		event: CompoundCommandEvent,
 	): MessageEmbed {
 		val maxVotingTime = DateUtils.convertSecToMin(
-			guildSettings.getGuildProperties(event.guildId).voting.timeToFinishSec
+			guildSettings.fetchDbProperty(
+				GuildDbProperty.MAX_VOTING_TIME,
+				event.guildId,
+				Long::class
+			)
 		)
-		val guildId = event.guildId
-		return CustomEmbedBuilder(event, botConfiguration)
+		return CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(i18nPlaceholder, params)
-			.addFooter("${i18nService.getMessage(I18nMiscLocale.MAX_TIME_VOTING, guildId)}: ${(maxVotingTime)}")
+			.addFooter("${i18nService.getMessage(I18nMiscLocale.MAX_TIME_VOTING, event.lang)}: ${(maxVotingTime)}")
 			.addColor(EmbedColor.WHITE)
 			.build()
 	}
@@ -60,9 +64,10 @@ abstract class AbstractVoteMusicCmd(
 		embedColor: EmbedColor,
 		event: CompoundCommandEvent,
 	): MessageEmbed {
-		val percentageRatio = "${guildSettings.getGuildProperties(event.guildId).voting.percentageRatio}%"
-		return CustomEmbedBuilder(event, botConfiguration)
-			.addTitle(i18nService.getMessage(i18nPlaceholder, event.guildId))
+		val percentageRatio =
+			"${guildSettings.fetchDbProperty(GuildDbProperty.VOTING_PERCENTAGE_RATIO, event.guildId, Int::class)}%"
+		return CustomEmbedBuilder(botConfiguration, event)
+			.addTitle(i18nService.getMessage(i18nPlaceholder, event.lang))
 			.addDescription(description)
 			.appendKeyValueField(I18nMiscLocale.VOTES_FOR_YES_NO_VOTING, "${data.forYes}/${data.forNo}")
 			.appendKeyValueField(I18nMiscLocale.REQUIRED_TOTAL_VOTES_VOTING, "${data.required}/${data.total}")

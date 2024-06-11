@@ -9,6 +9,7 @@ import pl.jwizard.core.audio.AudioPlayerSendHandler
 import pl.jwizard.core.audio.scheduler.TrackScheduler
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.CompoundCommandEvent
+import pl.jwizard.core.db.GuildDbProperty
 import pl.jwizard.core.log.AbstractLoggingBean
 
 class MusicManager(
@@ -34,10 +35,11 @@ class MusicManager(
 		return guildVolume
 	}
 
-	private fun getVolumeForGuild(): Int {
-		val guildDetails = botConfiguration.guildSettings.getGuildProperties(compoundCommandEvent.guildId)
-		return guildDetails.audioPlayer.defaultVolume.toInt()
-	}
+	private fun getVolumeForGuild(): Int = botConfiguration.guildSettingsSupplier.fetchDbProperty(
+		GuildDbProperty.DEFAULT_VOLUME,
+		compoundCommandEvent.guildId,
+		Int::class
+	)
 
 	val actions get() = trackScheduler.schedulerActions
 

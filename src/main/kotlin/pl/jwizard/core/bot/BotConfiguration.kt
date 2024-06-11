@@ -16,10 +16,12 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Lazy
 import org.springframework.context.annotation.Primary
 import org.springframework.core.io.ResourceLoader
-import pl.jwizard.core.command.reflect.CommandLoader
+import pl.jwizard.core.bot.properties.BotProperties
+import pl.jwizard.core.command.reflect.CommandReflectLoader
+import pl.jwizard.core.db.CommandsSupplier
+import pl.jwizard.core.db.GuildSettingsSupplier
 import pl.jwizard.core.i18n.I18nService
 import pl.jwizard.core.log.AbstractLoggingBean
-import pl.jwizard.core.settings.GuildSettings
 import java.io.IOException
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -29,8 +31,9 @@ import kotlin.system.exitProcess
 @Configuration
 class BotConfiguration(
 	@Lazy val i18nService: I18nService,
-	@Lazy val guildSettings: GuildSettings,
-	@Lazy val commandLoader: CommandLoader,
+	@Lazy val guildSettingsSupplier: GuildSettingsSupplier,
+	@Lazy val commandsSupplier: CommandsSupplier,
+	@Lazy val commandReflectLoader: CommandReflectLoader,
 	@Lazy val botProperties: BotProperties,
 	val resourceLoader: ResourceLoader,
 ) : AbstractLoggingBean(BotConfiguration::class) {

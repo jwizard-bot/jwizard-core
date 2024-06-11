@@ -14,6 +14,7 @@ import pl.jwizard.core.command.arg.CommandArgument
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
 import pl.jwizard.core.command.embed.EmbedColor
 import pl.jwizard.core.command.reflect.CommandListenerBean
+import pl.jwizard.core.db.GuildDbProperty
 import pl.jwizard.core.exception.AudioPlayerException
 import pl.jwizard.core.i18n.I18nResLocale
 import pl.jwizard.core.util.Formatter
@@ -34,10 +35,9 @@ class RepeatTrackCmd(
 	override fun executeMusicCmd(event: CompoundCommandEvent) {
 		val repeatsCount = getArg<Int>(CommandArgument.REPEATS, event)
 
-		val guildDetails = guildSettings.getGuildProperties(event.guildId)
-		val maxRepeats = guildDetails.audioPlayer.maxRepeatsOfTrack
+		val maxRepeats = guildSettings.fetchDbProperty(GuildDbProperty.MAX_REPEATS_OF_TRACK, event.guildId, Int::class)
 		if (repeatsCount < 2 || repeatsCount > maxRepeats) {
-			throw AudioPlayerException.TrackRepeatsOutOfBoundsException(event, maxRepeats.toInt())
+			throw AudioPlayerException.TrackRepeatsOutOfBoundsException(event, maxRepeats)
 		}
 		playerManagerFacade.setTrackRepeat(event, repeatsCount)
 
