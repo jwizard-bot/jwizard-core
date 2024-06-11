@@ -23,10 +23,10 @@ enum class SystemProperty(
 	;
 
 	companion object {
-		fun getAllFormatted(botConfiguration: BotConfiguration, guildId: String) = entries
+		fun getAllFormatted(botConfiguration: BotConfiguration, lang: String) = entries
 			.map {
 				"  `%s` :: %s".format(
-					botConfiguration.i18nService.getMessage(it.localeSet, guildId),
+					botConfiguration.i18nService.getMessage(it.localeSet, lang),
 					System.getProperty(it.property)
 				)
 			}

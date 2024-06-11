@@ -75,7 +75,7 @@ class AudioLoadResultImpl(
 	}
 
 	private fun onError(placeholder: I18nExceptionLocale, log: String) {
-		val messageEmbed = CustomEmbedBuilder(event, botConfiguration).buildErrorMessage(placeholder)
+		val messageEmbed = CustomEmbedBuilder(botConfiguration, event).buildErrorMessage(placeholder)
 		val actions = musicManager.trackScheduler.schedulerActions
 		if (musicManager.queue.isEmpty() && musicManager.audioPlayer.playingTrack == null) {
 			actions.leaveAndSendMessageAfterInactivity()
@@ -90,7 +90,7 @@ class AudioLoadResultImpl(
 		musicManager.actions.addToQueueAndOffer(track)
 		if (!musicManager.queue.isEmpty()) {
 			val trackPosition = if (musicManager.queue.size == 1) {
-				botConfiguration.i18nService.getMessage(I18nMiscLocale.NEXT_TRACK_INDEX_MESS, event.guildId)
+				botConfiguration.i18nService.getMessage(I18nMiscLocale.NEXT_TRACK_INDEX_MESS, event.lang)
 			} else {
 				musicManager.queue.size.toString()
 			}
@@ -102,8 +102,8 @@ class AudioLoadResultImpl(
 
 	private fun createSingleTrackMessage(track: AudioTrack, trackPosition: String): MessageEmbed {
 		val trackInfo = ExtendedAudioTrackInfo(track)
-		val addedByMessage = botConfiguration.i18nService.getMessage(I18nMiscLocale.TRACK_ADDDED_BY, event.guildId)
-		return CustomEmbedBuilder(event, botConfiguration)
+		val addedByMessage = botConfiguration.i18nService.getMessage(I18nMiscLocale.TRACK_ADDDED_BY, event.lang)
+		return CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(I18nResLocale.ADD_NEW_TRACK)
 			.appendKeyValueField(I18nMiscLocale.TRACK_NAME, Formatter.createRichTrackTitle(trackInfo))
@@ -120,7 +120,7 @@ class AudioLoadResultImpl(
 	private fun createPlaylistTracksMessage(audioTracks: List<AudioTrack>): MessageEmbed {
 		val trackInfo = ExtendedAudioTrackInfo(audioTracks[0])
 		val durationTime = DateUtils.convertMilisToDTF(audioTracks.sumOf { it.duration })
-		return CustomEmbedBuilder(event, botConfiguration)
+		return CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(I18nResLocale.ADD_NEW_PLAYLIST)
 			.appendKeyValueField(I18nMiscLocale.COUNT_OF_TRACKS, audioTracks.size)

@@ -29,7 +29,7 @@ class InfinitePlaylistCmd(
 
 	override fun executeDjCmd(event: CompoundCommandEvent) {
 		val isInfiniteRepeating = playerManagerFacade.toggleInfiniteLoopPlaylist(event)
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(
 				placeholder = if (isInfiniteRepeating) {
@@ -38,7 +38,7 @@ class InfinitePlaylistCmd(
 					I18nResLocale.REMOVED_PLAYLIST_FROM_INFINITE_LOOP
 				},
 				params = mapOf(
-					"playlistLoopCmd" to BotCommand.INFINITE.parseWithPrefix(botConfiguration, event),
+					"playlistLoopCmd" to BotCommand.INFINITE.parseWithPrefix(event),
 				)
 			)
 			.addColor(EmbedColor.WHITE)

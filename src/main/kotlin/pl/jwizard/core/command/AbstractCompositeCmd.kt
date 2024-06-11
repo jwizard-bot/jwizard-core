@@ -33,7 +33,7 @@ abstract class AbstractCompositeCmd(
 			execute(event)
 		} catch (ex: AbstractBotException) {
 			event.interactiveMessage.messageEmbeds.clear()
-			val embedMessage = CustomEmbedBuilder(event, botConfiguration).buildErrorMessage(
+			val embedMessage = CustomEmbedBuilder(botConfiguration, event).buildErrorMessage(
 				placeholder = ex.i18nLocale,
 				params = ex.variables
 			)
@@ -83,15 +83,15 @@ abstract class AbstractCompositeCmd(
 		.build()
 
 	private fun createButton(
-		event: CompoundCommandEvent,
 		actionComponent: ActionComponent,
 		style: ButtonStyle,
 		placeholder: I18nLocale,
-		params: Map<String, Any>
+		params: Map<String, Any>,
+		lang: String,
 	): Button {
 		return ButtonImpl(
 			actionComponent.name,
-			i18nService.getMessage(placeholder, params, event.guildId),
+			i18nService.getMessage(placeholder, params, lang),
 			style,
 			false,
 			null
@@ -99,12 +99,12 @@ abstract class AbstractCompositeCmd(
 	}
 
 	protected fun createButton(
-		event: CompoundCommandEvent,
 		actionComponent: ActionComponent,
 		style: ButtonStyle,
 		placeholder: I18nLocale,
+		lang: String,
 	): Button {
-		return createButton(event, actionComponent, style, placeholder, emptyMap())
+		return createButton(actionComponent, style, placeholder, emptyMap(), lang)
 	}
 
 	abstract fun execute(event: CompoundCommandEvent)

@@ -4,8 +4,6 @@
  */
 package pl.jwizard.core.command
 
-import pl.jwizard.core.bot.BotConfiguration
-
 enum class BotCommand(
 	val commandName: String,
 ) {
@@ -58,9 +56,8 @@ enum class BotCommand(
 	VSTOP("vstop"),
 	;
 
-	fun parseWithPrefix(botConfiguration: BotConfiguration, event: CompoundCommandEvent): String {
-		val guildDetails = botConfiguration.guildSettings.getGuildProperties(event.guildId)
-		val prefix = if (event.slashCommandEvent == null) guildDetails.legacyPrefix else "/"
+	fun parseWithPrefix(event: CompoundCommandEvent): String {
+		val prefix = if (event.slashCommandEvent == null) event.legacyPrefix else "/"
 		return "`${prefix}${commandName}`"
 	}
 

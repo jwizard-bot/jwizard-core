@@ -4,29 +4,33 @@
  */
 package pl.jwizard.core.command.embed
 
+import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.entities.MessageEmbed
+import net.dv8tion.jda.api.entities.User
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.exception.AbstractBotException
 import pl.jwizard.core.exception.I18nExceptionLocale
 import pl.jwizard.core.i18n.I18nLocale
 import pl.jwizard.core.i18n.I18nResLocale
-import net.dv8tion.jda.api.EmbedBuilder
-import net.dv8tion.jda.api.entities.MessageEmbed
-import net.dv8tion.jda.api.entities.User
 
 class CustomEmbedBuilder(
 	private val event: CompoundCommandEvent?,
 	private val botConfiguration: BotConfiguration,
-	private val guildId: String,
+	private val lang: String,
 ) : EmbedBuilder() {
+
 	private val i18nService = botConfiguration.i18nService
 
 	constructor(
-		event: CompoundCommandEvent,
-		botConfiguration: BotConfiguration
-	) : this(event, botConfiguration, "")
+		botConfiguration: BotConfiguration,
+		lang: String
+	) : this(null, botConfiguration, lang)
 
-	constructor(botConfiguration: BotConfiguration, guildId: String) : this(null, botConfiguration, guildId)
+	constructor(
+		botConfiguration: BotConfiguration,
+		event: CompoundCommandEvent
+	) : this(null, botConfiguration, event.lang)
 
 	fun addTitle(content: String): CustomEmbedBuilder {
 		setTitle(content)
@@ -44,7 +48,7 @@ class CustomEmbedBuilder(
 	}
 
 	fun addDescription(placeholder: I18nLocale, params: Map<String, Any>): CustomEmbedBuilder {
-		setDescription(i18nService.getMessage(placeholder, params, event?.guildId ?: guildId))
+		setDescription(i18nService.getMessage(placeholder, params, getMessLang()))
 		return this
 	}
 
@@ -58,7 +62,7 @@ class CustomEmbedBuilder(
 	fun appendKeyValueField(key: I18nLocale, value: Any): CustomEmbedBuilder {
 		addField(
 			MessageEmbed.Field(
-				"${i18nService.getMessage(key, event?.guildId ?: guildId)}:",
+				"${i18nService.getMessage(key, getMessLang())}:",
 				value.toString(),
 				true
 			)
@@ -101,8 +105,8 @@ class CustomEmbedBuilder(
 		params: Map<String, Any>,
 	): MessageEmbed = this
 		.setAuthor(event?.authorTag, null, event?.authorAvatarUrl)
-		.setDescription(i18nService.getMessage(placeholder, params, event?.guildId ?: guildId))
-		.appendDescription("\n\n${placeholder.createBugTrackerMessage(botConfiguration, event?.guildId ?: guildId)}")
+		.setDescription(i18nService.getMessage(placeholder, params, getMessLang()))
+		.appendDescription("\n\n${placeholder.createBugTrackerMessage(botConfiguration, getMessLang())}")
 		.setColor(EmbedColor.ERROR.color())
 		.build()
 
@@ -114,7 +118,7 @@ class CustomEmbedBuilder(
 		placeholder: I18nLocale,
 		params: Map<String, Any>,
 	): MessageEmbed = this
-		.setDescription(i18nService.getMessage(placeholder, params, event?.guildId ?: guildId))
+		.setDescription(i18nService.getMessage(placeholder, params, getMessLang()))
 		.setColor(EmbedColor.WHITE.color())
 		.build()
 
@@ -129,4 +133,7 @@ class CustomEmbedBuilder(
 		.addColor(EmbedColor.WHITE)
 		.addThumbnail(thumbnailUrl)
 		.build()
+
+	private fun getMessLang(): String = event?.lang ?: lang
+
 }

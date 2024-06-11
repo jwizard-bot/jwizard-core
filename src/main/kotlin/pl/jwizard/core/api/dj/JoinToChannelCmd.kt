@@ -29,7 +29,7 @@ class JoinToChannelCmd(
 
 	override fun executeDjCmd(event: CompoundCommandEvent) {
 		val movedToVoiceChannel = playerManagerFacade.moveToMemberCurrentVoiceChannel(event)
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(
 				placeholder = I18nResLocale.MOVE_BOT_TO_SELECTED_CHANNEL,

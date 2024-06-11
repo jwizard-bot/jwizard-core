@@ -65,13 +65,13 @@ class CommandProxyListener(
 				.split("\\|")
 				.filter { it.isNotEmpty() })
 			if (commandOptions.size < commandDetails.args.filter { it.req }.size) {
-				throwSyntaxException(compoundCommandEvent, commandName, commandDetails, false)
+				throwSyntaxException(compoundCommandEvent, commandName, commandDetails)
 			}
 			for (arg in commandDetails.args) {
 				val optionMapping = commandOptions.poll()
 				val argKey = CommandArgument.getInstation(arg.id)
 				if (argKey == null || (optionMapping == null && arg.req)) {
-					throwSyntaxException(compoundCommandEvent, commandName, commandDetails, false)
+					throwSyntaxException(compoundCommandEvent, commandName, commandDetails)
 				}
 				compoundCommandEvent.commandArgs[argKey!!] = CommandArgumentData(optionMapping, arg.type)
 			}
@@ -80,7 +80,7 @@ class CommandProxyListener(
 				val command = commandLoader.commandsProxyContainer[commandName]
 				interactiveMessage = command?.performCommand(compoundCommandEvent) ?: return
 			} catch (ex: NumberFormatException) {
-				throwSyntaxException(compoundCommandEvent, commandName, commandDetails, false)
+				throwSyntaxException(compoundCommandEvent, commandName, commandDetails)
 			}
 			val (messageEmbeds) = interactiveMessage
 			if (messageEmbeds.isNotEmpty()) {
@@ -88,7 +88,7 @@ class CommandProxyListener(
 				sendEmbeds(defferedSender, compoundCommandEvent)
 			}
 		} catch (ex: AbstractBotException) {
-			val embedMessage = CustomEmbedBuilder(botConfiguration, event.guild.id).buildErrorMessage(ex)
+			val embedMessage = CustomEmbedBuilder(botConfiguration, guildProps.lang).buildErrorMessage(ex)
 			event.channel.sendMessageEmbeds(embedMessage).queue()
 		}
 	}
@@ -106,13 +106,13 @@ class CommandProxyListener(
 			val commandDetails = commandLoader.getCommandBaseLang(commandName, guildProps.locale) ?: return
 			val commandOptions: Queue<OptionMapping> = LinkedList(event.options)
 			if (commandOptions.size < commandDetails.args.filter { it.req }.size) {
-				throwSyntaxException(compoundCommandEvent, commandName, commandDetails, true)
+				throwSyntaxException(compoundCommandEvent, commandName, commandDetails)
 			}
 			for (arg in commandDetails.args) {
 				val optionMapping = commandOptions.poll()
 				val argKey = CommandArgument.getInstation(arg.id)
 				if (argKey == null || (optionMapping == null && arg.req)) {
-					throwSyntaxException(compoundCommandEvent, commandName, commandDetails, true)
+					throwSyntaxException(compoundCommandEvent, commandName, commandDetails)
 				}
 				compoundCommandEvent.commandArgs[argKey!!] = CommandArgumentData(optionMapping.asString, arg.type)
 			}
@@ -121,7 +121,7 @@ class CommandProxyListener(
 				val command = commandLoader.commandsProxyContainer[commandName] ?: return
 				interactiveMessage = command.performCommand(compoundCommandEvent)
 			} catch (ex: NumberFormatException) {
-				throwSyntaxException(compoundCommandEvent, commandName, commandDetails, true)
+				throwSyntaxException(compoundCommandEvent, commandName, commandDetails)
 			}
 			event.deferReply().queue()
 
@@ -139,7 +139,7 @@ class CommandProxyListener(
 				sendEmbeds(defferedSender, compoundCommandEvent)
 			}
 		} catch (ex: AbstractBotException) {
-			val embedMessage = CustomEmbedBuilder(botConfiguration, guildId).buildErrorMessage(ex)
+			val embedMessage = CustomEmbedBuilder(botConfiguration, guildProps.lang).buildErrorMessage(ex)
 			event.channel.sendMessageEmbeds(embedMessage).queue()
 		}
 	}
@@ -168,17 +168,15 @@ class CommandProxyListener(
 		event: CompoundCommandEvent,
 		commandName: String,
 		commandDetails: CommandDetailsDto,
-		fromSlash: Boolean,
 	) {
 		throw CommandException.MismatchCommandArgumentsException(
 			event,
 			commandName,
 			syntax = Formatter.createCommandSyntax(
-				botConfiguration,
-				event.guildId,
 				commandName,
 				commandDetails,
-				fromSlash,
+				legacyPrefix = event.legacyPrefix,
+				lang = event.lang,
 			),
 		)
 	}

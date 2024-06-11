@@ -13,17 +13,11 @@ import pl.jwizard.core.exception.UserException
 import pl.jwizard.core.settings.GuildSettings
 
 object BotUtils {
-	fun validateUserDetails(
-		guildSettings: GuildSettings,
-		event: CompoundCommandEvent,
-	): ValidatedUserDetails {
-		val guildDetails = guildSettings.getGuildProperties(event.guildId)
-		return ValidatedUserDetails(
-			isNotOwner = event.author.id != event.guild?.ownerId,
-			isNotManager = event.member.hasPermission(Permission.MANAGE_SERVER),
-			isNotDj = event.member.roles.none { it.name == guildDetails.djRoleName }
-		)
-	}
+	fun validateUserDetails(event: CompoundCommandEvent): ValidatedUserDetails = ValidatedUserDetails(
+		isNotOwner = event.author.id != event.guild?.ownerId,
+		isNotManager = event.member.hasPermission(Permission.MANAGE_SERVER),
+		isNotDj = event.member.roles.none { it.name == event.djRoleName }
+	)
 
 	fun checkIfMemberInGuildExist(event: CompoundCommandEvent, memberId: String): Member = event.guild?.members
 		?.find { it.id == memberId }

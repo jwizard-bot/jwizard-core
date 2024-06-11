@@ -42,14 +42,14 @@ class RepeatTrackCmd(
 		playerManagerFacade.setTrackRepeat(event, repeatsCount)
 
 		val currentPlayingTrack = playerManagerFacade.currentPlayingTrack(event)
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(
 				placeholder = I18nResLocale.SET_MULTIPLE_REPEATING_TRACK,
 				params = mapOf(
 					"track" to Formatter.createRichTrackTitle(currentPlayingTrack as AudioTrackInfo),
 					"times" to repeatsCount,
-					"clearRepeatingCmd" to BotCommand.REPEATCLS.parseWithPrefix(botConfiguration, event),
+					"clearRepeatingCmd" to BotCommand.REPEATCLS.parseWithPrefix(event),
 				),
 			)
 			.addThumbnail(currentPlayingTrack.artworkUrl)

@@ -35,7 +35,7 @@ class AudioPlayerActivityEventsHandler(
 		if (botMember.voiceState != null) {
 			val musicManager = playerManagerFacade.findMusicManager(event.guild)
 			val isMuted = botMember.voiceState!!.isMuted
-			val messageEmbed = CustomEmbedBuilder(botConfiguration, event.guild.id).buildBaseMessage(
+			val messageEmbed = CustomEmbedBuilder(botConfiguration, guildLang).buildBaseMessage(
 				placeholder = if (isMuted) {
 					I18nResLocale.PAUSE_TRACK_ON_FORCE_MUTE
 				} else {

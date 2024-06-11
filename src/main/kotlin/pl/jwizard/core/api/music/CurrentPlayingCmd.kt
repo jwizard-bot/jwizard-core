@@ -4,6 +4,7 @@
  */
 package pl.jwizard.core.api.music
 
+import net.dv8tion.jda.api.interactions.components.ButtonStyle
 import pl.jwizard.core.api.AbstractMusicCmd
 import pl.jwizard.core.audio.player.PlayerManagerFacade
 import pl.jwizard.core.bot.BotConfiguration
@@ -13,7 +14,6 @@ import pl.jwizard.core.command.action.ActionComponent
 import pl.jwizard.core.command.reflect.CommandListenerBean
 import pl.jwizard.core.exception.AudioPlayerException
 import pl.jwizard.core.i18n.I18nMiscLocale
-import net.dv8tion.jda.api.interactions.components.ButtonStyle
 
 @CommandListenerBean(id = BotCommand.PLAYING)
 class CurrentPlayingCmd(
@@ -38,10 +38,10 @@ class CurrentPlayingCmd(
 			track = playingTrackInfo,
 		)
 		val button = createButton(
-			event,
 			actionComponent = ActionComponent.UPDATE_CURRENT_PLAYING_EMBED_MESSAGE,
 			style = ButtonStyle.SECONDARY,
-			placeholder = I18nMiscLocale.REFRESH_BUTTON
+			placeholder = I18nMiscLocale.REFRESH_BUTTON,
+			lang = event.lang,
 		)
 		event.appendEmbedMessage(messageEmbed)
 		event.addWebhookActionComponents(button)

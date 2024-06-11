@@ -49,18 +49,18 @@ class TrackSchedulerFacade(
 		val event = trackScheduler.event
 		val audioTrackInfo = ExtendedAudioTrackInfo(audioPlayer.playingTrack)
 		if (audioPlayer.isPaused) {
-			val messageEmbed = CustomEmbedBuilder(event, botConfiguration).buildTrackMessage(
+			val messageEmbed = CustomEmbedBuilder(botConfiguration, event).buildTrackMessage(
 				placeholder = I18nResLocale.ON_TRACK_START_ON_PAUSED,
 				params = mapOf(
 					"track" to Formatter.createRichTrackTitle(audioTrackInfo),
-					"resumeCmd" to BotCommand.RESUME.parseWithPrefix(botConfiguration, event),
+					"resumeCmd" to BotCommand.RESUME.parseWithPrefix(event),
 				),
 				thumbnailUrl = audioTrackInfo.artworkUrl
 			)
 			trackScheduler.event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)
 			jdaLog.info(event, "Starting playing audio track: ${audioTrackInfo.title} when audio player is paused")
 		} else {
-			val messageEmbed = CustomEmbedBuilder(event, botConfiguration).buildTrackMessage(
+			val messageEmbed = CustomEmbedBuilder(botConfiguration, event).buildTrackMessage(
 				placeholder = I18nResLocale.ON_TRACK_START,
 				params = mapOf(
 					"track" to Formatter.createRichTrackTitle(audioTrackInfo),
@@ -92,7 +92,7 @@ class TrackSchedulerFacade(
 		if (audioPlayer.playingTrack == null && actions.trackQueue.isEmpty() && isNoneRepeating) {
 			actions.nextTrackInfoDisabled = false
 
-			val messageEmbed = CustomEmbedBuilder(event, botConfiguration).buildBaseMessage(
+			val messageEmbed = CustomEmbedBuilder(botConfiguration, event).buildBaseMessage(
 				placeholder = I18nResLocale.ON_END_PLAYBACK_QUEUE,
 			)
 			event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)
@@ -121,7 +121,7 @@ class TrackSchedulerFacade(
 			actions.nextTrackInfoDisabled = true
 			actions.countOfRepeats -= 1
 
-			val messageEmbed = CustomEmbedBuilder(event, botConfiguration).buildBaseMessage(
+			val messageEmbed = CustomEmbedBuilder(botConfiguration, event).buildBaseMessage(
 				placeholder = I18nResLocale.MULTIPLE_REPEATING_TRACK_INFO,
 				params = mapOf(
 					"currentRepeat" to currentRepeat,
@@ -143,7 +143,7 @@ class TrackSchedulerFacade(
 
 	override fun onException(track: AudioTrack, ex: FriendlyException) {
 		val event = trackScheduler.event
-		val messageEmbed = CustomEmbedBuilder(event, botConfiguration).buildErrorMessage(
+		val messageEmbed = CustomEmbedBuilder(botConfiguration, event).buildErrorMessage(
 			placeholder = I18nExceptionLocale.ISSUE_WHILE_PLAYING_TRACK,
 		)
 		event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)

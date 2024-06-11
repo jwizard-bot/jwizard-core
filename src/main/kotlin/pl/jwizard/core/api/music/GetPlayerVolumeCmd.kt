@@ -26,7 +26,7 @@ class GetPlayerVolumeCmd(
 	}
 
 	override fun executeMusicCmd(event: CompoundCommandEvent) {
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration).buildBaseMessage(
+		val embedMessage = CustomEmbedBuilder(botConfiguration, event).buildBaseMessage(
 			placeholder = I18nResLocale.GET_CURRENT_AUDIO_PLAYER_VOLUME,
 			params = mapOf(
 				"currentVolume" to playerManagerFacade.findMusicManager(event).audioPlayer.volume,

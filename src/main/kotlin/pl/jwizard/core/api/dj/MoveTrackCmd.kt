@@ -38,7 +38,7 @@ class MoveTrackCmd(
 		val movedTrack = playerManagerFacade.moveTrackToPos(event, trackPosition)
 		val (previous, selected) = trackPosition
 
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(
 				placeholder = I18nResLocale.MOVE_TRACK_POS_TO_SELECTED_LOCATION,

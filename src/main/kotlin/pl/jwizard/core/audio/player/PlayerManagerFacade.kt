@@ -53,7 +53,7 @@ class PlayerManagerFacade(
 	override fun resumePausedTrack(event: CompoundCommandEvent) {
 		val musicManager = findMusicManager(event)
 		val pausedTrack = musicManager.actions.getPausedTrackInfo()
-		if (event.checkIfInvokerIsNotSenderOrAdmin(guildSettings, pausedTrack)) {
+		if (event.checkIfInvokerIsNotSenderOrAdmin(pausedTrack)) {
 			throw AudioPlayerException.InvokerIsNotTrackSenderOrAdminException(event)
 		}
 		musicManager.audioPlayer.isPaused = false
@@ -209,7 +209,7 @@ class PlayerManagerFacade(
 		val playingTrack = musicManager.audioPlayer.playingTrack
 		if (playingTrack == null) {
 			throw AudioPlayerException.TrackIsNotPlayingException(event)
-		} else if (event.checkIfInvokerIsNotSenderOrAdmin(guildSettings, ExtendedAudioTrackInfo(playingTrack))) {
+		} else if (event.checkIfInvokerIsNotSenderOrAdmin(ExtendedAudioTrackInfo(playingTrack))) {
 			throw AudioPlayerException.InvokerIsNotTrackSenderOrAdminException(event)
 		}
 		return musicManager

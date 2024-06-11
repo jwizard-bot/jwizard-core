@@ -33,12 +33,12 @@ class ShuffleQueueCmd(
 			throw AudioPlayerException.TrackQueueIsEmptyException(event)
 		}
 		playerManagerFacade.shuffleQueue(event)
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(
 				placeholder = I18nResLocale.QUEUE_WAS_SHUFFLED,
 				params = mapOf(
-					"showQueueCmd" to BotCommand.QUEUE.parseWithPrefix(botConfiguration, event),
+					"showQueueCmd" to BotCommand.QUEUE.parseWithPrefix(event),
 				)
 			)
 			.addColor(EmbedColor.WHITE)

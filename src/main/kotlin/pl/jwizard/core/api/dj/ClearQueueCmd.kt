@@ -33,7 +33,7 @@ class ClearQueueCmd(
 			throw AudioPlayerException.TrackQueueIsEmptyException(event)
 		}
 		val removedTracksCount = playerManagerFacade.clearQueue(event)
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(
 				placeholder = I18nResLocale.CLEAR_QUEUE,

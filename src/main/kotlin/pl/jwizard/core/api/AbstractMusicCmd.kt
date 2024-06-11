@@ -69,7 +69,7 @@ abstract class AbstractMusicCmd(
 			if (selfJoinable && botVoiceState?.inVoiceChannel() == false) {
 				event.guild?.audioManager?.openAudioConnection(userVoiceState.channel)
 			} else {
-				val (isNotOwner, isNotManager) = BotUtils.validateUserDetails(guildSettings, event)
+				val (isNotOwner, isNotManager) = BotUtils.validateUserDetails(event)
 				if (botVoiceState?.channel != userVoiceState.channel && onSameChannelWithBot
 					&& (isNotOwner || isNotManager)
 				) {
@@ -85,7 +85,7 @@ abstract class AbstractMusicCmd(
 		i18nDescription: I18nLocale,
 		i18nTimestampText: I18nLocale,
 		track: ExtendedAudioTrackInfo,
-	): MessageEmbed = CustomEmbedBuilder(event, botConfiguration)
+	): MessageEmbed = CustomEmbedBuilder(botConfiguration, event)
 		.addAuthor(track.sender)
 		.addDescription(i18nDescription)
 		.appendKeyValueField(I18nMiscLocale.TRACK_NAME, Formatter.createRichTrackTitle(track))

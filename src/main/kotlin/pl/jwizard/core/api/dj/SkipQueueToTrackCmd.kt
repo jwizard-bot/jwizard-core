@@ -39,7 +39,7 @@ class SkipQueueToTrackCmd(
 			throw AudioPlayerException.TrackPositionOutOfBoundsException(event, musicManager.queue.size)
 		}
 		val currentPlayingTrack = playerManagerFacade.skipToTrackPos(event, trackPosition)
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(
 				placeholder = I18nResLocale.SKIP_TO_SELECT_TRACK_POSITION,

@@ -26,7 +26,7 @@ abstract class AbstractVoteMusicCmd(
 	playerManagerFacade,
 ) {
 	override fun executeMusicCmd(event: CompoundCommandEvent) {
-		checkIfCommandModuleIsEnabled(event, CommandModule.VOTING)
+		checkIfCommandModuleIsEnabled(event, CommandModule.VOTE)
 		val responseData = executeVoteMusicCmd(event)
 		val votingSystemHandler = GeneralVotingSystemHandler(
 			response = responseData,
@@ -83,7 +83,7 @@ abstract class AbstractVoteMusicCmd(
 		event: CompoundCommandEvent,
 	): MessageEmbed = buildEndVoteMessage(
 		I18nMiscLocale.ON_SUCCESS_VOTING,
-		description = i18nService.getMessage(i18nPlaceholder, params, event.guildId),
+		description = i18nService.getMessage(i18nPlaceholder, params, event.lang),
 		data, EmbedColor.WHITE, event,
 	)
 
@@ -99,8 +99,8 @@ abstract class AbstractVoteMusicCmd(
 		data: VoteFinishData,
 		event: CompoundCommandEvent,
 	): MessageEmbed {
-		val message = i18nService.getMessage(I18nMiscLocale.TOO_FEW_POSITIVE_VOTES_VOTING, event.guildId) +
-			". ${i18nService.getMessage(i18nPlaceholder, params, event.guildId)}"
+		val message = i18nService.getMessage(I18nMiscLocale.TOO_FEW_POSITIVE_VOTES_VOTING, event.lang) +
+			". ${i18nService.getMessage(i18nPlaceholder, params, event.lang)}"
 		return buildEndVoteMessage(I18nMiscLocale.ON_FAILURE_VOTING, message, data, EmbedColor.DOMINATE, event)
 	}
 
@@ -117,7 +117,7 @@ abstract class AbstractVoteMusicCmd(
 		event: CompoundCommandEvent,
 	): MessageEmbed = buildEndVoteMessage(
 		I18nMiscLocale.ON_TIMEOUT_VOTING,
-		description = i18nService.getMessage(i18nPlaceholder, params, event.guildId),
+		description = i18nService.getMessage(i18nPlaceholder, params, event.lang),
 		data, EmbedColor.TINT, event,
 	)
 

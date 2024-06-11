@@ -28,7 +28,7 @@ class ResetPlayerVolumeCmd(
 
 	override fun executeDjCmd(event: CompoundCommandEvent) {
 		val defaultVolume = playerManagerFacade.findMusicManager(event).resetPlayerVolume()
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(
 				placeholder = I18nResLocale.RESET_AUDIO_PLAYER_VOLUME,
