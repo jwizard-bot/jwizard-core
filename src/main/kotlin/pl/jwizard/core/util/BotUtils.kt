@@ -14,7 +14,7 @@ import pl.jwizard.core.exception.UserException
 object BotUtils {
 	fun validateUserDetails(event: CompoundCommandEvent): ValidatedUserDetails = ValidatedUserDetails(
 		isNotOwner = event.author.id != event.guild?.ownerId,
-		isNotManager = event.member.hasPermission(Permission.MANAGE_SERVER),
+		isNotManager = !event.member.hasPermission(Permission.MANAGE_SERVER),
 		isNotDj = event.member.roles.none { it.name == event.djRoleName }
 	)
 

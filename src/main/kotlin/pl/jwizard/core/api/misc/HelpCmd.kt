@@ -5,6 +5,7 @@
 package pl.jwizard.core.api.misc
 
 import net.dv8tion.jda.api.entities.MessageEmbed
+import org.apache.commons.lang3.StringUtils
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.AbstractCompositeCmd
 import pl.jwizard.core.command.BotCommand
@@ -26,7 +27,7 @@ class HelpCmd(
 		val messageEmbed = createEmbedMessage(event, getAvailableGuildCommands(event).size)
 		val pageableData = createFormattedCommands(event)
 
-		val paginator = createDefaultPaginator(pageableData)
+		val paginator = createDefaultPaginator(pageableData, 15)
 		event.appendEmbedMessage(messageEmbed) { paginator.display(event.textChannel) }
 	}
 
@@ -38,15 +39,16 @@ class HelpCmd(
 		val prefix = if (event.slashCommandEvent == null) event.legacyPrefix else "/"
 		val enabledCommands = getAvailableGuildCommands(event)
 
-		for ((_, moduleData) in commandModules) {
+		for ((key, moduleData) in commandModules) {
 			val categoryCommands = botCommands
-				.filter { (name, data) -> data.module == name && enabledCommands.contains(name) }
+				.filter { (name, data) -> data.module == key && enabledCommands.contains(name) }
 			if (categoryCommands.isEmpty()) {
 				continue
 			}
 			commands.add("**${BotUtils.getLang(event.lang, moduleData.name).uppercase()}**\n")
+			var i = 0
 			for ((commandKey, commandData) in categoryCommands) {
-				val joiner = StringJoiner("")
+				val joiner = StringJoiner(StringUtils.EMPTY)
 				joiner.add("`")
 				joiner.add(prefix)
 				joiner.add(commandKey)
@@ -59,10 +61,11 @@ class HelpCmd(
 				if (descTranslations.size == commandData.argsDesc.size) {
 					joiner.add(" ${BotUtils.getLang(event.lang, descTranslations)}")
 				}
-				joiner.add("`\n")
+				joiner.add("` - ")
 				joiner.add(BotUtils.getLang(event.lang, commandData.commandDesc))
-				joiner.add("\n")
-
+				if (++i == categoryCommands.size) {
+					joiner.add("\n")
+				}
 				commands.add(joiner.toString())
 			}
 		}

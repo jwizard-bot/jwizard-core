@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.exceptions.PermissionException
 import net.dv8tion.jda.api.interactions.components.Button
 import net.dv8tion.jda.api.interactions.components.ButtonStyle
 import net.dv8tion.jda.internal.interactions.ButtonImpl
+import org.apache.commons.lang3.StringUtils
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.action.ActionComponent
 import pl.jwizard.core.command.arg.ArgumentTypeCaster
@@ -60,7 +61,7 @@ abstract class AbstractCompositeCmd(
 		return caster.clazz.cast(caster.castCallback(value)) as T
 	}
 
-	protected fun createDefaultPaginator(items: List<String>): Paginator = Paginator.Builder()
+	protected fun createDefaultPaginator(items: List<String>, pageSize: Int): Paginator = Paginator.Builder()
 		.setColumns(1)
 		.setFinalAction {
 			try {
@@ -68,8 +69,8 @@ abstract class AbstractCompositeCmd(
 			} catch (ignore: PermissionException) {
 			}
 		}
-		.setItemsPerPage(botConfiguration.botProperties.pagination.maxElementsPerPage - 1)
-		.setText("")
+		.setItemsPerPage(pageSize)
+		.setText(StringUtils.EMPTY)
 		.showPageNumbers(true)
 		.setColor(EmbedColor.WHITE.color())
 		.setEventWaiter(botConfiguration.eventWaiter)
@@ -94,6 +95,10 @@ abstract class AbstractCompositeCmd(
 			false,
 			null
 		)
+	}
+
+	protected fun createDefaultPaginator(items: List<String>): Paginator {
+		return createDefaultPaginator(items, botConfiguration.botProperties.pagination.maxElementsPerPage - 1)
 	}
 
 	protected fun createButton(
