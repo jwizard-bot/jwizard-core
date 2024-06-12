@@ -38,13 +38,13 @@ class LoopTrackCmd(
 		} else {
 			I18nResLocale.REMOVED_TRACK_FROM_INFINITE_LOOP
 		}
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(
 				placeholder = messagePlaceholder,
 				params = mapOf(
 					"track" to Formatter.createRichTrackTitle(playingTrack as AudioTrackInfo),
-					"loopCmd" to BotCommand.LOOP.parseWithPrefix(botConfiguration, event),
+					"loopCmd" to BotCommand.LOOP.parseWithPrefix(event),
 				)
 			)
 			.addThumbnail(playingTrack.artworkUrl)

@@ -26,4 +26,6 @@ object DateUtils {
 			SEC.toSeconds(seconds) - MIN.toSeconds(SEC.toMinutes(seconds))
 		)
 	}
+
+	fun convertSecToMin(seconds: Int): String = convertSecToMin(seconds.toLong())
 }

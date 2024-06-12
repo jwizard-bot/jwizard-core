@@ -4,6 +4,7 @@
  */
 package pl.jwizard.core.api.dj
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo
 import pl.jwizard.core.api.AbstractDjCmd
 import pl.jwizard.core.audio.player.PlayerManagerFacade
 import pl.jwizard.core.bot.BotConfiguration
@@ -14,7 +15,6 @@ import pl.jwizard.core.command.embed.EmbedColor
 import pl.jwizard.core.command.reflect.CommandListenerBean
 import pl.jwizard.core.i18n.I18nResLocale
 import pl.jwizard.core.util.Formatter
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo
 
 @CommandListenerBean(id = BotCommand.STOP)
 class StopClearQueueCmd(
@@ -35,7 +35,7 @@ class StopClearQueueCmd(
 		actions.clearAndDestroy(false)
 		actions.leaveAndSendMessageAfterInactivity()
 
-		val messageEmbedBuilder = CustomEmbedBuilder(event, botConfiguration)
+		val messageEmbedBuilder = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addColor(EmbedColor.WHITE)
 

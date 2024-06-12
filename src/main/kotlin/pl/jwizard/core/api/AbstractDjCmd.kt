@@ -20,7 +20,7 @@ abstract class AbstractDjCmd(
 	protected var allowAlsoForNormal = true
 
 	override fun executeMusicCmd(event: CompoundCommandEvent) {
-		val validatedUserDetails = BotUtils.validateUserDetails(guildSettings, event)
+		val validatedUserDetails = BotUtils.validateUserDetails(event)
 		val typicalRightsMember = validatedUserDetails.concatPositive()
 		val actions = playerManagerFacade.findMusicManager(event).actions
 		if (allowAlsoForNormal) {

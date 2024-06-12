@@ -31,7 +31,7 @@ class SkipTrackCmd(
 
 	override fun executeMusicCmd(event: CompoundCommandEvent) {
 		val skippedTrack = playerManagerFacade.skipTrack(event)
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(
 				placeholder = I18nResLocale.SKIP_TRACK_AND_PLAY_NEXT,

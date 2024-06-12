@@ -23,8 +23,6 @@ java.targetCompatibility = jvmVersion
 
 repositories {
 	mavenCentral()
-	maven { url = uri("https://repo.spring.io/milestone") }
-	maven { url = uri("https://repo.spring.io/snapshot") }
 	maven { url = uri("https://m2.dv8tion.net/releases") }
 	maven { url = uri("https://m2.chew.pro/releases") }
 	maven { url = uri("https://maven.lavalink.dev/snapshots") }
@@ -47,12 +45,18 @@ dependencies {
 	implementation("dev.lavalink.youtube:v2:1.2.0")
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.cloud:spring-cloud-vault-config:4.1.0")
-	implementation("com.squareup.okhttp3:okhttp:4.12.0")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.1")
 	implementation("com.fasterxml.jackson.module:jackson-module-parameter-names:2.16.1")
 	implementation("commons-validator:commons-validator:1.8.0")
+	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
+	implementation("com.mysql:mysql-connector-j:8.4.0")
+	implementation("org.apache.commons:commons-collections4:4.4")
+	implementation("org.apache.commons:commons-text:1.12.0")
+	implementation("commons-io:commons-io:2.16.1")
+
 	runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
 	testImplementation("org.jetbrains.kotlin:kotlin-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

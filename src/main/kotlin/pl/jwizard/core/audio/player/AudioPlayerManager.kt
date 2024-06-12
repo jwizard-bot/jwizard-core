@@ -13,7 +13,7 @@ import dev.lavalink.youtube.clients.TvHtml5EmbeddedWithThumbnail
 import dev.lavalink.youtube.clients.WebWithThumbnail
 import org.apache.http.client.config.RequestConfig
 import org.springframework.stereotype.Component
-import pl.jwizard.core.bot.BotProperties
+import pl.jwizard.core.bot.properties.BotProperties
 
 @Component
 class AudioPlayerManager(

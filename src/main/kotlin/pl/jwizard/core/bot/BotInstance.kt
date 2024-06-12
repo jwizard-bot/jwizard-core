@@ -4,16 +4,6 @@
  */
 package pl.jwizard.core.bot
 
-import javax.security.auth.login.LoginException
-import kotlin.system.exitProcess
-import pl.jwizard.core.audio.AloneOnChannelListener
-import pl.jwizard.core.audio.player.AudioPlayerManager
-import pl.jwizard.core.audio.player.PlayerManagerFacade
-import pl.jwizard.core.command.reflect.CommandLoader
-import pl.jwizard.core.http.AuthSessionHandler
-import pl.jwizard.core.log.AbstractLoggingBean
-import pl.jwizard.core.seq.ActivityStatusSequencer
-import org.springframework.stereotype.Component
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.OnlineStatus
@@ -22,14 +12,23 @@ import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.events.ShutdownEvent
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.cache.CacheFlag
+import org.springframework.stereotype.Component
+import pl.jwizard.core.audio.AloneOnChannelListener
+import pl.jwizard.core.audio.player.AudioPlayerManager
+import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.bot.properties.BotProperties
+import pl.jwizard.core.command.reflect.CommandReflectLoader
+import pl.jwizard.core.log.AbstractLoggingBean
+import pl.jwizard.core.seq.ActivityStatusSequencer
+import javax.security.auth.login.LoginException
+import kotlin.system.exitProcess
 
 @Component
 class BotInstance(
 	private val botProperties: BotProperties,
-	private val commandLoader: CommandLoader,
+	private val commandReflectLoader: CommandReflectLoader,
 	private val botEventHandler: BotEventHandler,
 	private val aloneOnChannelListener: AloneOnChannelListener,
-	private val authSessionHandler: AuthSessionHandler,
 	private val activityStatusSequencer: ActivityStatusSequencer,
 	private val audioPlayerManager: AudioPlayerManager,
 	private val playerManagerFacade: PlayerManagerFacade,
@@ -42,10 +41,8 @@ class BotInstance(
 	fun start() {
 		log.info("Bot instance is warming up...")
 		try {
-			authSessionHandler.loginAndCreateSession()
-
-			commandLoader.fetchCommandsFromApi()
-			commandLoader.reflectAndLoadCommands()
+			commandReflectLoader.loadCommandsAndCheckDataIntegrity()
+			commandReflectLoader.loadCommandsViaReflectionApi()
 
 			jda = JDABuilder
 				.create(botProperties.instance.authToken, GATEWAY_INTENTS)

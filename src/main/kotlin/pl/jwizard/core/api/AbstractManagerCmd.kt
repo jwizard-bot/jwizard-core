@@ -16,7 +16,7 @@ abstract class AbstractManagerCmd(
 	botConfiguration
 ) {
 	override fun execute(event: CompoundCommandEvent) {
-		val (isNotOwner, isNotManager) = BotUtils.validateUserDetails(guildSettings, event)
+		val (isNotOwner, isNotManager) = BotUtils.validateUserDetails(event)
 		if (isNotOwner && isNotManager) {
 			throw UserException.UnauthorizedManagerException(event)
 		}

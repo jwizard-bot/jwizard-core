@@ -36,7 +36,7 @@ class SetPlayerVolumeCmd(
 			throw CommandException.VolumeUnitsOutOfBoundsException(event, 0, 150)
 		}
 		playerManagerFacade.setPlayerVolume(event, newVolumeUnits)
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(
 				placeholder = I18nResLocale.SET_CURRENT_AUDIO_PLAYER_VOLUME,

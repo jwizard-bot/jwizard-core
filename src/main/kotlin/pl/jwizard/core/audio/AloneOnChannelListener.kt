@@ -4,23 +4,24 @@
  */
 package pl.jwizard.core.audio
 
-import java.time.Instant
-import java.util.concurrent.TimeUnit
-import pl.jwizard.core.audio.player.PlayerManagerFacade
-import pl.jwizard.core.bot.BotConfiguration
-import pl.jwizard.core.log.AbstractLoggingBean
-import pl.jwizard.core.settings.GuildSettings
-import pl.jwizard.core.util.Formatter
-import org.springframework.stereotype.Component
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
+import org.springframework.stereotype.Component
+import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.bot.BotConfiguration
+import pl.jwizard.core.db.GuildDbProperty
+import pl.jwizard.core.db.GuildSettingsSupplier
+import pl.jwizard.core.log.AbstractLoggingBean
+import pl.jwizard.core.util.Formatter
+import java.time.Instant
+import java.util.concurrent.TimeUnit
 
 @Component
 class AloneOnChannelListener(
 	private val botConfiguration: BotConfiguration,
 	private val playerManagerFacade: PlayerManagerFacade,
-	private val guildSettings: GuildSettings,
+	private val guildSettingsSupplier: GuildSettingsSupplier,
 ) : AbstractLoggingBean(AloneOnChannelListener::class) {
 
 	private final lateinit var jda: JDA
@@ -52,8 +53,8 @@ class AloneOnChannelListener(
 				removeFromGuild.add(guildId)
 				continue
 			}
-			val guildSettings = guildSettings.getGuildProperties(guild.id)
-			val maxInactivity = guildSettings.inactivity.leaveEmptyChannelSec
+			val maxInactivity = guildSettingsSupplier
+				.fetchDbProperty(GuildDbProperty.LEAVE_EMPTY_CHANNEL_SEC, guild.id, Int::class)
 			if (time.epochSecond > (Instant.now().epochSecond - maxInactivity)) {
 				continue
 			}

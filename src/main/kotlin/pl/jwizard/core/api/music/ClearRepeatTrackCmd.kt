@@ -32,13 +32,13 @@ class ClearRepeatTrackCmd(
 		playerManagerFacade.setTrackRepeat(event, 0)
 		val currentPlayingTrack = playerManagerFacade.currentPlayingTrack(event)
 
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(
 				placeholder = I18nResLocale.REMOVE_MULTIPLE_REPEATING_TRACK,
 				params = mapOf(
 					"track" to Formatter.createRichTrackTitle(currentPlayingTrack as AudioTrackInfo),
-					"repeatingCmd" to BotCommand.REPEAT.parseWithPrefix(botConfiguration, event),
+					"repeatingCmd" to BotCommand.REPEAT.parseWithPrefix(event),
 				)
 			)
 			.addThumbnail(currentPlayingTrack.artworkUrl)

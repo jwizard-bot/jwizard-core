@@ -47,13 +47,13 @@ class PauseTrackCmd(
 	private fun createCurrentPausedTrackMessage(
 		event: CompoundCommandEvent,
 		track: ExtendedAudioTrackInfo,
-	) = CustomEmbedBuilder(event, botConfiguration)
+	) = CustomEmbedBuilder(botConfiguration, event)
 		.addAuthor()
 		.addDescription(
 			placeholder = I18nResLocale.PAUSED_TRACK,
 			params = mapOf(
 				"track" to Formatter.createRichTrackTitle(track),
-				"resumeCmd" to BotCommand.RESUME.parseWithPrefix(botConfiguration, event),
+				"resumeCmd" to BotCommand.RESUME.parseWithPrefix(event),
 			),
 		)
 		.appendValueField(Formatter.createPercentageRepresentation(track), false)

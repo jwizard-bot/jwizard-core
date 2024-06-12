@@ -33,14 +33,14 @@ class ResumeTrackCmd(
 		playerManagerFacade.resumePausedTrack(event)
 		val currentTrack = playerManagerFacade.currentPlayingTrack(event)
 
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(
 				placeholder = I18nResLocale.RESUME_TRACK,
 				params = mapOf(
 					"track" to Formatter.createRichTrackTitle(currentTrack as AudioTrackInfo),
 					"invoker" to event.authorTag,
-					"pauseCmd" to BotCommand.PAUSE.parseWithPrefix(botConfiguration, event),
+					"pauseCmd" to BotCommand.PAUSE.parseWithPrefix(event),
 				)
 			)
 			.addThumbnail(currentTrack.artworkUrl)

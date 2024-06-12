@@ -4,6 +4,7 @@
  */
 package pl.jwizard.core.api.vote
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo
 import pl.jwizard.core.api.AbstractVoteMusicCmd
 import pl.jwizard.core.audio.player.PlayerManagerFacade
 import pl.jwizard.core.bot.BotConfiguration
@@ -13,7 +14,6 @@ import pl.jwizard.core.command.reflect.CommandListenerBean
 import pl.jwizard.core.i18n.I18nResLocale
 import pl.jwizard.core.util.Formatter
 import pl.jwizard.core.vote.VoteResponseData
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo
 
 @CommandListenerBean(id = BotCommand.VSKIP)
 class VoteSkipTrackCmd(

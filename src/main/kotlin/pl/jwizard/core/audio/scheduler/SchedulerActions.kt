@@ -4,28 +4,28 @@
  */
 package pl.jwizard.core.audio.scheduler
 
-import java.util.*
-import java.util.concurrent.ConcurrentLinkedQueue
-import java.util.concurrent.ScheduledFuture
-import java.util.concurrent.TimeUnit
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack
+import net.dv8tion.jda.api.entities.Member
 import pl.jwizard.core.audio.ExtendedAudioTrackInfo
 import pl.jwizard.core.audio.TrackPosition
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
+import pl.jwizard.core.db.GuildDbProperty
 import pl.jwizard.core.exception.AudioPlayerException
 import pl.jwizard.core.i18n.I18nResLocale
 import pl.jwizard.core.log.AbstractLoggingBean
 import pl.jwizard.core.util.DateUtils
 import pl.jwizard.core.util.Formatter
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import net.dv8tion.jda.api.entities.Member
+import java.util.*
+import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.TimeUnit
 
 class SchedulerActions(
 	private val botConfiguration: BotConfiguration,
 	private val trackScheduler: TrackScheduler,
 ) : AbstractLoggingBean(SchedulerActions::class) {
 
-	val trackQueue: Queue<AudioTrack> = ConcurrentLinkedQueue()
+	val trackQueue: Queue<AudioTrack> = LinkedList()
 	private var totalCountOfRepeats = 0
 
 	var threadsCountToLeave: ScheduledFuture<*>? = null
@@ -39,7 +39,6 @@ class SchedulerActions(
 	var pausedTrack: AudioTrack? = null
 	var countOfRepeats = 0
 	var nextTrackInfoDisabled = false
-	var isFirstTrack = true
 
 	internal fun addToQueueAndOffer(audioTrack: AudioTrack) {
 		if (!trackScheduler.audioPlayer.startTrack(audioTrack, true)) {
@@ -102,10 +101,9 @@ class SchedulerActions(
 		infiniteRepeating = false
 		nextTrackInfoDisabled = false
 		infinitePlaylistRepeating = false
-		isFirstTrack = true
 
 		if (showMessage) {
-			val messageEmbed = CustomEmbedBuilder(trackScheduler.event, botConfiguration).buildBaseMessage(
+			val messageEmbed = CustomEmbedBuilder(botConfiguration, trackScheduler.event).buildBaseMessage(
 				placeholder = I18nResLocale.LEAVE_EMPTY_CHANNEL
 			)
 			trackScheduler.event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)
@@ -115,12 +113,12 @@ class SchedulerActions(
 	}
 
 	fun leaveAndSendMessageAfterInactivity() {
-		val guildDetails = botConfiguration.guildSettings.getGuildProperties(trackScheduler.event.guildId)
-		val timeToLeaveChannel = guildDetails.inactivity.leaveNoTracksChannelSec
+		val timeToLeaveChannel = botConfiguration.guildSettingsSupplier
+			.fetchDbProperty(GuildDbProperty.LEAVE_NO_TRACKS_SEC, trackScheduler.event.guildId, Int::class)
 		threadsCountToLeave = botConfiguration.threadPool.schedule({
-			val messageEmbed = CustomEmbedBuilder(trackScheduler.event, botConfiguration).buildBaseMessage(
+			val messageEmbed = CustomEmbedBuilder(botConfiguration, trackScheduler.event).buildBaseMessage(
 				I18nResLocale.LEAVE_END_PLAYBACK_QUEUE,
-				params = mapOf("elapsed" to DateUtils.convertSecToMin(timeToLeaveChannel))
+				params = mapOf("elapsed" to DateUtils.convertSecToMin(timeToLeaveChannel.toLong()))
 			)
 			if (!trackScheduler.lockedGuilds.contains(trackScheduler.event.guildId)) {
 				clearAndDestroy(false)
@@ -135,7 +133,7 @@ class SchedulerActions(
 					"Leaved voice channel after $timeToLeaveChannel seconds of inactivity"
 				)
 			}
-		}, timeToLeaveChannel, TimeUnit.SECONDS)
+		}, timeToLeaveChannel.toLong(), TimeUnit.SECONDS)
 	}
 
 	fun getAverageTracksDuration(): Long = trackQueue

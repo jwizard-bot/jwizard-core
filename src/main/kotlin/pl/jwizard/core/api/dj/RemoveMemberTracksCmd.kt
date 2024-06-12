@@ -36,7 +36,7 @@ class RemoveMemberTracksCmd(
 			.mapIndexed { index, track -> Formatter.createRichPageableTrackInfo(index, track) }
 
 		val removedTracksListPaginator = createDefaultPaginator(pageableRemovedTracks)
-		val embedMessage = CustomEmbedBuilder(event, botConfiguration)
+		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(
 				placeholder = I18nResLocale.REMOVED_TRACKS_FROM_SELECTED_MEMBER,

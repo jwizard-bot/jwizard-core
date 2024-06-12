@@ -14,6 +14,7 @@ import pl.jwizard.core.command.CommandModule
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
 import pl.jwizard.core.command.embed.EmbedColor
+import pl.jwizard.core.db.GuildDbProperty
 import pl.jwizard.core.exception.AudioPlayerException
 import pl.jwizard.core.exception.CommandException
 import pl.jwizard.core.exception.UserException
@@ -37,8 +38,9 @@ abstract class AbstractMusicCmd(
 
 	override fun execute(event: CompoundCommandEvent) {
 		checkIfCommandModuleIsEnabled(event, CommandModule.MUSIC)
-		val musicTextChannelId = guildSettings.getGuildProperties(event.guildId).musicTextChannelId
-		if (musicTextChannelId != null && event.textChannel.id != musicTextChannelId) {
+		val musicTextChannelId = guildSettings
+			.fetchDbProperty(GuildDbProperty.MUSIC_TEXT_CHANNEL_ID, event.guildId, String::class)
+		if (musicTextChannelId.isNotEmpty() && event.textChannel.id != musicTextChannelId) {
 			val sendingChannel = event.guild?.getTextChannelById(musicTextChannelId)
 			throw AudioPlayerException.ForbiddenTextChannelException(event, sendingChannel?.name ?: "")
 		}
@@ -69,7 +71,7 @@ abstract class AbstractMusicCmd(
 			if (selfJoinable && botVoiceState?.inVoiceChannel() == false) {
 				event.guild?.audioManager?.openAudioConnection(userVoiceState.channel)
 			} else {
-				val (isNotOwner, isNotManager) = BotUtils.validateUserDetails(guildSettings, event)
+				val (isNotOwner, isNotManager) = BotUtils.validateUserDetails(event)
 				if (botVoiceState?.channel != userVoiceState.channel && onSameChannelWithBot
 					&& (isNotOwner || isNotManager)
 				) {
@@ -85,7 +87,7 @@ abstract class AbstractMusicCmd(
 		i18nDescription: I18nLocale,
 		i18nTimestampText: I18nLocale,
 		track: ExtendedAudioTrackInfo,
-	): MessageEmbed = CustomEmbedBuilder(event, botConfiguration)
+	): MessageEmbed = CustomEmbedBuilder(botConfiguration, event)
 		.addAuthor(track.sender)
 		.addDescription(i18nDescription)
 		.appendKeyValueField(I18nMiscLocale.TRACK_NAME, Formatter.createRichTrackTitle(track))

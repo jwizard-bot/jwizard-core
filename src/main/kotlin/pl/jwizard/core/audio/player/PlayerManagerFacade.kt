@@ -4,6 +4,10 @@
  */
 package pl.jwizard.core.audio.player
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack
+import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.VoiceChannel
+import org.springframework.stereotype.Component
 import pl.jwizard.core.audio.AudioLoadResultImpl
 import pl.jwizard.core.audio.ExtendedAudioTrackInfo
 import pl.jwizard.core.audio.TrackPosition
@@ -13,19 +17,13 @@ import pl.jwizard.core.exception.AudioPlayerException
 import pl.jwizard.core.exception.UserException
 import pl.jwizard.core.exception.UtilException
 import pl.jwizard.core.log.AbstractLoggingBean
-import pl.jwizard.core.settings.GuildSettings
 import pl.jwizard.core.util.BotUtils
 import pl.jwizard.core.util.Formatter
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import org.springframework.stereotype.Component
-import net.dv8tion.jda.api.entities.Guild
-import net.dv8tion.jda.api.entities.VoiceChannel
 
 @Component
 class PlayerManagerFacade(
 	private val audioPlayerManager: AudioPlayerManager,
 	private val botConfiguration: BotConfiguration,
-	private val guildSettings: GuildSettings,
 ) : PlayerManager, AbstractLoggingBean(PlayerManagerFacade::class) {
 
 	private val musicManagers = mutableMapOf<String, MusicManager>()
@@ -40,6 +38,7 @@ class PlayerManagerFacade(
 			isUrlPattern,
 			lockedGuilds
 		)
+		event.invokedBySender = true // set hook to inform, that sending of this message was invoked by user
 		event.guild?.audioManager?.isSelfDeafened = true
 		audioPlayerManager.loadItemOrdered(musicManager, trackUrl, audioLoadResultHandler)
 	}
@@ -53,7 +52,7 @@ class PlayerManagerFacade(
 	override fun resumePausedTrack(event: CompoundCommandEvent) {
 		val musicManager = findMusicManager(event)
 		val pausedTrack = musicManager.actions.getPausedTrackInfo()
-		if (event.checkIfInvokerIsNotSenderOrAdmin(guildSettings, pausedTrack)) {
+		if (event.checkIfInvokerIsNotSenderOrAdmin(pausedTrack)) {
 			throw AudioPlayerException.InvokerIsNotTrackSenderOrAdminException(event)
 		}
 		musicManager.audioPlayer.isPaused = false
@@ -209,7 +208,7 @@ class PlayerManagerFacade(
 		val playingTrack = musicManager.audioPlayer.playingTrack
 		if (playingTrack == null) {
 			throw AudioPlayerException.TrackIsNotPlayingException(event)
-		} else if (event.checkIfInvokerIsNotSenderOrAdmin(guildSettings, ExtendedAudioTrackInfo(playingTrack))) {
+		} else if (event.checkIfInvokerIsNotSenderOrAdmin(ExtendedAudioTrackInfo(playingTrack))) {
 			throw AudioPlayerException.InvokerIsNotTrackSenderOrAdminException(event)
 		}
 		return musicManager

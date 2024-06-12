@@ -4,19 +4,20 @@
  */
 package pl.jwizard.core.vote
 
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
-import kotlin.math.ceil
-import pl.jwizard.core.bot.BotConfiguration
-import pl.jwizard.core.command.CompoundCommandEvent
-import pl.jwizard.core.command.embed.UnicodeEmoji
-import pl.jwizard.core.exception.UserException
-import pl.jwizard.core.log.AbstractLoggingBean
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent
 import net.dv8tion.jda.api.requests.RestAction
+import pl.jwizard.core.bot.BotConfiguration
+import pl.jwizard.core.command.CompoundCommandEvent
+import pl.jwizard.core.command.embed.UnicodeEmoji
+import pl.jwizard.core.db.GuildDbProperty
+import pl.jwizard.core.exception.UserException
+import pl.jwizard.core.log.AbstractLoggingBean
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
+import kotlin.math.ceil
 
 class GeneralVotingSystemHandler(
 	private val response: VoteResponseData,
@@ -50,13 +51,14 @@ class GeneralVotingSystemHandler(
 	}
 
 	private fun fabricateEventWaiter(message: Message) {
-		val guildDetails = botConfiguration.guildSettings.getGuildProperties(event.guildId)
+		val timeToFinishSec = botConfiguration.guildSettingsSupplier
+			.fetchDbProperty(GuildDbProperty.MAX_VOTING_TIME, event.guildId, Int::class)
 		val predictorData = VotePredictorData(forYes, forNo, requiredVotes, succeed, voters, response, message)
 		botConfiguration.eventWaiter.waitForEvent(
 			GuildMessageReactionAddEvent::class.java,
 			{ onAfterVotePredicate(it, predictorData) },
 			{ onAfterFinishVoting(predictorData) },
-			guildDetails.voting.timeToFinishSec,
+			timeToFinishSec.toLong(),
 			TimeUnit.SECONDS,
 			{ onAfterTimeout(predictorData) },
 		)
@@ -114,12 +116,14 @@ class GeneralVotingSystemHandler(
 		val ratioFabricator: (votes: AtomicInteger) -> Double =
 			{ (1.0 * it.get().toDouble() / totalMembersOnChannel.toDouble()) * 100 }
 
-		val guildDetails = botConfiguration.guildSettings.getGuildProperties(gEvent.guild.id)
-
 		val differentYesRatio = ratioFabricator(predictorData.forYes)
 		val differentNoRatio = ratioFabricator(predictorData.forNo)
-		val percentageRatio = guildDetails.voting.percentageRatio
 
+		val percentageRatio = botConfiguration.guildSettingsSupplier.fetchDbProperty(
+			GuildDbProperty.VOTING_PERCENTAGE_RATIO,
+			gEvent.guild.id,
+			Int::class
+		)
 		predictorData.required.set(ceil(totalMembersOnChannel * (percentageRatio.toDouble() / 100)).toInt())
 		if (differentYesRatio >= percentageRatio) {
 			predictorData.succeed.set(true)

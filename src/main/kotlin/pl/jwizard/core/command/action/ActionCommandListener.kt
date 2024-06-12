@@ -11,6 +11,7 @@ import pl.jwizard.core.audio.player.PlayerManagerFacade
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
 import pl.jwizard.core.command.embed.EmbedColor
+import pl.jwizard.core.db.GuildSettingsSupplier
 import pl.jwizard.core.i18n.I18nMiscLocale
 import pl.jwizard.core.log.AbstractLoggingBean
 import pl.jwizard.core.util.DateUtils
@@ -19,7 +20,8 @@ import pl.jwizard.core.util.Formatter
 @Component
 class ActionCommandListener(
 	private val botConfiguration: BotConfiguration,
-	private val playerManagerFacade: PlayerManagerFacade
+	private val playerManagerFacade: PlayerManagerFacade,
+	private val guildSettingsSupplier: GuildSettingsSupplier,
 ) : AbstractLoggingBean(ActionCommandListener::class), ActionProxyHandler {
 
 	override fun updateCurrentPlayingEmbedMessage(buttonClickEvent: ButtonClickEvent) {
@@ -27,11 +29,13 @@ class ActionCommandListener(
 		if (embedMessage.isEmpty || buttonClickEvent.guild == null) {
 			return
 		}
-		val musicManager = playerManagerFacade.findMusicManager(buttonClickEvent.guild!!)
+		val guild = buttonClickEvent.guild!!
+		val musicManager = playerManagerFacade.findMusicManager(guild)
 		val currentPlayingTrack = musicManager?.audioPlayer?.playingTrack
 		if (currentPlayingTrack != null) {
 			val playingTrack = ExtendedAudioTrackInfo(currentPlayingTrack)
-			embedMessage = CustomEmbedBuilder(botConfiguration, buttonClickEvent.guild!!.id)
+			val guildLang = guildSettingsSupplier.fetchGuildLang(guild.id)
+			embedMessage = CustomEmbedBuilder(botConfiguration, guildLang)
 				.addAuthor(playingTrack.sender)
 				.addDescription(I18nMiscLocale.CURRENT_PLAYING_TRACK)
 				.appendKeyValueField(I18nMiscLocale.TRACK_NAME, Formatter.createRichTrackTitle(playingTrack))

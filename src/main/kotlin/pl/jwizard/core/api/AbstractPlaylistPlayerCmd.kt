@@ -20,7 +20,7 @@ abstract class AbstractPlaylistPlayerCmd(
 		checkIfCommandModuleIsEnabled(event, CommandModule.PLAYLIST)
 		executePlaylistPlayerCmd(event)
 	}
-	
+
 	abstract fun executePlaylistPlayerCmd(event: CompoundCommandEvent)
 }
 

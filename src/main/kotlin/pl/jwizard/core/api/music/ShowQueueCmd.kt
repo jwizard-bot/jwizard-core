@@ -4,6 +4,7 @@
  */
 package pl.jwizard.core.api.music
 
+import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.core.api.AbstractMusicCmd
 import pl.jwizard.core.audio.ExtendedAudioTrackInfo
 import pl.jwizard.core.audio.player.PlayerManagerFacade
@@ -17,7 +18,6 @@ import pl.jwizard.core.exception.AudioPlayerException
 import pl.jwizard.core.i18n.I18nMiscLocale
 import pl.jwizard.core.util.DateUtils
 import pl.jwizard.core.util.Formatter
-import net.dv8tion.jda.api.entities.MessageEmbed
 
 @CommandListenerBean(id = BotCommand.QUEUE)
 class ShowQueueCmd(
@@ -63,7 +63,7 @@ class ShowQueueCmd(
 		timeToNextTrack: String,
 		averageTrackDuration: Long,
 		repeatingState: Boolean,
-	): MessageEmbed = CustomEmbedBuilder(event, botConfiguration)
+	): MessageEmbed = CustomEmbedBuilder(botConfiguration, event)
 		.appendKeyValueField(I18nMiscLocale.ALL_TRACKS_IN_QUEUE_COUNT, queueSize)
 		.addSpace()
 		.appendKeyValueField(
@@ -78,7 +78,7 @@ class ShowQueueCmd(
 		)
 		.appendKeyValueField(
 			I18nMiscLocale.PLAYLIST_REPEATING_MODE,
-			i18nService.getMessage(Formatter.toStateTag(repeatingState), event.guildId)
+			i18nService.getMessage(Formatter.toStateTag(repeatingState), event.lang)
 		)
 		.addColor(EmbedColor.WHITE)
 		.build()
