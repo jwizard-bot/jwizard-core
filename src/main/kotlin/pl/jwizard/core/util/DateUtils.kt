@@ -21,7 +21,10 @@ object DateUtils {
 		if (minutes == 0L) {
 			return "${SEC.toSeconds(seconds) - MIN.toSeconds(SEC.toMinutes(seconds))}s"
 		}
-		return "%02dm, %02ds".format(
+		if (seconds == 0L) {
+			return "${minutes}m" // if has not seconds return only minutes
+		}
+		return "%dm, %02ds".format(
 			minutes,
 			SEC.toSeconds(seconds) - MIN.toSeconds(SEC.toMinutes(seconds))
 		)
