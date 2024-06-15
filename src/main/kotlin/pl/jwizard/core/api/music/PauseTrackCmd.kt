@@ -6,7 +6,7 @@ package pl.jwizard.core.api.music
 
 import pl.jwizard.core.api.AbstractMusicCmd
 import pl.jwizard.core.audio.ExtendedAudioTrackInfo
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -22,7 +22,7 @@ import pl.jwizard.core.util.Formatter
 @CommandListenerBean(id = BotCommand.PAUSE)
 class PauseTrackCmd(
 	botConfiguration: BotConfiguration,
-	playerManagerFacade: PlayerManagerFacade
+	playerManagerFacade: PlayerManager
 ) : AbstractMusicCmd(
 	botConfiguration,
 	playerManagerFacade
@@ -33,8 +33,8 @@ class PauseTrackCmd(
 	}
 
 	override fun executeMusicCmd(event: CompoundCommandEvent) {
-		playerManagerFacade.pauseTrack(event)
-		val pausedTrackInfo = playerManagerFacade.currentPlayingTrack(event)
+		playerManager.pauseTrack(event)
+		val pausedTrackInfo = playerManager.currentPlayingTrack(event)
 			?: throw AudioPlayerException.TrackIsNotPlayingException(event)
 
 		val embedMessage = createCurrentPausedTrackMessage(

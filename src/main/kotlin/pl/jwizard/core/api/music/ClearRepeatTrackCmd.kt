@@ -6,7 +6,7 @@ package pl.jwizard.core.api.music
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo
 import pl.jwizard.core.api.AbstractMusicCmd
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -19,7 +19,7 @@ import pl.jwizard.core.util.Formatter
 @CommandListenerBean(id = BotCommand.REPEATCLS)
 class ClearRepeatTrackCmd(
 	botConfiguration: BotConfiguration,
-	playerManagerFacade: PlayerManagerFacade
+	playerManagerFacade: PlayerManager
 ) : AbstractMusicCmd(
 	botConfiguration,
 	playerManagerFacade
@@ -29,8 +29,8 @@ class ClearRepeatTrackCmd(
 	}
 
 	override fun executeMusicCmd(event: CompoundCommandEvent) {
-		playerManagerFacade.setTrackRepeat(event, 0)
-		val currentPlayingTrack = playerManagerFacade.currentPlayingTrack(event)
+		playerManager.setTrackRepeat(event, 0)
+		val currentPlayingTrack = playerManager.currentPlayingTrack(event)
 
 		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()

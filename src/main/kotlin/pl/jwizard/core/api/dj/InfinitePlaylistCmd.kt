@@ -5,7 +5,7 @@
 package pl.jwizard.core.api.dj
 
 import pl.jwizard.core.api.AbstractDjCmd
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -17,7 +17,7 @@ import pl.jwizard.core.i18n.I18nResLocale
 @CommandListenerBean(id = BotCommand.INFINITE)
 class InfinitePlaylistCmd(
 	botConfiguration: BotConfiguration,
-	playerManagerFacade: PlayerManagerFacade
+	playerManagerFacade: PlayerManager
 ) : AbstractDjCmd(
 	botConfiguration,
 	playerManagerFacade
@@ -28,7 +28,7 @@ class InfinitePlaylistCmd(
 	}
 
 	override fun executeDjCmd(event: CompoundCommandEvent) {
-		val isInfiniteRepeating = playerManagerFacade.toggleInfiniteLoopPlaylist(event)
+		val isInfiniteRepeating = playerManager.toggleInfiniteLoopPlaylist(event)
 		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(

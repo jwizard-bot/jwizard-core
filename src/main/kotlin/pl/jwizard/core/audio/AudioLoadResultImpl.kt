@@ -83,7 +83,6 @@ class AudioLoadResultImpl(
 		}
 		event.instantlySendEmbedMessage(messageEmbed)
 		jdaLog.error(event, log)
-
 	}
 
 	private fun addNewAudioTrackToQueue(member: Member, track: AudioTrack) {

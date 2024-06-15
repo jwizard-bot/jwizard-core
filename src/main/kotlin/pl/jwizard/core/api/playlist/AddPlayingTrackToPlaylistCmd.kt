@@ -5,7 +5,7 @@
 package pl.jwizard.core.api.playlist
 
 import pl.jwizard.core.api.AbstractPlaylistPlayerCmd
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -14,7 +14,7 @@ import pl.jwizard.core.command.reflect.CommandListenerBean
 @CommandListenerBean(id = BotCommand.ADDTRACKPL)
 class AddPlayingTrackToPlaylistCmd(
 	botConfiguration: BotConfiguration,
-	playerManagerFacade: PlayerManagerFacade,
+	playerManagerFacade: PlayerManager,
 ) : AbstractPlaylistPlayerCmd(
 	botConfiguration,
 	playerManagerFacade,

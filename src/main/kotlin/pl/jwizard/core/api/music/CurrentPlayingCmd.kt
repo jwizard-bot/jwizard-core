@@ -6,7 +6,7 @@ package pl.jwizard.core.api.music
 
 import net.dv8tion.jda.api.interactions.components.ButtonStyle
 import pl.jwizard.core.api.AbstractMusicCmd
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -18,7 +18,7 @@ import pl.jwizard.core.i18n.I18nMiscLocale
 @CommandListenerBean(id = BotCommand.PLAYING)
 class CurrentPlayingCmd(
 	botConfiguration: BotConfiguration,
-	playerManagerFacade: PlayerManagerFacade
+	playerManagerFacade: PlayerManager
 ) : AbstractMusicCmd(
 	botConfiguration,
 	playerManagerFacade
@@ -28,7 +28,7 @@ class CurrentPlayingCmd(
 	}
 
 	override fun executeMusicCmd(event: CompoundCommandEvent) {
-		val playingTrackInfo = playerManagerFacade.currentPlayingTrack(event)
+		val playingTrackInfo = playerManager.currentPlayingTrack(event)
 			?: throw AudioPlayerException.TrackIsNotPlayingException(event)
 
 		val messageEmbed = createDetailedTrackEmbedMessage(

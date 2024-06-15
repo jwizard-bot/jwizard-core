@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMuteEvent
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent
 import org.springframework.stereotype.Component
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
 import pl.jwizard.core.command.embed.EmbedColor
@@ -23,7 +23,7 @@ import pl.jwizard.core.util.Formatter
 
 @Component
 class AudioPlayerActivityEventsHandler(
-	private val playerManagerFacade: PlayerManagerFacade,
+	private val playerManager: PlayerManager,
 	private val guildSettingsSupplier: GuildSettingsSupplier,
 	private val botConfiguration: BotConfiguration,
 ) : AbstractLoggingBean(AudioPlayerActivityEventsHandler::class) {
@@ -34,7 +34,7 @@ class AudioPlayerActivityEventsHandler(
 		}
 		val botMember = event.guild.selfMember
 		if (botMember.voiceState != null) {
-			val musicManager = playerManagerFacade.findMusicManager(event.guild)
+			val musicManager = playerManager.findMusicManager(event.guild.id)
 			val guildLang = guildSettingsSupplier.fetchGuildLang(event.guild.id)
 			val isMuted = botMember.voiceState!!.isMuted
 			val messageEmbed = CustomEmbedBuilder(botConfiguration, guildLang).buildBaseMessage(

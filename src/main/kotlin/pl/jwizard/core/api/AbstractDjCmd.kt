@@ -4,7 +4,7 @@
  */
 package pl.jwizard.core.api
 
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.exception.UserException
@@ -12,17 +12,17 @@ import pl.jwizard.core.util.BotUtils
 
 abstract class AbstractDjCmd(
 	botConfiguration: BotConfiguration,
-	playerManagerFacade: PlayerManagerFacade
+	playerManager: PlayerManager
 ) : AbstractMusicCmd(
 	botConfiguration,
-	playerManagerFacade,
+	playerManager,
 ) {
 	protected var allowAlsoForNormal = true
 
 	override fun executeMusicCmd(event: CompoundCommandEvent) {
 		val validatedUserDetails = BotUtils.validateUserDetails(event)
 		val typicalRightsMember = validatedUserDetails.concatPositive()
-		val actions = playerManagerFacade.findMusicManager(event).actions
+		val actions = playerManager.findMusicManager(event).actions
 		if (allowAlsoForNormal) {
 			val allTracksFromOneMember = actions.checkIfAllTracksIsFromSelectedMember(event.member)
 			if (!allTracksFromOneMember && typicalRightsMember) {

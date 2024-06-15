@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
 import org.springframework.stereotype.Component
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.db.GuildDbProperty
 import pl.jwizard.core.db.GuildSettingsSupplier
@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
 @Component
 class AloneOnChannelListener(
 	private val botConfiguration: BotConfiguration,
-	private val playerManagerFacade: PlayerManagerFacade,
+	private val playerManager: PlayerManager,
 	private val guildSettingsSupplier: GuildSettingsSupplier,
 ) : AbstractLoggingBean(AloneOnChannelListener::class) {
 
@@ -58,7 +58,7 @@ class AloneOnChannelListener(
 			if (time.epochSecond > (Instant.now().epochSecond - maxInactivity)) {
 				continue
 			}
-			val musicManager = playerManagerFacade.findMusicManager(guild)
+			val musicManager = playerManager.findMusicManager(guild.id)
 			musicManager?.actions?.clearAndDestroy(true)
 			guild.audioManager.closeAudioConnection()
 

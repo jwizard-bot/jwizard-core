@@ -6,7 +6,7 @@ package pl.jwizard.core.api.dj
 
 import pl.jwizard.core.api.AbstractDjCmd
 import pl.jwizard.core.audio.ExtendedAudioTrackInfo
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -21,7 +21,7 @@ import pl.jwizard.core.util.Formatter
 @CommandListenerBean(id = BotCommand.SKIPTO)
 class SkipQueueToTrackCmd(
 	botConfiguration: BotConfiguration,
-	playerManagerFacade: PlayerManagerFacade
+	playerManagerFacade: PlayerManager
 ) : AbstractDjCmd(
 	botConfiguration,
 	playerManagerFacade
@@ -34,11 +34,11 @@ class SkipQueueToTrackCmd(
 	override fun executeDjCmd(event: CompoundCommandEvent) {
 		val trackPosition = getArg<Int>(CommandArgument.POS, event)
 
-		val musicManager = playerManagerFacade.findMusicManager(event)
+		val musicManager = playerManager.findMusicManager(event)
 		if (musicManager.actions.checkInvertedTrackPosition(trackPosition)) {
 			throw AudioPlayerException.TrackPositionOutOfBoundsException(event, musicManager.queue.size)
 		}
-		val currentPlayingTrack = playerManagerFacade.skipToTrackPos(event, trackPosition)
+		val currentPlayingTrack = playerManager.skipToTrackPos(event, trackPosition)
 		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(

@@ -5,7 +5,7 @@
 package pl.jwizard.core.api.dj
 
 import pl.jwizard.core.api.AbstractDjCmd
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -19,7 +19,7 @@ import pl.jwizard.core.util.Formatter
 @CommandListenerBean(id = BotCommand.TRACKSRM)
 class RemoveMemberTracksCmd(
 	botConfiguration: BotConfiguration,
-	playerManagerFacade: PlayerManagerFacade
+	playerManagerFacade: PlayerManager
 ) : AbstractDjCmd(
 	botConfiguration,
 	playerManagerFacade
@@ -31,7 +31,7 @@ class RemoveMemberTracksCmd(
 	override fun executeDjCmd(event: CompoundCommandEvent) {
 		val userId = getArg<String>(CommandArgument.MEMBER, event)
 
-		val removedTrackInfo = playerManagerFacade.removeTracksFromMember(event, userId)
+		val removedTrackInfo = playerManager.removeTracksFromMember(event, userId)
 		val pageableRemovedTracks = removedTrackInfo.removedTracks
 			.mapIndexed { index, track -> Formatter.createRichPageableTrackInfo(index, track) }
 

@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag
 import org.springframework.stereotype.Component
 import pl.jwizard.core.audio.AloneOnChannelListener
 import pl.jwizard.core.audio.player.AudioPlayerManager
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.properties.BotProperties
 import pl.jwizard.core.command.reflect.CommandReflectLoader
 import pl.jwizard.core.log.AbstractLoggingBean
@@ -31,7 +31,7 @@ class BotInstance(
 	private val aloneOnChannelListener: AloneOnChannelListener,
 	private val activityStatusSequencer: ActivityStatusSequencer,
 	private val audioPlayerManager: AudioPlayerManager,
-	private val playerManagerFacade: PlayerManagerFacade,
+	private val playerManager: PlayerManager,
 	private val botConfiguration: BotConfiguration,
 ) : AbstractLoggingBean(BotInstance::class) {
 
@@ -80,7 +80,7 @@ class BotInstance(
 			if (event.jda.status == JDA.Status.SHUTTING_DOWN) {
 				log.info("Shutting down bot instance...")
 				for (guild in event.jda.guilds) {
-					playerManagerFacade.findMusicManager(guild)?.actions?.clearAndDestroy(false)
+					playerManager.findMusicManager(guild.id)?.actions?.clearAndDestroy(false)
 					guild.audioManager.closeAudioConnection()
 				}
 				botConfiguration.threadPool.shutdownNow()

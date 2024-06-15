@@ -7,7 +7,7 @@ package pl.jwizard.core.command.action
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent
 import org.springframework.stereotype.Component
 import pl.jwizard.core.audio.ExtendedAudioTrackInfo
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
 import pl.jwizard.core.command.embed.EmbedColor
@@ -20,7 +20,7 @@ import pl.jwizard.core.util.Formatter
 @Component
 class ActionCommandListener(
 	private val botConfiguration: BotConfiguration,
-	private val playerManagerFacade: PlayerManagerFacade,
+	private val playerManager: PlayerManager,
 	private val guildSettingsSupplier: GuildSettingsSupplier,
 ) : AbstractLoggingBean(ActionCommandListener::class), ActionProxyHandler {
 
@@ -30,7 +30,7 @@ class ActionCommandListener(
 			return
 		}
 		val guild = buttonClickEvent.guild!!
-		val musicManager = playerManagerFacade.findMusicManager(guild)
+		val musicManager = playerManager.findMusicManager(guild.id)
 		val currentPlayingTrack = musicManager?.audioPlayer?.playingTrack
 		if (currentPlayingTrack != null) {
 			val playingTrack = ExtendedAudioTrackInfo(currentPlayingTrack)

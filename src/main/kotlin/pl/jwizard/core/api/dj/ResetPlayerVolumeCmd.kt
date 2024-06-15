@@ -5,7 +5,7 @@
 package pl.jwizard.core.api.dj
 
 import pl.jwizard.core.api.AbstractDjCmd
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -17,7 +17,7 @@ import pl.jwizard.core.i18n.I18nResLocale
 @CommandListenerBean(id = BotCommand.VOLUMECLS)
 class ResetPlayerVolumeCmd(
 	botConfiguration: BotConfiguration,
-	playerManagerFacade: PlayerManagerFacade
+	playerManagerFacade: PlayerManager
 ) : AbstractDjCmd(
 	botConfiguration,
 	playerManagerFacade
@@ -27,7 +27,7 @@ class ResetPlayerVolumeCmd(
 	}
 
 	override fun executeDjCmd(event: CompoundCommandEvent) {
-		val defaultVolume = playerManagerFacade.findMusicManager(event).resetPlayerVolume()
+		val defaultVolume = playerManager.findMusicManager(event).resetPlayerVolume()
 		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(

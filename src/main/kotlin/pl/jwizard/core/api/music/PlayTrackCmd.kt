@@ -6,7 +6,7 @@ package pl.jwizard.core.api.music
 
 import org.apache.commons.validator.routines.UrlValidator
 import pl.jwizard.core.api.AbstractMusicCmd
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -16,7 +16,7 @@ import pl.jwizard.core.command.reflect.CommandListenerBean
 @CommandListenerBean(id = BotCommand.PLAY)
 class PlayTrackCmd(
 	botConfiguration: BotConfiguration,
-	playerManagerFacade: PlayerManagerFacade
+	playerManagerFacade: PlayerManager
 ) : AbstractMusicCmd(
 	botConfiguration,
 	playerManagerFacade
