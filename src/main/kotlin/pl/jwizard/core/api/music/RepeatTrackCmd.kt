@@ -33,7 +33,7 @@ class RepeatTrackCmd(
 	}
 
 	override fun executeMusicCmd(event: CompoundCommandEvent) {
-		val repeatsCount = getArg<Int>(CommandArgument.REPEATS, event)
+		val repeatsCount = getArg<Int>(CommandArgument.COUNT, event)
 
 		val maxRepeats = guildSettings.fetchDbProperty(GuildDbProperty.MAX_REPEATS_OF_TRACK, event.guildId, Int::class)
 		if (repeatsCount < 2 || repeatsCount > maxRepeats) {

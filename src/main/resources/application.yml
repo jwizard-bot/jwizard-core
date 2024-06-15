@@ -9,12 +9,11 @@ spring:
 
 jwizard:
   deployment:
-    build-version: ${JWIZARD_CORE_BUILD_VERSION:UNKNOWN}
-    last-build-date: ${JWIZARD_CORE_BUILD_DATE:UNKNOWN}
+    build-version: ${JWIZARD_CORE_BUILD_VERSION:DEVELOPMENT}
+    last-build-date: ${JWIZARD_CORE_BUILD_DATE:DEVELOPMENT}
   default-activity: tracks
   instance:
     auth-token: ${V_JDA_SECRET}
-    app-id: ${V_JDA_APP_ID}
     default-language: 'pl'
   splashes:
     enabled: true

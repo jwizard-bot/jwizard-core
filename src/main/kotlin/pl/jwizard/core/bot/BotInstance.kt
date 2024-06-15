@@ -36,7 +36,6 @@ class BotInstance(
 ) : AbstractLoggingBean(BotInstance::class) {
 
 	private lateinit var jda: JDA
-	private var shuttingDown = false
 
 	fun start() {
 		log.info("Bot instance is warming up...")
@@ -75,19 +74,16 @@ class BotInstance(
 	}
 
 	fun shutdown(event: ShutdownEvent) {
-		if (!shuttingDown) {
-			shuttingDown = true
-			if (event.jda.status == JDA.Status.SHUTTING_DOWN) {
-				log.info("Shutting down bot instance...")
-				for (guild in event.jda.guilds) {
-					playerManager.findMusicManager(guild.id)?.actions?.clearAndDestroy(false)
-					guild.audioManager.closeAudioConnection()
-				}
-				botConfiguration.threadPool.shutdownNow()
-				event.jda.shutdown()
-				log.info("Threadpool was cleared and current bot instance was terminated")
-				exitProcess(0)
+		if (event.jda.status == JDA.Status.SHUTTING_DOWN) {
+			log.info("Shutting down bot instance...")
+			for (guild in event.jda.guilds) {
+				playerManager.findMusicManager(guild.id)?.actions?.clearAndDestroy(false)
+				guild.audioManager.closeAudioConnection()
 			}
+			botConfiguration.threadPool.shutdownNow()
+			event.jda.shutdown()
+			log.info("Threadpool was cleared and current bot instance was terminated")
+			exitProcess(0)
 		}
 	}
 

@@ -6,6 +6,5 @@ package pl.jwizard.core.bot.properties
 
 class InstanceProperties(
 	var authToken: String = "",
-	var appId: String = "",
 	var defaultLanguage: String = "en",
 )
