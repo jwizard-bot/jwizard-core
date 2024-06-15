@@ -15,13 +15,13 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Lazy
 import org.springframework.context.annotation.Primary
-import org.springframework.core.io.ResourceLoader
 import pl.jwizard.core.bot.properties.BotProperties
 import pl.jwizard.core.command.reflect.CommandReflectLoader
 import pl.jwizard.core.db.CommandsSupplier
 import pl.jwizard.core.db.GuildSettingsSupplier
 import pl.jwizard.core.i18n.I18nService
 import pl.jwizard.core.log.AbstractLoggingBean
+import pl.jwizard.core.s3.S3Resource
 import java.io.IOException
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -43,10 +43,17 @@ class BotConfiguration(
 
 	fun setTitleAndIcon(jda: JDA) {
 		try {
-			val iconResource = resourceLoader.getResource(botProperties.appIconPath)
+			val iconResource = S3Resource.BRAND.getAndDownloadResource(botProperties, botProperties.appIconPath)
+			if (iconResource == null) {
+				log.error(
+					"Unable to fetch brand icon from: {}",
+					S3Resource.BRAND.getResourceUrl(botProperties, botProperties.appIconPath)
+				)
+				return // unable to find brand logo, skipping
+			}
 			AccountManagerImpl(jda.selfUser)
 				.setName(botProperties.appName)
-				.setAvatar(iconResource.inputStream.let { Icon.from(it) })
+				.setAvatar(Icon.from(iconResource))
 				.queue(
 					{
 						log.info(
