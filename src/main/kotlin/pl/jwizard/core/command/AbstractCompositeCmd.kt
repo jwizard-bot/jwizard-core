@@ -34,7 +34,7 @@ abstract class AbstractCompositeCmd(
 		try {
 			execute(event)
 		} catch (ex: AbstractBotException) {
-			event.interactiveMessage.messageEmbeds.clear()
+			event.interactiveMessage.messageEmbeds.clear() // remove all previous messages from queue on error
 			val embedMessage = CustomEmbedBuilder(botConfiguration, event).buildErrorMessage(
 				placeholder = ex.i18nLocale,
 				params = ex.variables

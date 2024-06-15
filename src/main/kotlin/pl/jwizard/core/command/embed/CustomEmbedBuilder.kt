@@ -30,7 +30,7 @@ class CustomEmbedBuilder(
 	constructor(
 		botConfiguration: BotConfiguration,
 		event: CompoundCommandEvent
-	) : this(null, botConfiguration, event.lang)
+	) : this(event, botConfiguration, event.lang)
 
 	fun addTitle(content: String): CustomEmbedBuilder {
 		setTitle(content)
