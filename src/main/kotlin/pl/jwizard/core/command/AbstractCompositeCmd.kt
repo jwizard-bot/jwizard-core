@@ -29,6 +29,7 @@ abstract class AbstractCompositeCmd(
 	protected val i18nService = botConfiguration.i18nService
 	protected val commandsSupplier = botConfiguration.commandsSupplier
 	protected val commandReflectLoader = botConfiguration.commandReflectLoader
+	protected val radioSupplier = botConfiguration.radioSupplier
 
 	internal fun performCommand(event: CompoundCommandEvent): InteractiveMessage {
 		try {

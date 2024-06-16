@@ -39,6 +39,12 @@ enum class BotCommand(
 	QUEUE("queue"),
 	SKIP("skip"),
 
+	// radio
+	PLAY_RADIO("radio"),
+	STOP_RADIO("radiostop"),
+	RADIO_INFO("radioinfo"),
+	SHOW_RADIOS("radios"),
+
 	// playlist
 	ADDTRACKPL("addtrackpl"),
 	ADDQUEUEPL("addqueuepl"),
@@ -59,9 +65,5 @@ enum class BotCommand(
 	fun parseWithPrefix(event: CompoundCommandEvent): String {
 		val prefix = if (event.slashCommandEvent == null) event.legacyPrefix else "/"
 		return "`${prefix}${commandName}`"
-	}
-
-	companion object {
-		fun checkIfCommandExist(name: String): Boolean = entries.any { it.commandName == name }
 	}
 }

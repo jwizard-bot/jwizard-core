@@ -26,6 +26,8 @@ enum class I18nResLocale(
 	START_PLAYING_RADIO_STATION_SECOND_OPTION("pl.jwizard.response.startPlayingRadioStationSecondOption"),
 	STOP_PLAYING_RADIO_STATION("pl.jwizard.response.stopPlayingRadioStation"),
 	CURRENTLY_PLAYING_STREAM_CONTENT("pl.jwizard.response.currentlyPlayingStreamContent"),
+	RADIO_STATIONS_INFO("pl.jwizard.response.radioStationsInfo"),
+	NO_RADIO_STATION_INFO("pl.jwizard.response.noRadioStationsInfo"),
 
 	// dj commands
 	ADD_PLAYLIST_TO_INFINITE_LOOP("pl.jwizard.response.addPlaylistToInfiniteLoop"),

@@ -11,10 +11,15 @@ object DateUtils {
 	private val SEC = TimeUnit.SECONDS
 	private val MIN = TimeUnit.MINUTES
 
-	fun convertMilisToDTF(milis: Long): String {
-		val duration = Duration.ofMillis(milis)
-		return "%02d:%02d:%02d".format(duration.toHoursPart(), duration.toMinutesPart(), duration.toSecondsPart())
-	}
+	fun convertMilisToDTF(milis: Long): String = dtfFormat(Duration.ofMillis(milis))
+
+	fun convertSecToDTF(seconds: Long): String = dtfFormat(Duration.ofSeconds(seconds))
+
+	private fun dtfFormat(duration: Duration): String = "%02d:%02d:%02d".format(
+		duration.toHoursPart(),
+		duration.toMinutesPart(),
+		duration.toSecondsPart()
+	)
 
 	fun convertSecToMin(seconds: Long): String {
 		val minutes = SEC.toMinutes(seconds) - TimeUnit.HOURS.toMinutes(SEC.toHours(seconds))
@@ -31,4 +36,7 @@ object DateUtils {
 	}
 
 	fun convertSecToMin(seconds: Int): String = convertSecToMin(seconds.toLong())
+
+	fun getTimeToDuration(timestamp: Long): String =
+		dtfFormat(Duration.ofSeconds(timestamp - System.currentTimeMillis() / 1000))
 }

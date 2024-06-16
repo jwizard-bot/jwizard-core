@@ -19,6 +19,7 @@ import pl.jwizard.core.bot.properties.BotProperties
 import pl.jwizard.core.command.reflect.CommandReflectLoader
 import pl.jwizard.core.db.CommandsSupplier
 import pl.jwizard.core.db.GuildSettingsSupplier
+import pl.jwizard.core.db.RadioSupplier
 import pl.jwizard.core.i18n.I18nService
 import pl.jwizard.core.log.AbstractLoggingBean
 import pl.jwizard.core.s3.S3Resource
@@ -35,7 +36,7 @@ class BotConfiguration(
 	@Lazy val commandsSupplier: CommandsSupplier,
 	@Lazy val commandReflectLoader: CommandReflectLoader,
 	@Lazy val botProperties: BotProperties,
-	val resourceLoader: ResourceLoader,
+	@Lazy val radioSupplier: RadioSupplier,
 ) : AbstractLoggingBean(BotConfiguration::class) {
 
 	val threadPool: ScheduledExecutorService = Executors.newScheduledThreadPool(2)

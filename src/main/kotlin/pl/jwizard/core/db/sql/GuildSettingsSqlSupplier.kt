@@ -57,7 +57,12 @@ class GuildSettingsSqlSupplier(
 				val generatedId = keyHolder.key ?: throw java.lang.RuntimeException("Could not find generated ID")
 				insertIndexesToDataTable("command_modules", "guilds_modules_binding", "module_id", generatedId.toLong())
 				insertIndexesToDataTable("bot_commands", "guilds_commands_binding", "command_id", generatedId.toLong())
-
+				insertIndexesToDataTable(
+					"radio_stations",
+					"guilds_radio_stations_binding",
+					"radio_station_id",
+					generatedId.toLong()
+				)
 				log.info("Successfully persisted new guild.")
 			} catch (ex: Exception) {
 				log.error("Unexpected error on persisting guild settings. Cause: {}. Leaving guild: {}.", ex.message, guild.id)

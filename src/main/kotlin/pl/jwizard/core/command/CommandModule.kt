@@ -6,6 +6,7 @@ package pl.jwizard.core.command
 
 enum class CommandModule(val moduleName: String) {
 	MUSIC("music"),
+	RADIO_STATION("radio"),
 	DJ("dj"),
 	PLAYLIST("playlist"),
 	VOTE("vote"),
