@@ -54,11 +54,10 @@ abstract class AbstractCompositeCmd(
 		}
 	}
 
-	@Suppress("UNCHECKED_CAST")
-	protected fun <T> getArg(arg: CommandArgument, event: CompoundCommandEvent): T {
+	protected inline fun <reified T : Any> getArg(arg: CommandArgument, event: CompoundCommandEvent): T {
 		val (value, type) = event.commandArgs[arg] ?: throw UtilException.UnexpectedException("Argument not found")
 		val caster = ArgumentTypeCaster.valueOf(type)
-		return caster.clazz.cast(caster.castCallback(value)) as T
+		return T::class.cast(caster.castCallback(value))
 	}
 
 	protected fun createDefaultPaginator(items: List<String>, pageSize: Int): Paginator = Paginator.Builder()

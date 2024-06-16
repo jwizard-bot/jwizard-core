@@ -32,7 +32,7 @@ class SetPlayerVolumeCmd(
 		val newVolumeUnits = getArg<Int>(CommandArgument.VOLUME, event)
 
 		val currentVolume = playerManager.findMusicManager(event).currentPlayerVolume
-		if (currentVolume < 0 || currentVolume > 150) {
+		if (newVolumeUnits < 0 || newVolumeUnits > 150) {
 			throw CommandException.VolumeUnitsOutOfBoundsException(event, 0, 150)
 		}
 		playerManager.setPlayerVolume(event, newVolumeUnits)
