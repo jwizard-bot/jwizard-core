@@ -32,10 +32,12 @@ class CurrentPlayingCmd(
 			?: throw AudioPlayerException.TrackIsNotPlayingException(event)
 
 		val messageEmbed = createDetailedTrackEmbedMessage(
-			event,
+			botConfiguration,
+			event.lang,
 			i18nDescription = I18nMiscLocale.CURRENT_PLAYING_TRACK,
 			i18nTimestampText = I18nMiscLocale.CURRENT_PLAYING_TIMESTAMP,
 			track = playingTrackInfo,
+			author = playingTrackInfo.sender,
 		)
 		val button = createButton(
 			actionComponent = ActionComponent.UPDATE_CURRENT_PLAYING_EMBED_MESSAGE,

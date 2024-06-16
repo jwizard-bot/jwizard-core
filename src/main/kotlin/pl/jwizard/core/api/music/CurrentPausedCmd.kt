@@ -29,10 +29,12 @@ class CurrentPausedCmd(
 		val pausedTrackInfo = musicManager.actions.getPausedTrackInfo()
 
 		val messageEmbed = createDetailedTrackEmbedMessage(
-			event,
+			botConfiguration,
+			event.lang,
 			i18nDescription = I18nMiscLocale.CURRENT_PAUSED_TRACK,
 			i18nTimestampText = I18nMiscLocale.CURRENT_PAUSED_TIMESTAMP,
-			track = pausedTrackInfo
+			track = pausedTrackInfo,
+			author = pausedTrackInfo.sender,
 		)
 		event.appendEmbedMessage(messageEmbed)
 	}

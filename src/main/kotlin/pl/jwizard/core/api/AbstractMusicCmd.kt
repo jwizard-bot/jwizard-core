@@ -55,27 +55,31 @@ abstract class AbstractMusicCmd(
 		executeMusicCmd(event)
 	}
 
-	protected fun createDetailedTrackEmbedMessage(
-		event: CompoundCommandEvent,
-		i18nDescription: I18nLocale,
-		i18nTimestampText: I18nLocale,
-		track: ExtendedAudioTrackInfo,
-	): MessageEmbed = CustomEmbedBuilder(botConfiguration, event)
-		.addAuthor(track.sender)
-		.addDescription(i18nDescription)
-		.appendKeyValueField(I18nMiscLocale.TRACK_NAME, Formatter.createRichTrackTitle(track))
-		.addSpace()
-		.appendKeyValueField(I18nMiscLocale.TRACK_ADDDED_BY, track.sender.asTag)
-		.appendValueField(Formatter.createPercentageRepresentation(track), false)
-		.appendKeyValueField(i18nTimestampText, Formatter.createTrackCurrentAndMaxDuration(track))
-		.addSpace()
-		.appendKeyValueField(
-			I18nMiscLocale.CURRENT_TRACK_LEFT_TO_NEXT,
-			DateUtils.convertMilisToDTF(track.approximateTime)
-		)
-		.addThumbnail(track.artworkUrl)
-		.addColor(EmbedColor.WHITE)
-		.build()
+	companion object {
+		fun createDetailedTrackEmbedMessage(
+			botConfiguration: BotConfiguration,
+			lang: String,
+			i18nDescription: I18nLocale,
+			i18nTimestampText: I18nLocale,
+			track: ExtendedAudioTrackInfo,
+			author: User,
+		): MessageEmbed = CustomEmbedBuilder(botConfiguration, lang)
+			.addAuthor(author)
+			.addDescription(i18nDescription)
+			.appendKeyValueField(I18nMiscLocale.TRACK_NAME, Formatter.createRichTrackTitle(track))
+			.addSpace()
+			.appendKeyValueField(I18nMiscLocale.TRACK_ADDDED_BY, track.sender.name)
+			.appendValueField(Formatter.createPercentageRepresentation(track), false)
+			.appendKeyValueField(i18nTimestampText, Formatter.createTrackCurrentAndMaxDuration(track))
+			.addSpace()
+			.appendKeyValueField(
+				I18nMiscLocale.CURRENT_TRACK_LEFT_TO_NEXT,
+				DateUtils.convertMilisToDTF(track.approximateTime)
+			)
+			.addThumbnail(track.artworkUrl)
+			.addColor(EmbedColor.WHITE)
+			.build()
+	}
 
 	abstract fun executeMusicCmd(event: CompoundCommandEvent)
 }
