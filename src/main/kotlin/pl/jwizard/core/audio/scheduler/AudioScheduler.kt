@@ -4,13 +4,14 @@
  */
 package pl.jwizard.core.audio.scheduler
 
-import pl.jwizard.core.bot.BotConfiguration
-import pl.jwizard.core.command.CompoundCommandEvent
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
+import pl.jwizard.core.audio.AudioSourceType
+import pl.jwizard.core.bot.BotConfiguration
+import pl.jwizard.core.command.CompoundCommandEvent
 
 class AudioScheduler(
 	val botConfiguration: BotConfiguration,
@@ -21,19 +22,35 @@ class AudioScheduler(
 
 	val schedulerActions = SchedulerActions(botConfiguration, this)
 
-	override fun onPlayerPause(player: AudioPlayer?) = facade.onPause()
+	private var facade: AudioSchedulerContract? = null
 
-	override fun onPlayerResume(player: AudioPlayer?) = facade.onResume()
+	override fun onPlayerPause(player: AudioPlayer?) {
+		facade?.onPause()
+	}
 
-	override fun onTrackStart(player: AudioPlayer?, track: AudioTrack?) = facade.onStart()
+	override fun onPlayerResume(player: AudioPlayer?) {
+		facade?.onResume()
+	}
 
-	override fun onTrackEnd(player: AudioPlayer?, track: AudioTrack, endReason: AudioTrackEndReason) =
-		facade.onEnd(track, endReason)
+	override fun onTrackStart(player: AudioPlayer?, track: AudioTrack?) {
+		facade?.onStart()
+	}
 
-	override fun onTrackException(player: AudioPlayer?, track: AudioTrack, exception: FriendlyException) =
-		facade.onException(track, exception)
+	override fun onTrackEnd(player: AudioPlayer?, track: AudioTrack, endReason: AudioTrackEndReason) {
+		facade?.onEnd(track, endReason)
+	}
+
+	override fun onTrackException(player: AudioPlayer?, track: AudioTrack, exception: FriendlyException) {
+		facade?.onException(track, exception)
+	}
 
 	fun setCompoundEvent(event: CompoundCommandEvent) {
 		this.event = event
 	}
+
+	fun setAudioScheduler(audioSourceType: AudioSourceType) {
+		facade = audioSourceType.getInstance(this)
+	}
+
+	fun isStreamFacade(): Boolean = facade != null && facade is StreamSchedulerFacade
 }

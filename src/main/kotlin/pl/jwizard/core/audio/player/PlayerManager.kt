@@ -9,11 +9,11 @@ import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel
 import pl.jwizard.core.audio.ExtendedAudioTrackInfo
 import pl.jwizard.core.audio.TrackPosition
 import pl.jwizard.core.command.CompoundCommandEvent
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import net.dv8tion.jda.api.entities.VoiceChannel
+import pl.jwizard.core.db.RadioStationDto
 
 interface PlayerManager {
 	fun loadAndPlay(event: CompoundCommandEvent, trackUrl: String, isUrlPattern: Boolean)
+	fun loadAndStream(event: CompoundCommandEvent, radioStation: RadioStationDto)
 	fun pauseTrack(event: CompoundCommandEvent)
 	fun resumePausedTrack(event: CompoundCommandEvent)
 	fun skipTrack(event: CompoundCommandEvent): ExtendedAudioTrackInfo?
@@ -28,4 +28,6 @@ interface PlayerManager {
 	fun clearQueue(event: CompoundCommandEvent): Int
 	fun currentPlayingTrack(event: CompoundCommandEvent): ExtendedAudioTrackInfo?
 	fun moveToMemberCurrentVoiceChannel(event: CompoundCommandEvent): VoiceChannel
+	fun findMusicManager(event: CompoundCommandEvent): MusicManager
+	fun findMusicManager(guildId: String): MusicManager?
 }

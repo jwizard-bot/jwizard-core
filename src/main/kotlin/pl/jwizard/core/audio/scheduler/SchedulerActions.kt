@@ -11,6 +11,7 @@ import pl.jwizard.core.audio.TrackPosition
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
 import pl.jwizard.core.db.GuildDbProperty
+import pl.jwizard.core.db.RadioStationDto
 import pl.jwizard.core.exception.AudioPlayerException
 import pl.jwizard.core.i18n.I18nResLocale
 import pl.jwizard.core.log.AbstractLoggingBean
@@ -39,6 +40,7 @@ class SchedulerActions(
 	var pausedTrack: AudioTrack? = null
 	var countOfRepeats = 0
 	var nextTrackInfoDisabled = false
+	var radioStationDto: RadioStationDto? = null
 
 	internal fun addToQueueAndOffer(audioTrack: AudioTrack) {
 		if (!audioScheduler.audioPlayer.startTrack(audioTrack, true)) {

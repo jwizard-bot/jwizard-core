@@ -36,8 +36,6 @@ class PlayTrackCmd(
 		} else {
 			"ytsearch: $searchPhrase audio"
 		}
-		val musicManager = playerManagerFacade.findMusicManager(event)
-		musicManager.trackScheduler.setCompoundEvent(event)
-		playerManagerFacade.loadAndPlay(event, searchPhrase, isUrlPattern)
+		playerManager.loadAndPlay(event, searchPhrase, isUrlPattern)
 	}
 }
