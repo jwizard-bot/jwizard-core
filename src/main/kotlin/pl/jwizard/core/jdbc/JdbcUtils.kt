@@ -5,6 +5,7 @@
 package pl.jwizard.core.jdbc
 
 import org.apache.commons.lang3.StringUtils
+import java.math.BigInteger
 
 object JdbcUtils {
 	fun parse(input: String?, replacements: Map<String, Any>): String {
@@ -14,4 +15,6 @@ object JdbcUtils {
 		}
 		return result ?: StringUtils.EMPTY
 	}
+
+	fun parseToLong(value: Any?): Long = (value as BigInteger).longValueExact()
 }

@@ -14,6 +14,7 @@ import pl.jwizard.core.command.AbstractCompositeCmd
 import pl.jwizard.core.command.CommandModule
 import pl.jwizard.core.command.CommandModule.Companion.getAllModuleNames
 import pl.jwizard.core.command.CompoundCommandEvent
+import pl.jwizard.core.command.arg.CommandArgument
 import pl.jwizard.core.db.CommandsSupplier
 import pl.jwizard.core.log.AbstractLoggingBean
 import pl.jwizard.core.util.BotUtils
@@ -45,7 +46,11 @@ class CommandReflectLoader(
 			commandModules.keys
 		)
 		if (!isModulesIntegrityEqual) {
-			throw DataIntegrityViolationException("Contract between modules is not persisted.")
+			throw DataIntegrityViolationException("Contract between modules is not obtained!")
+		}
+		val commandArgs = commandsSupplier.fetchAllCommandArguments()
+		if (!CommandArgument.checkIntegrity(commandArgs)) {
+			throw DataIntegrityViolationException("Contract between command arguments in not obtained!")
 		}
 		botCommands = commandsSupplier.fetchAllCommands()
 		botCommands.keys.forEach { commandsProxyContainer[it] = null }
@@ -73,7 +78,7 @@ class CommandReflectLoader(
 			.map { it.key }
 		if (onlyWithNullableValues.isNotEmpty()) {
 			throw DataIntegrityViolationException(
-				"Contract between API and beans volated by at least one command. Cause by: $onlyWithNullableValues"
+				"Contract between API and beans volated by at least one command! Cause by: $onlyWithNullableValues"
 			)
 		}
 	}
@@ -83,6 +88,9 @@ class CommandReflectLoader(
 		val isEnabled = commandsSupplier.checkIfModuleIsEnabled(module.moduleName, event.guildDbId)
 		return ModuleStateDto(BotUtils.getLang(event.lang, selectedModule.name), isEnabled)
 	}
+
+	fun getCommandByNameOrAlias(commandNameOrAlias: String): CommandDetailsDto? = botCommands[commandNameOrAlias]
+		?: botCommands.values.find { it.alias == commandNameOrAlias }
 
 	fun getBotCommand(commandName: String): CommandDetailsDto? = botCommands[commandName]
 

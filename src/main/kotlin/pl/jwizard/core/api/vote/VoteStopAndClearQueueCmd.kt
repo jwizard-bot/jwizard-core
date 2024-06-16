@@ -5,7 +5,7 @@
 package pl.jwizard.core.api.vote
 
 import pl.jwizard.core.api.AbstractVoteMusicCmd
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -16,7 +16,7 @@ import pl.jwizard.core.vote.VoteResponseData
 @CommandListenerBean(id = BotCommand.VSTOP)
 class VoteStopAndClearQueueCmd(
 	botConfiguration: BotConfiguration,
-	playerManagerFacade: PlayerManagerFacade
+	playerManagerFacade: PlayerManager
 ) : AbstractVoteMusicCmd(
 	botConfiguration,
 	playerManagerFacade
@@ -26,7 +26,7 @@ class VoteStopAndClearQueueCmd(
 	}
 
 	override fun executeVoteMusicCmd(event: CompoundCommandEvent): VoteResponseData {
-		val actions = playerManagerFacade.findMusicManager(event).actions
+		val actions = playerManager.findMusicManager(event).actions
 		return VoteResponseData(
 			initClazz = VoteStopAndClearQueueCmd::class,
 			message = buildInitMessage(I18nResLocale.VOTE_STOP_CLEAR_QUEUE, event),

@@ -20,6 +20,15 @@ enum class I18nResLocale(
 	PAUSE_TRACK_ON_FORCE_MUTE("pl.jwizard.response.pauseTrackOnForceMute"),
 	RESUME_TRACK_ON_FORCE_UNMUTE("pl.jwizard.response.resumeTrackOnForceUnmute"),
 
+	// radio station
+	START_PLAYING_RADIO_STATION("pl.jwizard.response.startPlayingRadioStation"),
+	START_PLAYING_RADIO_STATION_FIRST_OPTION("pl.jwizard.response.startPlayingRadioStationFirstOption"),
+	START_PLAYING_RADIO_STATION_SECOND_OPTION("pl.jwizard.response.startPlayingRadioStationSecondOption"),
+	STOP_PLAYING_RADIO_STATION("pl.jwizard.response.stopPlayingRadioStation"),
+	CURRENTLY_PLAYING_STREAM_CONTENT("pl.jwizard.response.currentlyPlayingStreamContent"),
+	RADIO_STATIONS_INFO("pl.jwizard.response.radioStationsInfo"),
+	NO_RADIO_STATION_INFO("pl.jwizard.response.noRadioStationsInfo"),
+
 	// dj commands
 	ADD_PLAYLIST_TO_INFINITE_LOOP("pl.jwizard.response.addPlaylistToInfiniteLoop"),
 	REMOVED_PLAYLIST_FROM_INFINITE_LOOP("pl.jwizard.response.removePlaylistFromInfiniteLoop"),

@@ -25,6 +25,7 @@ repositories {
 	mavenCentral()
 	maven { url = uri("https://m2.dv8tion.net/releases") }
 	maven { url = uri("https://m2.chew.pro/releases") }
+	maven { url = uri("https://m2.chew.pro/snapshots") }
 	maven { url = uri("https://maven.lavalink.dev/snapshots") }
 	maven { url = uri("https://maven.lavalink.dev/releases") }
 	maven { url = uri("https://jitpack.io") }
@@ -39,8 +40,8 @@ configurations.all {
 }
 
 dependencies {
-	implementation("net.dv8tion:JDA:4.4.1_353")
-	implementation("pw.chew:jda-chewtils:1.24.1")
+	implementation("net.dv8tion:JDA:5.0.0-beta.24")
+	implementation("pw.chew:jda-chewtils:2.0-SNAPSHOT")
 	implementation("dev.arbjerg:lavaplayer:2.1.2")
 	implementation("dev.lavalink.youtube:v2:1.2.0")
 	implementation("org.springframework.boot:spring-boot-starter")
@@ -53,6 +54,7 @@ dependencies {
 	implementation("org.apache.commons:commons-collections4:4.4")
 	implementation("org.apache.commons:commons-text:1.12.0")
 	implementation("commons-io:commons-io:2.16.1")
+	implementation("com.google.code.gson:gson:2.11.0")
 
 	runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")

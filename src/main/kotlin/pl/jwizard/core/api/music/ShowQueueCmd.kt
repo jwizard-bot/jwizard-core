@@ -7,7 +7,7 @@ package pl.jwizard.core.api.music
 import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.core.api.AbstractMusicCmd
 import pl.jwizard.core.audio.ExtendedAudioTrackInfo
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -22,7 +22,7 @@ import pl.jwizard.core.util.Formatter
 @CommandListenerBean(id = BotCommand.QUEUE)
 class ShowQueueCmd(
 	botConfiguration: BotConfiguration,
-	playerManagerFacade: PlayerManagerFacade
+	playerManagerFacade: PlayerManager
 ) : AbstractMusicCmd(
 	botConfiguration,
 	playerManagerFacade
@@ -32,14 +32,14 @@ class ShowQueueCmd(
 	}
 
 	override fun executeMusicCmd(event: CompoundCommandEvent) {
-		val musicManager = playerManagerFacade.findMusicManager(event)
+		val musicManager = playerManager.findMusicManager(event)
 		if (musicManager.queue.isEmpty()) {
 			throw AudioPlayerException.TrackQueueIsEmptyException(event)
 		}
 		val pageableTracks = musicManager.queue
 			.mapIndexed { index, track -> Formatter.createRichPageableTrackInfo(index, track) }
 
-		val currentTrack = playerManagerFacade.findMusicManager(event).audioPlayer.playingTrack
+		val currentTrack = playerManager.findMusicManager(event).audioPlayer.playingTrack
 		var leftToNextTrack = "-"
 		if (currentTrack != null) {
 			leftToNextTrack = DateUtils.convertMilisToDTF(ExtendedAudioTrackInfo(currentTrack).approximateTime)

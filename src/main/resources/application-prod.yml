@@ -19,7 +19,7 @@ spring:
 jwizard:
   api-host: http://localhost:6061
   app-name: JWizard
-  app-icon-path: classpath:assets/logo/light.png
+  app-icon-path: light.png
 
 logging:
   file:

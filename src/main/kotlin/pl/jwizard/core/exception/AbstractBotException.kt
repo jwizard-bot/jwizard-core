@@ -4,10 +4,10 @@
  */
 package pl.jwizard.core.exception
 
-import kotlin.reflect.KClass
+import org.slf4j.LoggerFactory
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.log.JdaLogger
-import org.slf4j.LoggerFactory
+import kotlin.reflect.KClass
 
 abstract class AbstractBotException(
 	val event: CompoundCommandEvent?,
@@ -27,7 +27,7 @@ abstract class AbstractBotException(
 			}
 		}
 	}
-	
+
 	constructor(
 		event: CompoundCommandEvent?,
 		clazz: KClass<*>,

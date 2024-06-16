@@ -5,11 +5,11 @@
 package pl.jwizard.core.command
 
 import net.dv8tion.jda.api.entities.MessageEmbed
-import net.dv8tion.jda.api.interactions.components.Component
+import net.dv8tion.jda.api.interactions.components.ItemComponent
 
 data class InteractiveMessage(
 	val messageEmbeds: MutableList<MessageEmbed>,
-	var actionComponents: MutableList<Component>
+	var actionComponents: MutableList<ItemComponent>
 ) {
 	constructor() : this(mutableListOf(), mutableListOf())
 }

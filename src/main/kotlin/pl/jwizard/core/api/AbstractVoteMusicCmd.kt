@@ -5,7 +5,7 @@
 package pl.jwizard.core.api
 
 import net.dv8tion.jda.api.entities.MessageEmbed
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.CommandModule
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -21,10 +21,10 @@ import pl.jwizard.core.vote.VoteResponseData
 
 abstract class AbstractVoteMusicCmd(
 	botConfiguration: BotConfiguration,
-	playerManagerFacade: PlayerManagerFacade
+	playerManager: PlayerManager
 ) : AbstractMusicCmd(
 	botConfiguration,
-	playerManagerFacade,
+	playerManager,
 ) {
 	override fun executeMusicCmd(event: CompoundCommandEvent) {
 		checkIfCommandModuleIsEnabled(event, CommandModule.VOTE)

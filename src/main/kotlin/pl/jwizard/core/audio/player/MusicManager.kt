@@ -6,7 +6,7 @@ package pl.jwizard.core.audio.player
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import pl.jwizard.core.audio.AudioPlayerSendHandler
-import pl.jwizard.core.audio.scheduler.TrackScheduler
+import pl.jwizard.core.audio.scheduler.AudioScheduler
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.db.GuildDbProperty
@@ -14,36 +14,36 @@ import pl.jwizard.core.log.AbstractLoggingBean
 
 class MusicManager(
 	private val botConfiguration: BotConfiguration,
-	playerManager: AudioPlayerManager,
-	private val compoundCommandEvent: CompoundCommandEvent,
+	private val event: CompoundCommandEvent,
+	audioPlayerManager: AudioPlayerManager,
 	lockedGuilds: MutableList<String>,
 ) : AbstractLoggingBean(MusicManager::class) {
 
-	val audioPlayer: AudioPlayer = playerManager.createPlayer()
-	val trackScheduler = TrackScheduler(botConfiguration, compoundCommandEvent, audioPlayer, lockedGuilds)
-	val audioPlayerSendHandler = AudioPlayerSendHandler(compoundCommandEvent.guild, audioPlayer)
+	val audioPlayer: AudioPlayer = audioPlayerManager.createPlayer()
+	val audioScheduler = AudioScheduler(botConfiguration, event, audioPlayer, lockedGuilds)
+	val audioPlayerSendHandler = AudioPlayerSendHandler(event.guild, audioPlayer)
 
 	init {
 		audioPlayer.volume = getVolumeForGuild()
-		audioPlayer.addListener(trackScheduler)
+		audioPlayer.addListener(audioScheduler)
 	}
 
 	fun resetPlayerVolume(): Int {
 		val guildVolume = getVolumeForGuild()
 		audioPlayer.volume = guildVolume
-		jdaLog.info(compoundCommandEvent, "Audio player volume was reset to default value ($guildVolume points)")
+		jdaLog.info(event, "Audio player volume was reset to default value ($guildVolume points)")
 		return guildVolume
 	}
 
 	private fun getVolumeForGuild(): Int = botConfiguration.guildSettingsSupplier.fetchDbProperty(
 		GuildDbProperty.DEFAULT_VOLUME,
-		compoundCommandEvent.guildId,
+		event.guildId,
 		Int::class
 	)
 
-	val actions get() = trackScheduler.schedulerActions
+	val actions get() = audioScheduler.schedulerActions
 
-	val queue get() = trackScheduler.schedulerActions.trackQueue
+	val queue get() = audioScheduler.schedulerActions.trackQueue
 
 	val currentPlayerVolume get() = audioPlayer.volume
 }

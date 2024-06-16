@@ -22,7 +22,7 @@ spring:
 jwizard:
   api-host: http://localhost:8670
   app-name: JWizard DEV
-  app-icon-path: classpath:assets/logo/dark.png
+  app-icon-path: dark.png
 
 logging:
   file:

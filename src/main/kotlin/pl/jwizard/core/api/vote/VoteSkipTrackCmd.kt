@@ -6,7 +6,7 @@ package pl.jwizard.core.api.vote
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo
 import pl.jwizard.core.api.AbstractVoteMusicCmd
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -18,7 +18,7 @@ import pl.jwizard.core.vote.VoteResponseData
 @CommandListenerBean(id = BotCommand.VSKIP)
 class VoteSkipTrackCmd(
 	botConfiguration: BotConfiguration,
-	playerManagerFacade: PlayerManagerFacade
+	playerManagerFacade: PlayerManager
 ) : AbstractVoteMusicCmd(
 	botConfiguration,
 	playerManagerFacade
@@ -29,7 +29,7 @@ class VoteSkipTrackCmd(
 	}
 
 	override fun executeVoteMusicCmd(event: CompoundCommandEvent): VoteResponseData {
-		val skippingCurrentPlaying = playerManagerFacade.currentPlayingTrack(event)
+		val skippingCurrentPlaying = playerManager.currentPlayingTrack(event)
 		val params = mapOf(
 			"audioTrack" to Formatter.createRichTrackTitle(skippingCurrentPlaying as AudioTrackInfo),
 		)
@@ -37,7 +37,7 @@ class VoteSkipTrackCmd(
 			initClazz = VoteSkipTrackCmd::class,
 			message = buildInitMessage(I18nResLocale.VOTE_SKIP_TRACK, params, event),
 			onSuccess = {
-				playerManagerFacade.skipTrack(event)
+				playerManager.skipTrack(event)
 				buildSuccessMessage(I18nResLocale.SUCCESS_VOTE_SKIP_TRACK, params, it, event)
 			},
 			onFailure = { buildFailureMessage(I18nResLocale.FAILURE_VOTE_SKIP_TRACK, params, it, event) },

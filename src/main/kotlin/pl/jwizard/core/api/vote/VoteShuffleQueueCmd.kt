@@ -5,7 +5,7 @@
 package pl.jwizard.core.api.vote
 
 import pl.jwizard.core.api.AbstractVoteMusicCmd
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -17,7 +17,7 @@ import pl.jwizard.core.vote.VoteResponseData
 @CommandListenerBean(id = BotCommand.VSHUFFLE)
 class VoteShuffleQueueCmd(
 	botConfiguration: BotConfiguration,
-	playerManagerFacade: PlayerManagerFacade
+	playerManagerFacade: PlayerManager
 ) : AbstractVoteMusicCmd(
 	botConfiguration,
 	playerManagerFacade
@@ -27,7 +27,7 @@ class VoteShuffleQueueCmd(
 	}
 
 	override fun executeVoteMusicCmd(event: CompoundCommandEvent): VoteResponseData {
-		val musicManager = playerManagerFacade.findMusicManager(event)
+		val musicManager = playerManager.findMusicManager(event)
 		if (musicManager.queue.isEmpty()) {
 			throw AudioPlayerException.TrackQueueIsEmptyException(event)
 		}
@@ -38,7 +38,7 @@ class VoteShuffleQueueCmd(
 			initClazz = VoteShuffleQueueCmd::class,
 			message = buildInitMessage(I18nResLocale.VOTE_SUFFLE_QUEUE, params, event),
 			onSuccess = {
-				playerManagerFacade.shuffleQueue(event)
+				playerManager.shuffleQueue(event)
 				buildSuccessMessage(I18nResLocale.SUCCESS_VOTE_SUFFLE_QUEUE, params, it, event)
 			},
 			onFailure = { buildFailureMessage(I18nResLocale.FAILURE_VOTE_SUFFLE_QUEUE, params, it, event) },

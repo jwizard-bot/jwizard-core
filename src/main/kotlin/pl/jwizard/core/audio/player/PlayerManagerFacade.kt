@@ -5,32 +5,38 @@
 package pl.jwizard.core.audio.player
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import net.dv8tion.jda.api.entities.Guild
-import net.dv8tion.jda.api.entities.VoiceChannel
+import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel
+import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
-import pl.jwizard.core.audio.AudioLoadResultImpl
-import pl.jwizard.core.audio.ExtendedAudioTrackInfo
-import pl.jwizard.core.audio.TrackPosition
+import pl.jwizard.core.audio.*
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.CompoundCommandEvent
+import pl.jwizard.core.db.RadioStationDto
 import pl.jwizard.core.exception.AudioPlayerException
 import pl.jwizard.core.exception.UserException
-import pl.jwizard.core.exception.UtilException
 import pl.jwizard.core.log.AbstractLoggingBean
 import pl.jwizard.core.util.BotUtils
 import pl.jwizard.core.util.Formatter
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
 
 @Component
 class PlayerManagerFacade(
 	private val audioPlayerManager: AudioPlayerManager,
 	private val botConfiguration: BotConfiguration,
-) : PlayerManager, AbstractLoggingBean(PlayerManagerFacade::class) {
+) : PlayerManager, AbstractLoggingBean(PlayerManager::class) {
 
 	private val musicManagers = mutableMapOf<String, MusicManager>()
 	private val lockedGuilds = mutableListOf<String>()
 
 	override fun loadAndPlay(event: CompoundCommandEvent, trackUrl: String, isUrlPattern: Boolean) {
-		val musicManager = findMusicManager(event)
+		val musicManager = findMusicManager(event) // not creating, because it is instantiated in AbstractMusicCmd
+
+		switchAudioTrackScheduler(event, musicManager, AudioSourceType.TRACK)
+		musicManager.audioScheduler.setCompoundEvent(event)
+
 		val audioLoadResultHandler = AudioLoadResultImpl(
 			musicManager,
 			botConfiguration,
@@ -41,6 +47,38 @@ class PlayerManagerFacade(
 		event.invokedBySender = true // set hook to inform, that sending of this message was invoked by user
 		event.guild?.audioManager?.isSelfDeafened = true
 		audioPlayerManager.loadItemOrdered(musicManager, trackUrl, audioLoadResultHandler)
+	}
+
+	override fun loadAndStream(event: CompoundCommandEvent, radioStation: RadioStationDto) {
+		val musicManager = findMusicManager(event)
+
+		switchAudioTrackScheduler(event, musicManager, AudioSourceType.STREAM)
+		musicManager.audioScheduler.setCompoundEvent(event)
+
+		musicManager.actions.radioStationDto = radioStation // set radio station and block default queue
+
+		// check primary stream url, if itn't working, swich to proxy stream url
+		val client = HttpClient.newHttpClient()
+		val request = HttpRequest.newBuilder()
+			.uri(URI.create(radioStation.streamUrl))
+			.method(HttpMethod.HEAD.name(), HttpRequest.BodyPublishers.noBody())
+			.build()
+
+		val response = client.send(request, HttpResponse.BodyHandlers.discarding())
+		// determinate stream url base availibility
+		val streamUrl = if (response.statusCode() == 200) {
+			radioStation.streamUrl
+		} else {
+			radioStation.proxyStreamUrl
+		}
+		event.guild?.audioManager?.isSelfDeafened = true
+		val streamLoadResultHandler = StreamLoadResultImpl(
+			musicManager,
+			botConfiguration,
+			event,
+			radioStation
+		)
+		audioPlayerManager.loadItem(streamUrl, streamLoadResultHandler)
 	}
 
 	override fun pauseTrack(event: CompoundCommandEvent) {
@@ -138,7 +176,7 @@ class PlayerManagerFacade(
 		val removedTracks = musicManager.actions.removeAllTracksFromMember(memberWithRemovableTracks)
 		jdaLog.info(
 			event, "Following tracks was removed $removedTracks added by " +
-				"member: ${memberWithRemovableTracks.user.asTag}"
+				"member: ${memberWithRemovableTracks.user.name}"
 		)
 		return MemberRemovedTracksInfo(
 			member = memberWithRemovableTracks,
@@ -192,16 +230,14 @@ class PlayerManagerFacade(
 		return voiceChannelWithMember
 	}
 
-	fun findMusicManager(event: CompoundCommandEvent): MusicManager {
-		val guild = event.guild ?: throw UtilException.UnexpectedException("Guild cannot be null")
-		return musicManagers.getOrPut(guild.id) {
-			val musicManager = MusicManager(botConfiguration, audioPlayerManager, event, lockedGuilds)
-			event.guild.audioManager.sendingHandler = musicManager.audioPlayerSendHandler
-			musicManager
-		}
+	override fun findMusicManager(event: CompoundCommandEvent): MusicManager = musicManagers.getOrPut(event.guildId) {
+		val musicManager = MusicManager(botConfiguration, event, audioPlayerManager, lockedGuilds)
+		event.guild?.audioManager?.sendingHandler = musicManager.audioPlayerSendHandler
+		musicManagers[event.guildId] = musicManager
+		return musicManager
 	}
 
-	fun findMusicManager(guild: Guild): MusicManager? = musicManagers[guild.id]
+	override fun findMusicManager(guildId: String): MusicManager? = musicManagers[guildId]
 
 	private fun findMusicManagerWithPermissions(event: CompoundCommandEvent): MusicManager {
 		val musicManager = findMusicManager(event)
@@ -212,5 +248,14 @@ class PlayerManagerFacade(
 			throw AudioPlayerException.InvokerIsNotTrackSenderOrAdminException(event)
 		}
 		return musicManager
+	}
+
+	private fun switchAudioTrackScheduler(
+		event: CompoundCommandEvent,
+		musicManager: MusicManager,
+		audioSourceType: AudioSourceType
+	) {
+		musicManager.audioScheduler.setAudioScheduler(audioSourceType)
+		jdaLog.info(event, "Changing audio scheduler instance to ${audioSourceType.name} type")
 	}
 }

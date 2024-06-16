@@ -6,7 +6,7 @@ package pl.jwizard.core.api.dj
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo
 import pl.jwizard.core.api.AbstractDjCmd
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -19,7 +19,7 @@ import pl.jwizard.core.util.Formatter
 @CommandListenerBean(id = BotCommand.STOP)
 class StopClearQueueCmd(
 	botConfiguration: BotConfiguration,
-	playerManagerFacade: PlayerManagerFacade
+	playerManagerFacade: PlayerManager
 ) : AbstractDjCmd(
 	botConfiguration,
 	playerManagerFacade
@@ -29,8 +29,8 @@ class StopClearQueueCmd(
 	}
 
 	override fun executeDjCmd(event: CompoundCommandEvent) {
-		val actions = playerManagerFacade.findMusicManager(event).actions
-		val currentTrack = playerManagerFacade.currentPlayingTrack(event)
+		val actions = playerManager.findMusicManager(event).actions
+		val currentTrack = playerManager.currentPlayingTrack(event)
 
 		actions.clearAndDestroy(false)
 		actions.leaveAndSendMessageAfterInactivity()

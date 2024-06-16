@@ -5,7 +5,7 @@
 package pl.jwizard.core.api.dj
 
 import pl.jwizard.core.api.AbstractDjCmd
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -19,7 +19,7 @@ import pl.jwizard.core.i18n.I18nResLocale
 @CommandListenerBean(id = BotCommand.SETVOLUME)
 class SetPlayerVolumeCmd(
 	botConfiguration: BotConfiguration,
-	playerManagerFacade: PlayerManagerFacade
+	playerManagerFacade: PlayerManager
 ) : AbstractDjCmd(
 	botConfiguration,
 	playerManagerFacade
@@ -31,11 +31,11 @@ class SetPlayerVolumeCmd(
 	override fun executeDjCmd(event: CompoundCommandEvent) {
 		val newVolumeUnits = getArg<Int>(CommandArgument.VOLUME, event)
 
-		val currentVolume = playerManagerFacade.findMusicManager(event).currentPlayerVolume
-		if (currentVolume < 0 || currentVolume > 150) {
+		val currentVolume = playerManager.findMusicManager(event).currentPlayerVolume
+		if (newVolumeUnits < 0 || newVolumeUnits > 150) {
 			throw CommandException.VolumeUnitsOutOfBoundsException(event, 0, 150)
 		}
-		playerManagerFacade.setPlayerVolume(event, newVolumeUnits)
+		playerManager.setPlayerVolume(event, newVolumeUnits)
 		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(

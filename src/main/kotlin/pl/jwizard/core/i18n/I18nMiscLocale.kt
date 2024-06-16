@@ -15,6 +15,7 @@ enum class I18nMiscLocale(
 	COMPILATION_VERSION("pl.jwizard.util.compilationVersion"),
 	TURN_ON("pl.jwizard.util.turnOn"),
 	TURN_OFF("pl.jwizard.util.turnOff"),
+	DATA_COMES_FROM("pl.jwizard.util.dataComesFrom"),
 
 	// audio player
 	COUNT_OF_TRACKS("pl.jwizard.audio.countOfTracks"),

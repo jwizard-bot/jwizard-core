@@ -5,8 +5,8 @@
 package pl.jwizard.core.command
 
 import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.interactions.commands.OptionMapping
 import net.dv8tion.jda.api.requests.RestAction
 import org.springframework.stereotype.Component
@@ -14,27 +14,26 @@ import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.arg.CommandArgument
 import pl.jwizard.core.command.arg.CommandArgumentData
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
+import pl.jwizard.core.command.reflect.CommandArgDto
 import pl.jwizard.core.command.reflect.CommandDetailsDto
 import pl.jwizard.core.command.reflect.CommandReflectLoader
 import pl.jwizard.core.db.GuildSettingsSupplier
 import pl.jwizard.core.exception.AbstractBotException
 import pl.jwizard.core.exception.CommandException
 import pl.jwizard.core.log.AbstractLoggingBean
-import pl.jwizard.core.settings.GuildSettingsFacade
 import pl.jwizard.core.util.Formatter
 import java.util.*
 
 @Component
 class CommandProxyListener(
-	private val reflectCommandLoader: CommandReflectLoader,
+	private val commandReflectLoader: CommandReflectLoader,
 	private val guildSettingsSupplier: GuildSettingsSupplier,
-	private val guildSettingsFacade: GuildSettingsFacade,
 	private val botConfiguration: BotConfiguration,
 ) : AbstractLoggingBean(CommandProxyListener::class) {
 
-	fun onRegularCommand(event: GuildMessageReceivedEvent) {
-		if (event.author.isBot) {
-			return // skipping bot messages
+	fun onRegularCommand(event: MessageReceivedEvent) {
+		if (event.author.isBot || !event.isFromGuild) {
+			return // skipping bot messages and non-guild message
 		}
 		val guildProps = guildSettingsSupplier.fetchGuildCommandProperties(event.guild.id)
 			?: return // skipping for non finding persisted guild settings
@@ -51,14 +50,13 @@ class CommandProxyListener(
 			} else {
 				cmdWithArguments
 			}
-			if (!BotCommand.checkIfCommandExist(commandName)) {
-				return // skipping, non existing command
-			}
+			val commandDetails = commandReflectLoader.getCommandByNameOrAlias(commandName)
+				?: return // skipping, non existing command
+
 			val compoundCommandEvent = CompoundCommandEvent(event, guildProps)
-			if (!guildSettingsFacade.checkIfCommandIsEnabled(commandName, compoundCommandEvent.guildDbId)) {
+			if (!guildSettingsSupplier.checkIfCommandIsEnabled(guildProps.id, commandDetails.id, isSlashCommand = false)) {
 				throw CommandException.CommandIsTurnedOffException(compoundCommandEvent, commandName)
 			}
-			val commandDetails = reflectCommandLoader.getBotCommand(commandName) ?: return // skipping, not existing command
 			val commandOptions: Queue<String> = LinkedList(cmdWithArguments
 				.substring(commandName.length)
 				.trim()
@@ -69,6 +67,8 @@ class CommandProxyListener(
 			}
 			for (arg in commandDetails.args) {
 				val optionMapping = commandOptions.poll()
+				// check, if passed command with pre-defined options violate integrity
+				checkIfArgumentOptionIsValid(compoundCommandEvent, arg, optionMapping)
 				val argKey = CommandArgument.getInstation(arg.name)
 				if (argKey == null || (optionMapping == null && arg.req)) {
 					throwSyntaxException(compoundCommandEvent, commandName, commandDetails)
@@ -77,7 +77,7 @@ class CommandProxyListener(
 			}
 			var interactiveMessage = InteractiveMessage()
 			try {
-				val command = reflectCommandLoader.getCommandBean(commandName)
+				val command = commandReflectLoader.getCommandBean(commandDetails.name)
 				interactiveMessage = command?.performCommand(compoundCommandEvent) ?: return
 			} catch (ex: NumberFormatException) {
 				throwSyntaxException(compoundCommandEvent, commandName, commandDetails)
@@ -93,17 +93,22 @@ class CommandProxyListener(
 		}
 	}
 
-	fun onSlashCommand(event: SlashCommandEvent) {
-		val commandName = event.commandPath
+	fun onSlashCommand(event: SlashCommandInteractionEvent) {
+		if (!event.isFromGuild) {
+			return // event not coming from guild, skipping
+		}
+		val commandName = event.fullCommandName
 		val guildId = event.guild?.id ?: return
 		val guildProps = guildSettingsSupplier.fetchGuildCommandProperties(guildId)
 			?: return // skipping for non finding persisted guild settings
 		try {
+			event.deferReply().complete()
+
 			val compoundCommandEvent = CompoundCommandEvent(event, guildProps)
-			if (!guildSettingsFacade.checkIfSlashCommandIsEnabled(commandName, guildProps.id)) {
+			val commandDetails = commandReflectLoader.getBotCommand(commandName) ?: return
+			if (!guildSettingsSupplier.checkIfCommandIsEnabled(guildProps.id, commandDetails.id, isSlashCommand = true)) {
 				throw CommandException.CommandIsTurnedOffException(compoundCommandEvent, commandName)
 			}
-			val commandDetails = reflectCommandLoader.getBotCommand(commandName) ?: return
 			val commandOptions: Queue<OptionMapping> = LinkedList(event.options)
 			if (commandOptions.size < commandDetails.args.filter { it.req }.size) {
 				throwSyntaxException(compoundCommandEvent, commandName, commandDetails)
@@ -111,19 +116,16 @@ class CommandProxyListener(
 			for (arg in commandDetails.args) {
 				val optionMapping = commandOptions.poll()
 				val argKey = CommandArgument.getInstation(arg.name)
-				if (argKey == null || (optionMapping == null && arg.req)) {
-					throwSyntaxException(compoundCommandEvent, commandName, commandDetails)
-				}
+				checkIfArgumentOptionIsValid(compoundCommandEvent, arg, optionMapping.asString)
 				compoundCommandEvent.commandArgs[argKey!!] = CommandArgumentData(optionMapping.asString, arg.type)
 			}
 			var interactiveMessage = InteractiveMessage()
 			try {
-				val command = reflectCommandLoader.getCommandBean(commandName) ?: return
+				val command = commandReflectLoader.getCommandBean(commandName) ?: return
 				interactiveMessage = command.performCommand(compoundCommandEvent)
 			} catch (ex: NumberFormatException) {
 				throwSyntaxException(compoundCommandEvent, commandName, commandDetails)
 			}
-			event.deferReply().queue()
 
 			val (messageEmbeds, actionComponents) = interactiveMessage
 			if (compoundCommandEvent.interactiveMessage.messageEmbeds.isNotEmpty()) {
@@ -140,7 +142,12 @@ class CommandProxyListener(
 			}
 		} catch (ex: AbstractBotException) {
 			val embedMessage = CustomEmbedBuilder(botConfiguration, guildProps.lang).buildErrorMessage(ex)
-			event.channel.sendMessageEmbeds(embedMessage).queue()
+			val defferedSender = if (!event.hook.isExpired) {
+				event.hook.sendMessageEmbeds(embedMessage)
+			} else {
+				event.channel.sendMessageEmbeds(embedMessage)
+			}
+			defferedSender.queue()
 		}
 	}
 
@@ -179,5 +186,18 @@ class CommandProxyListener(
 				lang = event.lang,
 			),
 		)
+	}
+
+	private fun checkIfArgumentOptionIsValid(event: CompoundCommandEvent, arg: CommandArgDto, option: String) {
+		val flatOptions = arg.options.map { it.rawValue }
+		if (arg.options.isNotEmpty() && !flatOptions.contains(option)) {
+			throw CommandException.ViolatedCommandArgumentOptionsException(
+				event,
+				arg.name,
+				option,
+				flatOptions,
+				Formatter.createArgumentOptionsSyntax(arg.options, event.lang)
+			)
+		}
 	}
 }

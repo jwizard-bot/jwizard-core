@@ -6,7 +6,7 @@ package pl.jwizard.core.vote
 
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.User
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent
 import net.dv8tion.jda.api.requests.RestAction
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -34,8 +34,8 @@ class GeneralVotingSystemHandler(
 
 	private val emojisCallback: (message: Message) -> RestAction<List<Void>> = {
 		RestAction.allOf(
-			it.addReaction(UnicodeEmoji.THUMBS_UP.code),
-			it.addReaction(UnicodeEmoji.THUMBS_DOWN.code),
+			it.addReaction(UnicodeEmoji.THUMBS_UP.createEmoji()),
+			it.addReaction(UnicodeEmoji.THUMBS_DOWN.createEmoji()),
 		)
 	}
 
@@ -55,7 +55,7 @@ class GeneralVotingSystemHandler(
 			.fetchDbProperty(GuildDbProperty.MAX_VOTING_TIME, event.guildId, Int::class)
 		val predictorData = VotePredictorData(forYes, forNo, requiredVotes, succeed, voters, response, message)
 		botConfiguration.eventWaiter.waitForEvent(
-			GuildMessageReactionAddEvent::class.java,
+			MessageReactionAddEvent::class.java,
 			{ onAfterVotePredicate(it, predictorData) },
 			{ onAfterFinishVoting(predictorData) },
 			timeToFinishSec.toLong(),
@@ -64,14 +64,11 @@ class GeneralVotingSystemHandler(
 		)
 	}
 
-	private fun onAfterVotePredicate(gEvent: GuildMessageReactionAddEvent, predictorData: VotePredictorData): Boolean {
-		if (gEvent.messageId != predictorData.message.id || gEvent.user.isBot) {
+	private fun onAfterVotePredicate(gEvent: MessageReactionAddEvent, predictorData: VotePredictorData): Boolean {
+		if (gEvent.messageId != predictorData.message.id || gEvent.user?.isBot == true) {
 			return false // end on different message or bot self-instance
 		}
-		val emote = gEvent.reactionEmote
-		if (!emote.isEmoji) {
-			return false // end on non emoji
-		}
+		val emoji = gEvent.emoji
 		val voiceChannelWithBot = gEvent.guild.voiceChannels
 			.find { it.members.contains(gEvent.guild.selfMember) }
 			?: throw UserException.UserOnVoiceChannelWithBotNotFoundException(event)
@@ -83,33 +80,33 @@ class GeneralVotingSystemHandler(
 			return false
 		}
 		if (predictorData.votedUsers.contains(gEvent.user)) { // revoting from same user
-			if (UnicodeEmoji.THUMBS_DOWN.checkEquals(emote)) {
+			if (UnicodeEmoji.THUMBS_DOWN.checkEquals(emoji)) {
 				removeEmoji(gEvent, predictorData, UnicodeEmoji.THUMBS_UP)
 				predictorData.forYes.decrementAndGet()
 				predictorData.forNo.incrementAndGet()
-				jdaLog.info(event, "Member: ${gEvent.user.asTag} was re-voted for NO from YES")
-			} else if (UnicodeEmoji.THUMBS_UP.checkEquals(emote)) {
+				jdaLog.info(event, "Member: ${gEvent.user?.name} was re-voted for NO from YES")
+			} else if (UnicodeEmoji.THUMBS_UP.checkEquals(emoji)) {
 				removeEmoji(gEvent, predictorData, UnicodeEmoji.THUMBS_DOWN)
 				predictorData.forYes.incrementAndGet()
 				predictorData.forNo.decrementAndGet()
-				jdaLog.info(event, "Member: ${gEvent.user.asTag} was re-voted for YES from NO")
+				jdaLog.info(event, "Member: ${gEvent.user?.name} was re-voted for YES from NO")
 			} else {
 				return false // unsupported emoji
 			}
 		} else { // on first voting for user
-			if (UnicodeEmoji.THUMBS_DOWN.checkEquals(emote)) {
+			if (UnicodeEmoji.THUMBS_DOWN.checkEquals(emoji)) {
 				predictorData.forNo.incrementAndGet()
-				jdaLog.info(event, "Member: ${gEvent.user.asTag} was voted for NO")
-			} else if (UnicodeEmoji.THUMBS_UP.checkEquals(emote)) {
+				jdaLog.info(event, "Member: ${gEvent.user?.name} was voted for NO")
+			} else if (UnicodeEmoji.THUMBS_UP.checkEquals(emoji)) {
 				predictorData.forYes.incrementAndGet()
-				jdaLog.info(event, "Member: ${gEvent.user.asTag} was voted for YES")
+				jdaLog.info(event, "Member: ${gEvent.user?.name} was voted for YES")
 			} else {
 				return false // unsupported emoji
 			}
-			predictorData.votedUsers.add(gEvent.user)
+			predictorData.votedUsers.add(gEvent.user as User)
 		}
 		val botMember = gEvent.guild.selfMember
-		val totalMembersOnChannel = voiceChannelWithBot.members.count { it.user.isBot && botMember != it }
+		val totalMembersOnChannel = voiceChannelWithBot.members.count { !it.user.isBot && botMember != it }
 		if (totalMembersOnChannel == 0) {
 			return false // no members found on channel, end voting
 		}
@@ -173,8 +170,8 @@ class GeneralVotingSystemHandler(
 	}
 
 	private fun removeEmoji(
-		gEvent: GuildMessageReactionAddEvent,
+		gEvent: MessageReactionAddEvent,
 		predictorData: VotePredictorData,
 		emoji: UnicodeEmoji
-	) = predictorData.message.removeReaction(emoji.code, gEvent.user).queue()
+	) = predictorData.message.removeReaction(emoji.createEmoji(), gEvent.user as User).queue()
 }

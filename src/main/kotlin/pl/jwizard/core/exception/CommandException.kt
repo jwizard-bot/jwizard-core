@@ -42,6 +42,29 @@ object CommandException {
 		event, MismatchCommandArgumentsException::class,
 		i18nLocale = I18nExceptionLocale.MISMATCH_COMMAND_ARGS,
 		variables = mapOf("syntax" to syntax),
-		logMessage = "Attempt to invoke command $command with non-exact arguments"
+		logMessage = "Attempt to invoke command $command with non-exact arguments",
+	)
+
+	class ViolatedCommandArgumentOptionsException(
+		event: CompoundCommandEvent,
+		violatedArgName: String,
+		violatedValue: Any,
+		acceptedValueList: List<String>,
+		acceptedValuesFormatted: String,
+	) : AbstractBotException(
+		event, ViolatedCommandArgumentOptionsException::class,
+		i18nLocale = I18nExceptionLocale.VIOLATED_COMMAND_ARG_OPTIONS,
+		variables = mapOf(
+			"violatedArgName" to violatedArgName,
+			"acceptedValueList" to acceptedValuesFormatted,
+		),
+		logMessage = "Attempt to invoke command with violated argument $violatedArgName options. " +
+			"Violated value: $violatedValue. Accepted values: $acceptedValueList",
+	)
+
+	class CommandAvailableOnlyForDiscreteTrackException(event: CompoundCommandEvent) : AbstractBotException(
+		event, CommandAvailableOnlyForDiscreteTrackException::class,
+		i18nLocale = I18nExceptionLocale.COMMAND_AVAILABLE_ONLY_FOR_DISCRETE_TRACK,
+		logMessage = "Attempt to invoke command on current continuous audio source, while is avaialbe only discrete source"
 	)
 }

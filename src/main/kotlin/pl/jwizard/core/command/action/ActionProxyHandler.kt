@@ -4,8 +4,9 @@
  */
 package pl.jwizard.core.command.action
 
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 
 interface ActionProxyHandler {
-	fun updateCurrentPlayingEmbedMessage(buttonClickEvent: ButtonClickEvent)
+	fun updateCurrentPlayingEmbedMessage(buttonClickEvent: ButtonInteractionEvent)
+	fun updateRadioPlaybackEmbedMessage(buttonClickEvent: ButtonInteractionEvent)
 }

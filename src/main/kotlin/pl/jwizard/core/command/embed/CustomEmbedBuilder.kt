@@ -7,12 +7,14 @@ package pl.jwizard.core.command.embed
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.User
+import org.apache.commons.lang3.StringUtils
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.exception.AbstractBotException
 import pl.jwizard.core.exception.I18nExceptionLocale
 import pl.jwizard.core.i18n.I18nLocale
 import pl.jwizard.core.i18n.I18nResLocale
+import java.util.*
 
 class CustomEmbedBuilder(
 	private val event: CompoundCommandEvent?,
@@ -30,7 +32,7 @@ class CustomEmbedBuilder(
 	constructor(
 		botConfiguration: BotConfiguration,
 		event: CompoundCommandEvent
-	) : this(null, botConfiguration, event.lang)
+	) : this(event, botConfiguration, event.lang)
 
 	fun addTitle(content: String): CustomEmbedBuilder {
 		setTitle(content)
@@ -43,7 +45,12 @@ class CustomEmbedBuilder(
 	}
 
 	fun addAuthor(user: User): CustomEmbedBuilder {
-		setAuthor(user.asTag, null, user.avatarUrl ?: user.defaultAvatarUrl)
+		setAuthor(user.name, null, user.avatarUrl ?: user.defaultAvatarUrl)
+		return this
+	}
+
+	fun addAuthor(name: String?, avatarUri: String?): CustomEmbedBuilder {
+		setAuthor(name, null, avatarUri)
 		return this
 	}
 
@@ -56,6 +63,20 @@ class CustomEmbedBuilder(
 
 	fun addDescription(placeholder: String): CustomEmbedBuilder {
 		setDescription(placeholder)
+		return this
+	}
+
+	fun appendDescriptionList(elements: Map<I18nLocale, Map<String, Any>>): CustomEmbedBuilder {
+		val stringJoiner = StringJoiner(StringUtils.EMPTY)
+		var i = 0
+		stringJoiner.add("\n\n")
+		for ((i18nLocale, params) in elements) {
+			stringJoiner.add("* ${i18nService.getMessage(i18nLocale, params, getMessLang())}")
+			if (i++ < elements.size) {
+				stringJoiner.add("\n")
+			}
+		}
+		appendDescription(stringJoiner.toString())
 		return this
 	}
 

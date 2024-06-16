@@ -7,7 +7,7 @@ package pl.jwizard.core.api.dj
 import pl.jwizard.core.api.AbstractDjCmd
 import pl.jwizard.core.audio.ExtendedAudioTrackInfo
 import pl.jwizard.core.audio.TrackPosition
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -21,7 +21,7 @@ import pl.jwizard.core.util.Formatter
 @CommandListenerBean(id = BotCommand.MOVE)
 class MoveTrackCmd(
 	botConfiguration: BotConfiguration,
-	playerManagerFacade: PlayerManagerFacade
+	playerManagerFacade: PlayerManager
 ) : AbstractDjCmd(
 	botConfiguration,
 	playerManagerFacade
@@ -35,7 +35,7 @@ class MoveTrackCmd(
 			previous = getArg(CommandArgument.FROM_POS, event),
 			selected = getArg(CommandArgument.TO_POS, event),
 		)
-		val movedTrack = playerManagerFacade.moveTrackToPos(event, trackPosition)
+		val movedTrack = playerManager.moveTrackToPos(event, trackPosition)
 		val (previous, selected) = trackPosition
 
 		val embedMessage = CustomEmbedBuilder(botConfiguration, event)

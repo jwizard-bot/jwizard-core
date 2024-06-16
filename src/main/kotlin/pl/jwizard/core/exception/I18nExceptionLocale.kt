@@ -50,6 +50,17 @@ enum class I18nExceptionLocale(
 	VOLUME_UNITS_OUT_OF_BOUNDS("pl.jwizard.exception.volumeUnitsOutOfBoundsException", 302),
 	COMMAND_IS_TURNED_OFF("pl.jwizard.exception.commandIsTurnedOffException", 303),
 	MISMATCH_COMMAND_ARGS("pl.jwizard.exception.mismatchCommandArgumentsException", 304),
+	VIOLATED_COMMAND_ARG_OPTIONS("pl.jwizard.exception.violatedCommandArgumentOptionsException", 305),
+	COMMAND_AVAILABLE_ONLY_FOR_DISCRETE_TRACK("pl.jwizard.exception.commandAvailableOnlyForDiscreteTrackException", 305),
+
+	// radio
+	RADIO_STATION_NOT_EXISTS_IS_TURNED_OFF("pl.jwizard.exception.radioStationNotExistsOrTurnedOffException", 401),
+	RADIO_STATION_IS_NOT_PLAYING("pl.jwizard.exception.radioStationIsNotPlayingException", 402),
+	RADIO_STATION_IS_PLAYING("pl.jwizard.exception.radioStationIsPlayingException", 403),
+	DISCRETE_AUDIO_STREAM_IS_PLAYING("pl.jwizard.exception.discreteAudioStreamIsPlayingException", 404),
+	UNXEPECTED_ERROR_ON_LOAD_RADIO("pl.jwizard.exception.unexpectedErrorOnLoadRadioException", 405),
+	UNXEPECTED_ERROR_WHILE_STREAMING_RADIO("pl.jwizard.exception.unexpectedErrorWhileStreamingRadioException", 406),
+	RADIO_STATION_NOT_PROVIDING_PLAYBACK_DATA("pl.jwizard.exception.radioStationNotProvidingPlaybackDataException", 407),
 	;
 
 	override fun getPlaceholder() = placeholder

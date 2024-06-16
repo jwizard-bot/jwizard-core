@@ -6,9 +6,9 @@ package pl.jwizard.core.command
 
 import com.jagrosh.jdautilities.menu.Paginator
 import net.dv8tion.jda.api.exceptions.PermissionException
-import net.dv8tion.jda.api.interactions.components.Button
-import net.dv8tion.jda.api.interactions.components.ButtonStyle
-import net.dv8tion.jda.internal.interactions.ButtonImpl
+import net.dv8tion.jda.api.interactions.components.buttons.Button
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
+import net.dv8tion.jda.internal.interactions.component.ButtonImpl
 import org.apache.commons.lang3.StringUtils
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.action.ActionComponent
@@ -29,12 +29,13 @@ abstract class AbstractCompositeCmd(
 	protected val i18nService = botConfiguration.i18nService
 	protected val commandsSupplier = botConfiguration.commandsSupplier
 	protected val commandReflectLoader = botConfiguration.commandReflectLoader
+	protected val radioSupplier = botConfiguration.radioSupplier
 
 	internal fun performCommand(event: CompoundCommandEvent): InteractiveMessage {
 		try {
 			execute(event)
 		} catch (ex: AbstractBotException) {
-			event.interactiveMessage.messageEmbeds.clear()
+			event.interactiveMessage.messageEmbeds.clear() // remove all previous messages from queue on error
 			val embedMessage = CustomEmbedBuilder(botConfiguration, event).buildErrorMessage(
 				placeholder = ex.i18nLocale,
 				params = ex.variables
@@ -54,11 +55,10 @@ abstract class AbstractCompositeCmd(
 		}
 	}
 
-	@Suppress("UNCHECKED_CAST")
-	protected fun <T> getArg(arg: CommandArgument, event: CompoundCommandEvent): T {
+	protected inline fun <reified T : Any> getArg(arg: CommandArgument, event: CompoundCommandEvent): T {
 		val (value, type) = event.commandArgs[arg] ?: throw UtilException.UnexpectedException("Argument not found")
 		val caster = ArgumentTypeCaster.valueOf(type)
-		return caster.clazz.cast(caster.castCallback(value)) as T
+		return T::class.cast(caster.castCallback(value))
 	}
 
 	protected fun createDefaultPaginator(items: List<String>, pageSize: Int): Paginator = Paginator.Builder()

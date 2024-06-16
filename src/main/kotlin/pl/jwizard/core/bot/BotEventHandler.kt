@@ -4,19 +4,19 @@
  */
 package pl.jwizard.core.bot
 
-import net.dv8tion.jda.api.events.ShutdownEvent
-import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent
+import net.dv8tion.jda.api.events.channel.ChannelDeleteEvent
 import net.dv8tion.jda.api.events.guild.GuildBanEvent
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMuteEvent
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent
+import net.dv8tion.jda.api.events.session.ShutdownEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
@@ -38,22 +38,29 @@ class BotEventHandler(
 	private val slashCommandRegisterer: SlashCommandRegisterer,
 ) : ListenerAdapter() {
 
-	override fun onGuildMessageReceived(event: GuildMessageReceivedEvent) = commandProxyListener.onRegularCommand(event)
+	override fun onMessageReceived(event: MessageReceivedEvent) = commandProxyListener.onRegularCommand(event)
 
-	override fun onSlashCommand(event: SlashCommandEvent) = commandProxyListener.onSlashCommand(event)
+	override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) =
+		commandProxyListener.onSlashCommand(event)
 
-	override fun onButtonClick(event: ButtonClickEvent) = actionProxyListener.onPressButton(event)
+	override fun onButtonInteraction(event: ButtonInteractionEvent) = actionProxyListener.onPressButton(event)
 
-	override fun onGuildVoiceJoin(event: GuildVoiceJoinEvent) = audioPlayerActivityEventsHandler.setBotDeafen(event)
+	override fun onCommandAutoCompleteInteraction(event: CommandAutoCompleteInteractionEvent) =
+		slashCommandRegisterer.onAutocompleteInteraction(event)
 
-	override fun onGuildVoiceUpdate(event: GuildVoiceUpdateEvent) = aloneOnChannelListener.onEveryVoiceUpdate(event)
+	override fun onGuildVoiceUpdate(event: GuildVoiceUpdateEvent) {
+		if (event.channelLeft == null) { // join to channel
+			audioPlayerActivityEventsHandler.setBotDeafen(event)
+		}
+		aloneOnChannelListener.onEveryVoiceUpdate(event)
+	}
 
 	override fun onGuildVoiceMute(event: GuildVoiceMuteEvent) =
 		audioPlayerActivityEventsHandler.stopPlayingContentAndFreeze(event)
 
 	override fun onRoleDelete(event: RoleDeleteEvent) = audioPlayerActivityEventsHandler.recreateDjRoleOnDelete(event)
 
-	override fun onTextChannelDelete(event: TextChannelDeleteEvent) =
+	override fun onChannelDelete(event: ChannelDeleteEvent) =
 		audioPlayerActivityEventsHandler.unsetMusicTextChannelOnDelete(event)
 
 	override fun onGuildJoin(event: GuildJoinEvent) {

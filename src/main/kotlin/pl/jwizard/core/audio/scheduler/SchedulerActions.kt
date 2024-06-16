@@ -11,6 +11,7 @@ import pl.jwizard.core.audio.TrackPosition
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
 import pl.jwizard.core.db.GuildDbProperty
+import pl.jwizard.core.db.RadioStationDto
 import pl.jwizard.core.exception.AudioPlayerException
 import pl.jwizard.core.i18n.I18nResLocale
 import pl.jwizard.core.log.AbstractLoggingBean
@@ -22,7 +23,7 @@ import java.util.concurrent.TimeUnit
 
 class SchedulerActions(
 	private val botConfiguration: BotConfiguration,
-	private val trackScheduler: TrackScheduler,
+	private val audioScheduler: AudioScheduler,
 ) : AbstractLoggingBean(SchedulerActions::class) {
 
 	val trackQueue: Queue<AudioTrack> = LinkedList()
@@ -39,9 +40,10 @@ class SchedulerActions(
 	var pausedTrack: AudioTrack? = null
 	var countOfRepeats = 0
 	var nextTrackInfoDisabled = false
+	var radioStationDto: RadioStationDto? = null
 
 	internal fun addToQueueAndOffer(audioTrack: AudioTrack) {
-		if (!trackScheduler.audioPlayer.startTrack(audioTrack, true)) {
+		if (!audioScheduler.audioPlayer.startTrack(audioTrack, true)) {
 			trackQueue.offer(audioTrack)
 		}
 	}
@@ -49,7 +51,7 @@ class SchedulerActions(
 	fun nextTrack() {
 		val audioTrack = trackQueue.poll()
 		if (audioTrack != null) {
-			trackScheduler.audioPlayer.startTrack(audioTrack, false)
+			audioScheduler.audioPlayer.startTrack(audioTrack, false)
 		}
 	}
 
@@ -59,7 +61,7 @@ class SchedulerActions(
 			audioTrack = trackQueue.poll()
 		}
 		if (audioTrack != null) {
-			trackScheduler.audioPlayer.startTrack(audioTrack, false)
+			audioScheduler.audioPlayer.startTrack(audioTrack, false)
 		}
 	}
 
@@ -80,10 +82,10 @@ class SchedulerActions(
 
 	fun checkIfAllTracksIsFromSelectedMember(member: Member): Boolean {
 		if (trackQueue.isEmpty()) {
-			if (trackScheduler.audioPlayer.playingTrack == null) {
+			if (audioScheduler.audioPlayer.playingTrack == null) {
 				return false
 			}
-			val sender = trackScheduler.audioPlayer.playingTrack.userData as Member
+			val sender = audioScheduler.audioPlayer.playingTrack.userData as Member
 			return sender.id == member.id
 		}
 		return trackQueue.all { (it.userData as Member).id == member.id }
@@ -91,8 +93,8 @@ class SchedulerActions(
 
 	fun clearAndDestroy(showMessage: Boolean) {
 		onClearing = true
-		trackScheduler.audioPlayer.isPaused = false
-		trackScheduler.audioPlayer.stopTrack()
+		audioScheduler.audioPlayer.isPaused = false
+		audioScheduler.audioPlayer.stopTrack()
 		trackQueue.clear()
 
 		pausedTrack = null
@@ -103,33 +105,33 @@ class SchedulerActions(
 		infinitePlaylistRepeating = false
 
 		if (showMessage) {
-			val messageEmbed = CustomEmbedBuilder(botConfiguration, trackScheduler.event).buildBaseMessage(
+			val messageEmbed = CustomEmbedBuilder(botConfiguration, audioScheduler.event).buildBaseMessage(
 				placeholder = I18nResLocale.LEAVE_EMPTY_CHANNEL
 			)
-			trackScheduler.event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)
+			audioScheduler.event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)
 		}
 		onClearing = false
-		jdaLog.info(trackScheduler.event, "Remove playing track and clear queue")
+		jdaLog.info(audioScheduler.event, "Remove playing track and clear queue")
 	}
 
 	fun leaveAndSendMessageAfterInactivity() {
 		val timeToLeaveChannel = botConfiguration.guildSettingsSupplier
-			.fetchDbProperty(GuildDbProperty.LEAVE_NO_TRACKS_SEC, trackScheduler.event.guildId, Int::class)
+			.fetchDbProperty(GuildDbProperty.LEAVE_NO_TRACKS_SEC, audioScheduler.event.guildId, Int::class)
 		threadsCountToLeave = botConfiguration.threadPool.schedule({
-			val messageEmbed = CustomEmbedBuilder(botConfiguration, trackScheduler.event).buildBaseMessage(
+			val messageEmbed = CustomEmbedBuilder(botConfiguration, audioScheduler.event).buildBaseMessage(
 				I18nResLocale.LEAVE_END_PLAYBACK_QUEUE,
 				params = mapOf("elapsed" to DateUtils.convertSecToMin(timeToLeaveChannel.toLong()))
 			)
-			if (!trackScheduler.lockedGuilds.contains(trackScheduler.event.guildId)) {
+			if (!audioScheduler.lockedGuilds.contains(audioScheduler.event.guildId)) {
 				clearAndDestroy(false)
 
-				val guild = trackScheduler.event.dataSender?.guild
+				val guild = audioScheduler.event.dataSender?.guild
 				botConfiguration.threadPool.submit { guild?.audioManager?.closeAudioConnection() }
 				log.info("Audio connection threadpool for guild: {} was closed", Formatter.guildTag(guild))
 
-				trackScheduler.event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)
+				audioScheduler.event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)
 				jdaLog.info(
-					trackScheduler.event,
+					audioScheduler.event,
 					"Leaved voice channel after $timeToLeaveChannel seconds of inactivity"
 				)
 			}
@@ -170,5 +172,5 @@ class SchedulerActions(
 
 	fun getPausedTrackInfo(): ExtendedAudioTrackInfo = pausedTrack
 		?.let { ExtendedAudioTrackInfo(it) }
-		?: throw AudioPlayerException.TrackIsNotPausedException(trackScheduler.event)
+		?: throw AudioPlayerException.TrackIsNotPausedException(audioScheduler.event)
 }

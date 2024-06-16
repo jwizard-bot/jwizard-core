@@ -6,7 +6,8 @@ package pl.jwizard.core.vote
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent
+import net.dv8tion.jda.api.entities.User
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent
 import net.dv8tion.jda.api.requests.RestAction
 import org.apache.commons.lang3.StringUtils
 import pl.jwizard.core.bot.BotConfiguration
@@ -43,7 +44,7 @@ class SongChooserVotingSystemHandler(
 		val guildDetails = botConfiguration.guildSettingsSupplier.fetchVotingSongChooserSettings(event.guildDbId)
 		isRandom = guildDetails.randomAutoChooseTrack
 		elapsedTimeInSec = guildDetails.timeAfterAutoChooseSec.toLong()
-		countOfMaxTracks = guildDetails.trackToChooseMax
+		countOfMaxTracks = guildDetails.tracksToChooseMax
 
 		trimmedTracks = loadedTracks.subList(0, countOfMaxTracks)
 		jdaLog.info(
@@ -83,14 +84,15 @@ class SongChooserVotingSystemHandler(
 			event.textChannel.sendMessageEmbeds(embedMessage)
 		}
 		val emojisCallback: (message: Message) -> RestAction<List<Void>> = { message ->
-			RestAction.allOf(UnicodeEmoji.getNumbers(countOfMaxTracks).map { message.addReaction(it.code) })
+			RestAction.allOf(
+				UnicodeEmoji.getNumbers(countOfMaxTracks).map { message.addReaction(it.createEmoji()) })
 		}
 		messageAction.queue { message -> emojisCallback(message).queue { fabricateEventWaiter(message) } }
 	}
 
 	private fun fabricateEventWaiter(message: Message) {
 		botConfiguration.eventWaiter.waitForEvent(
-			GuildMessageReactionAddEvent::class.java,
+			MessageReactionAddEvent::class.java,
 			{ onAfterSelect(it, message) },
 			{
 				lockedGuilds.remove(event.guildId)
@@ -102,20 +104,17 @@ class SongChooserVotingSystemHandler(
 		)
 	}
 
-	private fun onAfterSelect(gEvent: GuildMessageReactionAddEvent, message: Message): Boolean {
-		if (gEvent.messageId != message.id || gEvent.user.isBot) {
+	private fun onAfterSelect(gEvent: MessageReactionAddEvent, message: Message): Boolean {
+		if (gEvent.messageId != message.id || gEvent.user?.isBot == true) {
 			return false // end on different message or bot self-instance
 		}
-		val emote = gEvent.reactionEmote
-		if (!emote.isEmoji) {
-			return false // return for non emoji emote
-		}
-		if (gEvent.user.id != event.author.id) {
-			message.removeReaction(emote.emoji, gEvent.user).queue()
+		val emoji = gEvent.reaction.emoji
+		if (gEvent.user != null && gEvent.userId != event.author.id) {
+			message.removeReaction(emoji, gEvent.user as User).queue()
 			return false // skip for non-invoking voting user
 		}
 		val selectedEmoji = UnicodeEmoji.getNumbers(countOfMaxTracks)
-			.find { it.code == emote.emoji }
+			.find { it.code == emoji.asReactionCode }
 			?: return false
 
 		val index = selectedEmoji.index

@@ -6,7 +6,7 @@ package pl.jwizard.core.api.music
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo
 import pl.jwizard.core.api.AbstractMusicCmd
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.CompoundCommandEvent
@@ -22,7 +22,7 @@ import pl.jwizard.core.util.Formatter
 @CommandListenerBean(id = BotCommand.REPEAT)
 class RepeatTrackCmd(
 	botConfiguration: BotConfiguration,
-	playerManagerFacade: PlayerManagerFacade
+	playerManagerFacade: PlayerManager
 ) : AbstractMusicCmd(
 	botConfiguration,
 	playerManagerFacade
@@ -33,15 +33,15 @@ class RepeatTrackCmd(
 	}
 
 	override fun executeMusicCmd(event: CompoundCommandEvent) {
-		val repeatsCount = getArg<Int>(CommandArgument.REPEATS, event)
+		val repeatsCount = getArg<Int>(CommandArgument.COUNT, event)
 
 		val maxRepeats = guildSettings.fetchDbProperty(GuildDbProperty.MAX_REPEATS_OF_TRACK, event.guildId, Int::class)
 		if (repeatsCount < 2 || repeatsCount > maxRepeats) {
 			throw AudioPlayerException.TrackRepeatsOutOfBoundsException(event, maxRepeats)
 		}
-		playerManagerFacade.setTrackRepeat(event, repeatsCount)
+		playerManager.setTrackRepeat(event, repeatsCount)
 
-		val currentPlayingTrack = playerManagerFacade.currentPlayingTrack(event)
+		val currentPlayingTrack = playerManager.currentPlayingTrack(event)
 		val embedMessage = CustomEmbedBuilder(botConfiguration, event)
 			.addAuthor()
 			.addDescription(

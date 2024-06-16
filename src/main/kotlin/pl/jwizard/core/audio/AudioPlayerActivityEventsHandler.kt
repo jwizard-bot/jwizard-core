@@ -5,13 +5,14 @@
 package pl.jwizard.core.audio
 
 import net.dv8tion.jda.api.entities.Guild
-import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent
+import net.dv8tion.jda.api.entities.channel.ChannelType
+import net.dv8tion.jda.api.events.channel.ChannelDeleteEvent
 import net.dv8tion.jda.api.events.guild.GenericGuildEvent
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMuteEvent
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent
 import org.springframework.stereotype.Component
-import pl.jwizard.core.audio.player.PlayerManagerFacade
+import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
 import pl.jwizard.core.command.embed.EmbedColor
@@ -23,7 +24,7 @@ import pl.jwizard.core.util.Formatter
 
 @Component
 class AudioPlayerActivityEventsHandler(
-	private val playerManagerFacade: PlayerManagerFacade,
+	private val playerManager: PlayerManager,
 	private val guildSettingsSupplier: GuildSettingsSupplier,
 	private val botConfiguration: BotConfiguration,
 ) : AbstractLoggingBean(AudioPlayerActivityEventsHandler::class) {
@@ -34,7 +35,7 @@ class AudioPlayerActivityEventsHandler(
 		}
 		val botMember = event.guild.selfMember
 		if (botMember.voiceState != null) {
-			val musicManager = playerManagerFacade.findMusicManager(event.guild)
+			val musicManager = playerManager.findMusicManager(event.guild.id)
 			val guildLang = guildSettingsSupplier.fetchGuildLang(event.guild.id)
 			val isMuted = botMember.voiceState!!.isMuted
 			val messageEmbed = CustomEmbedBuilder(botConfiguration, guildLang).buildBaseMessage(
@@ -45,24 +46,26 @@ class AudioPlayerActivityEventsHandler(
 				}
 			)
 			musicManager?.audioPlayer?.isPaused = isMuted
-			musicManager?.trackScheduler?.event?.textChannel
+			musicManager?.audioScheduler?.event?.textChannel
 				?.sendMessageEmbeds(messageEmbed)
 				?.queue()
 		}
 	}
 
-	fun unsetMusicTextChannelOnDelete(event: TextChannelDeleteEvent) {
-		val removedTextChannelId = event.channel.id
-		val musicTextChannelId = guildSettingsSupplier
-			.fetchDbProperty(GuildDbProperty.MUSIC_TEXT_CHANNEL_ID, event.guild.id, String::class)
-		if (removedTextChannelId == musicTextChannelId) {
-			guildSettingsSupplier.removeDefaultMusicTextChannel(event.guild)
+	fun unsetMusicTextChannelOnDelete(event: ChannelDeleteEvent) {
+		if (event.channel.type == ChannelType.TEXT) {
+			val removedTextChannelId = event.channel.id
+			val musicTextChannelId = guildSettingsSupplier
+				.fetchDbProperty(GuildDbProperty.MUSIC_TEXT_CHANNEL_ID, event.guild.id, String::class)
+			if (removedTextChannelId == musicTextChannelId) {
+				guildSettingsSupplier.removeDefaultMusicTextChannel(event.guild)
+			}
 		}
 	}
 
-	fun setBotDeafen(event: GuildVoiceJoinEvent) {
+	fun setBotDeafen(event: GuildVoiceUpdateEvent) {
 		val guild = event.guild
-		if (event.member.id == guild.selfMember.id) {
+		if (event.channelLeft == null && event.member.id == guild.selfMember.id) {
 			guild.audioManager.isSelfDeafened = true
 			guild.selfMember.deafen(true).complete()
 		}
