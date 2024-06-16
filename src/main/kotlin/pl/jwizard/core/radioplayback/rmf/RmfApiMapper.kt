@@ -10,6 +10,7 @@ enum class RmfApiMapper(
 	private val providerUrl: String,
 ) {
 	RMF_FM("rmf-fm", "playlista_5.json.txt", "www.rmf.fm"),
+	RMF_MAXX("rmf-maxx", "playlista_213.json.txt", "www.rmf.fm"),
 	;
 
 	companion object {
