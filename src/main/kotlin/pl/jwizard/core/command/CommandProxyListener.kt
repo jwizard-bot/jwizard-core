@@ -5,8 +5,8 @@
 package pl.jwizard.core.command
 
 import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.interactions.commands.OptionMapping
 import net.dv8tion.jda.api.requests.RestAction
 import org.springframework.stereotype.Component
@@ -20,21 +20,19 @@ import pl.jwizard.core.db.GuildSettingsSupplier
 import pl.jwizard.core.exception.AbstractBotException
 import pl.jwizard.core.exception.CommandException
 import pl.jwizard.core.log.AbstractLoggingBean
-import pl.jwizard.core.settings.GuildSettingsFacade
 import pl.jwizard.core.util.Formatter
 import java.util.*
 
 @Component
 class CommandProxyListener(
-	private val reflectCommandLoader: CommandReflectLoader,
+	private val commandReflectLoader: CommandReflectLoader,
 	private val guildSettingsSupplier: GuildSettingsSupplier,
-	private val guildSettingsFacade: GuildSettingsFacade,
 	private val botConfiguration: BotConfiguration,
 ) : AbstractLoggingBean(CommandProxyListener::class) {
 
-	fun onRegularCommand(event: GuildMessageReceivedEvent) {
-		if (event.author.isBot) {
-			return // skipping bot messages
+	fun onRegularCommand(event: MessageReceivedEvent) {
+		if (event.author.isBot || !event.isFromGuild) {
+			return // skipping bot messages and non-guild message
 		}
 		val guildProps = guildSettingsSupplier.fetchGuildCommandProperties(event.guild.id)
 			?: return // skipping for non finding persisted guild settings
@@ -93,8 +91,11 @@ class CommandProxyListener(
 		}
 	}
 
-	fun onSlashCommand(event: SlashCommandEvent) {
-		val commandName = event.commandPath
+	fun onSlashCommand(event: SlashCommandInteractionEvent) {
+		if (!event.isFromGuild) {
+			return // event not coming from guild, skipping
+		}
+		val commandName = event.fullCommandName
 		val guildId = event.guild?.id ?: return
 		val guildProps = guildSettingsSupplier.fetchGuildCommandProperties(guildId)
 			?: return // skipping for non finding persisted guild settings

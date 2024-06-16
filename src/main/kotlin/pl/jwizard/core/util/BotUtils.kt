@@ -7,7 +7,7 @@ package pl.jwizard.core.util
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Member
-import net.dv8tion.jda.api.entities.TextChannel
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import pl.jwizard.core.command.CompoundCommandEvent
 import pl.jwizard.core.exception.UserException
 
@@ -27,7 +27,7 @@ object BotUtils {
 	fun getLang(lang: String, languagesMap: Map<String, String?>): String =
 		languagesMap[lang] ?: languagesMap.entries.first().value ?: "NULL"
 
-	fun getOwnerTag(event: CompoundCommandEvent): String = event.guild?.owner?.user?.asTag ?: "unknow"
+	fun getOwnerTag(event: CompoundCommandEvent): String = event.guild?.owner?.user?.name ?: "unknow"
 
 	fun getChannelTagName(guild: Guild?, channelId: String?): String {
 		val nullReplacement = "NULL"

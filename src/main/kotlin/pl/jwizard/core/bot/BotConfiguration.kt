@@ -52,7 +52,6 @@ class BotConfiguration(
 				return // unable to find brand logo, skipping
 			}
 			AccountManagerImpl(jda.selfUser)
-				.setName(botProperties.appName)
 				.setAvatar(Icon.from(iconResource))
 				.queue(
 					{

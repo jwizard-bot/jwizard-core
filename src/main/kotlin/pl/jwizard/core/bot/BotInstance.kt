@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Activity
-import net.dv8tion.jda.api.events.ShutdownEvent
+import net.dv8tion.jda.api.events.session.ShutdownEvent
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 import org.springframework.stereotype.Component
@@ -102,8 +102,8 @@ class BotInstance(
 			GatewayIntent.GUILD_MEMBERS,
 		)
 		private val PERMISSIONS = arrayListOf(
-			Permission.MESSAGE_READ,
-			Permission.MESSAGE_WRITE,
+			Permission.VIEW_CHANNEL,
+			Permission.MESSAGE_SEND,
 			Permission.MESSAGE_HISTORY,
 			Permission.MESSAGE_ADD_REACTION,
 			Permission.MESSAGE_EMBED_LINKS,
@@ -113,7 +113,7 @@ class BotInstance(
 			Permission.MANAGE_CHANNEL,
 			Permission.VOICE_CONNECT,
 			Permission.VOICE_SPEAK,
-			Permission.USE_SLASH_COMMANDS,
+			Permission.USE_APPLICATION_COMMANDS,
 			Permission.MANAGE_ROLES,
 			Permission.VOICE_DEAF_OTHERS,
 		)
@@ -124,8 +124,10 @@ class BotInstance(
 		private val DISABLED_CACHE_FLAGS = arrayListOf(
 			CacheFlag.ACTIVITY,
 			CacheFlag.CLIENT_STATUS,
-			CacheFlag.EMOTE,
-			CacheFlag.ONLINE_STATUS
+			CacheFlag.EMOJI,
+			CacheFlag.ONLINE_STATUS,
+			CacheFlag.SCHEDULED_EVENTS,
+			CacheFlag.STICKER,
 		)
 	}
 }

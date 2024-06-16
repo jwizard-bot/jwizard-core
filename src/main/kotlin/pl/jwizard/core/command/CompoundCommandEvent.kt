@@ -4,10 +4,14 @@
  */
 package pl.jwizard.core.command
 
-import net.dv8tion.jda.api.entities.*
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
-import net.dv8tion.jda.api.interactions.components.Component
+import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.entities.MessageEmbed
+import net.dv8tion.jda.api.entities.User
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
+import net.dv8tion.jda.api.interactions.components.ItemComponent
 import pl.jwizard.core.audio.ExtendedAudioTrackInfo
 import pl.jwizard.core.command.arg.CommandArgument
 import pl.jwizard.core.command.arg.CommandArgumentData
@@ -33,13 +37,13 @@ data class CompoundCommandEvent(
 	val commandArgs: MutableMap<CommandArgument, CommandArgumentData>,
 	val systemTextChannel: TextChannel,
 	var interactiveMessage: InteractiveMessage,
-	val slashCommandEvent: SlashCommandEvent?,
+	val slashCommandEvent: SlashCommandInteractionEvent?,
 	var appendAfterEmbeds: (() -> Unit)?,
 	var invokedBySender: Boolean,
 ) {
 	val botMember = guild?.selfMember
 
-	constructor(event: GuildMessageReceivedEvent, props: GuildCommandPropertiesDto) : this(
+	constructor(event: MessageReceivedEvent, props: GuildCommandPropertiesDto) : this(
 		guild = event.guild,
 		guildId = event.guild.id,
 		guildName = event.guild.name,
@@ -48,13 +52,13 @@ data class CompoundCommandEvent(
 		lang = props.lang,
 		isSlashEnabled = props.slashEnabled,
 		djRoleName = props.djRoleName,
-		authorTag = event.author.asTag,
+		authorTag = event.author.name,
 		authorAvatarUrl = event.author.avatarUrl ?: event.author.defaultAvatarUrl,
 		dataSender = event.guild.getMember(event.author),
 		author = event.author,
 		member = event.member!!,
 		delay = DefferedEmbed(),
-		textChannel = event.channel,
+		textChannel = event.channel.asTextChannel(),
 		commandArgs = mutableMapOf(),
 		systemTextChannel = BotUtils.getSystemTextChannel(event.guild),
 		interactiveMessage = InteractiveMessage(),
@@ -63,7 +67,7 @@ data class CompoundCommandEvent(
 		invokedBySender = false,
 	)
 
-	constructor(event: SlashCommandEvent, props: GuildCommandPropertiesDto) : this(
+	constructor(event: SlashCommandInteractionEvent, props: GuildCommandPropertiesDto) : this(
 		guild = event.guild,
 		guildId = event.guild?.id ?: "",
 		guildName = event.guild?.name ?: "unknow",
@@ -72,13 +76,13 @@ data class CompoundCommandEvent(
 		lang = props.lang,
 		isSlashEnabled = props.slashEnabled,
 		djRoleName = props.djRoleName,
-		authorTag = event.member?.user?.asTag ?: "user",
+		authorTag = event.member?.user?.name ?: "user",
 		authorAvatarUrl = event.member?.user?.avatarUrl ?: event.member?.user?.defaultAvatarUrl ?: "",
 		dataSender = event.guild?.getMember(event.member?.user!!),
 		author = event.member?.user!!,
 		member = event.member!!,
 		delay = DefferedEmbed(),
-		textChannel = event.textChannel,
+		textChannel = event.channel.asTextChannel(),
 		commandArgs = mutableMapOf(),
 		systemTextChannel = BotUtils.getSystemTextChannel(event.guild!!),
 		interactiveMessage = InteractiveMessage(),
@@ -87,7 +91,7 @@ data class CompoundCommandEvent(
 		invokedBySender = false,
 	)
 
-	fun addWebhookActionComponents(vararg components: Component) {
+	fun addWebhookActionComponents(vararg components: ItemComponent) {
 		components.forEach { interactiveMessage.actionComponents.add(it) }
 	}
 
@@ -105,7 +109,7 @@ data class CompoundCommandEvent(
 
 	fun instantlySendEmbedMessage(
 		messageEmbed: MessageEmbed,
-		actionComponents: List<Component> = emptyList(),
+		actionComponents: List<ItemComponent> = emptyList(),
 		delay: DefferedEmbed = DefferedEmbed(),
 		legacyTransport: Boolean = false
 	) {
@@ -126,7 +130,7 @@ data class CompoundCommandEvent(
 		val trackSender = (track.audioTrack.userData as Member).user
 		val validatedUserDetails = BotUtils.validateUserDetails(this)
 		return if (dataSender != null) {
-			!(trackSender.asTag == author.asTag || validatedUserDetails.concatLogicOr())
+			!(trackSender.name == author.name || validatedUserDetails.concatLogicOr())
 		} else {
 			true
 		}

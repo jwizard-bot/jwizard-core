@@ -6,9 +6,9 @@ package pl.jwizard.core.command
 
 import com.jagrosh.jdautilities.menu.Paginator
 import net.dv8tion.jda.api.exceptions.PermissionException
-import net.dv8tion.jda.api.interactions.components.Button
-import net.dv8tion.jda.api.interactions.components.ButtonStyle
-import net.dv8tion.jda.internal.interactions.ButtonImpl
+import net.dv8tion.jda.api.interactions.components.buttons.Button
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
+import net.dv8tion.jda.internal.interactions.component.ButtonImpl
 import org.apache.commons.lang3.StringUtils
 import pl.jwizard.core.bot.BotConfiguration
 import pl.jwizard.core.command.action.ActionComponent

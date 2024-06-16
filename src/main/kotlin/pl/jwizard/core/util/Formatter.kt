@@ -39,7 +39,7 @@ object Formatter {
 	fun createRichPageableTrackInfo(index: Int, audioTrack: AudioTrack): String = "`%d` [ %s ] %s\n**%s**".format(
 		index + 1,
 		DateUtils.convertMilisToDTF(audioTrack.duration),
-		(audioTrack.userData as Member).user.asTag,
+		(audioTrack.userData as Member).user.name,
 		createRichTrackTitle(audioTrack.info),
 	)
 

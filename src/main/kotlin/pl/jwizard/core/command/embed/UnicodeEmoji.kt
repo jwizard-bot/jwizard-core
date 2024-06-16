@@ -4,7 +4,8 @@
  */
 package pl.jwizard.core.command.embed
 
-import net.dv8tion.jda.api.entities.MessageReaction
+import net.dv8tion.jda.api.entities.emoji.Emoji
+import net.dv8tion.jda.api.entities.emoji.EmojiUnion
 
 // https://unicode.org/emoji/charts/full-emoji-list.html#1f44d
 
@@ -27,7 +28,9 @@ enum class UnicodeEmoji(
 	NUMBER_NINE("\u0039\u20E3", 9),
 	;
 
-	fun checkEquals(emote: MessageReaction.ReactionEmote): Boolean = code == emote.emoji
+	fun checkEquals(emoji: EmojiUnion): Boolean = code == emoji.asReactionCode
+
+	fun createEmoji(): Emoji = Emoji.fromUnicode(code)
 
 	companion object {
 		fun getNumbers(maxNumber: Int): List<UnicodeEmoji> = entries

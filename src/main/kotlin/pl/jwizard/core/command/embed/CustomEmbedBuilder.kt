@@ -43,7 +43,12 @@ class CustomEmbedBuilder(
 	}
 
 	fun addAuthor(user: User): CustomEmbedBuilder {
-		setAuthor(user.asTag, null, user.avatarUrl ?: user.defaultAvatarUrl)
+		setAuthor(user.name, null, user.avatarUrl ?: user.defaultAvatarUrl)
+		return this
+	}
+
+	fun addAuthor(name: String?, avatarUri: String?): CustomEmbedBuilder {
+		setAuthor(name, null, avatarUri)
 		return this
 	}
 
