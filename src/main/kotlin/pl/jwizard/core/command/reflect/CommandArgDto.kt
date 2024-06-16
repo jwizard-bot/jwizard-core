@@ -10,4 +10,5 @@ data class CommandArgDto(
 	val type: String,
 	val req: Boolean,
 	val pos: Long,
+	val options: List<CommandArgOptionDto>,
 )

@@ -50,6 +50,7 @@ enum class I18nExceptionLocale(
 	VOLUME_UNITS_OUT_OF_BOUNDS("pl.jwizard.exception.volumeUnitsOutOfBoundsException", 302),
 	COMMAND_IS_TURNED_OFF("pl.jwizard.exception.commandIsTurnedOffException", 303),
 	MISMATCH_COMMAND_ARGS("pl.jwizard.exception.mismatchCommandArgumentsException", 304),
+	VIOLATED_COMMAND_ARG_OPTIONS("pl.jwizard.exception.violatedCommandArgumentOptionsException", 305),
 	;
 
 	override fun getPlaceholder() = placeholder

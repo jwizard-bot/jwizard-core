@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Member
 import org.apache.commons.lang3.StringUtils
 import pl.jwizard.core.audio.ExtendedAudioTrackInfo
+import pl.jwizard.core.command.reflect.CommandArgOptionDto
 import pl.jwizard.core.command.reflect.CommandDetailsDto
 import pl.jwizard.core.i18n.I18nLocale
 import pl.jwizard.core.i18n.I18nMiscLocale
@@ -63,8 +64,21 @@ object Formatter {
 		val prefix = legacyPrefix.ifEmpty { "/" }
 		val stringJoiner = StringJoiner(StringUtils.EMPTY)
 		stringJoiner.add("\n\n")
-		stringJoiner.add("\t`${prefix}${commandName} ${BotUtils.getLang(lang, command.argsDesc)}`")
-		stringJoiner.add("\n\t`${prefix}${command.alias} ${BotUtils.getLang(lang, command.argsDesc)}`")
+		stringJoiner.add("* `${prefix}${commandName} |${BotUtils.getLang(lang, command.argsDesc)}|`\n")
+		stringJoiner.add("* `${prefix}${command.alias} |${BotUtils.getLang(lang, command.argsDesc)}|`")
+		return stringJoiner.toString()
+	}
+
+	fun createArgumentOptionsSyntax(options: List<CommandArgOptionDto>, lang: String): String {
+		val stringJoiner = StringJoiner(StringUtils.EMPTY)
+		var i = 0
+		stringJoiner.add("\n\n")
+		for (option in options) {
+			stringJoiner.add("* `${option.rawValue}` - ${BotUtils.getLang(lang, option.desc)}")
+			if (i++ < options.size && options.size != 1) {
+				stringJoiner.add("\n")
+			}
+		}
 		return stringJoiner.toString()
 	}
 

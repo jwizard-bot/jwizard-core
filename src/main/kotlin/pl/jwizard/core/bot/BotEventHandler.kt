@@ -45,7 +45,8 @@ class BotEventHandler(
 
 	override fun onButtonInteraction(event: ButtonInteractionEvent) = actionProxyListener.onPressButton(event)
 
-	override fun onGuildVoiceJoin(event: GuildVoiceJoinEvent) = audioPlayerActivityEventsHandler.setBotDeafen(event)
+	override fun onCommandAutoCompleteInteraction(event: CommandAutoCompleteInteractionEvent) =
+		slashCommandRegisterer.onAutocompleteInteraction(event)
 
 	override fun onGuildVoiceUpdate(event: GuildVoiceUpdateEvent) {
 		if (event.channelLeft == null) { // join to channel

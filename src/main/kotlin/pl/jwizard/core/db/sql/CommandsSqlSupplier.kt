@@ -8,11 +8,12 @@ import org.apache.commons.lang3.StringUtils
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service
 import pl.jwizard.core.command.reflect.CommandArgDto
+import pl.jwizard.core.command.reflect.CommandArgOptionDto
 import pl.jwizard.core.command.reflect.CommandDetailsDto
 import pl.jwizard.core.command.reflect.ModuleDetailsDto
 import pl.jwizard.core.db.CommandsSupplier
 import pl.jwizard.core.jdbc.JdbcUtils.parse
-import java.math.BigInteger
+import pl.jwizard.core.jdbc.JdbcUtils.parseToLong
 
 @Service
 class CommandsSqlSupplier(
@@ -37,10 +38,14 @@ class CommandsSqlSupplier(
 
 		val argsSql = parse(
 			"""
-				SELECT ca.command_id AS cId, a.name AS aName, casted_type, is_required, arg_pos, {{aDSqlF}}
+				SELECT a.id AS aId, ca.command_id AS cId, a.name AS aName, casted_type, is_required, arg_pos, {{aDSqlF}}
 				FROM commands_args_binding AS ca INNER JOIN command_args AS a ON ca.arg_id = a.id
 			""".trimIndent(),
-			mapOf("aDSqlF" to langs.joinToString(transform = { "desc_$it" }, separator = ", "))
+			mapOf("aDSqlF" to langs.joinToString(transform = { "desc_$it" }, separator = ", ")),
+		)
+		val argOptionsSql = parse(
+			"SELECT raw_value, {{aDSqlF}}, command_id, command_arg_id FROM command_arg_options",
+			mapOf("aDSqlF" to langs.joinToString(transform = { "desc_$it" }, separator = ", ")),
 		)
 		val commandsSql = parse(
 			"""
@@ -49,22 +54,36 @@ class CommandsSqlSupplier(
 			""".trimIndent(),
 			mapOf(
 				"aDSqlF" to langs.joinToString(transform = { "arg_desc_$it" }, separator = ", "),
-				"cDSqlF" to langs.joinToString(transform = { "c.desc_$it" }, separator = ", ")
-			)
+				"cDSqlF" to langs.joinToString(transform = { "c.desc_$it" }, separator = ", "),
+			),
 		)
-		val argsMap = jdbcTemplate.queryForList(argsSql)
-			.groupBy { it["cId"] }
+		val argOptionsMap = jdbcTemplate.queryForList(argOptionsSql)
+			.groupBy { parseToLong(it["command_arg_id"]) }
 			.map { (key, value) ->
-				parseToLong(key) to value.map {
+				key to value.map {
+					CommandArgOptionDto(
+						it["raw_value"] as String,
+						parseColumnsToMultiLangMap(it, "desc_"),
+						parseToLong(it["command_id"]),
+					)
+				}
+			}.toMap()
+
+		val argsMap = jdbcTemplate.queryForList(argsSql)
+			.groupBy { parseToLong(it["cId"]) }
+			.map { (key, value) ->
+				key to value.map {
 					CommandArgDto(
 						it["aName"] as String,
 						parseColumnsToMultiLangMap(it, "desc_"),
 						it["casted_type"] as String,
 						it["is_required"] as Boolean,
 						it["arg_pos"] as Long,
+						argOptionsMap[parseToLong(it["aId"])]?.filter { option -> option.commandId == key } ?: emptyList()
 					)
 				}
 			}.toMap()
+
 		val botCommands = jdbcTemplate.queryForList(commandsSql)
 		for (row in botCommands) {
 			val commandId = parseToLong(row["cId"])
@@ -100,12 +119,15 @@ class CommandsSqlSupplier(
 		return jdbcTemplate.queryForList(sql, String::class.java, guildId)
 	}
 
+	override fun fetchAllCommandArguments(): List<String> = jdbcTemplate.queryForList(
+		"SELECT name FROM command_args",
+		String::class.java
+	)
+
 	private fun parseColumnsToMultiLangMap(
 		row: MutableMap<String, Any>,
 		columnName: String,
 	): Map<String, String?> = row.entries
 		.filter { it.key.contains(columnName) }
 		.associate { (key, value) -> key.replace(columnName, StringUtils.EMPTY) to value as? String }
-
-	private fun parseToLong(value: Any?): Long = (value as BigInteger).longValueExact()
 }

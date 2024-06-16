@@ -12,4 +12,5 @@ interface CommandsSupplier {
 	fun fetchAllCommands(): Map<String, CommandDetailsDto>
 	fun checkIfModuleIsEnabled(moduleName: String, guildId: Long): Boolean
 	fun fetchEnabledGuildCommands(guildId: Long, isSlashCommands: Boolean): List<String>
+	fun fetchAllCommandArguments(): List<String>
 }
