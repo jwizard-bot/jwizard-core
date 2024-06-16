@@ -18,26 +18,26 @@ import pl.jwizard.core.util.Formatter
 import java.util.concurrent.TimeUnit
 
 class TrackSchedulerFacade(
-	private val trackScheduler: TrackScheduler
-) : AbstractLoggingBean(TrackSchedulerFacade::class), TrackSchedulerContract {
+	private val audioScheduler: AudioScheduler
+) : AbstractLoggingBean(TrackSchedulerFacade::class), AudioSchedulerContract {
 
-	private val audioPlayer = trackScheduler.audioPlayer
-	private val actions = trackScheduler.schedulerActions
-	private val botConfiguration = trackScheduler.botConfiguration
+	private val audioPlayer = audioScheduler.audioPlayer
+	private val actions = audioScheduler.schedulerActions
+	private val botConfiguration = audioScheduler.botConfiguration
 
 	override fun onPause() {
-		val audioTrack = trackScheduler.audioPlayer.playingTrack
+		val audioTrack = audioScheduler.audioPlayer.playingTrack
 		if (audioPlayer.playingTrack != null && !actions.onClearing) {
 			actions.pausedTrack = audioTrack
-			jdaLog.info(trackScheduler.event, "Audio track: ${audioTrack.info.title} was resumed")
+			jdaLog.info(audioScheduler.event, "Audio track: ${audioTrack.info.title} was resumed")
 		}
 	}
 
 	override fun onResume() {
-		val audioTrack = trackScheduler.audioPlayer.playingTrack
+		val audioTrack = audioScheduler.audioPlayer.playingTrack
 		if (actions.pausedTrack != null && !actions.onClearing) {
 			actions.pausedTrack = null
-			jdaLog.info(trackScheduler.event, "Audio track: ${audioTrack.info.title} was paused")
+			jdaLog.info(audioScheduler.event, "Audio track: ${audioTrack.info.title} was paused")
 		}
 	}
 
@@ -46,7 +46,7 @@ class TrackSchedulerFacade(
 		if (actions.onClearing) {
 			return
 		}
-		val event = trackScheduler.event
+		val event = audioScheduler.event
 		val audioTrackInfo = ExtendedAudioTrackInfo(audioPlayer.playingTrack)
 		if (audioPlayer.isPaused) {
 			val messageEmbed = CustomEmbedBuilder(botConfiguration, event).buildTrackMessage(
@@ -57,7 +57,7 @@ class TrackSchedulerFacade(
 				),
 				thumbnailUrl = audioTrackInfo.artworkUrl
 			)
-			trackScheduler.event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)
+			audioScheduler.event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)
 			jdaLog.info(event, "Starting playing audio track: ${audioTrackInfo.title} when audio player is paused")
 		} else {
 			val messageEmbed = CustomEmbedBuilder(botConfiguration, event).buildTrackMessage(
@@ -72,7 +72,7 @@ class TrackSchedulerFacade(
 				actions.nextTrackInfoDisabled = false
 			}
 			if (!actions.nextTrackInfoDisabled) {
-				trackScheduler.event.instantlySendEmbedMessage(
+				audioScheduler.event.instantlySendEmbedMessage(
 					messageEmbed,
 					delay = DefferedEmbed(if (event.invokedBySender) 0 else 1, TimeUnit.SECONDS),
 					legacyTransport = !event.invokedBySender
@@ -84,7 +84,7 @@ class TrackSchedulerFacade(
 	}
 
 	override fun onEnd(track: AudioTrack, endReason: AudioTrackEndReason) {
-		val event = trackScheduler.event
+		val event = audioScheduler.event
 		if (actions.onClearing) {
 			return
 		}
@@ -98,7 +98,7 @@ class TrackSchedulerFacade(
 			event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)
 
 			jdaLog.info(event, "End of playing queue tracks")
-			if (!trackScheduler.lockedGuilds.contains(event.guildId)) {
+			if (!audioScheduler.lockedGuilds.contains(event.guildId) || actions.radioStationDto == null) {
 				actions.leaveAndSendMessageAfterInactivity()
 			}
 			return
@@ -142,13 +142,13 @@ class TrackSchedulerFacade(
 	}
 
 	override fun onException(track: AudioTrack, ex: FriendlyException) {
-		val event = trackScheduler.event
+		val event = audioScheduler.event
 		val messageEmbed = CustomEmbedBuilder(botConfiguration, event).buildErrorMessage(
 			placeholder = I18nExceptionLocale.ISSUE_WHILE_PLAYING_TRACK,
 		)
 		event.instantlySendEmbedMessage(messageEmbed, legacyTransport = true)
 		// clear queue after unexpected exception
-		val actions = trackScheduler.schedulerActions
+		val actions = audioScheduler.schedulerActions
 		if (actions.trackQueue.isEmpty() && audioPlayer.playingTrack == null) {
 			actions.leaveAndSendMessageAfterInactivity()
 		}

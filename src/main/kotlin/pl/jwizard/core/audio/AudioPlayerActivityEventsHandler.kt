@@ -5,10 +5,11 @@
 package pl.jwizard.core.audio
 
 import net.dv8tion.jda.api.entities.Guild
-import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent
+import net.dv8tion.jda.api.entities.channel.ChannelType
+import net.dv8tion.jda.api.events.channel.ChannelDeleteEvent
 import net.dv8tion.jda.api.events.guild.GenericGuildEvent
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMuteEvent
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent
 import org.springframework.stereotype.Component
 import pl.jwizard.core.audio.player.PlayerManager
@@ -45,24 +46,26 @@ class AudioPlayerActivityEventsHandler(
 				}
 			)
 			musicManager?.audioPlayer?.isPaused = isMuted
-			musicManager?.trackScheduler?.event?.textChannel
+			musicManager?.audioScheduler?.event?.textChannel
 				?.sendMessageEmbeds(messageEmbed)
 				?.queue()
 		}
 	}
 
-	fun unsetMusicTextChannelOnDelete(event: TextChannelDeleteEvent) {
-		val removedTextChannelId = event.channel.id
-		val musicTextChannelId = guildSettingsSupplier
-			.fetchDbProperty(GuildDbProperty.MUSIC_TEXT_CHANNEL_ID, event.guild.id, String::class)
-		if (removedTextChannelId == musicTextChannelId) {
-			guildSettingsSupplier.removeDefaultMusicTextChannel(event.guild)
+	fun unsetMusicTextChannelOnDelete(event: ChannelDeleteEvent) {
+		if (event.channel.type == ChannelType.TEXT) {
+			val removedTextChannelId = event.channel.id
+			val musicTextChannelId = guildSettingsSupplier
+				.fetchDbProperty(GuildDbProperty.MUSIC_TEXT_CHANNEL_ID, event.guild.id, String::class)
+			if (removedTextChannelId == musicTextChannelId) {
+				guildSettingsSupplier.removeDefaultMusicTextChannel(event.guild)
+			}
 		}
 	}
 
-	fun setBotDeafen(event: GuildVoiceJoinEvent) {
+	fun setBotDeafen(event: GuildVoiceUpdateEvent) {
 		val guild = event.guild
-		if (event.member.id == guild.selfMember.id) {
+		if (event.channelLeft == null && event.member.id == guild.selfMember.id) {
 			guild.audioManager.isSelfDeafened = true
 			guild.selfMember.deafen(true).complete()
 		}

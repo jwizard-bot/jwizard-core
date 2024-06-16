@@ -4,6 +4,8 @@
  */
 package pl.jwizard.core.audio.player
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack
+import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel
 import pl.jwizard.core.audio.ExtendedAudioTrackInfo
 import pl.jwizard.core.audio.TrackPosition
 import pl.jwizard.core.command.CompoundCommandEvent

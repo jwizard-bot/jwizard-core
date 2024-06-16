@@ -77,7 +77,7 @@ class AudioLoadResultImpl(
 
 	private fun onError(placeholder: I18nExceptionLocale, log: String) {
 		val messageEmbed = CustomEmbedBuilder(botConfiguration, event).buildErrorMessage(placeholder)
-		val actions = musicManager.trackScheduler.schedulerActions
+		val actions = musicManager.audioScheduler.schedulerActions
 		if (musicManager.queue.isEmpty() && musicManager.audioPlayer.playingTrack == null) {
 			actions.leaveAndSendMessageAfterInactivity()
 		}

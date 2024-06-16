@@ -42,7 +42,7 @@ class RemoveMemberTracksCmd(
 				placeholder = I18nResLocale.REMOVED_TRACKS_FROM_SELECTED_MEMBER,
 				params = mapOf(
 					"countOfRemovedTracks" to pageableRemovedTracks.size,
-					"memberTag" to removedTrackInfo.member.user.asTag,
+					"memberTag" to removedTrackInfo.member.user.name,
 				)
 			)
 			.addColor(EmbedColor.WHITE)

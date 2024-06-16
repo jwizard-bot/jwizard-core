@@ -4,11 +4,12 @@
  */
 package pl.jwizard.core.audio
 
-import java.nio.ByteBuffer
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame
 import net.dv8tion.jda.api.audio.AudioSendHandler
 import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.channel.ChannelType
+import java.nio.ByteBuffer
 
 class AudioPlayerSendHandler(
 	private val guild: Guild?,
@@ -18,7 +19,7 @@ class AudioPlayerSendHandler(
 	private var audioFrame: AudioFrame? = null
 
 	fun isInPlayingMode(): Boolean {
-		val isActive = guild?.selfMember?.voiceState?.inVoiceChannel() ?: false
+		val isActive = guild?.selfMember?.voiceState?.channel?.type == ChannelType.VOICE
 		return audioPlayer.playingTrack != null && isActive
 	}
 

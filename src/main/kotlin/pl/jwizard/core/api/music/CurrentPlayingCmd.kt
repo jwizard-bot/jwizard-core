@@ -4,7 +4,7 @@
  */
 package pl.jwizard.core.api.music
 
-import net.dv8tion.jda.api.interactions.components.ButtonStyle
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
 import pl.jwizard.core.api.AbstractMusicCmd
 import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration

@@ -12,15 +12,14 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 
-class TrackScheduler(
+class AudioScheduler(
 	val botConfiguration: BotConfiguration,
 	var event: CompoundCommandEvent,
 	val audioPlayer: AudioPlayer,
 	val lockedGuilds: MutableList<String>,
 ) : AudioEventAdapter() {
 
-	val schedulerActions: SchedulerActions = SchedulerActions(botConfiguration, this)
-	private val facade: TrackSchedulerFacade = TrackSchedulerFacade(this)
+	val schedulerActions = SchedulerActions(botConfiguration, this)
 
 	override fun onPlayerPause(player: AudioPlayer?) = facade.onPause()
 
