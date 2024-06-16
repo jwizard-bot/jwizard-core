@@ -44,7 +44,7 @@ class SongChooserVotingSystemHandler(
 		val guildDetails = botConfiguration.guildSettingsSupplier.fetchVotingSongChooserSettings(event.guildDbId)
 		isRandom = guildDetails.randomAutoChooseTrack
 		elapsedTimeInSec = guildDetails.timeAfterAutoChooseSec.toLong()
-		countOfMaxTracks = guildDetails.trackToChooseMax
+		countOfMaxTracks = guildDetails.tracksToChooseMax
 
 		trimmedTracks = loadedTracks.subList(0, countOfMaxTracks)
 		jdaLog.info(
