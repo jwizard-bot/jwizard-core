@@ -12,7 +12,7 @@ enum class RadioStationPlayback(
 	private val stationSlugs: List<String>,
 	private val playbackFetcherClazz: KClass<out RadioStationPlaybackFetcher>
 ) {
-	RMF(listOf("rmf-fm"), RmfRadioStationPlaybackFetcher::class),
+	RMF(listOf("rmf-fm", "rmf-maxx"), RmfRadioStationPlaybackFetcher::class),
 	;
 
 	companion object {
