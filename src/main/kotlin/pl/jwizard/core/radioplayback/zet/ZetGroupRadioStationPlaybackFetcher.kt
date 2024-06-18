@@ -42,7 +42,10 @@ class ZetGroupRadioStationPlaybackFetcher(
 		// get now object
 		val apiResponse = ZetGroupApiResponse(jsonObject.getAsJsonObject("now"))
 		// check, if string has space, if space exist, return null otherwise parse to long
-		val duration = if (apiResponse.duration.contains(StringUtils.SPACE)) {
+		if (apiResponse.title == null || apiResponse.artist == null) {
+			return null
+		}
+		val duration = if (apiResponse.duration == null || apiResponse.duration.contains(StringUtils.SPACE)) {
 			null
 		} else {
 			DateUtils.convertSecToDTF(apiResponse.duration.toLong())
