@@ -19,7 +19,7 @@ enum class RmfApiMapper(
 		fun getTypeForSlug(stationSlug: String): RmfApiMapper? = entries.find { it.stationSlug == stationSlug }
 	}
 
-	fun parseToUrl(): String = "$API_URL/${endpointName}"
+	fun parseToUrl(): String = "$API_URL/$endpointName"
 
 	fun getProvider(): String = providerUrl
 }

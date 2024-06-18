@@ -79,7 +79,7 @@ class StreamSchedulerFacade(
 
 		jdaLog.info(
 			event, "Radio station: ${station.name} from server ${station.streamUrl} (proxy: ${station.proxyStreamUrl}) " +
-				"has ended streaming. Return to regular quueue"
+				"has ended streaming. Return to regular queue"
 		)
 		event.instantlySendEmbedMessage(embedMessage)
 	}

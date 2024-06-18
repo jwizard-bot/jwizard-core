@@ -7,7 +7,6 @@ package pl.jwizard.core.api.radio
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
-import org.springframework.context.ApplicationContext
 import pl.jwizard.core.api.AbstractRadioCmd
 import pl.jwizard.core.audio.player.PlayerManager
 import pl.jwizard.core.bot.BotConfiguration
@@ -21,12 +20,12 @@ import pl.jwizard.core.db.RadioStationDto
 import pl.jwizard.core.exception.RadioException
 import pl.jwizard.core.i18n.I18nMiscLocale
 import pl.jwizard.core.i18n.I18nResLocale
+import pl.jwizard.core.radioplayback.RadioPlaybackClassLoader
 import pl.jwizard.core.radioplayback.RadioPlaybackResponseData
-import pl.jwizard.core.radioplayback.RadioStationPlayback
 
 @CommandListenerBean(id = BotCommand.RADIO_INFO)
 class RadioInfoCmd(
-	private val applicationContext: ApplicationContext,
+	private val radioPlaybackClassLoader: RadioPlaybackClassLoader,
 	playerManager: PlayerManager,
 	botConfiguration: BotConfiguration,
 ) : AbstractRadioCmd(
@@ -42,7 +41,7 @@ class RadioInfoCmd(
 		val musicManager = playerManager.findMusicManager(event)
 
 		val radioStation = musicManager.actions.radioStationDto
-		val dataFetcher = radioStation?.slug?.let { RadioStationPlayback.getBeanBaseSlug(applicationContext, it) }
+		val dataFetcher = radioStation?.slug?.let { radioPlaybackClassLoader.loadClass(it) }
 			?: throw RadioException.RadioStationNotProvidedPlaybackDataException(event)
 
 		// fetch data from selected data fetcher bean

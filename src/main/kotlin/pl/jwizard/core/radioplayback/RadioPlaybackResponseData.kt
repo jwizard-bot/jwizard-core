@@ -22,4 +22,14 @@ data class RadioPlaybackResponseData(
 		null,
 		providedBy
 	)
+
+	constructor(title: String, trackDuration: String?, streamThumbnailUrl: String?, providedBy: String) : this(
+		title,
+		trackDuration,
+		null,
+		null,
+		streamThumbnailUrl,
+		null,
+		providedBy
+	)
 }

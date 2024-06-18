@@ -17,7 +17,7 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
-@Component
+@Component("rmf-fm+rmf-maxx")
 class RmfRadioStationPlaybackFetcher(
 	private val httpClient: HttpClient,
 	private val gsonParser: Gson
