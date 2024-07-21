@@ -11,18 +11,15 @@ defaults:
 jobs:
   pre-build:
     runs-on: self-hosted
-    env:
-      JAR_PATH: ${{ vars.GH_CORE_JAR_PATH }}
 
     steps:
-      - name: Kill existing process
+      - name: Stop existing process
         run: |
-          JWIZARD_CORE_PID=$(pgrep -f "$JAR_PATH") && [ -n "$JWIZARD_CORE_PID" ] && \
-          sudo kill -9 $JWIZARD_CORE_PID || echo "Process not running."
+          pm2 stop /root/ecosystem.config.js --only ${{ vars.PM2_CORE_NAME }} --silent
+          pm2 save
 
   build:
     runs-on: self-hosted
-    needs: pre-build
 
     steps:
       - uses: actions/checkout@v3
@@ -39,53 +36,58 @@ jobs:
       - name: Clean build dir
         run: ./gradlew clean --no-daemon
 
+      - name: Determinate build version
+        id: sha
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Package to JAR
-        run: ./gradlew bootJar --no-daemon
+        run: |
+          export JAR_SNAPSHOT_SHA=${{ steps.sha.outputs.sha_short }}
+          ./gradlew bootJar --no-daemon
 
   deploy:
     runs-on: self-hosted
     needs: build
     env:
-      ACT_VAULT_ADDR: ${{ vars.GH_VAULT_ADDR }}
-      ACT_VAULT_TOKEN: ${{ secrets.GH_VAULT_TOKEN }}
-      ENV_PATH: /opt/gh-action-runners/jwizard/.env
-      JAR_PATH: ${{ vars.GH_CORE_JAR_PATH }}
+      RUNNER_ROOT_DIR: ${{ secrets.GH_RUNNER_ROOT_DIR }}
 
     steps:
       - name: Revoke Vault key
         run: |
-          export VAULT_ADDR=$ACT_VAULT_ADDR && echo "Set vault url as $ACT_VAULT_ADDR"
-          export VAULT_TOKEN=$ACT_VAULT_TOKEN
-          VAULT_CORE_TOKEN=$(grep '^ENV_CORE_VAULT_TOKEN=' $ENV_PATH | cut -d '=' -f 2-) && [ -n "VAULT_CORE_TOKEN" ] && \
+          export VAULT_ADDR=${{ secrets.GH_VAULT_ADDR }}
+          export VAULT_TOKEN=${{ secrets.GH_VAULT_TOKEN }}
+          VAULT_CORE_TOKEN=$(grep '^ENV_CORE_VAULT_TOKEN=' $RUNNER_ROOT_DIR/.env | cut -d '=' -f 2-) && \
+            [ -n "VAULT_CORE_TOKEN" ] && \
             vault token revoke $VAULT_CORE_TOKEN || echo "Token not exist."
+          unset VAULT_ADDR
+          unset VAULT_TOKEN
 
       - name: Generate and export Vault key
         id: vault-keygen
         run: |
-          export VAULT_ADDR=$ACT_VAULT_ADDR && echo "Set vault url as $ACT_VAULT_ADDR"
-          export VAULT_TOKEN=$ACT_VAULT_TOKEN
+          export VAULT_ADDR=${{ secrets.GH_VAULT_ADDR }}
+          export VAULT_TOKEN=${{ secrets.GH_VAULT_TOKEN }}
           export JWIZARD_TOKEN=$(vault token create -policy=jwizard-readonly -ttl=30d -renewable=false --format=json | jq -r '.auth.client_token')
-          sed -i "s/^ENV_CORE_VAULT_TOKEN=.*$/ENV_CORE_VAULT_TOKEN=$JWIZARD_TOKEN/" $ENV_PATH
+          sed -i "s/^ENV_CORE_VAULT_TOKEN=.*$/ENV_CORE_VAULT_TOKEN=$JWIZARD_TOKEN/" $RUNNER_ROOT_DIR/.env
           echo "::add-mask::$JWIZARD_TOKEN"
           echo "vault_key=$JWIZARD_TOKEN" >> "$GITHUB_OUTPUT"
 
-      - name: Determinate build version
+      - name: Determinate deployment properties
         id: deployment
         run: |
           echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           echo "build_date=$(date +'%Y-%m-%dT%H:%M:%S%z %Z')" >> $GITHUB_OUTPUT
 
-      - name: Re-run process
-        env:
-          VM_CORE_MEM_MIN: ${{ vars.GH_XMS_CORE }}
-          VM_CORE_MEM_MAX: ${{ vars.GH_XMX_CORE }}
+      - name: Move compiled JAR file
         run: |
-          sudo nohup java \
-            -Xms$VM_CORE_MEM_MIN \
-            -Xmx$VM_CORE_MEM_MAX \
-            -XX:MaxRAM=$VM_CORE_MEM_MAX \
-            -Dspring.profiles.active=prod \
-            -DJWIZARD_CORE_VAULT_TOKEN=${{ steps.vault-keygen.outputs.vault_key }} \
-            -DJWIZARD_CORE_BUILD_VERSION=${{ steps.deployment.outputs.sha_short }}_${{ github.run_number }} \
-            -DJWIZARD_CORE_BUILD_DATE="${{ steps.deployment.outputs.build_date }}" \
-            -jar $JAR_PATH &
+          rm -rf /var/www/jwizard-core/*
+          cp ${{ secrets.GH_RUNNER_ROOT_DIR }}/_work/jwizard-core/jwizard-core/.bin/*.jar /var/www/jwizard-core
+
+      - name: Start process
+        run: |
+          JWIZARD_CORE_VAULT_TOKEN=${{ steps.vault-keygen.outputs.vault_key }} \
+          JWIZARD_CORE_BUILD_VERSION=${{ steps.vars.outputs.sha_short }}_${{ github.run_number }} \
+          JWIZARD_CORE_BUILD_DATE="${{ steps.vars.outputs.build_date }}" \
+          JWIZARD_CORE_SNAPSHOT_VERSION=${{ steps.vars.outputs.sha_short }} \
+          pm2 start /root/ecosystem.config.js --only ${{ vars.PM2_CORE_NAME }} --silent
+          pm2 save

@@ -2,10 +2,10 @@ spring:
   devtools:
     add-properties: false
   datasource:
-    url: jdbc:mysql://mysql2.small.pl:3306/m1486_jwizard
+    url: ${V_MYSQL_JDBC}
   cloud:
     vault:
-      uri: https://vault.miloszgilga.pl
+      uri: ${JWIZARD_CORE_VAULT_SERVER}
       token: ${JWIZARD_CORE_VAULT_TOKEN}
       authentication: TOKEN
       kv:

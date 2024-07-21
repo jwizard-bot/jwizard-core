@@ -5,8 +5,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
-var jvmVersion = JavaVersion.VERSION_17
-
 plugins {
 	id("org.springframework.boot") version "3.2.1"
 	id("io.spring.dependency-management") version "1.1.4"
@@ -17,6 +15,9 @@ plugins {
 
 group = "pl.jwizard.core"
 version = "1.0.0"
+
+var jvmVersion = JavaVersion.VERSION_17
+var jarSnapshotSHA = System.getenv("JAR_SNAPSHOT_SHA") ?: version
 
 java.sourceCompatibility = jvmVersion
 java.targetCompatibility = jvmVersion
@@ -42,8 +43,8 @@ configurations.all {
 dependencies {
 	implementation("net.dv8tion:JDA:5.0.0-beta.24")
 	implementation("pw.chew:jda-chewtils:2.0-SNAPSHOT")
-	implementation("dev.arbjerg:lavaplayer:2.1.2")
-	implementation("dev.lavalink.youtube:v2:1.2.0")
+	implementation("dev.arbjerg:lavaplayer:2.2.1")
+	implementation("dev.lavalink.youtube:v2:1.4.0")
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.cloud:spring-cloud-vault-config:4.1.0")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.1")
@@ -67,8 +68,18 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
+tasks.named<Delete>("clean") {
+	doLast {
+		val binDir = file("$projectDir/.bin")
+		if (binDir.exists()) {
+			binDir.deleteRecursively()
+		}
+	}
+}
+
 tasks.withType<BootJar> {
-	archiveFileName = "jwizard-core.jar"
+	destinationDirectory = file("$projectDir/.bin")
+	archiveFileName = "jwizard-core-$jarSnapshotSHA.jar"
 }
 
 tasks.withType<KotlinCompile> {
