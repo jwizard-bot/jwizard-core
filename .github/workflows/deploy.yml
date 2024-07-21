@@ -20,6 +20,7 @@ jobs:
 
   build:
     runs-on: self-hosted
+    needs: pre-build
 
     steps:
       - uses: actions/checkout@v3
@@ -73,7 +74,7 @@ jobs:
           echo "vault_key=$JWIZARD_TOKEN" >> "$GITHUB_OUTPUT"
 
       - name: Determinate deployment properties
-        id: deployment
+        id: vars
         run: |
           echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           echo "build_date=$(date +'%Y-%m-%dT%H:%M:%S%z %Z')" >> $GITHUB_OUTPUT
