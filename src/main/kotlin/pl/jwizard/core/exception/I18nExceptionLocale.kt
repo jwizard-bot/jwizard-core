@@ -31,10 +31,9 @@ enum class I18nExceptionLocale(
 	FORBIDDEN_TEXT_CHANNEL("pl.jwizard.exception.forbiddenTextChannelException", 108),
 	LOCK_COMMAND_ON_TEMPORARY_HALTED("pl.jwizard.exception.lockCommandOnTemporaryHaltedException", 109),
 	TRACK_REPEATS_OUT_OF_BOUNDS("pl.jwizard.exception.trackRepeatsOutOfBoundsException", 110),
-	MAX_REPEATS_OUT_OF_BOUNDS("pl.jwizard.exception.maxRepeatsOutOfBoundsException", 111),
-	ISSUE_WHILE_PLAYING_TRACK("pl.jwizard.exception.unexpectedErrorOnPlayTrack", 112),
-	ISSUE_WHILE_LOADING_TRACK("pl.jwizard.exception.unexpectedErrorOnLoadTrack", 113),
-	NOT_FOUND_TRACK("pl.jwizard.exception.notFoundAudioTrack", 114),
+	ISSUE_WHILE_PLAYING_TRACK("pl.jwizard.exception.unexpectedErrorOnPlayTrack", 111),
+	ISSUE_WHILE_LOADING_TRACK("pl.jwizard.exception.unexpectedErrorOnLoadTrack", 112),
+	NOT_FOUND_TRACK("pl.jwizard.exception.notFoundAudioTrack", 113),
 
 	// user
 	USER_ID_ALREADY_WITH_BOT("pl.jwizard.exception.userIsAlreadyWithBotException", 200),

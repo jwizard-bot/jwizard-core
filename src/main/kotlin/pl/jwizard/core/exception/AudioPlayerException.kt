@@ -69,11 +69,4 @@ object AudioPlayerException {
 		variables = mapOf("topLimit" to topLimit),
 		logMessage = "Attempt to set out of bounds current audio track repeats number: $topLimit"
 	)
-
-	class MaxRepeatsOutOfBoundsException(event: CompoundCommandEvent, maxRepeats: Int) : AbstractBotException(
-		event, MaxRepeatsOutOfBoundsException::class,
-		i18nLocale = I18nExceptionLocale.MAX_REPEATS_OUT_OF_BOUNDS,
-		variables = mapOf("maxRepeatsCount" to maxRepeats),
-		logMessage = "Attempt to set max repeats greater than default max repeats: $maxRepeats"
-	)
 }
