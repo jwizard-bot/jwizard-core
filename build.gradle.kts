@@ -44,7 +44,7 @@ dependencies {
 	implementation("net.dv8tion:JDA:5.0.0-beta.24")
 	implementation("pw.chew:jda-chewtils:2.0-SNAPSHOT")
 	implementation("dev.arbjerg:lavaplayer:2.2.1")
-	implementation("dev.lavalink.youtube:v2:1.4.0")
+	implementation("dev.lavalink.youtube:v2:1.5.1")
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.cloud:spring-cloud-vault-config:4.1.0")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.1")
