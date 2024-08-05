@@ -23,7 +23,3 @@ jwizard:
   api-host: http://localhost:8670
   app-name: JWizard DEV
   app-icon-path: dark.png
-
-logging:
-  file:
-    path: .log/dev
