@@ -8,6 +8,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import org.apache.commons.lang3.StringUtils
+import pl.jwizard.core.cdn.CdnResource
 import pl.jwizard.core.command.BotCommand
 import pl.jwizard.core.command.embed.CustomEmbedBuilder
 import pl.jwizard.core.command.embed.EmbedColor
@@ -15,7 +16,6 @@ import pl.jwizard.core.db.RadioStationDto
 import pl.jwizard.core.exception.I18nExceptionLocale
 import pl.jwizard.core.i18n.I18nResLocale
 import pl.jwizard.core.log.AbstractLoggingBean
-import pl.jwizard.core.s3.S3Resource
 
 class StreamSchedulerFacade(
 	private val audioScheduler: AudioScheduler,
@@ -99,7 +99,7 @@ class StreamSchedulerFacade(
 	private fun getRadioStationThumbnail(radioStation: RadioStationDto): String {
 		val coverImage = radioStation.coverImage
 		return if (coverImage != null) {
-			S3Resource.RADIO_STATIONS.getResourceUrl(botConfiguration, coverImage)
+			CdnResource.RADIO_STATIONS.getResourceUrl(botConfiguration, coverImage)
 		} else {
 			StringUtils.EMPTY
 		}

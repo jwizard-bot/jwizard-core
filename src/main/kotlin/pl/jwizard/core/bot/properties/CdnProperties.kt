@@ -6,6 +6,6 @@ package pl.jwizard.core.bot.properties
 
 import org.apache.commons.lang3.StringUtils
 
-data class S3Properties(
+data class CdnProperties(
 	var host: String = StringUtils.EMPTY,
 )

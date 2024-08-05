@@ -36,5 +36,5 @@ jwizard:
   i18n:
     locale-bundles:
       - i18n-res/messages
-  s3:
-    host: http://s3.jwizard.pl
+  cdn:
+    host: https://cdn.jwizard.pl

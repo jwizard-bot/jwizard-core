@@ -18,5 +18,5 @@ data class BotProperties(
 	var defaultActivity: String = "",
 	var splashes: SplashesProperties = SplashesProperties(),
 	var pagination: PaginationProperties = PaginationProperties(),
-	val s3: S3Properties = S3Properties(),
+	val cdn: CdnProperties = CdnProperties(),
 )
