@@ -21,6 +21,8 @@ jobs:
   build:
     runs-on: self-hosted
     needs: pre-build
+    env:
+      RUNNER_ROOT_DIR: ${{ secrets.GH_RUNNER_ROOT_DIR }}
 
     steps:
       - uses: actions/checkout@v3
@@ -42,17 +44,8 @@ jobs:
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Package to JAR
-        run: |
-          export JAR_SNAPSHOT_SHA=${{ steps.sha.outputs.sha_short }}
-          ./gradlew bootJar --no-daemon
+        run: ./gradlew bootJar --no-daemon
 
-  deploy:
-    runs-on: self-hosted
-    needs: build
-    env:
-      RUNNER_ROOT_DIR: ${{ secrets.GH_RUNNER_ROOT_DIR }}
-
-    steps:
       - name: Revoke Vault key
         run: |
           export VAULT_ADDR=${{ secrets.GH_VAULT_ADDR }}
@@ -68,27 +61,37 @@ jobs:
         run: |
           export VAULT_ADDR=${{ secrets.GH_VAULT_ADDR }}
           export VAULT_TOKEN=${{ secrets.GH_VAULT_TOKEN }}
-          export JWIZARD_TOKEN=$(vault token create -policy=jwizard-readonly -ttl=30d -renewable=false --format=json | jq -r '.auth.client_token')
+          JWIZARD_TOKEN=$(vault token create -policy=jwizard-readonly -ttl=30d -renewable=false --format=json | jq -r '.auth.client_token')
           sed -i "s/^ENV_CORE_VAULT_TOKEN=.*$/ENV_CORE_VAULT_TOKEN=$JWIZARD_TOKEN/" $RUNNER_ROOT_DIR/.env
           echo "::add-mask::$JWIZARD_TOKEN"
           echo "vault_key=$JWIZARD_TOKEN" >> "$GITHUB_OUTPUT"
+          unset VAULT_ADDR
+          unset VAULT_TOKEN
 
-      - name: Determinate deployment properties
+      - name: Determinate deployment version
         id: vars
         run: |
           echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-          echo "build_date=$(date +'%Y-%m-%dT%H:%M:%S%z %Z')" >> $GITHUB_OUTPUT
 
-      - name: Move compiled JAR file
-        run: |
-          rm -rf /var/www/jwizard-core/*
-          cp ${{ secrets.GH_RUNNER_ROOT_DIR }}/_work/jwizard-core/jwizard-core/.bin/*.jar /var/www/jwizard-core
-
-      - name: Start process
+      - name: Generate env file
         run: |
           JWIZARD_CORE_VAULT_TOKEN=${{ steps.vault-keygen.outputs.vault_key }} \
           JWIZARD_CORE_BUILD_VERSION=${{ steps.vars.outputs.sha_short }}_${{ github.run_number }} \
-          JWIZARD_CORE_BUILD_DATE="${{ steps.vars.outputs.build_date }}" \
-          JWIZARD_CORE_SNAPSHOT_VERSION=${{ steps.vars.outputs.sha_short }} \
+          JWIZARD_CORE_VAULT_SERVER=${{ secrets.GH_VAULT_SERVER }} \
+          ./gradlew createEnv --no-daemon
+
+  deploy:
+    runs-on: self-hosted
+    needs: build
+
+    steps:
+      - name: Move compiled JAR file
+        run: |
+          rm -rf /var/www/jwizard-core/*
+          rm -rf /var/www/jwizard-core/{*,.[!.]*,..?*} 2> /dev/null
+          cp -rT .bin /var/www/jwizard-core
+
+      - name: Start process
+        run: |
           pm2 start /root/ecosystem.config.js --only ${{ vars.PM2_CORE_NAME }} --silent
           pm2 save

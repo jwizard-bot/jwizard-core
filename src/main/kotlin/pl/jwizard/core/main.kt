@@ -4,10 +4,11 @@
  */
 package pl.jwizard.core
 
-import pl.jwizard.core.bot.BotInstance
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import pl.jwizard.core.bot.BotInstance
+import pl.jwizard.core.config.EnvironmentContextLoader
 
 @SpringBootApplication
 class JWizardCoreEntrypoint(private val botInstance: BotInstance) : CommandLineRunner {
@@ -15,5 +16,6 @@ class JWizardCoreEntrypoint(private val botInstance: BotInstance) : CommandLineR
 }
 
 fun main(args: Array<String>) {
+	EnvironmentContextLoader.loadContext()
 	runApplication<JWizardCoreEntrypoint>(*args)
 }

@@ -4,6 +4,7 @@
  */
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
+import java.time.LocalDateTime
 
 plugins {
 	id("org.springframework.boot") version "3.2.1"
@@ -17,7 +18,6 @@ group = "pl.jwizard.core"
 version = "1.0.0"
 
 var jvmVersion = JavaVersion.VERSION_17
-var jarSnapshotSHA = System.getenv("JAR_SNAPSHOT_SHA") ?: version
 
 java.sourceCompatibility = jvmVersion
 java.targetCompatibility = jvmVersion
@@ -56,6 +56,7 @@ dependencies {
 	implementation("org.apache.commons:commons-text:1.12.0")
 	implementation("commons-io:commons-io:2.16.1")
 	implementation("com.google.code.gson:gson:2.11.0")
+	implementation("io.github.cdimascio:dotenv-java:2.2.0")
 
 	runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -79,7 +80,29 @@ tasks.named<Delete>("clean") {
 
 tasks.withType<BootJar> {
 	destinationDirectory = file("$projectDir/.bin")
-	archiveFileName = "jwizard-core-$jarSnapshotSHA.jar"
+	archiveFileName = "jwizard-core.jar"
+}
+
+fun getEnv(name: String, def: Any = ""): String {
+	return System.getenv("JWIZARD_CORE_$name") ?: def.toString()
+}
+
+tasks.register<Copy>("createEnv") {
+	val envFile = file("$projectDir/.bin/.env")
+	if (envFile.exists()) {
+		envFile.delete()
+	}
+	val currentDateTime = LocalDateTime.now()
+	val values = mapOf(
+		"VAULT_TOKEN" to getEnv("VAULT_TOKEN"),
+		"VAULT_SERVER" to getEnv("VAULT_SERVER"),
+		"BUILD_VERSION" to getEnv("BUILD_VERSION", "DEVELOPMENT"),
+		"BUILD_DATE" to currentDateTime.toString(),
+	)
+	val str = values.entries.joinToString(separator = "\n") {
+		"JWIZARD_CORE_${it.key}=${it.value}"
+	}
+	envFile.writeText(str)
 }
 
 tasks.withType<KotlinCompile> {
