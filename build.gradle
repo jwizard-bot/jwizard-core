@@ -1,0 +1,85 @@
+/*
+ * Copyright (c) 2024 by JWizard
+ * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
+ */
+plugins {
+  id 'org.jetbrains.kotlin.jvm' version '2.0.20'
+  id 'org.jetbrains.kotlin.plugin.spring' version "2.0.20"
+  id 'org.springframework.boot' version "3.2.1" apply false
+  id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
+}
+
+ext {
+  jvmVersion = JavaVersion.VERSION_17
+  initProjectName = 'jwc-app'
+}
+
+ext.libs = [
+  kotlin           : 'org.jetbrains.kotlin:kotlin-stdlib',
+  springBootStarter: 'org.springframework.boot:spring-boot-starter:3.3.3',
+]
+
+allprojects {
+  repositories {
+    mavenCentral()
+    maven { url = uri("https://m2.dv8tion.net/releases") }
+    maven { url = uri("https://m2.chew.pro/releases") }
+    maven { url = uri("https://m2.chew.pro/snapshots") }
+    maven { url = uri("https://maven.lavalink.dev/snapshots") }
+    maven { url = uri("https://maven.lavalink.dev/releases") }
+    maven { url = uri("https://jitpack.io") }
+  }
+  group = 'pl.jwizard'
+  version = '1.0.0'
+}
+
+subprojects {
+  apply plugin: 'org.jetbrains.kotlin.jvm'
+  apply plugin: 'org.jetbrains.kotlin.plugin.spring'
+
+  if (project.name != initProjectName) {
+    apply plugin: 'java-library'
+  }
+
+  java.sourceCompatibility = jvmVersion
+  java.targetCompatibility = jvmVersion
+
+  dependencies {
+    implementation "${libs.kotlin}"
+  }
+
+  test {
+    useJUnitPlatform()
+  }
+
+  tasks.compileKotlin {
+    kotlinOptions {
+      jvmTarget = jvmVersion.toString()
+      freeCompilerArgs = [
+        '-Xjsr305=strict'
+      ]
+    }
+  }
+}
+
+project(":${initProjectName}") {
+  apply plugin: 'org.springframework.boot'
+
+  tasks.bootJar {
+    destinationDirectory = file("$rootDir/.bin")
+    archiveFileName = 'jwizard-core.jar'
+  }
+}
+
+tasks.clean {
+  doLast {
+    var binDir = file("$projectDir/.bin")
+    if (binDir.exists()) {
+      binDir.deleteDir()
+    }
+  }
+}
+
+tasks.register('bootJar') {
+  dependsOn ':jwc-app:bootJar'
+}
