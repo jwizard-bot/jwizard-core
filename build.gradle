@@ -2,6 +2,8 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
+import java.time.LocalDateTime
+
 plugins {
   id 'org.jetbrains.kotlin.jvm' version '2.0.20'
   id 'org.jetbrains.kotlin.plugin.spring' version '2.0.20'
@@ -83,4 +85,26 @@ tasks.clean {
 
 tasks.register('bootJar') {
   dependsOn ':jwc-app:bootJar'
+}
+
+static def getEnv(String name, Object defValue = '') {
+  return System.getenv("JWIZARD_CORE_$name") ?: defValue.toString()
+}
+
+tasks.register('createEnv') {
+  def envFile = file("$projectDir/.bin/.env")
+  if (envFile.exists()) {
+    envFile.delete()
+  }
+  def currentDateTime = LocalDateTime.now()
+  def values = [
+    'VAULT_TOKEN'  : getEnv('VAULT_TOKEN'),
+    'VAULT_SERVER' : getEnv('VAULT_SERVER'),
+    'BUILD_VERSION': getEnv('BUILD_VERSION', 'DEVELOPMENT'),
+    'BUILD_DATE'   : currentDateTime.toString(),
+  ]
+  def str = values
+    .collect { key, value -> "JWIZARD_CORE_${key}=${value}" }
+    .join('\n')
+  envFile.write(str)
 }
