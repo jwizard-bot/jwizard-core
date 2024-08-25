@@ -5,6 +5,7 @@
 dependencies {
   // libs
   implementation "${libs.springBootStarter}"
+  implementation "${libs.springVault}"
   // subprojects
   implementation project(':jwc-command')
 }

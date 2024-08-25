@@ -17,6 +17,7 @@ ext {
 ext.libs = [
   kotlin           : 'org.jetbrains.kotlin:kotlin-stdlib',
   springBootStarter: 'org.springframework.boot:spring-boot-starter:3.3.3',
+  springVault      : 'org.springframework.cloud:spring-cloud-vault-config:4.1.0',
 ]
 
 allprojects {
