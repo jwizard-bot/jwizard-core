@@ -11,3 +11,5 @@ include 'jwc-command'
 include 'jwc-config'
 include 'jwc-persistence'
 include 'jwc-radio'
+include 'jwc-vote'
+

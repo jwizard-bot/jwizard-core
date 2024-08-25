@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/jwc-config" />
             <option value="$PROJECT_DIR$/jwc-persistence" />
             <option value="$PROJECT_DIR$/jwc-radio" />
+            <option value="$PROJECT_DIR$/jwc-vote" />
           </set>
         </option>
       </GradleProjectSettings>
