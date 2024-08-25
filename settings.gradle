@@ -4,5 +4,10 @@
  */
 rootProject.name = 'jwizard-core'
 
+include 'jwc-api'
 include 'jwc-app'
+include 'jwc-audio'
 include 'jwc-command'
+include 'jwc-config'
+include 'jwc-persistence'
+include 'jwc-radio'

@@ -9,8 +9,13 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/jwc-api" />
             <option value="$PROJECT_DIR$/jwc-app" />
+            <option value="$PROJECT_DIR$/jwc-audio" />
             <option value="$PROJECT_DIR$/jwc-command" />
+            <option value="$PROJECT_DIR$/jwc-config" />
+            <option value="$PROJECT_DIR$/jwc-persistence" />
+            <option value="$PROJECT_DIR$/jwc-radio" />
           </set>
         </option>
       </GradleProjectSettings>
