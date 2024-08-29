@@ -4,10 +4,12 @@
  */
 dependencies {
   // libs
-  implementation "${libs.springBootStarter}"
-  implementation "${libs.springVault}"
+  compileOnly libs.springBootDevTools
+  implementation libs.springBootStarter
+  implementation libs.springBootJdbc
+  implementation libs.springVault
+  implementation libs.mysqlConnector
   // subprojects
+  implementation project(':jwc-config')
   implementation project(':jwc-command')
 }
-
-

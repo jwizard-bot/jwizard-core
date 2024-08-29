@@ -1,0 +1,30 @@
+[versions]
+springBootVersion = "3.3.3"
+springBootDepManagementVersion = '1.1.6'
+kotlinVersion = "2.0.20"
+springVaultVersion = "4.1.3"
+dotenvVersion = "2.2.0"
+slf4jApiVersion = "2.0.16"
+mysqlConnectorVersion = "8.4.0"
+lombokVersion = "1.18.34"
+
+[libraries]
+kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinVersion" }
+kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlinVersion" }
+
+springBootDep = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "springBootVersion" }
+springBootStarter = { module = "org.springframework.boot:spring-boot-starter", version.ref = "springBootVersion" }
+springBootDevTools = { module = "org.springframework.boot:spring-boot-devtools", version.ref = "springBootVersion" }
+springBootJdbc = { module = "org.springframework.boot:spring-boot-starter-data-jdbc", version.ref = "springBootVersion" }
+springVault = { module = "org.springframework.cloud:spring-cloud-vault-config", version.ref = "springVaultVersion" }
+
+dotEnv = { module = "io.github.cdimascio:dotenv-java", version.ref = "dotenvVersion" }
+slf4jApi = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApiVersion" }
+mysqlConnector = { module = "com.mysql:mysql-connector-j", version.ref = "mysqlConnectorVersion" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombokVersion" }
+
+[plugins]
+kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
+kotlinSpring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlinVersion" }
+springBoot = { id = "org.springframework.boot", version.ref = "springBootVersion" }
+springDepManagement = { id = "io.spring.dependency-management", version.ref = "springBootDepManagementVersion" }

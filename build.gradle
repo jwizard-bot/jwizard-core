@@ -4,39 +4,20 @@
  */
 import java.time.LocalDateTime
 
-buildscript {
-  ext {
-    // root project setup
-    initProjectName = 'jwc-app'
-    groupId = 'pl.jwizard'
-    version = '1.0.0'
-    // sc environment versions
-    jvmVersion = JavaVersion.VERSION_17
-    springVersion = '3.3.3'
-    kotlinVersion = '2.0.20'
-  }
-}
-
 plugins {
-  id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion"
-  id 'org.jetbrains.kotlin.plugin.spring' version "$kotlinVersion"
-  id 'org.springframework.boot' version "$springVersion" apply false
-  id 'io.spring.dependency-management' version '1.1.6'
-  id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
+  alias libs.plugins.kotlinJvm
+  alias libs.plugins.kotlinSpring apply false
+  alias libs.plugins.springBoot apply false
+  alias libs.plugins.springDepManagement
 }
 
-ext.libs = [
-  kotlin            : 'org.jetbrains.kotlin:kotlin-stdlib',
-  kotlinReflect     : 'org.jetbrains.kotlin:kotlin-reflect',
-  springBootDep     : "org.springframework.boot:spring-boot-dependencies:$springVersion",
-  springBootStarter : 'org.springframework.boot:spring-boot-starter',
-  springBootDevTools: 'org.springframework.boot:spring-boot-devtools',
-  springBootJdbc    : 'org.springframework.boot:spring-boot-starter-data-jdbc',
-  springVault       : 'org.springframework.cloud:spring-cloud-vault-config:4.1.3',
-  dotEnv            : 'io.github.cdimascio:dotenv-java:2.2.0',
-  slf4jApi          : 'org.slf4j:slf4j-api:2.0.16',
-  mysqlConnector    : 'com.mysql:mysql-connector-j:8.4.0',
-]
+static def getEnv(String name, Object defValue = '') {
+  return System.getenv("JWIZARD_CORE_$name") ?: defValue.toString()
+}
+
+static def getPluginId(Provider<PluginDependency> accessor) {
+  return accessor.get().pluginId
+}
 
 configurations.configureEach {
   exclude group: 'commons-logging', module: 'commons-logging'
@@ -51,14 +32,15 @@ allprojects {
     maven { url = uri('https://maven.lavalink.dev/snapshots') }
     maven { url = uri('https://maven.lavalink.dev/releases') }
     maven { url = uri('https://jitpack.io') }
+    mavenLocal()
   }
   group = groupId
   version = version
 }
 
 subprojects {
-  apply plugin: 'org.jetbrains.kotlin.jvm'
-  apply plugin: 'org.jetbrains.kotlin.plugin.spring'
+  apply plugin: getPluginId(libs.plugins.kotlinJvm)
+  apply plugin: getPluginId(libs.plugins.kotlinSpring)
 
   if (project.name != initProjectName) {
     apply plugin: 'java-library'
@@ -70,7 +52,10 @@ subprojects {
   dependencies {
     implementation libs.kotlin
     implementation libs.kotlinReflect
+    implementation libs.lombok
+    implementation platform(libs.springBootDep)
     compileOnly libs.slf4jApi
+    annotationProcessor libs.lombok
   }
 
   test {
@@ -88,7 +73,7 @@ subprojects {
 }
 
 project(":${initProjectName}") {
-  apply plugin: 'org.springframework.boot'
+  apply plugin: getPluginId(libs.plugins.springBoot)
 
   tasks.bootJar {
     destinationDirectory = file("$rootDir/.bin")
@@ -106,11 +91,7 @@ tasks.clean {
 }
 
 tasks.register('bootJar') {
-  dependsOn ':jwc-app:bootJar'
-}
-
-static def getEnv(String name, Object defValue = '') {
-  return System.getenv("JWIZARD_CORE_$name") ?: defValue.toString()
+  dependsOn ":$initProjectName:bootJar"
 }
 
 tasks.register('createEnv') {
