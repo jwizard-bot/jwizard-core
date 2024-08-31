@@ -6,9 +6,8 @@ import java.time.LocalDateTime
 
 plugins {
   alias libs.plugins.kotlinJvm
+  alias libs.plugins.kotlinSerialization
   alias libs.plugins.kotlinSpring apply false
-  alias libs.plugins.springBoot apply false
-  alias libs.plugins.springDepManagement
 }
 
 static def getEnv(String name, Object defValue = '') {
@@ -52,10 +51,10 @@ subprojects {
   dependencies {
     implementation libs.kotlin
     implementation libs.kotlinReflect
-    implementation libs.lombok
-    implementation platform(libs.springBootDep)
-    compileOnly libs.slf4jApi
-    annotationProcessor libs.lombok
+
+    implementation libs.logbackCore
+    implementation libs.logbackClassic
+    implementation libs.slf4jApi
   }
 
   test {

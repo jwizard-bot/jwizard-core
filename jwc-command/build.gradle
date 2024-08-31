@@ -4,7 +4,6 @@
  */
 dependencies {
   // libs
-  compileOnly libs.springBootStarter
   // subprojects
   implementation project(':jwc-api')
   implementation project(':jwc-persistence')

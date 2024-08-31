@@ -4,7 +4,5 @@
  */
 dependencies {
   // libs
-  compileOnly libs.springBootJdbc
-  compileOnly libs.mysqlConnector
   // subprojects
 }

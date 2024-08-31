@@ -5,5 +5,7 @@
 dependencies {
   // libs
   implementation libs.dotEnv
+  implementation libs.kaml
+  implementation libs.springContext
   // subprojects
 }
