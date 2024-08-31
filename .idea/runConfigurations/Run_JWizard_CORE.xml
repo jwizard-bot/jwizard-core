@@ -1,8 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run JWizard CORE" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <option name="ACTIVE_PROFILES" value="dev" />
+  <configuration default="false" name="Run JWizard CORE" type="JetRunConfigurationType">
+    <option name="MAIN_CLASS_NAME" value="pl.jwizard.jwc.app.JWizardCoreEntrypointKt" />
     <module name="jwizard-core.jwc-app.main" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="pl.jwizard.jwc.app.JWizardCoreEntrypoint" />
+    <option name="PROGRAM_PARAMETERS" value="-Druntime.mode=dev" />
+    <shortenClasspath name="NONE" />
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
       <option name="IS_SUBST" value="false" />
