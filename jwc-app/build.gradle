@@ -6,6 +6,6 @@ dependencies {
   // libs
   implementation libs.springContext
   // subprojects
-  implementation project(':jwc-config')
+  implementation project(':jwc-core')
   implementation project(':jwc-command')
 }
