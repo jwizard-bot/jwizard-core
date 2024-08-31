@@ -4,12 +4,15 @@
  */
 package pl.jwizard.jwc.app
 
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
+import pl.jwizard.jwc.core.DiscordBotApp
+import pl.jwizard.jwc.core.DiscordBotAppRunner
 
-@SpringBootApplication
+/**
+ * Main application class.
+ */
+@DiscordBotApp
 class JWizardCoreEntrypoint
 
 fun main(args: Array<String>) {
-	runApplication<JWizardCoreEntrypoint>(*args)
+	DiscordBotAppRunner.run(args, JWizardCoreEntrypoint::class, envFileLoader = true)
 }
