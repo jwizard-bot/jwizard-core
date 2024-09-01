@@ -9,6 +9,7 @@ plugins {
   alias libs.plugins.kotlinSerialization
   alias libs.plugins.kotlinSpring apply false
   alias libs.plugins.shadowJar apply false
+  alias libs.plugins.dokka
 }
 
 static def getEnv(String name, Object defValue = '') {
@@ -41,6 +42,7 @@ allprojects {
 subprojects {
   apply plugin: getPluginId(libs.plugins.kotlinJvm)
   apply plugin: getPluginId(libs.plugins.kotlinSpring)
+  apply plugin: getPluginId(libs.plugins.dokka)
 
   if (project.name != initProjectName) {
     apply plugin: 'java-library'
@@ -62,7 +64,7 @@ subprojects {
     useJUnitPlatform()
   }
 
-  tasks.compileKotlin {
+  compileKotlin {
     kotlinOptions {
       jvmTarget = jvmVersion.toString()
       freeCompilerArgs = [
@@ -70,12 +72,16 @@ subprojects {
       ]
     }
   }
+
+  dokkaHtml {
+    outputDirectory = file("${project.layout.buildDirectory}/docs/kdoc")
+  }
 }
 
 project(":${initProjectName}") {
   apply plugin: getPluginId(libs.plugins.shadowJar)
 
-  tasks.jar {
+  jar {
     manifest {
       attributes(
         'Main-Class': mainClass
@@ -83,7 +89,7 @@ project(":${initProjectName}") {
     }
   }
 
-  tasks.shadowJar {
+  shadowJar {
     archiveBaseName = 'jwizard-core'
     archiveClassifier = ''
     archiveVersion = ''
@@ -91,7 +97,11 @@ project(":${initProjectName}") {
   }
 }
 
-tasks.clean {
+dokkaHtmlMultiModule {
+  outputDirectory = file("$projectDir/docs")
+}
+
+clean {
   doLast {
     def binDir = file("$projectDir/.bin")
     if (binDir.exists()) {

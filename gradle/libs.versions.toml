@@ -6,6 +6,7 @@ slf4jApiVersion = "2.0.16"
 kamlVersion = "0.61.0"
 dotenvVersion = "2.2.0"
 shadowJarVersion = "8.1.1"
+dokkaVersion = "1.9.20"
 
 [libraries]
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinVersion" }
@@ -22,3 +23,4 @@ kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
 kotlinSpring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlinVersion" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
 shadowJar = { id = "com.github.johnrengelman.shadow", version.ref = "shadowJarVersion" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokkaVersion" }
