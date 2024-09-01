@@ -1,6 +1,4 @@
-<p align="center">
-    <img src=".github/banner.png" alt="">
-</p>
+![](.github/banner.png)
 
 This repo contains music bot core (JDA handler), music client (provided by Lavaplayer) and command listener repo with
 custom Kotlin reflect command loader. Repository to run correctly requires:

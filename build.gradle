@@ -3,6 +3,7 @@
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 import java.time.LocalDateTime
+import java.time.Year
 
 plugins {
   alias libs.plugins.kotlinJvm
@@ -99,6 +100,19 @@ project(":${initProjectName}") {
 
 dokkaHtmlMultiModule {
   outputDirectory = file("$projectDir/docs")
+  def bannerUrl = file('.github/banner.png').absolutePath.replace("\\", "\\\\")
+  def dokkaBaseConfiguration = """
+      {
+        "customAssets": [
+          "$bannerUrl"
+        ],
+        "footerMessage": "&copy; ${Year.now().value} by JWizard. On AGPL-3.0 license."
+      }
+    """
+  pluginsMapConfiguration.set([
+    "org.jetbrains.dokka.base.DokkaBase": dokkaBaseConfiguration
+  ])
+  includes.from(file("README-DOCS.md"))
 }
 
 clean {
