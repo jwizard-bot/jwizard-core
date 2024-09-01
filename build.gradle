@@ -49,8 +49,10 @@ subprojects {
     apply plugin: 'java-library'
   }
 
-  java.sourceCompatibility = jvmVersion
-  java.targetCompatibility = jvmVersion
+  java {
+    sourceCompatibility = jvmVersion
+    targetCompatibility = jvmVersion
+  }
 
   dependencies {
     implementation libs.kotlin
