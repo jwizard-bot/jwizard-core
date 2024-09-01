@@ -5,6 +5,7 @@ logbackVersion = "1.5.7"
 slf4jApiVersion = "2.0.16"
 kamlVersion = "0.61.0"
 dotenvVersion = "2.2.0"
+shadowJarVersion = "8.1.1"
 
 [libraries]
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinVersion" }
@@ -20,3 +21,4 @@ dotEnv = { module = "io.github.cdimascio:dotenv-java", version.ref = "dotenvVers
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
 kotlinSpring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlinVersion" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
+shadowJar = { id = "com.github.johnrengelman.shadow", version.ref = "shadowJarVersion" }

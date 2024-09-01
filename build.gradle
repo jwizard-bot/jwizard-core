@@ -8,6 +8,7 @@ plugins {
   alias libs.plugins.kotlinJvm
   alias libs.plugins.kotlinSerialization
   alias libs.plugins.kotlinSpring apply false
+  alias libs.plugins.shadowJar apply false
 }
 
 static def getEnv(String name, Object defValue = '') {
@@ -72,11 +73,21 @@ subprojects {
 }
 
 project(":${initProjectName}") {
-  apply plugin: getPluginId(libs.plugins.springBoot)
+  apply plugin: getPluginId(libs.plugins.shadowJar)
 
-  tasks.bootJar {
+  tasks.jar {
+    manifest {
+      attributes(
+        'Main-Class': mainClass
+      )
+    }
+  }
+
+  tasks.shadowJar {
+    archiveBaseName = 'jwizard-core'
+    archiveClassifier = ''
+    archiveVersion = ''
     destinationDirectory = file("$rootDir/.bin")
-    archiveFileName = 'jwizard-core.jar'
   }
 }
 
@@ -89,8 +100,8 @@ tasks.clean {
   }
 }
 
-tasks.register('bootJar') {
-  dependsOn ":$initProjectName:bootJar"
+tasks.register('shadowJar') {
+  dependsOn ":$initProjectName:shadowJar"
 }
 
 tasks.register('createEnv') {
