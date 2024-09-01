@@ -106,7 +106,7 @@ dokkaHtmlMultiModule {
         "customAssets": [
           "$bannerUrl"
         ],
-        "footerMessage": "&copy; ${Year.now().value} by JWizard. On AGPL-3.0 license."
+        "footerMessage": "&copy; ${Year.now().value} by JWizard. On $license license."
       }
     """
   pluginsMapConfiguration.set([
