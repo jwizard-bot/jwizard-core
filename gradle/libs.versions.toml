@@ -24,3 +24,4 @@ kotlinSpring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotli
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
 shadowJar = { id = "com.github.johnrengelman.shadow", version.ref = "shadowJarVersion" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokkaVersion" }
+kotlinNoArg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = "kotlinVersion" }

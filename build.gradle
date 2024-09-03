@@ -11,6 +11,7 @@ plugins {
   alias libs.plugins.kotlinSpring apply false
   alias libs.plugins.shadowJar apply false
   alias libs.plugins.dokka
+  alias libs.plugins.kotlinNoArg
 }
 
 static def getEnv(String name, Object defValue = '') {
@@ -23,6 +24,10 @@ static def getPluginId(Provider<PluginDependency> accessor) {
 
 configurations.configureEach {
   exclude group: 'commons-logging', module: 'commons-logging'
+}
+
+noArg {
+  annotation("pl.jwizard.jwc.core.util.NoArgConstructor")
 }
 
 allprojects {
