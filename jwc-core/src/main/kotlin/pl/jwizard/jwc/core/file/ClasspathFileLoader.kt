@@ -22,7 +22,8 @@ class ClasspathFileLoader(private val location: String) : AutoCloseable {
 	private var inputStream: InputStream? = null
 
 	init {
-		inputStream = javaClass.getResourceAsStream(location)
+		val locationWithSlash = if (location.startsWith("/")) location else "/$location"
+		inputStream = javaClass.getResourceAsStream(locationWithSlash)
 	}
 
 	/**
@@ -43,6 +44,14 @@ class ClasspathFileLoader(private val location: String) : AutoCloseable {
 	 * @author Miłosz Gilga
 	 */
 	fun fileExist(): Boolean = inputStream != null
+
+	/**
+	 * Return defined file location.
+	 *
+	 * @return file location as [String]
+	 * @author Miłosz Gilga
+	 */
+	fun getFileLocation(): String = location
 
 	override fun close() {
 		inputStream?.close()
