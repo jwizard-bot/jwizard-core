@@ -2,8 +2,8 @@
   <configuration default="false" name="Run JWizard CORE" type="JetRunConfigurationType">
     <option name="MAIN_CLASS_NAME" value="pl.jwizard.jwc.app.JWizardCoreEntrypointKt" />
     <module name="jwizard-core.jwc-app.main" />
-    <option name="PROGRAM_PARAMETERS" value="-Druntime.mode=dev" />
     <shortenClasspath name="NONE" />
+    <option name="VM_PARAMETERS" value="-Druntime.mode=dev" />
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
       <option name="IS_SUBST" value="false" />
