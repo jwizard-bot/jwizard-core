@@ -5,12 +5,12 @@
 package pl.jwizard.jwc.core.printer
 
 /**
- * Class defining console printer adapter. Based on [PrinterAdapter] contract.
+ * Class defining console printer. Based on [Printer] contract.
  *
  * @author Miłosz Gilga
- * @see PrinterAdapter
+ * @see Printer
  */
-class ConsolePrinterAdapter : PrinterAdapter {
+class ConsolePrinter : Printer {
 
 	override fun print(content: String) {
 		println(content)

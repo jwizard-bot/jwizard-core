@@ -9,26 +9,26 @@ import org.slf4j.LoggerFactory
 /**
  * Abstract class defining custom content printer (ex. console or log statement printer).
  *
- * @constructor Create printer inherits from [AbstractPrinter] with selected [printerAdapter].
- * @property printerAdapter printer class definition
+ * @constructor Create printer inherits from [AbstractPrinter] with selected [printer].
+ * @property printer printer class definition
  * @author Miłosz Gilga
- * @see PrinterAdapter
+ * @see Printer
  */
-abstract class AbstractPrinter(private val printerAdapter: PrinterAdapter) {
+abstract class AbstractPrinter(private val printer: Printer) {
 
 	companion object {
 		private val log = LoggerFactory.getLogger(AbstractPrinter::class.java)
 	}
 
 	/**
-	 * Method responsible for printing custom content taking from [print] method by declared [printerAdapter]
+	 * Method responsible for printing custom content taking from [print] method by declared [printer]
 	 * class.
 	 *
 	 * @author Miłosz Gilga
 	 */
 	fun print() {
 		bodyContent()
-			?.let { printerAdapter.print(it) }
+			?.let { printer.print(it) }
 			?: run { log.warn("Unable to find content for {} printing statement.", this::class.simpleName) }
 	}
 
