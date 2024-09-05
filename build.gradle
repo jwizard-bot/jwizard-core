@@ -2,6 +2,9 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
+
+import org.codehaus.groovy.runtime.GStringImpl
+
 import java.time.LocalDateTime
 import java.time.Year
 
@@ -14,12 +17,13 @@ plugins {
   alias libs.plugins.kotlinNoArg
 }
 
-static def getEnv(String name, Object defValue = '') {
-  return System.getenv("JWIZARD_CORE_$name") ?: defValue.toString()
-}
-
-static def getPluginId(Provider<PluginDependency> accessor) {
-  return accessor.get().pluginId
+ext {
+  dokkaCommonAssets = [
+    'dokka/logo-icon.svg',
+    'dokka/logo-nav.svg',
+    'dokka/dokka-styles.css'
+  ]
+  dokkaCopyright = "&copy; ${Year.now().value} by JWizard. On $license license." as GStringImpl
 }
 
 configurations.configureEach {
@@ -81,8 +85,10 @@ subprojects {
     }
   }
 
-  dokkaHtml {
-    outputDirectory = file("${project.layout.buildDirectory}/docs/kdoc")
+  dokkaHtmlPartial {
+    pluginsMapConfiguration.set([
+      "org.jetbrains.dokka.base.DokkaBase": generateDokkaBaseConfig()
+    ])
   }
 }
 
@@ -107,19 +113,13 @@ project(":${initProjectName}") {
 
 dokkaHtmlMultiModule {
   outputDirectory = file("$projectDir/docs")
-  def bannerUrl = file('.github/banner.png').absolutePath.replace("\\", "\\\\")
-  def dokkaBaseConfiguration = """
-      {
-        "customAssets": [
-          "$bannerUrl"
-        ],
-        "footerMessage": "&copy; ${Year.now().value} by JWizard. On $license license."
-      }
-    """
+  def additionalAssets = [
+    'dokka/banner.png'
+  ]
   pluginsMapConfiguration.set([
-    "org.jetbrains.dokka.base.DokkaBase": dokkaBaseConfiguration
+    "org.jetbrains.dokka.base.DokkaBase": generateDokkaBaseConfig(additionalAssets)
   ])
-  includes.from(file("README-DOCS.md"))
+  includes.from(file("dokka/README-DOCS.md"))
 }
 
 clean {
@@ -151,4 +151,28 @@ tasks.register('createEnv') {
     .collect { key, value -> "JWIZARD_CORE_${key}=${value}" }
     .join('\n')
   envFile.write(str)
+}
+
+static def getEnv(String name, Object defValue = '') {
+  return System.getenv("JWIZARD_CORE_$name") ?: defValue.toString()
+}
+
+static def getPluginId(Provider<PluginDependency> accessor) {
+  return accessor.get().pluginId
+}
+
+def generateDokkaBaseConfig(List additionalAssets = []) {
+  def assets = ext.dokkaCommonAssets
+  assets.addAll(additionalAssets)
+
+  def definedDokkaAssets = assets
+    .collect { "\"${file(it).absolutePath.replace("\\", "\\\\")}\"" }
+    .join(',')
+
+  return """
+      {
+        "customAssets": [${definedDokkaAssets}],
+        "footerMessage": "${ext.dokkaCopyright}"
+      }
+    """
 }

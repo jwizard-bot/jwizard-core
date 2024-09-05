@@ -10,6 +10,7 @@ import pl.jwizard.jwc.core.file.ClasspathFileLoader
  * Class extending [AbstractPrinter] with [ConsolePrinterAdapter] as printer adapter responsible for printing fancy
  * title taken by classpath config file.
  *
+ * @constructor Create [FancyTitlePrinter] with defined [fileClasspathLocation] and [printerAdapter].
  * @property fileClasspathLocation classpath fancy title file location
  * @property printerAdapter printer adapter implements [PrinterAdapter] interface
  * @author Miłosz Gilga

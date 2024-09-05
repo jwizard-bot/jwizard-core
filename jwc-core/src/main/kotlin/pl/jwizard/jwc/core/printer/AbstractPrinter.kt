@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory
 /**
  * Abstract class defining custom content printer (ex. console or log statement printer).
  *
+ * @constructor Create printer inherits from [AbstractPrinter] with selected [printerAdapter].
  * @property printerAdapter printer class definition
  * @author Miłosz Gilga
  * @see PrinterAdapter
