@@ -1,6 +1,8 @@
 [versions]
 kotlinVersion = "2.0.20"
 springVersion = "6.1.12"
+mysqlConnectorVersion = "9.0.0"
+hikariCpVersion = "5.1.0"
 logbackVersion = "1.5.7"
 slf4jApiVersion = "2.0.16"
 dotenvVersion = "2.2.0"
@@ -13,6 +15,9 @@ springVaultVersion = "3.1.2"
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinVersion" }
 kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlinVersion" }
 springContext = { module = "org.springframework:spring-context", version.ref = "springVersion" }
+springJdbc = { module = "org.springframework:spring-jdbc", version.ref = "springVersion" }
+mysqlConnector = { module = "com.mysql:mysql-connector-j", version.ref = "mysqlConnectorVersion" }
+hikariCp = { module = "com.zaxxer:HikariCP", version.ref = "hikariCpVersion" }
 logbackCore = { module = "ch.qos.logback:logback-core", version.ref = "logbackVersion" }
 logbackClassic = { module = "ch.qos.logback:logback-classic", version.ref = "logbackVersion" }
 slf4jApi = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApiVersion" }

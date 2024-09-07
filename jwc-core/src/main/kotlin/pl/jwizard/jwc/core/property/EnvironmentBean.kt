@@ -5,9 +5,9 @@
 package pl.jwizard.jwc.core.property
 
 import org.slf4j.LoggerFactory
+import org.springframework.context.annotation.Configuration
 import org.springframework.core.env.PropertySourcesPropertyResolver
 import org.springframework.core.env.StandardEnvironment
-import org.springframework.stereotype.Component
 import kotlin.reflect.KClass
 
 /**
@@ -19,7 +19,7 @@ import kotlin.reflect.KClass
  *
  * @author Miłosz Gilga
  */
-@Component
+@Configuration
 class EnvironmentBean {
 
 	/**
