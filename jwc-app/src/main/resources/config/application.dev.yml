@@ -1,0 +1,13 @@
+db:
+  jdbc: jdbc:mysql://localhost:${env:ENV_MYSQL_PORT:8762}/jwizard-db
+
+vault:
+  url: http://localhost:8761
+  token: ${env:ENV_VAULT_TOKEN}
+
+jda:
+  name: JWizard DEV
+  icon-path: dark.png
+
+service:
+  api-url: http://localhost:8670

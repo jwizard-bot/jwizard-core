@@ -1,0 +1,47 @@
+deployment:
+  build-version: ${env:JWIZARD_CORE_BUILD_VERSION:UNKNOWN}
+  last-build-date: ${env:JWIZARD_CORE_BUILD_DATE:UNKNOWN}
+
+db:
+  username: ${vault:V_MYSQL_USERNAME}
+  password: ${vault:V_MYSQL_PASSWORD}
+
+vault:
+  kv:
+    backend: jwizard
+    default-context: common
+    application-name: core
+
+jda:
+  secret-token: ${vault:V_JDA_SECRET}
+  pagination:
+    max-elements-per-page: 20
+    menu-alive-sec: 60
+  splashes:
+    enabled: true
+    interval-sec: 5
+    elements:
+      - Welcome!
+      - I am
+      - a magic
+      - Discord
+      - bot
+      - and I can
+      - play
+      - songs
+      - and
+      - much
+      - more...
+
+service:
+  cdn-url: https://cdn.jwizard.pl
+
+i18n:
+  default-language: pl
+  resources:
+    remote:
+      - i18n-commands/messages
+      - i18n-error-codes/messages
+    local:
+      - i18n/messages
+      - i18n-res/messages

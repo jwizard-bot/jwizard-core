@@ -9,10 +9,12 @@ import pl.jwizard.jwc.core.DiscordBotAppRunner
 
 /**
  * Main application class.
+ *
+ * @author Miłosz Gilga
  */
 @DiscordBotApp
 class JWizardCoreEntrypoint
 
-fun main(args: Array<String>) {
-	DiscordBotAppRunner.run(args, JWizardCoreEntrypoint::class, envFileLoader = true)
+fun main() {
+	DiscordBotAppRunner.run(JWizardCoreEntrypoint::class)
 }

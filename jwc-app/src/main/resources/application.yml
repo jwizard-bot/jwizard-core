@@ -1,8 +1,0 @@
-spring:
-  application:
-    name: jwizard-core
-  banner:
-    location: classpath:spring/banner.txt
-  datasource:
-    username: ${V_MYSQL_USERNAME}
-    password: ${V_MYSQL_PASSWORD}

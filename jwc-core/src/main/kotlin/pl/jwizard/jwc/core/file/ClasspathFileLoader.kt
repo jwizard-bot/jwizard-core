@@ -4,7 +4,8 @@
  */
 package pl.jwizard.jwc.core.file
 
-import java.io.InputStream
+import org.springframework.core.io.ClassPathResource
+import java.io.FileNotFoundException
 import java.nio.charset.StandardCharsets
 
 /**
@@ -12,49 +13,24 @@ import java.nio.charset.StandardCharsets
  * other major file parameters.
  *
  * @constructor Instantiate [ClasspathFileLoader] with [location] parameter.
- * @property location classpath file location, starts with `/`, ex. `/static/example.txt`.
+ * @property location classpath file location ex. `static/example.txt`.
  * @author Miłosz Gilga
  */
-class ClasspathFileLoader(private val location: String) : AutoCloseable {
+class ClasspathFileLoader(private val location: String) {
 
 	/**
-	 * File representation by [InputStream] hook java class.
+	 * File representation by [ClassPathResource] hook java class.
 	 */
-	private var inputStream: InputStream? = null
-
-	init {
-		val locationWithSlash = if (location.startsWith("/")) location else "/$location"
-		inputStream = javaClass.getResourceAsStream(locationWithSlash)
-	}
+	private val classPathResource: ClassPathResource = ClassPathResource(location)
 
 	/**
 	 * Method responsible for reading raw file content from declared classpath [location]. If file not exist,
-	 * return null.
+	 * throw [FileNotFoundException].
 	 *
 	 * @return raw file content if file exist. Otherwise, null.
 	 * @author Miłosz Gilga
 	 */
-	fun readFileRaw(): String? {
-		return inputStream?.let { stream -> stream.bufferedReader(StandardCharsets.UTF_8).use { it.readText() } }
-	}
-
-	/**
-	 * Check if passed file with classpath location exists and it's available.
-	 *
-	 * @return true if file exist, otherwise false
-	 * @author Miłosz Gilga
-	 */
-	fun fileExist(): Boolean = inputStream != null
-
-	/**
-	 * Return defined file location.
-	 *
-	 * @return file location as [String]
-	 * @author Miłosz Gilga
-	 */
-	fun getFileLocation(): String = location
-
-	override fun close() {
-		inputStream?.close()
+	fun readFileRaw(): String {
+		return classPathResource.inputStream.bufferedReader(StandardCharsets.UTF_8).use { it.readText() }
 	}
 }

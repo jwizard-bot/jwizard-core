@@ -1,0 +1,13 @@
+db:
+  jdbc: ${vault:V_MYSQL_JDBC}
+
+vault:
+  url: ${env:JWIZARD_CORE_VAULT_SERVER}
+  token: ${env:JWIZARD_CORE_VAULT_TOKEN}
+
+jda:
+  name: JWizard
+  icon-path: light.png
+
+service:
+  api-url: https://api.jwizard.pl

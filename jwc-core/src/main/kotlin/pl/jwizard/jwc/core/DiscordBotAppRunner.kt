@@ -5,10 +5,13 @@
 package pl.jwizard.jwc.core
 
 import org.slf4j.LoggerFactory
+import org.springframework.beans.FatalBeanException
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.ComponentScan
-import pl.jwizard.jwc.core.util.FancyTitlePrinter
+import pl.jwizard.jwc.core.printer.ConsolePrinter
+import pl.jwizard.jwc.core.printer.FancyFramePrinter
+import pl.jwizard.jwc.core.printer.FancyTitlePrinter
 import kotlin.reflect.KClass
 
 /**
@@ -27,18 +30,14 @@ object DiscordBotAppRunner {
 	const val BASE_PACKAGE = "pl.jwizard"
 
 	/**
-	 * Fancy title banner classpath location in `resources` directory
+	 * Fancy title banner classpath location in `resources` directory.
 	 */
-	private const val BANNER_CLASSPATH_LOCATION = "/util/banner.txt"
+	private const val BANNER_CLASSPATH_LOCATION = "util/banner.txt"
 
 	/**
-	 * Fancy frame elements rendered together with fancy title banner element.
+	 * Fancy frame classpath location in `resources` directory.
 	 */
-	private val FANCY_FRAME_ELEMENTS = listOf(
-		"Source code repository: https://github.com/jwizard-bot/jwizard-core",
-		"Originally developed by: Miłosz Gilga (https://miloszgilga.pl)",
-		"Application license you will find in the LICENSE file",
-	)
+	private const val FRAME_CLASSPATH_LOCATION = "util/frame.txt"
 
 	/**
 	 * Spring Context instance.
@@ -46,36 +45,27 @@ object DiscordBotAppRunner {
 	private lateinit var context: ApplicationContext
 
 	/**
-	 * Static method which starts loading configuration, resources and a new JDA instance of the bot being created. By
-	 * default, loads variables from root .env file.
-	 *
-	 * @param args  command line args, passing from main method, accept only with *jda* prefix, ex. *jda.name*,
-	 * @param clazz main type of class that runs the bot.
-	 * @author Miłosz Gilga
-	 */
-	fun run(args: Array<String>, clazz: KClass<*>) {
-		run(args, clazz, true)
-	}
-
-	/**
 	 * Static method which starts loading configuration, resources and a new JDA instance of the bot being created.
 	 *
-	 * @param args  command line args, passing from main method, accept only with *jda* prefix, ex. *jda.name*,
 	 * @param clazz main type of class that runs the bot.
-	 * @param envFileLoader determinate, if application should load variables from root .env file
-	 * @author Miłosz Gilga
 	 */
-	fun run(args: Array<String>, clazz: KClass<*>, envFileLoader: Boolean) {
-		val fancyTitlePrinter = FancyTitlePrinter(
-			fileClasspathLocation = BANNER_CLASSPATH_LOCATION,
-			frameElements = FANCY_FRAME_ELEMENTS,
-		)
-		fancyTitlePrinter.printTitle()
-		fancyTitlePrinter.printFrame()
-
-		
-
-		context = AnnotationConfigApplicationContext(clazz.java)
-		log.info("Init Spring Context with base class: {}. Init packages tree: {}.", clazz, BASE_PACKAGE)
+	fun run(clazz: KClass<*>) {
+		try {
+			val printer = ConsolePrinter()
+			val printers = arrayOf(
+				FancyTitlePrinter(BANNER_CLASSPATH_LOCATION, printer),
+				FancyFramePrinter(FRAME_CLASSPATH_LOCATION, printer),
+			)
+			printers.forEach { it.print() }
+			try {
+				log.info("Init Spring Context with base class: {}. Init packages tree: {}.", clazz.qualifiedName, BASE_PACKAGE)
+				context = AnnotationConfigApplicationContext(clazz.java)
+			} catch (ex: FatalBeanException) {
+				throw IrreparableException(ex)
+			}
+		} catch (ex: IrreparableException) {
+			ex.printLogStatement()
+			ex.killProcess()
+		}
 	}
 }

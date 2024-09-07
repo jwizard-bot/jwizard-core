@@ -47,7 +47,7 @@ class FancyFramePrinter(
 	override fun bodyContent(): String? {
 		val loader = ClasspathFileLoader(fileClasspathLocation)
 
-		val rawFrameElements = loader.readFileRaw() ?: return null
+		val rawFrameElements = loader.readFileRaw()
 		val frameElements = rawFrameElements
 			.split(regex = "\\r?\\n|\\r".toRegex())
 			.dropLastWhile { it.isEmpty() }

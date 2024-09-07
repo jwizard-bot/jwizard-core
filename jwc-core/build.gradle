@@ -5,7 +5,10 @@
 dependencies {
   // libs
   implementation libs.dotEnv
-  implementation libs.kaml
+  implementation libs.jacksonKotlin
+  implementation libs.jacksonDatabind
+  implementation libs.jacksonDataformatYaml
   implementation libs.springContext
+  implementation libs.springVaultCore
   // subprojects
 }
