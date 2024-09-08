@@ -23,7 +23,7 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
  * @author Miłosz Gilga
  */
 @Configuration
-class DbPoolInitializer(private val environmentBean: EnvironmentBean) {
+class DbSourceInitializer(private val environmentBean: EnvironmentBean) {
 
 	/**
 	 * Configures and creates a [HikariDataSource] bean.
@@ -56,7 +56,5 @@ class DbPoolInitializer(private val environmentBean: EnvironmentBean) {
 	 * @return The configured [JdbcTemplate] instance.
 	 */
 	@Bean
-	fun jdbcTemplate(): JdbcTemplate {
-		return JdbcTemplate(dataSource())
-	}
+	fun jdbcTemplate() = JdbcTemplate(dataSource())
 }
