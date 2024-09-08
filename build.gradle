@@ -31,7 +31,7 @@ configurations.configureEach {
 }
 
 noArg {
-  annotation("pl.jwizard.jwc.core.util.NoArgConstructor")
+  annotation('pl.jwizard.jwc.core.util.NoArgConstructor')
 }
 
 allprojects {
@@ -87,7 +87,7 @@ subprojects {
 
   dokkaHtmlPartial {
     pluginsMapConfiguration.set([
-      "org.jetbrains.dokka.base.DokkaBase": generateDokkaBaseConfig()
+      'org.jetbrains.dokka.base.DokkaBase': generateDokkaBaseConfig()
     ])
   }
 }
@@ -117,9 +117,9 @@ dokkaHtmlMultiModule {
     'dokka/banner.png'
   ]
   pluginsMapConfiguration.set([
-    "org.jetbrains.dokka.base.DokkaBase": generateDokkaBaseConfig(additionalAssets)
+    'org.jetbrains.dokka.base.DokkaBase': generateDokkaBaseConfig(additionalAssets)
   ])
-  includes.from(file("dokka/README-DOCS.md"))
+  includes.from(file('dokka/README-DOCS.md'))
 }
 
 clean {
