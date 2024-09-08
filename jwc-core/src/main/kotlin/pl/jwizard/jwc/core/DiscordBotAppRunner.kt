@@ -7,7 +7,7 @@ package pl.jwizard.jwc.core
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.ComponentScan
 import pl.jwizard.jwc.core.jda.ActivitySplashesBean
-import pl.jwizard.jwc.core.jda.JdaInstance
+import pl.jwizard.jwc.core.jda.JdaInstanceBean
 import pl.jwizard.jwc.core.printer.ConsolePrinter
 import pl.jwizard.jwc.core.printer.FancyFramePrinter
 import pl.jwizard.jwc.core.printer.FancyTitlePrinter
@@ -60,15 +60,16 @@ object DiscordBotAppRunner {
 			)
 			printers.forEach { it.print() }
 
-			var jda: JdaInstance? = null
+			var jda: JdaInstanceBean? = null
 			try {
 				log.info("Init Spring Context with base class: {}. Init packages tree: {}.", clazz.qualifiedName, BASE_PACKAGE)
 				context = SpringKtContextFactory(clazz)
 
-				val commandLoader = context.getBean(CommandsLoader::class)
-				val jdaInstance = context.getBean(JdaInstance::class)
-				val audioPlayerManager = context.getBean(AudioPlayerManager::class)
+				val jdaInstance = context.getBean(JdaInstanceBean::class)
 				val activitySplashes = context.getBean(ActivitySplashesBean::class)
+
+				val commandLoader = context.getBean(CommandsLoader::class)
+				val audioPlayerManager = context.getBean(AudioPlayerManager::class)
 				val channelListenerGuard = context.getBean(ChannelListenerGuard::class)
 
 				commandLoader.loadMetadata()

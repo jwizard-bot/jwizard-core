@@ -25,12 +25,12 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
  * The class also provides methods to configure additional metadata and gracefully shut down the JDA client.
  *
  * @property environmentBean Provides access to application properties, including the bot token.
- * @constructor Creates an instance of [JdaInstance] with the specified [environmentBean].
+ * @constructor Creates an instance of [JdaInstanceBean] with the specified [environmentBean].
  *
  * @author Miłosz Gilga
  */
 @Component
-class JdaInstance(private val environmentBean: EnvironmentBean) {
+class JdaInstanceBean(private val environmentBean: EnvironmentBean) {
 
 	/**
 	 * The JDA (Java Discord API) client instance. Initializing in [createJdaWrapper] method.
@@ -38,7 +38,7 @@ class JdaInstance(private val environmentBean: EnvironmentBean) {
 	final lateinit var jda: JDA private set
 
 	companion object {
-		private val log = LoggerFactory.getLogger(JdaInstance::class.java)
+		private val log = LoggerFactory.getLogger(JdaInstanceBean::class.java)
 
 		/**
 		 * A list of [GatewayIntent] instances that are enabled for the application.
