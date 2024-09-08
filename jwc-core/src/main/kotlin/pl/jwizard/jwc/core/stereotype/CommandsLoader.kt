@@ -7,15 +7,6 @@ package pl.jwizard.jwc.core.stereotype
 import pl.jwizard.jwc.core.DiscordBotAppRunner
 
 /**
- * Interface for loading and managing commands metadata and integrity. This interface provides methods for loading
- * metadata, checking the integrity of the commands, and loading classes using reflection. Applied in command loader
- * in `jwc-command` submodule.
- *
- * @author Miłosz Gilga
- *
- */
-
-/**
  * Interface for loading and managing commands metadata and integrity. This interface defines the contract for
  * operations related to command metadata, integrity checking, and class loading. Implementations of this interface
  * will be provided in separate modules and registered as Spring beans for dependency injection.
