@@ -5,13 +5,15 @@
 package pl.jwizard.jwc.core
 
 import org.slf4j.LoggerFactory
-import org.springframework.beans.FatalBeanException
-import org.springframework.context.ApplicationContext
-import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.ComponentScan
+import pl.jwizard.jwc.core.jda.ActivitySplashesBean
+import pl.jwizard.jwc.core.jda.JdaInstance
 import pl.jwizard.jwc.core.printer.ConsolePrinter
 import pl.jwizard.jwc.core.printer.FancyFramePrinter
 import pl.jwizard.jwc.core.printer.FancyTitlePrinter
+import pl.jwizard.jwc.core.stereotype.AudioPlayerManager
+import pl.jwizard.jwc.core.stereotype.ChannelListenerGuard
+import pl.jwizard.jwc.core.stereotype.CommandsLoader
 import kotlin.reflect.KClass
 
 /**
@@ -40,9 +42,9 @@ object DiscordBotAppRunner {
 	private const val FRAME_CLASSPATH_LOCATION = "util/frame.txt"
 
 	/**
-	 * Spring Context instance.
+	 * Spring Kotlin Context instance.
 	 */
-	private lateinit var context: ApplicationContext
+	private lateinit var context: SpringKtContextFactory
 
 	/**
 	 * Static method which starts loading configuration, resources and a new JDA instance of the bot being created.
@@ -57,10 +59,34 @@ object DiscordBotAppRunner {
 				FancyFramePrinter(FRAME_CLASSPATH_LOCATION, printer),
 			)
 			printers.forEach { it.print() }
+
+			var jda: JdaInstance? = null
 			try {
 				log.info("Init Spring Context with base class: {}. Init packages tree: {}.", clazz.qualifiedName, BASE_PACKAGE)
-				context = AnnotationConfigApplicationContext(clazz.java)
-			} catch (ex: FatalBeanException) {
+				context = SpringKtContextFactory(clazz)
+
+				val commandLoader = context.getBean(CommandsLoader::class)
+				val jdaInstance = context.getBean(JdaInstance::class)
+				val audioPlayerManager = context.getBean(AudioPlayerManager::class)
+				val activitySplashes = context.getBean(ActivitySplashesBean::class)
+				val channelListenerGuard = context.getBean(ChannelListenerGuard::class)
+
+				commandLoader.loadMetadata()
+				commandLoader.checkIntegrity()
+				commandLoader.loadClassesViaReflectionApi()
+
+				jda = jdaInstance
+				jdaInstance.createJdaWrapper()
+				jdaInstance.configureMetadata()
+
+				activitySplashes.initSplashesSequence(jdaInstance.jda)
+				audioPlayerManager.registerSources()
+				channelListenerGuard.initThreadPool(jdaInstance.jda)
+
+				log.info("Started listening incoming requests...")
+
+			} catch (ex: Throwable) {
+				jda?.gracefullyShutdown()
 				throw IrreparableException(ex)
 			}
 		} catch (ex: IrreparableException) {

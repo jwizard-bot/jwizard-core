@@ -6,6 +6,11 @@ dependencies {
   // libs
   implementation libs.springContext
   // subprojects
-  implementation project(':jwc-core')
+  implementation project(':jwc-api')
+  implementation project(':jwc-audio')
   implementation project(':jwc-command')
+  implementation project(':jwc-core')
+  implementation project(':jwc-persistence')
+  implementation project(':jwc-radio')
+  implementation project(':jwc-vote')
 }

@@ -54,6 +54,9 @@ open class IrreparableException(
 			stacktraceCauses.add("[${clazz.jvmName} -> ${cause.javaClass.name}]: ${cause.message}")
 			cause = cause.cause
 		}
+		if (stacktraceCauses.isEmpty() && !throwable.message.isNullOrBlank()) {
+			throwable.message?.let { stacktraceCauses.add(it) }
+		}
 	}
 
 	/**

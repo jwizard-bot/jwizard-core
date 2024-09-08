@@ -4,7 +4,7 @@
  */
 dependencies {
   // libs
+  implementation libs.springContext
   // subprojects
-  implementation project(':jwc-api')
-  implementation project(':jwc-persistence')
+  implementation project(':jwc-core')
 }

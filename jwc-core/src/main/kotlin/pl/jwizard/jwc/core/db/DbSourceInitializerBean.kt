@@ -23,7 +23,7 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
  * @author Miłosz Gilga
  */
 @Configuration
-class DbSourceInitializer(private val environmentBean: EnvironmentBean) {
+class DbSourceInitializerBean(private val environmentBean: EnvironmentBean) {
 
 	/**
 	 * Configures and creates a [HikariDataSource] bean.
