@@ -43,8 +43,9 @@ i18n:
   default-language: pl
   resources:
     remote:
+      - i18n-modules/messages
+      - i18n-args/messages
       - i18n-commands/messages
-      - i18n-error-codes/messages
     local:
       - i18n-action/messages
       - i18n-audio/messages
