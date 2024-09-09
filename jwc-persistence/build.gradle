@@ -3,6 +3,10 @@
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 dependencies {
-  // libs
-  // subprojects
+  implementation libs.springContext
+  implementation libs.springJdbc
+  implementation libs.mysqlConnector
+  implementation libs.hikariCp
+
+  implementation project(":jwc-core")
 }

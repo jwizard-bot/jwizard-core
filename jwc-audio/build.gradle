@@ -3,9 +3,10 @@
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 dependencies {
-  // libs
   implementation libs.springContext
   implementation libs.jda
-  // subprojects
+  implementation libs.lavaplayer
+  implementation libs.lavalinkYtSource
+
   implementation project(':jwc-core')
 }

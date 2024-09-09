@@ -3,9 +3,6 @@
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 dependencies {
-  // libs
-  implementation libs.springContext
-  // subprojects
   implementation project(':jwc-api')
   implementation project(':jwc-audio')
   implementation project(':jwc-command')

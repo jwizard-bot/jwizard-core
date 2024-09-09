@@ -3,8 +3,7 @@
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 dependencies {
-  // libs
   implementation libs.springContext
-  // subprojects
+
   implementation project(':jwc-core')
 }

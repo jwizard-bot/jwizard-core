@@ -11,6 +11,8 @@ dokkaVersion = "1.9.20"
 jacksonVersion = "2.17.2"
 springVaultVersion = "3.1.2"
 jdaVersion = "5.1.0"
+lavaplayerVersion = "2.2.1"
+lavalinkYtSourceVersion = "1.7.2"
 
 [libraries]
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinVersion" }
@@ -28,6 +30,8 @@ jacksonDatabind = { module = "com.fasterxml.jackson.core:jackson-databind", vers
 jacksonDataformatYaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jacksonVersion" }
 springVaultCore = { module = "org.springframework.vault:spring-vault-core", version.ref = "springVaultVersion" }
 jda = { module = "net.dv8tion:JDA", version.ref = "jdaVersion" }
+lavaplayer = { module = "dev.arbjerg:lavaplayer", version.ref = "lavaplayerVersion" }
+lavalinkYtSource = { module = "dev.lavalink.youtube:v2", version.ref = "lavalinkYtSourceVersion" }
 
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
