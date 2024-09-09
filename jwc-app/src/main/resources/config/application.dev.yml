@@ -7,7 +7,13 @@ vault:
 
 jda:
   name: JWizard DEV
-  icon-path: dark.png
 
 service:
-  api-url: http://localhost:8670
+  api-url: http://localhost:8765
+
+s3:
+  public-api-url: http://localhost:8763/jwizard-static
+  host-url: http://localhost:8763
+  access-key: ${vault:V_S3_USERNAME}
+  secret-key: ${vault:V_S3_PASSWORD}
+  root-bucket: jwizard-static

@@ -34,8 +34,9 @@ jda:
       - much
       - more...
 
-service:
-  cdn-url: https://cdn.jwizard.pl
+s3:
+  region: eu-central-1
+  path-style-access-enabled: true
 
 i18n:
   default-language: pl

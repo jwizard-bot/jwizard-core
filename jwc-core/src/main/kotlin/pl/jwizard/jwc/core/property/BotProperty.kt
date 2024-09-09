@@ -26,7 +26,6 @@ import kotlin.reflect.KClass
  * 	 application name.
  * - [VAULT_KV_APPLICATION_NAME]: Vault key storage KV application name. Load all secrets from this pre-path.
  * - [JDA_NAME]: JDA instance name.
- * - [JDA_ICON_PATH]: JDA instance icon path.
  * - [JDA_SECRET_TOKEN]: JDA secret token.
  * - [JDA_DEFAULT_ACTIVITY]: JDA default activity. Enabled when [JDA_SPLASHES_ENABLED] property is set to false.
  * - [JDA_PAGINATION_MAX_ELEMENTS_PER_PAGE]: Max elements per page number for JDA pagination generator.
@@ -34,7 +33,13 @@ import kotlin.reflect.KClass
  * - [JDA_SPLASHES_ENABLED]: JDA splashes toggle boolean property. If true, splashes are enabled, otherwise show nothing.
  * - [JDA_SPLASHES_INTERVAL]: JDA splashes interval in seconds.
  * - [SERVICE_API_URL]: JWizard API service host URL.
- * - [SERVICE_CDN_URL]: JWizard Content Delivery Network service host URL.
+ * - [S3_PUBLIC_API_URL]: The URL or endpoint for accessing the public S3 API.
+ * - [S3_HOST_URL]: The host address of the S3 service.
+ * - [S3_REGION]: The region where the S3 bucket is hosted.
+ * - [S3_ACCESS_KEY]: The access key for S3 authentication.
+ * - [S3_SECRET_KEY]: The secret key for S3 authentication.
+ * - [S3_ROOT_BUCKET]: The name of the root bucket in the S3 storage.
+ * - [S3_PATH_STYLE_ACCESS_ENABLED]: Determines if path-style access is enabled for the S3 service.
  * - [I18N_DEFAULT_LANGUAGE]: I18n default language (as language tag, without localization property).
  * - [GUILD_VOTING_PERCENTAGE_RATIO]: Ratio of voting percentage for guilds.
  * - [GUILD_MAX_VOTING_TIME]: Maximum voting time for guilds in seconds.
@@ -120,11 +125,6 @@ enum class BotProperty(
 	JDA_NAME("jda.name"),
 
 	/**
-	 * JDA instance icon path.
-	 */
-	JDA_ICON_PATH("jda.icon-path"),
-
-	/**
 	 * JDA secret token.
 	 */
 	JDA_SECRET_TOKEN("jda.secret-token"),
@@ -160,9 +160,39 @@ enum class BotProperty(
 	SERVICE_API_URL("service.api-url"),
 
 	/**
-	 * JWizard Content Delivery Network service host url.
+	 * The URL or endpoint for accessing the public S3 API.
 	 */
-	SERVICE_CDN_URL("service.cdn-url"),
+	S3_PUBLIC_API_URL("s3.public-api-url"),
+
+	/**
+	 * The host address of the S3 service.
+	 */
+	S3_HOST_URL("s3.host-url"),
+
+	/**
+	 * The region where the S3 bucket is hosted.
+	 */
+	S3_REGION("s3.region"),
+
+	/**
+	 * The access key for S3 authentication.
+	 */
+	S3_ACCESS_KEY("s3.access-key"),
+
+	/**
+	 * The secret key for S3 authentication.
+	 */
+	S3_SECRET_KEY("s3.secret-key"),
+
+	/**
+	 * The name of the root bucket in the S3 storage.
+	 */
+	S3_ROOT_BUCKET("s3.root-bucket"),
+
+	/**
+	 * Determines if path-style access is enabled for the S3 service.
+	 */
+	S3_PATH_STYLE_ACCESS_ENABLED("s3.path-style-access-enabled", Boolean::class),
 
 	/**
 	 * I18n default language (as language tag, without localization property).

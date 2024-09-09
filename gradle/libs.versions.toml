@@ -14,6 +14,7 @@ jdaVersion = "5.1.0"
 lavaplayerVersion = "2.2.1"
 lavalinkYtSourceVersion = "1.7.2"
 jeeAnnotationApiVersion = "3.0.0"
+awsS3sdkVersion = "2.27.21"
 
 [libraries]
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinVersion" }
@@ -34,6 +35,7 @@ jda = { module = "net.dv8tion:JDA", version.ref = "jdaVersion" }
 lavaplayer = { module = "dev.arbjerg:lavaplayer", version.ref = "lavaplayerVersion" }
 lavalinkYtSource = { module = "dev.lavalink.youtube:v2", version.ref = "lavalinkYtSourceVersion" }
 jeeAnnotationApi = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jeeAnnotationApiVersion" }
+awsS3sdk = { module = "software.amazon.awssdk:s3", version.ref = "awsS3sdkVersion" }
 
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }

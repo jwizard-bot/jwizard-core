@@ -122,11 +122,38 @@ class JdaInstanceBean(private val environmentBean: EnvironmentBean) : JdaInstanc
 	}
 
 	/**
-	 * TODO
+	 * Configures the metadata for the bot account, such as its name, avatar, and banner.
 	 *
+	 * This method retrieves the logo and banner images from S3, sets them as the bot's avatar and banner using the
+	 * [AccountManager], and updates the bot's name. The method also logs the metadata properties that were configured.
+	 *
+	 * It fetches the `LOGO` and `BANNER` resources from S3, converts them into input streams, and uses them to set the
+	 * avatar and banner for the bot. If the resources are successfully retrieved, they are logged along with the
+	 * bot's name.
+	 *
+	 * @throws IllegalArgumentException If the name property is not present in the environment configuration.
+	 * @see S3ClientBean.getPublicObject
 	 */
 	fun configureMetadata() {
-		log.info("configure metadata")
+		val logoInputStream = s3ClientBean.getPublicObject(S3Object.LOGO)
+		val bannerInputStream = s3ClientBean.getPublicObject(S3Object.BANNER)
+
+		val accountManager = AccountManagerImpl(jda.selfUser)
+		val metadataProperties = mutableListOf<String>()
+
+		val name = environmentBean.getProperty<String>(BotProperty.JDA_NAME)
+		accountManager.setName(name)
+		metadataProperties.add("name: $name")
+
+		logoInputStream?.use {
+			accountManager.setAvatar(Icon.from(it))
+			metadataProperties.add("avatar: ${S3Object.LOGO.resourcePath}")
+		}
+		bannerInputStream?.use {
+			accountManager.setBanner(Icon.from(it))
+			metadataProperties.add("banner: ${S3Object.BANNER.resourcePath}")
+		}
+		log.info("Configure metadata properties: {}.", metadataProperties)
 	}
 
 	/**
