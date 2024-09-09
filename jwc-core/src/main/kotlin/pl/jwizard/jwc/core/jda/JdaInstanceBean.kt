@@ -60,26 +60,6 @@ class JdaInstanceBean(
 		)
 
 		/**
-		 * A list of [Permission] instances required for the application to function properly.
-		 */
-		private val PERMISSIONS = arrayListOf(
-			Permission.VIEW_CHANNEL,
-			Permission.MESSAGE_SEND,
-			Permission.MESSAGE_HISTORY,
-			Permission.MESSAGE_ADD_REACTION,
-			Permission.MESSAGE_EMBED_LINKS,
-			Permission.MESSAGE_ATTACH_FILES,
-			Permission.MESSAGE_MANAGE,
-			Permission.MESSAGE_EXT_EMOJI,
-			Permission.MANAGE_CHANNEL,
-			Permission.VOICE_CONNECT,
-			Permission.VOICE_SPEAK,
-			Permission.USE_APPLICATION_COMMANDS,
-			Permission.MANAGE_ROLES,
-			Permission.VOICE_DEAF_OTHERS,
-		)
-
-		/**
 		 * A list of [CacheFlag] instances that are enabled for caching.
 		 */
 		private val ENABLED_CACHE_FLAGS = arrayListOf(
@@ -118,6 +98,14 @@ class JdaInstanceBean(
 	fun createJdaWrapper() {
 		log.info("JDA instance is warming up...")
 
+		val permissionFlags = jdaPermissionFlagsSupplier.getPermissionFlags()
+		val permissions = mutableListOf<Permission>()
+
+		for (flag in permissionFlags) {
+			permissions.add(Permission.valueOf(flag))
+		}
+		log.info("Load: {} JDA permissions.", permissions.size)
+
 		jda = JDABuilder
 			.create(environmentBean.getProperty(BotProperty.JDA_SECRET_TOKEN), GATEWAY_INTENTS)
 			.enableCache(ENABLED_CACHE_FLAGS)
@@ -129,7 +117,7 @@ class JdaInstanceBean(
 			.build()
 			.awaitReady()
 
-		log.info("Add bot into Discord server via link: {}", jda.getInviteUrl(PERMISSIONS))
+		log.info("Add bot into Discord server via link: {}", jda.getInviteUrl(permissions))
 	}
 
 	/**
