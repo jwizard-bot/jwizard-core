@@ -23,7 +23,10 @@ ext {
     'dokka/logo-nav.svg',
     'dokka/dokka-styles.css'
   ]
-  dokkaCopyright = "&copy; ${Year.now().value} by JWizard. On $license license." as GStringImpl
+  dokkaCopyright
+    = ("&copy; ${Year.now().value} by JWizard"
+    + ". On $license license"
+    + ". Snap SHA: ${getEnv('BUILD_VERSION', 'DEVELOPMENT')}") as GStringImpl
 }
 
 allprojects {
