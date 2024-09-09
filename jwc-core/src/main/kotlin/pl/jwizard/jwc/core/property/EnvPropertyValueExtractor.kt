@@ -55,7 +55,7 @@ class EnvPropertyValueExtractor(
 			}
 			.toTypedArray()
 
-		log.info("Extract: {} environment variables from: {} file: {}", envFileKeys.size, ENV_FILE_NAME, envFileKeys)
+		log.info("Extract: {} environment variables from: {} file: {}.", envFileKeys.size, ENV_FILE_NAME, envFileKeys)
 		return envFileKeys.associateWith { dotEnv.get(it as String) }
 	}
 

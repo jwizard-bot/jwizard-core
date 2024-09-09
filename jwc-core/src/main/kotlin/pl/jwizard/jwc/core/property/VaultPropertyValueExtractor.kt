@@ -41,11 +41,10 @@ class VaultPropertyValueExtractor(
 	}
 
 	init {
+		log.info("Connecting with vault KV server: {}.", vaultServerUri)
+	
 		val vaultEndpoint = VaultEndpoint.from(vaultServerUri)
 		vaultTemplate = VaultTemplate(vaultEndpoint, TokenAuthentication(vaultToken))
-
-		vaultTemplate.read("sys/health")
-		log.info("Connected with vault KV server: {}.", vaultServerUri)
 	}
 
 	/**
@@ -73,7 +72,7 @@ class VaultPropertyValueExtractor(
 
 		kvSecrets?.let { response ->
 			response.data?.forEach { properties[it.key] = it.value }
-			log.info("Loaded: {} secrets from: {} KV store.", response.data?.size, qualifiedKvStorePath)
+			log.info("Load: {} secrets from: {} KV store.", response.data?.size, qualifiedKvStorePath)
 		} ?: run {
 			log.warn("Not found any secrets in KV store: {}. Skipping.", qualifiedKvStorePath)
 		}

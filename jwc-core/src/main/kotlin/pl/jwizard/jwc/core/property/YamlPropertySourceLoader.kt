@@ -64,7 +64,7 @@ class YamlPropertySourceLoader(
 		runtimeProperties.forEach { propertiesMode -> propertiesMode?.let { fileContents.add(it) } }
 
 		yamlPropertiesFactoryBean.setResources(*fileContents.toTypedArray())
-		log.info("Load YAML configuration files: {}", fileContents.map { it.filename })
+		log.info("Load YAML configuration files: {}.", fileContents.map { it.filename })
 
 		val properties = yamlPropertiesFactoryBean.getObject()
 		return properties?.map { it.key to it.value }?.toMap() ?: emptyMap()

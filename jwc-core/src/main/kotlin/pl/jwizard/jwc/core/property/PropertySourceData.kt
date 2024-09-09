@@ -7,7 +7,6 @@ package pl.jwizard.jwc.core.property
 import org.springframework.core.env.PropertySource
 import java.util.*
 import kotlin.reflect.KClass
-import kotlin.reflect.jvm.jvmName
 
 /**
  * Abstract class representing a source of loadable properties, with a specific type [T].
@@ -19,7 +18,7 @@ import kotlin.reflect.jvm.jvmName
  */
 abstract class PropertySourceData<T>(
 	private val clazz: KClass<*>,
-) : PropertySource<T>(clazz.jvmName), PropertySourceLoader {
+) : PropertySource<T>(clazz.java.simpleName), PropertySourceLoader {
 
 	/**
 	 * The properties loaded from the property source.
