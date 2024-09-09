@@ -5,7 +5,7 @@
 package pl.jwizard.jwc.persistence
 
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.core.jda.stereotype.JdaPermissionFlagsSupplier
+import pl.jwizard.jwc.core.jda.spi.JdaPermissionFlagsSupplier
 
 /**
  * Implementation of the [JdaPermissionFlagsSupplier] interface for retrieving permission flags from a database

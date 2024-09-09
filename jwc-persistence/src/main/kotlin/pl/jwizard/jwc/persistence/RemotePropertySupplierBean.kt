@@ -5,7 +5,7 @@
 package pl.jwizard.jwc.persistence
 
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.core.property.stereotype.RemotePropertySupplier
+import pl.jwizard.jwc.core.property.spi.RemotePropertySupplier
 import kotlin.reflect.KClass
 
 /**

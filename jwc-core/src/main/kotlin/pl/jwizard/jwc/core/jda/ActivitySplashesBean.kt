@@ -6,7 +6,7 @@ package pl.jwizard.jwc.core.jda
 
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.core.jda.stereotype.JdaInstance
+import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.property.BotMultiProperty
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean

@@ -18,8 +18,8 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag
 import net.dv8tion.jda.internal.managers.AccountManagerImpl
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.core.jda.stereotype.JdaInstance
-import pl.jwizard.jwc.core.jda.stereotype.JdaPermissionFlagsSupplier
+import pl.jwizard.jwc.core.jda.spi.JdaInstance
+import pl.jwizard.jwc.core.jda.spi.JdaPermissionFlagsSupplier
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.s3.S3ClientBean

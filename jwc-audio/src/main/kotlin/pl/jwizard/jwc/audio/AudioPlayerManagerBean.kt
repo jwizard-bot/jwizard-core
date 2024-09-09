@@ -22,7 +22,7 @@ import dev.lavalink.youtube.clients.WebWithThumbnail
 import org.apache.http.client.config.RequestConfig
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.core.jda.stereotype.AudioPlayerManager
+import pl.jwizard.jwc.core.jda.spi.AudioPlayerManager
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
 

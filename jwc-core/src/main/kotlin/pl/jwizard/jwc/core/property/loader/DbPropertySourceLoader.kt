@@ -6,7 +6,7 @@ package pl.jwizard.jwc.core.property.loader
 
 import org.springframework.core.env.PropertySource
 import pl.jwizard.jwc.core.property.PropertySourceData
-import pl.jwizard.jwc.core.property.stereotype.RemotePropertySupplier
+import pl.jwizard.jwc.core.property.spi.RemotePropertySupplier
 import pl.jwizard.jwc.core.util.KtCast
 
 /**

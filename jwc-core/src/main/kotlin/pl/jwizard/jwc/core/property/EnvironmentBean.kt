@@ -14,7 +14,7 @@ import pl.jwizard.jwc.core.property.extractor.EnvPropertyValueExtractor
 import pl.jwizard.jwc.core.property.extractor.VaultPropertyValueExtractor
 import pl.jwizard.jwc.core.property.loader.DbPropertySourceLoader
 import pl.jwizard.jwc.core.property.loader.YamlPropertySourceLoader
-import pl.jwizard.jwc.core.property.stereotype.RemotePropertySupplier
+import pl.jwizard.jwc.core.property.spi.RemotePropertySupplier
 import pl.jwizard.jwc.core.util.KtCast
 import kotlin.reflect.KClass
 
