@@ -26,14 +26,6 @@ ext {
   dokkaCopyright = "&copy; ${Year.now().value} by JWizard. On $license license." as GStringImpl
 }
 
-configurations.configureEach {
-  exclude group: 'commons-logging', module: 'commons-logging'
-}
-
-noArg {
-  annotation('pl.jwizard.jwc.core.util.NoArgConstructor')
-}
-
 allprojects {
   repositories {
     mavenCentral()
@@ -89,6 +81,14 @@ subprojects {
     pluginsMapConfiguration.set([
       'org.jetbrains.dokka.base.DokkaBase': generateDokkaBaseConfig()
     ])
+  }
+
+  noArg {
+    annotation('pl.jwizard.jwc.core.util.NoArgConstructor')
+  }
+
+  configurations.configureEach {
+    exclude group: 'commons-logging', module: 'commons-logging'
   }
 }
 
