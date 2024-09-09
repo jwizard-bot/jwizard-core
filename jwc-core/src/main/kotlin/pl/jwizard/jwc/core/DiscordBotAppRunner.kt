@@ -59,8 +59,6 @@ object DiscordBotAppRunner {
 				FancyFramePrinter(FRAME_CLASSPATH_LOCATION, printer),
 			)
 			printers.forEach { it.print() }
-
-			var jda: JdaInstanceBean? = null
 			try {
 				log.info("Init Spring Context with base class: {}. Init packages tree: {}.", clazz.qualifiedName, BASE_PACKAGE)
 				context = SpringKtContextFactory(clazz)
@@ -76,18 +74,22 @@ object DiscordBotAppRunner {
 				commandLoader.checkIntegrity()
 				commandLoader.loadClassesViaReflectionApi()
 
-				jda = jdaInstance
 				jdaInstance.createJdaWrapper()
 				jdaInstance.configureMetadata()
 
-				activitySplashes.initSplashesSequence(jdaInstance.jda)
+				activitySplashes.initSplashesSequence()
 				audioPlayerManager.registerSources()
-				channelListenerGuard.initThreadPool(jdaInstance.jda)
+				channelListenerGuard.initThreadPool()
 
-				log.info("Started listening incoming requests...")
+				log.info("Start listening incoming requests...")
+
+				val runtime = Runtime.getRuntime()
+				runtime.addShutdownHook(Thread {
+					log.info("Shutting down and close Spring Context...")
+					context.close()
+				})
 
 			} catch (ex: Throwable) {
-				jda?.gracefullyShutdown()
 				throw IrreparableException(ex)
 			}
 		} catch (ex: IrreparableException) {

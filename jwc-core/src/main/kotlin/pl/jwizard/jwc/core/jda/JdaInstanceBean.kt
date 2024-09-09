@@ -9,14 +9,21 @@ import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Activity
+import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.Icon
 import net.dv8tion.jda.api.exceptions.InvalidTokenException
+import net.dv8tion.jda.api.managers.AccountManager
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.cache.CacheFlag
+import net.dv8tion.jda.internal.managers.AccountManagerImpl
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.jda.stereotype.JdaInstance
+import pl.jwizard.jwc.core.jda.stereotype.JdaPermissionFlagsSupplier
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwc.core.s3.S3ClientBean
+import pl.jwizard.jwc.core.s3.S3Object
 
 /**
  * Manages the JDA (Java Discord API) client instance.
@@ -26,12 +33,16 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
  * The class also provides methods to configure additional metadata and gracefully shut down the JDA client.
  *
  * @property environmentBean Provides access to application properties, including the bot token.
+ * @property jdaPermissionFlagsSupplier Provides bean supplied JDA permission flags.
  * @constructor Creates an instance of [JdaInstanceBean] with the specified [environmentBean].
- *
  * @author Miłosz Gilga
  */
 @Component
-class JdaInstanceBean(private val environmentBean: EnvironmentBean) : JdaInstance {
+class JdaInstanceBean(
+	private val environmentBean: EnvironmentBean,
+	private val jdaPermissionFlagsSupplier: JdaPermissionFlagsSupplier,
+	private val s3ClientBean: S3ClientBean,
+) : JdaInstance {
 
 	companion object {
 		private val log = LoggerFactory.getLogger(JdaInstanceBean::class.java)
@@ -157,10 +168,19 @@ class JdaInstanceBean(private val environmentBean: EnvironmentBean) : JdaInstanc
 	}
 
 	/**
-	 * TODO
+	 * Sets the presence activity of the JDA instance to a listening activity with the specified [activity] description.
 	 *
+	 * @param activity The activity description to set for the presence.
 	 */
-	fun gracefullyShutdown() {
-		log.info("shutdown JDA")
+	override fun setPresenceActivity(activity: String) {
+		jda.presence.activity = Activity.listening(activity)
 	}
+
+	/**
+	 * Retrieves the [Guild] object associated with the specified [guildId].
+	 *
+	 * @param guildId The ID of the guild to retrieve.
+	 * @return The [Guild] object associated with the given ID, or `null` if no such guild is found.
+	 */
+	override fun getGuildById(guildId: String) = jda.getGuildById(guildId)
 }
