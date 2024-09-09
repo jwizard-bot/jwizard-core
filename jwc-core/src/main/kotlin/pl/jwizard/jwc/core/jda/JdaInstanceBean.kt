@@ -118,6 +118,13 @@ class JdaInstanceBean(
 			.awaitReady()
 
 		log.info("Add bot into Discord server via link: {}", jda.getInviteUrl(permissions))
+
+		val runtime = Runtime.getRuntime()
+		runtime.addShutdownHook(Thread {
+			val previousState = jda.status
+			jda.shutdownNow()
+			log.info("JDA instance change state from: {} to: {}.", previousState, jda.status)
+		})
 	}
 
 	/**
