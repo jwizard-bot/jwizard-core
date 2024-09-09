@@ -14,6 +14,7 @@ vault:
 
 jda:
   secret-token: ${vault:V_JDA_SECRET}
+  default-activity: tracks
   pagination:
     max-elements-per-page: 20
     menu-alive-sec: 60

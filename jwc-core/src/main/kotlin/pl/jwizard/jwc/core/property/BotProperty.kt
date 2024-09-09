@@ -19,7 +19,7 @@ import kotlin.reflect.KClass
  */
 enum class BotProperty(
 	val key: String,
-	val type: KClass<*>,
+	val type: KClass<*> = String::class,
 ) {
 
 	/**
@@ -93,6 +93,11 @@ enum class BotProperty(
 	JDA_SECRET_TOKEN("jda.secret-token"),
 
 	/**
+	 * JDA default activity. Enabled when [JDA_SPLASHES_ENABLED] property is set to false.
+	 */
+	JDA_DEFAULT_ACTIVITY("jda.default-activity"),
+
+	/**
 	 * Max elements per page number for JDA pagination generator.
 	 */
 	JDA_PAGINATION_MAX_ELEMENTS_PER_PAGE("jda.pagination.max-elements-per-page", Int::class),
@@ -110,7 +115,7 @@ enum class BotProperty(
 	/**
 	 * JDA splashes interval in seconds.
 	 */
-	JDA_SPLASHES_INTERVAL("jda.splashes.interval-sec", Int::class),
+	JDA_SPLASHES_INTERVAL("jda.splashes.interval-sec", Long::class),
 
 	/**
 	 * JWizard API service host url.
@@ -127,11 +132,4 @@ enum class BotProperty(
 	 */
 	I18N_DEFAULT_LANGUAGE("i18n.default-language"),
 	;
-
-	/**
-	 * Constructor for creating a [BotProperty] with a property type of [String].
-	 *
-	 * @param key The key used to retrieve the property value.
-	 */
-	constructor(key: String) : this(key, String::class)
 }
