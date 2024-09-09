@@ -43,5 +43,10 @@ i18n:
       - i18n-commands/messages
       - i18n-error-codes/messages
     local:
-      - i18n/messages
-      - i18n-res/messages
+      - i18n-action/messages
+      - i18n-audio/messages
+      - i18n-exception/messages
+      - i18n-response/messages
+      - i18n-system/messages
+      - i18n-util/messages
+      - i18n-voting/messages
