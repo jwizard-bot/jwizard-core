@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.core.db
+package pl.jwizard.jwc.persistence
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -15,8 +15,8 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
 /**
  * Configuration class for initializing the database connection pool and JDBC template.
  *
- * This class provides configuration for the `HikariDataSource`, which is used to manage the connection pool for
- * connecting to the database. It also provides a `JdbcTemplate` bean that is used to perform database operations.
+ * This class provides configuration for the [HikariDataSource], which is used to manage the connection pool for
+ * connecting to the database. It also provides a [JdbcTemplate] bean that is used to perform database operations.
  *
  * @property environmentBean The [EnvironmentBean] instance used to retrieve database connection properties from
  * 					 the environment.
@@ -34,7 +34,7 @@ class DbSourceInitializerBean(private val environmentBean: EnvironmentBean) {
 	 * @return The configured [HikariDataSource] instance.
 	 */
 	@Bean
-	fun dataSource(): HikariDataSource {
+	fun dataSourceBean(): HikariDataSource {
 		val config = HikariConfig()
 		config.jdbcUrl = environmentBean.getProperty(BotProperty.DB_URL)
 		config.username = environmentBean.getProperty(BotProperty.DB_USERNAME)
@@ -48,13 +48,13 @@ class DbSourceInitializerBean(private val environmentBean: EnvironmentBean) {
 	}
 
 	/**
-	 * Configures and creates a [JdbcTemplate] bean.
+	 * Configures and creates a [JdbcTemplateBean] bean.
 	 *
-	 * This method creates a [JdbcTemplate] instance using the configured [HikariDataSource]. The [JdbcTemplate] is used
-	 * for executing SQL queries and updates, and provides a simplified way to interact with the database.
+	 * This method creates a [JdbcTemplateBean] instance using the configured [HikariDataSource]. The [JdbcTemplateBean]
+	 * is used for executing SQL queries and updates, and provides a simplified way to interact with the database.
 	 *
-	 * @return The configured [JdbcTemplate] instance.
+	 * @return The configured [JdbcTemplateBean] instance.
 	 */
 	@Bean
-	fun jdbcTemplate() = JdbcTemplate(dataSource())
+	fun jdbcTemplateBean() = JdbcTemplateBean(dataSourceBean())
 }
