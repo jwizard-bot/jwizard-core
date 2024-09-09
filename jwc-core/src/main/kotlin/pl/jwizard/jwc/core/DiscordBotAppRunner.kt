@@ -8,12 +8,12 @@ import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.ComponentScan
 import pl.jwizard.jwc.core.jda.ActivitySplashesBean
 import pl.jwizard.jwc.core.jda.JdaInstanceBean
+import pl.jwizard.jwc.core.jda.stereotype.AudioPlayerManager
+import pl.jwizard.jwc.core.jda.stereotype.ChannelListenerGuard
+import pl.jwizard.jwc.core.jda.stereotype.CommandsLoader
 import pl.jwizard.jwc.core.printer.ConsolePrinter
 import pl.jwizard.jwc.core.printer.FancyFramePrinter
 import pl.jwizard.jwc.core.printer.FancyTitlePrinter
-import pl.jwizard.jwc.core.stereotype.AudioPlayerManager
-import pl.jwizard.jwc.core.stereotype.ChannelListenerGuard
-import pl.jwizard.jwc.core.stereotype.CommandsLoader
 import kotlin.reflect.KClass
 
 /**

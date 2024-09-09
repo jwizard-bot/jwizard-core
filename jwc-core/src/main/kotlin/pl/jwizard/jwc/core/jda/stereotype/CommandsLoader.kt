@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.core.stereotype
+package pl.jwizard.jwc.core.jda.stereotype
 
 import pl.jwizard.jwc.core.DiscordBotAppRunner
 

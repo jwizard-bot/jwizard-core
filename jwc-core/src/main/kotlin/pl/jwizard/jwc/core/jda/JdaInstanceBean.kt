@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import pl.jwizard.jwc.core.jda.stereotype.JdaInstance
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
 
@@ -30,12 +31,7 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
  * @author Miłosz Gilga
  */
 @Component
-class JdaInstanceBean(private val environmentBean: EnvironmentBean) {
-
-	/**
-	 * The JDA (Java Discord API) client instance. Initializing in [createJdaWrapper] method.
-	 */
-	final lateinit var jda: JDA private set
+class JdaInstanceBean(private val environmentBean: EnvironmentBean) : JdaInstance {
 
 	companion object {
 		private val log = LoggerFactory.getLogger(JdaInstanceBean::class.java)
@@ -94,11 +90,16 @@ class JdaInstanceBean(private val environmentBean: EnvironmentBean) {
 	}
 
 	/**
+	 * The JDA (Java Discord API) client instance. Initializing in [createJdaWrapper] method.
+	 */
+	private final lateinit var jda: JDA
+
+	/**
 	 * Initializes and configures a JDA (Java Discord API) client.
 	 *
 	 * This method creates and configures the JDA client with the specified bot token and gateway intents,
 	 * sets cache settings, activity status, and adds event listeners (to be defined). It also logs the
-	 * initialization progress and provides an invite URL for adding the bot to a Discord server once ready.
+	 * initialization progress and provides an invitation URL for adding the bot to a Discord server once ready.
 	 *
 	 * @throws InterruptedException If waiting for the JDA client to be ready is interrupted.
 	 * @throws InvalidTokenException If there is an issue with the bot token or login process.
@@ -107,7 +108,7 @@ class JdaInstanceBean(private val environmentBean: EnvironmentBean) {
 		log.info("JDA instance is warming up...")
 
 		jda = JDABuilder
-			.create(environmentBean.getProperty<String>(BotProperty.JDA_SECRET_TOKEN), GATEWAY_INTENTS)
+			.create(environmentBean.getProperty(BotProperty.JDA_SECRET_TOKEN), GATEWAY_INTENTS)
 			.enableCache(ENABLED_CACHE_FLAGS)
 			.disableCache(DISABLED_CACHE_FLAGS)
 			.setActivity(Activity.listening("Loading..."))

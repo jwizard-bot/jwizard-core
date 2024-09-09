@@ -6,7 +6,7 @@ package pl.jwizard.jwc.command
 
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.core.stereotype.CommandsLoader
+import pl.jwizard.jwc.core.jda.stereotype.CommandsLoader
 
 /**
  * TODO
