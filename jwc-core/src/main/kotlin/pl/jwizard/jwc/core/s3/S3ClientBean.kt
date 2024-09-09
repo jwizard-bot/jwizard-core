@@ -15,6 +15,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.model.GetObjectRequest
 import software.amazon.awssdk.services.s3.model.ListBucketsRequest
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -67,6 +68,7 @@ class S3ClientBean(
 			.credentialsProvider(StaticCredentialsProvider.create(credentials))
 			.region(Region.of(environmentBean.getProperty(BotProperty.S3_REGION)))
 			.endpointOverride(URI.create(hostUrl))
+			.forcePathStyle(environmentBean.getProperty<Boolean>(BotProperty.S3_PATH_STYLE_ACCESS_ENABLED))
 			.build()
 
 		rootBucket = environmentBean.getProperty(BotProperty.S3_ROOT_BUCKET)
@@ -89,7 +91,7 @@ class S3ClientBean(
 	 * @return The resource as an [InputStream], or `null` if the resource cannot be retrieved.
 	 */
 	fun getPublicObject(s3Object: S3Object, vararg args: String): InputStream? {
-		val resourceUrl = "$s3PublicApiUrl/${s3Object.resourcePath.format(args)}"
+		val resourceUrl = "$s3PublicApiUrl/${parseResourcePath(s3Object, *args)}"
 		return try {
 			val resourceBytes = restTemplate.getForObject(resourceUrl, ByteArray::class.java)
 			resourceBytes?.let { ByteArrayInputStream(it) }
@@ -98,6 +100,32 @@ class S3ClientBean(
 			null
 		}
 	}
+
+	/**
+	 * Retrieves a private object from the S3 bucket using the [S3Client]. This method constructs an S3 object request
+	 * based on the provided [S3Object] and optional formatting arguments, and returns the content as an [InputStream].
+	 *
+	 * @param s3Object The object to fetch from the S3 bucket.
+	 * @param args Optional arguments to format the resource path.
+	 * @return The object as an [InputStream], or `null` if the object cannot be retrieved.
+	 */
+	fun getObject(s3Object: S3Object, vararg args: String): InputStream? {
+		val objectRequest = GetObjectRequest.builder()
+			.bucket(rootBucket)
+			.key(parseResourcePath(s3Object, *args))
+			.build()
+		return client.getObject(objectRequest)
+	}
+
+	/**
+	 * Parses the resource path for the given [S3Object], replacing any placeholders in the resource path with the
+	 * provided arguments.
+	 *
+	 * @param s3Object The S3 object whose resource path is to be parsed.
+	 * @param args The arguments to format the resource path.
+	 * @return A string representing the formatted resource path.
+	 */
+	private fun parseResourcePath(s3Object: S3Object, vararg args: String) = s3Object.resourcePath.format(*args)
 
 	/**
 	 * Shutdown and destroy [S3Client] after remove bean from Spring Context.

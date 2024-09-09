@@ -32,5 +32,17 @@ enum class S3Object(val resourcePath: String) {
 	 * Represents the Discord banner resource within the S3 bucket.
 	 */
 	BANNER("brand/discord-banner.png"),
+
+	/**
+	 * Represents the path to internationalization (i18n) resource files stored in the S3 bucket. The path includes
+	 * placeholders for the module name and language code, which are replaced with specific values to access the
+	 * appropriate localized configuration file.
+	 *
+	 * The first `%s` is replaced by the module name (ex. *i18n-commands*), and the second `%s` is replaced by
+	 * the language code (ex. *en*).
+	 *
+	 * Example usage: `configuration/ui_en.properties`
+	 */
+	I18N_BUNDLE("configuration/%s_%s.properties")
 	;
 }
