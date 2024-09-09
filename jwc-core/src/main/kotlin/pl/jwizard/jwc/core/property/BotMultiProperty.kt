@@ -4,10 +4,21 @@
  */
 package pl.jwizard.jwc.core.property
 
+import pl.jwizard.jwc.core.property.BotMultiProperty.*
 import kotlin.reflect.KClass
 
 /**
  * Enum representing different types of multi-properties used in the application.
+ *
+ * Defining following properties:
+ *
+ * - [RUNTIME_PROFILES]: Application runtime profiles. Defined all others configurations and Spring Context loaders.
+ * 	 Accepted: *dev*, *prod*. Default: *empty array*.
+ * - [JDA_SPLASHES_ELEMENTS]: JDA splashes elements show in sequentially order.
+ * - [I18N_RESOURCES_REMOTE]: I18n CDN resources elements list. Loaded from Content Delivery Network. Must be ends
+ * 	 with messages, ex. config/messages.
+ * - [I18N_RESOURCES_LOCALE]: I18n local resources elements list. Loaded from classpath. Must be ends with
+ * 	 messages, ex. config/messages.
  *
  * @property key The key used to retrieve the property value.
  * @property listElementsType The type of elements in the list represented by this property.

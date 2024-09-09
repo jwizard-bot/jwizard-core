@@ -14,6 +14,7 @@ import pl.jwizard.jwc.core.s3.S3Object.LOGO
  * The [resourcePath] property holds the relative path to the resource within the bucket.
  *
  * Defining following properties:
+ *
  * - [LOGO]: Represents the logo resource within the S3 bucket.
  * - [BANNER]: Represents the Discord banner resource within the S3 bucket.
  *
