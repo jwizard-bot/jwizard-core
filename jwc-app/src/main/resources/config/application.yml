@@ -5,7 +5,8 @@ deployment:
 db:
   username: ${vault:V_MYSQL_USERNAME}
   password: ${vault:V_MYSQL_PASSWORD}
-
+  driver-class-name: com.mysql.cj.jdbc.Driver
+  
 vault:
   kv:
     backend: jwizard

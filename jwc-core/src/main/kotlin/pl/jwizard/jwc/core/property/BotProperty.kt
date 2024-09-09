@@ -19,6 +19,7 @@ import kotlin.reflect.KClass
  * - [DB_URL]: Database JDBC URL provider.
  * - [DB_USERNAME]: Database username.
  * - [DB_PASSWORD]: Database password.
+ * - [DB_DRIVER_CLASS_NAME]: Database driver class name (full qualified path).
  * - [VAULT_URL]: Vault key storage URL.
  * - [VAULT_TOKEN]: Vault key storage access token.
  * - [VAULT_KV_BACKEND]: Vault key storage KV backend name.
@@ -93,6 +94,11 @@ enum class BotProperty(
 	 * Database password.
 	 */
 	DB_PASSWORD("db.password"),
+
+	/**
+	 * Database driver class name (full qualified path).
+	 */
+	DB_DRIVER_CLASS_NAME("db.driver-class-name"),
 
 	/**
 	 * Vault key storage url.

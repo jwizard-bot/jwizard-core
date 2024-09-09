@@ -39,7 +39,7 @@ class DbSourceInitializerBean(private val environmentBean: EnvironmentBean) {
 		config.jdbcUrl = environmentBean.getProperty(BotProperty.DB_URL)
 		config.username = environmentBean.getProperty(BotProperty.DB_USERNAME)
 		config.password = environmentBean.getProperty(BotProperty.DB_PASSWORD)
-		config.driverClassName = "com.mysql.cj.jdbc.Driver"
+		config.driverClassName = environmentBean.getProperty(BotProperty.DB_DRIVER_CLASS_NAME)
 		config.maximumPoolSize = 10
 		config.minimumIdle = 5
 		config.idleTimeout = 30000
