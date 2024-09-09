@@ -13,6 +13,7 @@ springVaultVersion = "3.1.2"
 jdaVersion = "5.1.0"
 lavaplayerVersion = "2.2.1"
 lavalinkYtSourceVersion = "1.7.2"
+jeeAnnotationApiVersion = "3.0.0"
 
 [libraries]
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinVersion" }
@@ -32,6 +33,7 @@ springVaultCore = { module = "org.springframework.vault:spring-vault-core", vers
 jda = { module = "net.dv8tion:JDA", version.ref = "jdaVersion" }
 lavaplayer = { module = "dev.arbjerg:lavaplayer", version.ref = "lavaplayerVersion" }
 lavalinkYtSource = { module = "dev.lavalink.youtube:v2", version.ref = "lavalinkYtSourceVersion" }
+jeeAnnotationApi = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jeeAnnotationApiVersion" }
 
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }

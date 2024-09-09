@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.jda.JdaThreadExecutor
 import pl.jwizard.jwc.core.jda.stereotype.ChannelListenerGuard
 import pl.jwizard.jwc.core.jda.stereotype.JdaInstance
-import pl.jwizard.jwc.core.property.remote.RemoteEnvironmentBean
-import pl.jwizard.jwc.core.property.remote.RemoteProperty
+import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwc.core.property.GuildProperty
 import pl.jwizard.jwc.core.util.Formatter
 import java.time.Instant
 
@@ -22,7 +22,7 @@ import java.time.Instant
  * to handle voice channel events.
  *
  * @property jdaInstance Provide access to the JDA API, used to retrieve guild information.
- * @property remoteEnvironmentBean Retrieve remote property values related to guild settings.
+ * @property environmentBean Provides access to application properties.
  * @property playerManagersBean Manage audio players and their connections in guilds.
  * @author Miłosz Gilga
  * @see ChannelListenerGuard
@@ -31,7 +31,7 @@ import java.time.Instant
 @Component
 class ChannelListenerGuardBean(
 	private val jdaInstance: JdaInstance,
-	private val remoteEnvironmentBean: RemoteEnvironmentBean,
+	private val environmentBean: EnvironmentBean,
 	private val playerManagersBean: PlayerManagersBean,
 ) : ChannelListenerGuard, JdaThreadExecutor(MAX_THREADS) {
 
@@ -101,7 +101,7 @@ class ChannelListenerGuardBean(
 				removeFromGuild.add(guildId)
 				continue
 			}
-			val maxInactivity = remoteEnvironmentBean.getProperty<Long>(RemoteProperty.LEAVE_EMPTY_CHANNEL_SEC, guildId)
+			val maxInactivity = environmentBean.getGuildProperty<Long>(GuildProperty.LEAVE_EMPTY_CHANNEL_SEC, guildId)
 			if (time.epochSecond > (Instant.now().epochSecond - maxInactivity)) {
 				continue
 			}

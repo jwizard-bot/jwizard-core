@@ -5,6 +5,7 @@
 package pl.jwizard.jwc.core.property
 
 import org.springframework.core.env.PropertySource
+import pl.jwizard.jwc.core.property.loader.PropertySourceLoader
 import java.util.*
 import kotlin.reflect.KClass
 

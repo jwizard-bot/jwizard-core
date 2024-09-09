@@ -2,13 +2,14 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.core.property
+package pl.jwizard.jwc.core.property.loader
 
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean
 import org.springframework.core.env.PropertiesPropertySource
 import org.springframework.core.env.PropertySource
 import org.springframework.core.io.ClassPathResource
+import pl.jwizard.jwc.core.property.PropertySourceData
 import kotlin.reflect.jvm.jvmName
 
 /**

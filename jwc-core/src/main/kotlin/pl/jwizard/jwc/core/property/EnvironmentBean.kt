@@ -4,10 +4,18 @@
  */
 package pl.jwizard.jwc.core.property
 
+import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
-import org.springframework.context.annotation.Configuration
 import org.springframework.core.env.PropertySourcesPropertyResolver
 import org.springframework.core.env.StandardEnvironment
+import org.springframework.stereotype.Component
+import pl.jwizard.jwc.core.SpringKtContextFactory
+import pl.jwizard.jwc.core.property.extractor.EnvPropertyValueExtractor
+import pl.jwizard.jwc.core.property.extractor.VaultPropertyValueExtractor
+import pl.jwizard.jwc.core.property.loader.DbPropertySourceLoader
+import pl.jwizard.jwc.core.property.loader.YamlPropertySourceLoader
+import pl.jwizard.jwc.core.property.stereotype.RemotePropertySupplier
+import pl.jwizard.jwc.core.util.KtCast
 import kotlin.reflect.KClass
 
 /**
@@ -19,8 +27,12 @@ import kotlin.reflect.KClass
  *
  * @author Miłosz Gilga
  */
-@Configuration
-class EnvironmentBean {
+@Component
+class EnvironmentBean(private val springKtContextFactory: SpringKtContextFactory) {
+
+	companion object {
+		private val log = LoggerFactory.getLogger(EnvironmentBean::class.java)
+	}
 
 	/**
 	 * The [StandardEnvironment] instance used to manage and access property sources.
@@ -37,19 +49,29 @@ class EnvironmentBean {
 	 * This resolver provides methods to retrieve property values based on the keys. It is created and updated
 	 * whenever a new property source is added to the environment.
 	 */
-	private final var propertySourceResolver: PropertySourcesPropertyResolver
+	final lateinit var propertySourceResolver: PropertySourcesPropertyResolver
+		private set
 
-	init {
-		propertySourceResolver = createResolver()
+	/**
+	 * Initializes the property sources and loads properties from YAML files, environment variables, Vault, and database.
+	 *
+	 * This method is annotated with [PostConstruct] to ensure it is executed after the [RemotePropertySupplier] bean
+	 * has been created.
+	 */
+	@PostConstruct
+	fun afterConstruct() {
+		val propertiesEnv = PropertiesEnvironment(environment.propertySources)
+
+		propertySourceResolver = propertiesEnv.createResolver()
 
 		val runtimeProfiles = getMultiProperty<String>(BotMultiProperty.RUNTIME_PROFILES)
-		initPropertySourceLoader(YamlPropertySourceLoader(runtimeProfiles))
+		propertiesEnv.addSource(YamlPropertySourceLoader(runtimeProfiles))
 		log.info("Loaded runtime profiles: {}", runtimeProfiles)
 
 		val envFileEnabled = getProperty<Boolean>(BotProperty.ENV_ENABLED)
-		initPropertySourceLoader(EnvPropertyValueExtractor(envFileEnabled))
+		propertiesEnv.addSource(EnvPropertyValueExtractor(envFileEnabled))
 
-		initPropertySourceLoader(
+		propertiesEnv.addSource(
 			VaultPropertyValueExtractor(
 				vaultServerUri = getProperty(BotProperty.VAULT_URL),
 				vaultToken = getProperty(BotProperty.VAULT_TOKEN),
@@ -58,35 +80,10 @@ class EnvironmentBean {
 				vaultKvApplicationName = getProperty(BotProperty.VAULT_KV_APPLICATION_NAME),
 			)
 		)
-	}
+		propertiesEnv.addSource(DbPropertySourceLoader(remotePropertySupplier))
 
-	companion object {
-		private val log = LoggerFactory.getLogger(EnvironmentBean::class.java)
+		log.info("Load: {} properties from sources: {}.", propertiesEnv.size, propertiesEnv.propertySourceNames)
 	}
-
-	/**
-	 * Initializes the property source loader with the given [loader].
-	 *
-	 * This method loads properties using the provided loader and adds the loaded property source to the environment.
-	 * After adding the property source, it recreates the [propertySourceResolver] to reflect the new properties.
-	 *
-	 * @param T The type of property values handled by the loader.
-	 * @param loader The [PropertySourceData] instance responsible for loading properties.
-	 */
-	private fun <T> initPropertySourceLoader(loader: PropertySourceData<T>) {
-		loader.loadProperties()
-		environment.propertySources.addLast(loader.getSourceLoader())
-		propertySourceResolver = createResolver()
-	}
-
-	/**
-	 * Creates and returns a new [PropertySourcesPropertyResolver] instance.
-	 *
-	 * This resolver is used to retrieve property values from the environment's property sources.
-	 *
-	 * @return A [PropertySourcesPropertyResolver] instance.
-	 */
-	private fun createResolver() = PropertySourcesPropertyResolver(environment.propertySources)
 
 	/**
 	 * Retrieves a list of properties of type [T] from a multi-property source.
@@ -99,24 +96,23 @@ class EnvironmentBean {
 	 * @return A list of properties of type [T].
 	 */
 	final inline fun <reified T> getMultiProperty(botMultiProperty: BotMultiProperty): List<T> {
-		val resolver = getPropertyResourceResolver()
 		val elements = mutableListOf<String>()
 		if (botMultiProperty.separator == null) {
 			var listIndex = 0
 			while (true) {
-				val listElement = resolver.getProperty("${botMultiProperty.key}[${listIndex++}]")
+				val listElement = propertySourceResolver.getProperty("${botMultiProperty.key}[${listIndex++}]")
 					?: break
 				elements.add(listElement)
 			}
 		} else {
-			val rawValues = resolver.getProperty(botMultiProperty.key)
+			val rawValues = propertySourceResolver.getProperty(botMultiProperty.key)
 				?: throw PropertyNotFoundException(this::class, botMultiProperty.key)
 			rawValues.split(botMultiProperty.separator).forEach { elements.add(it.trim()) }
 		}
 		if (elements.isEmpty()) {
 			throw PropertyNotFoundException(this::class, botMultiProperty.key)
 		}
-		return elements.map { castToValue(it, botMultiProperty.listElementsType) }
+		return elements.map { KtCast.castToValue(it, botMultiProperty.listElementsType) }
 	}
 
 	/**
@@ -128,37 +124,73 @@ class EnvironmentBean {
 	 * @param T The type of the property value.
 	 * @param botProperty The property definition containing the key and type.
 	 * @return The property value of type [T].
+	 * @throws PropertyNotFoundException If property with following key not exist.
 	 */
 	final inline fun <reified T : Any> getProperty(botProperty: BotProperty): T {
-		val resolver = getPropertyResourceResolver()
-		val rawValue = resolver.getProperty(botProperty.key)
+		val rawValue = propertySourceResolver.getProperty(botProperty.key)
 			?: throw PropertyNotFoundException(this::class, botProperty.key)
-		return castToValue(rawValue, botProperty.type)
+		return KtCast.castToValue(rawValue, botProperty.type)
 	}
 
 	/**
-	 * Casts a string value to the specified type [T].
+	 * Retrieves a nullable property of type [T] for a specific guild from a property source.
 	 *
-	 * The string value is cast to the target type based on the provided [KClass].
+	 * The property is first looked up in the database using [GuildProperty] and [guildId]. If not found, it falls back
+	 * to a default property value if defined. If [allowNullable] is set to false and no value is found, a
+	 * [PropertyNotFoundException] is thrown.
 	 *
-	 * @param T The target type to cast the value to.
-	 * @param value The string value to cast.
-	 * @param targetType The [KClass] representing the target type.
-	 * @return The cast value of type [T].
+	 * @param T The type of the property value.
+	 * @param guildProperty The guild property definition containing the database column name and type.
+	 * @param guildId The ID of the guild.
+	 * @param allowNullable Whether to allow null values if the property is not found.
+	 * @return The property value of type [T], or null if not found and [allowNullable] is true.
+	 * @throws PropertyNotFoundException If property with the given column name does not exist and [allowNullable]
+	 * 				 is false.
 	 */
-	final inline fun <reified T : Any> castToValue(value: String, targetType: KClass<*>): T {
-		return when (targetType) {
-			Int::class -> value.toInt() as T
-			Double::class -> value.toDouble() as T
-			Boolean::class -> value.toBoolean() as T
-			else -> value as T
+	final inline fun <reified T : Any> getGuildNullableProperty(
+		guildProperty: GuildProperty,
+		guildId: String,
+		allowNullable: Boolean = true
+	): T? {
+		val defaultProperty = try {
+			BotProperty.valueOf("GUILD_${guildProperty.name}")
+		} catch (ex: IllegalArgumentException) {
+			null
 		}
+		val type = defaultProperty?.type ?: guildProperty.nonDefaultType as KClass<*>
+		val nullableValue = remotePropertySupplier.getProperty(guildProperty.dbColumnName, guildId, type) as T?
+		val value = if (nullableValue == null && defaultProperty != null) {
+			getProperty(defaultProperty)
+		} else {
+			nullableValue
+		}
+		if (value == null && !allowNullable) {
+			throw PropertyNotFoundException(this::class, guildProperty.dbColumnName)
+		}
+		return value
 	}
 
 	/**
-	 * Provides access to the property source resolver.
+	 * Retrieves a non-nullable property of type [T] for a specific guild from a property source.
 	 *
-	 * @return The [PropertySourcesPropertyResolver] instance.
+	 * This method is similar to [getGuildNullableProperty], but it ensures that a value is always returned.
+	 * If the property is not found in the database, it falls back to a default property value. If the default value is
+	 * not found, a [PropertyNotFoundException] is thrown.
+	 *
+	 * @param T The type of the property value.
+	 * @param guildProperty The guild property definition containing the database column name and type.
+	 * @param guildId The ID of the guild.
+	 * @return The property value of type [T].
+	 * @throws PropertyNotFoundException If property with the given column name does not exist.
 	 */
-	fun getPropertyResourceResolver() = propertySourceResolver
+	final inline fun <reified T : Any> getGuildProperty(guildProperty: GuildProperty, guildId: String): T =
+		getGuildNullableProperty<T>(guildProperty, guildId, allowNullable = false) as T
+
+	/**
+	 * Retrieves the [RemotePropertySupplier] bean from the Spring context.
+	 *
+	 * This bean is used to access remote properties from the database or other external sources.
+	 */
+	val remotePropertySupplier: RemotePropertySupplier
+		get() = springKtContextFactory.getBean(RemotePropertySupplier::class)
 }

@@ -10,4 +10,5 @@ dependencies {
   implementation libs.springContext
   implementation libs.springVaultCore
   implementation libs.jda
+  implementation libs.jeeAnnotationApi
 }

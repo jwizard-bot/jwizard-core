@@ -7,8 +7,8 @@ package pl.jwizard.jwc.persistence
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
 
@@ -22,7 +22,7 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
  * 					 the environment.
  * @author Miłosz Gilga
  */
-@Configuration
+@Component
 class DbSourceInitializerBean(private val environmentBean: EnvironmentBean) {
 
 	/**
@@ -53,8 +53,9 @@ class DbSourceInitializerBean(private val environmentBean: EnvironmentBean) {
 	 * This method creates a [JdbcTemplateBean] instance using the configured [HikariDataSource]. The [JdbcTemplateBean]
 	 * is used for executing SQL queries and updates, and provides a simplified way to interact with the database.
 	 *
+	 * @param dataSourceBean Configured [HikariDataSource] instance.
 	 * @return The configured [JdbcTemplateBean] instance.
 	 */
 	@Bean
-	fun jdbcTemplateBean() = JdbcTemplateBean(dataSourceBean())
+	fun jdbcTemplateBean(dataSourceBean: HikariDataSource) = JdbcTemplateBean(dataSourceBean)
 }

@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.core.property
+package pl.jwizard.jwc.core.property.loader
 
 import org.springframework.core.env.PropertySource
 

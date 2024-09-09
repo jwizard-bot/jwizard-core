@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.core.property
+package pl.jwizard.jwc.core.property.extractor
 
 import org.slf4j.LoggerFactory
 import org.springframework.vault.authentication.TokenAuthentication
@@ -42,7 +42,7 @@ class VaultPropertyValueExtractor(
 
 	init {
 		log.info("Connecting with vault KV server: {}.", vaultServerUri)
-	
+
 		val vaultEndpoint = VaultEndpoint.from(vaultServerUri)
 		vaultTemplate = VaultTemplate(vaultEndpoint, TokenAuthentication(vaultToken))
 	}

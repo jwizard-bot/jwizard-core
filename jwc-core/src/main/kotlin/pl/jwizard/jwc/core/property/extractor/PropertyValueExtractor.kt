@@ -2,9 +2,12 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.core.property
+package pl.jwizard.jwc.core.property.extractor
 
 import org.springframework.core.env.PropertySource
+import pl.jwizard.jwc.core.property.PropertyNotFoundException
+import pl.jwizard.jwc.core.property.PropertySourceData
+import pl.jwizard.jwc.core.property.loader.PropertySourceLoader
 import kotlin.reflect.KClass
 
 /**
