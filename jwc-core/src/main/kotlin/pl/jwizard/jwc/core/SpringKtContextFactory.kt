@@ -4,8 +4,11 @@
  */
 package pl.jwizard.jwc.core
 
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Configuration
+import pl.jwizard.jwc.core.jvm.JvmDisposable
+import pl.jwizard.jwc.core.jvm.JvmDisposableHook
 import kotlin.reflect.KClass
 
 /**
@@ -18,7 +21,21 @@ import kotlin.reflect.KClass
  * 							initialize the Spring context.
  * @author Miłosz Gilga
  */
-class SpringKtContextFactory(clazz: KClass<*>) : AnnotationConfigApplicationContext(clazz.java) {
+class SpringKtContextFactory(clazz: KClass<*>) : AnnotationConfigApplicationContext(clazz.java), JvmDisposable {
+
+	companion object {
+		private val log = LoggerFactory.getLogger(SpringKtContextFactory::class.java)
+	}
+
+	/**
+	 * Hook to handle JVM shutdown by cleaning up the Spring context properly. Uses [JvmDisposableHook] to add the
+	 * shutdown hook to the JVM.
+	 */
+	private val jvmDisposableHook = JvmDisposableHook(this)
+
+	init {
+		jvmDisposableHook.initHook()
+	}
 
 	/**
 	 * Retrieves a registered Spring bean of the specified type from the application context.
@@ -28,4 +45,13 @@ class SpringKtContextFactory(clazz: KClass<*>) : AnnotationConfigApplicationCont
 	 * @return An instance of the bean of the specified type.
 	 */
 	fun <T : Any> getBean(beanType: KClass<T>): T = super.getBean(beanType.java)
+
+	/**
+	 * Cleans up the Spring context before JVM shutdown. Invokes the [close] method to release any resources held by
+	 * the Spring container.
+	 */
+	override fun cleanBeforeDisposeJvm() {
+		log.info("Shutting down and close internal Spring Context factory...")
+		close()
+	}
 }

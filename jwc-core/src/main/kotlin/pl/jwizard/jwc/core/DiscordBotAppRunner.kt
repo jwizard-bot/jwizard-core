@@ -82,13 +82,6 @@ object DiscordBotAppRunner {
 				channelListenerGuard.initThreadPool()
 
 				log.info("Start listening incoming requests...")
-
-				val runtime = Runtime.getRuntime()
-				runtime.addShutdownHook(Thread {
-					log.info("Shutting down and close Spring Context...")
-					context.close()
-				})
-
 			} catch (ex: Throwable) {
 				throw IrreparableException(ex)
 			}

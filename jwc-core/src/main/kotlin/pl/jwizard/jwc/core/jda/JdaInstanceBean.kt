@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.jda.spi.JdaPermissionFlagsSupplier
+import pl.jwizard.jwc.core.jvm.JvmDisposable
+import pl.jwizard.jwc.core.jvm.JvmDisposableHook
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.s3.S3ClientBean
@@ -38,11 +40,11 @@ import pl.jwizard.jwc.core.s3.S3Object
  * @author Miłosz Gilga
  */
 @Component
-class JdaInstanceBean(
+final class JdaInstanceBean(
 	private val environmentBean: EnvironmentBean,
 	private val jdaPermissionFlagsSupplier: JdaPermissionFlagsSupplier,
 	private val s3ClientBean: S3ClientBean,
-) : JdaInstance {
+) : JdaInstance, JvmDisposable {
 
 	companion object {
 		private val log = LoggerFactory.getLogger(JdaInstanceBean::class.java)
@@ -86,6 +88,11 @@ class JdaInstanceBean(
 	private final lateinit var jda: JDA
 
 	/**
+	 * Instance of [JvmDisposableHook] responsible for managing JVM shutdown hooks.
+	 */
+	private val jvmDisposableHook = JvmDisposableHook(this)
+
+	/**
 	 * Initializes and configures a JDA (Java Discord API) client.
 	 *
 	 * This method creates and configures the JDA client with the specified bot token and gateway intents,
@@ -117,14 +124,8 @@ class JdaInstanceBean(
 			.build()
 			.awaitReady()
 
+		jvmDisposableHook.initHook()
 		log.info("Add bot into Discord server via link: {}", jda.getInviteUrl(permissions))
-
-		val runtime = Runtime.getRuntime()
-		runtime.addShutdownHook(Thread {
-			val previousState = jda.status
-			jda.shutdownNow()
-			log.info("JDA instance change state from: {} to: {}.", previousState, jda.status)
-		})
 	}
 
 	/**
@@ -160,6 +161,16 @@ class JdaInstanceBean(
 			metadataProperties.add("banner: ${S3Object.BANNER.resourcePath}")
 		}
 		log.info("Configure metadata properties: {}.", metadataProperties)
+	}
+
+	/**
+	 * Cleans up resources before JVM shutdown. This method shuts down the JDA client and logs the state transition
+	 * of the JDA instance.
+	 */
+	override fun cleanBeforeDisposeJvm() {
+		val previousState = jda.status
+		jda.shutdownNow()
+		log.info("JDA instance change state from: {} to: {}.", previousState, jda.status)
 	}
 
 	/**
