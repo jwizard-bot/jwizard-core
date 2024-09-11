@@ -215,6 +215,36 @@ enum class BotProperty(
 	I81N_REVALIDATE_CACHE_SEC("i18n.revalidate-cache-sec", Int::class),
 
 	/**
+	 * JVM name property, indicating the name of the Java Virtual Machine.
+	 */
+	JVM_NAME("java.vm.name"),
+
+	/**
+	 * JRE name property, specifying the name of the Java Runtime Environment.
+	 */
+	JRE_NAME("java.runtime.name"),
+
+	/**
+	 * JRE version property, representing the version of the Java Runtime Environment.
+	 */
+	JRE_VERSION("java.runtime.version"),
+
+	/**
+	 * JRE specification version property, indicating the version of the Java specification.
+	 */
+	JRE_SPEC_VERSION("java.specification.version"),
+
+	/**
+	 * OS name property, defining the name of the operating system.
+	 */
+	OS_NAME("os.name"),
+
+	/**
+	 * OS architecture property, specifying the architecture of the operating system.
+	 */
+	OS_ARCHITECTURE("os.arch"),
+
+	/**
 	 * Ratio of voting percentage for guilds.
 	 */
 	GUILD_VOTING_PERCENTAGE_RATIO("guild.voting-percentage-ratio", Int::class),

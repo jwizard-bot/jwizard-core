@@ -36,8 +36,6 @@ enum class I18nSystemSource(private val placeholder: String) : I18nLocaleSource 
 	TIME_AFTER_AUTO_CHOOSE_SEC("jwc.system.timeAfterAutoChooseTrack"),
 	MAX_TRACKS_TO_CHOOSE("jwc.system.maxTracksToChoose"),
 	JVM_NAME("jwc.system.java.jvmName"),
-	JVM_VERSION("jwc.system.java.jvmVersion"),
-	JVM_SPEC_VERSION("jwc.system.java.jvmSpecVersion"),
 	JRE_NAME("jwc.system.java.jreName"),
 	JRE_VERSION("jwc.system.java.jreVersion"),
 	JRE_SPEC_VERSION("jwc.system.java.jreSpecVersion"),
