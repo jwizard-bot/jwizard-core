@@ -4,6 +4,7 @@
  */
 package pl.jwizard.jwc.core.property
 
+import org.springframework.context.support.AbstractMessageSource
 import pl.jwizard.jwc.core.property.BotProperty.*
 import kotlin.reflect.KClass
 
@@ -42,6 +43,8 @@ import kotlin.reflect.KClass
  * - [S3_ROOT_BUCKET]: The name of the root bucket in the S3 storage.
  * - [S3_PATH_STYLE_ACCESS_ENABLED]: Determines if path-style access is enabled for the S3 service.
  * - [I18N_DEFAULT_LANGUAGE]: I18n default language (as language tag, without localization property).
+ * - [I81N_REVALIDATE_CACHE_SEC]: I18n revalidate cache time interval in seconds. For non-positive value (including *0*,
+ *   ex. *-1*) never revalidate cache. For more info, check `setCacheSeconds` method in [AbstractMessageSource] class.
  * - [GUILD_VOTING_PERCENTAGE_RATIO]: Ratio of voting percentage for guilds.
  * - [GUILD_MAX_VOTING_TIME]: Maximum voting time for guilds in seconds.
  * - [GUILD_DJ_ROLE_NAME]: Name of the DJ role in guilds.
@@ -204,6 +207,12 @@ enum class BotProperty(
 	 * I18n default language (as language tag, without localization property).
 	 */
 	I18N_DEFAULT_LANGUAGE("i18n.default-language"),
+
+	/**
+	 * I18n revalidate cache time interval in seconds. For non-positive value (including *0*, ex. *-1*) never revalidate
+	 * cache. For more info, check `setCacheSeconds()` method in [AbstractMessageSource] class
+	 */
+	I81N_REVALIDATE_CACHE_SEC("i18n.revalidate-cache-sec", Int::class),
 
 	/**
 	 * Ratio of voting percentage for guilds.

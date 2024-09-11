@@ -6,7 +6,7 @@ db:
   username: ${vault:V_MYSQL_USERNAME}
   password: ${vault:V_MYSQL_PASSWORD}
   driver-class-name: com.mysql.cj.jdbc.Driver
-  
+
 vault:
   kv:
     backend: jwizard
@@ -41,6 +41,7 @@ s3:
 
 i18n:
   default-language: pl
+  revalidate-cache-sec: 10800 # 3 hours
   resources:
     remote:
       - i18n-modules/messages

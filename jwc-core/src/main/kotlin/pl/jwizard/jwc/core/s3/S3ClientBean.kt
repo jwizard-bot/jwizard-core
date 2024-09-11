@@ -20,6 +20,7 @@ import software.amazon.awssdk.services.s3.model.ListBucketsRequest
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.net.URI
+import java.nio.charset.Charset
 
 /**
  * This class serves as a bean for interacting with an S3-compatible storage service. It manages the connection to
@@ -115,6 +116,20 @@ class S3ClientBean(
 			.key(parseResourcePath(s3Object, *args))
 			.build()
 		return client.getObject(objectRequest)
+	}
+
+	/**
+	 * Retrieves the content of an object from the S3 bucket as a text string. This method uses the [getObject] function
+	 * to fetch the object as an [InputStream], then reads the content using the specified [charset].
+	 *
+	 * @param s3Object The object to fetch from the S3 bucket.
+	 * @param charset The character set to use when decoding the content of the object.
+	 * @param args Optional arguments to format the resource path.
+	 * @return The content of the object as a [String], or `null` if the object cannot be retrieved or read.
+	 */
+	fun getObjectAsText(s3Object: S3Object, charset: Charset, vararg args: String): String? {
+		val inputStream = getObject(s3Object, *args)
+		return inputStream?.bufferedReader(charset).use { it?.readText() }
 	}
 
 	/**

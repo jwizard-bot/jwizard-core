@@ -36,7 +36,7 @@ abstract class JvmThreadExecutor(private val countOfThreads: Int = 1) : Disposab
 	 *
 	 * @param intervalSec The interval in seconds between the end of one execution and the start of the next.
 	 */
-	protected fun start(intervalSec: Long) {
+	fun start(intervalSec: Long) {
 		executor.scheduleWithFixedDelay(this, 0, intervalSec, TimeUnit.SECONDS)
 	}
 }
