@@ -36,6 +36,7 @@ import pl.jwizard.jwc.core.s3.S3Object
  *
  * @property environmentBean Provides access to application properties, including the bot token.
  * @property jdaPermissionFlagsSupplier Provides bean supplied JDA permission flags.
+ * @property s3ClientBean S3 client bean available get interaction with S3 API.
  * @constructor Creates an instance of [JdaInstanceBean] with the specified [environmentBean].
  * @author Miłosz Gilga
  */
