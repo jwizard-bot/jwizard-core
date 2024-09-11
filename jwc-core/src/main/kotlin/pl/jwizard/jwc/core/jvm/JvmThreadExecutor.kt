@@ -29,9 +29,7 @@ abstract class JvmThreadExecutor(private val countOfThreads: Int = 1) : Disposab
 	 * Shuts down the executor service gracefully when the bean is destroyed.
 	 * This method is called automatically by Spring when the bean is disposed.
 	 */
-	override fun destroy() {
-		executor.shutdown()
-	}
+	override fun destroy() = executor.shutdown()
 
 	/**
 	 * Starts the execution of the runnable task with a fixed delay between each execution.

@@ -18,6 +18,13 @@ abstract class AbstractPrinter(private val printer: Printer) {
 
 	companion object {
 		private val log = LoggerFactory.getLogger(AbstractPrinter::class.java)
+
+		/**
+		 * Prints content using an array of [AbstractPrinter] instances.
+		 *
+		 * @param printers An array of [AbstractPrinter] instances to use for printing.
+		 */
+		fun printContent(printers: Array<AbstractPrinter>) = printers.forEach { it.print() }
 	}
 
 	/**

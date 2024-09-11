@@ -11,6 +11,7 @@ import pl.jwizard.jwc.core.jda.JdaInstanceBean
 import pl.jwizard.jwc.core.jda.spi.AudioPlayerManager
 import pl.jwizard.jwc.core.jda.spi.ChannelListenerGuard
 import pl.jwizard.jwc.core.jda.spi.CommandsLoader
+import pl.jwizard.jwc.core.printer.AbstractPrinter
 import pl.jwizard.jwc.core.printer.ConsolePrinter
 import pl.jwizard.jwc.core.printer.FancyFramePrinter
 import pl.jwizard.jwc.core.printer.FancyTitlePrinter
@@ -58,7 +59,7 @@ object DiscordBotAppRunner {
 				FancyTitlePrinter(BANNER_CLASSPATH_LOCATION, printer),
 				FancyFramePrinter(FRAME_CLASSPATH_LOCATION, printer),
 			)
-			printers.forEach { it.print() }
+			AbstractPrinter.printContent(printers)
 			try {
 				log.info("Init Spring Context with base class: {}. Init packages tree: {}.", clazz.qualifiedName, BASE_PACKAGE)
 				context = SpringKtContextFactory(clazz)
