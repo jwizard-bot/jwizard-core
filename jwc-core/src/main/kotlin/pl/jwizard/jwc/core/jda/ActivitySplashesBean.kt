@@ -7,6 +7,7 @@ package pl.jwizard.jwc.core.jda
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
+import pl.jwizard.jwc.core.jvm.JvmThreadExecutor
 import pl.jwizard.jwc.core.property.BotMultiProperty
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
@@ -18,13 +19,13 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
  * @property environmentBean Provide access to environment properties, used to configure splash settings and intervals.
  * @property jdaInstanceBean Provide access to the JDA instance, used to set the bot's activity status.
  * @author Miłosz Gilga
- * @see JdaThreadExecutor
+ * @see JvmThreadExecutor
  */
 @Component
 class ActivitySplashesBean(
 	private val environmentBean: EnvironmentBean,
 	private val jdaInstanceBean: JdaInstance,
-) : JdaThreadExecutor() {
+) : JvmThreadExecutor() {
 
 	companion object {
 		private val log = LoggerFactory.getLogger(ActivitySplashesBean::class.java)

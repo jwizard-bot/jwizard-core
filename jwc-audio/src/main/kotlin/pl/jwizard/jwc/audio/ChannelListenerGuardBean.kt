@@ -8,9 +8,9 @@ import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.core.jda.JdaThreadExecutor
 import pl.jwizard.jwc.core.jda.spi.ChannelListenerGuard
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
+import pl.jwizard.jwc.core.jvm.JvmThreadExecutor
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.property.GuildProperty
 import pl.jwizard.jwc.core.util.Formatter
@@ -18,7 +18,7 @@ import java.time.Instant
 
 /**
  * Monitors voice channels in guilds to detect when they become empty and performs actions accordingly.
- * This component extends [JdaThreadExecutor] to periodically check voice channels and uses [ChannelListenerGuard]
+ * This component extends [JvmThreadExecutor] to periodically check voice channels and uses [ChannelListenerGuard]
  * to handle voice channel events.
  *
  * @property jdaInstance Provide access to the JDA API, used to retrieve guild information.
@@ -26,14 +26,14 @@ import java.time.Instant
  * @property playerManagersBean Manage audio players and their connections in guilds.
  * @author Miłosz Gilga
  * @see ChannelListenerGuard
- * @see JdaThreadExecutor
+ * @see JvmThreadExecutor
  */
 @Component
 class ChannelListenerGuardBean(
 	private val jdaInstance: JdaInstance,
 	private val environmentBean: EnvironmentBean,
 	private val playerManagersBean: PlayerManagersBean,
-) : ChannelListenerGuard, JdaThreadExecutor(MAX_THREADS) {
+) : ChannelListenerGuard, JvmThreadExecutor(MAX_THREADS) {
 
 	companion object {
 		private val log = LoggerFactory.getLogger(ChannelListenerGuardBean::class.java)
