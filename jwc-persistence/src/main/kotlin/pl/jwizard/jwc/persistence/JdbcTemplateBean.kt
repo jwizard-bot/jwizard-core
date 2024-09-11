@@ -6,9 +6,11 @@ package pl.jwizard.jwc.persistence
 
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.RowMapper
 import java.math.BigInteger
 import javax.sql.DataSource
 import kotlin.reflect.KClass
+import kotlin.reflect.cast
 
 /**
  * A custom extension of [JdbcTemplate] that provides additional utility methods for querying and parsing.
@@ -46,13 +48,27 @@ class JdbcTemplateBean(private val datasource: DataSource) : JdbcTemplate(dataso
 	 * @param args Optional arguments for the SQL query.
 	 * @return The result of the query cast to type [T], or null if no result is found.
 	 */
-	fun <T : Any> queryForNullableObject(sql: String, type: KClass<T>, vararg args: Any): T? {
-		return try {
-			queryForObject(sql, type.java, args)
-		} catch (ex: EmptyResultDataAccessException) {
-			null
-		}
+	fun <T : Any> queryForNullableObject(sql: String, type: KClass<T>, vararg args: Any) = try {
+		queryForObject(sql, type.java, args)
+	} catch (ex: EmptyResultDataAccessException) {
+		null
 	}
+
+	/**
+	 * Executes a SQL query and returns the results as a map where each entry's key and value are mapped from the
+	 * specified columns.
+	 *
+	 * @param U The type of the key column.
+	 * @param V The type of the value column.
+	 * @param sql The SQL query to execute.
+	 * @param key Definition of the key column, including its type and column name.
+	 * @param value Definition of the value column, including its type and column name.
+	 * @return A map where each key-value pair is derived from the specified columns in the query result.
+	 */
+	fun <U : Any, V : Any> queryForListMap(sql: String, key: ColumnDef<U>, value: ColumnDef<V>) =
+		query(sql, RowMapper { rs, _ ->
+			key.type.cast(rs.getObject(key.columnName)) to value.type.cast(rs.getObject(value.columnName))
+		}).toMap()
 
 	/**
 	 * Replaces placeholders in the input string with the provided replacement values.

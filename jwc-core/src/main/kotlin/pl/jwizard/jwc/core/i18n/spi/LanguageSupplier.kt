@@ -14,11 +14,11 @@ package pl.jwizard.jwc.core.i18n.spi
 interface LanguageSupplier {
 
 	/**
-	 * Fetches a list of all supported languages.
+	 * Fetches a map of all supported languages.
 	 *
-	 * @return A list of language tags, such as "en", "pl", etc.
+	 * @return A map of languages, which key is language tag ex. *en*, *pl* and value is description.
 	 */
-	fun fetchLanguages(): List<String>
+	fun fetchLanguages(): Map<String, String>
 
 	/**
 	 * Fetches the language associated with a specific guild.

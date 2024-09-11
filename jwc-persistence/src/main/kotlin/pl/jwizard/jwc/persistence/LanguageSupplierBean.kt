@@ -29,12 +29,15 @@ class LanguageSupplierBean(
 	}
 
 	/**
-	 * Retrieves a list of all supported languages from the database.
+	 * Retrieves a map of all supported languages from the database.
 	 *
-	 * @return A list of language tags retrieved from the `bot_langs` table.
+	 * @return A map of language tag (keys) and names (values) retrieved from the `bot_langs` table.
 	 */
-	override fun fetchLanguages(): List<String> =
-		jdbcTemplateBean.queryForList("SELECT tag FROM bot_langs", String::class.java)
+	override fun fetchLanguages() = jdbcTemplateBean.queryForListMap(
+		sql = "SELECT tag, name FROM bot_langs",
+		key = ColumnDef("tag", String::class),
+		value = ColumnDef("name", String::class)
+	)
 
 	/**
 	 * Retrieves the language associated with a specific guild from the database. If no language is found for the guild,
