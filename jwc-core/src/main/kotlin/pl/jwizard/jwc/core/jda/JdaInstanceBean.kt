@@ -112,7 +112,7 @@ final class JdaInstanceBean(
 		val permissions = permissionFlags.map { Permission.valueOf(it) }
 		log.info("Load: {} JDA permissions.", permissions.size)
 
-		val eventListeners = context.getBeansAnnotatedWith<ListenerAdapter>(JdaEventListenerBean::class)
+		val eventListeners = context.getBeansAnnotatedWith<ListenerAdapter, JdaEventListenerBean>()
 		log.info("Load: {} JDA event listeners: {}.", eventListeners.size, eventListeners.map { it.javaClass.name })
 
 		jda = JDABuilder
