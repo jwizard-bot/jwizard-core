@@ -12,5 +12,6 @@ import org.springframework.context.annotation.ComponentScan
  * @author Miłosz Gilga
  */
 @ComponentScan(basePackages = [DiscordBotAppRunner.BASE_PACKAGE])
+@Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class DiscordBotApp
