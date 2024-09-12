@@ -47,6 +47,16 @@ class SpringKtContextFactory(clazz: KClass<*>) : AnnotationConfigApplicationCont
 	fun <T : Any> getBean(beanType: KClass<T>): T = super.getBean(beanType.java)
 
 	/**
+	 * Retrieves all beans that are annotated with a specific annotation in the Spring context.
+	 *
+	 * @param T The type of the beans to retrieve.
+	 * @param annotation The class of the annotation to filter the beans by.
+	 * @return A list of beans that are annotated with the specified annotation.
+	 */
+	inline fun <reified T : Any> getBeansAnnotatedWith(annotation: KClass<out Annotation>): List<T> =
+		getBeansWithAnnotation(annotation.java).map { it.value as T }
+
+	/**
 	 * Cleans up the Spring context before JVM shutdown. Invokes the [close] method to release any resources held by
 	 * the Spring container.
 	 */

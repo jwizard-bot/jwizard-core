@@ -12,12 +12,14 @@ import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Icon
 import net.dv8tion.jda.api.exceptions.InvalidTokenException
+import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.managers.AccountManager
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 import net.dv8tion.jda.internal.managers.AccountManagerImpl
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import pl.jwizard.jwc.core.DiscordBotAppRunner.context
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.jda.spi.JdaPermissionFlagsSupplier
 import pl.jwizard.jwc.core.jvm.JvmDisposable
@@ -107,12 +109,11 @@ final class JdaInstanceBean(
 		log.info("JDA instance is warming up...")
 
 		val permissionFlags = jdaPermissionFlagsSupplier.getPermissionFlags()
-		val permissions = mutableListOf<Permission>()
-
-		for (flag in permissionFlags) {
-			permissions.add(Permission.valueOf(flag))
-		}
+		val permissions = permissionFlags.map { Permission.valueOf(it) }
 		log.info("Load: {} JDA permissions.", permissions.size)
+
+		val eventListeners = context.getBeansAnnotatedWith<ListenerAdapter>(JdaEventListenerBean::class)
+		log.info("Load: {} JDA event listeners: {}.", eventListeners.size, eventListeners.map { it.javaClass.name })
 
 		jda = JDABuilder
 			.create(environmentBean.getProperty(BotProperty.JDA_SECRET_TOKEN), GATEWAY_INTENTS)
@@ -120,7 +121,7 @@ final class JdaInstanceBean(
 			.disableCache(DISABLED_CACHE_FLAGS)
 			.setActivity(Activity.listening("Loading..."))
 			.setStatus(OnlineStatus.ONLINE)
-			.addEventListeners(/*TODO*/)
+			.addEventListeners(*eventListeners.toTypedArray())
 			.setBulkDeleteSplittingEnabled(true)
 			.build()
 			.awaitReady()
