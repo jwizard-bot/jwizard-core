@@ -1,0 +1,3 @@
+Source code repository: https://github.com/jwizard-bot/jwizard-core
+Originally developed by: Miłosz Gilga (https://miloszgilga.pl)
+Application license you will find in the LICENSE file

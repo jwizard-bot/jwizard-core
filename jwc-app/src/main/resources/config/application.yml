@@ -1,0 +1,57 @@
+deployment:
+  build-version: ${env:JWIZARD_CORE_BUILD_VERSION:UNKNOWN}
+  last-build-date: ${env:JWIZARD_CORE_BUILD_DATE:UNKNOWN}
+
+db:
+  username: ${vault:V_MYSQL_USERNAME}
+  password: ${vault:V_MYSQL_PASSWORD}
+  driver-class-name: com.mysql.cj.jdbc.Driver
+
+vault:
+  kv:
+    backend: jwizard
+    default-context: common
+    application-name: core
+
+jda:
+  secret-token: ${vault:V_JDA_SECRET}
+  default-activity: tracks
+  pagination:
+    max-elements-per-page: 20
+    menu-alive-sec: 60
+  splashes:
+    enabled: true
+    interval-sec: 5
+    elements:
+      - Welcome!
+      - I am
+      - a magic
+      - Discord
+      - bot
+      - and I can
+      - play
+      - songs
+      - and
+      - much
+      - more...
+
+s3:
+  region: eu-central-1
+  path-style-access-enabled: true
+
+i18n:
+  default-language: pl
+  revalidate-cache-sec: 10800 # 3 hours
+  resources:
+    remote:
+      - i18n-modules/messages
+      - i18n-args/messages
+      - i18n-commands/messages
+    local:
+      - i18n-action/messages
+      - i18n-audio/messages
+      - i18n-exception/messages
+      - i18n-response/messages
+      - i18n-system/messages
+      - i18n-util/messages
+      - i18n-voting/messages
