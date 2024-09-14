@@ -66,7 +66,7 @@ class ActivitySplashesBean(
 	 * Updates the JDA bot's activity status to the current splash text and rotates to the next one.
 	 * The splash text list is cycled through, so after reaching the end, it starts again from the beginning.
 	 */
-	override fun run() {
+	override fun executeJvmThread() {
 		jdaInstanceBean.setPresenceActivity(splashes[position])
 		position = (position + 1) % splashes.size
 	}

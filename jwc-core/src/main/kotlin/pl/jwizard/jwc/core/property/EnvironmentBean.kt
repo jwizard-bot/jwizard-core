@@ -150,11 +150,11 @@ class EnvironmentBean(private val springKtContextFactory: SpringKtContextFactory
 	final inline fun <reified T : Any> getGuildNullableProperty(
 		guildProperty: GuildProperty,
 		guildId: String,
-		allowNullable: Boolean = true
+		allowNullable: Boolean = true,
 	): T? {
 		val defaultProperty = try {
 			BotProperty.valueOf("GUILD_${guildProperty.name}")
-		} catch (ex: IllegalArgumentException) {
+		} catch (_: IllegalArgumentException) {
 			null
 		}
 		val type = defaultProperty?.type ?: guildProperty.nonDefaultType as KClass<*>

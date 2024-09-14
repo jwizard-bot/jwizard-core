@@ -11,7 +11,6 @@ package pl.jwizard.jwc.core.printer
  * @see Printer
  */
 class ConsolePrinter : Printer {
-
 	override fun print(content: String) {
 		println(content)
 	}

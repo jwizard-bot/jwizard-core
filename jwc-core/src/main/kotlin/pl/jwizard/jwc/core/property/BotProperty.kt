@@ -5,7 +5,6 @@
 package pl.jwizard.jwc.core.property
 
 import org.springframework.context.support.AbstractMessageSource
-import pl.jwizard.jwc.core.property.BotProperty.*
 import kotlin.reflect.KClass
 
 /**

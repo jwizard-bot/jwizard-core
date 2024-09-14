@@ -44,7 +44,7 @@ class FancyFramePrinter(
 		private val BOTTOM_EDGE: (String) -> String = { "╰$it╯" }
 	}
 
-	override fun bodyContent(): String? {
+	override fun setBodyContent(): String? {
 		val loader = ClasspathFileLoader(fileClasspathLocation)
 
 		val rawFrameElements = loader.readFileRaw()

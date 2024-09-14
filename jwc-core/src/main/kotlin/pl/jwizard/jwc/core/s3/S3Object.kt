@@ -4,9 +4,6 @@
  */
 package pl.jwizard.jwc.core.s3
 
-import pl.jwizard.jwc.core.s3.S3Object.BANNER
-import pl.jwizard.jwc.core.s3.S3Object.LOGO
-
 /**
  * This enum class represents objects stored in an S3-compatible storage service.
  *
@@ -41,7 +38,7 @@ enum class S3Object(val resourcePath: String) {
 	 * The first `%s` is replaced by the module name (ex. *i18n-commands*), and the second `%s` is replaced by
 	 * the language code (ex. *en*).
 	 *
-	 * Example usage: `configuration/ui_en.properties`
+	 * Example bundle source path: `configuration/i18n-commands_en.properties`
 	 */
 	I18N_BUNDLE("configuration/%s_%s.properties")
 	;

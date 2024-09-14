@@ -50,7 +50,7 @@ class JdbcTemplateBean(private val datasource: DataSource) : JdbcTemplate(dataso
 	 */
 	fun <T : Any> queryForNullableObject(sql: String, type: KClass<T>, vararg args: Any) = try {
 		queryForObject(sql, type.java, args)
-	} catch (ex: EmptyResultDataAccessException) {
+	} catch (_: EmptyResultDataAccessException) {
 		null
 	}
 

@@ -22,7 +22,7 @@ class FancyTitlePrinter(
 	private val printer: Printer
 ) : AbstractPrinter(printer) {
 
-	override fun bodyContent(): String? {
+	override fun setBodyContent(): String? {
 		val loader = ClasspathFileLoader(fileClasspathLocation)
 		return loader.readFileRaw()
 	}

@@ -39,4 +39,18 @@ abstract class JvmThreadExecutor(private val countOfThreads: Int = 1) : Disposab
 	fun start(intervalSec: Long) {
 		executor.scheduleWithFixedDelay(this, 0, intervalSec, TimeUnit.SECONDS)
 	}
+
+	/**
+	 * Umbrella method for better code readability and make possibility to implement [Runnable] interface in inherit
+	 * classes. Perform per-thread job.
+	 *
+	 * **Do not implement `run` method in subclasses. For execute job in thread, use [executeJvmThread].**
+	 */
+	final override fun run() = executeJvmThread()
+
+	/**
+	 * Code in this method will be executed per thread in declared thread pool with size defined in [countOfThreads]
+	 * variable.
+	 */
+	protected abstract fun executeJvmThread()
 }

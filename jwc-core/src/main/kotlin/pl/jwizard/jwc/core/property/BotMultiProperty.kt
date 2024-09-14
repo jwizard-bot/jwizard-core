@@ -4,7 +4,6 @@
  */
 package pl.jwizard.jwc.core.property
 
-import pl.jwizard.jwc.core.property.BotMultiProperty.*
 import kotlin.reflect.KClass
 
 /**

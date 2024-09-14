@@ -93,7 +93,7 @@ class ChannelListenerGuardBean(
 	 *
 	 * Removes guilds that were found to be empty from the [aloneFromTime] map.
 	 */
-	override fun run() {
+	override fun executeJvmThread() {
 		val removeFromGuild = mutableSetOf<String>()
 		for ((guildId, time) in aloneFromTime) {
 			val guild = jdaInstance.getGuildById(guildId)

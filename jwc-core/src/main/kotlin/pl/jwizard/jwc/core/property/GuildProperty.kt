@@ -4,7 +4,6 @@
  */
 package pl.jwizard.jwc.core.property
 
-import pl.jwizard.jwc.core.property.GuildProperty.*
 import kotlin.reflect.KClass
 
 /**

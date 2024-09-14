@@ -30,11 +30,9 @@ abstract class AbstractPrinter(private val printer: Printer) {
 	/**
 	 * Method responsible for printing custom content taking from [print] method by declared [printer]
 	 * class.
-	 *
-	 * @author Miłosz Gilga
 	 */
 	fun print() {
-		bodyContent()
+		setBodyContent()
 			?.let { printer.print(it) }
 			?: run { log.warn("Unable to find content for {} printing statement.", this::class.simpleName) }
 	}
@@ -45,5 +43,5 @@ abstract class AbstractPrinter(private val printer: Printer) {
 	 * @return body content passing to [print] method; if body content is null, printing is disabled
 	 * @author Miłosz Gilga
 	 */
-	protected abstract fun bodyContent(): String?
+	protected abstract fun setBodyContent(): String?
 }

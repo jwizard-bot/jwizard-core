@@ -49,7 +49,7 @@ class CacheableRemotePropertiesLoader(
 	 * The task executed by the thread executor. It fetches and updates properties from remote bundles and logs the
 	 * number of properties loaded. It initializes the properties map if not already done.
 	 */
-	override fun run() {
+	override fun executeJvmThread() {
 		var countOfElements = 0
 		val s3Resources = prepareS3ResourcePaths(remoteBundles)
 		s3Resources.forEach { (lang, rawContent) ->
