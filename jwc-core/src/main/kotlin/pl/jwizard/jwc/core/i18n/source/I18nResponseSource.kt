@@ -10,12 +10,11 @@ import pl.jwizard.jwc.core.i18n.I18nLocaleSource
 /**
  * Provides internationalization (i18n) placeholders for various response-related messages.
  *
- * @property placeholder The placeholder key used to retrieve the localized message.
  * @author Miłosz Gilga
  * @see I18nLocaleSource
  * @see I18nBean
  */
-enum class I18nResponseSource(private val placeholder: String) : I18nLocaleSource {
+enum class I18nResponseSource(override val placeholder: String) : I18nLocaleSource {
 
 	// audio player
 	LEAVE_EMPTY_CHANNEL("jwc.response.leaveEmptyChannel"),
@@ -87,6 +86,4 @@ enum class I18nResponseSource(private val placeholder: String) : I18nLocaleSourc
 	SUCCESS_VOTE_STOP_CLEAR_QUEUE("jwc.response.successVoteStopClearQueue"),
 	FAILURE_VOTE_STOP_CLEAR_QUEUE("jwc.response.failureVoteStopClearQueue"),
 	;
-
-	override fun getPlaceholder() = placeholder
 }

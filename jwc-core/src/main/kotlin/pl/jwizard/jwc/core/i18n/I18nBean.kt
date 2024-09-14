@@ -88,7 +88,7 @@ class I18nBean(
 	 * @return The formatted localized message with placeholders replaced by the corresponding parameters.
 	 */
 	fun t(i18nLocaleSource: I18nLocaleSource, params: Map<String, Any>, lang: String) =
-		tRaw(i18nLocaleSource.getPlaceholder(), params, lang)
+		tRaw(i18nLocaleSource.placeholder, params, lang)
 
 	/**
 	 * Retrieves a localized message based on the provided [I18nLocaleSource] and language. This method uses an empty

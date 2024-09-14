@@ -7,7 +7,6 @@ package pl.jwizard.jwc.core.property.loader
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean
 import org.springframework.core.env.PropertiesPropertySource
-import org.springframework.core.env.PropertySource
 import org.springframework.core.io.ClassPathResource
 import pl.jwizard.jwc.core.property.PropertySourceData
 import kotlin.reflect.jvm.jvmName
@@ -79,7 +78,7 @@ class YamlPropertySourceLoader(
 	 */
 	override fun getProperty(name: String): Any? = properties.getProperty(name)
 
-	override fun getSourceLoader(): PropertySource<*> = propertySource
+	override val sourceLoader = propertySource
 
 	/**
 	 * Finds an existing YAML configuration file with the given suffix.

@@ -44,7 +44,7 @@ abstract class PropertyValueExtractor<T>(
 	 * @return The property value or default value if not found.
 	 */
 	override fun getProperty(name: String): Any? {
-		val qualifier = "${extractionKey()}$SEPARATOR"
+		val qualifier = "${extractionKey}$SEPARATOR"
 		if (!name.startsWith(qualifier)) {
 			return null
 		}
@@ -60,17 +60,10 @@ abstract class PropertyValueExtractor<T>(
 		return parsedProperty
 	}
 
-	/**
-	 * Returns the [PropertySource] instance for this extractor.
-	 *
-	 * @return The [PropertySource] instance.
-	 */
-	override fun getSourceLoader(): PropertySource<*> = this
+	override val sourceLoader = this
 
 	/**
-	 * Abstract method to define the extraction key used for identifying properties.
-	 *
-	 * @return The extraction key as a [String].
+	 * Abstract property defines the extraction key used for identifying properties.
 	 */
-	protected abstract fun extractionKey(): String
+	protected abstract val extractionKey: String
 }

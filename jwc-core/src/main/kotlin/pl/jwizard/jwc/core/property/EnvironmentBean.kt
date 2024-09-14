@@ -62,7 +62,7 @@ class EnvironmentBean(private val springKtContextFactory: SpringKtContextFactory
 	fun afterConstruct() {
 		val propertiesEnv = PropertiesEnvironment(environment.propertySources)
 
-		propertySourceResolver = propertiesEnv.createResolver()
+		propertySourceResolver = propertiesEnv.resolver
 
 		val runtimeProfiles = getMultiProperty<String>(BotMultiProperty.RUNTIME_PROFILES)
 		propertiesEnv.addSource(YamlPropertySourceLoader(runtimeProfiles))

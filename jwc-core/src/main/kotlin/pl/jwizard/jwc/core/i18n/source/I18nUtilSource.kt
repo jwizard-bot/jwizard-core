@@ -10,12 +10,11 @@ import pl.jwizard.jwc.core.i18n.I18nLocaleSource
 /**
  * Provides internationalization (i18n) placeholders for various utility-related messages.
  *
- * @property placeholder The placeholder key used to retrieve the localized message.
  * @author Miłosz Gilga
  * @see I18nLocaleSource
  * @see I18nBean
  */
-enum class I18nUtilSource(private val placeholder: String) : I18nLocaleSource {
+enum class I18nUtilSource(override val placeholder: String) : I18nLocaleSource {
 	REQUIRED("jwc.util.required"),
 	OPTIONAL("jwc.util.optional"),
 	BUG_TRACKER("jwc.util.bugTracker"),
@@ -24,6 +23,4 @@ enum class I18nUtilSource(private val placeholder: String) : I18nLocaleSource {
 	TURN_OFF("jwc.util.turnOff"),
 	DATA_COMES_FROM("jwc.util.dataComesFrom"),
 	;
-
-	override fun getPlaceholder() = placeholder
 }

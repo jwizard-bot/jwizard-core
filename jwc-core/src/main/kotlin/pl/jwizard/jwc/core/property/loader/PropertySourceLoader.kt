@@ -16,8 +16,6 @@ interface PropertySourceLoader {
 
 	/**
 	 * Provides the [PropertySource] to be used.
-	 *
-	 * @return The [PropertySource] instance.
 	 */
-	fun getSourceLoader(): PropertySource<*>
+	val sourceLoader: PropertySource<*>
 }

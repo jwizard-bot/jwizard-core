@@ -32,6 +32,11 @@ class PropertiesEnvironment(private val propertySources: MutablePropertySources)
 	val propertySourceNames = mutableListOf<String>()
 
 	/**
+	 * Creates a new [PropertySourcesPropertyResolver] based on the current set of property sources.
+	 */
+	val resolver = PropertySourcesPropertyResolver(propertySources)
+
+	/**
 	 * Adds a new property source to the environment and updates the property resolver.
 	 *
 	 * This method takes a [PropertySourceData]] loader, loads its properties, and adds the source to the
@@ -47,18 +52,11 @@ class PropertiesEnvironment(private val propertySources: MutablePropertySources)
 	 */
 	fun <T> addSource(loader: PropertySourceData<T>): PropertySourcesPropertyResolver {
 		loader.loadProperties()
-		propertySources.addLast(loader.getSourceLoader())
+		propertySources.addLast(loader.sourceLoader)
 		propertySourceNames.add(loader.javaClass.simpleName)
 		if (loader !is PropertyValueExtractor) {
 			size += loader.properties.size
 		}
-		return createResolver()
+		return resolver
 	}
-
-	/**
-	 * Creates a new [PropertySourcesPropertyResolver] based on the current set of property sources.
-	 *
-	 * @return A [PropertySourcesPropertyResolver] instance.
-	 */
-	fun createResolver() = PropertySourcesPropertyResolver(propertySources)
 }

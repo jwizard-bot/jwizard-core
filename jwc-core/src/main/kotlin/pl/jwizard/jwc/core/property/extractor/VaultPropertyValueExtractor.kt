@@ -79,5 +79,5 @@ class VaultPropertyValueExtractor(
 		return properties
 	}
 
-	override fun extractionKey(): String = "vault"
+	override val extractionKey = "vault"
 }

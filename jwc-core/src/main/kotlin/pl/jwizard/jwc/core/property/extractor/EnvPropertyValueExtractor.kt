@@ -59,5 +59,5 @@ class EnvPropertyValueExtractor(
 		return envFileKeys.associateWith { dotEnv.get(it as String) }
 	}
 
-	override fun extractionKey(): String = "env"
+	override val extractionKey = "env"
 }

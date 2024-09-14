@@ -10,12 +10,11 @@ import pl.jwizard.jwc.core.i18n.I18nLocaleSource
 /**
  * This enum class represents objects stored in an S3-compatible storage service.
  *
- * @property placeholder The placeholder key used to retrieve the localized message.
  * @author Miłosz Gilga
  * @see I18nLocaleSource
  * @see I18nBean
  */
-enum class I18nVotingSource(private val placeholder: String) : I18nLocaleSource {
+enum class I18nVotingSource(override val placeholder: String) : I18nLocaleSource {
 	ON_SUCCESS_VOTING("jwc.voting.votingSuccess"),
 	ON_FAILURE_VOTING("jwc.voting.votingFailure"),
 	ON_TIMEOUT_VOTING("jwc.voting.votingTimeout"),
@@ -27,6 +26,4 @@ enum class I18nVotingSource(private val placeholder: String) : I18nLocaleSource 
 	FIRST_RESULT("jwc.voting.firstResult"),
 	RANDOM_RESULT("jwc.voting.randomResult"),
 	;
-
-	override fun getPlaceholder() = placeholder
 }

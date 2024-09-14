@@ -10,12 +10,11 @@ import pl.jwizard.jwc.core.i18n.I18nLocaleSource
 /**
  * Provides internationalization (i18n) placeholders for various audio-related messages.
  *
- * @property placeholder The placeholder key used to retrieve the localized message.
  * @author Miłosz Gilga
  * @see I18nLocaleSource
  * @see I18nBean
  */
-enum class I18nAudioSource(private val placeholder: String) : I18nLocaleSource {
+enum class I18nAudioSource(override val placeholder: String) : I18nLocaleSource {
 	COUNT_OF_TRACKS("jwc.audio.countOfTracks"),
 	TRACKS_TOTAL_DURATION_TIME("jwc.audio.totalDurationTime"),
 	NEXT_TRACK_INDEX_MESS("jwc.audio.nextTrackIndex"),
@@ -37,6 +36,4 @@ enum class I18nAudioSource(private val placeholder: String) : I18nLocaleSource {
 	PLAYLIST_AVERAGE_TRACK_DURATION("jwc.audio.playlistAverageTrackDuration"),
 	PLAYLIST_REPEATING_MODE("jwc.audio.playlistRepeatingMode"),
 	;
-
-	override fun getPlaceholder() = placeholder
 }

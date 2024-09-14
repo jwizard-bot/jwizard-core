@@ -4,7 +4,6 @@
  */
 package pl.jwizard.jwc.core.property.loader
 
-import org.springframework.core.env.PropertySource
 import pl.jwizard.jwc.core.property.PropertySourceData
 import pl.jwizard.jwc.core.property.spi.RemotePropertySupplier
 import pl.jwizard.jwc.core.util.KtCast
@@ -44,11 +43,5 @@ class DbPropertySourceLoader(
 	 */
 	override fun getProperty(name: String): Any? = properties.getProperty(name)
 
-	/**
-	 * Returns the current instance of the class as a [PropertySource], which integrates it into the Spring environment
-	 * to resolve properties.
-	 *
-	 * @return The property source of this class.
-	 */
-	override fun getSourceLoader(): PropertySource<*> = this
+	override val sourceLoader = this
 }
