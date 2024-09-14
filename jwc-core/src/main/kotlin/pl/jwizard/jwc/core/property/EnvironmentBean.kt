@@ -158,14 +158,14 @@ class EnvironmentBean(private val springKtContextFactory: SpringKtContextFactory
 			null
 		}
 		val type = defaultProperty?.type ?: guildProperty.nonDefaultType as KClass<*>
-		val nullableValue = remotePropertySupplier.getProperty(guildProperty.dbColumnName, guildId, type) as T?
+		val nullableValue = remotePropertySupplier.getProperty(guildProperty.key, guildId, type) as T?
 		val value = if (nullableValue == null && defaultProperty != null) {
 			getProperty(defaultProperty)
 		} else {
 			nullableValue
 		}
 		if (value == null && !allowNullable) {
-			throw PropertyNotFoundException(this::class, guildProperty.dbColumnName)
+			throw PropertyNotFoundException(this::class, guildProperty.key)
 		}
 		return value
 	}

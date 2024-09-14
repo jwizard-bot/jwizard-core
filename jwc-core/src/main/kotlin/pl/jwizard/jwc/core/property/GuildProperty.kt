@@ -24,16 +24,16 @@ import kotlin.reflect.KClass
  * - [TIME_AFTER_AUTO_CHOOSE_SEC]: Time in seconds after which the bot automatically chooses a track in the guild.
  * - [MAX_TRACKS_TO_CHOOSE]: Maximum number of tracks to choose from in the guild.
  *
- * @property dbColumnName The name of the database column that corresponds to this property.
+ * @property key The name of the database column that corresponds to this property.
  * @property nonDefaultType The type of the property value. By default, guild property refer to [BotProperty] as
  * 					 default value. If default value not exist, this field must not be null.
  * @author Miłosz Gilga
  * @see BotProperty
  */
 enum class GuildProperty(
-	val dbColumnName: String,
+	override val key: String,
 	val nonDefaultType: KClass<*>? = null,
-) {
+): Property {
 
 	/**
 	 * Ratio of voting percentage for guilds.

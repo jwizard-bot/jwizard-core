@@ -28,10 +28,10 @@ import kotlin.reflect.KClass
  * @see BotProperty
  */
 enum class BotMultiProperty(
-	val key: String,
+	override val key: String,
 	val listElementsType: KClass<*>,
 	val separator: String?,
-) {
+) : Property {
 
 	/**
 	 * Application runtime profiles. Defined all others configurations and Spring Context loaders.

@@ -64,9 +64,9 @@ import kotlin.reflect.KClass
  * @see BotMultiProperty
  */
 enum class BotProperty(
-	val key: String,
+	override val key: String,
 	val type: KClass<*> = String::class,
-) {
+) : Property {
 
 	/**
 	 * Determinate, if application at start should load environment variables from .env file.
