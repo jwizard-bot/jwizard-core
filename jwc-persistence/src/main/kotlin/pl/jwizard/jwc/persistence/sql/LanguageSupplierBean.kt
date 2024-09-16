@@ -4,11 +4,13 @@
  */
 package pl.jwizard.jwc.persistence.sql
 
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.i18n.spi.LanguageSupplier
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwc.persistence.ColumnDef
+import pl.jwizard.jwc.persistence.JdbcKtTemplateBean
+import java.math.BigInteger
 
 /**
  * Implementation of the [LanguageSupplier] interface that retrieves language data from a database. It uses
@@ -24,10 +26,6 @@ class LanguageSupplierBean(
 	private val environmentBean: EnvironmentBean,
 ) : LanguageSupplier {
 
-	companion object {
-		private val log = LoggerFactory.getLogger(LanguageSupplierBean::class.java)
-	}
-
 	/**
 	 * Retrieves a map of all supported languages from the database.
 	 *
@@ -40,21 +38,34 @@ class LanguageSupplierBean(
 	)
 
 	/**
-	 * Retrieves the language associated with a specific guild from the database. If no language is found for the guild,
-	 * the default language is returned (defined in YAML config file).
+	 * Retrieves the language associated with a specific guild from the database.
 	 *
 	 * @param guildId The ID of the guild for which the language is to be retrieved.
-	 * @return The language tag associated with the specified guild, or the default language if not found.
-	 * @see BotProperty.I18N_DEFAULT_LANGUAGE
+	 * @return The language tag associated with the specified guild.
 	 */
-	override fun fetchGuildLanguage(guildId: String): String {
+	override fun getGuildLanguage(guildId: String): String? {
 		val sql = "SELECT tag FROM guilds AS g INNER JOIN bot_langs AS l ON g.lang_id = l.id WHERE discord_id = ?"
-		val result = jdbcTemplateBean.queryForObject(sql, String::class.java, guildId)
-		if (result.isEmpty()) {
-			val defValue = environmentBean.getProperty<String>(BotProperty.I18N_DEFAULT_LANGUAGE)
-			log.debug("Persisted guild language not found. Return default value: {}.", defValue)
-			return defValue
+		return jdbcKtTemplateBean.queryForObject(sql, String::class, guildId)
+	}
+
+	/**
+	 * Retrieves the ID of a language based on its tag. If the language tag is not found, it attempts to retrieve the ID
+	 * of the default language specified in the environment properties. If the default language is also not found, it
+	 * returns the ID of the first language in the list.
+	 *
+	 * @param tag The language tag for which the ID is to be retrieved.
+	 * @return The ID of the language corresponding to the provided tag. If the tag is not found, it returns the ID of
+	 *         the default language or the first available language ID in the list.
+	 */
+	override fun getLanguageId(tag: String): BigInteger {
+		val sql = "SELECT id FROM bot_langs WHERE tag = ?"
+		val language = jdbcKtTemplateBean.queryForObject(sql, BigInteger::class, tag)
+		if (language == null) {
+			val configLanguage = environmentBean.getProperty<String>(BotProperty.I18N_DEFAULT_LANGUAGE)
+			val defaultLanguage = jdbcKtTemplateBean.queryForObject(sql, BigInteger::class, configLanguage)
+				?: return jdbcKtTemplateBean.queryForList("SELECT id FROM bot_langs WHERE", BigInteger::class).first()
+			return defaultLanguage
 		}
-		return result
+		return language
 	}
 }

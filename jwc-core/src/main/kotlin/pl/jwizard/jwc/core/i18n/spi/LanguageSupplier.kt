@@ -4,6 +4,8 @@
  */
 package pl.jwizard.jwc.core.i18n.spi
 
+import java.math.BigInteger
+
 /**
  * Interface for providing language-related data.
  *
@@ -26,5 +28,13 @@ interface LanguageSupplier {
 	 * @param guildId The ID of the guild for which the language is to be retrieved.
 	 * @return The language tag associated with the specified guild.
 	 */
-	fun fetchGuildLanguage(guildId: String): String
+	fun getGuildLanguage(guildId: String): String?
+
+	/**
+	 * Retrieves the ID of a language based on its tag.
+	 *
+	 * @param tag The tag of the language whose ID is to be retrieved (ex., *en*).
+	 * @return The ID of the language corresponding to the provided tag.
+	 */
+	fun getLanguageId(tag: String): BigInteger
 }
