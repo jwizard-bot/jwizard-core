@@ -52,13 +52,14 @@ class CacheableRemotePropertiesLoader(
 	override fun executeJvmThread() {
 		var countOfElements = 0
 		val s3Resources = prepareS3ResourcePaths(remoteBundles)
-		s3Resources.forEach { (lang, rawContent) ->
-			rawContent?.let { countOfElements = insertProperties(lang, it) }
+		s3Resources.forEach { (lang, rawContents) ->
+			remoteProperties[lang] = Properties()
+			rawContents.filterNotNull().forEach { countOfElements += insertProperties(lang, it) }
 		}
 		if (!isInitialized) {
 			log.info(
 				"Load: {} keys from remote bundles: {} with languages: {}.",
-				countOfElements,
+				countOfElements / 2,
 				remoteBundles,
 				s3Resources.keys
 			)
@@ -73,10 +74,10 @@ class CacheableRemotePropertiesLoader(
 	 * @param remoteBundles A list of remote bundle identifiers.
 	 * @return A map of language codes to raw [String] for the remote message bundles.
 	 */
-	private fun prepareS3ResourcePaths(remoteBundles: List<String>) = languageTags
-		.flatMap { language ->
-			remoteBundles.map { language to s3ClientBean.getObjectAsText(S3Object.I18N_BUNDLE, charset, it, language) }
-		}.toMap()
+	private fun prepareS3ResourcePaths(remoteBundles: List<String>): Map<String, List<String?>> =
+		languageTags.associateWith { language ->
+			remoteBundles.map { s3ClientBean.getObjectAsText(S3Object.I18N_BUNDLE, charset, it, language) }
+		}
 
 	/**
 	 * Loads properties from the provided raw [String] and stores them in the [remoteProperties] map under
@@ -89,7 +90,7 @@ class CacheableRemotePropertiesLoader(
 	private fun insertProperties(language: String, rawContent: String): Int {
 		val properties = Properties()
 		properties.load(StringReader(rawContent))
-		remoteProperties[language] = properties
+		remoteProperties[language]?.putAll(properties)
 		return properties.size
 	}
 }
