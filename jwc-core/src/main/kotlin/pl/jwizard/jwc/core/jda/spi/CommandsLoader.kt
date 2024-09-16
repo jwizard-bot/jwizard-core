@@ -26,13 +26,6 @@ interface CommandsLoader {
 	fun loadMetadata()
 
 	/**
-	 * Checks the integrity of the loaded commands. Implementations should verify the consistency and correctness of
-	 * commands including external and in-app commands definitions and their metadata. This method will be used to
-	 * ensure that the commands are valid and can be safely used in the application.
-	 */
-	fun checkIntegrity()
-
-	/**
 	 * Loads classes via the reflection API. Implementations should use reflection to dynamically load and initialize
 	 * classes related to commands.
 	 */

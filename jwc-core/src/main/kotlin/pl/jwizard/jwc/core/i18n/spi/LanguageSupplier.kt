@@ -18,7 +18,7 @@ interface LanguageSupplier {
 	 *
 	 * @return A map of languages, which key is language tag ex. *en*, *pl* and value is description.
 	 */
-	fun fetchLanguages(): Map<String, String>
+	fun getLanguages(): Map<String, String>
 
 	/**
 	 * Fetches the language associated with a specific guild.

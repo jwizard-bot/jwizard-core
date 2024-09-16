@@ -66,7 +66,7 @@ class I18nInitializerBean(private val environmentBean: EnvironmentBean) : Dispos
 	 */
 	@Bean
 	fun messageSource(s3ClientBean: S3ClientBean, languageSupplier: LanguageSupplier): MessageSource {
-		languages.putAll(languageSupplier.fetchLanguages())
+		languages.putAll(languageSupplier.getLanguages())
 		source = CombinedMessageSource(s3ClientBean, languages.keys, DEFAULT_CHARSET)
 
 		val remoteBundles = environmentBean.getMultiProperty<String>(BotMultiProperty.I18N_RESOURCES_REMOTE)

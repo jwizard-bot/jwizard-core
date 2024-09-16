@@ -81,7 +81,6 @@ class EnvironmentBean(private val springKtContextFactory: SpringKtContextFactory
 			)
 		)
 		propertiesEnv.addSource(DbPropertySourceLoader(remotePropertySupplier))
-
 		log.info("Load: {} properties from sources: {}.", propertiesEnv.size, propertiesEnv.propertySourceNames)
 	}
 

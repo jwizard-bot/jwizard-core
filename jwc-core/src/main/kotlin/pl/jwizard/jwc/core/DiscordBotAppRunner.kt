@@ -73,7 +73,6 @@ object DiscordBotAppRunner {
 				val channelListenerGuard = context.getBean(ChannelListenerGuard::class)
 
 				commandLoader.loadMetadata()
-				commandLoader.checkIntegrity()
 				commandLoader.loadClassesViaReflectionApi()
 
 				jdaInstance.createJdaWrapper()

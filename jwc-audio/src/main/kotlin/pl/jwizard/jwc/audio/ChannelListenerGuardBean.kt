@@ -13,7 +13,7 @@ import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.jvm.JvmThreadExecutor
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.property.GuildProperty
-import pl.jwizard.jwc.core.util.Formatter
+import pl.jwizard.jwc.core.util.qualifier
 import java.time.Instant
 
 /**
@@ -108,7 +108,7 @@ class ChannelListenerGuardBean(
 			val playerManager = playerManagersBean.getManager(guildId)
 			playerManager?.destroyAndDisconnect()
 
-			log.info("Leave voice channel in guild: {}. Cause: not found any active user.", Formatter.guildQualifier(guild))
+			log.info("Leave voice channel in guild: {}. Cause: not found any active user.", guild.qualifier)
 			removeFromGuild.add(guildId)
 		}
 		removeFromGuild.forEach { aloneFromTime.remove(it) }

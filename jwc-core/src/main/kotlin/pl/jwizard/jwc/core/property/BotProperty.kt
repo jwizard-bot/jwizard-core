@@ -5,6 +5,7 @@
 package pl.jwizard.jwc.core.property
 
 import org.springframework.context.support.AbstractMessageSource
+import pl.jwizard.jwc.core.property.BotProperty.*
 import kotlin.reflect.KClass
 
 /**
@@ -45,7 +46,7 @@ import kotlin.reflect.KClass
  * - [I81N_REVALIDATE_CACHE_SEC]: I18n revalidate cache time interval in seconds. For non-positive value (including *0*,
  *   ex. *-1*) never revalidate cache. For more info, check `setCacheSeconds` method in [AbstractMessageSource] class.
  * - [GUILD_VOTING_PERCENTAGE_RATIO]: Ratio of voting percentage for guilds.
- * - [GUILD_MAX_VOTING_TIME]: Maximum voting time for guilds in seconds.
+ * - [GUILD_TIME_TO_FINISH_VOTING_SEC]: Maximum voting time for guilds in seconds.
  * - [GUILD_DJ_ROLE_NAME]: Name of the DJ role in guilds.
  * - [GUILD_MAX_REPEATS_OF_TRACK]: Maximum number of repeats allowed for a track in guilds.
  * - [GUILD_LEAVE_EMPTY_CHANNEL_SEC]: Time in seconds after which the bot leaves an empty channel in guilds.
@@ -251,7 +252,7 @@ enum class BotProperty(
 	/**
 	 * Maximum voting time for guilds in seconds.
 	 */
-	GUILD_MAX_VOTING_TIME("guild.time-to-finish-voting-sec", Long::class),
+	GUILD_TIME_TO_FINISH_VOTING_SEC("guild.time-to-finish-voting-sec", Int::class),
 
 	/**
 	 * Name of the DJ role in guilds.
@@ -266,12 +267,12 @@ enum class BotProperty(
 	/**
 	 * Time in seconds after which the bot leaves an empty channel in guilds.
 	 */
-	GUILD_LEAVE_EMPTY_CHANNEL_SEC("guild.leave-empty-channel-sec", Long::class),
+	GUILD_LEAVE_EMPTY_CHANNEL_SEC("guild.leave-empty-channel-sec", Int::class),
 
 	/**
 	 * Time in seconds after which the bot leaves a channel with no tracks in guilds.
 	 */
-	GUILD_LEAVE_NO_TRACKS_SEC("guild.leave-no-tracks-channel-sec", Long::class),
+	GUILD_LEAVE_NO_TRACKS_SEC("guild.leave-no-tracks-channel-sec", Int::class),
 
 	/**
 	 * Default volume level for guilds.
@@ -286,7 +287,7 @@ enum class BotProperty(
 	/**
 	 * Time in seconds after which the bot automatically chooses a track in guilds.
 	 */
-	GUILD_TIME_AFTER_AUTO_CHOOSE_SEC("guild.time-after-auto-choose-sec", Long::class),
+	GUILD_TIME_AFTER_AUTO_CHOOSE_SEC("guild.time-after-auto-choose-sec", Int::class),
 
 	/**
 	 * Maximum number of tracks to choose from in guilds.

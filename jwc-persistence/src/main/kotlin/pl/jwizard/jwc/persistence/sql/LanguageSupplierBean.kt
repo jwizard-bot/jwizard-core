@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.persistence
+package pl.jwizard.jwc.persistence.sql
 
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -12,15 +12,15 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
 
 /**
  * Implementation of the [LanguageSupplier] interface that retrieves language data from a database. It uses
- * [JdbcTemplateBean] to query for supported languages and guild-specific languages.
+ * [JdbcKtTemplateBean] to query for supported languages and guild-specific languages.
  *
- * @property jdbcTemplateBean The [JdbcTemplateBean] bean used for database operations.
+ * @property jdbcKtTemplateBean The [JdbcKtTemplateBean] bean used for database operations.
  * @property environmentBean Provides environment-specific properties, such as the default language.
  * @author Miłosz Gilga
  */
 @Component
 class LanguageSupplierBean(
-	private val jdbcTemplateBean: JdbcTemplateBean,
+	private val jdbcKtTemplateBean: JdbcKtTemplateBean,
 	private val environmentBean: EnvironmentBean,
 ) : LanguageSupplier {
 
@@ -33,7 +33,7 @@ class LanguageSupplierBean(
 	 *
 	 * @return A map of language tag (keys) and names (values) retrieved from the `bot_langs` table.
 	 */
-	override fun fetchLanguages() = jdbcTemplateBean.queryForListMap(
+	override fun getLanguages() = jdbcKtTemplateBean.queryForListMap(
 		sql = "SELECT tag, name FROM bot_langs",
 		key = ColumnDef("tag", String::class),
 		value = ColumnDef("name", String::class)

@@ -2,10 +2,11 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.persistence
+package pl.jwizard.jwc.persistence.sql
 
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.property.spi.RemotePropertySupplier
+import pl.jwizard.jwc.persistence.JdbcKtTemplateBean
 import kotlin.reflect.KClass
 
 /**
@@ -14,11 +15,11 @@ import kotlin.reflect.KClass
  *
  * This class interacts with a database to fetch global properties and specific properties for a given guild.
  *
- * @property jdbcTemplateBean The bean responsible for JDBC operations.
+ * @property jdbcKtTemplateBean The bean responsible for JDBC operations.
  * @author Miłosz Gilga
  */
 @Component
-class RemotePropertySupplierBean(private val jdbcTemplateBean: JdbcTemplateBean) : RemotePropertySupplier {
+class RemotePropertySupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean) : RemotePropertySupplier {
 
 	/**
 	 * Retrieves all global properties from the database.
@@ -33,7 +34,7 @@ class RemotePropertySupplierBean(private val jdbcTemplateBean: JdbcTemplateBean)
 	override fun getGlobalProperties(): MutableMap<String, Pair<String, String>> {
 		val sql = "SELECT prop_key, prop_value, type FROM global_configs"
 		val properties = mutableMapOf<String, Pair<String, String>>()
-		jdbcTemplateBean.query(sql) {
+		jdbcKtTemplateBean.query(sql) {
 			properties[it.getString("prop_key")] = it.getString("prop_value") to it.getString("type")
 		}
 		return properties
@@ -52,10 +53,10 @@ class RemotePropertySupplierBean(private val jdbcTemplateBean: JdbcTemplateBean)
 	 * @return The property value cast to type [T], or null if no value is found.
 	 */
 	override fun <T : Any> getProperty(columnName: String, guildId: String, type: KClass<T>): T? {
-		val sql = jdbcTemplateBean.parse(
+		val sql = jdbcKtTemplateBean.parse(
 			"SELECT {{columnName}} FROM guilds WHERE discord_id = ?",
 			mapOf("columnName" to columnName)
 		)
-		return jdbcTemplateBean.queryForNullableObject(sql, type, guildId)
+		return jdbcKtTemplateBean.queryForNullableObject(sql, type, arrayOf(guildId))
 	}
 }

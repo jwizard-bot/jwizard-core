@@ -2,20 +2,21 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.persistence
+package pl.jwizard.jwc.persistence.sql
 
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.jda.spi.JdaPermissionFlagsSupplier
+import pl.jwizard.jwc.persistence.JdbcKtTemplateBean
 
 /**
  * Implementation of the [JdaPermissionFlagsSupplier] interface for retrieving permission flags from a database
  * using JDBC.
  *
- * @property jdbcTemplateBean The [JdbcTemplateBean] used to execute SQL queries against the database.
+ * @property jdbcKtTemplateBean The [JdbcKtTemplateBean] used to execute SQL queries against the database.
  * @author Miłosz Gilga
  */
 @Component
-class JdaPermissionFlagsSupplierBean(private val jdbcTemplateBean: JdbcTemplateBean) : JdaPermissionFlagsSupplier {
+class JdaPermissionFlagsSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean) : JdaPermissionFlagsSupplier {
 
 	/**
 	 * Retrieves a list of active permission flags from the database.
@@ -27,6 +28,6 @@ class JdaPermissionFlagsSupplierBean(private val jdbcTemplateBean: JdbcTemplateB
 	 */
 	override fun getPermissionFlags(): List<String> {
 		val sql = "SELECT flag_name FROM jda_permission_flags WHERE is_active = true"
-		return jdbcTemplateBean.queryForList(sql, String::class.java)
+		return jdbcKtTemplateBean.queryForList(sql, String::class.java)
 	}
 }

@@ -22,7 +22,7 @@ import kotlin.reflect.cast
  * @property datasource The data source used by this template to interact with the database.
  * @author Miłosz Gilga
  */
-class JdbcTemplateBean(private val datasource: DataSource) : JdbcTemplate(datasource) {
+class JdbcKtTemplateBean(private val datasource: DataSource) : JdbcTemplate(datasource) {
 
 	companion object {
 		/**
@@ -49,7 +49,7 @@ class JdbcTemplateBean(private val datasource: DataSource) : JdbcTemplate(dataso
 	 * @return The result of the query cast to type [T], or null if no result is found.
 	 */
 	fun <T : Any> queryForNullableObject(sql: String, type: KClass<T>, vararg args: Any) = try {
-		queryForObject(sql, type.java, args)
+		super.queryForObject(sql, type.java, *args)
 	} catch (_: EmptyResultDataAccessException) {
 		null
 	}

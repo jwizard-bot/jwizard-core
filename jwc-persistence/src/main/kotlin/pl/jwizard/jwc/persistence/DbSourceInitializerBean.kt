@@ -48,9 +48,9 @@ class DbSourceInitializerBean(private val environmentBean: EnvironmentBean) {
 	}
 
 	/**
-	 * Configures and creates a [JdbcTemplateBean] bean.
+	 * Configures and creates a [JdbcKtTemplateBean] bean.
 	 *
-	 * This method creates a [JdbcTemplateBean] instance using the configured [HikariDataSource]. The [JdbcTemplateBean]
+	 * This method creates a [JdbcKtTemplateBean] instance using the configured [HikariDataSource]. The [JdbcKtTemplateBean]
 	 * is used for executing SQL queries and updates, and provides a simplified way to interact with the database.
 	 *
 	 * @param dataSourceBean Configured [HikariDataSource] instance.
