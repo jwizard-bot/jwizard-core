@@ -8,7 +8,10 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.springframework.context.annotation.Bean
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.datasource.DataSourceTransactionManager
 import org.springframework.stereotype.Component
+import org.springframework.transaction.PlatformTransactionManager
+import org.springframework.transaction.support.TransactionTemplate
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
 
@@ -54,8 +57,26 @@ class DbSourceInitializerBean(private val environmentBean: EnvironmentBean) {
 	 * is used for executing SQL queries and updates, and provides a simplified way to interact with the database.
 	 *
 	 * @param dataSourceBean Configured [HikariDataSource] instance.
-	 * @return The configured [JdbcTemplateBean] instance.
+	 * @return The configured [JdbcKtTemplateBean] instance.
 	 */
 	@Bean
-	fun jdbcTemplateBean(dataSourceBean: HikariDataSource) = JdbcTemplateBean(dataSourceBean)
+	fun jdbcTemplateBean(dataSourceBean: HikariDataSource) = JdbcKtTemplateBean(dataSourceBean)
+
+	/**
+	 * Configures and creates a [DataSourceTransactionManager] bean.
+	 *
+	 * @param dataSourceBean The configured [HikariDataSource] instance used for transaction management.
+	 * @return The configured [DataSourceTransactionManager] instance.
+	 */
+	@Bean
+	fun transactionManager(dataSourceBean: HikariDataSource) = DataSourceTransactionManager(dataSourceBean)
+
+	/**
+	 * Configures and creates a [TransactionTemplate] bean.
+	 *
+	 * @param transactionManager The [PlatformTransactionManager] instance used to manage transactions.
+	 * @return The configured [TransactionTemplate] instance.
+	 */
+	@Bean
+	fun transactionTemplate(transactionManager: PlatformTransactionManager) = TransactionTemplate(transactionManager)
 }
