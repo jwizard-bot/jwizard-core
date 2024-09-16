@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.persistence
+package pl.jwizard.jwc.persistence.sql
 
 /**
  * Represents a binding table configuration with column details.

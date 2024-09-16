@@ -2,11 +2,11 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.persistence.sql
+package pl.jwizard.jwc.persistence.sql.bind
 
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.persistence.ColumnDef
-import pl.jwizard.jwc.persistence.JdbcKtTemplateBean
+import pl.jwizard.jwc.persistence.sql.ColumnDef
+import pl.jwizard.jwc.persistence.sql.JdbcKtTemplateBean
 import pl.jwizard.jwc.radio.RadioStation
 import pl.jwizard.jwc.radio.spi.RadioStationSupplier
 import java.math.BigInteger
