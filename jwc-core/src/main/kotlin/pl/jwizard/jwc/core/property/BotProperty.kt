@@ -31,9 +31,9 @@ import kotlin.reflect.KClass
  * - [JDA_SECRET_TOKEN]: JDA secret token.
  * - [JDA_DEFAULT_ACTIVITY]: JDA default activity. Enabled when [JDA_SPLASHES_ENABLED] property is set to false.
  * - [JDA_PAGINATION_MAX_ELEMENTS_PER_PAGE]: Max elements per page number for JDA pagination generator.
- * - [JDA_PAGINATION_MENU_ALIVE]: JDA pagination generator menu visibility in seconds.
+ * - [JDA_PAGINATION_MENU_ALIVE_SEC]: JDA pagination generator menu visibility in seconds.
  * - [JDA_SPLASHES_ENABLED]: JDA splashes toggle boolean property. If true, splashes are enabled, otherwise show nothing.
- * - [JDA_SPLASHES_INTERVAL]: JDA splashes interval in seconds.
+ * - [JDA_SPLASHES_INTERVAL_SEC]: JDA splashes interval in seconds.
  * - [SERVICE_API_URL]: JWizard API service host URL.
  * - [S3_PUBLIC_API_URL]: The URL or endpoint for accessing the public S3 API.
  * - [S3_HOST_URL]: The host address of the S3 service.
@@ -151,7 +151,7 @@ enum class BotProperty(
 	/**
 	 * JDA pagination generator menu visibility in seconds.
 	 */
-	JDA_PAGINATION_MENU_ALIVE("jda.pagination.menu-alive-sec", Int::class),
+	JDA_PAGINATION_MENU_ALIVE_SEC("jda.pagination.menu-alive-sec", Int::class),
 
 	/**
 	 * JDA splashes toggle boolean property. If true, splashes are enabled, otherwise show nothing.
@@ -161,7 +161,7 @@ enum class BotProperty(
 	/**
 	 * JDA splashes interval in seconds.
 	 */
-	JDA_SPLASHES_INTERVAL("jda.splashes.interval-sec", Long::class),
+	JDA_SPLASHES_INTERVAL_SEC("jda.splashes.interval-sec", Long::class),
 
 	/**
 	 * JWizard API service host url.

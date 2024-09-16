@@ -58,7 +58,7 @@ class ActivitySplashesBean(
 			return
 		}
 		log.info("Start single thread executor service for activity splashes: {}", splashes)
-		start(intervalSec = environmentBean.getProperty<Long>(BotProperty.JDA_SPLASHES_INTERVAL))
+		start(intervalSec = environmentBean.getProperty<Long>(BotProperty.JDA_SPLASHES_INTERVAL_SEC))
 	}
 
 	/**
