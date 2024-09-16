@@ -28,7 +28,7 @@ class VaultPropertyValueExtractor(
 	private val vaultKvBackend: String,
 	private val vaultKvDefaultContext: String,
 	private val vaultKvApplicationName: String,
-) : PropertyValueExtractor<VaultPropertyValueExtractor>(VaultPropertyValueExtractor::class) {
+) : PropertyValueExtractor(VaultPropertyValueExtractor::class) {
 
 	/**
 	 * Template used to interact with Vault. This field holds an instance of [VaultTemplate] configured with the

@@ -18,7 +18,7 @@ import java.io.File
  */
 class EnvPropertyValueExtractor(
 	private val envFileEnabled: Boolean,
-) : PropertyValueExtractor<EnvPropertyValueExtractor>(EnvPropertyValueExtractor::class) {
+) : PropertyValueExtractor(EnvPropertyValueExtractor::class) {
 
 	/**
 	 * Dotenv instance for reading .env file.

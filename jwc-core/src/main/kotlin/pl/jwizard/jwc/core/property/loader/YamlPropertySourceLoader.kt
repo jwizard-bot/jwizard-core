@@ -6,10 +6,8 @@ package pl.jwizard.jwc.core.property.loader
 
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean
-import org.springframework.core.env.PropertiesPropertySource
 import org.springframework.core.io.ClassPathResource
 import pl.jwizard.jwc.core.property.PropertySourceData
-import kotlin.reflect.jvm.jvmName
 
 /**
  * Loader for YAML property sources.
@@ -20,13 +18,7 @@ import kotlin.reflect.jvm.jvmName
  */
 class YamlPropertySourceLoader(
 	private val runtimeProfiles: List<String>,
-) : PropertySourceData<YamlPropertySourceLoader>(YamlPropertySourceLoader::class) {
-
-	/**
-	 * The property source created from the loaded properties.
-	 */
-	private val propertySource: PropertiesPropertySource =
-		PropertiesPropertySource(YamlPropertySourceLoader::class.jvmName, properties)
+) : PropertySourceData(YamlPropertySourceLoader::class) {
 
 	companion object {
 		private val log = LoggerFactory.getLogger(YamlPropertySourceLoader::class.java)
@@ -69,16 +61,6 @@ class YamlPropertySourceLoader(
 		val properties = yamlPropertiesFactoryBean.getObject()
 		return properties?.map { it.key to it.value }?.toMap() ?: emptyMap()
 	}
-
-	/**
-	 * Retrieves the value of the specified property name from the loaded properties.
-	 *
-	 * @param name The property name.
-	 * @return The property value, or null if not found.
-	 */
-	override fun getProperty(name: String): Any? = properties.getProperty(name)
-
-	override val sourceLoader = propertySource
 
 	/**
 	 * Finds an existing YAML configuration file with the given suffix.

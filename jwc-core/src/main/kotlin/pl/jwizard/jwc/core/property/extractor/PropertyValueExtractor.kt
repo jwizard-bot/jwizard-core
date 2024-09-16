@@ -4,10 +4,8 @@
  */
 package pl.jwizard.jwc.core.property.extractor
 
-import org.springframework.core.env.PropertySource
 import pl.jwizard.jwc.core.property.PropertyNotFoundException
 import pl.jwizard.jwc.core.property.PropertySourceData
-import pl.jwizard.jwc.core.property.loader.PropertySourceLoader
 import kotlin.reflect.KClass
 
 /**
@@ -16,15 +14,11 @@ import kotlin.reflect.KClass
  * This class extends [PropertySourceData], providing common functionality for property extraction and property source
  * loading. It provides a mechanism to retrieve properties based on a qualifier prefix and handle default values.
  *
- * @param T The type of the property source data.
  * @property clazz The Kotlin class of the property source data.
  * @author Miłosz Gilga
  * @see PropertySourceData
- * @see PropertySourceLoader
  */
-abstract class PropertyValueExtractor<T>(
-	private val clazz: KClass<*>,
-) : PropertySourceData<T>(clazz) {
+abstract class PropertyValueExtractor(private val clazz: KClass<*>) : PropertySourceData(clazz) {
 
 	companion object {
 		/**
@@ -50,7 +44,7 @@ abstract class PropertyValueExtractor<T>(
 		}
 		val keyFragments = name.substring(qualifier.length).split(SEPARATOR)
 		val key = keyFragments[0]
-		val parsedProperty = properties.getProperty(key)
+		val parsedProperty = super.getProperty(key)
 		if (parsedProperty == null) {
 			if (keyFragments.size != 2) { // has not default value
 				throw PropertyNotFoundException(this::class, name)
@@ -59,8 +53,6 @@ abstract class PropertyValueExtractor<T>(
 		}
 		return parsedProperty
 	}
-
-	override val sourceLoader = this
 
 	/**
 	 * Abstract property defines the extraction key used for identifying properties.

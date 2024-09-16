@@ -6,7 +6,6 @@ package pl.jwizard.jwc.core.property
 
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
-import org.springframework.core.env.PropertySourcesPropertyResolver
 import org.springframework.core.env.StandardEnvironment
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.SpringKtContextFactory
@@ -25,6 +24,7 @@ import kotlin.reflect.KClass
  * This class initializes and configures property sources, including YAML configuration files, environment variables,
  * and Vault secrets. It also provides methods for retrieving and casting property values from these sources.
  *
+ * @property springKtContextFactory Provides access to the Spring context for retrieving beans.
  * @author Miłosz Gilga
  */
 @Component
@@ -43,13 +43,9 @@ class EnvironmentBean(private val springKtContextFactory: SpringKtContextFactory
 	private final val environment = StandardEnvironment()
 
 	/**
-	 * The [PropertySourcesPropertyResolver] instance used to resolve property values from the environment's property
-	 * sources.
-	 *
-	 * This resolver provides methods to retrieve property values based on the keys. It is created and updated
-	 * whenever a new property source is added to the environment.
+	 * An instance of [PropertiesEnvironment] that manages and resolves property sources.
 	 */
-	final lateinit var propertySourceResolver: PropertySourcesPropertyResolver
+	final lateinit var propertiesEnv: PropertiesEnvironment
 		private set
 
 	/**
@@ -60,9 +56,8 @@ class EnvironmentBean(private val springKtContextFactory: SpringKtContextFactory
 	 */
 	@PostConstruct
 	fun afterConstruct() {
-		val propertiesEnv = PropertiesEnvironment(environment.propertySources)
-
-		propertySourceResolver = propertiesEnv.resolver
+		propertiesEnv = PropertiesEnvironment(environment.propertySources)
+		propertiesEnv.createResolver()
 
 		val runtimeProfiles = getMultiProperty<String>(BotMultiProperty.RUNTIME_PROFILES)
 		propertiesEnv.addSource(YamlPropertySourceLoader(runtimeProfiles))
@@ -96,15 +91,16 @@ class EnvironmentBean(private val springKtContextFactory: SpringKtContextFactory
 	 */
 	final inline fun <reified T> getMultiProperty(botMultiProperty: BotMultiProperty): List<T> {
 		val elements = mutableListOf<String>()
+		val resolver = propertiesEnv.resolver
 		if (botMultiProperty.separator == null) {
 			var listIndex = 0
 			while (true) {
-				val listElement = propertySourceResolver.getProperty("${botMultiProperty.key}[${listIndex++}]")
+				val listElement = resolver.getProperty("${botMultiProperty.key}[${listIndex++}]")
 					?: break
 				elements.add(listElement)
 			}
 		} else {
-			val rawValues = propertySourceResolver.getProperty(botMultiProperty.key)
+			val rawValues = resolver.getProperty(botMultiProperty.key)
 				?: throw PropertyNotFoundException(this::class, botMultiProperty.key)
 			rawValues.split(botMultiProperty.separator).forEach { elements.add(it.trim()) }
 		}
@@ -126,7 +122,7 @@ class EnvironmentBean(private val springKtContextFactory: SpringKtContextFactory
 	 * @throws PropertyNotFoundException If property with following key not exist.
 	 */
 	final inline fun <reified T : Any> getProperty(botProperty: BotProperty): T {
-		val rawValue = propertySourceResolver.getProperty(botProperty.key)
+		val rawValue = propertiesEnv.resolver.getProperty(botProperty.key)
 			?: throw PropertyNotFoundException(this::class, botProperty.key)
 		return KtCast.castToValue(rawValue, botProperty.type)
 	}

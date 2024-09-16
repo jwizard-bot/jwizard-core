@@ -5,34 +5,35 @@
 package pl.jwizard.jwc.core.property
 
 import org.springframework.core.env.PropertySource
-import pl.jwizard.jwc.core.property.loader.PropertySourceLoader
 import java.util.*
 import kotlin.reflect.KClass
 
 /**
- * Abstract class representing a source of loadable properties, with a specific type [T].
+ * Abstract class representing a source of loadable properties.
  *
- * @param T The type of the property source.
  * @property clazz The class of the property source.
  * @author Miłosz Gilga
  * @see PropertySource
  */
-abstract class PropertySourceData<T>(
+abstract class PropertySourceData(
 	private val clazz: KClass<*>,
-) : PropertySource<T>(clazz.java.simpleName), PropertySourceLoader {
-
-	/**
-	 * The properties loaded from the property source.
-	 */
-	val properties: Properties = Properties()
+) : PropertySource<Properties>(clazz.java.simpleName, Properties()) {
 
 	/**
 	 * Loads properties into the internal properties map.
 	 */
 	fun loadProperties() {
 		val propertiesAsMap = this.setProperties()
-		propertiesAsMap.forEach { properties[it.key] = it.value }
+		propertiesAsMap.forEach { source[it.key] = it.value }
 	}
+
+	/**
+	 * Retrieves a specific property by its name.
+	 *
+	 * @param name The name of the property to retrieve.
+	 * @return The value of the property or `null` if not found.
+	 */
+	override fun getProperty(name: String): Any? = source[name]
 
 	/**
 	 * Abstract method for setting properties. Implementations must provide the logic to load properties.

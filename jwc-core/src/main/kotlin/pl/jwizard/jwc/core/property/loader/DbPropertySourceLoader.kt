@@ -17,7 +17,7 @@ import pl.jwizard.jwc.core.util.KtCast
  */
 class DbPropertySourceLoader(
 	private val remotePropertySupplier: RemotePropertySupplier
-) : PropertySourceData<DbPropertySourceLoader>(DbPropertySourceLoader::class) {
+) : PropertySourceData(DbPropertySourceLoader::class) {
 
 	/**
 	 * Loads and sets properties from the remote data source by fetching global properties and converting them to
@@ -34,14 +34,4 @@ class DbPropertySourceLoader(
 			}
 			.toMap()
 	}
-
-	/**
-	 * Retrieves a specific property by its name.
-	 *
-	 * @param name The name of the property to retrieve.
-	 * @return The value of the property or `null` if not found.
-	 */
-	override fun getProperty(name: String): Any? = properties.getProperty(name)
-
-	override val sourceLoader = this
 }
