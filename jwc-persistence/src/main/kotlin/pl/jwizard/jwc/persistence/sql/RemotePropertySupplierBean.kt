@@ -57,6 +57,6 @@ class RemotePropertySupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateB
 			"SELECT {{columnName}} FROM guilds WHERE discord_id = ?",
 			mapOf("columnName" to columnName)
 		)
-		return jdbcKtTemplateBean.queryForNullableObject(sql, type, arrayOf(guildId))
+		return jdbcKtTemplateBean.queryForNullableObject(sql, type, guildId)
 	}
 }

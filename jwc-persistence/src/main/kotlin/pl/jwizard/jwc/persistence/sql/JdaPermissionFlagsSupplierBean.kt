@@ -28,6 +28,6 @@ class JdaPermissionFlagsSupplierBean(private val jdbcKtTemplateBean: JdbcKtTempl
 	 */
 	override fun getPermissionFlags(): List<String> {
 		val sql = "SELECT flag_name FROM jda_permission_flags WHERE is_active = true"
-		return jdbcKtTemplateBean.queryForList(sql, String::class.java)
+		return jdbcKtTemplateBean.queryForList(sql, String::class)
 	}
 }
