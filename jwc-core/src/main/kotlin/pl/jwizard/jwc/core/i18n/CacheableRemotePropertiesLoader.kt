@@ -5,9 +5,8 @@
 package pl.jwizard.jwc.core.i18n
 
 import org.slf4j.LoggerFactory
+import pl.jwizard.jwc.core.i18n.spi.I18nPropertyFilesSupplier
 import pl.jwizard.jwc.core.jvm.JvmThreadExecutor
-import pl.jwizard.jwc.core.s3.S3ClientBean
-import pl.jwizard.jwc.core.s3.S3Object
 import java.io.StringReader
 import java.nio.charset.Charset
 import java.util.*
@@ -17,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap
  * A class that loads and caches remote properties from S3 buckets. It extends [JvmThreadExecutor] to run periodic
  * updates in a scheduled manner. It fetches property files from remote sources and caches them for fast access.
  *
- * @property s3ClientBean The S3 client used to fetch remote property files.
+ * @property i18nPropertyFilesSupplier The remote property supplier used to fetch remote property files.
  * @property languageTags A set of language tags for which properties are loaded.
  * @property remoteBundles A list of remote bundle identifiers for fetching property files.
  * @property charset The character set used for decoding the property files.
@@ -25,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap
  * @see JvmThreadExecutor
  */
 class CacheableRemotePropertiesLoader(
-	private val s3ClientBean: S3ClientBean,
+	private val i18nPropertyFilesSupplier: I18nPropertyFilesSupplier,
 	private val languageTags: Set<String>,
 	private val remoteBundles: List<String>,
 	private val charset: Charset,
@@ -76,7 +75,7 @@ class CacheableRemotePropertiesLoader(
 	 */
 	private fun prepareS3ResourcePaths(remoteBundles: List<String>): Map<String, List<String?>> =
 		languageTags.associateWith { language ->
-			remoteBundles.map { s3ClientBean.getObjectAsText(S3Object.I18N_BUNDLE, charset, it, language) }
+			remoteBundles.map { i18nPropertyFilesSupplier.getFileRaw(it, language, charset) }
 		}
 
 	/**

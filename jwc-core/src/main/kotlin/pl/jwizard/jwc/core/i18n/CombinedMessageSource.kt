@@ -7,7 +7,7 @@ package pl.jwizard.jwc.core.i18n
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
-import pl.jwizard.jwc.core.s3.S3ClientBean
+import pl.jwizard.jwc.core.i18n.spi.I18nPropertyFilesSupplier
 import java.nio.charset.Charset
 import java.text.MessageFormat
 import java.util.*
@@ -16,16 +16,16 @@ import kotlin.time.toDuration
 
 /**
  * A [ReloadableResourceBundleMessageSource] implementation that combines local and remote message sources. It
- * integrates with [S3ClientBean] to fetch remote properties and uses caching to improve performance.
+ * integrates with [I18nPropertyFilesSupplier] to fetch remote properties and uses caching to improve performance.
  *
- * @property s3ClientBean The S3 client used to fetch remote message properties.
+ * @property i18nPropertyFilesSupplier The remote property supplier used to fetch remote property files.
  * @property languageTags A set of language tags supported by this message source.
  * @property charset The character set used for encoding messages.
  * @author Miłosz Gilga
  * @see CacheableRemotePropertiesLoader
  */
 class CombinedMessageSource(
-	private val s3ClientBean: S3ClientBean,
+	private val i18nPropertyFilesSupplier: I18nPropertyFilesSupplier,
 	private val languageTags: Set<String>,
 	private val charset: Charset,
 ) : ReloadableResourceBundleMessageSource(), DisposableBean {
@@ -51,7 +51,7 @@ class CombinedMessageSource(
 	 * @param basenames The base names of the remote message bundles to be loaded.
 	 */
 	fun setRemoteBasenames(vararg basenames: String) {
-		loader = CacheableRemotePropertiesLoader(s3ClientBean, languageTags, basenames.toList(), charset)
+		loader = CacheableRemotePropertiesLoader(i18nPropertyFilesSupplier, languageTags, basenames.toList(), charset)
 		if (cacheMillis > 0) {
 			val durationSec = cacheMillis.toDuration(DurationUnit.MILLISECONDS).inWholeSeconds
 			loader.start(durationSec)

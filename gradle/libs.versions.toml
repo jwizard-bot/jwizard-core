@@ -21,6 +21,7 @@ kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinV
 kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlinVersion" }
 springContext = { module = "org.springframework:spring-context", version.ref = "springVersion" }
 springJdbc = { module = "org.springframework:spring-jdbc", version.ref = "springVersion" }
+springWeb = { module = "org.springframework:spring-web", version.ref = "springVersion" }
 mysqlConnector = { module = "com.mysql:mysql-connector-j", version.ref = "mysqlConnectorVersion" }
 hikariCp = { module = "com.zaxxer:HikariCP", version.ref = "hikariCpVersion" }
 logbackCore = { module = "ch.qos.logback:logback-core", version.ref = "logbackVersion" }

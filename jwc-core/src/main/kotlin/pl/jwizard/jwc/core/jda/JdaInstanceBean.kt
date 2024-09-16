@@ -22,12 +22,11 @@ import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.DiscordBotAppRunner.context
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.jda.spi.JdaPermissionFlagsSupplier
+import pl.jwizard.jwc.core.jda.spi.JdaResourceSupplier
 import pl.jwizard.jwc.core.jvm.JvmDisposable
 import pl.jwizard.jwc.core.jvm.JvmDisposableHook
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwc.core.s3.S3ClientBean
-import pl.jwizard.jwc.core.s3.S3Object
 
 /**
  * Manages the JDA (Java Discord API) client instance.
@@ -38,7 +37,7 @@ import pl.jwizard.jwc.core.s3.S3Object
  *
  * @property environmentBean Provides access to application properties, including the bot token.
  * @property jdaPermissionFlagsSupplier Provides bean supplied JDA permission flags.
- * @property s3ClientBean S3 client bean available get interaction with S3 API.
+ * @property jdaResourceSupplier S3 resource supplier fetching JDA resources (logo and banner).
  * @constructor Creates an instance of [JdaInstanceBean] with the specified [environmentBean].
  * @author Miłosz Gilga
  */
@@ -46,7 +45,7 @@ import pl.jwizard.jwc.core.s3.S3Object
 final class JdaInstanceBean(
 	private val environmentBean: EnvironmentBean,
 	private val jdaPermissionFlagsSupplier: JdaPermissionFlagsSupplier,
-	private val s3ClientBean: S3ClientBean,
+	private val jdaResourceSupplier: JdaResourceSupplier,
 ) : JdaInstance, JvmDisposable {
 
 	companion object {
@@ -136,16 +135,15 @@ final class JdaInstanceBean(
 	 * This method retrieves the logo and banner images from S3, sets them as the bot's avatar and banner using the
 	 * [AccountManager], and updates the bot's name. The method also logs the metadata properties that were configured.
 	 *
-	 * It fetches the `LOGO` and `BANNER` resources from S3, converts them into input streams, and uses them to set the
-	 * avatar and banner for the bot. If the resources are successfully retrieved, they are logged along with the
-	 * bot's name.
+	 * It fetches the logo and banner resources from S3 and uses them to set the avatar and banner for the bot. If the
+	 * resources are successfully retrieved, they are logged along with the bot's name.
 	 *
 	 * @throws IllegalArgumentException If the name property is not present in the environment configuration.
-	 * @see S3ClientBean.getPublicObject
+	 * @see JdaResourceSupplier
 	 */
 	fun configureMetadata() {
-		val logoInputStream = s3ClientBean.getPublicObject(S3Object.LOGO)
-		val bannerInputStream = s3ClientBean.getPublicObject(S3Object.BANNER)
+		val logoResource = jdaResourceSupplier.getLogo()
+		val bannerResource = jdaResourceSupplier.getBanner()
 
 		val accountManager = AccountManagerImpl(jda.selfUser)
 		val metadataProperties = mutableListOf<String>()
@@ -154,13 +152,13 @@ final class JdaInstanceBean(
 		accountManager.setName(name)
 		metadataProperties.add("name: $name")
 
-		logoInputStream?.use {
-			accountManager.setAvatar(Icon.from(it))
-			metadataProperties.add("avatar: ${S3Object.LOGO.resourcePath}")
+		logoResource?.let { (resourcePath, byteArray) ->
+			accountManager.setAvatar(Icon.from(byteArray))
+			metadataProperties.add("avatar: $resourcePath")
 		}
-		bannerInputStream?.use {
-			accountManager.setBanner(Icon.from(it))
-			metadataProperties.add("banner: ${S3Object.BANNER.resourcePath}")
+		bannerResource?.let { (resourcePath, byteArray) ->
+			accountManager.setBanner(Icon.from(byteArray))
+			metadataProperties.add("banner: $resourcePath")
 		}
 		log.info("Configure metadata properties: {}.", metadataProperties)
 	}

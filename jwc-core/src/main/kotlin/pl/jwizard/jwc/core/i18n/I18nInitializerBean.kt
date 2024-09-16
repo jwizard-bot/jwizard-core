@@ -9,22 +9,22 @@ import org.springframework.beans.factory.DisposableBean
 import org.springframework.context.MessageSource
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
+import pl.jwizard.jwc.core.i18n.spi.I18nPropertyFilesSupplier
 import pl.jwizard.jwc.core.i18n.spi.LanguageSupplier
 import pl.jwizard.jwc.core.property.BotMultiProperty
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwc.core.s3.S3ClientBean
 import java.nio.charset.StandardCharsets
 
 /**
  * This component initializes the [MessageSource] bean used for internationalization (i18n) in the application.
  * It sets up the [CombinedMessageSource] with the necessary configuration to handle messages from both
- * local resources and remote S3 sources.
+ * local resources and remote sources.
  *
  * @property environmentBean A Spring-managed bean that provides environment-specific properties used to configure
  * 					 the message source and S3 client.
  * @author Miłosz Gilga
- * @see S3ClientBean
+ * @see I18nPropertyFilesSupplier
  * @see LanguageSupplier
  * @see CombinedMessageSource
  */
@@ -60,14 +60,17 @@ class I18nInitializerBean(private val environmentBean: EnvironmentBean) : Dispos
 	 * Configures the [MessageSource] bean with the [CombinedMessageSource], setting up the required properties
 	 * including base names, remote bundles, cache duration, and encoding.
 	 *
-	 * @param s3ClientBean A bean used to interact with the S3 client for fetching remote message bundles.
+	 * @param i18nPropertyFilesSupplier The remote property supplier used to fetch remote property files.
 	 * @param languageSupplier A supplier that provides available languages.
 	 * @return The configured [MessageSource] bean.
 	 */
 	@Bean
-	fun messageSource(s3ClientBean: S3ClientBean, languageSupplier: LanguageSupplier): MessageSource {
+	fun messageSource(
+		i18nPropertyFilesSupplier: I18nPropertyFilesSupplier,
+		languageSupplier: LanguageSupplier
+	): MessageSource {
 		languages.putAll(languageSupplier.getLanguages())
-		source = CombinedMessageSource(s3ClientBean, languages.keys, DEFAULT_CHARSET)
+		source = CombinedMessageSource(i18nPropertyFilesSupplier, languages.keys, DEFAULT_CHARSET)
 
 		val remoteBundles = environmentBean.getMultiProperty<String>(BotMultiProperty.I18N_RESOURCES_REMOTE)
 		val revalidateCacheSec = environmentBean.getProperty<Int>(BotProperty.I81N_REVALIDATE_CACHE_SEC)

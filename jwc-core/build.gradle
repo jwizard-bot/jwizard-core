@@ -11,5 +11,4 @@ dependencies {
   implementation libs.springVaultCore
   implementation libs.jda
   implementation libs.jeeAnnotationApi
-  implementation libs.awsS3sdk
 }
