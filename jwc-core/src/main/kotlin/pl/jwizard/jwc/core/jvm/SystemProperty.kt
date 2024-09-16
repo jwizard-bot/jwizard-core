@@ -11,7 +11,7 @@ import pl.jwizard.jwc.core.property.BotProperty
  * Enum representing various system properties such as JVM, JRE, and OS details. Each enum constant maps a system
  * property from [BotProperty] to its localized equivalent from [I18nSystemSource].
  *
- * @property botProperty The system property to retrieve (e.g., JVM name, OS name).
+ * @property botProperty The system property to retrieve (ex. JVM name, OS name).
  * @property i18nSystemSource The internationalized source for the property name.
  * @author Miłosz Gilga
  */

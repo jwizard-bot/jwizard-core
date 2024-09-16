@@ -17,7 +17,7 @@ interface AudioPlayerManager {
 	/**
 	 * Registers all audio source managers with the audio player.
 	 *
-	 * This method should be implemented to register different audio sources (e.g., YouTube, SoundCloud, Bandcamp) with
+	 * This method should be implemented to register different audio sources (ex. YouTube, SoundCloud, Bandcamp) with
 	 * the audio player manager. It should also configure settings related to HTTP requests and pagination if applicable.
 	 * Implementations should ensure that all required source managers are properly registered and configured for audio
 	 * playback.

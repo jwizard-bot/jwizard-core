@@ -46,7 +46,7 @@ class I18nInitializerBean(private val environmentBean: EnvironmentBean) : Dispos
 	}
 
 	/**
-	 * A map of languages loaded from the remote source, where the key is the language tag (e.g., *en*) and the value
+	 * A map of languages loaded from the remote source, where the key is the language tag (ex. *en*) and the value
 	 * is the language name.
 	 */
 	val languages = mutableMapOf<String, String>()
