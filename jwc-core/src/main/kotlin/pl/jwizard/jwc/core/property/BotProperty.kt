@@ -55,6 +55,8 @@ import kotlin.reflect.KClass
  * - [GUILD_RANDOM_AUTO_CHOOSE_TRACK]: Indicates whether to randomly auto-choose tracks in guilds.
  * - [GUILD_TIME_AFTER_AUTO_CHOOSE_SEC]: Time in seconds after which the bot automatically chooses a track in guilds.
  * - [GUILD_MAX_TRACKS_TO_CHOOSE]: Maximum number of tracks to choose from in guilds.
+ * - [GUILD_DEFAULT_LEGACY_PREFIX]: Default legacy command prefix used in guild.
+ * - [GUILD_DEFAULT_SLASH_ENABLED]: Determines if the slash command system is enabled by default in guild.
  *
  * @property key The key used to retrieve the property value from various property sources.
  * @property type The type of the property value. Defaults to [String] if not specified.
@@ -293,5 +295,15 @@ enum class BotProperty(
 	 * Maximum number of tracks to choose from in guilds.
 	 */
 	GUILD_MAX_TRACKS_TO_CHOOSE("guild.tracks-to-choose-max", Int::class),
+
+	/**
+	 * Default legacy command prefix used in guild.
+	 */
+	GUILD_DEFAULT_LEGACY_PREFIX("guild.default-legacy-prefix"),
+
+	/**
+	 * Determines if the slash command system is enabled by default in guild.
+	 */
+	GUILD_DEFAULT_SLASH_ENABLED("guild.default-slash-enabled", Boolean::class)
 	;
 }

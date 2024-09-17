@@ -76,7 +76,6 @@ subprojects {
       jvmTarget = jvmVersion.toString()
       freeCompilerArgs = [
         '-Xjsr305=strict',
-        '-Xcharset=UTF-8',
       ]
     }
   }
