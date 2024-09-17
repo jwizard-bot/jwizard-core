@@ -20,11 +20,13 @@ import net.dv8tion.jda.internal.managers.AccountManagerImpl
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.DiscordBotAppRunner.context
+import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.jda.spi.JdaPermissionFlagsSupplier
 import pl.jwizard.jwc.core.jda.spi.JdaResourceSupplier
 import pl.jwizard.jwc.core.jvm.JvmDisposable
 import pl.jwizard.jwc.core.jvm.JvmDisposableHook
+import pl.jwizard.jwc.core.property.BotMultiProperty
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
 
@@ -50,38 +52,6 @@ final class JdaInstanceBean(
 
 	companion object {
 		private val log = LoggerFactory.getLogger(JdaInstanceBean::class.java)
-
-		/**
-		 * A list of [GatewayIntent] instances that are enabled for the application.
-		 */
-		private val GATEWAY_INTENTS = arrayListOf(
-			GatewayIntent.DIRECT_MESSAGES,
-			GatewayIntent.GUILD_MESSAGES,
-			GatewayIntent.GUILD_MESSAGE_REACTIONS,
-			GatewayIntent.GUILD_VOICE_STATES,
-			GatewayIntent.GUILD_MESSAGE_TYPING,
-			GatewayIntent.GUILD_MEMBERS,
-		)
-
-		/**
-		 * A list of [CacheFlag] instances that are enabled for caching.
-		 */
-		private val ENABLED_CACHE_FLAGS = arrayListOf(
-			CacheFlag.MEMBER_OVERRIDES,
-			CacheFlag.VOICE_STATE,
-		)
-
-		/**
-		 * A list of [CacheFlag] instances that are disabled for caching.
-		 */
-		private val DISABLED_CACHE_FLAGS = arrayListOf(
-			CacheFlag.ACTIVITY,
-			CacheFlag.CLIENT_STATUS,
-			CacheFlag.EMOJI,
-			CacheFlag.ONLINE_STATUS,
-			CacheFlag.SCHEDULED_EVENTS,
-			CacheFlag.STICKER,
-		)
 	}
 
 	/**
@@ -107,6 +77,10 @@ final class JdaInstanceBean(
 	fun createJdaWrapper() {
 		log.info("JDA instance is warming up...")
 
+		val gatewayIntents = environmentBean.getMultiProperty<String>(BotMultiProperty.JDA_GATEWAY_INTENTS)
+		val enabledCacheFlags = environmentBean.getMultiProperty<String>(BotMultiProperty.JDA_CACHE_FLAGS_ENABLED)
+		val disabledCacheFlags = environmentBean.getMultiProperty<String>(BotMultiProperty.JDA_CACHE_FLAGS_DISABLED)
+
 		val permissionFlags = jdaPermissionFlagsSupplier.getPermissionFlags()
 		val permissions = permissionFlags.map { Permission.valueOf(it) }
 		log.info("Load: {} JDA permissions.", permissions.size)
@@ -114,10 +88,16 @@ final class JdaInstanceBean(
 		val eventListeners = context.getBeansAnnotatedWith<ListenerAdapter, JdaEventListenerBean>()
 		log.info("Load: {} JDA event listeners: {}.", eventListeners.size, eventListeners.map { it.javaClass.name })
 
+		val jdaToken = environmentBean.getProperty<String>(BotProperty.JDA_SECRET_TOKEN)
+
+		log.info("Load: {} gateway intents: {}.", gatewayIntents.size, gatewayIntents)
+		log.info("Load: {} enabled cache flags: {}.", enabledCacheFlags.size, enabledCacheFlags)
+		log.info("Load: {} disabled cache flags: {}.", disabledCacheFlags.size, disabledCacheFlags)
+
 		jda = JDABuilder
-			.create(environmentBean.getProperty(BotProperty.JDA_SECRET_TOKEN), GATEWAY_INTENTS)
-			.enableCache(ENABLED_CACHE_FLAGS)
-			.disableCache(DISABLED_CACHE_FLAGS)
+			.create(jdaToken, gatewayIntents.map { GatewayIntent.valueOf(it) })
+			.enableCache(enabledCacheFlags.map { CacheFlag.valueOf(it) })
+			.disableCache(disabledCacheFlags.map { CacheFlag.valueOf(it) })
 			.setActivity(Activity.listening("Loading..."))
 			.setStatus(OnlineStatus.ONLINE)
 			.addEventListeners(*eventListeners.toTypedArray())

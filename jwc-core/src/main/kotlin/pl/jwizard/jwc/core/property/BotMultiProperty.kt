@@ -4,6 +4,9 @@
  */
 package pl.jwizard.jwc.core.property
 
+import net.dv8tion.jda.api.requests.GatewayIntent
+import net.dv8tion.jda.api.utils.cache.CacheFlag
+import pl.jwizard.jwc.core.property.BotMultiProperty.*
 import kotlin.reflect.KClass
 
 /**
@@ -14,6 +17,9 @@ import kotlin.reflect.KClass
  * - [RUNTIME_PROFILES]: Application runtime profiles. Defined all others configurations and Spring Context loaders.
  * 	 Accepted: *dev*, *prod*. Default: *empty array*.
  * - [JDA_SPLASHES_ELEMENTS]: JDA splashes elements show in sequentially order.
+ * - [JDA_GATEWAY_INTENTS]: A list of [GatewayIntent] instances that are enabled for the JDA application.
+ * - [JDA_CACHE_FLAGS_ENABLED]: A list of [CacheFlag] instances that are enabled for JDA caching.
+ * - [JDA_CACHE_FLAGS_DISABLED]: A list of [CacheFlag] instances that are disabled for JDA caching.
  * - [I18N_RESOURCES_REMOTE]: I18n CDN resources elements list. Loaded from Content Delivery Network. Must be ends
  * 	 with messages, ex. config/messages.
  * - [I18N_RESOURCES_LOCALE]: I18n local resources elements list. Loaded from classpath. Must be ends with
@@ -42,6 +48,21 @@ enum class BotMultiProperty(
 	 * JDA splashes elements show in sequentially order.
 	 */
 	JDA_SPLASHES_ELEMENTS("jda.splashes.elements"),
+
+	/**
+	 * A list of [GatewayIntent] instances that are enabled for the JDA application.
+	 */
+	JDA_GATEWAY_INTENTS("jda.gateway-intents"),
+
+	/**
+	 * A list of [CacheFlag] instances that are enabled for JDA caching.
+	 */
+	JDA_CACHE_FLAGS_ENABLED("jda.cache-flags.enabled"),
+
+	/**
+	 * A list of [CacheFlag] instances that are disabled for JDA caching.
+	 */
+	JDA_CACHE_FLAGS_DISABLED("jda.cache-flags.disabled"),
 
 	/**
 	 * I18n CDN resources elements list. Loaded from Content Delivery Network. Must be ends with messages,
