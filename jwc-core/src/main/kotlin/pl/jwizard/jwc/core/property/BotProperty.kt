@@ -34,7 +34,12 @@ import kotlin.reflect.KClass
  * - [JDA_PAGINATION_MENU_ALIVE_SEC]: JDA pagination generator menu visibility in seconds.
  * - [JDA_SPLASHES_ENABLED]: JDA splashes toggle boolean property. If true, splashes are enabled, otherwise show nothing.
  * - [JDA_SPLASHES_INTERVAL_SEC]: JDA splashes interval in seconds.
+ * - [JDA_COLOR_PRIMARY]: JDA primary color in embed messages.
+ * - [JDA_COLOR_SECONDARY]: JDA secondary color in embed messages.
+ * - [JDA_COLOR_TINT]: JDA tint color in embed messages.
+ * - [JDA_COLOR_DANGER]: JDA danger color in embed messages.
  * - [SERVICE_API_URL]: JWizard API service host URL.
+ * - [SERVICE_FRONT_URL]: JWizard front-end service host url.
  * - [S3_PUBLIC_API_URL]: The URL or endpoint for accessing the public S3 API.
  * - [S3_HOST_URL]: The host address of the S3 service.
  * - [S3_REGION]: The region where the S3 bucket is hosted.
@@ -164,9 +169,34 @@ enum class BotProperty(
 	JDA_SPLASHES_INTERVAL_SEC("jda.splashes.interval-sec", Long::class),
 
 	/**
+	 * JDA primary color in embed messages.
+	 */
+	JDA_COLOR_PRIMARY("jda.color.primary", Int::class),
+
+	/**
+	 * JDA secondary color in embed messages.
+	 */
+	JDA_COLOR_SECONDARY("jda.color.secondary", Int::class),
+
+	/**
+	 * JDA tint color in embed messages.
+	 */
+	JDA_COLOR_TINT("jda.color.tint", Int::class),
+
+	/**
+	 * JDA danger color in embed messages.
+	 */
+	JDA_COLOR_DANGER("jda.color.danger", Int::class),
+
+	/**
 	 * JWizard API service host url.
 	 */
 	SERVICE_API_URL("service.api-url"),
+
+	/**
+	 * JWizard front-end service host url.
+	 */
+	SERVICE_FRONT_URL("service.front-url"),
 
 	/**
 	 * The URL or endpoint for accessing the public S3 API.

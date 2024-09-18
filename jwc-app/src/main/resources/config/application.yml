@@ -41,6 +41,7 @@ jda:
     - GUILD_VOICE_STATES
     - GUILD_MESSAGE_TYPING
     - GUILD_MEMBERS
+    - MESSAGE_CONTENT
   cache-flags:
     enabled:
       - MEMBER_OVERRIDES
@@ -52,6 +53,11 @@ jda:
       - ONLINE_STATUS
       - SCHEDULED_EVENTS
       - STICKER
+  color:
+    primary: 0xFFFFFF
+    secondary: 0x000000
+    tint: 0x505050
+    danger: 0xEF4444
 
 s3:
   region: eu-central-1

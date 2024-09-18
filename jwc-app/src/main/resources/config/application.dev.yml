@@ -10,6 +10,7 @@ jda:
 
 service:
   api-url: http://localhost:8765
+  front-url: http://localhost:8766
 
 s3:
   public-api-url: http://localhost:8763/jwizard-static
