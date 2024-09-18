@@ -41,27 +41,16 @@ class I18nBean(
 	}
 
 	/**
-	 * Retrieves a localized message based on the provided [I18nLocaleSource], parameters, and language.
-	 * This method looks up the message using the [MessageSource], replaces placeholders with the provided parameters,
-	 * and returns the final formatted message.
+	 * TODO
 	 *
-	 * @param i18nLocaleSource The [I18nLocaleSource] that provides the placeholder key for the message.
-	 * @param params A map of parameters to replace placeholders in the message.
-	 * @param lang The language tag representing the desired locale (ex. *en*).
-	 * @return The formatted localized message with placeholders replaced by the corresponding parameters.
+	 * @param i18nLocaleSource
+	 * @param lang
+	 * @param params
 	 */
-	fun t(i18nLocaleSource: I18nLocaleSource, params: Map<String, Any>, lang: String) =
-		tRaw(i18nLocaleSource.placeholder, params, lang)
-
-	/**
-	 * Retrieves a localized message based on the provided [I18nLocaleSource] and language. This method uses an empty
-	 * map for parameters.
-	 *
-	 * @param i18nLocaleSource The [I18nLocaleSource] that provides the placeholder key for the message.
-	 * @param lang The language tag representing the desired locale (ex. *en*).
-	 * @return The localized message with placeholders replaced by the corresponding parameters.
-	 */
-	fun t(i18nLocaleSource: I18nLocaleSource, lang: String) = t(i18nLocaleSource, emptyMap(), lang)
+	fun t(i18nLocaleSource: I18nLocaleSource, lang: String?, params: Map<String, Any> = emptyMap()): String {
+		val defaultLanguage = environmentBean.getProperty<String>(BotProperty.I18N_DEFAULT_LANGUAGE)
+		return tRaw(i18nLocaleSource.placeholder, params, lang ?: defaultLanguage)
+	}
 
 	/**
 	 * Retrieves the name of a language based on the provided language tag.
