@@ -6,14 +6,14 @@ package pl.jwizard.jwc.core.i18n
 
 import org.slf4j.LoggerFactory
 import pl.jwizard.jwc.core.i18n.spi.I18nPropertyFilesSupplier
-import pl.jwizard.jwc.core.jvm.JvmThreadExecutor
+import pl.jwizard.jwc.core.jvm.thread.JvmFixedThreadExecutor
 import java.io.StringReader
 import java.nio.charset.Charset
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * A class that loads and caches remote properties from S3 buckets. It extends [JvmThreadExecutor] to run periodic
+ * A class that loads and caches remote properties from S3 buckets. It extends [JvmFixedThreadExecutor] to run periodic
  * updates in a scheduled manner. It fetches property files from remote sources and caches them for fast access.
  *
  * @property i18nPropertyFilesSupplier The remote property supplier used to fetch remote property files.
@@ -21,14 +21,14 @@ import java.util.concurrent.ConcurrentHashMap
  * @property remoteBundles A list of remote bundle identifiers for fetching property files.
  * @property charset The character set used for decoding the property files.
  * @author Miłosz Gilga
- * @see JvmThreadExecutor
+ * @see JvmFixedThreadExecutor
  */
 class CacheableRemotePropertiesLoader(
 	private val i18nPropertyFilesSupplier: I18nPropertyFilesSupplier,
 	private val languageTags: Set<String>,
 	private val remoteBundles: List<String>,
 	private val charset: Charset,
-) : JvmThreadExecutor() {
+) : JvmFixedThreadExecutor() {
 
 	companion object {
 		private val log = LoggerFactory.getLogger(CacheableRemotePropertiesLoader::class.java)

@@ -2,10 +2,8 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.core.jvm
+package pl.jwizard.jwc.core.jvm.thread
 
-import org.springframework.beans.factory.DisposableBean
-import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
@@ -14,22 +12,11 @@ import java.util.concurrent.TimeUnit
  * It uses a [ScheduledThreadPoolExecutor] to manage periodic tasks.
  *
  * @property countOfThreads The number of threads in the pool. Defaults to 1.
- * @constructor Initializes a thread pool executor with the specified number of threads.
  * @author Miłosz Gilga
  */
-abstract class JvmThreadExecutor(private val countOfThreads: Int = 1) : DisposableBean, Runnable {
-
-	/**
-	 * Executor service for managing the scheduled tasks with fixed delays.
-	 * It uses a scheduled thread pool with the specified number of threads defined by [countOfThreads].
-	 */
-	private val executor = Executors.newScheduledThreadPool(countOfThreads)
-
-	/**
-	 * Shuts down the executor service gracefully when the bean is destroyed.
-	 * This method is called automatically by Spring when the bean is disposed.
-	 */
-	override fun destroy() = executor.shutdown()
+abstract class JvmFixedThreadExecutor(
+	private val countOfThreads: Int = 1
+) : JvmThreadExecutor(countOfThreads), Runnable {
 
 	/**
 	 * Starts the execution of the runnable task with a fixed delay between each execution.

@@ -10,15 +10,15 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.jda.spi.ChannelListenerGuard
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
-import pl.jwizard.jwc.core.jvm.JvmThreadExecutor
+import pl.jwizard.jwc.core.jvm.thread.JvmFixedThreadExecutor
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.property.GuildProperty
-import pl.jwizard.jwc.core.util.qualifier
+import pl.jwizard.jwc.core.util.ext.qualifier
 import java.time.Instant
 
 /**
  * Monitors voice channels in guilds to detect when they become empty and performs actions accordingly.
- * This component extends [JvmThreadExecutor] to periodically check voice channels and uses [ChannelListenerGuard]
+ * This component extends [JvmFixedThreadExecutor] to periodically check voice channels and uses [ChannelListenerGuard]
  * to handle voice channel events.
  *
  * @property jdaInstance Provide access to the JDA API, used to retrieve guild information.
@@ -26,22 +26,17 @@ import java.time.Instant
  * @property playerManagersBean Manage audio players and their connections in guilds.
  * @author Miłosz Gilga
  * @see ChannelListenerGuard
- * @see JvmThreadExecutor
+ * @see JvmFixedThreadExecutor
  */
 @Component
 class ChannelListenerGuardBean(
 	private val jdaInstance: JdaInstance,
 	private val environmentBean: EnvironmentBean,
 	private val playerManagersBean: PlayerManagersBean,
-) : ChannelListenerGuard, JvmThreadExecutor(MAX_THREADS) {
+) : ChannelListenerGuard, JvmFixedThreadExecutor() {
 
 	companion object {
 		private val log = LoggerFactory.getLogger(ChannelListenerGuardBean::class.java)
-
-		/**
-		 * The maximum number of threads used for the executor service.
-		 */
-		private const val MAX_THREADS = 5
 
 		/**
 		 * The interval in seconds at which the executor service runs to check voice channels.
@@ -60,10 +55,7 @@ class ChannelListenerGuardBean(
 	 */
 	override fun initThreadPool() {
 		start(intervalSec = INTERVAL_TICK_SEC)
-		log.info(
-			"Start listening users voice channels with interval: {}s and threads count: {}.",
-			INTERVAL_TICK_SEC, MAX_THREADS
-		)
+		log.info("Start listening users voice channels with interval: {}s.", INTERVAL_TICK_SEC)
 	}
 
 	/**
