@@ -41,11 +41,16 @@ class I18nBean(
 	}
 
 	/**
-	 * TODO
+	 * Retrieves a translated message based on the provided [I18nLocaleSource], language, and parameters.
 	 *
-	 * @param i18nLocaleSource
-	 * @param lang
-	 * @param params
+	 * This method fetches a localized message for the specified locale. If no language is provided, it defaults
+	 * to the language specified in the environment properties. Placeholders within the message are replaced with
+	 * the corresponding values from the [params] map.
+	 *
+	 * @param i18nLocaleSource The source providing the placeholder for the message.
+	 * @param lang The language tag representing the desired locale (ex. *en*). If null, the default language is used.
+	 * @param params A map of parameters to replace placeholders within the message. Default is an empty map.
+	 * @return The translated message with placeholders replaced by the corresponding parameters.
 	 */
 	fun t(i18nLocaleSource: I18nLocaleSource, lang: String?, params: Map<String, Any> = emptyMap()): String {
 		val defaultLanguage = environmentBean.getProperty<String>(BotProperty.I18N_DEFAULT_LANGUAGE)
