@@ -60,10 +60,8 @@ import kotlin.reflect.KClass
  *
  * @property key The key used to retrieve the property value from various property sources.
  * @property type The type of the property value. Defaults to [String] if not specified.
- * @constructor Creates a [BotProperty] with the specified [key] and [type]. If only [key] is provided,
- * 							the [type] defaults to [String].
  * @author Miłosz Gilga
- * @see BotMultiProperty
+ * @see BotListProperty
  */
 enum class BotProperty(
 	override val key: String,

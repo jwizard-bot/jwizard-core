@@ -59,7 +59,7 @@ class EnvironmentBean(private val springKtContextFactory: SpringKtContextFactory
 		propertiesEnv = PropertiesEnvironment(environment.propertySources)
 		propertiesEnv.createResolver()
 
-		val runtimeProfiles = getMultiProperty<String>(BotMultiProperty.RUNTIME_PROFILES)
+		val runtimeProfiles = getListProperty<String>(BotListProperty.RUNTIME_PROFILES)
 		propertiesEnv.addSource(YamlPropertySourceLoader(runtimeProfiles))
 		log.info("Loaded runtime profiles: {}", runtimeProfiles)
 
@@ -86,28 +86,28 @@ class EnvironmentBean(private val springKtContextFactory: SpringKtContextFactory
 	 * found, a [PropertyNotFoundException] is thrown.
 	 *
 	 * @param T The type of the property values in the list.
-	 * @param botMultiProperty The multi-property definition containing the key and element type.
+	 * @param botListProperty The multi-property definition containing the key and element type.
 	 * @return A list of properties of type [T].
 	 */
-	final inline fun <reified T> getMultiProperty(botMultiProperty: BotMultiProperty): List<T> {
+	final inline fun <reified T> getListProperty(botListProperty: BotListProperty): List<T> {
 		val elements = mutableListOf<String>()
 		val resolver = propertiesEnv.resolver
-		if (botMultiProperty.separator == null) {
+		if (botListProperty.separator == null) {
 			var listIndex = 0
 			while (true) {
-				val listElement = resolver.getProperty("${botMultiProperty.key}[${listIndex++}]")
+				val listElement = resolver.getProperty("${botListProperty.key}[${listIndex++}]")
 					?: break
 				elements.add(listElement)
 			}
 		} else {
-			val rawValues = resolver.getProperty(botMultiProperty.key)
-				?: throw PropertyNotFoundException(this::class, botMultiProperty.key)
-			rawValues.split(botMultiProperty.separator).forEach { elements.add(it.trim()) }
+			val rawValues = resolver.getProperty(botListProperty.key)
+				?: throw PropertyNotFoundException(this::class, botListProperty.key)
+			rawValues.split(botListProperty.separator).forEach { elements.add(it.trim()) }
 		}
 		if (elements.isEmpty()) {
-			throw PropertyNotFoundException(this::class, botMultiProperty.key)
+			throw PropertyNotFoundException(this::class, botListProperty.key)
 		}
-		return elements.map { KtCast.castToValue(it, botMultiProperty.listElementsType) }
+		return elements.map { KtCast.castToValue(it, botListProperty.listElementsType) }
 	}
 
 	/**

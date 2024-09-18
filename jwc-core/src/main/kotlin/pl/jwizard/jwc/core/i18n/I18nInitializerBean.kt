@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.i18n.spi.I18nPropertyFilesSupplier
 import pl.jwizard.jwc.core.i18n.spi.LanguageSupplier
-import pl.jwizard.jwc.core.property.BotMultiProperty
+import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import java.nio.charset.StandardCharsets
@@ -72,7 +72,7 @@ class I18nInitializerBean(private val environmentBean: EnvironmentBean) : Dispos
 		languages.putAll(languageSupplier.getLanguages())
 		source = CombinedMessageSource(i18nPropertyFilesSupplier, languages.keys, DEFAULT_CHARSET)
 
-		val remoteBundles = environmentBean.getMultiProperty<String>(BotMultiProperty.I18N_RESOURCES_REMOTE)
+		val remoteBundles = environmentBean.getListProperty<String>(BotListProperty.I18N_RESOURCES_REMOTE)
 		val revalidateCacheSec = environmentBean.getProperty<Int>(BotProperty.I81N_REVALIDATE_CACHE_SEC)
 
 		source.setCacheSeconds(revalidateCacheSec)
@@ -88,7 +88,7 @@ class I18nInitializerBean(private val environmentBean: EnvironmentBean) : Dispos
 	 * @return A list of base names for message bundles.
 	 */
 	private fun createLocaleBundlePaths(): List<String> {
-		val localMessageBundles = environmentBean.getMultiProperty<String>(BotMultiProperty.I18N_RESOURCES_LOCALE)
+		val localMessageBundles = environmentBean.getListProperty<String>(BotListProperty.I18N_RESOURCES_LOCALE)
 		val basenameBundles = arrayOfNulls<String>(localMessageBundles.size + 1)
 		basenameBundles[0] = DEFAULT_I18N_BUNDLE_NAME
 		localMessageBundles.toTypedArray().copyInto(basenameBundles, destinationOffset = 1)

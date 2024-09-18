@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.jvm.JvmThreadExecutor
-import pl.jwizard.jwc.core.property.BotMultiProperty
+import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
 
@@ -50,7 +50,7 @@ class ActivitySplashesBean(
 	 */
 	fun initSplashesSequence() {
 		val splashesEnabled = environmentBean.getProperty<Boolean>(BotProperty.JDA_SPLASHES_ENABLED)
-		splashes = environmentBean.getMultiProperty<String>(BotMultiProperty.JDA_SPLASHES_ELEMENTS)
+		splashes = environmentBean.getListProperty<String>(BotListProperty.JDA_SPLASHES_ELEMENTS)
 
 		if (!splashesEnabled || splashes.isEmpty()) {
 			val defaultActivity = environmentBean.getProperty<String>(BotProperty.JDA_DEFAULT_ACTIVITY)

@@ -6,11 +6,11 @@ package pl.jwizard.jwc.core.property
 
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.cache.CacheFlag
-import pl.jwizard.jwc.core.property.BotMultiProperty.*
+import pl.jwizard.jwc.core.property.BotListProperty.*
 import kotlin.reflect.KClass
 
 /**
- * Enum representing different types of multi-properties used in the application.
+ * Enum representing different types of list-properties used in the application.
  *
  * Defining following properties:
  *
@@ -28,11 +28,10 @@ import kotlin.reflect.KClass
  * @property key The key used to retrieve the property value.
  * @property listElementsType The type of elements in the list represented by this property.
  * @property separator Optional separator used to split the list elements in a string representation.
- * @constructor Creates an instance of [BotMultiProperty].
  * @author Miłosz Gilga
  * @see BotProperty
  */
-enum class BotMultiProperty(
+enum class BotListProperty(
 	override val key: String,
 	val listElementsType: KClass<*>,
 	val separator: String?,

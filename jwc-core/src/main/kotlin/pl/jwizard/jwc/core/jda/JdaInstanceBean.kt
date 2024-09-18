@@ -26,7 +26,7 @@ import pl.jwizard.jwc.core.jda.spi.JdaPermissionFlagsSupplier
 import pl.jwizard.jwc.core.jda.spi.JdaResourceSupplier
 import pl.jwizard.jwc.core.jvm.JvmDisposable
 import pl.jwizard.jwc.core.jvm.JvmDisposableHook
-import pl.jwizard.jwc.core.property.BotMultiProperty
+import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
 
@@ -77,9 +77,9 @@ final class JdaInstanceBean(
 	fun createJdaWrapper() {
 		log.info("JDA instance is warming up...")
 
-		val gatewayIntents = environmentBean.getMultiProperty<String>(BotMultiProperty.JDA_GATEWAY_INTENTS)
-		val enabledCacheFlags = environmentBean.getMultiProperty<String>(BotMultiProperty.JDA_CACHE_FLAGS_ENABLED)
-		val disabledCacheFlags = environmentBean.getMultiProperty<String>(BotMultiProperty.JDA_CACHE_FLAGS_DISABLED)
+		val gatewayIntents = environmentBean.getListProperty<String>(BotListProperty.JDA_GATEWAY_INTENTS)
+		val enabledCacheFlags = environmentBean.getListProperty<String>(BotListProperty.JDA_CACHE_FLAGS_ENABLED)
+		val disabledCacheFlags = environmentBean.getListProperty<String>(BotListProperty.JDA_CACHE_FLAGS_DISABLED)
 
 		val permissionFlags = jdaPermissionFlagsSupplier.getPermissionFlags()
 		val permissions = permissionFlags.map { Permission.valueOf(it) }
