@@ -2,8 +2,8 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-
 import org.codehaus.groovy.runtime.GStringImpl
+import org.jetbrains.dokka.DokkaConfiguration
 
 import java.time.LocalDateTime
 import java.time.Year
@@ -84,6 +84,14 @@ subprojects {
     pluginsMapConfiguration.set([
       'org.jetbrains.dokka.base.DokkaBase': generateDokkaBaseConfig()
     ])
+    dokkaSourceSets.configureEach {
+      documentedVisibilities.set([
+        DokkaConfiguration.Visibility.PUBLIC,
+        DokkaConfiguration.Visibility.PRIVATE,
+        DokkaConfiguration.Visibility.PROTECTED
+      ])
+    }
+    suppressInheritedMembers = true
   }
 
   noArg {
@@ -122,6 +130,7 @@ dokkaHtmlMultiModule {
   pluginsMapConfiguration.set([
     'org.jetbrains.dokka.base.DokkaBase': generateDokkaBaseConfig(additionalAssets)
   ])
+  suppressInheritedMembers = true
   includes.from(file('dokka/README-DOCS.md'))
 }
 
@@ -175,7 +184,8 @@ def generateDokkaBaseConfig(List additionalAssets = []) {
   return """
       {
         "customAssets": [${definedDokkaAssets}],
-        "footerMessage": "${ext.dokkaCopyright}"
+        "footerMessage": "${ext.dokkaCopyright}",
+        "separateInheritedMembers": false
       }
     """
 }
