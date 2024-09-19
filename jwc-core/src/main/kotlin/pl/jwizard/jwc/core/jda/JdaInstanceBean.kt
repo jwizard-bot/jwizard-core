@@ -19,7 +19,8 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag
 import net.dv8tion.jda.internal.managers.AccountManagerImpl
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.core.DiscordBotAppRunner.context
+import pl.jwizard.jwc.core.SpringKtContextFactory
+import pl.jwizard.jwc.core.jda.embed.EmbedColor
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.jda.spi.JdaPermissionFlagsSupplier
@@ -48,6 +49,7 @@ final class JdaInstanceBean(
 	private val environmentBean: EnvironmentBean,
 	private val jdaPermissionFlagsSupplier: JdaPermissionFlagsSupplier,
 	private val jdaResourceSupplier: JdaResourceSupplier,
+	private val applicationContext: SpringKtContextFactory,
 ) : JdaInstance, JvmDisposable {
 
 	companion object {
@@ -85,7 +87,7 @@ final class JdaInstanceBean(
 		val permissions = permissionFlags.map { Permission.valueOf(it) }
 		log.info("Load: {} JDA permissions.", permissions.size)
 
-		val eventListeners = context.getBeansAnnotatedWith<ListenerAdapter, JdaEventListenerBean>()
+		val eventListeners = applicationContext.getBeansAnnotatedWith<ListenerAdapter, JdaEventListenerBean>()
 		log.info("Load: {} JDA event listeners: {}.", eventListeners.size, eventListeners.map { it.javaClass.name })
 
 		val jdaToken = environmentBean.getProperty<String>(BotProperty.JDA_SECRET_TOKEN)

@@ -45,8 +45,7 @@ object DiscordBotAppRunner {
 	/**
 	 * Spring Kotlin Context instance.
 	 */
-	lateinit var context: SpringKtContextFactory
-		private set
+	private lateinit var context: SpringKtContextFactory
 
 	/**
 	 * Static method which starts loading configuration, resources and a new JDA instance of the bot being created.
