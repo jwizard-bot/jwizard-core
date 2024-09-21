@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Icon
 import net.dv8tion.jda.api.exceptions.InvalidTokenException
-import net.dv8tion.jda.api.hooks.ListenerAdapter
+import net.dv8tion.jda.api.hooks.EventListener
 import net.dv8tion.jda.api.managers.AccountManager
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.cache.CacheFlag
@@ -87,7 +87,7 @@ final class JdaInstanceBean(
 		val permissions = permissionFlags.map { Permission.valueOf(it) }
 		log.info("Load: {} JDA permissions.", permissions.size)
 
-		val eventListeners = applicationContext.getBeansAnnotatedWith<ListenerAdapter, JdaEventListenerBean>()
+		val eventListeners = applicationContext.getBeansAnnotatedWith<EventListener, JdaEventListenerBean>()
 		log.info("Load: {} JDA event listeners: {}.", eventListeners.size, eventListeners.map { it.javaClass.name })
 
 		val jdaToken = environmentBean.getProperty<String>(BotProperty.JDA_SECRET_TOKEN)
