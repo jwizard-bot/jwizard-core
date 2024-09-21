@@ -58,6 +58,14 @@ jda:
     secondary: 0x000000
     tint: 0x505050
     danger: 0xEF4444
+  interaction:
+    max-embed-messages: 10
+    max-action-rows: 5
+    max-components-in-action-row: 5
+    disable-components-delay-sec: 840 # 14 min
+  exception:
+    segment-size: 100
+    url-refer-template: '%s/error-codes/%d'
 
 s3:
   region: eu-central-1
