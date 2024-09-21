@@ -20,7 +20,7 @@ import net.dv8tion.jda.internal.managers.AccountManagerImpl
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.SpringKtContextFactory
-import pl.jwizard.jwc.core.jda.embed.EmbedColor
+import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.jda.spi.JdaPermissionFlagsSupplier
@@ -41,6 +41,7 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
  * @property environmentBean Provides access to application properties, including the bot token.
  * @property jdaPermissionFlagsSupplier Provides bean supplied JDA permission flags.
  * @property jdaResourceSupplier S3 resource supplier fetching JDA resources (logo and banner).
+ * @property jdaColorStoreBean Provides access to JDA colors loader.
  * @constructor Creates an instance of [JdaInstanceBean] with the specified [environmentBean].
  * @author Miłosz Gilga
  */
@@ -50,6 +51,7 @@ final class JdaInstanceBean(
 	private val jdaPermissionFlagsSupplier: JdaPermissionFlagsSupplier,
 	private val jdaResourceSupplier: JdaResourceSupplier,
 	private val applicationContext: SpringKtContextFactory,
+	private val jdaColorStoreBean: JdaColorStoreBean,
 ) : JdaInstance, JvmDisposable {
 
 	companion object {
@@ -78,6 +80,7 @@ final class JdaInstanceBean(
 	 */
 	fun createJdaWrapper() {
 		log.info("JDA instance is warming up...")
+		jdaColorStoreBean.loadColors()
 
 		val gatewayIntents = environmentBean.getListProperty<String>(BotListProperty.JDA_GATEWAY_INTENTS)
 		val enabledCacheFlags = environmentBean.getListProperty<String>(BotListProperty.JDA_CACHE_FLAGS_ENABLED)
