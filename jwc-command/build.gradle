@@ -4,6 +4,8 @@
  */
 dependencies {
   implementation libs.springContext
+  implementation libs.jda
+  implementation libs.collectionUtils
 
   implementation project(':jwc-core')
 }
