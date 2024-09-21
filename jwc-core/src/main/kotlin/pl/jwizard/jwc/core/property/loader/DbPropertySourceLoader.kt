@@ -6,11 +6,11 @@ package pl.jwizard.jwc.core.property.loader
 
 import pl.jwizard.jwc.core.property.PropertySourceData
 import pl.jwizard.jwc.core.property.spi.RemotePropertySupplier
-import pl.jwizard.jwc.core.util.KtCast
+import pl.jwizard.jwc.core.util.castToValue
 
 /**
  * Load properties from an external data source (database) using the [RemotePropertySupplier]. These properties are
- * then cast to the appropriate types using the [KtCast] utility.
+ * then cast to the appropriate types using the [castToValue] utility function.
  *
  * @property remotePropertySupplier Provides access to remote properties, fetched from a database.
  * @author Miłosz Gilga
@@ -30,7 +30,7 @@ class DbPropertySourceLoader(
 		return rawProperties
 			.map {
 				val (value, type) = it.value
-				it.key to KtCast.castToValue(value, type)
+				it.key to castToValue<Any>(value, Class.forName("java.lang.$type").kotlin)
 			}
 			.toMap()
 	}

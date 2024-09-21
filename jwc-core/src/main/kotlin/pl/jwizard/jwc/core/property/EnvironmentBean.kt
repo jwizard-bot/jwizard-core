@@ -14,7 +14,7 @@ import pl.jwizard.jwc.core.property.extractor.VaultPropertyValueExtractor
 import pl.jwizard.jwc.core.property.loader.DbPropertySourceLoader
 import pl.jwizard.jwc.core.property.loader.YamlPropertySourceLoader
 import pl.jwizard.jwc.core.property.spi.RemotePropertySupplier
-import pl.jwizard.jwc.core.util.KtCast
+import pl.jwizard.jwc.core.util.castToValue
 import kotlin.reflect.KClass
 
 /**
@@ -107,7 +107,7 @@ class EnvironmentBean(private val springKtContextFactory: SpringKtContextFactory
 		if (elements.isEmpty()) {
 			throw PropertyNotFoundException(this::class, botListProperty.key)
 		}
-		return elements.map { KtCast.castToValue(it, botListProperty.listElementsType) }
+		return elements.map { castToValue(it, botListProperty.listElementsType) }
 	}
 
 	/**
@@ -124,7 +124,7 @@ class EnvironmentBean(private val springKtContextFactory: SpringKtContextFactory
 	final inline fun <reified T : Any> getProperty(botProperty: BotProperty): T {
 		val rawValue = propertiesEnv.resolver.getProperty(botProperty.key)
 			?: throw PropertyNotFoundException(this::class, botProperty.key)
-		return KtCast.castToValue(rawValue, botProperty.type)
+		return castToValue(rawValue, botProperty.type)
 	}
 
 	/**
