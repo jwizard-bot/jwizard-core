@@ -13,7 +13,9 @@ import pl.jwizard.jwc.core.exception.spi.ExceptionSupplier
 import pl.jwizard.jwc.core.i18n.I18nBean
 import pl.jwizard.jwc.core.i18n.I18nLocaleSource
 import pl.jwizard.jwc.core.i18n.source.I18nActionSource
+import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.i18n.source.I18nUtilSource
+import pl.jwizard.jwc.core.integrity.ReferentialIntegrityChecker
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
@@ -64,7 +66,11 @@ class ExceptionTrackerStore(
 	 */
 	fun loadTrackers() {
 		val segmentSize = environmentBean.getProperty<Int>(BotProperty.JDA_EXCEPTION_SEGMENT_SIZE)
-		trackers.putAll(exceptionSupplier.loadTrackers())
+
+		val fetchedTrackers = exceptionSupplier.loadTrackers()
+		ReferentialIntegrityChecker.checkIntegrity<I18nExceptionSource>(this::class, fetchedTrackers.keys)
+		trackers.putAll(fetchedTrackers)
+
 		val segments = trackers.map { it.value / segmentSize }.distinct()
 		log.info("Load: {} exception trackers with: {} segments.", trackers.size, segments.size)
 	}

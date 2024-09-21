@@ -4,7 +4,6 @@
  */
 package pl.jwizard.jwc.command.reflect
 
-import org.apache.commons.collections4.CollectionUtils
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider
 import org.springframework.core.type.filter.AnnotationTypeFilter
@@ -13,14 +12,12 @@ import pl.jwizard.jwc.command.CommandBase
 import pl.jwizard.jwc.command.CommandsProxyStoreBean
 import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.refer.CommandArgument
-import pl.jwizard.jwc.command.refer.ReferentialIntegrityChecker
-import pl.jwizard.jwc.command.reflect.exception.DataIntegrityViolationException
 import pl.jwizard.jwc.command.spi.CommandDataSupplier
 import pl.jwizard.jwc.command.spi.ModuleDataSupplier
 import pl.jwizard.jwc.core.DiscordBotAppRunner.BASE_PACKAGE
 import pl.jwizard.jwc.core.SpringKtContextFactory
+import pl.jwizard.jwc.core.integrity.ReferentialIntegrityChecker
 import pl.jwizard.jwc.core.jda.spi.CommandsLoader
-import kotlin.enums.enumEntries
 
 /**
  * A bean responsible for loading command metadata and classes within the Discord bot framework.
@@ -71,11 +68,11 @@ class CommandsLoaderBean(
 
 		val suppliedCommandArguments = commandDataSupplier.getCommandArgumentKeys()
 		log.info("Fetch: {} command arguments from datasource.", suppliedCommandArguments.size)
-		checkIntegrity<CommandArgument>(suppliedCommandArguments)
+		ReferentialIntegrityChecker.checkIntegrity<CommandArgument>(this::class, suppliedCommandArguments)
 
 		val suppliedCommands = commandDataSupplier.getCommands()
 		log.info("Fetch: {} commands from datasource.", suppliedCommands.size)
-		checkIntegrity<Command>(suppliedCommands.keys)
+		ReferentialIntegrityChecker.checkIntegrity<Command>(this::class, suppliedCommands.keys)
 		commandsProxyStoreBean.commands.putAll(suppliedCommands)
 	}
 
@@ -96,23 +93,8 @@ class CommandsLoaderBean(
 		val commands = commandsProxyStoreBean.commands
 		log.info("Load: {} commands ({} persisted in DB) classes.", loadedCommands.size, commands.size)
 		if (loadedCommands.size != commands.size) {
-			log.warn("Unable to load: {} commands.", commands.keys - loadedCommands)
-		}
-	}
-
-	/**
-	 * Checks the integrity of a collection of command names against the defined enumeration of commands, ensuring that
-	 * all expected commands are present.
-	 *
-	 * @param T The type of the enum to check against.
-	 * @param source The collection of command names to verify.
-	 */
-	private final inline fun <reified T> checkIntegrity(
-		source: Collection<String>
-	) where T : Enum<T>, T : ReferentialIntegrityChecker {
-		val dataEntries = enumEntries<T>()
-		if (!CollectionUtils.isEqualCollection(source, dataEntries.map { it.propName })) {
-			throw DataIntegrityViolationException(this::class, dataEntries[0].moduleIntegrityName)
+			val nonLoadedCommands = commands.keys - loadedCommands
+			log.warn("Unable to load: {} commands: {}.", nonLoadedCommands.size, nonLoadedCommands)
 		}
 	}
 }

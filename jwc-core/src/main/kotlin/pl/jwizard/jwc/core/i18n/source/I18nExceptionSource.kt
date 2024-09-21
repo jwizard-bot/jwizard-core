@@ -6,6 +6,7 @@ package pl.jwizard.jwc.core.i18n.source
 
 import pl.jwizard.jwc.core.i18n.I18nBean
 import pl.jwizard.jwc.core.i18n.I18nLocaleSource
+import pl.jwizard.jwc.core.integrity.ReferentialIntegrityChecker
 
 /**
  * Provides internationalization (i18n) placeholders for various exception-related messages.
@@ -14,7 +15,7 @@ import pl.jwizard.jwc.core.i18n.I18nLocaleSource
  * @see I18nLocaleSource
  * @see I18nBean
  */
-enum class I18nExceptionSource(override val placeholder: String) : I18nLocaleSource {
+enum class I18nExceptionSource(override val placeholder: String) : I18nLocaleSource, ReferentialIntegrityChecker {
 	UNEXPECTED_EXCEPTION("jwc.exception.unexpectedException"),
 	MODULE_IS_TURNED_OFF("jwc.exception.moduleIsTurnedOffException"),
 	TRACK_OFFSET_OUT_OF_BOUNDS("jwc.exception.trackOffsetOutOfBoundsException"),
@@ -51,4 +52,22 @@ enum class I18nExceptionSource(override val placeholder: String) : I18nLocaleSou
 	UNEXPECTED_ERROR_ON_LOAD_RADIO("jwc.exception.unexpectedErrorOnLoadRadioException"),
 	UNEXPECTED_ERROR_WHILE_STREAMING_RADIO("jwc.exception.unexpectedErrorWhileStreamingRadioException"),
 	RADIO_STATION_NOT_PROVIDING_PLAYBACK_DATA("jwc.exception.radioStationNotProvidingPlaybackDataException"),
+	;
+
+	/**
+	 * Extracts the property name from the placeholder string by retrieving the substring after the last dot for
+	 * integrity checker.
+	 *
+	 * @return The property name derived from the placeholder.
+	 */
+	override val propName: String
+		get() = placeholder.substring(placeholder.lastIndexOf('.') + 1)
+
+	/**
+	 * Provides a name for the integrity check module.
+	 *
+	 * @return The module name for integrity checking.
+	 */
+	override val moduleIntegrityName: String
+		get() = "exceptions"
 }

@@ -4,6 +4,8 @@
  */
 package pl.jwizard.jwc.command.refer
 
+import pl.jwizard.jwc.core.integrity.ReferentialIntegrityChecker
+
 /**
  * Enum representing various commands that can be executed in the application. Each command is associated with a string
  * property name used for referencing purposes.

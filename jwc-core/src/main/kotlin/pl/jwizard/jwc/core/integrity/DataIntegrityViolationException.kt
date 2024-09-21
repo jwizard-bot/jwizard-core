@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.command.reflect.exception
+package pl.jwizard.jwc.core.integrity
 
 import pl.jwizard.jwc.core.IrreparableException
 import kotlin.reflect.KClass
@@ -22,6 +22,6 @@ class DataIntegrityViolationException(
 	private val contractScheme: String,
 ) : IrreparableException(
 	clazz = clazz,
-	messageContent = "Contract in \"%s\" between local and remote sources obtained.",
+	messageContent = "Contract in \"%s\" between local and remote sources not obtained.",
 	args = arrayOf(contractScheme)
 )
