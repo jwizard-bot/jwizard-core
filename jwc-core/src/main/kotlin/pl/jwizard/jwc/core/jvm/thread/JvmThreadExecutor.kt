@@ -15,7 +15,7 @@ import java.util.concurrent.ScheduledExecutorService
  * @property countOfThreads The number of threads in the thread pool.
  * @author Miłosz Gilga
  */
-abstract class JvmThreadExecutor(private val countOfThreads: Int) : DisposableBean {
+abstract class JvmThreadExecutor(private val countOfThreads: Int = 1) : DisposableBean {
 
 	/**
 	 * The scheduled executor service managing the thread pool. Tasks can be scheduled with a fixed delay or executed

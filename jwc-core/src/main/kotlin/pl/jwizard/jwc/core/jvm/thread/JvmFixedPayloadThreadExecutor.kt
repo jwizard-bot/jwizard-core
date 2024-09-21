@@ -10,11 +10,13 @@ import java.util.concurrent.TimeUnit
  * Abstract class representing a thread executor with a fixed number of threads. It provides functionality to schedule
  * tasks with a specific payload and delay.
  *
- * @param T The type of the payload to be processed by the thread.
+ * @param T The type of the payload to be processed by the thread. By default, single thread.
  * @property countOfThreads The fixed number of threads in the thread pool.
  * @author Miłosz Gilga
  */
-abstract class JvmFixedPayloadThreadExecutor<T>(private val countOfThreads: Int) : JvmThreadExecutor(countOfThreads) {
+abstract class JvmFixedPayloadThreadExecutor<T>(
+	private val countOfThreads: Int = 1
+) : JvmThreadExecutor(countOfThreads) {
 
 	/**
 	 * Schedules a single execution of a task with the provided payload after a specified delay.
