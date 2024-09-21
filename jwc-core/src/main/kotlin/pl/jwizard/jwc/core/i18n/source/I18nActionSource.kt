@@ -15,6 +15,11 @@ import pl.jwizard.jwc.core.i18n.I18nLocaleSource
  * @see I18nBean
  */
 enum class I18nActionSource(override val placeholder: String) : I18nLocaleSource {
-	REFRESH_BUTTON("jwc.action.refreshButton"),
+	REFRESH("jwc.action.refreshButton"),
+	DETAILS("jwc.action.details"),
+	FIRST("jwc.action.first"),
+	PREV("jwc.action.prev"),
+	NEXT("jwc.action.next"),
+	LAST("jwc.action.last"),
 	;
 }
