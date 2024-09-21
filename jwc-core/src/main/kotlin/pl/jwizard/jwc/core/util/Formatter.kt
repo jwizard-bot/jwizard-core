@@ -4,13 +4,14 @@
  */
 package pl.jwizard.jwc.core.util
 
-import net.dv8tion.jda.api.entities.Guild
-
 /**
- * Formats the provided [Guild] object into a string representation.
- * Formatted [String] that includes the guild's name and ID.
- * Example format: `"GuildName <@GuildID>"`.
+ * Formats a string to represent a qualifier in Discord.
  *
+ * This function takes a name and an ID, and formats them into a string that follows the Discord mention format.
+ *
+ * @param name Readable name.
+ * @param id The numbered unique ID.
+ * @return A formatted string in the form of "name <@id>".
  * @author Miłosz Gilga
  */
-val Guild.qualifier get() = "\"$name <@${id}>\""
+fun formatQualifier(name: String, id: String) = "\"%s <@%s>\"".format(name, id)
