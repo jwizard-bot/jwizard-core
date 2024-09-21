@@ -18,6 +18,7 @@ import pl.jwizard.jwc.core.integrity.ReferentialIntegrityChecker
 enum class I18nExceptionSource(override val placeholder: String) : I18nLocaleSource, ReferentialIntegrityChecker {
 	UNEXPECTED_EXCEPTION("jwc.exception.unexpectedException"),
 	MODULE_IS_TURNED_OFF("jwc.exception.moduleIsTurnedOffException"),
+	EPHEMERAL_UNEXPECTED_EXCEPTION("jwc.exception.ephemeralUnexpectedException"),
 	TRACK_OFFSET_OUT_OF_BOUNDS("jwc.exception.trackOffsetOutOfBoundsException"),
 	TRACK_THE_SAME_POSITION("jwc.exception.trackTheSamePositionException"),
 	TRACK_QUEUE_IS_EMPTY("jwc.exception.trackQueueIsEmptyException"),

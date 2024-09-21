@@ -16,6 +16,7 @@ import pl.jwizard.jwc.command.spi.CommandDataSupplier
 import pl.jwizard.jwc.command.spi.ModuleDataSupplier
 import pl.jwizard.jwc.core.exception.ExceptionTrackerStore
 import pl.jwizard.jwc.core.i18n.I18nBean
+import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
 import pl.jwizard.jwc.core.property.EnvironmentBean
 
@@ -28,6 +29,7 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
  * @property exceptionTrackerStore Tracks exceptions for reporting.
  * @property i18nBean Provides internationalization support.
  * @property environmentBean Accesses environment-specific properties.
+ * @property jdaColorStoreBean Accesses to JDA defined colors for embed messages.
  * @author Miłosz Gilga
  * @see CommandEventHandler
  * @see SlashCommandInteractionEvent
@@ -40,6 +42,7 @@ class SlashCommandEventHandlerBean(
 	private val exceptionTrackerStore: ExceptionTrackerStore,
 	private val i18nBean: I18nBean,
 	private val environmentBean: EnvironmentBean,
+	private val jdaColorStoreBean: JdaColorStoreBean,
 ) : CommandEventHandler<SlashCommandInteractionEvent>(
 	commandDataSupplier,
 	moduleDataSupplier,
@@ -47,6 +50,7 @@ class SlashCommandEventHandlerBean(
 	exceptionTrackerStore,
 	i18nBean,
 	environmentBean,
+	jdaColorStoreBean,
 ) {
 
 	/**
@@ -112,7 +116,7 @@ class SlashCommandEventHandlerBean(
 		return if (event.hook.isExpired) {
 			event.channel.sendMessageEmbeds(embedMessages).addComponents(actionRows)
 		} else {
-			event.hook.sendMessageEmbeds(embedMessages).addComponents(actionRows)
+			event.hook.sendMessageEmbeds(embedMessages).setEphemeral(response.privateMessage).addComponents(actionRows)
 		}
 	}
 }

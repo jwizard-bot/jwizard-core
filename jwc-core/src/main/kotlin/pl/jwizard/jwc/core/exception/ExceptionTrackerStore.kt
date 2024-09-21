@@ -18,6 +18,7 @@ import pl.jwizard.jwc.core.i18n.source.I18nUtilSource
 import pl.jwizard.jwc.core.integrity.ReferentialIntegrityChecker
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
+import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
@@ -76,40 +77,57 @@ class ExceptionTrackerStore(
 	}
 
 	/**
-	 * Creates a Discord embed message for the given exception.
+	 * Creates a formatted message embed for the given internationalization source, including tracker details.
 	 *
-	 * The embed includes a tracker ID (if available), the build version, and the localized description of the exception.
+	 * This method retrieves the tracker associated with the provided `i18nSource`, formats it with the current
+	 * application build version, and constructs a message embed to be sent in Discord.
 	 *
-	 * @param ex The exception for which the message is created.
-	 * @return A MessageEmbed containing the formatted exception information.
+	 * @param i18nSource The source for internationalization to create a descriptive message.
+	 * @param variables A map of variables to be included in the message (optional).
+	 * @param context The context of the command execution, which may include localization information (optional).
+	 * @return A MessageEmbed containing the formatted message.
 	 */
-	fun createTrackerMessage(ex: CommandPipelineException): MessageEmbed {
-		val tracker = extractTracker(ex)
+	fun createTrackerMessage(
+		i18nSource: I18nExceptionSource,
+		variables: Map<String, Any> = emptyMap(),
+		context: CommandBaseContext? = null
+	): MessageEmbed {
+		val tracker = extractTracker(i18nSource)
 		val buildVersion = environmentBean.getProperty<String>(BotProperty.DEPLOYMENT_BUILD_VERSION)
 		val stringJoiner = StringJoiner("")
 		if (tracker != null) {
-			val lang = ex.commandBaseContext?.guildLanguage
+			val lang = context?.guildLanguage
 			stringJoiner.addKeyValue(I18nUtilSource.BUG_TRACKER, tracker, lang)
 			stringJoiner.add("\n")
 			stringJoiner.addKeyValue(I18nUtilSource.COMPILATION_VERSION, buildVersion, lang)
 		}
-		return MessageEmbedBuilder(ex.commandBaseContext, i18nBean, jdaColorStoreBean)
-			.setDescription(ex.i18nExceptionSource, ex.variables)
+		return MessageEmbedBuilder(context, i18nBean, jdaColorStoreBean)
+			.setDescription(i18nSource, variables)
 			.appendDescription(stringJoiner.toString())
 			.setColor(JdaColor.ERROR)
 			.build()
 	}
 
 	/**
-	 * Creates a button link to the tracker associated with the exception.
+	 * Creates a tracker message embed for a specific CommandPipelineException. This overload uses the exception's
+	 * internal properties to construct the message.
 	 *
-	 * The link directs users to the service front URL, optionally including the tracker ID if available.
-	 *
-	 * @param ex The exception for which the tracker link is created.
-	 * @return An ActionRow containing a button with the tracker link.
+	 * @param ex The CommandPipelineException containing the necessary information for the tracker message.
+	 * @return A MessageEmbed formatted for the exception.
 	 */
-	fun createTrackerLink(ex: CommandPipelineException): ActionRow {
-		val tracker = extractTracker(ex)
+	fun createTrackerMessage(ex: CommandPipelineException) =
+		createTrackerMessage(ex.i18nExceptionSource, ex.variables, ex.commandBaseContext)
+
+	/**
+	 * Creates a link action row for the specified internationalization source, allowing users to view exception details.
+	 * The link is constructed using the extracted tracker and a base URL defined in the application properties.
+	 *
+	 * @param i18nSource The source for internationalization to create a descriptive button label.
+	 * @param context The context of the command execution, which may include localization information (optional).
+	 * @return An ActionRow containing a button that links to the exception details.
+	 */
+	fun createTrackerLink(i18nSource: I18nExceptionSource, context: CommandBaseContext? = null): ActionRow {
+		val tracker = extractTracker(i18nSource)
 		val baseUrl = environmentBean.getProperty<String>(BotProperty.SERVICE_FRONT_URL)
 		val trackerUrl = if (tracker != null) {
 			val urlReferTemplate = environmentBean.getProperty<String>(BotProperty.JDA_EXCEPTION_URL_REFER_TEMPLATE)
@@ -117,18 +135,28 @@ class ExceptionTrackerStore(
 		} else {
 			baseUrl
 		}
-		val detailsMessage = i18nBean.t(I18nActionSource.DETAILS, ex.commandBaseContext?.guildLanguage)
+		val detailsMessage = i18nBean.t(I18nActionSource.DETAILS, context?.guildLanguage)
 		return ActionRow.of(Button.link(trackerUrl, detailsMessage))
 	}
 
 	/**
-	 * Extracts the tracker ID from the exception's source.
+	 * Creates a link action row for a specific CommandPipelineException. This overload uses the exception's internal
+	 * properties to construct the link.
 	 *
-	 * @param ex The exception from which to extract the tracker.
-	 * @return The tracker ID, or null if not found.
+	 * @param ex The CommandPipelineException containing the necessary information for the tracker link.
+	 * @return An ActionRow containing a button that links to the exception details.
 	 */
-	private fun extractTracker(ex: CommandPipelineException): Int? {
-		val trackerKey = I18N_REFER_PATTERN.find(ex.i18nExceptionSource.placeholder)?.value
+	fun createTrackerLink(ex: CommandPipelineException) = createTrackerLink(ex.i18nExceptionSource, ex.commandBaseContext)
+
+	/**
+	 * Extracts the tracker number associated with a given internationalization exception source. This method retrieves
+	 * the last word from the `i18nExceptionSource` placeholder and looks it up in the internal trackers map.
+	 *
+	 * @param i18nExceptionSource The internationalization source from which to extract the tracker key.
+	 * @return The associated tracker count, or null if not found.
+	 */
+	private fun extractTracker(i18nExceptionSource: I18nExceptionSource): Int? {
+		val trackerKey = I18N_REFER_PATTERN.find(i18nExceptionSource.placeholder)?.value
 		return trackers[trackerKey]
 	}
 

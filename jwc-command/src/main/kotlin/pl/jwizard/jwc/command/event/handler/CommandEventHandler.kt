@@ -6,6 +6,8 @@ package pl.jwizard.jwc.command.event.handler
 
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Message
+import net.dv8tion.jda.api.entities.User
+import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel
 import net.dv8tion.jda.api.events.Event
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.components.ActionRow
@@ -29,6 +31,11 @@ import pl.jwizard.jwc.core.exception.ExceptionTrackerStore
 import pl.jwizard.jwc.core.exception.UnexpectedException
 import pl.jwizard.jwc.core.i18n.I18nBean
 import pl.jwizard.jwc.core.i18n.source.I18nDynamicMod
+import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
+import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
+import pl.jwizard.jwc.core.jda.color.JdaColor
+import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
+import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import java.util.*
@@ -46,6 +53,7 @@ import java.util.concurrent.TimeUnit
  * @property exceptionTrackerStore The bean for tracking exceptions.
  * @property i18nBean The bean for internationalization.
  * @property environmentBean The bean for environment properties.
+ * @property jdaColorStoreBean Accesses to JDA defined colors for embed messages.
  * @author Miłosz Gilga
  */
 abstract class CommandEventHandler<E : Event>(
@@ -55,6 +63,7 @@ abstract class CommandEventHandler<E : Event>(
 	private val exceptionTrackerStore: ExceptionTrackerStore,
 	private val i18nBean: I18nBean,
 	private val environmentBean: EnvironmentBean,
+	private val jdaColorStoreBean: JdaColorStoreBean,
 ) : ListenerAdapter(), DisposableBean {
 
 	/**
@@ -91,7 +100,9 @@ abstract class CommandEventHandler<E : Event>(
 	 * @param event The event that triggered this handler.
 	 */
 	protected fun initPipelineAndPerformCommand(event: E) {
-		var deferMessage: RestAction<Message>
+		var directEphemeralUser: User? = null
+		var context: CommandContext? = null
+		var commandResponse: CommandResponse
 		try {
 			try {
 				if (forbiddenInvocationCondition(event)) {
@@ -105,7 +116,7 @@ abstract class CommandEventHandler<E : Event>(
 					throw CommandInvocationException("forbidden invocation details")
 				}
 				val (commandNameOrAlias, commandArguments) = commandNameAndArguments(event)
-				val context = createCommandContext(event, properties)
+				context = createCommandContext(event, properties)
 
 				val commandDetails = commandsProxyStoreBean.commands[commandNameOrAlias]
 					?: throw CommandInvocationException("command by command name could not be found", context)
@@ -123,8 +134,13 @@ abstract class CommandEventHandler<E : Event>(
 				val parsedArguments = parseCommandArguments(context, commandDetails, commandArguments)
 				parsedArguments.forEach { (key, value) -> context.commandArguments[key] = value }
 
-				val commandResponse = executeCommand(context, commandDetails, commandNameOrAlias)
-				deferMessage = deferMessage(event, commandResponse)
+				commandResponse = executeCommand(context, commandDetails, commandNameOrAlias)
+
+				if (commandResponse.privateMessage) {
+					val userId = commandResponse.privateMessageUserId
+					directEphemeralUser = event.jda.getUserById(userId)
+						?: throw CommandInvocationException("user with id $userId not found", context)
+				}
 			} catch (ex: CommandInvocationException) {
 				if (commandType == CommandType.LEGACY) {
 					return
@@ -134,13 +150,65 @@ abstract class CommandEventHandler<E : Event>(
 		} catch (ex: CommandPipelineException) {
 			val trackerMessage = exceptionTrackerStore.createTrackerMessage(ex)
 			val trackerLink = exceptionTrackerStore.createTrackerLink(ex)
-			deferMessage = deferMessage(event, CommandResponse(trackerMessage, trackerLink))
+			commandResponse = CommandResponse.ofPublicInteractionMessage(trackerMessage, trackerLink)
 			ex.printLogStatement()
 		}
-		deferMessage.queue {
-			if (it.actionRows.isNotEmpty()) {
-				interactionRemovalThread.startOnce(remoteInteractionsDelay, TimeUnit.SECONDS, it)
+		if (directEphemeralUser != null) {
+			sendPrivateMessage(event, directEphemeralUser, context, commandResponse)
+			return
+		}
+		deferMessage(event, commandResponse).queue(::startRemovalInteractionThread)
+	}
+
+	/**
+	 * Sends a private message to a specified user in response to a command execution.
+	 *
+	 * This function handles the process of sending a private message to the user identified by the provided
+	 * `User` object. If the user has their direct messages open, the response
+	 * (which may include embedded messages and action components) is sent successfully. If the message sending fails,
+	 * an error message is sent to the original command event.
+	 *
+	 * @param event The event that triggered this handler, containing the context for the command execution.
+	 * @param user The user to whom the private message will be sent.
+	 * @param context The command context, providing information such as the guild language for localization.
+	 * @param response The response generated from executing the command, which may include embedded messages
+	 *                 and interactive components.
+	 */
+	private fun sendPrivateMessage(event: E, user: User, context: CommandContext?, response: CommandResponse) {
+		val successMessage = MessageEmbedBuilder(context, i18nBean, jdaColorStoreBean)
+			.setDescription(I18nResponseSource.PRIVATE_MESSAGE_SEND)
+			.setColor(JdaColor.PRIMARY)
+			.build()
+
+		val i18nSource = I18nExceptionSource.EPHEMERAL_UNEXPECTED_EXCEPTION
+		val trackerMessage = exceptionTrackerStore.createTrackerMessage(i18nSource)
+		val trackerLink = exceptionTrackerStore.createTrackerLink(i18nSource)
+		val errorMessage = CommandResponse.ofPrivateInteractionMessage(trackerMessage, trackerLink, user.id)
+
+		val onSuccess: (Message) -> Unit = {
+			if (commandType == CommandType.SLASH) {
+				val message = CommandResponse.ofPrivateMessage(successMessage, user.id)
+				deferMessage(event, message).queue(::startRemovalInteractionThread)
 			}
+		}
+		val onError: (Throwable) -> Unit = { deferMessage(event, errorMessage).queue() }
+
+		val onOpenChannel: (PrivateChannel) -> Unit = {
+			val (embedMessages, actionRows) = response
+			it.sendMessageEmbeds(embedMessages).addComponents(actionRows).queue(onSuccess, onError)
+		}
+		user.openPrivateChannel().queue(onOpenChannel, onError)
+	}
+
+	/**
+	 * Starts the removal interaction thread for a given message. This method schedules the removal of interaction
+	 * components from the message after a specified delay.
+	 *
+	 * @param message The message containing interaction components to be removed.
+	 */
+	private fun startRemovalInteractionThread(message: Message) {
+		if (message.actionRows.isNotEmpty()) {
+			interactionRemovalThread.startOnce(remoteInteractionsDelay, TimeUnit.SECONDS, message)
 		}
 	}
 
@@ -206,7 +274,7 @@ abstract class CommandEventHandler<E : Event>(
 		if (truncatedEmbedMessages.isEmpty() && commandType == CommandType.SLASH) {
 			throw CommandInvocationException("not found any slash interaction response", context)
 		}
-		return CommandResponse(truncatedEmbedMessages, truncatedActionRows)
+		return interactiveResponse.copy(embedMessages = truncatedEmbedMessages, actionRows = truncatedActionRows)
 	}
 
 	/**

@@ -55,6 +55,7 @@ enum class I18nResponseSource(override val placeholder: String) : I18nLocaleSour
 
 	// misc
 	COUNT_OF_AVAILABLE_COMMANDS("jwc.response.countOfAvailableCommands"),
+	PRIVATE_MESSAGE_SEND("jwc.response.privateMessageSend"),
 
 	// music
 	REMOVE_MULTIPLE_REPEATING_TRACK("jwc.response.removeMultipleRepeatingTrack"),
