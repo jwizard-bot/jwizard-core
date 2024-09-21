@@ -38,12 +38,15 @@ import kotlin.reflect.KClass
  * - [JDA_COLOR_SECONDARY]: JDA secondary color in embed messages.
  * - [JDA_COLOR_TINT]: JDA tint color in embed messages.
  * - [JDA_COLOR_DANGER]: JDA danger color in embed messages.
- * - [JDA_INTERACTION_MAX_EMBED_MESSAGES]: Maximum embeds messages in single JDA command interaction.
- * - [JDA_INTERACTION_MAX_ACTION_ROWS]: Maximum action rows in single JDA command message with custom interaction.
- * - [JDA_INTERACTION_MAX_COMPONENTS_IN_ACTION_ROW]: Maximum components in single action row in single JDA command
- *   message with custom interaction.
- * - [JDA_INTERACTION_DISABLE_COMPONENTS_DELAY_SEC]: The delay time (in seconds) before disabling interaction
+ * - [JDA_INTERACTION_MESSAGE_MAX_EMBEDS]: Maximum embeds messages in single JDA command interaction.
+ * - [JDA_INTERACTION_MESSAGE_ACTION_ROW_MAX_ROWS]: Maximum action rows in single JDA command message with custom
+ *   interaction.
+ * - [JDA_INTERACTION_MESSAGE_ACTION_ROW_MAX_COMPONENTS_IN_ROW]: Maximum components in single action row in single JDA
+ *   command message with custom interaction.
+ * - [JDA_INTERACTION_MESSAGE_COMPONENT_DISABLE_DELAY_SEC]: The delay time (in seconds) before disabling interaction
  *   components in JDA.
+ * - [JDA_INTERACTION_SLASH_AUTOCOMPLETE_MAX_OPTIONS]: JDA maximum number of options in single autocomplete interaction
+ * 	 request.
  * - [JDA_EXCEPTION_SEGMENT_SIZE]: Specifies the maximum size of the segment in exception group.
  * - [JDA_EXCEPTION_URL_REFER_TEMPLATE]: Defines the URL template used for referring to detailed exception information
  *   in bot website.
@@ -200,22 +203,33 @@ enum class BotProperty(
 	/**
 	 * Maximum embeds messages in single JDA command interaction.
 	 */
-	JDA_INTERACTION_MAX_EMBED_MESSAGES("jda.interaction.max-embed-messages", Int::class),
+	JDA_INTERACTION_MESSAGE_MAX_EMBEDS("jda.interaction.message.max-embeds", Int::class),
 
 	/**
 	 * Maximum action rows in single JDA command message with custom interaction.
 	 */
-	JDA_INTERACTION_MAX_ACTION_ROWS("jda.interaction.max-embed-messages", Int::class),
+	JDA_INTERACTION_MESSAGE_ACTION_ROW_MAX_ROWS("jda.interaction.message.action-row.max-rows", Int::class),
 
 	/**
 	 * Maximum components in single action row in single JDA command message with custom interaction.
 	 */
-	JDA_INTERACTION_MAX_COMPONENTS_IN_ACTION_ROW("jda.interaction.max-components-in-action-row", Int::class),
+	JDA_INTERACTION_MESSAGE_ACTION_ROW_MAX_COMPONENTS_IN_ROW(
+		"jda.interaction.message.action-row.max-components-in-row",
+		Int::class
+	),
 
 	/**
 	 * The delay time (in seconds) before disabling interaction components in JDA.
 	 */
-	JDA_INTERACTION_DISABLE_COMPONENTS_DELAY_SEC("jda.interaction.disable-components-delay-sec", Long::class),
+	JDA_INTERACTION_MESSAGE_COMPONENT_DISABLE_DELAY_SEC(
+		"jda.interaction.message.component.disable-delay-sec",
+		Long::class
+	),
+
+	/**
+	 * JDA maximum number of options in single autocomplete interaction request.
+	 */
+	JDA_INTERACTION_SLASH_AUTOCOMPLETE_MAX_OPTIONS("jda.interaction.slash.autocomplete.max-options", Int::class),
 
 	/**
 	 * Specifies the maximum size of the segment in exception group.
