@@ -26,7 +26,7 @@ data class CommandResponse(
 
 	companion object {
 		/**
-		 * Creates a CommandResponse for a public interaction message.
+		 * Creates a [CommandResponse] for a public interaction message.
 		 *
 		 * This method constructs a response intended for a public Discord channel, including the provided embed message
 		 * and action row.
@@ -39,7 +39,7 @@ data class CommandResponse(
 			CommandResponse(listOf(embedMessage), listOf(actionRow), false, "")
 
 		/**
-		 * Creates a CommandResponse for a private interaction message.
+		 * Creates a [CommandResponse] for a private interaction message.
 		 *
 		 * This method constructs a response intended for a specific user, including the provided embed message and action
 		 * row.
@@ -53,7 +53,7 @@ data class CommandResponse(
 			CommandResponse(listOf(embedMessage), listOf(actionRow), true, userId)
 
 		/**
-		 * Creates a CommandResponse for a private message.
+		 * Creates a [CommandResponse] for a private message.
 		 *
 		 * This method constructs a response that contains only an embedded message to be sent as a private message to the
 		 * specified user.
