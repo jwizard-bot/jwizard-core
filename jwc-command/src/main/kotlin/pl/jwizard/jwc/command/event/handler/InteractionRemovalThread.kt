@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.interactions.components.ActionComponent
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
-import pl.jwizard.jwc.command.event.handler.InteractionRemovalThread.Companion.COUNT_OF_THREADS
 import pl.jwizard.jwc.core.jvm.thread.JvmFixedPayloadThreadExecutor
 
 /**
@@ -18,7 +17,6 @@ import pl.jwizard.jwc.core.jvm.thread.JvmFixedPayloadThreadExecutor
  * This class extends [JvmFixedPayloadThreadExecutor] to provide functionality for processing messages and disabling
  * their buttons and other interactive components based on specified conditions.
  *
- * @property COUNT_OF_THREADS The number of threads to use for handling interaction removals.
  * @author Miłosz Gilga
  */
 class InteractionRemovalThread : JvmFixedPayloadThreadExecutor<Message>(COUNT_OF_THREADS) {
