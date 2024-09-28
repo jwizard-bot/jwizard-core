@@ -4,9 +4,9 @@
  */
 package pl.jwizard.jwc.core.jda.color
 
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwc.core.util.logger
 import java.awt.Color
 
 /**
@@ -19,7 +19,7 @@ import java.awt.Color
 class JdaColorStoreBean(private val environmentBean: EnvironmentBean) {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(JdaColorStoreBean::class.java)
+		private val log = logger<JdaColorStoreBean>()
 
 		/**
 		 * Default color value (black) used when a specific color is not found.

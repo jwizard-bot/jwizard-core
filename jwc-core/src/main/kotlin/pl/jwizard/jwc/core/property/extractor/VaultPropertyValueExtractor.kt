@@ -4,11 +4,11 @@
  */
 package pl.jwizard.jwc.core.property.extractor
 
-import org.slf4j.LoggerFactory
 import org.springframework.vault.authentication.TokenAuthentication
 import org.springframework.vault.client.VaultEndpoint
 import org.springframework.vault.core.VaultTemplate
 import org.springframework.vault.support.VaultResponse
+import pl.jwizard.jwc.core.util.logger
 import java.util.*
 
 /**
@@ -30,15 +30,15 @@ class VaultPropertyValueExtractor(
 	private val vaultKvApplicationName: String,
 ) : PropertyValueExtractor(VaultPropertyValueExtractor::class) {
 
+	companion object {
+		private val log = logger<VaultPropertyValueExtractor>()
+	}
+
 	/**
 	 * Template used to interact with Vault. This field holds an instance of [VaultTemplate] configured with the
 	 * provided Vault server URI and authentication token.
 	 */
 	private val vaultTemplate: VaultTemplate
-
-	companion object {
-		private val log = LoggerFactory.getLogger(VaultPropertyValueExtractor::class.java)
-	}
 
 	init {
 		log.info("Connecting with vault KV server: {}.", vaultServerUri)

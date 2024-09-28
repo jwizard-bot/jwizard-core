@@ -35,6 +35,7 @@ data class CommandResponse(
 		 * @param actionRow The action row containing interactive components to be included.
 		 * @return A CommandResponse configured for public interaction.
 		 */
+		@JvmStatic
 		fun ofPublicInteractionMessage(embedMessage: MessageEmbed, actionRow: ActionRow) =
 			CommandResponse(listOf(embedMessage), listOf(actionRow), false, null)
 
@@ -49,6 +50,7 @@ data class CommandResponse(
 		 * @param userId The ID of the user to whom the private message should be sent.
 		 * @return A CommandResponse configured for private interaction.
 		 */
+		@JvmStatic
 		fun ofPrivateInteractionMessage(embedMessage: MessageEmbed, actionRow: ActionRow, userId: Long) =
 			CommandResponse(listOf(embedMessage), listOf(actionRow), true, userId)
 
@@ -62,6 +64,7 @@ data class CommandResponse(
 		 * @param userId The ID of the user to whom the private message should be sent.
 		 * @return A CommandResponse configured for a private message.
 		 */
+		@JvmStatic
 		fun ofPrivateMessage(embedMessage: MessageEmbed, userId: Long) =
 			CommandResponse(listOf(embedMessage), emptyList(), true, userId)
 	}

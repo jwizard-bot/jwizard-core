@@ -6,7 +6,6 @@ package pl.jwizard.jwc.audio
 
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.jda.spi.ChannelListenerGuard
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
@@ -14,12 +13,13 @@ import pl.jwizard.jwc.core.jvm.thread.JvmFixedThreadExecutor
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.property.GuildProperty
 import pl.jwizard.jwc.core.util.ext.qualifier
+import pl.jwizard.jwc.core.util.logger
 import java.time.Instant
 
 /**
- * Monitors voice channels in guilds to detect when they become empty and performs actions accordingly.
- * This component extends [JvmFixedThreadExecutor] to periodically check voice channels and uses [ChannelListenerGuard]
- * to handle voice channel events.
+ * Monitors voice channels in guilds to detect when they become empty and performs actions accordingly. This component
+ * extends [JvmFixedThreadExecutor] to periodically check voice channels and uses [ChannelListenerGuard] to handle voice
+ * channel events.
  *
  * @property jdaInstance Provide access to the JDA API, used to retrieve guild information.
  * @property environmentBean Provides access to application properties.
@@ -36,7 +36,7 @@ class AudioChannelsListenerGuardBean(
 ) : ChannelListenerGuard, JvmFixedThreadExecutor() {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(AudioChannelsListenerGuardBean::class.java)
+		private val log = logger<AudioChannelsListenerGuardBean>()
 
 		/**
 		 * The interval in seconds at which the executor service runs to check voice channels.

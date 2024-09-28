@@ -7,7 +7,6 @@ package pl.jwizard.jwc.exception
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.buttons.Button
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.exception.CommandPipelineException
 import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
@@ -23,6 +22,7 @@ import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwc.core.util.logger
 import pl.jwizard.jwc.exception.spi.ExceptionSupplier
 import java.util.*
 
@@ -48,7 +48,7 @@ class ExceptionTrackerStoreBean(
 ) : ExceptionTrackerStore {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(ExceptionTrackerStoreBean::class.java)
+		private val log = logger<ExceptionTrackerStoreBean>()
 
 		/**
 		 * Pattern used to extract the last word from a string.

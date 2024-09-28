@@ -4,11 +4,11 @@
  */
 package pl.jwizard.jwc.core
 
-import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Configuration
 import pl.jwizard.jwc.core.jvm.JvmDisposable
 import pl.jwizard.jwc.core.jvm.JvmDisposableHook
+import pl.jwizard.jwc.core.util.logger
 import kotlin.reflect.KClass
 
 /**
@@ -24,7 +24,7 @@ import kotlin.reflect.KClass
 class SpringKtContextFactory(clazz: KClass<*>) : AnnotationConfigApplicationContext(clazz.java), JvmDisposable {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(SpringKtContextFactory::class.java)
+		private val log = logger<SpringKtContextFactory>()
 	}
 
 	/**

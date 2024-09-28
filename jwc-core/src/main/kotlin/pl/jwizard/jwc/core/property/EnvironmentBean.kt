@@ -5,7 +5,6 @@
 package pl.jwizard.jwc.core.property
 
 import jakarta.annotation.PostConstruct
-import org.slf4j.LoggerFactory
 import org.springframework.core.env.StandardEnvironment
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.SpringKtContextFactory
@@ -15,6 +14,7 @@ import pl.jwizard.jwc.core.property.loader.DbPropertySourceLoader
 import pl.jwizard.jwc.core.property.loader.YamlPropertySourceLoader
 import pl.jwizard.jwc.core.property.spi.RemotePropertySupplier
 import pl.jwizard.jwc.core.util.castToValue
+import pl.jwizard.jwc.core.util.logger
 import kotlin.reflect.KClass
 
 /**
@@ -31,7 +31,7 @@ import kotlin.reflect.KClass
 class EnvironmentBean(private val springKtContextFactory: SpringKtContextFactory) {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(EnvironmentBean::class.java)
+		private val log = logger<EnvironmentBean>()
 	}
 
 	/**

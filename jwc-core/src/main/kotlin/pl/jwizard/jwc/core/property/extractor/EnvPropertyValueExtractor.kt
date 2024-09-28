@@ -5,7 +5,7 @@
 package pl.jwizard.jwc.core.property.extractor
 
 import io.github.cdimascio.dotenv.Dotenv
-import org.slf4j.LoggerFactory
+import pl.jwizard.jwc.core.util.logger
 import java.io.File
 
 /**
@@ -26,7 +26,7 @@ class EnvPropertyValueExtractor(
 	private val dotEnv = Dotenv.load()
 
 	companion object {
-		private val log = LoggerFactory.getLogger(EnvPropertyValueExtractor::class.java)
+		private val log = logger<EnvPropertyValueExtractor>()
 
 		/**
 		 * The default name of the environment file.

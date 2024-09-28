@@ -4,7 +4,6 @@
  */
 package pl.jwizard.jwc.command.reflect
 
-import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider
 import org.springframework.core.type.filter.AnnotationTypeFilter
 import org.springframework.stereotype.Component
@@ -18,6 +17,7 @@ import pl.jwizard.jwc.core.DiscordBotAppRunner.BASE_PACKAGE
 import pl.jwizard.jwc.core.SpringKtContextFactory
 import pl.jwizard.jwc.core.integrity.ReferentialIntegrityChecker
 import pl.jwizard.jwc.core.jda.spi.CommandsLoader
+import pl.jwizard.jwc.core.util.logger
 
 /**
  * A bean responsible for loading command metadata and classes within the Discord bot framework.
@@ -40,7 +40,7 @@ class CommandsLoaderBean(
 ) : CommandsLoader {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(CommandsLoaderBean::class.java)
+		private val log = logger<CommandsLoaderBean>()
 
 		/**
 		 * Base package used for scanning command classes.

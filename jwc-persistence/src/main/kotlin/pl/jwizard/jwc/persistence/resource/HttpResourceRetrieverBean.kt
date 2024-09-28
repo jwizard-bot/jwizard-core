@@ -4,12 +4,12 @@
  */
 package pl.jwizard.jwc.persistence.resource
 
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwc.core.util.logger
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 
@@ -28,7 +28,7 @@ class HttpResourceRetrieverBean(
 ) : ResourceRetriever() {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(HttpResourceRetrieverBean::class.java)
+		private val log = logger<HttpResourceRetrieverBean>()
 	}
 
 	/**

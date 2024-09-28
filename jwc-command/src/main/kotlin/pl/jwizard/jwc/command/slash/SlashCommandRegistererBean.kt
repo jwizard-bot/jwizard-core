@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.CommandData
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.interactions.commands.build.OptionData
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.command.CommandsProxyStoreBean
 import pl.jwizard.jwc.command.reflect.CommandDetails
@@ -20,6 +19,7 @@ import pl.jwizard.jwc.core.i18n.source.I18nDynamicMod
 import pl.jwizard.jwc.core.i18n.source.I18nUtilSource
 import pl.jwizard.jwc.core.jda.spi.SlashCommandRegisterer
 import pl.jwizard.jwc.core.util.ext.qualifier
+import pl.jwizard.jwc.core.util.logger
 
 /**
  * A Spring component responsible for registering slash commands in Discord guilds. It implements the
@@ -39,7 +39,7 @@ class SlashCommandRegistererBean(
 ) : SlashCommandRegisterer {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(SlashCommandRegistererBean::class.java)
+		private val log = logger<SlashCommandRegistererBean>()
 	}
 
 	/**

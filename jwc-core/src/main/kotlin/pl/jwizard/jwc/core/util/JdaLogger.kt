@@ -5,9 +5,22 @@
 package pl.jwizard.jwc.core.util
 
 import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.util.ext.authorQualifier
 import pl.jwizard.jwc.core.util.ext.guildQualifier
+
+/**
+ * Creates a logger instance for the specified class type.
+ *
+ * This inline function utilizes Kotlin's reified type parameters to allow for type-safe logging, creating a logger
+ * that is associated with the class type provided as the generic type parameter.
+ *
+ * @param T The type of the class for which the logger is being created.
+ * @return A [Logger] instance associated with the specified class type.
+ * @author Miłosz Gilga
+ */
+inline fun <reified T : Any> logger(): Logger = LoggerFactory.getLogger(T::class.java)
 
 /**
  * Extension function for logging info messages with context.

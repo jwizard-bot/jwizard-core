@@ -11,12 +11,12 @@ import net.dv8tion.jda.api.events.guild.GuildBanEvent
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import org.slf4j.LoggerFactory
 import pl.jwizard.jwc.core.jda.spi.GuildSettingsEventAction
 import pl.jwizard.jwc.core.jda.spi.SlashCommandRegisterer
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.property.GuildProperty
 import pl.jwizard.jwc.core.util.ext.qualifier
+import pl.jwizard.jwc.core.util.logger
 
 /**
  * Listener responsible for handling various guild-related events, such as guild initialization, leaving, banning
@@ -35,7 +35,7 @@ class GuildEventListenerBean(
 ) : ListenerAdapter() {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(GuildEventListenerBean::class.java)
+		private val log = logger<GuildEventListenerBean>()
 	}
 
 	/**

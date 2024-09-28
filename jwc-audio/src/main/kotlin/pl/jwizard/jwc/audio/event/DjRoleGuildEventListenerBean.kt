@@ -8,13 +8,13 @@ import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import org.slf4j.LoggerFactory
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.property.GuildProperty
 import pl.jwizard.jwc.core.util.ext.qualifier
+import pl.jwizard.jwc.core.util.logger
 
 /**
  * Listener for handling events related to the DJ role in a guild. Automatically creates a DJ role if it doesn't exist
@@ -31,7 +31,7 @@ class DjRoleGuildEventListenerBean(
 ) : ListenerAdapter() {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(DjRoleGuildEventListenerBean::class.java)
+		private val log = logger<DjRoleGuildEventListenerBean>()
 	}
 
 	/**

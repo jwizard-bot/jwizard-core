@@ -31,6 +31,7 @@ interface ReferentialIntegrityChecker {
 		 * @param source The collection of property names to validate.
 		 * @throws DataIntegrityViolationException if the integrity check fails.
 		 */
+		@JvmStatic
 		inline fun <reified T> checkIntegrity(
 			clazz: KClass<*>,
 			source: Collection<String>

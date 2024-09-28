@@ -4,9 +4,9 @@
  */
 package pl.jwizard.jwc.core.i18n
 
-import org.slf4j.LoggerFactory
 import pl.jwizard.jwc.core.i18n.spi.I18nPropertyFilesSupplier
 import pl.jwizard.jwc.core.jvm.thread.JvmFixedThreadExecutor
+import pl.jwizard.jwc.core.util.logger
 import java.io.StringReader
 import java.nio.charset.Charset
 import java.util.*
@@ -31,7 +31,7 @@ class CacheableRemotePropertiesLoader(
 ) : JvmFixedThreadExecutor() {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(CacheableRemotePropertiesLoader::class.java)
+		private val log = logger<CacheableRemotePropertiesLoader>()
 	}
 
 	/**

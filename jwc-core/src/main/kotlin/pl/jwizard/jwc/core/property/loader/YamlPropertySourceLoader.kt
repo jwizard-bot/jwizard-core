@@ -4,10 +4,10 @@
  */
 package pl.jwizard.jwc.core.property.loader
 
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean
 import org.springframework.core.io.ClassPathResource
 import pl.jwizard.jwc.core.property.PropertySourceData
+import pl.jwizard.jwc.core.util.logger
 
 /**
  * Loader for YAML property sources.
@@ -21,7 +21,7 @@ class YamlPropertySourceLoader(
 ) : PropertySourceData(YamlPropertySourceLoader::class) {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(YamlPropertySourceLoader::class.java)
+		private val log = logger<YamlPropertySourceLoader>()
 
 		/**
 		 * Default prefix for YAML configuration files.

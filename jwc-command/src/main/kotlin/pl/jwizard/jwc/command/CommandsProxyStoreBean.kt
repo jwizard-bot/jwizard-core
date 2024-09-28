@@ -4,9 +4,9 @@
  */
 package pl.jwizard.jwc.command
 
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.command.reflect.CommandDetails
+import pl.jwizard.jwc.core.util.logger
 import java.math.BigInteger
 import java.util.concurrent.ConcurrentHashMap
 
@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap
 class CommandsProxyStoreBean {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(CommandsProxyStoreBean::class.java)
+		private val log = logger<CommandsProxyStoreBean>()
 	}
 
 	/**

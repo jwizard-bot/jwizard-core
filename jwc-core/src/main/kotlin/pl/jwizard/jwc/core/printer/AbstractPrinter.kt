@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.core.printer
 
-import org.slf4j.LoggerFactory
+import pl.jwizard.jwc.core.util.logger
 
 /**
  * Abstract class defining custom content printer (ex. console or log statement printer).
@@ -16,13 +16,14 @@ import org.slf4j.LoggerFactory
 abstract class AbstractPrinter(private val printer: Printer) {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(AbstractPrinter::class.java)
+		private val log = logger<AbstractPrinter>()
 
 		/**
 		 * Prints content using an array of [AbstractPrinter] instances.
 		 *
 		 * @param printers An array of [AbstractPrinter] instances to use for printing.
 		 */
+		@JvmStatic
 		fun printContent(printers: Array<AbstractPrinter>) = printers.forEach { it.print() }
 	}
 

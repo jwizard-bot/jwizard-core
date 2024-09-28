@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.core.jvm
 
-import org.slf4j.LoggerFactory
+import pl.jwizard.jwc.core.util.logger
 import kotlin.reflect.jvm.jvmName
 
 /**
@@ -18,7 +18,7 @@ import kotlin.reflect.jvm.jvmName
 class JvmDisposableHook(private val jvmDisposable: JvmDisposable) {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(JvmDisposableHook::class.java)
+		private val log = logger<JvmDisposableHook>()
 	}
 
 	/**

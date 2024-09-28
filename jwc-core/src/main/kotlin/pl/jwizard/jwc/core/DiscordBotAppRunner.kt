@@ -4,7 +4,6 @@
  */
 package pl.jwizard.jwc.core
 
-import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.ComponentScan
 import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
 import pl.jwizard.jwc.core.jda.ActivitySplashesBean
@@ -16,6 +15,7 @@ import pl.jwizard.jwc.core.printer.AbstractPrinter
 import pl.jwizard.jwc.core.printer.ConsolePrinter
 import pl.jwizard.jwc.core.printer.FancyFramePrinter
 import pl.jwizard.jwc.core.printer.FancyTitlePrinter
+import pl.jwizard.jwc.core.util.logger
 import kotlin.reflect.KClass
 
 /**
@@ -25,7 +25,7 @@ import kotlin.reflect.KClass
  * @author Miłosz Gilga
  */
 object DiscordBotAppRunner {
-	private val log = LoggerFactory.getLogger(DiscordBotAppRunner::class.java)
+	private val log = logger<DiscordBotAppRunner>()
 
 	/**
 	 * Base application package. Used for Spring Context [ComponentScan] annotation. All classes related with

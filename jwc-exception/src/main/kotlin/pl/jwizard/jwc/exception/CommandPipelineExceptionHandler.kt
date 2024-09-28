@@ -27,7 +27,7 @@ abstract class CommandPipelineExceptionHandler(
 	override val commandBaseContext: CommandBaseContext? = null,
 	override val i18nExceptionSource: I18nExceptionSource,
 	override val variables: Map<String, Any?> = emptyMap(),
-	override val logMessage: String = ""
+	override val logMessage: String? = null,
 ) : RuntimeException(), CommandPipelineException {
 
 	private val log = LoggerFactory.getLogger(this::class.java)
@@ -39,8 +39,8 @@ abstract class CommandPipelineExceptionHandler(
 	 * error message will be logged at a general level.
 	 */
 	fun printLogStatement() {
-		if (logMessage.isNotBlank()) {
-			val message = logMessage.trimIndent()
+		if (logMessage != null) {
+			val message = logMessage!!.trimIndent()
 			if (commandBaseContext != null) {
 				log.jdaError(commandBaseContext!!, message)
 			} else {

@@ -4,10 +4,10 @@
  */
 package pl.jwizard.jwc.core.i18n
 
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import pl.jwizard.jwc.core.i18n.spi.I18nPropertyFilesSupplier
+import pl.jwizard.jwc.core.util.logger
 import java.nio.charset.Charset
 import java.text.MessageFormat
 import java.util.*
@@ -31,7 +31,7 @@ class CombinedMessageSource(
 ) : ReloadableResourceBundleMessageSource(), DisposableBean {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(CombinedMessageSource::class.java)
+		private val log = logger<CombinedMessageSource>()
 	}
 
 	/**

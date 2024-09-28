@@ -4,11 +4,11 @@
  */
 package pl.jwizard.jwc.persistence.resource
 
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwc.core.util.logger
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import software.amazon.awssdk.regions.Region
@@ -31,7 +31,7 @@ import java.net.URI
 class S3ResourceRetrieverBean(private val environmentBean: EnvironmentBean) : ResourceRetriever(), DisposableBean {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(S3ResourceRetrieverBean::class.java)
+		private val log = logger<S3ResourceRetrieverBean>()
 	}
 
 	/**

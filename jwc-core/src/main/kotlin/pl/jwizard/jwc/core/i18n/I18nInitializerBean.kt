@@ -4,7 +4,6 @@
  */
 package pl.jwizard.jwc.core.i18n
 
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.context.MessageSource
 import org.springframework.context.annotation.Bean
@@ -14,6 +13,7 @@ import pl.jwizard.jwc.core.i18n.spi.LanguageSupplier
 import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwc.core.util.logger
 import java.nio.charset.StandardCharsets
 
 /**
@@ -32,7 +32,7 @@ import java.nio.charset.StandardCharsets
 class I18nInitializerBean(private val environmentBean: EnvironmentBean) : DisposableBean {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(I18nInitializerBean::class.java)
+		private val log = logger<I18nInitializerBean>()
 
 		/**
 		 * The default base name for the i18n message bundle.
