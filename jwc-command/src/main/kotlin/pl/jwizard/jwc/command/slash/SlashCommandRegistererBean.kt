@@ -54,10 +54,11 @@ class SlashCommandRegistererBean(
 		if (guildProperties == null || !guildProperties.slashEnabled) {
 			return
 		}
+		val loadedCommands = commandsProxyStoreBean.instancesContainer.map { it.key }
 		val commands = commandsProxyStoreBean.commands
-		val parsedSlashCommands = commands.map { (name, details) ->
-			mapToCommandData(name, details, guildProperties.lang)
-		}
+		val parsedSlashCommands = commands
+			.filter { loadedCommands.contains(it.key) }
+			.map { (name, details) -> mapToCommandData(name, details, guildProperties.lang) }
 		log.info(
 			"Load: {} slash of: {} commands for guild: {} (disabled: {}).",
 			parsedSlashCommands.size,
