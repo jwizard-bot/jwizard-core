@@ -128,11 +128,12 @@ class PrefixCommandEventHandlerBean(
 	 * Creates the command context specific to prefix commands.
 	 *
 	 * @param event The message received event.
+	 * @param command Definition of the command on which the event was invoked.
 	 * @param properties The command properties for the guild.
 	 * @return The command context.
 	 */
-	override fun createCommandContext(event: MessageReceivedEvent, properties: GuildCommandProperties) =
-		PrefixCommandContext(event, properties)
+	override fun createCommandContext(event: MessageReceivedEvent, command: String, properties: GuildCommandProperties) =
+		PrefixCommandContext(event, command, properties)
 
 	/**
 	 * Sends a response message based on the command execution result.

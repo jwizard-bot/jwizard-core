@@ -15,11 +15,13 @@ import pl.jwizard.jwc.core.util.ext.avatarOrDefaultUrl
  * properties, to facilitate command processing.
  *
  * @property event The [SlashCommandInteractionEvent] that triggered the command.
+ * @property commandName Definition of the command on which the event was invoked.
  * @property guildCommandProperties The properties specific to the guild where the command is executed.
  * @author Miłosz Gilga
  */
 class SlashCommandContext(
 	private val event: SlashCommandInteractionEvent,
+	override val commandName: String,
 	private val guildCommandProperties: GuildCommandProperties,
 ) : CommandContext(guildCommandProperties) {
 

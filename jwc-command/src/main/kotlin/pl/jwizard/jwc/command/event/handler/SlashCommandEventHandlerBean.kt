@@ -98,11 +98,15 @@ class SlashCommandEventHandlerBean(
 	 * Creates the command context specific to slash commands.
 	 *
 	 * @param event The slash command interaction event.
+	 * @param command Definition of the command on which the event was invoked.
 	 * @param properties The command properties for the guild.
 	 * @return The command context.
 	 */
-	override fun createCommandContext(event: SlashCommandInteractionEvent, properties: GuildCommandProperties) =
-		SlashCommandContext(event, properties)
+	override fun createCommandContext(
+		event: SlashCommandInteractionEvent,
+		command: String,
+		properties: GuildCommandProperties
+	) = SlashCommandContext(event, command, properties)
 
 	/**
 	 * Sends a response message based on the command execution result.

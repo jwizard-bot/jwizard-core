@@ -121,10 +121,10 @@ abstract class CommandEventHandler<E : Event>(
 					throw CommandInvocationException("forbidden invocation details")
 				}
 				val (commandNameOrAlias, commandArguments) = commandNameAndArguments(event)
-				context = createCommandContext(event, properties)
 
 				val commandDetails = commandsProxyStoreBean.commands[commandNameOrAlias]
-					?: throw CommandInvocationException("command by command name could not be found", context)
+					?: throw CommandInvocationException("command by command name could not be found")
+				context = createCommandContext(event, commandDetails.name, properties)
 
 				val (moduleId, isEnabled) = moduleDataSupplier.isEnabled(commandDetails.name, properties.guildDbId)
 					?: throw CommandInvocationException("module by command name could not be found", context)
@@ -374,10 +374,15 @@ abstract class CommandEventHandler<E : Event>(
 	 * Creates the command context from the event and the guild properties.
 	 *
 	 * @param event The event being processed.
+	 * @param command Definition of the command on which the event was invoked.
 	 * @param properties The command properties for the guild.
 	 * @return The command context created from the event.
 	 */
-	protected abstract fun createCommandContext(event: E, properties: GuildCommandProperties): CommandContext
+	protected abstract fun createCommandContext(
+		event: E,
+		command: String,
+		properties: GuildCommandProperties
+	): CommandContext
 
 	/**
 	 * Defers a message based on the event and the command response.
