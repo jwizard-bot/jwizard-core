@@ -9,4 +9,5 @@ dependencies {
 
   implementation project(':jwc-core')
   implementation project(':jwc-exception')
+  implementation project(':jwc-radio')
 }
