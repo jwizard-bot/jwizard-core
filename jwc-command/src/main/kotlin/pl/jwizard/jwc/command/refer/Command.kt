@@ -5,6 +5,8 @@
 package pl.jwizard.jwc.command.refer
 
 import pl.jwizard.jwc.core.integrity.ReferentialIntegrityChecker
+import pl.jwizard.jwc.core.jda.command.CommandBaseContext
+import pl.jwizard.jwc.core.jda.command.CommandPrefix
 
 /**
  * Enum representing various commands that can be executed in the application. Each command is associated with a string
@@ -13,7 +15,7 @@ import pl.jwizard.jwc.core.integrity.ReferentialIntegrityChecker
  * @property propName The string representation of the command, which is used for matching and processing JDA commands.
  * @author Miłosz Gilga
  */
-enum class Command(override val propName: String) : ReferentialIntegrityChecker {
+enum class Command(override val propName: String) : ReferentialIntegrityChecker, CommandPrefix {
 	CLEAR("clear"),
 	INFINITE("infinite"),
 	JOIN("join"),
@@ -62,4 +64,12 @@ enum class Command(override val propName: String) : ReferentialIntegrityChecker 
 	 */
 	override val moduleIntegrityName
 		get() = "commands"
+
+	/**
+	 * Parses the command by combining the command prefix from the context with the command property name.
+	 *
+	 * @param context the context containing information about the current command and its execution environment.
+	 * @return the full command string with its prefix.
+	 */
+	override fun parseWithPrefix(context: CommandBaseContext) = "${context.prefix}$propName"
 }
