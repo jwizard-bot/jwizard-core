@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.core.exception.spi
+package pl.jwizard.jwc.exception.spi
 
 /**
  * Interface for supplying exception-related data.

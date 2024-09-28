@@ -2,14 +2,15 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.core.exception
+package pl.jwizard.jwc.exception
 
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.core.exception.spi.ExceptionSupplier
+import pl.jwizard.jwc.core.exception.CommandPipelineException
+import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
 import pl.jwizard.jwc.core.i18n.I18nBean
 import pl.jwizard.jwc.core.i18n.I18nLocaleSource
 import pl.jwizard.jwc.core.i18n.source.I18nActionSource
@@ -22,6 +23,7 @@ import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwc.exception.spi.ExceptionSupplier
 import java.util.*
 
 /**
@@ -38,15 +40,15 @@ import java.util.*
  * @author Miłosz Gilga
  */
 @Component
-class ExceptionTrackerStore(
+class ExceptionTrackerStoreBean(
 	private val exceptionSupplier: ExceptionSupplier,
 	private val environmentBean: EnvironmentBean,
 	private val i18nBean: I18nBean,
 	private val jdaColorStoreBean: JdaColorStoreBean,
-) {
+) : ExceptionTrackerStore {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(ExceptionTrackerStore::class.java)
+		private val log = LoggerFactory.getLogger(ExceptionTrackerStoreBean::class.java)
 
 		/**
 		 * Pattern used to extract the last word from a string.
@@ -65,7 +67,7 @@ class ExceptionTrackerStore(
 	 * It divides the tracker counts by a segment size defined in the application properties and logs the number of
 	 * trackers and segments loaded.
 	 */
-	fun loadTrackers() {
+	override fun initTrackers() {
 		val segmentSize = environmentBean.getProperty<Int>(BotProperty.JDA_EXCEPTION_SEGMENT_SIZE)
 
 		val fetchedTrackers = exceptionSupplier.loadTrackers()
@@ -87,10 +89,10 @@ class ExceptionTrackerStore(
 	 * @param context The context of the command execution, which may include localization information (optional).
 	 * @return A MessageEmbed containing the formatted message.
 	 */
-	fun createTrackerMessage(
+	override fun createTrackerMessage(
 		i18nSource: I18nExceptionSource,
-		variables: Map<String, Any> = emptyMap(),
-		context: CommandBaseContext? = null
+		variables: Map<String, Any?>,
+		context: CommandBaseContext?,
 	): MessageEmbed {
 		val tracker = extractTracker(i18nSource)
 		val buildVersion = environmentBean.getProperty<String>(BotProperty.DEPLOYMENT_BUILD_VERSION)
@@ -115,7 +117,7 @@ class ExceptionTrackerStore(
 	 * @param ex The CommandPipelineException containing the necessary information for the tracker message.
 	 * @return A MessageEmbed formatted for the exception.
 	 */
-	fun createTrackerMessage(ex: CommandPipelineException) =
+	override fun createTrackerMessage(ex: CommandPipelineException) =
 		createTrackerMessage(ex.i18nExceptionSource, ex.variables, ex.commandBaseContext)
 
 	/**
@@ -126,7 +128,7 @@ class ExceptionTrackerStore(
 	 * @param context The context of the command execution, which may include localization information (optional).
 	 * @return An ActionRow containing a button that links to the exception details.
 	 */
-	fun createTrackerLink(i18nSource: I18nExceptionSource, context: CommandBaseContext? = null): ActionRow {
+	override fun createTrackerLink(i18nSource: I18nExceptionSource, context: CommandBaseContext?): ActionRow {
 		val tracker = extractTracker(i18nSource)
 		val baseUrl = environmentBean.getProperty<String>(BotProperty.SERVICE_FRONT_URL)
 		val trackerUrl = if (tracker != null) {
@@ -146,7 +148,8 @@ class ExceptionTrackerStore(
 	 * @param ex The CommandPipelineException containing the necessary information for the tracker link.
 	 * @return An ActionRow containing a button that links to the exception details.
 	 */
-	fun createTrackerLink(ex: CommandPipelineException) = createTrackerLink(ex.i18nExceptionSource, ex.commandBaseContext)
+	override fun createTrackerLink(ex: CommandPipelineException) =
+		createTrackerLink(ex.i18nExceptionSource, ex.commandBaseContext)
 
 	/**
 	 * Extracts the tracker number associated with a given internationalization exception source. This method retrieves

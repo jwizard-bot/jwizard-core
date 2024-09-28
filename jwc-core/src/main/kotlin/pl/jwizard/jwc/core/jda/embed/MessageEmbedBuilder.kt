@@ -52,7 +52,7 @@ class MessageEmbedBuilder(
 	 * @param args Arguments to replace placeholders in the description.
 	 * @return The current instance of MessageEmbedBuilder for method chaining.
 	 */
-	fun setDescription(i18nLocaleSource: I18nLocaleSource, args: Map<String, Any> = emptyMap()): MessageEmbedBuilder {
+	fun setDescription(i18nLocaleSource: I18nLocaleSource, args: Map<String, Any?> = emptyMap()): MessageEmbedBuilder {
 		super.setDescription(i18nBean.t(i18nLocaleSource, context?.guildLanguage, args))
 		return this
 	}

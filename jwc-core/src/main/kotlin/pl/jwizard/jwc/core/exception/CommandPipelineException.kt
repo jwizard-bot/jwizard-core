@@ -4,47 +4,35 @@
  */
 package pl.jwizard.jwc.core.exception
 
-import org.slf4j.LoggerFactory
 import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
-import pl.jwizard.jwc.core.util.jdaError
 
 /**
- * Base class for exceptions that occur within the command processing pipeline.
+ * Interface defining a structure for handling exceptions related to the command pipeline.
  *
- * This abstract class provides a structure for exceptions that are related to command execution in the application,
- * encapsulating relevant context information such as the command context and internationalization resources.
- *
- * @property commandBaseContext The context of the command being executed, which may contain relevant information for
- * 				   logging.
- * @property i18nExceptionSource Source for internationalized exception messages.
- * @property variables A map of additional variables to be used for message formatting.
- * @property logMessage A custom message to log when the exception occurs.
  * @author Miłosz Gilga
  */
-abstract class CommandPipelineException(
-	val commandBaseContext: CommandBaseContext? = null,
-	val i18nExceptionSource: I18nExceptionSource,
-	val variables: Map<String, Any> = emptyMap(),
-	private val logMessage: String = ""
-) : RuntimeException() {
-
-	private val log = LoggerFactory.getLogger(this::class.java)
+interface CommandPipelineException {
 
 	/**
-	 * Logs the exception message if provided.
-	 *
-	 * If a command base context is available, the log statement will include context-specific details. Otherwise, the
-	 * error message will be logged at a general level.
+	 * The context of the base command when the exception occurred. This might be null if the context is not applicable
+	 * or unavailable.
 	 */
-	fun printLogStatement() {
-		if (logMessage.isNotBlank()) {
-			val message = logMessage.trimIndent()
-			if (commandBaseContext != null) {
-				log.jdaError(commandBaseContext, message)
-			} else {
-				log.error(message)
-			}
-		}
-	}
+	val commandBaseContext: CommandBaseContext?
+
+	/**
+	 * Internationalization (i18n) source providing localized messages for the exception.
+	 */
+	val i18nExceptionSource: I18nExceptionSource
+
+	/**
+	 * A map containing additional variables that can be used to populate exception messages or logs.
+	 */
+	val variables: Map<String, Any?>
+
+	/**
+	 * The log message associated with the exception, used for debugging or tracking purposes. This may be null if no
+	 * specific log message is available.
+	 */
+	val logMessage: String?
 }

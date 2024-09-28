@@ -5,8 +5,6 @@
 dependencies {
   implementation libs.springContext
   implementation libs.jda
-  implementation libs.collectionUtils
-
-  implementation project(':jwc-core')
-  implementation project(':jwc-exception')
+  
+  implementation project(":jwc-core")
 }

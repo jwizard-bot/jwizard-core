@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/jwc-audio" />
             <option value="$PROJECT_DIR$/jwc-command" />
             <option value="$PROJECT_DIR$/jwc-core" />
+            <option value="$PROJECT_DIR$/jwc-exception" />
             <option value="$PROJECT_DIR$/jwc-persistence" />
             <option value="$PROJECT_DIR$/jwc-radio" />
             <option value="$PROJECT_DIR$/jwc-vote" />

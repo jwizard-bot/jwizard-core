@@ -6,7 +6,7 @@ package pl.jwizard.jwc.core
 
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.ComponentScan
-import pl.jwizard.jwc.core.exception.ExceptionTrackerStore
+import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
 import pl.jwizard.jwc.core.jda.ActivitySplashesBean
 import pl.jwizard.jwc.core.jda.JdaInstanceBean
 import pl.jwizard.jwc.core.jda.spi.AudioPlayerManager
@@ -67,13 +67,13 @@ object DiscordBotAppRunner {
 
 				val jdaInstance = context.getBean(JdaInstanceBean::class)
 				val activitySplashes = context.getBean(ActivitySplashesBean::class)
-				val exceptionTrackerStore = context.getBean(ExceptionTrackerStore::class)
 
+				val exceptionTrackerStore = context.getBean(ExceptionTrackerStore::class)
 				val commandLoader = context.getBean(CommandsLoader::class)
 				val audioPlayerManager = context.getBean(AudioPlayerManager::class)
 				val channelListenerGuard = context.getBean(ChannelListenerGuard::class)
 
-				exceptionTrackerStore.loadTrackers()
+				exceptionTrackerStore.initTrackers()
 
 				commandLoader.loadMetadata()
 				commandLoader.loadClassesViaReflectionApi()

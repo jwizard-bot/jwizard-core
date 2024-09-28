@@ -9,7 +9,7 @@ include 'jwc-app'
 include 'jwc-audio'
 include 'jwc-command'
 include 'jwc-core'
+include 'jwc-exception'
 include 'jwc-persistence'
 include 'jwc-radio'
 include 'jwc-vote'
-

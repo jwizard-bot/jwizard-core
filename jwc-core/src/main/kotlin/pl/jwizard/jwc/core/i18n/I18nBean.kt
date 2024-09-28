@@ -52,7 +52,7 @@ class I18nBean(
 	 * @param params A map of parameters to replace placeholders within the message. Default is an empty map.
 	 * @return The translated message with placeholders replaced by the corresponding parameters.
 	 */
-	fun t(i18nLocaleSource: I18nLocaleSource, lang: String?, params: Map<String, Any> = emptyMap()): String {
+	fun t(i18nLocaleSource: I18nLocaleSource, lang: String?, params: Map<String, Any?> = emptyMap()): String {
 		val defaultLanguage = environmentBean.getProperty<String>(BotProperty.I18N_DEFAULT_LANGUAGE)
 		return tRaw(i18nLocaleSource.placeholder, params, lang ?: defaultLanguage)
 	}
@@ -117,7 +117,7 @@ class I18nBean(
 	 * @param lang The language tag representing the desired locale (ex. *en*).
 	 * @return The formatted localized message with placeholders replaced by the corresponding parameters.
 	 */
-	private fun tRaw(i18nKey: String, params: Map<String, Any>, lang: String): String {
+	private fun tRaw(i18nKey: String, params: Map<String, Any?>, lang: String): String {
 		val locale = Locale.forLanguageTag(lang)
 		return try {
 			var propertyValue = messageSource.getMessage(i18nKey, null, locale)

@@ -20,15 +20,14 @@ import pl.jwizard.jwc.command.event.CommandType
 import pl.jwizard.jwc.command.event.arg.CommandArgumentParsingData
 import pl.jwizard.jwc.command.event.arg.CommandArgumentType
 import pl.jwizard.jwc.command.event.context.CommandContext
-import pl.jwizard.jwc.command.event.exception.*
+import pl.jwizard.jwc.command.event.exception.CommandInvocationException
+import pl.jwizard.jwc.command.event.exception.CommandParserException
 import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.reflect.CommandArgumentDetails
 import pl.jwizard.jwc.command.reflect.CommandDetails
 import pl.jwizard.jwc.command.spi.CommandDataSupplier
 import pl.jwizard.jwc.command.spi.ModuleDataSupplier
-import pl.jwizard.jwc.core.exception.CommandPipelineException
-import pl.jwizard.jwc.core.exception.ExceptionTrackerStore
-import pl.jwizard.jwc.core.exception.UnexpectedException
+import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
 import pl.jwizard.jwc.core.i18n.I18nBean
 import pl.jwizard.jwc.core.i18n.source.I18nDynamicMod
 import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
@@ -38,6 +37,12 @@ import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
+import pl.jwizard.jwc.exception.UnexpectedException
+import pl.jwizard.jwc.exception.command.CommandIsTurnedOffException
+import pl.jwizard.jwc.exception.command.MismatchCommandArgumentsException
+import pl.jwizard.jwc.exception.command.ModuleIsTurnedOffException
+import pl.jwizard.jwc.exception.command.ViolatedCommandArgumentOptionsException
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -147,7 +152,7 @@ abstract class CommandEventHandler<E : Event>(
 				}
 				throw UnexpectedException(ex.context, ex.message)
 			}
-		} catch (ex: CommandPipelineException) {
+		} catch (ex: CommandPipelineExceptionHandler) {
 			val trackerMessage = exceptionTrackerStore.createTrackerMessage(ex)
 			val trackerLink = exceptionTrackerStore.createTrackerLink(ex)
 			commandResponse = CommandResponse.ofPublicInteractionMessage(trackerMessage, trackerLink)

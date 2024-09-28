@@ -13,4 +13,5 @@ dependencies {
   implementation project(":jwc-core")
   implementation project(":jwc-command")
   implementation project(":jwc-radio")
+  implementation project(":jwc-exception")
 }
