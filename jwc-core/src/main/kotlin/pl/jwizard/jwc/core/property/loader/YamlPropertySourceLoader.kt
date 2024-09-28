@@ -43,7 +43,7 @@ class YamlPropertySourceLoader(
 	 * Logs the names of the YAML files and the number of properties loaded.
 	 *
 	 * @return A map of properties where keys are property names and values are property values. Returns an empty map
-	 * 				 if no properties are found.
+	 *         if no properties are found.
 	 */
 	override fun setProperties(): Map<Any, Any> {
 		val yamlPropertiesFactoryBean = YamlPropertiesFactoryBean()

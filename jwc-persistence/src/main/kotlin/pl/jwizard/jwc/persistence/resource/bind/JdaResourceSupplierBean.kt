@@ -25,7 +25,7 @@ class JdaResourceSupplierBean(
 	 * Retrieves the JDA logo from HTTP resource.
 	 *
 	 * @return A [Pair] where the first element is the resource path and the second element is the logo data as a
-	 * 				 byte array, or `null` if the resource could not be retrieved.
+	 *         byte array, or `null` if the resource could not be retrieved.
 	 */
 	override fun getLogo() = getResource(ResourceObject.LOGO)
 
@@ -33,7 +33,7 @@ class JdaResourceSupplierBean(
 	 * Retrieves the JDA banner from HTTP resource.
 	 *
 	 * @return A [Pair] where the first element is the resource path and the second element is the banner data as a
-	 * 			   byte array, or `null` if the resource could not be retrieved.
+	 *         byte array, or `null` if the resource could not be retrieved.
 	 */
 	override fun getBanner() = getResource(ResourceObject.BANNER)
 
@@ -42,7 +42,7 @@ class JdaResourceSupplierBean(
 	 *
 	 * @param resourceObject The [ResourceObject] that specifies which resource to retrieve.
 	 * @return A [Pair] where the first element is the resource path and the second element is the resource data as a
-	 * 		     byte array, or `null` if the resource could not be retrieved.
+	 *         byte array, or `null` if the resource could not be retrieved.
 	 */
 	private fun getResource(resourceObject: ResourceObject): Pair<String, ByteArray>? {
 		val data = httpResourceRetrieverBean.getObjectAsByteArray(resourceObject) ?: return null

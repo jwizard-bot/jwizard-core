@@ -18,7 +18,7 @@ import kotlin.reflect.KClass
  * @constructor Creates an instance of the Spring context factory using the provided configuration class.
  *
  * @param clazz The configuration class (annotated with [Configuration] or other appropriate annotations) used to
- * 							initialize the Spring context.
+ *        initialize the Spring context.
  * @author Miłosz Gilga
  */
 class SpringKtContextFactory(clazz: KClass<*>) : AnnotationConfigApplicationContext(clazz.java), JvmDisposable {

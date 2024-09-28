@@ -38,7 +38,7 @@ class ModuleDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean)
 	 * @param commandName The name of the command for which to check module status.
 	 * @param guildDbId The unique database ID of the guild.
 	 * @return A [ModuleData] object containing the module name and its activation status (`isActive`), or `null` if no
-	 * 				 module is found.
+	 *         module is found.
 	 */
 	override fun isEnabled(commandName: String, guildDbId: BigInteger): ModuleData? {
 		val sql = """

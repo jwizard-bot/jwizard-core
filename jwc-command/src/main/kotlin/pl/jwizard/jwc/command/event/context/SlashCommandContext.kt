@@ -26,13 +26,13 @@ class SlashCommandContext(
 ) : CommandContext(guildCommandProperties) {
 
 	override val guildId
-		get() = event.guild!!.id
+		get() = event.guild!!.idLong
 
 	override val guildName
 		get() = event.guild!!.name
 
 	override val authorId
-		get() = event.user.id
+		get() = event.user.idLong
 
 	override val authorAvatarUrl
 		get() = event.user.avatarOrDefaultUrl

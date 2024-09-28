@@ -15,7 +15,7 @@ interface Printer {
 	 * Override this method in class which implements [Printer] interface to print content by various printers
 	 * (ex. console or log statement).
 	 *
-	 * @param content body to print by custom [Printer] printer
+	 * @param content Body to print by custom [Printer] printer.
 	 */
 	fun print(content: String)
 }

@@ -5,7 +5,7 @@
 package pl.jwizard.jwc.persistence.sql.bind
 
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.core.exception.spi.ExceptionSupplier
+import pl.jwizard.jwc.exception.spi.ExceptionSupplier
 import pl.jwizard.jwc.persistence.sql.ColumnDef
 import pl.jwizard.jwc.persistence.sql.JdbcKtTemplateBean
 

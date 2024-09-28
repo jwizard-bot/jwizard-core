@@ -26,7 +26,7 @@ interface CommandBaseContext : MessageBaseContext {
 	/**
 	 * The unique identifier of the guild where the command is issued.
 	 */
-	val guildId: String
+	val guildId: Long
 
 	/**
 	 * The database identifier of the guild, used for data persistence.
@@ -41,7 +41,7 @@ interface CommandBaseContext : MessageBaseContext {
 	/**
 	 * The unique identifier of the user who issued the command.
 	 */
-	val authorId: String
+	val authorId: Long
 
 	/**
 	 * The command prefix used for executing commands in this guild.

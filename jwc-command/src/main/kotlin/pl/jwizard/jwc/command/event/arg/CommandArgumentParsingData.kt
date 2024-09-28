@@ -11,7 +11,6 @@ package pl.jwizard.jwc.command.event.arg
  *
  * @property value The raw string value of the command argument.
  * @property type The type of the command argument, represented by [CommandArgumentType].
- *
  * @author Miłosz Gilga
  */
 data class CommandArgumentParsingData(

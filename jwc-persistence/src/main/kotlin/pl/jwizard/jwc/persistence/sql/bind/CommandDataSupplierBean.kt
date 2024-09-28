@@ -26,7 +26,7 @@ class CommandDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean
 	 * Retrieves a map of all commands and their associated metadata from the database.
 	 *
 	 * @return A map where the key is the command name and the value is a [CommandDetails] object containing detailed
-	 * 				 information about the command, including arguments and options.
+	 *         information about the command, including arguments and options.
 	 */
 	override fun getCommands(): Map<String, CommandDetails> {
 		val sql = """
@@ -84,7 +84,7 @@ class CommandDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean
 	 *
 	 * @param guildDbId The unique database ID of the guild.
 	 * @param slashCommands A flag indicating whether to return slash command keys (`true`) or regular command keys
-	 * 				(`false`).
+	 *        (`false`).
 	 * @return A list of command names that are enabled for the specified guild.
 	 */
 	override fun getEnabledGuildCommandKeys(guildDbId: BigInteger, slashCommands: Boolean): List<String> {
@@ -112,9 +112,9 @@ class CommandDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean
 	 *
 	 * @param guildId The unique Discord ID of the guild.
 	 * @return A [GuildCommandProperties] object containing command properties for the specified guild, or `null` if no
-	 * 				 properties are found.
+	 *         properties are found.
 	 */
-	override fun getCommandPropertiesFromGuild(guildId: String): GuildCommandProperties? {
+	override fun getCommandPropertiesFromGuild(guildId: Long): GuildCommandProperties? {
 		val sql = """
 			SELECT g.id guildDbId, tag lang, legacy_prefix prefix, dj_role_name, slash_enabled
 			FROM guilds g

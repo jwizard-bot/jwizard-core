@@ -22,7 +22,7 @@ import java.net.URI
  * This class serves as a bean for interacting with an S3-compatible storage service.
  *
  * @property environmentBean A Spring-managed bean that provides environment-specific properties such as S3 access
- * 					 keys, region, and host URL.
+ *           keys, region, and host URL.
  * @author Miłosz Gilga
  * @see S3Client
  * @see ResourceRetriever

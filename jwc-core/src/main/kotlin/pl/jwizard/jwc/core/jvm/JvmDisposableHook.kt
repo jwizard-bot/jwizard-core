@@ -11,8 +11,8 @@ import kotlin.reflect.jvm.jvmName
  * Class responsible for adding a shutdown hook to the JVM that triggers a user-defined cleanup method before the
  * JVM shuts down.
  *
- * @property jvmDisposable instance of a class implementing the [JvmDisposable] interface, which will be used to
- * 					 perform cleanup operations.
+ * @property jvmDisposable Instance of a class implementing the [JvmDisposable] interface, which will be used to
+ *           perform cleanup operations.
  * @author Miłosz Gilga
  */
 class JvmDisposableHook(private val jvmDisposable: JvmDisposable) {

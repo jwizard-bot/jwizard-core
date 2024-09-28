@@ -17,7 +17,7 @@ import pl.jwizard.jwc.core.util.jdaError
  * encapsulating relevant context information such as the command context and internationalization resources.
  *
  * @property commandBaseContext The context of the command being executed, which may contain relevant information for
- * 				   logging.
+ *           logging.
  * @property i18nExceptionSource Source for internationalized exception messages.
  * @property variables A map of additional variables to be used for message formatting.
  * @property logMessage A custom message to log when the exception occurs.

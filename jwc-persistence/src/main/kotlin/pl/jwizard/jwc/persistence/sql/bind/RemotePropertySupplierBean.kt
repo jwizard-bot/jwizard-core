@@ -52,7 +52,7 @@ class RemotePropertySupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateB
 	 * @param type The [KClass] representing the type to which the property value should be cast.
 	 * @return The property value cast to type [T], or null if no value is found.
 	 */
-	override fun <T : Any> getProperty(columnName: String, guildId: String, type: KClass<T>): T? {
+	override fun <T : Any> getProperty(columnName: String, guildId: Long, type: KClass<T>): T? {
 		val sql = jdbcKtTemplateBean.parse(
 			"SELECT {{columnName}} FROM guilds WHERE discord_id = ?",
 			mapOf("columnName" to columnName)

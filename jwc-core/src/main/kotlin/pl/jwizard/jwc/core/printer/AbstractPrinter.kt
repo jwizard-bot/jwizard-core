@@ -9,8 +9,7 @@ import org.slf4j.LoggerFactory
 /**
  * Abstract class defining custom content printer (ex. console or log statement printer).
  *
- * @constructor Create printer inherits from [AbstractPrinter] with selected [printer].
- * @property printer printer class definition
+ * @property printer Printer class definition.
  * @author Miłosz Gilga
  * @see Printer
  */
@@ -40,7 +39,7 @@ abstract class AbstractPrinter(private val printer: Printer) {
 	/**
 	 * Method responsible for setting body content printing by [print] method.
 	 *
-	 * @return body content passing to [print] method; if body content is null, printing is disabled
+	 * @return Body content passing to [print] method; if body content is null, printing is disabled.
 	 * @author Miłosz Gilga
 	 */
 	protected abstract fun setBodyContent(): String?

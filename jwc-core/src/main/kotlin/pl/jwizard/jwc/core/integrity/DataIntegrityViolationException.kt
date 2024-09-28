@@ -13,8 +13,7 @@ import kotlin.reflect.KClass
  *
  * @property clazz The class where the violation occurred, providing context for the exception.
  * @property contractScheme A description of the expected contract that has been violated. This helps in identifying
- * 					 what was expected versus what was found.
- *
+ *           what was expected versus what was found.
  * @author Miłosz Gilga
  */
 class DataIntegrityViolationException(

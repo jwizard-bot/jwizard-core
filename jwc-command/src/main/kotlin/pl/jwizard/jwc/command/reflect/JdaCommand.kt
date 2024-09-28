@@ -12,9 +12,8 @@ import pl.jwizard.jwc.command.refer.Command
 /**
  * Annotation to mark a class as a Discord command listener for JDA (Java Discord API).
  *
- * This annotation associates the
- * class with a specific command identifier, allowing the command framework to automatically recognize and register the
- * command handler.
+ * This annotation associates the class with a specific command identifier, allowing the command framework to
+ * automatically recognize and register the command handler.
  *
  * Usage example:
  *

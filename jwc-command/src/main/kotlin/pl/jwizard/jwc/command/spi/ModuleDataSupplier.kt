@@ -30,7 +30,7 @@ interface ModuleDataSupplier {
 	 * @param commandName The name of the command to check.
 	 * @param guildDbId The unique database ID of the guild.
 	 * @return A [ModuleData] object containing module information if the command is enabled for the guild, or `null` if
-	 * 				 the module is disabled.
+	 *         the module is disabled.
 	 */
 	fun isEnabled(commandName: String, guildDbId: BigInteger): ModuleData?
 }

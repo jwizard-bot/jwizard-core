@@ -29,5 +29,5 @@ interface JdaInstance {
 	 * @param guildId The unique identifier of the guild to retrieve.
 	 * @return The [Guild] object representing the guild with the specified ID, or null if the guild is not found.
 	 */
-	fun getGuildById(guildId: String): Guild?
+	fun getGuildById(guildId: Long): Guild?
 }

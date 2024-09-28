@@ -48,7 +48,7 @@ class AudioChannelsListenerGuardBean(
 	 * Maps guild IDs to the time when the guild's voice channel was last detected as empty.
 	 * This is used to track the inactivity of voice channels.
 	 */
-	private final val aloneFromTime = mutableMapOf<String, Instant>()
+	private final val aloneFromTime = mutableMapOf<Long, Instant>()
 
 	/**
 	 * Initializes the thread pool and starts the executor service with the configured interval.
@@ -68,12 +68,12 @@ class AudioChannelsListenerGuardBean(
 		val guild = event.guild
 		guild.audioManager.sendingHandler?.let {
 			val isAlone = isAloneOnChannel(guild)
-			val isAlonePrevious = aloneFromTime.containsKey(guild.id)
+			val isAlonePrevious = aloneFromTime.containsKey(guild.idLong)
 			if (!isAlone && isAlonePrevious) {
-				aloneFromTime.remove(guild.id)
+				aloneFromTime.remove(guild.idLong)
 			}
 			if (isAlone && !isAlonePrevious) {
-				aloneFromTime[guild.id] = Instant.now()
+				aloneFromTime[guild.idLong] = Instant.now()
 			}
 		}
 	}
@@ -86,7 +86,7 @@ class AudioChannelsListenerGuardBean(
 	 * Removes guilds that were found to be empty from the [aloneFromTime] map.
 	 */
 	override fun executeJvmThread() {
-		val removeFromGuild = mutableSetOf<String>()
+		val removeFromGuild = mutableSetOf<Long>()
 		for ((guildId, time) in aloneFromTime) {
 			val guild = jdaInstance.getGuildById(guildId)
 			if (guild == null) {

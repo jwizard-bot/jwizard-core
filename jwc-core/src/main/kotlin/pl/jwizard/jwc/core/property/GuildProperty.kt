@@ -30,7 +30,7 @@ import kotlin.reflect.KClass
  * @property key The name of the database column that corresponds to this property.
  * @property i18nSourceKey The source key used for internationalization (i18n) of this property.
  * @property nonDefaultType The type of the property value. By default, guild property refer to [BotProperty] as
- * 					 default value. If default value not exist, this field must not be null.
+ *           default value. If default value not exist, this field must not be null.
  * @author Miłosz Gilga
  * @see BotProperty
  */

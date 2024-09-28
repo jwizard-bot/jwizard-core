@@ -40,5 +40,5 @@ interface RemotePropertySupplier {
 	 * @param type The class of the property type.
 	 * @return The property value of type [T], or null if the property is not found.
 	 */
-	fun <T : Any> getProperty(columnName: String, guildId: String, type: KClass<T>): T?
+	fun <T : Any> getProperty(columnName: String, guildId: Long, type: KClass<T>): T?
 }

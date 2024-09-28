@@ -20,8 +20,8 @@ import net.dv8tion.jda.api.interactions.components.ActionRow
 data class CommandResponse(
 	val embedMessages: List<MessageEmbed>,
 	val actionRows: List<ActionRow>,
-	val privateMessage: Boolean = false,
-	val privateMessageUserId: String,
+	val privateMessage: Boolean,
+	val privateMessageUserId: Long?,
 ) {
 
 	companion object {
@@ -36,7 +36,7 @@ data class CommandResponse(
 		 * @return A CommandResponse configured for public interaction.
 		 */
 		fun ofPublicInteractionMessage(embedMessage: MessageEmbed, actionRow: ActionRow) =
-			CommandResponse(listOf(embedMessage), listOf(actionRow), false, "")
+			CommandResponse(listOf(embedMessage), listOf(actionRow), false, null)
 
 		/**
 		 * Creates a [CommandResponse] for a private interaction message.
@@ -49,7 +49,7 @@ data class CommandResponse(
 		 * @param userId The ID of the user to whom the private message should be sent.
 		 * @return A CommandResponse configured for private interaction.
 		 */
-		fun ofPrivateInteractionMessage(embedMessage: MessageEmbed, actionRow: ActionRow, userId: String) =
+		fun ofPrivateInteractionMessage(embedMessage: MessageEmbed, actionRow: ActionRow, userId: Long) =
 			CommandResponse(listOf(embedMessage), listOf(actionRow), true, userId)
 
 		/**
@@ -62,7 +62,7 @@ data class CommandResponse(
 		 * @param userId The ID of the user to whom the private message should be sent.
 		 * @return A CommandResponse configured for a private message.
 		 */
-		fun ofPrivateMessage(embedMessage: MessageEmbed, userId: String) =
+		fun ofPrivateMessage(embedMessage: MessageEmbed, userId: Long) =
 			CommandResponse(listOf(embedMessage), emptyList(), true, userId)
 	}
 }

@@ -12,8 +12,7 @@ import java.nio.charset.StandardCharsets
  * Class responsible for loading, reading and handling classpath files, including reading raw content and checking
  * other major file parameters.
  *
- * @constructor Instantiate [ClasspathFileLoader] with [location] parameter.
- * @property location classpath file location ex. `static/example.txt`.
+ * @property location Classpath file location ex. `static/example.txt`.
  * @author Miłosz Gilga
  */
 class ClasspathFileLoader(private val location: String) {

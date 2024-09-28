@@ -11,7 +11,7 @@ import pl.jwizard.jwc.core.integrity.ReferentialIntegrityChecker
  * linked to a specific property name used for reference in command execution.
  *
  * @property propName The string representation of the argument, which is used for matching and processing command
- * 					 arguments.
+ *           arguments.
  * @author Miłosz Gilga
  */
 enum class CommandArgument(override val propName: String) : ReferentialIntegrityChecker {

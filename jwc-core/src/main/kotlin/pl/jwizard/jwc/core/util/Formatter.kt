@@ -14,4 +14,4 @@ package pl.jwizard.jwc.core.util
  * @return A formatted string in the form of "name <@id>".
  * @author Miłosz Gilga
  */
-fun formatQualifier(name: String, id: String) = "\"%s <@%s>\"".format(name, id)
+fun formatQualifier(name: String, id: Long) = "\"%s <@%s>\"".format(name, id)

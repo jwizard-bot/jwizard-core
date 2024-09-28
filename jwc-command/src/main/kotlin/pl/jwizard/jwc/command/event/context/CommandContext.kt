@@ -9,7 +9,6 @@ import pl.jwizard.jwc.command.event.arg.CommandArgumentParsingData
 import pl.jwizard.jwc.command.event.exception.CommandParserException
 import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
-import java.math.BigInteger
 
 /**
  * Abstract class representing the context of a command execution within a guild. It provides access to command
@@ -29,7 +28,7 @@ abstract class CommandContext(private val guildCommandProperties: GuildCommandPr
 	/**
 	 * The unique database identifier for the guild.
 	 */
-	override val guildDbId: BigInteger
+	override val guildDbId
 		get() = guildCommandProperties.guildDbId
 
 	/**

@@ -25,7 +25,7 @@ import kotlin.reflect.KClass
  * - [VAULT_TOKEN]: Vault key storage access token.
  * - [VAULT_KV_BACKEND]: Vault key storage KV backend name.
  * - [VAULT_KV_DEFAULT_CONTEXT]: Vault key storage KV default context. Load default secrets independently of
- * 	 application name.
+ *   application name.
  * - [VAULT_KV_APPLICATION_NAME]: Vault key storage KV application name. Load all secrets from this pre-path.
  * - [JDA_NAME]: JDA instance name.
  * - [JDA_SECRET_TOKEN]: JDA secret token.
@@ -46,7 +46,7 @@ import kotlin.reflect.KClass
  * - [JDA_INTERACTION_MESSAGE_COMPONENT_DISABLE_DELAY_SEC]: The delay time (in seconds) before disabling interaction
  *   components in JDA.
  * - [JDA_INTERACTION_SLASH_AUTOCOMPLETE_MAX_OPTIONS]: JDA maximum number of options in single autocomplete interaction
- * 	 request.
+ *   request.
  * - [JDA_EXCEPTION_SEGMENT_SIZE]: Specifies the maximum size of the segment in exception group.
  * - [JDA_EXCEPTION_URL_REFER_TEMPLATE]: Defines the URL template used for referring to detailed exception information
  *   in bot website.

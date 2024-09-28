@@ -114,7 +114,7 @@ abstract class CommandEventHandler<E : Event>(
 					throw CommandInvocationException("forbidden invocation condition")
 				}
 				val guild = eventGuild(event) ?: throw CommandInvocationException("guild is null")
-				val properties = commandDataSupplier.getCommandPropertiesFromGuild(guild.id)
+				val properties = commandDataSupplier.getCommandPropertiesFromGuild(guild.idLong)
 					?: throw CommandInvocationException("properties not exists")
 
 				if (forbiddenInvocationDetails(event, properties)) {
@@ -141,8 +141,8 @@ abstract class CommandEventHandler<E : Event>(
 
 				commandResponse = executeCommand(context, commandDetails, commandNameOrAlias)
 
-				if (commandResponse.privateMessage) {
-					val userId = commandResponse.privateMessageUserId
+				val userId = commandResponse.privateMessageUserId
+				if (commandResponse.privateMessage && userId != null) {
 					directEphemeralUser = event.jda.getUserById(userId)
 						?: throw CommandInvocationException("user with id $userId not found", context)
 				}
@@ -176,8 +176,8 @@ abstract class CommandEventHandler<E : Event>(
 	 * @param event The event that triggered this handler, containing the context for the command execution.
 	 * @param user The user to whom the private message will be sent.
 	 * @param context The command context, providing information such as the guild language for localization.
-	 * @param response The response generated from executing the command, which may include embedded messages
-	 *                 and interactive components.
+	 * @param response The response generated from executing the command, which may include embedded messages and
+	 *        interactive components.
 	 */
 	private fun sendPrivateMessage(event: E, user: User, context: CommandContext?, response: CommandResponse) {
 		val successMessage = MessageEmbedBuilder(context, i18nBean, jdaColorStoreBean)
@@ -188,11 +188,11 @@ abstract class CommandEventHandler<E : Event>(
 		val i18nSource = I18nExceptionSource.EPHEMERAL_UNEXPECTED_EXCEPTION
 		val trackerMessage = exceptionTrackerStore.createTrackerMessage(i18nSource)
 		val trackerLink = exceptionTrackerStore.createTrackerLink(i18nSource)
-		val errorMessage = CommandResponse.ofPrivateInteractionMessage(trackerMessage, trackerLink, user.id)
+		val errorMessage = CommandResponse.ofPrivateInteractionMessage(trackerMessage, trackerLink, user.idLong)
 
 		val onSuccess: (Message) -> Unit = {
 			if (commandType == CommandType.SLASH) {
-				val message = CommandResponse.ofPrivateMessage(successMessage, user.id)
+				val message = CommandResponse.ofPrivateMessage(successMessage, user.idLong)
 				deferMessage(event, message).queue(::startRemovalInteractionThread)
 			}
 		}

@@ -10,9 +10,8 @@ import pl.jwizard.jwc.core.file.ClasspathFileLoader
  * Class extending [AbstractPrinter] with [ConsolePrinter] as printer responsible for printing fancy
  * frame based elements taken from [fileClasspathLocation] property.
  *
- * @constructor Create [FancyFramePrinter] with defined [fileClasspathLocation] and [printer].
- * @property fileClasspathLocation classpath fancy frame file location
- * @property printer printer adapter implements [Printer] interface
+ * @property fileClasspathLocation Classpath fancy frame file location.
+ * @property printer Printer adapter implements [Printer] interface.
  * @author Miłosz Gilga
  * @see AbstractPrinter
  * @see Printer

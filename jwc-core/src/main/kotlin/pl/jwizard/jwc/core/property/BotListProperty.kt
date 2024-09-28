@@ -15,7 +15,7 @@ import kotlin.reflect.KClass
  * Defining following properties:
  *
  * - [RUNTIME_PROFILES]: Application runtime profiles. Defined all others configurations and Spring Context loaders.
- * 	 Accepted: *dev*, *prod*. Default: *empty array*.
+ *   Accepted: *dev*, *prod*. Default: *empty array*.
  * - [JDA_SPLASHES_ELEMENTS]: JDA splashes elements show in sequentially order.
  * - [JDA_GATEWAY_INTENTS]: A list of [GatewayIntent] instances that are enabled for the JDA application.
  * - [JDA_CACHE_FLAGS_ENABLED]: A list of [CacheFlag] instances that are enabled for JDA caching.

@@ -16,7 +16,7 @@ interface JdaResourceSupplier {
 	 * Retrieves the JDA logo as a pair containing the resource path and the logo data.
 	 *
 	 * @return A [Pair] where the first element is the resource path and the second element is the logo data as a
-	 * 				 byte array, or `null` if the logo could not be retrieved.
+	 *         byte array, or `null` if the logo could not be retrieved.
 	 */
 	fun getLogo(): Pair<String, ByteArray>?
 
@@ -24,7 +24,7 @@ interface JdaResourceSupplier {
 	 * Retrieves the JDA banner as a pair containing the resource path and the banner data.
 	 *
 	 * @return A [Pair] where the first element is the resource path and the second element is the banner data as a
-	 * 				 byte array, or `null` if the banner could not be retrieved.
+	 *         byte array, or `null` if the banner could not be retrieved.
 	 */
 	fun getBanner(): Pair<String, ByteArray>?
 }

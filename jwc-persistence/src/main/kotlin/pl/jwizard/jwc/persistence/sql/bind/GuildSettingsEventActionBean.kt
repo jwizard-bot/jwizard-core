@@ -44,7 +44,7 @@ class GuildSettingsEventActionBean(
 	 * @return A pair where the first value is true if the settings were created successfully, and the second value
 	 *         contains an error message if the creation failed.
 	 */
-	override fun createGuildSettings(guildId: String, guildLocale: String): Pair<Boolean, String?> {
+	override fun createGuildSettings(guildId: Long, guildLocale: String): Pair<Boolean, String?> {
 		val guildSettingsAlreadyExist = jdbcKtTemplateBean.queryForBool(
 			"SELECT COUNT(*) > 0 FROM guilds WHERE discord_id = ?",
 			guildId
@@ -97,7 +97,7 @@ class GuildSettingsEventActionBean(
 	 * @param guildId Unique identifier of the guild.
 	 * @return The number of rows affected by the update operation.
 	 */
-	override fun deleteDefaultMusicTextChannel(guildId: String) =
+	override fun deleteDefaultMusicTextChannel(guildId: Long) =
 		jdbcKtTemplateBean.update("UPDATE guilds SET music_text_channel_id = NULL where id = ?", guildId)
 
 	/**
@@ -106,7 +106,7 @@ class GuildSettingsEventActionBean(
 	 * @param guildId Unique identifier of the guild.
 	 * @return The number of rows affected by the delete operation.
 	 */
-	override fun deleteGuildSettings(guildId: String) =
+	override fun deleteGuildSettings(guildId: Long) =
 		jdbcKtTemplateBean.update("DELETE FROM guilds WHERE discord_id = ?", guildId)
 
 	/**
@@ -114,9 +114,9 @@ class GuildSettingsEventActionBean(
 	 *
 	 * @param guildId Unique identifier of the guild.
 	 * @return A map containing the guild's settings, where the keys are instances of [GuildProperty] and the values
-	 * are the associated settings.
+	 *         are the associated settings.
 	 */
-	override fun getGuildSettings(guildId: String): Map<GuildProperty, Any?> {
+	override fun getGuildSettings(guildId: Long): Map<GuildProperty, Any?> {
 		val fetchedProperties = jdbcKtTemplateBean.queryForMap("SELECT * FROM guilds WHERE discord_id = ?", guildId)
 		val combinedProperties = mutableMapOf<GuildProperty, Any?>()
 		fetchedProperties.forEach {

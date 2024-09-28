@@ -140,11 +140,11 @@ class EnvironmentBean(private val springKtContextFactory: SpringKtContextFactory
 	 * @param allowNullable Whether to allow null values if the property is not found.
 	 * @return The property value of type [T], or null if not found and [allowNullable] is true.
 	 * @throws PropertyNotFoundException If property with the given column name does not exist and [allowNullable]
-	 * 				 is false.
+	 *         is false.
 	 */
 	final inline fun <reified T : Any> getGuildNullableProperty(
 		guildProperty: GuildProperty,
-		guildId: String,
+		guildId: Long,
 		allowNullable: Boolean = true,
 	): T? {
 		val defaultProperty = try {
@@ -178,7 +178,7 @@ class EnvironmentBean(private val springKtContextFactory: SpringKtContextFactory
 	 * @return The property value of type [T].
 	 * @throws PropertyNotFoundException If property with the given column name does not exist.
 	 */
-	final inline fun <reified T : Any> getGuildProperty(guildProperty: GuildProperty, guildId: String): T =
+	final inline fun <reified T : Any> getGuildProperty(guildProperty: GuildProperty, guildId: Long): T =
 		getGuildNullableProperty<T>(guildProperty, guildId, allowNullable = false) as T
 
 	/**

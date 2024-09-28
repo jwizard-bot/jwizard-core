@@ -32,7 +32,7 @@ interface CommandDataSupplier {
 	 *
 	 * @param guildDbId The unique database ID of the guild.
 	 * @param slashCommands A flag indicating whether to fetch slash command keys (`true`) or regular command keys
-	 * 				(`false`).
+	 *        (`false`).
 	 * @return A list of command keys that are enabled for the specified guild.
 	 */
 	fun getEnabledGuildCommandKeys(guildDbId: BigInteger, slashCommands: Boolean): List<String>
@@ -49,9 +49,9 @@ interface CommandDataSupplier {
 	 *
 	 * @param guildId The unique ID of the guild.
 	 * @return A [GuildCommandProperties] object containing the guild's command settings, or `null` if no properties are
-	 * 				 found for the specified guild.
+	 *         found for the specified guild.
 	 */
-	fun getCommandPropertiesFromGuild(guildId: String): GuildCommandProperties?
+	fun getCommandPropertiesFromGuild(guildId: Long): GuildCommandProperties?
 
 	/**
 	 * Checks whether a specific command is enabled for a given guild.

@@ -22,7 +22,7 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
  * connecting to the database. It also provides a [JdbcTemplate] bean that is used to perform database operations.
  *
  * @property environmentBean The [EnvironmentBean] instance used to retrieve database connection properties from
- * 					 the environment.
+ *           the environment.
  * @author Miłosz Gilga
  */
 @Component

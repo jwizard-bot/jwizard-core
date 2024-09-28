@@ -28,7 +28,7 @@ interface LanguageSupplier {
 	 * @param guildId The ID of the guild for which the language is to be retrieved.
 	 * @return The language tag associated with the specified guild.
 	 */
-	fun getGuildLanguage(guildId: String): String?
+	fun getGuildLanguage(guildId: Long): String?
 
 	/**
 	 * Retrieves the ID of a language based on its tag.

@@ -43,7 +43,7 @@ class LanguageSupplierBean(
 	 * @param guildId The ID of the guild for which the language is to be retrieved.
 	 * @return The language tag associated with the specified guild.
 	 */
-	override fun getGuildLanguage(guildId: String): String? {
+	override fun getGuildLanguage(guildId: Long): String? {
 		val sql = "SELECT tag FROM guilds AS g INNER JOIN bot_langs AS l ON g.lang_id = l.id WHERE discord_id = ?"
 		return jdbcKtTemplateBean.queryForObject(sql, String::class, guildId)
 	}

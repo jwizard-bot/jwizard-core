@@ -10,9 +10,8 @@ import pl.jwizard.jwc.core.file.ClasspathFileLoader
  * Class extending [AbstractPrinter] with [ConsolePrinter] as printer responsible for printing fancy
  * title taken by classpath config file.
  *
- * @constructor Create [FancyTitlePrinter] with defined [fileClasspathLocation] and [printer].
- * @property fileClasspathLocation classpath fancy title file location
- * @property printer printer adapter implements [Printer] interface
+ * @property fileClasspathLocation Classpath fancy title file location.
+ * @property printer Printer adapter implements [Printer] interface.
  * @author Miłosz Gilga
  * @see AbstractPrinter
  * @see Printer
@@ -22,7 +21,7 @@ class FancyTitlePrinter(
 	private val printer: Printer
 ) : AbstractPrinter(printer) {
 
-	override fun setBodyContent(): String? {
+	override fun setBodyContent(): String {
 		val loader = ClasspathFileLoader(fileClasspathLocation)
 		return loader.readFileRaw()
 	}

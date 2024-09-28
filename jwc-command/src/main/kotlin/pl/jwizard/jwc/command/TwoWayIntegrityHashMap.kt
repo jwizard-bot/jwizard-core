@@ -27,7 +27,7 @@ class TwoWayIntegrityHashMap<K, V : HashMapAlterKey<K>> : ConcurrentHashMap<K, V
 	 *
 	 * @param key The key whose associated value is to be returned, or an alias to be checked.
 	 * @return The value to which the specified key is mapped, or `null` if this map contains no mapping for the key or
-	 * 				 its alias.
+	 *         its alias.
 	 */
 	override operator fun get(key: K) = super.get(key) ?: values.find { it.keyAlias == key }
 }

@@ -173,5 +173,5 @@ final class JdaInstanceBean(
 	 * @param guildId The ID of the guild to retrieve.
 	 * @return The [Guild] object associated with the given ID, or `null` if no such guild is found.
 	 */
-	override fun getGuildById(guildId: String) = jda.getGuildById(guildId)
+	override fun getGuildById(guildId: Long) = jda.getGuildById(guildId)
 }

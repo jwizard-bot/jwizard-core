@@ -50,7 +50,7 @@ class SlashCommandRegistererBean(
 	 * @param guild The Discord guild for which to register the slash commands.
 	 */
 	override fun registerGuildCommands(guild: Guild) {
-		val guildProperties = commandDataSupplier.getCommandPropertiesFromGuild(guild.id)
+		val guildProperties = commandDataSupplier.getCommandPropertiesFromGuild(guild.idLong)
 		if (guildProperties == null || !guildProperties.slashEnabled) {
 			return
 		}

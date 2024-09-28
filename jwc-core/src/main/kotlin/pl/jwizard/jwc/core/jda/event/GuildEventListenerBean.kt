@@ -46,7 +46,7 @@ class GuildEventListenerBean(
 	 */
 	override fun onGuildReady(event: GuildReadyEvent) {
 		val guild = event.guild
-		val (arePersisted, errorMessage) = guildSettingsEventAction.createGuildSettings(guild.id, guild.locale.locale)
+		val (arePersisted, errorMessage) = guildSettingsEventAction.createGuildSettings(guild.idLong, guild.locale.locale)
 		if (errorMessage != null) {
 			log.error("Unexpected exception while persisting guild: {}. Cause: {}.", guild.qualifier, errorMessage)
 			guild.leave().queue { log.info("Leaved guild: {}.", guild.qualifier) }
@@ -84,9 +84,9 @@ class GuildEventListenerBean(
 			return
 		}
 		val guild = event.guild
-		val musicTextChannelId = environmentBean.getGuildProperty<String>(GuildProperty.MUSIC_TEXT_CHANNEL_ID, guild.id)
+		val musicTextChannelId = environmentBean.getGuildProperty<String>(GuildProperty.MUSIC_TEXT_CHANNEL_ID, guild.idLong)
 		if (musicTextChannelId == channel.id) {
-			guildSettingsEventAction.deleteDefaultMusicTextChannel(guild.id)
+			guildSettingsEventAction.deleteDefaultMusicTextChannel(guild.idLong)
 		}
 	}
 
@@ -96,7 +96,7 @@ class GuildEventListenerBean(
 	 * @param guild The guild whose settings are to be deleted.
 	 */
 	private fun deleteGuildSettings(guild: Guild) {
-		val rowsAffected = guildSettingsEventAction.deleteGuildSettings(guild.id)
+		val rowsAffected = guildSettingsEventAction.deleteGuildSettings(guild.idLong)
 		if (rowsAffected > 0) {
 			log.info("Delete guild: {} settings from persisted storage. Rows affected: {}.", guild.qualifier, rowsAffected)
 		}

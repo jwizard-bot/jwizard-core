@@ -15,12 +15,6 @@ import kotlin.reflect.KClass
  *
  * @property clazz The class where the property was expected to be found or accessed.
  * @property propertyKey The key of the property that was not found or could not be accessed.
- *
- * @constructor Creates a new instance of [PropertyNotFoundException].
- *
- * @param clazz The class context where the property was expected.
- * @param propertyKey The key of the property that could not be found.
- *
  * @author Miłosz Gilga
  */
 class PropertyNotFoundException(

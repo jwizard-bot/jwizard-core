@@ -89,5 +89,5 @@ class DjRoleGuildEventListenerBean(
 	 * @return The name of the DJ role as a string.
 	 */
 	private fun getDjRoleName(guild: Guild) = environmentBean
-		.getGuildProperty<String>(GuildProperty.DJ_ROLE_NAME, guild.id)
+		.getGuildProperty<String>(GuildProperty.DJ_ROLE_NAME, guild.idLong)
 }

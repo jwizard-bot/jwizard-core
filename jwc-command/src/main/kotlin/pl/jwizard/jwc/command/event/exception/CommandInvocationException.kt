@@ -14,7 +14,7 @@ import pl.jwizard.jwc.core.jda.command.CommandBaseContext
  *
  * @property exceptionMessage A message describing the reason for the exception.
  * @property context Optional context related to the command invocation, providing additional information about the
- * 					 command's execution environment.
+ *           command's execution environment.
  * @author Miłosz Gilga
  */
 class CommandInvocationException(

@@ -23,7 +23,7 @@ interface GuildSettingsEventAction {
 	 * @return A pair where the first value is true if the settings were created successfully, and the second value
 	 *         contains an error message if the creation failed.
 	 */
-	fun createGuildSettings(guildId: String, guildLocale: String): Pair<Boolean, String?>
+	fun createGuildSettings(guildId: Long, guildLocale: String): Pair<Boolean, String?>
 
 	/**
 	 * Deletes the default music text channel for a given guild by setting the channel ID to null.
@@ -31,7 +31,7 @@ interface GuildSettingsEventAction {
 	 * @param guildId Unique identifier of the guild.
 	 * @return The number of rows affected by the update operation.
 	 */
-	fun deleteDefaultMusicTextChannel(guildId: String): Int
+	fun deleteDefaultMusicTextChannel(guildId: Long): Int
 
 	/**
 	 * Deletes all settings for a specific guild from the persistent storage.
@@ -39,7 +39,7 @@ interface GuildSettingsEventAction {
 	 * @param guildId Unique identifier of the guild.
 	 * @return The number of rows affected by the delete operation.
 	 */
-	fun deleteGuildSettings(guildId: String): Int
+	fun deleteGuildSettings(guildId: Long): Int
 
 	/**
 	 * Retrieves the settings for a specific guild from the persistent storage.
@@ -47,5 +47,5 @@ interface GuildSettingsEventAction {
 	 * @param guildId Unique identifier of the guild.
 	 * @return A map where the keys are instances of [GuildProperty] and the values are the associated settings.
 	 */
-	fun getGuildSettings(guildId: String): Map<GuildProperty, Any?>
+	fun getGuildSettings(guildId: Long): Map<GuildProperty, Any?>
 }
