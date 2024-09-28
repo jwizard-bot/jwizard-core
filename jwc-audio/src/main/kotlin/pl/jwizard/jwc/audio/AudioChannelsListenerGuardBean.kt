@@ -29,14 +29,14 @@ import java.time.Instant
  * @see JvmFixedThreadExecutor
  */
 @Component
-class ChannelListenerGuardBean(
+class AudioChannelsListenerGuardBean(
 	private val jdaInstance: JdaInstance,
 	private val environmentBean: EnvironmentBean,
 	private val playerManagersBean: PlayerManagersBean,
 ) : ChannelListenerGuard, JvmFixedThreadExecutor() {
 
 	companion object {
-		private val log = LoggerFactory.getLogger(ChannelListenerGuardBean::class.java)
+		private val log = LoggerFactory.getLogger(AudioChannelsListenerGuardBean::class.java)
 
 		/**
 		 * The interval in seconds at which the executor service runs to check voice channels.
@@ -64,7 +64,7 @@ class ChannelListenerGuardBean(
 	 *
 	 * @param event The [GuildVoiceUpdateEvent] containing information about the voice state update.
 	 */
-	override fun onEveryVoiceUpdate(event: GuildVoiceUpdateEvent) {
+	fun onEveryVoiceUpdate(event: GuildVoiceUpdateEvent) {
 		val guild = event.guild
 		guild.audioManager.sendingHandler?.let {
 			val isAlone = isAloneOnChannel(guild)

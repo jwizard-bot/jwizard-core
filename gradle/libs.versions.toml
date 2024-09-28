@@ -11,11 +11,10 @@ dokkaVersion = "1.9.20"
 jacksonVersion = "2.17.2"
 springVaultVersion = "3.1.2"
 jdaVersion = "5.1.0"
-lavaplayerVersion = "2.2.1"
-lavalinkYtSourceVersion = "1.7.2"
 jeeAnnotationApiVersion = "3.0.0"
 awsS3sdkVersion = "2.27.21"
 collectionUtilsVersion = "4.5.0-M2"
+lavalinkClientVersion = "3.1.0"
 
 [libraries]
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinVersion" }
@@ -34,11 +33,10 @@ jacksonDatabind = { module = "com.fasterxml.jackson.core:jackson-databind", vers
 jacksonDataformatYaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jacksonVersion" }
 springVaultCore = { module = "org.springframework.vault:spring-vault-core", version.ref = "springVaultVersion" }
 jda = { module = "net.dv8tion:JDA", version.ref = "jdaVersion" }
-lavaplayer = { module = "dev.arbjerg:lavaplayer", version.ref = "lavaplayerVersion" }
-lavalinkYtSource = { module = "dev.lavalink.youtube:v2", version.ref = "lavalinkYtSourceVersion" }
 jeeAnnotationApi = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jeeAnnotationApiVersion" }
 awsS3sdk = { module = "software.amazon.awssdk:s3", version.ref = "awsS3sdkVersion" }
 collectionUtils = { module = "org.apache.commons:commons-collections4", version.ref = "collectionUtilsVersion" }
+lavalinkClient = { module = "dev.arbjerg:lavalink-client", version.ref = "lavalinkClientVersion" }
 
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }

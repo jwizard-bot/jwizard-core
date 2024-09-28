@@ -3,4 +3,9 @@
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 dependencies {
+  implementation libs.springContext
+  implementation libs.jda
+
+  implementation project(":jwc-core")
+  implementation project(":jwc-command")
 }

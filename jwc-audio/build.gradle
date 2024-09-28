@@ -5,8 +5,7 @@
 dependencies {
   implementation libs.springContext
   implementation libs.jda
-  implementation libs.lavaplayer
-  implementation libs.lavalinkYtSource
+  implementation libs.lavalinkClient
 
   implementation project(':jwc-core')
 }

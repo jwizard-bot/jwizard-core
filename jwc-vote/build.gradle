@@ -3,4 +3,5 @@
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 dependencies {
+  implementation project(":jwc-core")
 }

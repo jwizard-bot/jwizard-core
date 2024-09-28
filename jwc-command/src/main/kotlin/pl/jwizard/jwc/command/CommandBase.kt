@@ -15,7 +15,7 @@ import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
  * @property commandEnvironmentBean The environment dependencies required for command execution.
  * @author Miłosz Gilga
  */
-abstract class CommandBase(private val commandEnvironmentBean: CommandEnvironmentBean) {
+abstract class CommandBase(protected val commandEnvironmentBean: CommandEnvironmentBean) {
 
 	/**
 	 * Creates a message embed builder configured with the given command context.
