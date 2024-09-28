@@ -21,9 +21,10 @@ import kotlin.reflect.KClass
  * - [JDA_CACHE_FLAGS_ENABLED]: A list of [CacheFlag] instances that are enabled for JDA caching.
  * - [JDA_CACHE_FLAGS_DISABLED]: A list of [CacheFlag] instances that are disabled for JDA caching.
  * - [I18N_RESOURCES_REMOTE]: I18n CDN resources elements list. Loaded from Content Delivery Network. Must be ends
- * 	 with messages, ex. config/messages.
+ *   with messages, ex. config/messages.
  * - [I18N_RESOURCES_LOCALE]: I18n local resources elements list. Loaded from classpath. Must be ends with
- * 	 messages, ex. config/messages.
+ *   messages, ex. config/messages.
+ * - [JDA_SUPERUSER_PERMISSIONS]: List of JDA permissions for superuser (debug, change guild settings etc.).
  *
  * @property key The key used to retrieve the property value.
  * @property listElementsType The type of elements in the list represented by this property.
@@ -62,6 +63,11 @@ enum class BotListProperty(
 	 * A list of [CacheFlag] instances that are disabled for JDA caching.
 	 */
 	JDA_CACHE_FLAGS_DISABLED("jda.cache-flags.disabled"),
+
+	/**
+	 * List of JDA permissions for superuser (debug, change guild settings etc.).
+	 */
+	JDA_SUPERUSER_PERMISSIONS("jda.superuser-permissions"),
 
 	/**
 	 * I18n CDN resources elements list. Loaded from Content Delivery Network. Must be ends with messages,

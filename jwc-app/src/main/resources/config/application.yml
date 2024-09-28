@@ -72,6 +72,9 @@ jda:
   exception:
     segment-size: 100
     url-refer-template: '%s/error-codes/%d'
+  superuser-permissions:
+    - ADMINISTRATOR
+    - MANAGE_SERVER
 
 s3:
   region: eu-central-1
