@@ -23,9 +23,10 @@ interface RadioStationSupplier {
 	 * This method should return a map where each entry consists of a radio station slug as the key and its name as
 	 * the value.
 	 *
+	 * @param guildDbId The ID of the guild to filter the radio stations.
 	 * @return A map of radio stations with slugs as keys and names as values.
 	 */
-	fun getRadioStations(): Map<String, String>
+	fun getRadioStations(guildDbId: BigInteger): Map<String, String>
 
 	/**
 	 * Retrieves a specific radio station based on its slug and guild ID.

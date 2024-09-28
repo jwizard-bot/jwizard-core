@@ -8,7 +8,6 @@ import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.BatchPreparedStatementSetter
 import org.springframework.jdbc.core.DataClassRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.support.GeneratedKeyHolder
 import java.math.BigInteger
 import java.sql.JDBCType
@@ -69,12 +68,13 @@ class JdbcKtTemplateBean(private val datasource: DataSource) : JdbcTemplate(data
 	 * @param sql The SQL query to execute.
 	 * @param key Definition of the key column, including its type and column name.
 	 * @param value Definition of the value column, including its type and column name.
+	 * @param args Optional arguments for the SQL query.
 	 * @return A map where each key-value pair is derived from the specified columns in the query result.
 	 */
-	fun <U : Any, V : Any> queryForListMap(sql: String, key: ColumnDef<U>, value: ColumnDef<V>) =
-		query(sql, RowMapper { rs, _ ->
+	fun <U : Any, V : Any> queryForListMap(sql: String, key: ColumnDef<U>, value: ColumnDef<V>, vararg args: Any) =
+		query(sql, { rs, _ ->
 			key.type.cast(rs.getObject(key.columnName)) to value.type.cast(rs.getObject(value.columnName))
-		}).toMap()
+		}, *args).toMap()
 
 	/**
 	 * Replaces placeholders in the input string with the provided replacement values.

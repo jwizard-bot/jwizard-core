@@ -29,16 +29,22 @@ class RadioStationSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBea
 	 * This method executes a SQL query to fetch radio station names and slugs, and returns them as a map where
 	 * the slug is the key and the name are the value.
 	 *
+	 * @param guildDbId The ID of the guild to filter the radio stations.
 	 * @return A map of radio stations with slugs as keys and names as values.
 	 */
-	override fun getRadioStations(): Map<String, String> {
+	override fun getRadioStations(guildDbId: BigInteger): Map<String, String> {
 		val sql = """
 			SELECT name, slug
 			FROM guilds_radio_stations_binding rsb
 			INNER JOIN radio_stations rs ON rsb.radio_station_id = rs.id
 			WHERE guild_id = ?
 		""".trimIndent()
-		return jdbcKtTemplateBean.queryForListMap(sql, ColumnDef("slug", String::class), ColumnDef("name", String::class))
+		return jdbcKtTemplateBean.queryForListMap(
+			sql,
+			ColumnDef("slug", String::class),
+			ColumnDef("name", String::class),
+			guildDbId
+		)
 	}
 
 	/**
