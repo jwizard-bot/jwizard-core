@@ -19,6 +19,11 @@ import java.math.BigInteger
 interface CommandBaseContext : MessageBaseContext {
 
 	/**
+	 * Definition of the command on which the event was invoked.
+	 */
+	val commandName: String
+
+	/**
 	 * The unique identifier of the guild where the command is issued.
 	 */
 	val guildId: String
