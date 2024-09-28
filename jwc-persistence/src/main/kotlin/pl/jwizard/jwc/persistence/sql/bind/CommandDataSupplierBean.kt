@@ -116,7 +116,7 @@ class CommandDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean
 	 */
 	override fun getCommandPropertiesFromGuild(guildId: Long): GuildCommandProperties? {
 		val sql = """
-			SELECT g.id guildDbId, tag lang, legacy_prefix prefix, dj_role_name, slash_enabled
+			SELECT g.id guildDbId, tag lang, legacy_prefix prefix, dj_role_name, slash_enabled, music_text_channel_id
 			FROM guilds g
 			INNER JOIN bot_langs l ON g.lang_id = l.id
 			WHERE discord_id = ?

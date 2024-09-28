@@ -15,6 +15,7 @@ import java.math.BigInteger
  * @property prefix The prefix used for text-based commands.
  * @property slashEnabled A flag indicating if slash commands are enabled for the guild.
  * @property djRoleName The name of the DJ role assigned in the guild.
+ * @property musicTextChannelId The Discord ID of the music text channel. Possibly null.
  * @author Miłosz Gilga
  */
 data class GuildCommandProperties(
@@ -23,4 +24,5 @@ data class GuildCommandProperties(
 	val prefix: String,
 	val slashEnabled: Boolean,
 	val djRoleName: String,
+	val musicTextChannelId: Long?,
 )
