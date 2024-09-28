@@ -54,6 +54,7 @@ object DiscordBotAppRunner {
 	 * @param clazz main type of class that runs the bot.
 	 */
 	fun run(clazz: KClass<*>) {
+		val startTimestamp = System.currentTimeMillis()
 		try {
 			val printer = ConsolePrinter()
 			val printers = arrayOf(
@@ -85,7 +86,10 @@ object DiscordBotAppRunner {
 				audioPlayerManager.registerSources()
 				channelListenerGuard.initThreadPool()
 
-				log.info("Start listening incoming requests...")
+				val endTimestamp = System.currentTimeMillis()
+				val elapsedTime = endTimestamp - startTimestamp
+
+				log.info("Load in: {}s. Start listening incoming requests...", elapsedTime / 1000.0)
 			} catch (ex: Throwable) {
 				throw IrreparableException(ex)
 			}
