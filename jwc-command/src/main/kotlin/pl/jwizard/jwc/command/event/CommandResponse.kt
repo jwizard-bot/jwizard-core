@@ -40,6 +40,18 @@ data class CommandResponse(
 			CommandResponse(listOf(embedMessage), listOf(actionRow), false, null)
 
 		/**
+		 * Creates a [CommandResponse] for a public message.
+		 *
+		 * This method constructs a response containing only the provided embedded message, intended for a public
+		 * Discord channel without any interactive components (action rows).
+		 *
+		 * @param embedMessage The embedded message to be included in the response.
+		 * @return A CommandResponse configured for a public message without interaction components.
+		 */
+		@JvmStatic
+		fun ofPublicMessage(embedMessage: MessageEmbed) = CommandResponse(listOf(embedMessage), emptyList(), false, null)
+
+		/**
 		 * Creates a [CommandResponse] for a private interaction message.
 		 *
 		 * This method constructs a response intended for a specific user, including the provided embed message and action

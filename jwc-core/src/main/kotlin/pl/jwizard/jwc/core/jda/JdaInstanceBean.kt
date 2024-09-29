@@ -91,7 +91,7 @@ final class JdaInstanceBean(
 		log.info("Load: {} JDA permissions.", permissions.size)
 
 		val eventListeners = applicationContext.getBeansAnnotatedWith<EventListener, JdaEventListenerBean>()
-		log.info("Load: {} JDA event listeners: {}.", eventListeners.size, eventListeners.map { it.javaClass.name })
+		log.info("Load: {} JDA event listeners: {}.", eventListeners.size, eventListeners.map { it.javaClass.simpleName })
 
 		val jdaToken = environmentBean.getProperty<String>(BotProperty.JDA_SECRET_TOKEN)
 

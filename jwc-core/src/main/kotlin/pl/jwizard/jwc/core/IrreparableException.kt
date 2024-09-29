@@ -48,7 +48,7 @@ open class IrreparableException(
 	 *
 	 * @param throwable The original [Throwable] from which to derive the stack trace causes.
 	 */
-	constructor(throwable: Throwable) : this(DiscordBotAppRunner::class) {
+	constructor(throwable: Throwable) : this(throwable.cause?.javaClass?.kotlin ?: IrreparableException::class) {
 		var cause: Throwable? = throwable.cause
 		while (cause != null) {
 			stacktraceCauses.add("[${clazz.jvmName} -> ${cause.javaClass.name}]: ${cause.message}")
