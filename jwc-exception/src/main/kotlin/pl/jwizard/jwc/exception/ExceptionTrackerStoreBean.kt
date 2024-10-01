@@ -85,14 +85,14 @@ class ExceptionTrackerStoreBean(
 	 * application build version, and constructs a message embed to be sent in Discord.
 	 *
 	 * @param i18nSource The source for internationalization to create a descriptive message.
-	 * @param variables A map of variables to be included in the message (optional).
 	 * @param context The context of the command execution, which may include localization information (optional).
+	 * @param variables A map of variables to be included in the message (optional).
 	 * @return A MessageEmbed containing the formatted message.
 	 */
 	override fun createTrackerMessage(
 		i18nSource: I18nExceptionSource,
-		variables: Map<String, Any?>,
 		context: CommandBaseContext?,
+		variables: Map<String, Any?>,
 	): MessageEmbed {
 		val tracker = extractTracker(i18nSource)
 		val buildVersion = environmentBean.getProperty<String>(BotProperty.DEPLOYMENT_BUILD_VERSION)
@@ -103,7 +103,7 @@ class ExceptionTrackerStoreBean(
 			stringJoiner.add("\n")
 			stringJoiner.addKeyValue(I18nUtilSource.COMPILATION_VERSION, buildVersion, lang)
 		}
-		return MessageEmbedBuilder(context, i18nBean, jdaColorStoreBean)
+		return MessageEmbedBuilder(i18nBean, jdaColorStoreBean, context)
 			.setDescription(i18nSource, variables)
 			.appendDescription(stringJoiner.toString())
 			.setColor(JdaColor.ERROR)
@@ -118,7 +118,7 @@ class ExceptionTrackerStoreBean(
 	 * @return A MessageEmbed formatted for the exception.
 	 */
 	override fun createTrackerMessage(ex: CommandPipelineException) =
-		createTrackerMessage(ex.i18nExceptionSource, ex.variables, ex.commandBaseContext)
+		createTrackerMessage(ex.i18nExceptionSource, ex.commandBaseContext, ex.variables)
 
 	/**
 	 * Creates a link action row for the specified internationalization source, allowing users to view exception details.

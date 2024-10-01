@@ -19,9 +19,9 @@ import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
  * @author Miłosz Gilga
  */
 class MessageEmbedBuilder(
-	private val context: MessageBaseContext?,
 	private val i18nBean: I18nBean,
 	private val jdaColorStoreBean: JdaColorStoreBean,
+	private val context: MessageBaseContext? = null,
 ) : EmbedBuilder() {
 
 	/**

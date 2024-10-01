@@ -29,14 +29,14 @@ interface ExceptionTrackerStore {
 	 * internationalization source, optional variables, and an optional command context.
 	 *
 	 * @param i18nSource the source of internationalized exception messages
-	 * @param variables a map of variables used to populate the exception message (default is an empty map)
 	 * @param context the context of the command when the exception occurred (optional)
+	 * @param variables a map of variables used to populate the exception message (default is an empty map)
 	 * @return a message embed containing the details of the exception
 	 */
 	fun createTrackerMessage(
 		i18nSource: I18nExceptionSource,
+		context: CommandBaseContext? = null,
 		variables: Map<String, Any?> = emptyMap(),
-		context: CommandBaseContext? = null
 	): MessageEmbed
 
 	/**
