@@ -76,6 +76,9 @@ jda:
     - ADMINISTRATOR
     - MANAGE_SERVER
 
+lavalink:
+  timeout-ms: 5000
+
 s3:
   region: eu-central-1
   path-style-access-enabled: true

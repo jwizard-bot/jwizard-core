@@ -8,6 +8,11 @@ vault:
 jda:
   name: JWizard
 
+lavalink:
+  nodes:
+    - LAVA-NODE-1::EUROPE::${vault:V_LAVA_NODE_1_TOKEN}::wss://prod-node1.lava.jwizard.pl
+    - LAVA-NODE-2::EUROPE::${vault:V_LAVA_NODE_2_TOKEN}::wss://prod-node2.lava.jwizard.pl
+
 service:
   api-url: https://api.jwizard.pl
   front-url: https://jwizard.pl

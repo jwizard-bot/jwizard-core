@@ -20,11 +20,13 @@ import kotlin.reflect.KClass
  * - [JDA_GATEWAY_INTENTS]: A list of [GatewayIntent] instances that are enabled for the JDA application.
  * - [JDA_CACHE_FLAGS_ENABLED]: A list of [CacheFlag] instances that are enabled for JDA caching.
  * - [JDA_CACHE_FLAGS_DISABLED]: A list of [CacheFlag] instances that are disabled for JDA caching.
+ * - [JDA_SUPERUSER_PERMISSIONS]: List of JDA permissions for superuser (debug, change guild settings etc.).
+ * - [LAVALINK_NODES]: Lavalink nodes definitions, where single node is:
+ *   `<name>::<region group>::<node token>::<node host url>`.
  * - [I18N_RESOURCES_REMOTE]: I18n CDN resources elements list. Loaded from Content Delivery Network. Must be ends
  *   with messages, ex. config/messages.
  * - [I18N_RESOURCES_LOCALE]: I18n local resources elements list. Loaded from classpath. Must be ends with
  *   messages, ex. config/messages.
- * - [JDA_SUPERUSER_PERMISSIONS]: List of JDA permissions for superuser (debug, change guild settings etc.).
  *
  * @property key The key used to retrieve the property value.
  * @property listElementsType The type of elements in the list represented by this property.
@@ -68,6 +70,11 @@ enum class BotListProperty(
 	 * List of JDA permissions for superuser (debug, change guild settings etc.).
 	 */
 	JDA_SUPERUSER_PERMISSIONS("jda.superuser-permissions"),
+
+	/**
+	 * Lavalink nodes definitions, where single node is: `<name>::<region group>::<node token>::<node host url>`.
+	 */
+	LAVALINK_NODES("lavalink.nodes"),
 
 	/**
 	 * I18n CDN resources elements list. Loaded from Content Delivery Network. Must be ends with messages,

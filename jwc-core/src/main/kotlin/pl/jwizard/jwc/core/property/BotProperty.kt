@@ -50,6 +50,7 @@ import kotlin.reflect.KClass
  * - [JDA_EXCEPTION_SEGMENT_SIZE]: Specifies the maximum size of the segment in exception group.
  * - [JDA_EXCEPTION_URL_REFER_TEMPLATE]: Defines the URL template used for referring to detailed exception information
  *   in bot website.
+ * - [LAVALINK_TIMEOUT_MS]: Represents the timeout duration (in milliseconds) for Lavalink connections.
  * - [SERVICE_API_URL]: JWizard API service host URL.
  * - [SERVICE_FRONT_URL]: JWizard front-end service host url.
  * - [S3_PUBLIC_API_URL]: The URL or endpoint for accessing the public S3 API.
@@ -240,6 +241,11 @@ enum class BotProperty(
 	 * Defines the URL template used for referring to detailed exception information in bot website.
 	 */
 	JDA_EXCEPTION_URL_REFER_TEMPLATE("jda.exception.url-refer-template"),
+
+	/**
+	 * Represents the timeout duration (in milliseconds) for Lavalink connections.
+	 */
+	LAVALINK_TIMEOUT_MS("lavalink.timeout-ms", Long::class),
 
 	/**
 	 * JWizard API service host url.
