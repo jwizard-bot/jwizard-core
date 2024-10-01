@@ -166,6 +166,33 @@ class EnvironmentBean(private val springKtContextFactory: SpringKtContextFactory
 	}
 
 	/**
+	 * Retrieves multiple properties for a specific guild from the property source.
+	 *
+	 * This method fetches multiple guild-specific properties based on a list of [GuildProperty] keys. The properties are
+	 * retrieved from the database, and default values are used when necessary. If no value is found for a property and
+	 * no default is provided, the property will not be included in the result.
+	 *
+	 * @param guildProperties A list of guild-specific property definitions.
+	 * @param guildId The ID of the guild for which to retrieve the properties.
+	 * @return A [GuildMultipleProperties] object containing the retrieved properties.
+	 */
+	fun getGuildMultipleProperties(guildProperties: List<GuildProperty>, guildId: Long): GuildMultipleProperties {
+		val rawProperties = remotePropertySupplier.getCombinedProperties(guildProperties.map(GuildProperty::key), guildId)
+		val multipleProperties = GuildMultipleProperties(rawProperties.size)
+
+		for ((key, nullableValue) in rawProperties) {
+			val propertyKey = GuildProperty.entries.find { it.key == key } ?: continue
+			val defaultProperty = try {
+				BotProperty.valueOf("GUILD_${propertyKey.name}")
+			} catch (_: IllegalArgumentException) {
+				continue
+			}
+			multipleProperties[propertyKey] = nullableValue ?: getProperty<Any>(defaultProperty)
+		}
+		return multipleProperties
+	}
+
+	/**
 	 * Retrieves a non-nullable property of type [T] for a specific guild from a property source.
 	 *
 	 * This method is similar to [getGuildNullableProperty], but it ensures that a value is always returned.

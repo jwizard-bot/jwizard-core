@@ -59,4 +59,23 @@ class RemotePropertySupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateB
 		)
 		return jdbcKtTemplateBean.queryForNullableObject(sql, type, guildId)
 	}
+
+	/**
+	 * Retrieves multiple properties for a given guild from the database.
+	 *
+	 * This method constructs a SQL query to fetch multiple property values for a guild based on the provided list of
+	 * column names. It then returns a map where the key is the column name, and the value is the corresponding property
+	 * value.
+	 *
+	 * @param columnNames A list of column names whose values should be fetched from the `guilds` table.
+	 * @param guildId The ID of the guild for which the properties are fetched.
+	 * @return A map containing the column names as keys and their corresponding values as map values.
+	 */
+	override fun getCombinedProperties(columnNames: List<String>, guildId: Long): Map<String, Any?> {
+		val sql = jdbcKtTemplateBean.parse(
+			"SELECT {{columnNames}} FROM guilds WHERE discord_id = ?",
+			mapOf("columnNames" to columnNames.joinToString(","))
+		)
+		return jdbcKtTemplateBean.queryForMap(sql, guildId)
+	}
 }

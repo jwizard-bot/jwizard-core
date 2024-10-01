@@ -41,4 +41,17 @@ interface RemotePropertySupplier {
 	 * @return The property value of type [T], or null if the property is not found.
 	 */
 	fun <T : Any> getProperty(columnName: String, guildId: Long, type: KClass<T>): T?
+
+	/**
+	 * Retrieves multiple properties for a given guild from the remote source.
+	 *
+	 * This method allows fetching several properties at once based on a list of column names. It is useful for retrieving
+	 * multiple configuration settings for a specific guild in a single call. The result is returned as a map where each
+	 * key is a column name and each value is the corresponding property value.
+	 *
+	 * @param columnNames A list of column names to retrieve values for.
+	 * @param guildId The ID of the guild for which to retrieve the properties.
+	 * @return A map where each key is a column name, and the value is the property value for that guild.
+	 */
+	fun getCombinedProperties(columnNames: List<String>, guildId: Long): Map<String, Any?>
 }
