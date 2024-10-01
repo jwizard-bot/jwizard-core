@@ -5,6 +5,8 @@
 package pl.jwizard.jwc.core.jda.spi
 
 import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.User
+import net.dv8tion.jda.api.managers.DirectAudioController
 
 /**
  * Interface for interacting with the JDA (Java Discord API) bean instance.
@@ -30,4 +32,23 @@ interface JdaInstance {
 	 * @return The [Guild] object representing the guild with the specified ID, or null if the guild is not found.
 	 */
 	fun getGuildById(guildId: Long): Guild?
+
+	/**
+	 * Retrieves a [User] by its unique identifier.
+	 *
+	 * This method fetches a user object based on the user's unique ID, allowing further interactions with that user,
+	 * such as sending messages or performing actions.
+	 *
+	 * @param userId The unique identifier of the user to retrieve.
+	 * @return The [User] object representing the user with the specified ID, or null if the user is not found.
+	 */
+	fun getUserById(userId: Long): User?
+
+	/**
+	 * Accesses the [DirectAudioController] for managing audio playback directly in voice channels.
+	 *
+	 * This property provides an interface to control audio playback, allowing the bot to join and leave voice channels,
+	 * play audio, and manage audio-related tasks.
+	 */
+	val directAudioController: DirectAudioController
 }

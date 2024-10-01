@@ -10,9 +10,7 @@ import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel
 import net.dv8tion.jda.api.events.Event
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.requests.RestAction
-import org.springframework.beans.factory.DisposableBean
 import pl.jwizard.jwc.command.CommandsProxyStoreBean
 import pl.jwizard.jwc.command.GuildCommandProperties
 import pl.jwizard.jwc.command.event.CommandType
@@ -21,6 +19,7 @@ import pl.jwizard.jwc.command.event.arg.CommandArgumentType
 import pl.jwizard.jwc.command.event.context.CommandContext
 import pl.jwizard.jwc.command.event.exception.CommandInvocationException
 import pl.jwizard.jwc.command.event.exception.CommandParserException
+import pl.jwizard.jwc.command.event.transport.LooselyTransportHandlerBean
 import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.reflect.CommandArgumentDetails
 import pl.jwizard.jwc.command.reflect.CommandDetails
@@ -35,7 +34,6 @@ import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
-import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
 import pl.jwizard.jwc.exception.UnexpectedException
@@ -45,7 +43,6 @@ import pl.jwizard.jwc.exception.command.ModuleIsTurnedOffException
 import pl.jwizard.jwc.exception.command.ViolatedCommandArgumentOptionsException
 import java.util.*
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.TimeUnit
 
 /**
  * Abstract base class for handling command events in the Discord bot.
@@ -70,34 +67,8 @@ abstract class CommandEventHandler<E : Event>(
 	private val i18nBean: I18nBean,
 	private val environmentBean: EnvironmentBean,
 	private val jdaColorStoreBean: JdaColorStoreBean,
-) : ListenerAdapter(), DisposableBean {
-
-	/**
-	 * The maximum number of embed messages that can be sent in a single interaction response.
-	 */
-	private val maxEmbedMessagesBuffer = environmentBean.getProperty<Int>(BotProperty.JDA_INTERACTION_MESSAGE_MAX_EMBEDS)
-
-	/**
-	 * The maximum number of action rows allowed in an interaction response.
-	 */
-	private val maxActionRows = environmentBean.getProperty<Int>(BotProperty.JDA_INTERACTION_MESSAGE_ACTION_ROW_MAX_ROWS)
-
-	/**
-	 * The maximum number of components (like buttons) that can be included in a single action row.
-	 */
-	private val maxActionRowComponents =
-		environmentBean.getProperty<Int>(BotProperty.JDA_INTERACTION_MESSAGE_ACTION_ROW_MAX_COMPONENTS_IN_ROW)
-
-	/**
-	 * The delay (in seconds) before remote interactions can be disabled after a command execution.
-	 */
-	private val remoteInteractionsDelay =
-		environmentBean.getProperty<Long>(BotProperty.JDA_INTERACTION_MESSAGE_COMPONENT_DISABLE_DELAY_SEC)
-
-	/**
-	 * Thread responsible for managing the removal of interaction components from messages.
-	 */
-	private val interactionRemovalThread = InteractionRemovalThread()
+	private val looselyTransportHandlerBean: LooselyTransportHandlerBean,
+) : ListenerAdapter() {
 
 	/**
 	 * Initializes the command pipeline and performs the command based on the event. This method handles the main logic
@@ -174,21 +145,16 @@ abstract class CommandEventHandler<E : Event>(
 	 * @param context Optional context for the command, containing additional execution details.
 	 */
 	private fun sendResponse(event: E, response: CommandResponse, context: CommandContext?) {
-		val truncatedEmbedMessages = response.embedMessages.take(maxEmbedMessagesBuffer)
-		val truncatedActionRows = response.actionRows
-			.map { row -> ActionRow.of(row.take(maxActionRowComponents)) }
-			.take(maxActionRows)
-
 		var directEphemeralUser: User? = null
 		val truncatedResponse = try {
-			if (truncatedEmbedMessages.isEmpty() && commandType == CommandType.SLASH) {
+			if (response.embedMessages.isEmpty() && commandType == CommandType.SLASH) {
 				throw CommandInvocationException("response should have at least one embed message")
 			}
 			if (response.privateMessage && response.privateMessageUserId != null) {
 				directEphemeralUser = event.jda.getUserById(response.privateMessageUserId!!)
 					?: throw CommandInvocationException("ephemeral user cannot be null")
 			}
-			response.copy(truncatedEmbedMessages, truncatedActionRows)
+			looselyTransportHandlerBean.truncateComponents(response)
 		} catch (ex: CommandPipelineExceptionHandler) {
 			createExceptionMessage(ex)
 		}
@@ -198,7 +164,7 @@ abstract class CommandEventHandler<E : Event>(
 		}
 		val onMessageSend: (Message) -> Unit = {
 			if (truncatedResponse.disposeComponents) {
-				startRemovalInteractionThread(it)
+				looselyTransportHandlerBean.startRemovalInteractionThread(it)
 			}
 			truncatedResponse.afterSendAction(it)
 		}
@@ -260,7 +226,7 @@ abstract class CommandEventHandler<E : Event>(
 					.addEmbedMessages(successMessage)
 					.asPrivateMessage(user.idLong)
 					.build()
-				deferMessage(event, message).queue(::startRemovalInteractionThread)
+				deferMessage(event, message).queue(looselyTransportHandlerBean::startRemovalInteractionThread)
 			}
 		}
 		val onError: (Throwable) -> Unit = { deferMessage(event, errorMessage).queue() }
@@ -269,20 +235,6 @@ abstract class CommandEventHandler<E : Event>(
 			it.sendMessageEmbeds(response.embedMessages).addComponents(response.actionRows).queue(onSuccess, onError)
 		}
 		user.openPrivateChannel().queue(onOpenChannel, onError)
-	}
-
-	/**
-	 * Starts a thread to remove interaction components (like buttons) from a message after a specified delay.
-	 *
-	 * This method schedules the removal of interaction components from the provided message after the
-	 * [remoteInteractionsDelay] has passed.
-	 *
-	 * @param message The message from which interaction components will be removed.
-	 */
-	private fun startRemovalInteractionThread(message: Message) {
-		if (message.actionRows.isNotEmpty()) {
-			interactionRemovalThread.startOnce(remoteInteractionsDelay, TimeUnit.SECONDS, message)
-		}
 	}
 
 	/**
@@ -371,11 +323,6 @@ abstract class CommandEventHandler<E : Event>(
 	 * The type of command this handler processes.
 	 */
 	protected abstract val commandType: CommandType
-
-	/**
-	 * Destroys the interaction removal thread when no longer needed.
-	 */
-	override fun destroy() = interactionRemovalThread.destroy()
 
 	/**
 	 * Determines if the event invocation is forbidden based on certain conditions.

@@ -11,6 +11,7 @@ import pl.jwizard.jwc.command.CommandsProxyStoreBean
 import pl.jwizard.jwc.command.GuildCommandProperties
 import pl.jwizard.jwc.command.event.CommandType
 import pl.jwizard.jwc.command.event.context.PrefixCommandContext
+import pl.jwizard.jwc.command.event.transport.LooselyTransportHandlerBean
 import pl.jwizard.jwc.command.spi.CommandDataSupplier
 import pl.jwizard.jwc.command.spi.ModuleDataSupplier
 import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
@@ -30,6 +31,7 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
  * @property i18nBean Provides internationalization support.
  * @property environmentBean Accesses environment-specific properties.
  * @property jdaColorStoreBean Accesses to JDA defined colors for embed messages.
+ * @property looselyTransportHandlerBean
  * @author Miłosz Gilga
  * @see CommandEventHandler
  * @see MessageReceivedEvent
@@ -43,6 +45,7 @@ class PrefixCommandEventHandlerBean(
 	private val i18nBean: I18nBean,
 	private val environmentBean: EnvironmentBean,
 	private val jdaColorStoreBean: JdaColorStoreBean,
+	private val looselyTransportHandlerBean: LooselyTransportHandlerBean,
 ) : CommandEventHandler<MessageReceivedEvent>(
 	commandDataSupplier,
 	moduleDataSupplier,
@@ -51,6 +54,7 @@ class PrefixCommandEventHandlerBean(
 	i18nBean,
 	environmentBean,
 	jdaColorStoreBean,
+	looselyTransportHandlerBean,
 ) {
 
 	companion object {

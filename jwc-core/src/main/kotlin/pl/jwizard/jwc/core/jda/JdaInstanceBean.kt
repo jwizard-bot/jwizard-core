@@ -11,9 +11,11 @@ import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Icon
+import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.exceptions.InvalidTokenException
 import net.dv8tion.jda.api.hooks.EventListener
 import net.dv8tion.jda.api.managers.AccountManager
+import net.dv8tion.jda.api.managers.DirectAudioController
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 import net.dv8tion.jda.internal.managers.AccountManagerImpl
@@ -174,4 +176,24 @@ final class JdaInstanceBean(
 	 * @return The [Guild] object associated with the given ID, or `null` if no such guild is found.
 	 */
 	override fun getGuildById(guildId: Long) = jda.getGuildById(guildId)
+
+	/**
+	 * Retrieves a [User] object associated with the specified userId.
+	 *
+	 * This method allows for the retrieval of a user object from the JDA instance using the provided user ID.
+	 * It can be used for various actions, such as sending messages or managing user-related features.
+	 *
+	 * @param userId The ID of the user to retrieve.
+	 * @return The [User] object associated with the given ID, or `null` if no such user is found.
+	 */
+	override fun getUserById(userId: Long) = jda.getUserById(userId)
+
+	/**
+	 * Provides access to the [DirectAudioController] for managing audio playback in voice channels.
+	 *
+	 * This property allows interaction with the audio functionalities of the JDA instance, enabling the bot to play
+	 * audio in voice channels and manage audio-related tasks.
+	 */
+	override val directAudioController
+		get() = jda.directAudioController
 }
