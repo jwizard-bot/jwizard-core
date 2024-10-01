@@ -15,7 +15,6 @@ import net.dv8tion.jda.api.requests.RestAction
 import org.springframework.beans.factory.DisposableBean
 import pl.jwizard.jwc.command.CommandsProxyStoreBean
 import pl.jwizard.jwc.command.GuildCommandProperties
-import pl.jwizard.jwc.command.event.CommandResponse
 import pl.jwizard.jwc.command.event.CommandType
 import pl.jwizard.jwc.command.event.arg.CommandArgumentParsingData
 import pl.jwizard.jwc.command.event.arg.CommandArgumentType
@@ -34,6 +33,7 @@ import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
+import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
@@ -44,6 +44,7 @@ import pl.jwizard.jwc.exception.command.MismatchCommandArgumentsException
 import pl.jwizard.jwc.exception.command.ModuleIsTurnedOffException
 import pl.jwizard.jwc.exception.command.ViolatedCommandArgumentOptionsException
 import java.util.*
+import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 
 /**
@@ -105,9 +106,8 @@ abstract class CommandEventHandler<E : Event>(
 	 * @param event The event that triggered this handler.
 	 */
 	protected fun initPipelineAndPerformCommand(event: E) {
-		var directEphemeralUser: User? = null
+		var commandResponse: CompletableFuture<CommandResponse>
 		var context: CommandContext? = null
-		var commandResponse: CommandResponse
 		try {
 			try {
 				if (forbiddenInvocationCondition(event)) {
@@ -139,12 +139,15 @@ abstract class CommandEventHandler<E : Event>(
 				val parsedArguments = parseCommandArguments(context, commandDetails, commandArguments)
 				parsedArguments.forEach { (key, value) -> context.commandArguments[key] = value }
 
-				commandResponse = executeCommand(context, commandDetails, commandNameOrAlias)
+				val commandSyntax = createCommandSyntax(context, commandDetails)
+				val command = commandsProxyStoreBean.instancesContainer[commandDetails.name]
+					?: throw CommandIsTurnedOffException(context, commandNameOrAlias)
 
-				val userId = commandResponse.privateMessageUserId
-				if (commandResponse.privateMessage && userId != null) {
-					directEphemeralUser = event.jda.getUserById(userId)
-						?: throw CommandInvocationException("user with id $userId not found", context)
+				commandResponse = CompletableFuture<CommandResponse>()
+				try {
+					command.execute(context, commandResponse)
+				} catch (ex: CommandParserException) {
+					throw MismatchCommandArgumentsException(context, commandDetails.name, commandSyntax)
 				}
 			} catch (ex: CommandInvocationException) {
 				if (commandType == CommandType.LEGACY) {
@@ -153,25 +156,81 @@ abstract class CommandEventHandler<E : Event>(
 				throw UnexpectedException(ex.context, ex.message)
 			}
 		} catch (ex: CommandPipelineExceptionHandler) {
-			val trackerMessage = exceptionTrackerStore.createTrackerMessage(ex)
-			val trackerLink = exceptionTrackerStore.createTrackerLink(ex)
-			commandResponse = CommandResponse.ofPublicInteractionMessage(trackerMessage, trackerLink)
-			ex.printLogStatement()
+			commandResponse = CompletableFuture()
+			commandResponse.complete(createExceptionMessage(ex))
 		}
-		if (directEphemeralUser != null) {
-			sendPrivateMessage(event, directEphemeralUser, context, commandResponse)
+		commandResponse.thenAccept { sendResponse(event, it, context) }
+	}
+
+	/**
+	 * Sends a command response message after processing an event.
+	 *
+	 * This method takes the command response and sends it to the user, truncating embedded messages and action rows if
+	 * they exceed the predefined limits. If the response is set to be a private message, it will send the message
+	 * directly to the user. Otherwise, it sends it to the public channel.
+	 *
+	 * @param event The event that triggered this handler.
+	 * @param response The response generated from executing the command.
+	 * @param context Optional context for the command, containing additional execution details.
+	 */
+	private fun sendResponse(event: E, response: CommandResponse, context: CommandContext?) {
+		val truncatedEmbedMessages = response.embedMessages.take(maxEmbedMessagesBuffer)
+		val truncatedActionRows = response.actionRows
+			.map { row -> ActionRow.of(row.take(maxActionRowComponents)) }
+			.take(maxActionRows)
+
+		var directEphemeralUser: User? = null
+		val truncatedResponse = try {
+			if (truncatedEmbedMessages.isEmpty() && commandType == CommandType.SLASH) {
+				throw CommandInvocationException("response should have at least one embed message")
+			}
+			if (response.privateMessage && response.privateMessageUserId != null) {
+				directEphemeralUser = event.jda.getUserById(response.privateMessageUserId!!)
+					?: throw CommandInvocationException("ephemeral user cannot be null")
+			}
+			response.copy(truncatedEmbedMessages, truncatedActionRows)
+		} catch (ex: CommandPipelineExceptionHandler) {
+			createExceptionMessage(ex)
+		}
+		if (directEphemeralUser != null && context != null) {
+			sendPrivateMessage(event, directEphemeralUser, context, response)
 			return
 		}
-		deferMessage(event, commandResponse).queue(::startRemovalInteractionThread)
+		val onMessageSend: (Message) -> Unit = {
+			if (truncatedResponse.disposeComponents) {
+				startRemovalInteractionThread(it)
+			}
+			truncatedResponse.afterSendAction(it)
+		}
+		deferMessage(event, truncatedResponse).queue(onMessageSend)
+	}
+
+	/**
+	 * Creates a command response that includes details about an exception.
+	 *
+	 * This method is used to generate a [CommandResponse] object that contains information about an exception
+	 * encountered during command execution. The exception details are formatted and stored for tracking purposes.
+	 *
+	 * @param ex The exception thrown during command execution.
+	 * @return A [CommandResponse] containing the formatted exception message and optional tracking link.
+	 */
+	private fun createExceptionMessage(ex: CommandPipelineExceptionHandler): CommandResponse {
+		ex.printLogStatement()
+		val trackerMessage = exceptionTrackerStore.createTrackerMessage(ex)
+		val trackerLink = exceptionTrackerStore.createTrackerLink(ex)
+		return CommandResponse.Builder()
+			.addEmbedMessages(trackerMessage)
+			.addActionRows(trackerLink)
+			.build()
 	}
 
 	/**
 	 * Sends a private message to a specified user in response to a command execution.
 	 *
-	 * This function handles the process of sending a private message to the user identified by the provided
-	 * `User` object. If the user has their direct messages open, the response
-	 * (which may include embedded messages and action components) is sent successfully. If the message sending fails,
-	 * an error message is sent to the original command event.
+	 * This function handles the process of sending a private message to the user identified by the provided [User]
+	 * object. If the user has their direct messages open, the response (which may include embedded messages and action
+	 * components) is sent successfully. If the message sending fails, an error message is sent to the original command
+	 * event.
 	 *
 	 * @param event The event that triggered this handler, containing the context for the command execution.
 	 * @param user The user to whom the private message will be sent.
@@ -180,7 +239,7 @@ abstract class CommandEventHandler<E : Event>(
 	 *        interactive components.
 	 */
 	private fun sendPrivateMessage(event: E, user: User, context: CommandContext?, response: CommandResponse) {
-		val successMessage = MessageEmbedBuilder(context, i18nBean, jdaColorStoreBean)
+		val successMessage = MessageEmbedBuilder(i18nBean, jdaColorStoreBean, context)
 			.setDescription(I18nResponseSource.PRIVATE_MESSAGE_SEND)
 			.setColor(JdaColor.PRIMARY)
 			.build()
@@ -188,28 +247,37 @@ abstract class CommandEventHandler<E : Event>(
 		val i18nSource = I18nExceptionSource.EPHEMERAL_UNEXPECTED_EXCEPTION
 		val trackerMessage = exceptionTrackerStore.createTrackerMessage(i18nSource)
 		val trackerLink = exceptionTrackerStore.createTrackerLink(i18nSource)
-		val errorMessage = CommandResponse.ofPrivateInteractionMessage(trackerMessage, trackerLink, user.idLong)
+
+		val errorMessage = CommandResponse.Builder()
+			.addEmbedMessages(trackerMessage)
+			.addActionRows(trackerLink)
+			.asPrivateMessage(user.idLong)
+			.build()
 
 		val onSuccess: (Message) -> Unit = {
 			if (commandType == CommandType.SLASH) {
-				val message = CommandResponse.ofPrivateMessage(successMessage, user.idLong)
+				val message = CommandResponse.Builder()
+					.addEmbedMessages(successMessage)
+					.asPrivateMessage(user.idLong)
+					.build()
 				deferMessage(event, message).queue(::startRemovalInteractionThread)
 			}
 		}
 		val onError: (Throwable) -> Unit = { deferMessage(event, errorMessage).queue() }
 
 		val onOpenChannel: (PrivateChannel) -> Unit = {
-			val (embedMessages, actionRows) = response
-			it.sendMessageEmbeds(embedMessages).addComponents(actionRows).queue(onSuccess, onError)
+			it.sendMessageEmbeds(response.embedMessages).addComponents(response.actionRows).queue(onSuccess, onError)
 		}
 		user.openPrivateChannel().queue(onOpenChannel, onError)
 	}
 
 	/**
-	 * Starts the removal interaction thread for a given message. This method schedules the removal of interaction
-	 * components from the message after a specified delay.
+	 * Starts a thread to remove interaction components (like buttons) from a message after a specified delay.
 	 *
-	 * @param message The message containing interaction components to be removed.
+	 * This method schedules the removal of interaction components from the provided message after the
+	 * [remoteInteractionsDelay] has passed.
+	 *
+	 * @param message The message from which interaction components will be removed.
 	 */
 	private fun startRemovalInteractionThread(message: Message) {
 		if (message.actionRows.isNotEmpty()) {
@@ -218,12 +286,15 @@ abstract class CommandEventHandler<E : Event>(
 	}
 
 	/**
-	 * Parses the command arguments provided in the event.
+	 * Parses the command arguments passed in the event and checks if they are valid.
 	 *
-	 * @param context The command context.
-	 * @param details The command details.
-	 * @param arguments The list of arguments passed with the command.
-	 * @return A map of command arguments to their parsing data.
+	 * This method ensures that the arguments passed match the required command arguments and their respective types,
+	 * handling optional and required arguments as defined in the command details.
+	 *
+	 * @param context The command context, including execution details like language and guild ID.
+	 * @param details The command details, including its argument structure.
+	 * @param arguments The list of arguments passed in the command.
+	 * @return A map of parsed command arguments and their associated data.
 	 */
 	private fun parseCommandArguments(
 		context: CommandContext,
@@ -249,37 +320,6 @@ abstract class CommandEventHandler<E : Event>(
 			}
 			argKey to CommandArgumentParsingData(optionMapping, type)
 		}
-	}
-
-	/**
-	 * Executes the command with the provided context and command details.
-	 *
-	 * @param context The command context.
-	 * @param details The command details.
-	 * @param commandName The name of the command being executed.
-	 * @return The response generated by executing the command.
-	 */
-	private fun executeCommand(context: CommandContext, details: CommandDetails, commandName: String): CommandResponse {
-		val commandSyntax = createCommandSyntax(context, details)
-		val command = commandsProxyStoreBean.instancesContainer[details.name]
-			?: throw CommandIsTurnedOffException(context, commandName)
-
-		val interactiveResponse = try {
-			command.execute(context)
-		} catch (ex: CommandParserException) {
-			throw MismatchCommandArgumentsException(context, details.name, commandSyntax)
-		}
-		val (embedMessages, actionRows) = interactiveResponse
-
-		val truncatedEmbedMessages = embedMessages.take(maxEmbedMessagesBuffer)
-		val truncatedActionRows = actionRows
-			.map { ActionRow.of(it.take(maxActionRowComponents)) }
-			.take(maxActionRows)
-
-		if (truncatedEmbedMessages.isEmpty() && commandType == CommandType.SLASH) {
-			throw CommandInvocationException("not found any slash interaction response", context)
-		}
-		return interactiveResponse.copy(embedMessages = truncatedEmbedMessages, actionRows = truncatedActionRows)
 	}
 
 	/**

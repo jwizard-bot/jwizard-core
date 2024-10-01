@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.requests.RestAction
 import pl.jwizard.jwc.command.CommandsProxyStoreBean
 import pl.jwizard.jwc.command.GuildCommandProperties
-import pl.jwizard.jwc.command.event.CommandResponse
 import pl.jwizard.jwc.command.event.CommandType
 import pl.jwizard.jwc.command.event.context.PrefixCommandContext
 import pl.jwizard.jwc.command.spi.CommandDataSupplier
@@ -17,6 +16,7 @@ import pl.jwizard.jwc.command.spi.ModuleDataSupplier
 import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
 import pl.jwizard.jwc.core.i18n.I18nBean
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
+import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
 import pl.jwizard.jwc.core.property.EnvironmentBean
 
@@ -143,7 +143,6 @@ class PrefixCommandEventHandlerBean(
 	 * @return The action to send the message.
 	 */
 	override fun deferMessage(event: MessageReceivedEvent, response: CommandResponse): RestAction<Message> {
-		val (embedMessages, actionRows) = response
-		return event.channel.sendMessageEmbeds(embedMessages).addComponents(actionRows)
+		return event.channel.sendMessageEmbeds(response.embedMessages).addComponents(response.actionRows)
 	}
 }

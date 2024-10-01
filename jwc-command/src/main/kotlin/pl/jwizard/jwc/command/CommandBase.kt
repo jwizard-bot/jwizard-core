@@ -4,10 +4,11 @@
  */
 package pl.jwizard.jwc.command
 
-import pl.jwizard.jwc.command.event.CommandResponse
 import pl.jwizard.jwc.command.event.context.CommandContext
 import pl.jwizard.jwc.command.interaction.component.Paginator
+import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
+import java.util.concurrent.CompletableFuture
 
 /**
  * Base class for commands that provides common functionalities.
@@ -45,7 +46,7 @@ abstract class CommandBase(protected val commandEnvironmentBean: CommandEnvironm
 	 * Executes the command logic and returns the command response.
 	 *
 	 * @param context The context of the command execution.
-	 * @return A CommandResponse object containing the results of the command execution.
+	 * @param response
 	 */
-	abstract fun execute(context: CommandContext): CommandResponse
+	abstract fun execute(context: CommandContext, response: CompletableFuture<CommandResponse>)
 }
