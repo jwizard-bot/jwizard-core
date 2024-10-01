@@ -43,6 +43,9 @@ class InteractionRemovalThread : JvmFixedPayloadThreadExecutor<Message>(COUNT_OF
 				.map(ActionComponent::asDisabled)
 			)
 		}
-		payload.editMessageComponents(disabledComponents).queue()
+		val channel = payload.channel.asTextChannel()
+		channel.retrieveMessageById(payload.idLong).queue { // check, if message exist
+			payload.editMessageComponents(disabledComponents).queue()
+		}
 	}
 }

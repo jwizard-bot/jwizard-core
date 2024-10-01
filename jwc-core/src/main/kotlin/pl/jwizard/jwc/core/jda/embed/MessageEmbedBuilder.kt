@@ -30,20 +30,14 @@ class MessageEmbedBuilder(
 	 * @param title The title text to set.
 	 * @return The current instance of MessageEmbedBuilder for method chaining.
 	 */
-	fun setTitle(title: String): MessageEmbedBuilder {
-		super.setTitle(title)
-		return this
-	}
+	fun setTitle(title: String) = apply { super.setTitle(title) }
 
 	/**
 	 * Sets the author of the embed if context is available.
 	 *
 	 * @return The current instance of MessageEmbedBuilder for method chaining.
 	 */
-	fun setAuthor(): MessageEmbedBuilder {
-		context?.let { super.setAuthor(it.authorName, null, it.authorAvatarUrl) }
-		return this
-	}
+	fun setAuthor() = apply { context?.let { super.setAuthor(it.authorName, null, it.authorAvatarUrl) } }
 
 	/**
 	 * Sets the description of the embed using internationalization.
@@ -52,10 +46,8 @@ class MessageEmbedBuilder(
 	 * @param args Arguments to replace placeholders in the description.
 	 * @return The current instance of MessageEmbedBuilder for method chaining.
 	 */
-	fun setDescription(i18nLocaleSource: I18nLocaleSource, args: Map<String, Any?> = emptyMap()): MessageEmbedBuilder {
-		super.setDescription(i18nBean.t(i18nLocaleSource, context?.guildLanguage, args))
-		return this
-	}
+	fun setDescription(i18nLocaleSource: I18nLocaleSource, args: Map<String, Any?> = emptyMap()) =
+		apply { super.setDescription(i18nBean.t(i18nLocaleSource, context?.guildLanguage, args)) }
 
 	/**
 	 * Sets the description of the embed.
@@ -63,10 +55,7 @@ class MessageEmbedBuilder(
 	 * @param description The description text to set.
 	 * @return The current instance of MessageEmbedBuilder for method chaining.
 	 */
-	fun setDescription(description: String): MessageEmbedBuilder {
-		super.setDescription(description)
-		return this
-	}
+	fun setDescription(description: String) = apply { super.setDescription(description) }
 
 	/**
 	 * Appends additional text to the current description.
@@ -74,10 +63,7 @@ class MessageEmbedBuilder(
 	 * @param description The additional description text to append.
 	 * @return The current instance of MessageEmbedBuilder for method chaining.
 	 */
-	fun appendDescription(description: String): MessageEmbedBuilder {
-		super.appendDescription("\n\n$description")
-		return this
-	}
+	fun appendDescription(description: String) = apply { super.appendDescription("\n\n$description") }
 
 	/**
 	 * Sets the color of the embed based on the provided JDA color.
@@ -85,10 +71,7 @@ class MessageEmbedBuilder(
 	 * @param jdaColor The color to apply to the embed.
 	 * @return The current instance of MessageEmbedBuilder for method chaining.
 	 */
-	fun setColor(jdaColor: JdaColor): MessageEmbedBuilder {
-		super.setColor(jdaColorStoreBean.getHexColor(jdaColor))
-		return this
-	}
+	fun setColor(jdaColor: JdaColor) = apply { super.setColor(jdaColorStoreBean.getHexColor(jdaColor)) }
 
 	/**
 	 * Sets the footer of the embed with optional icon.
@@ -97,10 +80,7 @@ class MessageEmbedBuilder(
 	 * @param iconUrl Optional URL of the icon to display in the footer.
 	 * @return The current instance of MessageEmbedBuilder for method chaining.
 	 */
-	fun setFooter(text: String, iconUrl: String): MessageEmbedBuilder {
-		super.setFooter(text, iconUrl)
-		return this
-	}
+	fun setFooter(text: String, iconUrl: String) = apply { super.setFooter(text, iconUrl) }
 
 	/**
 	 * Sets a thumbnail image for the embed.
@@ -108,8 +88,5 @@ class MessageEmbedBuilder(
 	 * @param thumbnailUrl The URL of the thumbnail image.
 	 * @return The current instance of MessageEmbedBuilder for method chaining.
 	 */
-	fun setThumbnail(thumbnailUrl: String): MessageEmbedBuilder {
-		super.setThumbnail(thumbnailUrl)
-		return this
-	}
+	fun setThumbnail(thumbnailUrl: String) = apply { super.setThumbnail(thumbnailUrl) }
 }

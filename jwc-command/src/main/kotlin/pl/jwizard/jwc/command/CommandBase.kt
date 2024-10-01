@@ -13,10 +13,16 @@ import java.util.concurrent.CompletableFuture
 /**
  * Base class for commands that provides common functionalities.
  *
- * @property commandEnvironmentBean The environment dependencies required for command execution.
+ * @property commandEnvironment The environment dependencies required for command execution.
  * @author Miłosz Gilga
  */
-abstract class CommandBase(protected val commandEnvironmentBean: CommandEnvironmentBean) {
+abstract class CommandBase(private val commandEnvironment: CommandEnvironmentBean) {
+
+	protected val environmentBean = commandEnvironment.environmentBean
+	protected val guildSettingsEventAction = commandEnvironment.guildSettingsEventAction
+	protected val i18nBean = commandEnvironment.i18nBean
+	protected val radioStationSupplier = commandEnvironment.radioStationSupplier
+	protected val jdaInstance = commandEnvironment.jdaInstance
 
 	/**
 	 * Creates a message embed builder configured with the given command context.
@@ -25,7 +31,7 @@ abstract class CommandBase(protected val commandEnvironmentBean: CommandEnvironm
 	 * @return A configured MessageEmbedBuilder instance.
 	 */
 	protected fun createEmbedMessage(context: CommandContext) =
-		MessageEmbedBuilder(context, commandEnvironmentBean.i18nBean, commandEnvironmentBean.jdaColorStoreBean)
+		MessageEmbedBuilder(commandEnvironment.i18nBean, commandEnvironment.jdaColorStoreBean, context)
 
 	/**
 	 * Creates a paginator for displaying multiple pages of content.
@@ -36,9 +42,9 @@ abstract class CommandBase(protected val commandEnvironmentBean: CommandEnvironm
 	 */
 	protected fun createPaginator(context: CommandContext, pages: List<String>) = Paginator(
 		context,
-		i18nBean = commandEnvironmentBean.i18nBean,
-		eventQueueBean = commandEnvironmentBean.eventQueueBean,
-		jdaColorStoreBean = commandEnvironmentBean.jdaColorStoreBean,
+		i18nBean,
+		eventQueueBean = commandEnvironment.eventQueueBean,
+		jdaColorStoreBean = commandEnvironment.jdaColorStoreBean,
 		pages
 	)
 
