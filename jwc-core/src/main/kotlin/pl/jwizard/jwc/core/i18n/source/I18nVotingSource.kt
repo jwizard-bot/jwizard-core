@@ -25,5 +25,6 @@ enum class I18nVotingSource(override val placeholder: String) : I18nLocaleSource
 	TOO_FEW_POSITIVE_VOTES_VOTING("jwc.voting.tooFewPositiveVotes"),
 	FIRST_RESULT("jwc.voting.firstResult"),
 	RANDOM_RESULT("jwc.voting.randomResult"),
+	PICK_AN_OPTION("jwc.voting.pickAnOption"),
 	;
 }
