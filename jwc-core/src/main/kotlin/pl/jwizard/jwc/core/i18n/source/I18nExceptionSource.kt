@@ -22,7 +22,6 @@ enum class I18nExceptionSource(override val placeholder: String) : I18nLocaleSou
 	TRACK_OFFSET_OUT_OF_BOUNDS("jwc.exception.trackOffsetOutOfBoundsException"),
 	TRACK_THE_SAME_POSITION("jwc.exception.trackTheSamePositionException"),
 	TRACK_QUEUE_IS_EMPTY("jwc.exception.trackQueueIsEmptyException"),
-	PLAYER_NOT_PLAYING("jwc.exception.playerNotPlayingException"),
 	PLAYER_NOT_PAUSED("jwc.exception.playerNotPausedException"),
 	INVOKER_IS_NOT_SENDER_OR_SUPERUSER("jwc.exception.invokerIsNotSenderOrSuperuserException"),
 	USER_NOT_ADDED_TRACKS_TO_QUEUE("jwc.exception.userNotAddedTracksToQueueException"),
