@@ -5,10 +5,10 @@
 dependencies {
   implementation libs.springContext
   implementation libs.jda
+  implementation libs.lavalinkClient
 
   implementation project(":jwc-core")
   implementation project(":jwc-command")
-  implementation project(":jwc-audio")
   implementation project(":jwc-exception")
   implementation project(":jwc-radio")
 }

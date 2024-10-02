@@ -19,5 +19,5 @@ class TemporaryHaltedBotException(
 ) : CommandPipelineExceptionHandler(
 	commandBaseContext,
 	i18nExceptionSource = I18nExceptionSource.TEMPORARY_HALTED_BOT,
-	logMessage = "Attempt to use music command on halted (muted) bot."
+	logMessage = "Attempt to use music command on halted (muted) bot.",
 )

@@ -25,5 +25,5 @@ class UnauthorizedManagerException(
 ) : CommandPipelineExceptionHandler(
 	commandBaseContext,
 	i18nExceptionSource = I18nExceptionSource.UNAUTHORIZED_MANAGER,
-	logMessage = "Attempt to invoke command: \"$commandName\" by: \"${user?.qualifier}\" without superuser role."
+	logMessage = "Attempt to invoke command: \"$commandName\" by: \"${user?.qualifier}\" without superuser role.",
 )

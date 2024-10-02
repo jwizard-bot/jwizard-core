@@ -15,6 +15,9 @@ jeeAnnotationApiVersion = "3.0.0"
 awsS3sdkVersion = "2.27.21"
 collectionUtilsVersion = "4.5.0-M2"
 lavalinkClientVersion = "3.1.0"
+commonsCodecVersion = "1.17.1"
+commonsValidatorVersion = "1.9.0"
+jacksonAnnotationsVersion = "2.18.0"
 
 [libraries]
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinVersion" }
@@ -37,6 +40,9 @@ jeeAnnotationApi = { module = "jakarta.annotation:jakarta.annotation-api", versi
 awsS3sdk = { module = "software.amazon.awssdk:s3", version.ref = "awsS3sdkVersion" }
 collectionUtils = { module = "org.apache.commons:commons-collections4", version.ref = "collectionUtilsVersion" }
 lavalinkClient = { module = "dev.arbjerg:lavalink-client", version.ref = "lavalinkClientVersion" }
+commonsCodec = { module = "commons-codec:commons-codec", version.ref = "commonsCodecVersion" }
+commonsValidator = { module = "commons-validator:commons-validator", version.ref = "commonsValidatorVersion" }
+jacksonAnnotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jacksonAnnotationsVersion" }
 
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }

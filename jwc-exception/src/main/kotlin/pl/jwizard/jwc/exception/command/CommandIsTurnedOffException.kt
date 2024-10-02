@@ -26,5 +26,5 @@ class CommandIsTurnedOffException(
 	commandBaseContext,
 	i18nExceptionSource = I18nExceptionSource.COMMAND_IS_TURNED_OFF,
 	variables = mapOf("command" to commandName),
-	logMessage = "Attempt to execute turned off command. Command: \"$commandName\"."
+	logMessage = "Attempt to execute turned off command. Command: \"$commandName\".",
 )

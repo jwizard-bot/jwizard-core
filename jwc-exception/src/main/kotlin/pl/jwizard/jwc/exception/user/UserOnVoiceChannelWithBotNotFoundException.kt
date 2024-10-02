@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.exception.audio
+package pl.jwizard.jwc.exception.user
 
 import net.dv8tion.jda.api.entities.channel.Channel
 import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource

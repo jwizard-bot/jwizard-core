@@ -6,6 +6,10 @@ dependencies {
   implementation libs.springContext
   implementation libs.jda
   implementation libs.lavalinkClient
+  implementation libs.commonsCodec
+  implementation libs.commonsValidator
+  implementation libs.jacksonAnnotations
 
   implementation project(':jwc-core')
+  implementation project(':jwc-command')
 }

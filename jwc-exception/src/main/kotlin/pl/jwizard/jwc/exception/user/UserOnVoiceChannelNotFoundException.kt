@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.exception.audio
+package pl.jwizard.jwc.exception.user
 
 import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
@@ -19,5 +19,5 @@ class UserOnVoiceChannelNotFoundException(
 ) : CommandPipelineExceptionHandler(
 	commandBaseContext,
 	i18nExceptionSource = I18nExceptionSource.USER_ON_VOICE_CHANNEL_NOT_FOUND,
-	logMessage = "Attempt to invoke command while user is not in voice channel."
+	logMessage = "Attempt to invoke command while user is not in voice channel.",
 )

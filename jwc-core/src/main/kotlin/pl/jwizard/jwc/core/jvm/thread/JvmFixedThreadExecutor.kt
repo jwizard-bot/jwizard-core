@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
  * @author Miłosz Gilga
  */
 abstract class JvmFixedThreadExecutor(
-	private val countOfThreads: Int = 1
+	private val countOfThreads: Int = 1,
 ) : JvmThreadExecutor(countOfThreads), Runnable {
 
 	/**

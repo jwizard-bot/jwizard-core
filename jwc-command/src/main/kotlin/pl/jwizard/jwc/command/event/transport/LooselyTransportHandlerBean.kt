@@ -53,7 +53,9 @@ class LooselyTransportHandlerBean(
 		environmentBean.getProperty<Long>(BotProperty.JDA_INTERACTION_MESSAGE_COMPONENT_DISABLE_DELAY_SEC)
 
 	/**
-	 *
+	 * A thread responsible for removing interaction components from a message after a delay. It runs once per invocation
+	 * and ensures that interactive elements (such as buttons) are disabled after the specified delay, preventing further
+	 * user interaction.
 	 */
 	private val interactionRemovalThread = InteractionRemovalThread()
 
@@ -75,6 +77,7 @@ class LooselyTransportHandlerBean(
 		}
 		if (!response.privateMessage || response.privateMessageUserId == null) {
 			textChannel.sendMessageEmbeds(response.embedMessages).addComponents(response.actionRows).queue(onSend)
+			return
 		}
 		val user = jdaInstance.getUserById(response.privateMessageUserId!!)
 		user?.openPrivateChannel()?.queue {

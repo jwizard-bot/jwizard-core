@@ -37,5 +37,5 @@ class ViolatedCommandArgumentOptionsException(
 	logMessage = """
 		Attempt to invoke command with violated argument: "$violatedArgName" options.
 		Violated value: "$violatedValue". Accepted values: "$acceptedValueList".
-	"""
+	""",
 )

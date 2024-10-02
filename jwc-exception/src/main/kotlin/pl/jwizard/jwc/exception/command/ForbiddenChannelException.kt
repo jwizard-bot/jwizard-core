@@ -29,5 +29,5 @@ class ForbiddenChannelException(
 	logMessage = """
 		Attempt to use song request command on forbidden channel: "${forbiddenChannel?.qualifier}".
 		Accepted channel: "${acceptedChannel?.qualifier}".
-	"""
+	""",
 )

@@ -6,9 +6,9 @@ package pl.jwizard.jwc.command
 
 import pl.jwizard.jwc.command.event.context.CommandContext
 import pl.jwizard.jwc.command.interaction.component.Paginator
-import pl.jwizard.jwc.core.jda.command.CommandResponse
+import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
-import java.util.concurrent.CompletableFuture
+import pl.jwizard.jwc.core.property.BotListProperty
 
 /**
  * Base class for commands that provides common functionalities.
@@ -16,13 +16,21 @@ import java.util.concurrent.CompletableFuture
  * @property commandEnvironment The environment dependencies required for command execution.
  * @author Miłosz Gilga
  */
-abstract class CommandBase(private val commandEnvironment: CommandEnvironmentBean) {
+abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentBean) {
 
 	protected val environmentBean = commandEnvironment.environmentBean
 	protected val guildSettingsEventAction = commandEnvironment.guildSettingsEventAction
 	protected val i18nBean = commandEnvironment.i18nBean
 	protected val radioStationSupplier = commandEnvironment.radioStationSupplier
 	protected val jdaInstance = commandEnvironment.jdaInstance
+
+	/**
+	 * A list of permissions assigned to superusers.
+	 *
+	 * @see BotListProperty.JDA_SUPERUSER_PERMISSIONS
+	 */
+	protected val superuserPermissions =
+		environmentBean.getListProperty<String>(BotListProperty.JDA_SUPERUSER_PERMISSIONS)
 
 	/**
 	 * Creates a message embed builder configured with the given command context.
@@ -54,5 +62,5 @@ abstract class CommandBase(private val commandEnvironment: CommandEnvironmentBea
 	 * @param context The context of the command execution.
 	 * @param response
 	 */
-	abstract fun execute(context: CommandContext, response: CompletableFuture<CommandResponse>)
+	abstract fun execute(context: CommandContext, response: TFutureResponse)
 }

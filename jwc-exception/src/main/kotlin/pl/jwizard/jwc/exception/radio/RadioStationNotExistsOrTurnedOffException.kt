@@ -22,5 +22,5 @@ class RadioStationNotExistsOrTurnedOffException(
 ) : CommandPipelineExceptionHandler(
 	commandBaseContext,
 	i18nExceptionSource = I18nExceptionSource.RADIO_STATION_NOT_EXISTS_IS_TURNED_OFF,
-	logMessage = "Attempt to invoke command, while radio station: \"$radioStationSlug\" is turned off."
+	logMessage = "Attempt to invoke command, while radio station: \"$radioStationSlug\" is turned off.",
 )

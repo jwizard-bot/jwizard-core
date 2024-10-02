@@ -25,25 +25,25 @@ inline fun <reified T : Any> logger(): Logger = LoggerFactory.getLogger(T::class
 /**
  * Extension function for logging info messages with context.
  *
- * @param commandBaseContext The context for the command, providing guild and author information.
+ * @param context The context for the command, providing guild and author information.
  * @param message The message to log.
  * @param args Additional arguments for message formatting.
  * @author Miłosz Gilga
  */
-fun Logger.jdaInfo(commandBaseContext: CommandBaseContext, message: String, vararg args: Any) {
-	info(loggerMessageContent(commandBaseContext, message, *args))
+fun Logger.jdaInfo(context: CommandBaseContext, message: String, vararg args: Any?) {
+	info(loggerMessageContent(context, message, *args))
 }
 
 /**
  * Extension function for logging error messages with context.
  *
- * @param commandBaseContext The context for the command, providing guild and author information.
+ * @param context The context for the command, providing guild and author information.
  * @param message The message to log.
  * @param args Additional arguments for message formatting.
  * @author Miłosz Gilga
  */
-fun Logger.jdaError(commandBaseContext: CommandBaseContext, message: String, vararg args: Any) {
-	error(loggerMessageContent(commandBaseContext, message, *args))
+fun Logger.jdaError(context: CommandBaseContext, message: String, vararg args: Any?) {
+	error(loggerMessageContent(context, message, *args))
 }
 
 /**
@@ -54,7 +54,7 @@ fun Logger.jdaError(commandBaseContext: CommandBaseContext, message: String, var
  * @param args Additional arguments for message formatting.
  * @return A formatted string containing guild, author, and the message.
  */
-private fun loggerMessageContent(commandBaseContext: CommandBaseContext, message: String, vararg args: Any) =
+private fun loggerMessageContent(commandBaseContext: CommandBaseContext, message: String, vararg args: Any?) =
 	"G: %s, A: %s -> %s".format(
 		commandBaseContext.guildQualifier,
 		commandBaseContext.authorQualifier,

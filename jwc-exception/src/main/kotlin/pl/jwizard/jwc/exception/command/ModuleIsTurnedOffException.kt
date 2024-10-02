@@ -29,5 +29,5 @@ class ModuleIsTurnedOffException(
 	commandBaseContext,
 	i18nExceptionSource = I18nExceptionSource.MODULE_IS_TURNED_OFF,
 	variables = mapOf("moduleName" to moduleName),
-	logMessage = "Attempt to invoke command: \"$commandName\" from currently turned off module: \"$moduleId\"."
+	logMessage = "Attempt to invoke command: \"$commandName\" from currently turned off module: \"$moduleId\".",
 )

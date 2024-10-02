@@ -356,12 +356,12 @@ enum class BotProperty(
 	/**
 	 * Time in seconds after which the bot leaves an empty channel in guilds.
 	 */
-	GUILD_LEAVE_EMPTY_CHANNEL_SEC("guild.leave-empty-channel-sec", Int::class),
+	GUILD_LEAVE_EMPTY_CHANNEL_SEC("guild.leave-empty-channel-sec", Long::class),
 
 	/**
 	 * Time in seconds after which the bot leaves a channel with no tracks in guilds.
 	 */
-	GUILD_LEAVE_NO_TRACKS_SEC("guild.leave-no-tracks-channel-sec", Int::class),
+	GUILD_LEAVE_NO_TRACKS_SEC("guild.leave-no-tracks-channel-sec", Long::class),
 
 	/**
 	 * Default volume level for guilds.
@@ -376,7 +376,7 @@ enum class BotProperty(
 	/**
 	 * Time in seconds after which the bot automatically chooses a track in guilds.
 	 */
-	GUILD_TIME_AFTER_AUTO_CHOOSE_SEC("guild.time-after-auto-choose-sec", Int::class),
+	GUILD_TIME_AFTER_AUTO_CHOOSE_SEC("guild.time-after-auto-choose-sec", Long::class),
 
 	/**
 	 * Maximum number of tracks to choose from in guilds.

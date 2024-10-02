@@ -33,6 +33,7 @@ import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.command.CommandResponse
+import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
@@ -77,7 +78,7 @@ abstract class CommandEventHandler<E : Event>(
 	 * @param event The event that triggered this handler.
 	 */
 	protected fun initPipelineAndPerformCommand(event: E) {
-		var commandResponse: CompletableFuture<CommandResponse>
+		var commandResponse: TFutureResponse
 		var context: CommandContext? = null
 		try {
 			try {
