@@ -4,6 +4,7 @@
  */
 package pl.jwizard.jwc.core.jvm.thread
 
+import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
 /**
@@ -19,6 +20,11 @@ abstract class JvmFixedPayloadThreadExecutor<T>(
 ) : JvmThreadExecutor(countOfThreads) {
 
 	/**
+	 * Future representing the scheduled task.
+	 */
+	private var future: ScheduledFuture<*>? = null
+
+	/**
 	 * Schedules a single execution of a task with the provided payload after a specified delay.
 	 *
 	 * @param delay The time delay before the task is executed.
@@ -26,8 +32,13 @@ abstract class JvmFixedPayloadThreadExecutor<T>(
 	 * @param payload The payload to be processed by the thread.
 	 */
 	fun startOnce(delay: Long, unit: TimeUnit, payload: T) {
-		executor.schedule({ executeJvmThreadWithPayload(payload) }, delay, unit)
+		future = executor.schedule({ executeJvmThreadWithPayload(payload) }, delay, unit)
 	}
+
+	/**
+	 * Cancels the scheduled task if it has not yet executed.
+	 */
+	fun gracefullyShutdown() = future?.cancel(false)
 
 	/**
 	 * Executes the task with the provided payload. This method should be implemented by subclasses to define the
