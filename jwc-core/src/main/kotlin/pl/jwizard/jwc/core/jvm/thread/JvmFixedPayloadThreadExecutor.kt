@@ -4,6 +4,8 @@
  */
 package pl.jwizard.jwc.core.jvm.thread
 
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
@@ -39,6 +41,16 @@ abstract class JvmFixedPayloadThreadExecutor<T>(
 	 * Cancels the scheduled task if it has not yet executed.
 	 */
 	fun gracefullyShutdown() = future?.cancel(false)
+
+	/**
+	 * Returns the future execution time based on the given delay.
+	 *
+	 * @param delay The delay for the future time.
+	 * @param unit Time unit of the delay (default: seconds).
+	 * @return Future time as a string.
+	 */
+	fun getFutureTime(delay: Long, unit: TimeUnit = TimeUnit.SECONDS) =
+		LocalDateTime.now().plus(unit.toSeconds(delay), ChronoUnit.SECONDS).toString()
 
 	/**
 	 * Executes the task with the provided payload. This method should be implemented by subclasses to define the

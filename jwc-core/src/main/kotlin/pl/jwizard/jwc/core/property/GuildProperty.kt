@@ -17,6 +17,7 @@ import kotlin.reflect.KClass
  * - [MAX_VOTING_TIME]: Maximum voting time for guilds in seconds.
  * - [MUSIC_TEXT_CHANNEL_ID]: ID of the music text channel in the guild. Stored as a string.
  * - [DJ_ROLE_NAME]: Name of the DJ role in the guild.
+ * - [MIN_REPEATS_OF_TRACK]: Minimum number of repeats allowed for a track in the guild.
  * - [MAX_REPEATS_OF_TRACK]: Maximum number of repeats allowed for a track in the guild.
  * - [LEAVE_EMPTY_CHANNEL_SEC]: Time in seconds after which the bot leaves an empty channel in the guild.
  * - [LEAVE_NO_TRACKS_SEC]: Time in seconds after which the bot leaves a channel with no tracks in the guild.
@@ -61,6 +62,11 @@ enum class GuildProperty(
 	DJ_ROLE_NAME("dj_role_name", I18nSystemSource.DJ_ROLE_NAME),
 
 	/**
+	 * Minimum number of repeats allowed for a track in the guild.
+	 */
+	MIN_REPEATS_OF_TRACK("min_repeats_of_track", I18nSystemSource.MIN_REPEATS_OF_TRACK),
+
+	/**
 	 * Maximum number of repeats allowed for a track in the guild.
 	 */
 	MAX_REPEATS_OF_TRACK("max_repeats_of_track", I18nSystemSource.MAX_REPEATS_OF_TRACK),
@@ -103,6 +109,6 @@ enum class GuildProperty(
 	/**
 	 * Indicates whether slash commands are enabled for the guild.
 	 */
-	SLASH_ENABLED("slash_enabled", I18nSystemSource.SLASH_ENABLED)
+	SLASH_ENABLED("slash_enabled", I18nSystemSource.SLASH_ENABLED),
 	;
 }

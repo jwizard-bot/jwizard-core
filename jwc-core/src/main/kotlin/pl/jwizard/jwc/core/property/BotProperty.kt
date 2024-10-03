@@ -66,6 +66,7 @@ import kotlin.reflect.KClass
  * - [GUILD_VOTING_PERCENTAGE_RATIO]: Ratio of voting percentage for guilds.
  * - [GUILD_TIME_TO_FINISH_VOTING_SEC]: Maximum voting time for guilds in seconds.
  * - [GUILD_DJ_ROLE_NAME]: Name of the DJ role in guilds.
+ * - [GUILD_MIN_REPEATS_OF_TRACK]: Minimum number of repeats allowed for a track in guilds.
  * - [GUILD_MAX_REPEATS_OF_TRACK]: Maximum number of repeats allowed for a track in guilds.
  * - [GUILD_LEAVE_EMPTY_CHANNEL_SEC]: Time in seconds after which the bot leaves an empty channel in guilds.
  * - [GUILD_LEAVE_NO_TRACKS_SEC]: Time in seconds after which the bot leaves a channel with no tracks in guilds.
@@ -75,6 +76,7 @@ import kotlin.reflect.KClass
  * - [GUILD_MAX_TRACKS_TO_CHOOSE]: Maximum number of tracks to choose from in guilds.
  * - [GUILD_DEFAULT_LEGACY_PREFIX]: Default legacy command prefix used in guild.
  * - [GUILD_DEFAULT_SLASH_ENABLED]: Determines if the slash command system is enabled by default in guild.
+ * - [PLAYER_MAX_VOLUME]: Max discord player volume (in units).
  *
  * @property key The key used to retrieve the property value from various property sources.
  * @property type The type of the property value. Defaults to [String] if not specified.
@@ -349,6 +351,11 @@ enum class BotProperty(
 	GUILD_DJ_ROLE_NAME("guild.dj-role-name"),
 
 	/**
+	 * Minimum number of tracks to choose from in guilds.
+	 */
+	GUILD_MIN_REPEATS_OF_TRACK("guild.min-repeats-of-track", Int::class),
+
+	/**
 	 * Maximum number of repeats allowed for a track in guilds.
 	 */
 	GUILD_MAX_REPEATS_OF_TRACK("guild.max-repeats-of-track", Int::class),
@@ -391,6 +398,11 @@ enum class BotProperty(
 	/**
 	 * Determines if the slash command system is enabled by default in guild.
 	 */
-	GUILD_DEFAULT_SLASH_ENABLED("guild.default-slash-enabled", Boolean::class)
+	GUILD_DEFAULT_SLASH_ENABLED("guild.default-slash-enabled", Boolean::class),
+
+	/**
+	 * Max discord player volume (in units).
+	 */
+	PLAYER_MAX_VOLUME("player.max-volume", Int::class),
 	;
 }

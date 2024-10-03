@@ -27,6 +27,7 @@ enum class I18nSystemSource(override val placeholder: String) : I18nLocaleSource
 	VOTE_MAX_WAITING_TIME("jwc.system.voteMaxWaitingTime"),
 	MUSIC_TEXT_CHANNEL("jwc.system.musicTextChannel"),
 	DJ_ROLE_NAME("jwc.system.djRole"),
+	MIN_REPEATS_OF_TRACK("jwc.system.minRepeatsOfTrack"),
 	MAX_REPEATS_OF_TRACK("jwc.system.maxRepeatsOfTrack"),
 	LEAVE_EMPTY_CHANNEL_SEC("jwc.system.leaveEmptyChannelSec"),
 	LEAVE_NO_TRACKS_SEC("jwc.system.leaveNoTracksSec"),

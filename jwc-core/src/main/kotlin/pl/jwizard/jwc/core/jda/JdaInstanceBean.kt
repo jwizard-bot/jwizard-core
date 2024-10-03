@@ -44,7 +44,6 @@ import pl.jwizard.jwc.core.util.logger
  * @property jdaPermissionFlagsSupplier Provides bean supplied JDA permission flags.
  * @property jdaResourceSupplier S3 resource supplier fetching JDA resources (logo and banner).
  * @property jdaColorStoreBean Provides access to JDA colors loader.
- * @constructor Creates an instance of [JdaInstanceBean] with the specified [environmentBean].
  * @author Miłosz Gilga
  */
 @Component
