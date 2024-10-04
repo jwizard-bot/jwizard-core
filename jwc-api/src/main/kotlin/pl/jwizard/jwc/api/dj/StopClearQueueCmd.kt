@@ -43,9 +43,9 @@ class StopClearQueueCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandB
 	 */
 	override fun executeDj(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
 		val playingTrack = manager.cachedPlayer?.track
-		val countOfTracks = manager.trackScheduler.queue.queueSize()
+		val countOfTracks = manager.audioScheduler.queue.queueSize()
 
-		manager.trackScheduler.stopAndDestroyQueue()
+		manager.audioScheduler.stopAndDestroyQueue()
 
 		val (i18nSourceKey, args) = if (playingTrack == null) {
 			I18nResponseSource.CLEAR_QUEUE to mapOf("countOfTracks" to countOfTracks)

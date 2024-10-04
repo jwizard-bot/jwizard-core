@@ -13,9 +13,7 @@ import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
-import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.spi.lava.MusicManager
-import kotlin.math.round
 
 /**
  * Command to retrieve the current volume of the audio player.
@@ -43,13 +41,10 @@ class GetPlayerVolumeCmd(commandEnvironment: CommandEnvironmentBean) : MusicComm
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeMusic(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		val playerMaxVolume = environmentBean.getProperty<Int>(BotProperty.PLAYER_MAX_VOLUME)
-		val percentageVolume = ((manager.cachedPlayer?.volume ?: 0).toDouble() / playerMaxVolume.toDouble()) * 100
-
 		val message = createEmbedMessage(context)
 			.setDescription(
 				i18nLocaleSource = I18nResponseSource.GET_CURRENT_AUDIO_PLAYER_VOLUME,
-				args = mapOf("currentVolume" to round(percentageVolume).toInt())
+				args = mapOf("currentVolume" to manager.cachedPlayer?.volume)
 			)
 			.setColor(JdaColor.PRIMARY)
 			.build()

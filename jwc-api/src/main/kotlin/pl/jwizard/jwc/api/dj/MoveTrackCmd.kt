@@ -58,7 +58,7 @@ class MoveTrackCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBase(c
 			throw TrackPositionsIsTheSameException(context)
 		}
 
-		val queue = manager.trackScheduler.queue
+		val queue = manager.audioScheduler.queue
 		if (queue.positionIsOutOfBounds(fromPos) || queue.positionIsOutOfBounds(toPos)) {
 			throw TrackOffsetOutOfBoundsException(context, abs(fromPos - toPos), queue.queueSize())
 		}

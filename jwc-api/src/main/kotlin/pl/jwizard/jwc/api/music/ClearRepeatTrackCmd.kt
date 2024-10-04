@@ -49,7 +49,7 @@ class ClearRepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCom
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeMusic(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		manager.trackScheduler.updateCountOfRepeats(0)
+		manager.audioScheduler.updateCountOfRepeats(0)
 
 		val currentPlayingTrack = manager.cachedPlayer?.track
 		log.jdaInfo(context, "Repeating of current playing track: %s was removed.", currentPlayingTrack?.qualifier)

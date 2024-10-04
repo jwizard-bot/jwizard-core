@@ -46,9 +46,9 @@ class InfinitePlaylistCmd(commandEnvironment: CommandEnvironmentBean) : DjComman
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeDj(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		val trackScheduler = manager.trackScheduler
+		val audioScheduler = manager.audioScheduler
 
-		val isInLoop = trackScheduler.audioRepeat.togglePlaylistLoop()
+		val isInLoop = audioScheduler.audioRepeat.togglePlaylistLoop()
 		log.jdaInfo(context, "Current playlist infinite playing state: %s.", isInLoop.toString())
 
 		val message = createEmbedMessage(context)

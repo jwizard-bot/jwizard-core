@@ -55,7 +55,7 @@ class SkipQueueToTrackCmd(commandEnvironment: CommandEnvironmentBean) : DjComman
 	override fun executeDj(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
 		val position = context.getArg<Int>(CommandArgument.POS)
 
-		val queue = manager.trackScheduler.queue
+		val queue = manager.audioScheduler.queue
 		if (queue.positionIsOutOfBounds(position)) {
 			throw TrackOffsetOutOfBoundsException(context, position, queue.queueSize())
 		}

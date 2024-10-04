@@ -72,8 +72,8 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 * @param manager The music manager responsible for handling the audio queue and playback.
 	 * @return A Triple indicating whether the user is the sender, a DJ, or a superuser.
 	 */
-	protected fun checkPermissions(context: CommandContext, manager: MusicManager?): Triple<Boolean, Boolean, Boolean> {
-		val isSender = manager?.trackScheduler?.trackSenderId == context.authorId
+	protected fun checkPermissions(context: CommandContext, manager: MusicManager): Triple<Boolean, Boolean, Boolean> {
+		val isSender = manager.getAudioSenderId(manager.cachedPlayer?.track) == context.authorId
 		val isSuperUser = context.checkIfUserHasPermissions(*(superuserPermissions.toTypedArray()))
 		val isDj = context.checkIfUserHasRoles(context.djRoleName)
 		return Triple(isSender, isDj, isSuperUser)

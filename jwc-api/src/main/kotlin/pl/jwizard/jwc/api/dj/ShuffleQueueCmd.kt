@@ -49,7 +49,7 @@ class ShuffleQueueCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBas
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeDj(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		val queue = manager.trackScheduler.queue
+		val queue = manager.audioScheduler.queue
 
 		queue.shuffle()
 		log.jdaInfo(context, "Current queue of: %d tracks was shuffled.", queue.queueSize())

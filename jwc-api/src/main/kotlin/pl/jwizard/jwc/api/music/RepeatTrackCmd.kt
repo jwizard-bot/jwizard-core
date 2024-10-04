@@ -67,7 +67,7 @@ class RepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandB
 		if (repeatsCount < minRepeats || repeatsCount > maxRepeats) {
 			throw TrackRepeatsOutOfBoundException(context, maxRepeats)
 		}
-		manager.trackScheduler.updateCountOfRepeats(repeatsCount)
+		manager.audioScheduler.updateCountOfRepeats(repeatsCount)
 
 		val currentPlayingTrack = manager.cachedPlayer?.track
 		log.jdaInfo(

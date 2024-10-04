@@ -38,14 +38,12 @@ abstract class DjCommandBase(commandEnvironment: CommandEnvironmentBean) : Music
 	 * @throws UnauthorizedDjOrSenderException if the user is a normal user and all tracks in the queue are sent by them.
 	 */
 	final override fun executeMusic(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		val trackScheduler = manager.trackScheduler
 		val (isSender, isDj, isSuperUser) = checkPermissions(context, manager)
-
 		val isNormalUser = !isSender && !isDj && !isSuperUser
 		val djRoleName = context.djRoleName
 
 		if (shouldAllowAlsoForAllContentSender) {
-			val allFromOneUser = trackScheduler.queue.asList().all { trackScheduler.trackSenderId == context.authorId }
+			val allFromOneUser = checkIfAllTracksIsFromSelectedMember(manager, context)
 			if (allFromOneUser && isNormalUser) {
 				throw UnauthorizedDjOrSenderException(context, djRoleName)
 			}
@@ -53,6 +51,24 @@ abstract class DjCommandBase(commandEnvironment: CommandEnvironmentBean) : Music
 			throw UnauthorizedDjException(context, djRoleName)
 		}
 		executeDj(context, manager, response)
+	}
+
+	/**
+	 * Checks whether all tracks in the queue were added by the same user who invoked the command.
+	 *
+	 * This method is used to determine if the user is allowed to execute certain commands based on their ownership of
+	 * all tracks in the queue. If the queue is empty, the method checks the sender of the currently playing track.
+	 *
+	 * @param manager The music manager responsible for handling audio playback.
+	 * @param context The context of the command, containing user interaction details.
+	 * @return `true` if all tracks were added by the same user; `false` otherwise.
+	 */
+	private fun checkIfAllTracksIsFromSelectedMember(manager: MusicManager, context: CommandContext): Boolean {
+		val audioScheduler = manager.audioScheduler
+		if (audioScheduler.queue.queueSize() == 0) {
+			return manager.getAudioSenderId(manager.cachedPlayer?.track) == context.authorId
+		}
+		return audioScheduler.queue.asList().all { manager.getAudioSenderId(it) == context.authorId }
 	}
 
 	/**

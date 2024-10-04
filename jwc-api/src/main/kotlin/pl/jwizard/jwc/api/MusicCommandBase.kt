@@ -60,7 +60,7 @@ abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 				joinAndOpenAudioConnection(context)
 			}
 		}
-		if (queueShouldNotBeEmpty && manager.trackScheduler.queue.queueSize() == 0) {
+		if (queueShouldNotBeEmpty && manager.audioScheduler.queue.queueSize() == 0) {
 			throw TrackQueueIsEmptyException(context)
 		}
 		executeMusic(context, manager, response)
