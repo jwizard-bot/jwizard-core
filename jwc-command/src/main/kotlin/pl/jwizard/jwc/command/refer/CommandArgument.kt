@@ -31,6 +31,5 @@ enum class CommandArgument(override val propName: String) : ReferentialIntegrity
 	 * Provides the integrity name for the module to ensure that command arguments conform to expected integrity
 	 * constraints within the application.
 	 */
-	override val moduleIntegrityName
-		get() = "command arguments"
+	override val moduleIntegrityName = "command arguments"
 }

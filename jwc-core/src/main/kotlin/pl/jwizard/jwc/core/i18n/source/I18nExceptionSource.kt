@@ -59,7 +59,7 @@ enum class I18nExceptionSource(override val placeholder: String) : I18nLocaleSou
 	 *
 	 * @return The property name derived from the placeholder.
 	 */
-	override val propName: String
+	override val propName
 		get() = placeholder.substring(placeholder.lastIndexOf('.') + 1)
 
 	/**
@@ -67,6 +67,5 @@ enum class I18nExceptionSource(override val placeholder: String) : I18nLocaleSou
 	 *
 	 * @return The module name for integrity checking.
 	 */
-	override val moduleIntegrityName: String
-		get() = "exceptions"
+	override val moduleIntegrityName = "exceptions"
 }

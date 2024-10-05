@@ -19,8 +19,6 @@ enum class I18nUtilSource(override val placeholder: String) : I18nLocaleSource {
 	OPTIONAL("jwc.util.optional"),
 	BUG_TRACKER("jwc.util.bugTracker"),
 	COMPILATION_VERSION("jwc.util.compilationVersion"),
-	TURN_ON("jwc.util.turnOn"),
-	TURN_OFF("jwc.util.turnOff"),
 	DATA_COMES_FROM("jwc.util.dataComesFrom"),
 	;
 }

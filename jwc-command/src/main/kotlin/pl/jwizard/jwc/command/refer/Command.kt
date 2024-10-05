@@ -63,8 +63,7 @@ enum class Command(override val propName: String) : ReferentialIntegrityChecker,
 	 * Provides the integrity name for the module to ensure that commands conform to expected integrity constraints
 	 * within the application.
 	 */
-	override val moduleIntegrityName
-		get() = "commands"
+	override val moduleIntegrityName = "commands"
 
 	/**
 	 * Parses the command by combining the command prefix from the context with the command property name.
