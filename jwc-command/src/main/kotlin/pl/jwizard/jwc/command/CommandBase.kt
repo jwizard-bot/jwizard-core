@@ -23,6 +23,7 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 	protected val i18nBean = commandEnvironment.i18nBean
 	protected val radioStationSupplier = commandEnvironment.radioStationSupplier
 	protected val jdaInstance = commandEnvironment.jdaInstance
+	protected val eventQueueBean = commandEnvironment.eventQueueBean
 
 	/**
 	 * A list of permissions assigned to superusers.

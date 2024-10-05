@@ -29,13 +29,13 @@ enum class CommandArgumentType(val castTo: (value: String) -> Any) {
 	 * Represents a mentionable type (ex. users).
 	 * If the value contains a mention format, it strips the mention tags.
 	 */
-	MENTIONABLE({ if (it.contains("@")) it.replace(Regex("<@|>"), "") else it }),
+	MENTIONABLE({ (if (it.contains("@")) it.replace(Regex("<@|>"), "") else it).toLong() }),
 
 	/**
 	 * Represents a channel type.
 	 * If the value contains a channel mention format, it strips the channel tags.
 	 */
-	CHANNEL({ if (it.contains("#")) it.replace(Regex("<#|>"), "") else it }),
+	CHANNEL({ (if (it.contains("#")) it.replace(Regex("<#|>"), "") else it).toLong() }),
 
 	/**
 	 * Represents a boolean type.

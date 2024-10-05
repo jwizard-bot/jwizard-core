@@ -5,14 +5,15 @@
 package pl.jwizard.jwc.command
 
 import org.springframework.stereotype.Component
+import pl.jwizard.jwc.core.audio.spi.LavalinkClientSupplier
+import pl.jwizard.jwc.core.audio.spi.MusicManagersSupplier
 import pl.jwizard.jwc.core.i18n.I18nBean
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
 import pl.jwizard.jwc.core.jda.spi.GuildSettingsEventAction
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwc.core.spi.lava.LavalinkClientSupplier
-import pl.jwizard.jwc.core.spi.lava.MusicManagersSupplier
+import pl.jwizard.jwc.core.radio.spi.RadioPlaybackMappersCache
 import pl.jwizard.jwc.radio.spi.RadioStationSupplier
 
 /**
@@ -27,6 +28,7 @@ import pl.jwizard.jwc.radio.spi.RadioStationSupplier
  * @property jdaInstance Provides access to the JDA instance for Discord interaction.
  * @property guildSettingsEventAction Handles guild settings change events.
  * @property radioStationSupplier Supplies instances related to radio station management.
+ * @property radioPlaybackMappersCache
  * @author Miłosz Gilga
  */
 @Component
@@ -40,4 +42,5 @@ class CommandEnvironmentBean(
 	val jdaInstance: JdaInstance,
 	val guildSettingsEventAction: GuildSettingsEventAction,
 	val radioStationSupplier: RadioStationSupplier,
+	val radioPlaybackMappersCache: RadioPlaybackMappersCache,
 )

@@ -78,6 +78,12 @@ jda:
 
 lavalink:
   timeout-ms: 5000
+  search:
+    content-prefix: 'ytmsearch: %s'
+
+radio:
+  playback:
+    extended-link: 'https://www.youtube.com/results?search_query=%s'
 
 s3:
   region: eu-central-1

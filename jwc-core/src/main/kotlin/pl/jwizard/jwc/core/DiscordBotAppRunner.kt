@@ -5,16 +5,17 @@
 package pl.jwizard.jwc.core
 
 import org.springframework.context.annotation.ComponentScan
+import pl.jwizard.jwc.core.audio.spi.LavalinkClientSupplier
 import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
 import pl.jwizard.jwc.core.jda.ActivitySplashesBean
 import pl.jwizard.jwc.core.jda.JdaInstanceBean
-import pl.jwizard.jwc.core.jda.spi.AudioPlayerManager
 import pl.jwizard.jwc.core.jda.spi.ChannelListenerGuard
 import pl.jwizard.jwc.core.jda.spi.CommandsLoader
 import pl.jwizard.jwc.core.printer.AbstractPrinter
 import pl.jwizard.jwc.core.printer.ConsolePrinter
 import pl.jwizard.jwc.core.printer.FancyFramePrinter
 import pl.jwizard.jwc.core.printer.FancyTitlePrinter
+import pl.jwizard.jwc.core.radio.spi.RadioPlaybackMappersCache
 import pl.jwizard.jwc.core.util.logger
 import kotlin.reflect.KClass
 
@@ -69,11 +70,13 @@ object DiscordBotAppRunner {
 				val jdaInstance = context.getBean(JdaInstanceBean::class)
 				val activitySplashes = context.getBean(ActivitySplashesBean::class)
 
+				val radioPlaybackMappersCache = context.getBean(RadioPlaybackMappersCache::class)
 				val exceptionTrackerStore = context.getBean(ExceptionTrackerStore::class)
 				val commandLoader = context.getBean(CommandsLoader::class)
 				val audioPlayerManager = context.getBean(AudioPlayerManager::class)
 				val channelListenerGuard = context.getBean(ChannelListenerGuard::class)
 
+				radioPlaybackMappersCache.loadRadioPlaybackClasses()
 				exceptionTrackerStore.initTrackers()
 
 				commandLoader.loadMetadata()

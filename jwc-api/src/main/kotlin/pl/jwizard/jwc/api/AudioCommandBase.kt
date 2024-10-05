@@ -10,9 +10,9 @@ import net.dv8tion.jda.api.entities.channel.ChannelType
 import pl.jwizard.jwc.command.CommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.event.context.CommandContext
+import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotListProperty
-import pl.jwizard.jwc.core.spi.lava.MusicManager
 import pl.jwizard.jwc.exception.audio.TemporaryHaltedBotException
 import pl.jwizard.jwc.exception.command.ForbiddenChannelException
 import pl.jwizard.jwc.exception.command.InvokerIsNotSenderOrSuperuserException

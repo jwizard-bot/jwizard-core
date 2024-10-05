@@ -10,8 +10,8 @@ import pl.jwizard.jwc.command.event.context.CommandContext
 import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.reflect.JdaCommand
+import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
-import pl.jwizard.jwc.core.spi.lava.MusicManager
 
 /**
  * Command to play a specified track in the music player.

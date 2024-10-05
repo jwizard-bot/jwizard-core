@@ -5,9 +5,9 @@
 package pl.jwizard.jwc.persistence.sql.bind
 
 import org.springframework.stereotype.Component
+import pl.jwizard.jwc.core.radio.RadioStationDetails
 import pl.jwizard.jwc.persistence.sql.ColumnDef
 import pl.jwizard.jwc.persistence.sql.JdbcKtTemplateBean
-import pl.jwizard.jwc.radio.RadioStation
 import pl.jwizard.jwc.radio.spi.RadioStationSupplier
 import java.math.BigInteger
 
@@ -51,19 +51,20 @@ class RadioStationSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBea
 	 * Retrieves a specific radio station from the database based on its slug and guild ID.
 	 *
 	 * This method executes a SQL query to fetch the details of a radio station by its slug and guild ID. It returns
-	 * a [RadioStation] instance if found, or null if no matching record exists.
+	 * a [RadioStationDetails] instance if found, or null if no matching record exists.
 	 *
 	 * @param slug The unique slug of the radio station to retrieve.
 	 * @param guildDbId The ID of the guild to filter the radio stations.
-	 * @return The [RadioStation] instance if found, or null if not found.
+	 * @return The [RadioStationDetails] instance if found, or null if not found.
 	 */
-	override fun getRadioStation(slug: String, guildDbId: BigInteger): RadioStation? {
+	override fun getRadioStation(slug: String, guildDbId: BigInteger): RadioStationDetails? {
 		val sql = """
-			SELECT name, slug, stream_url, proxy_stream_url, cover_image
+			SELECT radio_key, stream_url, CONCAT(rspp.url, '/', playback_api) playbackApiUrl, parser_class_name
 			FROM guilds_radio_stations_binding rsb
-			INNER JOIN radio_stations rs rsb.radio_station_id = rs.id
-			WHERE slug = ? AND guild_id = ?
+			INNER JOIN radio_stations rs ON rsb.radio_station_id = rs.id
+			INNER JOIN radio_station_playback_providers rspp ON rs.api_provider_id = rspp.id
+			WHERE radio_key = ? AND guild_id = ?
 		""".trimIndent()
-		return jdbcKtTemplateBean.queryForDataClass(sql, RadioStation::class, slug, guildDbId)
+		return jdbcKtTemplateBean.queryForDataClass(sql, RadioStationDetails::class, slug, guildDbId)
 	}
 }

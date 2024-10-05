@@ -7,8 +7,8 @@ package pl.jwizard.jwc.api
 import net.dv8tion.jda.api.entities.channel.ChannelType
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.event.context.CommandContext
+import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
-import pl.jwizard.jwc.core.spi.lava.MusicManager
 import pl.jwizard.jwc.exception.audio.ActiveAudioPlayingNotFoundException
 import pl.jwizard.jwc.exception.audio.PlayerNotPausedException
 import pl.jwizard.jwc.exception.track.TrackQueueIsEmptyException

@@ -5,10 +5,12 @@
 package pl.jwizard.jwc.core.jda.embed
 
 import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.core.i18n.I18nBean
 import pl.jwizard.jwc.core.i18n.I18nLocaleSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
+import pl.jwizard.jwc.core.util.keyValueFormat
 
 /**
  * A builder class for creating Discord message embeds with additional customization options.
@@ -75,19 +77,51 @@ class MessageEmbedBuilder(
 	fun setColor(jdaColor: JdaColor) = apply { super.setColor(jdaColorStoreBean.getHexColor(jdaColor)) }
 
 	/**
-	 * Sets the footer of the embed with optional icon.
+	 * Sets the footer of the embed using internationalization.
 	 *
-	 * @param text The footer text to display.
-	 * @param iconUrl Optional URL of the icon to display in the footer.
+	 * @param i18nKey The key for the localization of the footer text.
+	 * @param value The value to display in the footer.
+	 * @param iconUrl Optional URL of an icon to display next to the footer text.
 	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
 	 */
-	fun setFooter(text: String, iconUrl: String) = apply { super.setFooter(text, iconUrl) }
+	fun setFooter(i18nKey: I18nLocaleSource, value: Any, iconUrl: String? = null) = apply {
+		super.setFooter(keyValueFormat(i18nBean.t(i18nKey, context?.guildLanguage), value), iconUrl)
+	}
 
 	/**
-	 * Sets a thumbnail image for the embed.
+	 * Sets an artwork image for the embed.
 	 *
-	 * @param thumbnailUrl The URL of the thumbnail image.
-	 * @return The current instance of MessageEmbedBuilder for method chaining.
+	 * @param url The URL of the artwork image. If url is `null`, image cannot be rendered.
+	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
 	 */
-	fun setThumbnail(thumbnailUrl: String) = apply { super.setThumbnail(thumbnailUrl) }
+	fun setArtwork(url: String?) = apply { url?.let { super.setThumbnail(url) } }
+
+	/**
+	 * Sets a value field in the embed with an optional inline display.
+	 *
+	 * @param value The value to display in the field.
+	 * @param inline Whether to display the field inline with others (default is true).
+	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
+	 */
+	fun setValueField(value: Any, inline: Boolean = true) = apply { addField("", value.toString(), inline) }
+
+	/**
+	 * Sets a key-value field in the embed with a localized key.
+	 *
+	 * @param key The key for the localization of the field name.
+	 * @param value The value to display in the field.
+	 * @param inline Whether to display the field inline with others (default is true).
+	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
+	 */
+	fun setKeyValueField(key: I18nLocaleSource, value: Any, inline: Boolean = true) = apply {
+		addField(MessageEmbed.Field("$key:", value.toString(), inline))
+	}
+
+	/**
+	 * Adds a blank field to the embed for spacing purposes. This method can be used to create visual separation between
+	 * fields.
+	 *
+	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
+	 */
+	fun setSpace() = apply { addBlankField(true) }
 }

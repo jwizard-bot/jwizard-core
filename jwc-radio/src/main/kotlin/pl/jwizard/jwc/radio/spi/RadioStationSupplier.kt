@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.radio.spi
 
-import pl.jwizard.jwc.radio.RadioStation
+import pl.jwizard.jwc.core.radio.RadioStationDetails
 import java.math.BigInteger
 
 /**
@@ -31,12 +31,12 @@ interface RadioStationSupplier {
 	/**
 	 * Retrieves a specific radio station based on its slug and guild ID.
 	 *
-	 * This method should return a [RadioStation] instance if found, or null if no matching radio station exists for
-	 * the given slug and guild ID.
+	 * This method should return a [RadioStationDetails] instance if found, or null if no matching radio station exists
+	 * for the given slug and guild ID.
 	 *
 	 * @param slug The unique slug of the radio station to retrieve.
 	 * @param guildDbId The ID of the guild to filter the radio stations.
-	 * @return The [RadioStation] instance if found, or null if not found.
+	 * @return The [RadioStationDetails] instance if found, or null if not found.
 	 */
-	fun getRadioStation(slug: String, guildDbId: BigInteger): RadioStation?
+	fun getRadioStation(slug: String, guildDbId: BigInteger): RadioStationDetails?
 }

@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.core.http
+package pl.jwizard.jwc.core.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component

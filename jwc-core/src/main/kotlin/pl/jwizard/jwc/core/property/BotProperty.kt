@@ -51,6 +51,8 @@ import kotlin.reflect.KClass
  * - [JDA_EXCEPTION_URL_REFER_TEMPLATE]: Defines the URL template used for referring to detailed exception information
  *   in bot website.
  * - [LAVALINK_TIMEOUT_MS]: Represents the timeout duration (in milliseconds) for Lavalink connections.
+ * - [LAVALINK_SEARCH_CONTENT_PREFIX]: Represents the prefix used to search for content in Lavalink.
+ * - [RADIO_PLAYBACK_EXTENDED_LINK]: Extended link for radio playback content.
  * - [SERVICE_API_URL]: JWizard API service host URL.
  * - [SERVICE_FRONT_URL]: JWizard front-end service host url.
  * - [S3_PUBLIC_API_URL]: The URL or endpoint for accessing the public S3 API.
@@ -248,6 +250,16 @@ enum class BotProperty(
 	 * Represents the timeout duration (in milliseconds) for Lavalink connections.
 	 */
 	LAVALINK_TIMEOUT_MS("lavalink.timeout-ms", Long::class),
+
+	/**
+	 * Represents the prefix used to search for content in Lavalink.
+	 */
+	LAVALINK_SEARCH_CONTENT_PREFIX("lavalink.search.content-prefix"),
+
+	/**
+	 * Extended link for radio playback content.
+	 */
+	RADIO_PLAYBACK_EXTENDED_LINK("radio.playback.extended-link"),
 
 	/**
 	 * JWizard API service host url.

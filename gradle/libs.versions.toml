@@ -8,7 +8,7 @@ slf4jApiVersion = "2.0.16"
 dotenvVersion = "2.2.0"
 shadowJarVersion = "8.1.1"
 dokkaVersion = "1.9.20"
-jacksonVersion = "2.17.2"
+jacksonVersion = "2.18.0"
 springVaultVersion = "3.1.2"
 jdaVersion = "5.1.0"
 jeeAnnotationApiVersion = "3.0.0"
@@ -17,7 +17,6 @@ collectionUtilsVersion = "4.5.0-M2"
 lavalinkClientVersion = "3.1.0"
 commonsCodecVersion = "1.17.1"
 commonsValidatorVersion = "1.9.0"
-jacksonAnnotationsVersion = "2.18.0"
 
 [libraries]
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinVersion" }
@@ -34,6 +33,7 @@ dotEnv = { module = "io.github.cdimascio:dotenv-java", version.ref = "dotenvVers
 jacksonKotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jacksonVersion" }
 jacksonDatabind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jacksonVersion" }
 jacksonDataformatYaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jacksonVersion" }
+jacksonAnnotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jacksonVersion" }
 springVaultCore = { module = "org.springframework.vault:spring-vault-core", version.ref = "springVaultVersion" }
 jda = { module = "net.dv8tion:JDA", version.ref = "jdaVersion" }
 jeeAnnotationApi = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jeeAnnotationApiVersion" }
@@ -42,7 +42,6 @@ collectionUtils = { module = "org.apache.commons:commons-collections4", version.
 lavalinkClient = { module = "dev.arbjerg:lavalink-client", version.ref = "lavalinkClientVersion" }
 commonsCodec = { module = "commons-codec:commons-codec", version.ref = "commonsCodecVersion" }
 commonsValidator = { module = "commons-validator:commons-validator", version.ref = "commonsValidatorVersion" }
-jacksonAnnotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jacksonAnnotationsVersion" }
 
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
