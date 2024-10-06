@@ -69,7 +69,6 @@ class SlashCommandEventHandlerBean(
 	 * @param event The slash command interaction event.
 	 */
 	override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
-		event.deferReply().queue()
 		initPipelineAndPerformCommand(event)
 	}
 
@@ -117,18 +116,35 @@ class SlashCommandEventHandlerBean(
 	 *
 	 * @param event The slash command interaction event.
 	 * @param response The command response to send.
+	 * @param privateMessage The value defined, if sending message should be private or public.
 	 * @return The action to send the message.
 	 */
 	override fun deferMessage(
 		event: SlashCommandInteractionEvent,
-		response: CommandResponse
+		response: CommandResponse,
+		privateMessage: Boolean,
 	): RestAction<Message> {
 		val embedMessages = response.embedMessages
 		val actionRows = response.actionRows
 		return if (event.hook.isExpired) {
 			event.channel.sendMessageEmbeds(embedMessages).addComponents(response.actionRows)
 		} else {
-			event.hook.sendMessageEmbeds(embedMessages).setEphemeral(response.privateMessage).addComponents(actionRows)
+			event.hook.sendMessageEmbeds(embedMessages).setEphemeral(privateMessage).addComponents(actionRows)
+		}
+	}
+
+	/**
+	 * Overrides the deferAction method to handle deferred replies for slash command interactions. This method defers the
+	 * reply to the slash command and allows specifying whether the response should be ephemeral (private) or public.
+	 *
+	 * @param event The slash command interaction event that triggered this action. It contains details about the command
+	 *        and the user who invoked it.
+	 * @param privateMessage A boolean indicating whether the response should be ephemeral (true) or visible to all users
+	 *        (false).
+	 */
+	override fun deferAction(event: SlashCommandInteractionEvent, privateMessage: Boolean) {
+		if (!event.isAcknowledged) {
+			event.deferReply(privateMessage).queue()
 		}
 	}
 }

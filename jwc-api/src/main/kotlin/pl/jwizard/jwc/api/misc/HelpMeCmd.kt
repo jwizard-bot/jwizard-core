@@ -41,9 +41,16 @@ class HelpMeCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(comman
 		val commandResponse = CommandResponse.Builder()
 			.addEmbedMessages(initMessage)
 			.addActionRows(row)
-			.asPrivateMessage(context.authorId)
 			.build()
 
 		response.complete(commandResponse)
 	}
+
+	/**
+	 * Determines if the command should be executed in a private context.
+	 *
+	 * @param context The command context, which contains information about the guild, user, and message event.
+	 * @return The author's ID if the command is invoked in a private context, otherwise null.
+	 */
+	override fun isPrivate(context: CommandContext) = context.authorId
 }

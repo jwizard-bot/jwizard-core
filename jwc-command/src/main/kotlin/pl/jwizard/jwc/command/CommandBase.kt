@@ -68,4 +68,13 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 	 * @param response
 	 */
 	abstract fun execute(context: CommandContext, response: TFutureResponse)
+
+	/**
+	 * Determines if the command should be executed in a private context. This method can be overridden by subclasses to
+	 * specify if the command is intended to be used in a private message context.
+	 *
+	 * @param context The context of the command execution.
+	 * @return An optional value indicating the channel ID if the command is private, or null if it is not.
+	 */
+	open fun isPrivate(context: CommandContext): Long? = null
 }

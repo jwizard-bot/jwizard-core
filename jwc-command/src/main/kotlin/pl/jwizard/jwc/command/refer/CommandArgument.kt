@@ -25,6 +25,7 @@ enum class CommandArgument(override val propName: String) : ReferentialIntegrity
 	PLAYLIST_NAME_OR_ID("playlistNameOrId"),
 	PLAYLIST_NAME("playlistName"),
 	RADIO_STATION("radioStation"),
+	PRIVATE("private"),
 	;
 
 	/**

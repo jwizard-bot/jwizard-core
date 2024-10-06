@@ -16,7 +16,7 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
  *
  * @param commandBaseContext The context in which the command was invoked.
  * @param violatedArgName The name of the argument that has been violated.
- * @param violatedValue The value provided for the violated argument.
+ * @param violatedValue The value provided for the violated argument. Might be null.
  * @param acceptedValueList A list of accepted values for the argument.
  * @param acceptedValuesFormatted A formatted string representation of the accepted values.
  * @author Miłosz Gilga
@@ -24,7 +24,7 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
 class ViolatedCommandArgumentOptionsException(
 	commandBaseContext: CommandBaseContext,
 	violatedArgName: String,
-	violatedValue: Any,
+	violatedValue: Any?,
 	acceptedValueList: List<String>,
 	acceptedValuesFormatted: String,
 ) : CommandPipelineExceptionHandler(

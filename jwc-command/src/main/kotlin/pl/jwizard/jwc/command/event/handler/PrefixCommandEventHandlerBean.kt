@@ -4,9 +4,7 @@
  */
 package pl.jwizard.jwc.command.event.handler
 
-import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
-import net.dv8tion.jda.api.requests.RestAction
 import pl.jwizard.jwc.command.CommandsCacheBean
 import pl.jwizard.jwc.command.GuildCommandProperties
 import pl.jwizard.jwc.command.event.CommandType
@@ -144,9 +142,12 @@ class PrefixCommandEventHandlerBean(
 	 *
 	 * @param event The message received event.
 	 * @param response The command response to send.
+	 * @param privateMessage The value defined, if sending message should be private or public.
 	 * @return The action to send the message.
 	 */
-	override fun deferMessage(event: MessageReceivedEvent, response: CommandResponse): RestAction<Message> {
-		return event.channel.sendMessageEmbeds(response.embedMessages).addComponents(response.actionRows)
-	}
+	override fun deferMessage(
+		event: MessageReceivedEvent,
+		response: CommandResponse,
+		privateMessage: Boolean,
+	) = event.channel.sendMessageEmbeds(response.embedMessages).addComponents(response.actionRows)
 }

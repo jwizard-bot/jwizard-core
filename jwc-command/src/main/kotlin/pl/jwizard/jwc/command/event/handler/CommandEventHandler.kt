@@ -7,7 +7,6 @@ package pl.jwizard.jwc.command.event.handler
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.User
-import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel
 import net.dv8tion.jda.api.events.Event
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.requests.RestAction
@@ -80,6 +79,7 @@ abstract class CommandEventHandler<E : Event>(
 	protected fun initPipelineAndPerformCommand(event: E) {
 		var commandResponse: TFutureResponse
 		var context: CommandContext? = null
+		var privateMessageUserId: Long? = null
 		try {
 			try {
 				if (forbiddenInvocationCondition(event)) {
@@ -117,6 +117,8 @@ abstract class CommandEventHandler<E : Event>(
 
 				commandResponse = CompletableFuture<CommandResponse>()
 				try {
+					privateMessageUserId = command.isPrivate(context)
+					deferAction(event, privateMessageUserId != null)
 					command.execute(context, commandResponse)
 				} catch (ex: CommandParserException) {
 					throw MismatchCommandArgumentsException(context, commandDetails.name, commandSyntax)
@@ -128,10 +130,11 @@ abstract class CommandEventHandler<E : Event>(
 				throw UnexpectedException(ex.context, ex.message)
 			}
 		} catch (ex: CommandPipelineExceptionHandler) {
+			deferAction(event, privateMessageUserId != null)
 			commandResponse = CompletableFuture()
 			commandResponse.complete(createExceptionMessage(ex))
 		}
-		commandResponse.thenAccept { sendResponse(event, it, context) }
+		commandResponse.thenAccept { sendResponse(event, it, context, privateMessageUserId) }
 	}
 
 	/**
@@ -144,16 +147,17 @@ abstract class CommandEventHandler<E : Event>(
 	 * @param event The event that triggered this handler.
 	 * @param response The response generated from executing the command.
 	 * @param context Optional context for the command, containing additional execution details.
+	 * @param privateUserId User id used to send private message. If it is `null`, message is public.
 	 */
-	private fun sendResponse(event: E, response: CommandResponse, context: CommandContext?) {
+	private fun sendResponse(event: E, response: CommandResponse, context: CommandContext?, privateUserId: Long?) {
 		var directEphemeralUser: User? = null
 		val truncatedResponse = try {
 			if (response.embedMessages.isEmpty() && commandType == CommandType.SLASH) {
-				throw CommandInvocationException("response should have at least one embed message")
+				throw UnexpectedException(context, "response should have at least one embed message")
 			}
-			if (response.privateMessage && response.privateMessageUserId != null) {
-				directEphemeralUser = event.jda.getUserById(response.privateMessageUserId!!)
-					?: throw CommandInvocationException("ephemeral user cannot be null")
+			if (privateUserId != null) {
+				directEphemeralUser = event.jda.getUserById(privateUserId)
+					?: throw UnexpectedException(context, "ephemeral user cannot be null")
 			}
 			looselyTransportHandlerBean.truncateComponents(response)
 		} catch (ex: CommandPipelineExceptionHandler) {
@@ -169,7 +173,7 @@ abstract class CommandEventHandler<E : Event>(
 			}
 			truncatedResponse.afterSendAction(it)
 		}
-		deferMessage(event, truncatedResponse).queue(onMessageSend)
+		deferMessage(event, truncatedResponse, privateMessage = false).queue(onMessageSend)
 	}
 
 	/**
@@ -218,24 +222,19 @@ abstract class CommandEventHandler<E : Event>(
 		val errorMessage = CommandResponse.Builder()
 			.addEmbedMessages(trackerMessage)
 			.addActionRows(trackerLink)
-			.asPrivateMessage(user.idLong)
 			.build()
 
-		val onSuccess: (Message) -> Unit = {
+		val onSuccess: (Message) -> Unit = { privateMessage ->
 			if (commandType == CommandType.SLASH) {
-				val message = CommandResponse.Builder()
-					.addEmbedMessages(successMessage)
-					.asPrivateMessage(user.idLong)
-					.build()
-				deferMessage(event, message).queue(looselyTransportHandlerBean::startRemovalInteractionThread)
+				val message = CommandResponse.Builder().addEmbedMessages(successMessage).build()
+				deferMessage(event, message, privateMessage = true)
+					.queue { looselyTransportHandlerBean.startRemovalInteractionThread(privateMessage) }
 			}
 		}
-		val onError: (Throwable) -> Unit = { deferMessage(event, errorMessage).queue() }
-
-		val onOpenChannel: (PrivateChannel) -> Unit = {
+		val onError: (Throwable) -> Unit = { deferMessage(event, errorMessage, privateMessage = true).queue() }
+		user.openPrivateChannel().queue({
 			it.sendMessageEmbeds(response.embedMessages).addComponents(response.actionRows).queue(onSuccess, onError)
-		}
-		user.openPrivateChannel().queue(onOpenChannel, onError)
+		}, onError)
 	}
 
 	/**
@@ -252,7 +251,7 @@ abstract class CommandEventHandler<E : Event>(
 	private fun parseCommandArguments(
 		context: CommandContext,
 		details: CommandDetails,
-		arguments: List<String>
+		arguments: List<String>,
 	): Map<CommandArgument, CommandArgumentParsingData> {
 		val commandSyntax = createCommandSyntax(context, details)
 		val options = LinkedList(arguments)
@@ -261,8 +260,8 @@ abstract class CommandEventHandler<E : Event>(
 			throw MismatchCommandArgumentsException(context, details.name, commandSyntax)
 		}
 		return details.args.associate {
-			val optionMapping = options.poll()
-			if ((it.options.isNotEmpty() && !it.options.contains(optionMapping))) {
+			val optionMapping: String? = options.poll()
+			if (it.options.isNotEmpty() && !it.options.contains(optionMapping)) {
 				val syntax = createArgumentsOptionsSyntax(options, context.guildLanguage)
 				throw ViolatedCommandArgumentOptionsException(context, it.name, optionMapping, it.options, syntax)
 			}
@@ -271,7 +270,7 @@ abstract class CommandEventHandler<E : Event>(
 			if (argKey == null || type == null || (optionMapping == null && it.required)) {
 				throw MismatchCommandArgumentsException(context, details.name, commandSyntax)
 			}
-			argKey to CommandArgumentParsingData(optionMapping, type)
+			argKey to CommandArgumentParsingData(optionMapping, type, it.required)
 		}
 	}
 
@@ -377,7 +376,19 @@ abstract class CommandEventHandler<E : Event>(
 	 *
 	 * @param event The event being processed.
 	 * @param response The response generated from executing the command.
+	 * @param privateMessage The value defined, if sending message should be private or public.
 	 * @return A RestAction that sends the deferred message.
 	 */
-	protected abstract fun deferMessage(event: E, response: CommandResponse): RestAction<Message>
+	protected abstract fun deferMessage(event: E, response: CommandResponse, privateMessage: Boolean): RestAction<Message>
+
+	/**
+	 * Defers an action for the given event, which can be configured to be either public or private (ephemeral).
+	 * This method can be overridden to customize the behavior based on the event type and context.
+	 *
+	 * @param event The event that triggered the action, typically containing the necessary context such as user, guild,
+	 *        or message details.
+	 * @param privateMessage A boolean indicating whether the response should be ephemeral (private) or public. If true,
+	 *        the response will be sent as a private message (ephemeral); if false, it will be visible to everyone.
+	 */
+	protected open fun deferAction(event: E, privateMessage: Boolean) {}
 }

@@ -15,8 +15,6 @@ import net.dv8tion.jda.api.interactions.components.ActionRow
  * @property embedMessages A list of embedded messages (MessageEmbed) sent in the response.
  * @property actionRows A list of ActionRows containing interaction components (ex. buttons, dropdown menus).
  * @property disposeComponents A flag indicating whether the interaction components should be disabled after execution.
- * @property privateMessage A flag indicating whether the message should be sent as a private message (DM).
- * @property privateMessageUserId The user ID to whom the private message should be sent, if applicable.
  * @property afterSendAction A lambda function that will be executed after the message is sent. It receives the send
  *           Message as an argument.
  */
@@ -24,8 +22,6 @@ class CommandResponse private constructor(
 	val embedMessages: List<MessageEmbed>,
 	val actionRows: List<ActionRow>,
 	val disposeComponents: Boolean,
-	val privateMessage: Boolean,
-	val privateMessageUserId: Long?,
 	val afterSendAction: (Message) -> Unit,
 ) {
 
@@ -37,7 +33,7 @@ class CommandResponse private constructor(
 	 * @return A new CommandResponse instance with the updated values.
 	 */
 	fun copy(embedMessages: List<MessageEmbed>, actionRows: List<ActionRow>) =
-		CommandResponse(embedMessages, actionRows, disposeComponents, privateMessage, privateMessageUserId, afterSendAction)
+		CommandResponse(embedMessages, actionRows, disposeComponents, afterSendAction)
 
 	/**
 	 * Builder class for constructing a CommandResponse instance with various options.
@@ -55,19 +51,9 @@ class CommandResponse private constructor(
 		private var actionRows: List<ActionRow> = emptyList()
 
 		/**
-		 * A flag indicating whether the response should be sent as a private message (DM).
-		 */
-		private var privateMessage: Boolean = false
-
-		/**
 		 * A flag indicating whether interaction components (buttons, etc.) should be disabled after execution.
 		 */
 		private var disposeComponents: Boolean = true
-
-		/**
-		 * The user ID to whom the private message should be sent, if applicable.
-		 */
-		private var privateMessageUserId: Long? = null
 
 		/**
 		 * A lambda function to be executed after the message is sent. Receives the send Message as an argument.
@@ -99,17 +85,6 @@ class CommandResponse private constructor(
 		fun disposeComponents(disposeComponents: Boolean) = apply { this.disposeComponents = disposeComponents }
 
 		/**
-		 * Marks the message as a private message (DM) to a specific user.
-		 *
-		 * @param userId The ID of the user to whom the private message should be sent.
-		 * @return The Builder instance for chaining.
-		 */
-		fun asPrivateMessage(userId: Long) = apply {
-			privateMessage = true
-			privateMessageUserId = userId
-		}
-
-		/**
 		 * Adds an action to be executed after the message is sent.
 		 *
 		 * @param onSendAction A lambda function to execute after sending the message, receiving the send Message.
@@ -122,7 +97,6 @@ class CommandResponse private constructor(
 		 *
 		 * @return A new CommandResponse instance.
 		 */
-		fun build() =
-			CommandResponse(embedMessages, actionRows, disposeComponents, privateMessage, privateMessageUserId, onSendAction)
+		fun build() = CommandResponse(embedMessages, actionRows, disposeComponents, onSendAction)
 	}
 }
