@@ -4,6 +4,7 @@
  */
 package pl.jwizard.jwc.command
 
+import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.command.event.context.CommandContext
 import pl.jwizard.jwc.command.interaction.component.Paginator
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
@@ -24,6 +25,9 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 	protected val radioStationSupplier = commandEnvironment.radioStationSupplier
 	protected val jdaInstance = commandEnvironment.jdaInstance
 	protected val eventQueueBean = commandEnvironment.eventQueueBean
+	protected val commandDataSupplier = commandEnvironment.commandDataSupplier
+	protected val commandsCacheBean = commandEnvironment.commandsCacheBean
+	protected val commandHelpMessageBean = commandEnvironment.commandHelpMessageBean
 
 	/**
 	 * A list of permissions assigned to superusers.
@@ -49,12 +53,12 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 	 * @param pages The list of pages to be included in the paginator.
 	 * @return A Paginator instance that handles pagination logic.
 	 */
-	protected fun createPaginator(context: CommandContext, pages: List<String>) = Paginator(
+	protected fun createPaginator(context: CommandContext, pages: List<MessageEmbed>) = Paginator(
 		context,
 		i18nBean,
 		eventQueueBean = commandEnvironment.eventQueueBean,
 		jdaColorStoreBean = commandEnvironment.jdaColorStoreBean,
-		pages
+		pages,
 	)
 
 	/**

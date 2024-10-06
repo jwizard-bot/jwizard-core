@@ -7,7 +7,7 @@ package pl.jwizard.jwc.command.event.handler
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.requests.RestAction
-import pl.jwizard.jwc.command.CommandsProxyStoreBean
+import pl.jwizard.jwc.command.CommandsCacheBean
 import pl.jwizard.jwc.command.GuildCommandProperties
 import pl.jwizard.jwc.command.event.CommandType
 import pl.jwizard.jwc.command.event.context.PrefixCommandContext
@@ -26,7 +26,7 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
  *
  * @property commandDataSupplier Supplies command data.
  * @property moduleDataSupplier Supplies module data.
- * @property commandsProxyStoreBean Proxy for command execution.
+ * @property commandsCacheBean Cache for command execution.
  * @property exceptionTrackerStore Tracks exceptions for reporting.
  * @property i18nBean Provides internationalization support.
  * @property environmentBean Accesses environment-specific properties.
@@ -40,7 +40,7 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
 class PrefixCommandEventHandlerBean(
 	private val commandDataSupplier: CommandDataSupplier,
 	private val moduleDataSupplier: ModuleDataSupplier,
-	private val commandsProxyStoreBean: CommandsProxyStoreBean,
+	private val commandsCacheBean: CommandsCacheBean,
 	private val exceptionTrackerStore: ExceptionTrackerStore,
 	private val i18nBean: I18nBean,
 	private val environmentBean: EnvironmentBean,
@@ -49,7 +49,7 @@ class PrefixCommandEventHandlerBean(
 ) : CommandEventHandler<MessageReceivedEvent>(
 	commandDataSupplier,
 	moduleDataSupplier,
-	commandsProxyStoreBean,
+	commandsCacheBean,
 	exceptionTrackerStore,
 	i18nBean,
 	environmentBean,

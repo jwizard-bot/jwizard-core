@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.interactions.commands.build.OptionData
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.command.CommandsProxyStoreBean
+import pl.jwizard.jwc.command.CommandsCacheBean
 import pl.jwizard.jwc.command.reflect.CommandDetails
 import pl.jwizard.jwc.command.spi.CommandDataSupplier
 import pl.jwizard.jwc.core.i18n.I18nBean
@@ -28,14 +28,14 @@ import pl.jwizard.jwc.core.util.logger
  *
  * @property i18nBean Provides internationalization functionality to localize command names and descriptions.
  * @property commandDataSupplier Supplies command-related data such as arguments and enabled commands for guilds.
- * @property commandsProxyStoreBean Stores command instances and their details for reflection-based registration.
+ * @property commandsCacheBean Stores command instances and their details for reflection-based registration.
  * @author Miłosz Gilga
  */
 @Component
 class SlashCommandRegistererBean(
 	private val i18nBean: I18nBean,
 	private val commandDataSupplier: CommandDataSupplier,
-	private val commandsProxyStoreBean: CommandsProxyStoreBean,
+	private val commandsCacheBean: CommandsCacheBean,
 ) : SlashCommandRegisterer {
 
 	companion object {
@@ -54,8 +54,8 @@ class SlashCommandRegistererBean(
 		if (guildProperties == null || !guildProperties.slashEnabled) {
 			return
 		}
-		val loadedCommands = commandsProxyStoreBean.instancesContainer.map { it.key }
-		val commands = commandsProxyStoreBean.commands
+		val loadedCommands = commandsCacheBean.instancesContainer.map { it.key }
+		val commands = commandsCacheBean.commands
 		val parsedSlashCommands = commands
 			.filter { loadedCommands.contains(it.key) }
 			.map { (name, details) -> mapToCommandData(name, details, guildProperties.lang) }

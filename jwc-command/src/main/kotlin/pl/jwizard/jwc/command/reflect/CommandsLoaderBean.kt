@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ClassPathScanningCandidateComponen
 import org.springframework.core.type.filter.AnnotationTypeFilter
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.command.CommandBase
-import pl.jwizard.jwc.command.CommandsProxyStoreBean
+import pl.jwizard.jwc.command.CommandsCacheBean
 import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.spi.CommandDataSupplier
@@ -28,7 +28,7 @@ import pl.jwizard.jwc.core.util.logger
  * @property moduleDataSupplier The supplier for module data.
  * @property commandDataSupplier The supplier for command data.
  * @property springKtContextFactory The context factory for retrieving Spring beans.
- * @property commandsProxyStoreBean The store for command proxies.
+ * @property commandsCacheBean The cache for commands.
  * @author Miłosz Gilga
  */
 @Component
@@ -36,7 +36,7 @@ class CommandsLoaderBean(
 	private val moduleDataSupplier: ModuleDataSupplier,
 	private val commandDataSupplier: CommandDataSupplier,
 	private val springKtContextFactory: SpringKtContextFactory,
-	private val commandsProxyStoreBean: CommandsProxyStoreBean,
+	private val commandsCacheBean: CommandsCacheBean,
 ) : CommandsLoader {
 
 	companion object {
@@ -64,7 +64,7 @@ class CommandsLoaderBean(
 	override fun loadMetadata() {
 		val suppliedModules = moduleDataSupplier.getModules()
 		log.info("Fetch: {} modules from datasource.", suppliedModules.size)
-		commandsProxyStoreBean.modules.putAll(suppliedModules)
+		commandsCacheBean.modules.putAll(suppliedModules)
 
 		val suppliedCommandArguments = commandDataSupplier.getCommandArgumentKeys()
 		log.info("Fetch: {} command arguments from datasource.", suppliedCommandArguments.size)
@@ -73,7 +73,7 @@ class CommandsLoaderBean(
 		val suppliedCommands = commandDataSupplier.getCommands()
 		log.info("Fetch: {} commands from datasource.", suppliedCommands.size)
 		ReferentialIntegrityChecker.checkIntegrity<Command>(this::class, suppliedCommands.keys)
-		commandsProxyStoreBean.commands.putAll(suppliedCommands)
+		commandsCacheBean.commands.putAll(suppliedCommands)
 	}
 
 	/**
@@ -87,10 +87,10 @@ class CommandsLoaderBean(
 				clazz.getAnnotation(JdaCommand::class.java) to clazz
 			}
 			.forEach { (command, clazz) ->
-				commandsProxyStoreBean.addInstance(command.id.propName, springKtContextFactory.getBean(clazz) as CommandBase)
+				commandsCacheBean.addInstance(command.id.propName, springKtContextFactory.getBean(clazz) as CommandBase)
 			}
-		val loadedCommands = commandsProxyStoreBean.instancesContainer.keys
-		val commands = commandsProxyStoreBean.commands
+		val loadedCommands = commandsCacheBean.instancesContainer.keys
+		val commands = commandsCacheBean.commands
 		log.info("Load: {} commands ({} persisted in DB) classes.", loadedCommands.size, commands.size)
 		if (loadedCommands.size != commands.size) {
 			val nonLoadedCommands = commands.keys - loadedCommands

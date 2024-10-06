@@ -54,8 +54,13 @@ enum class I18nResponseSource(override val placeholder: String) : I18nLocaleSour
 	SYSTEM_DATA("jwc.response.systemData"),
 
 	// misc
-	COUNT_OF_AVAILABLE_COMMANDS("jwc.response.countOfAvailableCommands"),
 	PRIVATE_MESSAGE_SEND("jwc.response.privateMessageSend"),
+	HELP("jwc.response.help"),
+	HELPFUL_LINKS("jwc.response.helpfulLinks"),
+	COMMANDS("jwc.response.commands"),
+	BOT_WEBSITE("jwc.response.botWebsite"),
+	BOT_SOURCE_CODE("jwc.response.botSourceCode"),
+	BOT_DOCUMENTATION("jwc.response.botDocumentation"),
 
 	// music
 	REMOVE_MULTIPLE_REPEATING_TRACK("jwc.response.removeMultipleRepeatingTrack"),

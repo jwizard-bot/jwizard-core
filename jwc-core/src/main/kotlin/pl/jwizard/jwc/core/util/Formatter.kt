@@ -29,6 +29,17 @@ fun formatQualifier(name: String, id: Long) = "\"%s <@%s>\"".format(name, id)
 fun mdLink(name: String, link: String?) = "[$name]($link)"
 
 /**
+ * Formats the given text as bold Markdown.
+ *
+ * This function wraps the input text with double asterisks (`**`), which is the Markdown syntax for bold text.
+ *
+ * @param text The string to be formatted as bold.
+ * @return A new string that contains the input text formatted as bold in Markdown.
+ * @author Miłosz Gilga
+ */
+fun mdBold(text: String) = "**$text**"
+
+/**
  * Formats a key-value pair as a string.
  *
  * This function takes a key and a value, and formats them into a string representation.  If the value is null, it will

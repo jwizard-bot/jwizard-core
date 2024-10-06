@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel
 import net.dv8tion.jda.api.events.Event
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.requests.RestAction
-import pl.jwizard.jwc.command.CommandsProxyStoreBean
+import pl.jwizard.jwc.command.CommandsCacheBean
 import pl.jwizard.jwc.command.GuildCommandProperties
 import pl.jwizard.jwc.command.event.CommandType
 import pl.jwizard.jwc.command.event.arg.CommandArgumentParsingData
@@ -53,7 +53,7 @@ import java.util.concurrent.CompletableFuture
  *
  * @property commandDataSupplier The supplier for command data.
  * @property moduleDataSupplier The supplier for module data.
- * @property commandsProxyStoreBean The bean for storing command proxies.
+ * @property commandsCacheBean The bean for storing command cache.
  * @property exceptionTrackerStore The bean for tracking exceptions.
  * @property i18nBean The bean for internationalization.
  * @property environmentBean The bean for environment properties.
@@ -63,7 +63,7 @@ import java.util.concurrent.CompletableFuture
 abstract class CommandEventHandler<E : Event>(
 	private val commandDataSupplier: CommandDataSupplier,
 	private val moduleDataSupplier: ModuleDataSupplier,
-	private val commandsProxyStoreBean: CommandsProxyStoreBean,
+	private val commandsCacheBean: CommandsCacheBean,
 	private val exceptionTrackerStore: ExceptionTrackerStore,
 	private val i18nBean: I18nBean,
 	private val environmentBean: EnvironmentBean,
@@ -94,7 +94,7 @@ abstract class CommandEventHandler<E : Event>(
 				}
 				val (commandNameOrAlias, commandArguments) = commandNameAndArguments(event)
 
-				val commandDetails = commandsProxyStoreBean.commands[commandNameOrAlias]
+				val commandDetails = commandsCacheBean.commands[commandNameOrAlias]
 					?: throw CommandInvocationException("command by command name could not be found")
 				context = createCommandContext(event, commandDetails.name, properties)
 
@@ -112,7 +112,7 @@ abstract class CommandEventHandler<E : Event>(
 				parsedArguments.forEach { (key, value) -> context.commandArguments[key] = value }
 
 				val commandSyntax = createCommandSyntax(context, commandDetails)
-				val command = commandsProxyStoreBean.instancesContainer[commandDetails.name]
+				val command = commandsCacheBean.instancesContainer[commandDetails.name]
 					?: throw CommandIsTurnedOffException(context, commandNameOrAlias)
 
 				commandResponse = CompletableFuture<CommandResponse>()

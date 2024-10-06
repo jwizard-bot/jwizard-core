@@ -30,8 +30,6 @@ import kotlin.reflect.KClass
  * - [JDA_NAME]: JDA instance name.
  * - [JDA_SECRET_TOKEN]: JDA secret token.
  * - [JDA_DEFAULT_ACTIVITY]: JDA default activity. Enabled when [JDA_SPLASHES_ENABLED] property is set to false.
- * - [JDA_PAGINATION_MAX_ELEMENTS_PER_PAGE]: Max elements per page number for JDA pagination generator.
- * - [JDA_PAGINATION_MENU_ALIVE_SEC]: JDA pagination generator menu visibility in seconds.
  * - [JDA_SPLASHES_ENABLED]: JDA splashes toggle boolean property. If true, splashes are enabled, otherwise show nothing.
  * - [JDA_SPLASHES_INTERVAL_SEC]: JDA splashes interval in seconds.
  * - [JDA_COLOR_PRIMARY]: JDA primary color in embed messages.
@@ -50,6 +48,10 @@ import kotlin.reflect.KClass
  * - [JDA_EXCEPTION_SEGMENT_SIZE]: Specifies the maximum size of the segment in exception group.
  * - [JDA_EXCEPTION_URL_REFER_TEMPLATE]: Defines the URL template used for referring to detailed exception information
  *   in bot website.
+ * - [LINK_WEBSITE]: The official website for the bot. It contains general information and features.
+ * - [LINK_REPOSITORY]: The repository URL where the bot's source code is hosted.
+ * - [LINK_DOCS]: The official website with documentation.
+ * - [LINK_COMMAND]: Direct link to the bot command reference, detailing all available commands and their usage.
  * - [LAVALINK_TIMEOUT_MS]: Represents the timeout duration (in milliseconds) for Lavalink connections.
  * - [LAVALINK_SEARCH_CONTENT_PREFIX]: Represents the prefix used to search for content in Lavalink.
  * - [RADIO_PLAYBACK_EXTENDED_LINK]: Extended link for radio playback content.
@@ -166,16 +168,6 @@ enum class BotProperty(
 	JDA_DEFAULT_ACTIVITY("jda.default-activity"),
 
 	/**
-	 * Max elements per page number for JDA pagination generator.
-	 */
-	JDA_PAGINATION_MAX_ELEMENTS_PER_PAGE("jda.pagination.max-elements-per-page", Int::class),
-
-	/**
-	 * JDA pagination generator menu visibility in seconds.
-	 */
-	JDA_PAGINATION_MENU_ALIVE_SEC("jda.pagination.menu-alive-sec", Int::class),
-
-	/**
 	 * JDA splashes toggle boolean property. If true, splashes are enabled, otherwise show nothing.
 	 */
 	JDA_SPLASHES_ENABLED("jda.splashes.enabled", Boolean::class),
@@ -245,6 +237,26 @@ enum class BotProperty(
 	 * Defines the URL template used for referring to detailed exception information in bot website.
 	 */
 	JDA_EXCEPTION_URL_REFER_TEMPLATE("jda.exception.url-refer-template"),
+
+	/**
+	 * The official website for the bot. It contains general information and features.
+	 */
+	LINK_WEBSITE("link.website"),
+
+	/**
+	 * The repository URL where the bot's source code is hosted.
+	 */
+	LINK_REPOSITORY("link.repository"),
+
+	/**
+	 * The official website with documentation.
+	 */
+	LINK_DOCS("link.docs"),
+
+	/**
+	 * Direct link to the bot command reference, detailing all available commands and their usage.
+	 */
+	LINK_COMMAND("link.command"),
 
 	/**
 	 * Represents the timeout duration (in milliseconds) for Lavalink connections.

@@ -19,10 +19,10 @@ import java.util.concurrent.ConcurrentHashMap
  * @author Miłosz Gilga
  */
 @Component
-class CommandsProxyStoreBean {
+class CommandsCacheBean {
 
 	companion object {
-		private val log = logger<CommandsProxyStoreBean>()
+		private val log = logger<CommandsCacheBean>()
 	}
 
 	/**

@@ -5,6 +5,8 @@
 package pl.jwizard.jwc.command
 
 import org.springframework.stereotype.Component
+import pl.jwizard.jwc.command.embed.CommandHelpMessageBean
+import pl.jwizard.jwc.command.spi.CommandDataSupplier
 import pl.jwizard.jwc.core.audio.spi.LavalinkClientSupplier
 import pl.jwizard.jwc.core.audio.spi.MusicManagersSupplier
 import pl.jwizard.jwc.core.i18n.I18nBean
@@ -28,7 +30,10 @@ import pl.jwizard.jwc.radio.spi.RadioStationSupplier
  * @property jdaInstance Provides access to the JDA instance for Discord interaction.
  * @property guildSettingsEventAction Handles guild settings change events.
  * @property radioStationSupplier Supplies instances related to radio station management.
- * @property radioPlaybackMappersCache
+ * @property radioPlaybackMappersCache Caches radio playback mappers for efficient access.
+ * @property commandDataSupplier Supplies metadata and definitions for bot commands.
+ * @property commandsCacheBean Caches command-related data to improve command lookup performance.
+ * @property commandHelpMessageBean Generates help message components for available bot commands.
  * @author Miłosz Gilga
  */
 @Component
@@ -43,4 +48,7 @@ class CommandEnvironmentBean(
 	val guildSettingsEventAction: GuildSettingsEventAction,
 	val radioStationSupplier: RadioStationSupplier,
 	val radioPlaybackMappersCache: RadioPlaybackMappersCache,
+	val commandDataSupplier: CommandDataSupplier,
+	val commandsCacheBean: CommandsCacheBean,
+	val commandHelpMessageBean: CommandHelpMessageBean,
 )

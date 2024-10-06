@@ -16,9 +16,6 @@ vault:
 jda:
   secret-token: ${vault:V_JDA_SECRET}
   default-activity: tracks
-  pagination:
-    max-elements-per-page: 20
-    menu-alive-sec: 60
   splashes:
     enabled: true
     interval-sec: 5
@@ -75,6 +72,12 @@ jda:
   superuser-permissions:
     - ADMINISTRATOR
     - MANAGE_SERVER
+
+link:
+  website: https://jwizard.pl
+  repository: https://github.com/jwizard-bot
+  docs: '%s/docs'
+  command: '%s/command/%s'
 
 lavalink:
   timeout-ms: 5000
