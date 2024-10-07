@@ -2,40 +2,32 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.command.embed
+package pl.jwizard.jwc.api
 
 import net.dv8tion.jda.api.entities.MessageEmbed
-import org.springframework.stereotype.Component
+import pl.jwizard.jwc.command.CommandBase
+import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.event.context.CommandContext
 import pl.jwizard.jwc.command.reflect.CommandDetails
-import pl.jwizard.jwc.core.i18n.I18nBean
 import pl.jwizard.jwc.core.i18n.source.I18nDynamicMod
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
-import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
+import pl.jwizard.jwc.core.jda.command.CommandResponse
+import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotProperty
-import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.util.mdBold
 import pl.jwizard.jwc.core.util.mdLink
 import java.util.*
 
 /**
- * A component responsible for creating help messages containing available bot commands and their descriptions. This
- * bean is used to generate message embeds that display helpful links and information about the bot's commands.
+ * Abstract base class for handling bot help commands, providing common functionality for displaying available commands
+ * in an organized and paginated format.
  *
- * @property i18nBean Provides internationalization support for translating commands and descriptions.
- * @property jdaColorStoreBean Provides color themes for the embed messages.
- * @property environmentBean Provides environment properties, such as links to documentation, source code, and the
- *           website.
+ * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-@Component
-class CommandHelpMessageBean(
-	private val i18nBean: I18nBean,
-	private val jdaColorStoreBean: JdaColorStoreBean,
-	private val environmentBean: EnvironmentBean,
-) {
+abstract class HelpCommandBase(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
 
 	companion object {
 		/**
@@ -46,6 +38,27 @@ class CommandHelpMessageBean(
 	}
 
 	/**
+	 * Executes the help command, generating and displaying paginated help information for all available commands.
+	 *
+	 * @param context The context of the command execution, containing guild, user, and other relevant data.
+	 * @param response The future response object used to send back the command output to Discord.
+	 */
+	final override fun execute(context: CommandContext, response: TFutureResponse) {
+		val commands = executeHelp(context, response)
+
+		val paginator = createPaginator(context, createHelpComponents(context, commands))
+		val row = paginator.createPaginatorButtonsRow()
+		val initMessage = paginator.initPaginator()
+
+		val commandResponse = CommandResponse.Builder()
+			.addEmbedMessages(initMessage)
+			.addActionRows(row)
+			.build()
+
+		response.complete(commandResponse)
+	}
+
+	/**
 	 * Creates a list of embed messages containing available bot commands and their descriptions. The commands are split
 	 * into chunks, and each chunk is displayed in a separate embed.
 	 *
@@ -53,7 +66,10 @@ class CommandHelpMessageBean(
 	 * @param commands A map of command names and their details to be included in the embed.
 	 * @return A list of MessageEmbed objects, each containing a chunk of commands with descriptions.
 	 */
-	fun createHelpComponents(context: CommandContext, commands: Map<String, CommandDetails>): List<MessageEmbed> {
+	private fun createHelpComponents(
+		context: CommandContext,
+		commands: Map<String, CommandDetails>,
+	): List<MessageEmbed> {
 		val sortedCommands = commands.toSortedMap()
 
 		val website = environmentBean.getProperty<String>(BotProperty.LINK_WEBSITE)
@@ -134,7 +150,7 @@ class CommandHelpMessageBean(
 		val messages = mutableListOf<MessageEmbed>()
 
 		for ((index, chunk) in listOfChunkedCommands.withIndex()) {
-			val messageBuilder = MessageEmbedBuilder(i18nBean, jdaColorStoreBean, context)
+			val messageBuilder = MessageEmbedBuilder(i18nBean, commandEnvironment.jdaColorStoreBean, context)
 			if (index == 0) {
 				messageBuilder.setTitle(i18nBean.t(I18nResponseSource.HELP, lang))
 				messageBuilder.setDescription(descriptionElements.joinToString("\n"))
@@ -149,4 +165,14 @@ class CommandHelpMessageBean(
 		}
 		return messages
 	}
+
+	/**
+	 * Abstract method that must be implemented to provide the help information for commands. It should return a map of
+	 * command names and their details, which will be used to build the help message.
+	 *
+	 * @param context The context of the command execution, containing guild, user, and other relevant data.
+	 * @param response The future response object used to send back the command output to Discord.
+	 * @return A map of command names and their corresponding CommandDetails.
+	 */
+	protected abstract fun executeHelp(context: CommandContext, response: TFutureResponse): Map<String, CommandDetails>
 }

@@ -4,12 +4,12 @@
  */
 package pl.jwizard.jwc.api.misc
 
-import pl.jwizard.jwc.command.CommandBase
+import pl.jwizard.jwc.api.HelpCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.event.context.CommandContext
 import pl.jwizard.jwc.command.refer.Command
+import pl.jwizard.jwc.command.reflect.CommandDetails
 import pl.jwizard.jwc.command.reflect.JdaCommand
-import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 
 /**
@@ -20,34 +20,18 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
  * @author Miłosz Gilga
  */
 @JdaCommand(id = Command.HELP)
-class HelpCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
+class HelpCmd(commandEnvironment: CommandEnvironmentBean) : HelpCommandBase(commandEnvironment) {
 
 	/**
-	 * Executes the Help command, sending a paginated response to the user with the list of available commands.
+	 * Retrieves and returns a map of commands that are enabled for the current guild. This method is invoked by the
+	 * [HelpCommandBase] class to display available bot commands.
 	 *
-	 * The method first retrieves the enabled commands for the guild based on the event type (slash or text command).
-	 * It then filters the cached commands to include only those available in the current guild. After that,
-	 * the method uses [commandHelpMessageBean] to generate help messages, splits them into pages, and sends them
-	 * with paginator buttons.
-	 *
-	 * @param context The command context, which contains information about the guild, user, and message event.
-	 * @param response The future response object, which allows sending the command response asynchronously.
+	 * @param context The context of the command execution, containing guild, user, and event information.
+	 * @param response The future response object used to send back the command output to Discord.
+	 * @return A map of command names and their corresponding details, filtered based on the guild's settings.
 	 */
-	override fun execute(context: CommandContext, response: TFutureResponse) {
+	override fun executeHelp(context: CommandContext, response: TFutureResponse): Map<String, CommandDetails> {
 		val enabledCommands = commandDataSupplier.getEnabledGuildCommandKeys(context.guildDbId, context.isSlashEvent)
-		val guildCommands = commandsCacheBean.commands.filter { it.key in enabledCommands }
-
-		val messages = commandHelpMessageBean.createHelpComponents(context, guildCommands)
-
-		val paginator = createPaginator(context, messages)
-		val row = paginator.createPaginatorButtonsRow()
-		val initMessage = paginator.initPaginator()
-
-		val commandResponse = CommandResponse.Builder()
-			.addEmbedMessages(initMessage)
-			.addActionRows(row)
-			.build()
-
-		response.complete(commandResponse)
+		return commandsCacheBean.commands.filter { it.key in enabledCommands }
 	}
 }
