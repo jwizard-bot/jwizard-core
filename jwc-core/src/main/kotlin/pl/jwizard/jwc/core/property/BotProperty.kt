@@ -33,8 +33,6 @@ import kotlin.reflect.KClass
  * - [JDA_SPLASHES_ENABLED]: JDA splashes toggle boolean property. If true, splashes are enabled, otherwise show nothing.
  * - [JDA_SPLASHES_INTERVAL_SEC]: JDA splashes interval in seconds.
  * - [JDA_COLOR_PRIMARY]: JDA primary color in embed messages.
- * - [JDA_COLOR_SECONDARY]: JDA secondary color in embed messages.
- * - [JDA_COLOR_TINT]: JDA tint color in embed messages.
  * - [JDA_COLOR_DANGER]: JDA danger color in embed messages.
  * - [JDA_INTERACTION_MESSAGE_MAX_EMBEDS]: Maximum embeds messages in single JDA command interaction.
  * - [JDA_INTERACTION_MESSAGE_ACTION_ROW_MAX_ROWS]: Maximum action rows in single JDA command message with custom
@@ -181,16 +179,6 @@ enum class BotProperty(
 	 * JDA primary color in embed messages.
 	 */
 	JDA_COLOR_PRIMARY("jda.color.primary", Int::class),
-
-	/**
-	 * JDA secondary color in embed messages.
-	 */
-	JDA_COLOR_SECONDARY("jda.color.secondary", Int::class),
-
-	/**
-	 * JDA tint color in embed messages.
-	 */
-	JDA_COLOR_TINT("jda.color.tint", Int::class),
 
 	/**
 	 * JDA danger color in embed messages.

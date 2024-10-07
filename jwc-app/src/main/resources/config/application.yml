@@ -51,9 +51,7 @@ jda:
       - SCHEDULED_EVENTS
       - STICKER
   color:
-    primary: 0xFFFFFF
-    secondary: 0x000000
-    tint: 0x505050
+    primary: 0x4E5058
     danger: 0xEF4444
   interaction:
     message:

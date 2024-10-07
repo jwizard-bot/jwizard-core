@@ -21,16 +21,6 @@ enum class JdaColor(val botProperty: BotProperty) {
 	PRIMARY(BotProperty.JDA_COLOR_PRIMARY),
 
 	/**
-	 * Secondary color used in the bot's interface.
-	 */
-	SECONDARY(BotProperty.JDA_COLOR_SECONDARY),
-
-	/**
-	 * Tint color, often used for highlighting or accents.
-	 */
-	TINT(BotProperty.JDA_COLOR_TINT),
-
-	/**
 	 * Error color, typically used to indicate danger or errors.
 	 */
 	ERROR(BotProperty.JDA_COLOR_DANGER),
