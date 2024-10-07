@@ -41,7 +41,7 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 */
 	final override fun execute(context: CommandContext, response: TFutureResponse) {
 		val musicManager = commandEnvironment.musicManagersBean
-			.getOrCreateMusicManager(context, commandEnvironment.lavalinkClientBean)
+			.getOrCreateMusicManager(context, commandEnvironment.distributedAudioClientSupplier)
 
 		val musicTextChannel = context.musicTextChannelId?.let { context.getTextChannel(it) }
 		val musicTextChannelId = musicTextChannel?.idLong

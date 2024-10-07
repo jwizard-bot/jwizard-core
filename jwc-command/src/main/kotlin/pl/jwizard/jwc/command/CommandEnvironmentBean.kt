@@ -5,9 +5,8 @@
 package pl.jwizard.jwc.command
 
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.command.embed.CommandHelpMessageBean
 import pl.jwizard.jwc.command.spi.CommandDataSupplier
-import pl.jwizard.jwc.core.audio.spi.LavalinkClientSupplier
+import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
 import pl.jwizard.jwc.core.audio.spi.MusicManagersSupplier
 import pl.jwizard.jwc.core.i18n.I18nBean
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
@@ -26,14 +25,13 @@ import pl.jwizard.jwc.radio.spi.RadioStationSupplier
  * @property jdaColorStoreBean Handles color settings for JDA interactions.
  * @property eventQueueBean Manages event queue for asynchronous processing of JDA events.
  * @property musicManagersBean Supplies music manager instances for voice channel management.
- * @property lavalinkClientBean Supplies Lavalink client instances for audio streaming.
+ * @property distributedAudioClientSupplier Supplies distributed audio client instance for audio streaming.
  * @property jdaInstance Provides access to the JDA instance for Discord interaction.
  * @property guildSettingsEventAction Handles guild settings change events.
  * @property radioStationSupplier Supplies instances related to radio station management.
  * @property radioPlaybackMappersCache Caches radio playback mappers for efficient access.
  * @property commandDataSupplier Supplies metadata and definitions for bot commands.
  * @property commandsCacheBean Caches command-related data to improve command lookup performance.
- * @property commandHelpMessageBean Generates help message components for available bot commands.
  * @author Miłosz Gilga
  */
 @Component
@@ -43,12 +41,11 @@ class CommandEnvironmentBean(
 	val jdaColorStoreBean: JdaColorStoreBean,
 	val eventQueueBean: EventQueueBean,
 	val musicManagersBean: MusicManagersSupplier,
-	val lavalinkClientBean: LavalinkClientSupplier,
+	val distributedAudioClientSupplier: DistributedAudioClientSupplier,
 	val jdaInstance: JdaInstance,
 	val guildSettingsEventAction: GuildSettingsEventAction,
 	val radioStationSupplier: RadioStationSupplier,
 	val radioPlaybackMappersCache: RadioPlaybackMappersCache,
 	val commandDataSupplier: CommandDataSupplier,
 	val commandsCacheBean: CommandsCacheBean,
-	val commandHelpMessageBean: CommandHelpMessageBean,
 )
