@@ -12,16 +12,16 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
 /**
  * Exception thrown when a command is invoked while a radio station is already playing.
  *
- * @param commandBaseContext The context of the command that caused the exception.
+ * @param context The context of the command that caused the exception.
  * @param command The radio command prefix for stopping the current station.
  * @author Miłosz Gilga
  */
 class RadioStationIsPlayingException(
-	commandBaseContext: CommandBaseContext,
+	context: CommandBaseContext,
 	command: CommandPrefix,
 ) : CommandPipelineExceptionHandler(
-	commandBaseContext,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.RADIO_STATION_IS_PLAYING,
-	variables = mapOf("stopRadioStationCmd" to command.parseWithPrefix(commandBaseContext)),
+	variables = mapOf("stopRadioStationCmd" to command.parseWithPrefix(context)),
 	logMessage = "Attempt to invoke command, while radio station is currently playing.",
 )

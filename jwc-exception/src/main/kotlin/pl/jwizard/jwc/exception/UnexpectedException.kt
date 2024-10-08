@@ -23,7 +23,7 @@ class UnexpectedException(
 	context: CommandBaseContext?,
 	cause: String? = "Unknown command pipeline exception"
 ) : CommandPipelineExceptionHandler(
-	context,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.UNEXPECTED_EXCEPTION,
 	logMessage = "Unexpected bot exception. Cause: \"$cause\"."
 )

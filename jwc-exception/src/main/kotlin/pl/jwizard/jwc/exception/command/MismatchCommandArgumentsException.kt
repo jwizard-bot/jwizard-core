@@ -14,17 +14,17 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
  * This exception indicates that the command invocation has failed due to a mismatch between the required argument
  * structure and what was actually provided by the user.
  *
- * @param commandBaseContext The context in which the command was invoked.
+ * @param context The context in which the command was invoked.
  * @param command The name of the command that was attempted to be executed.
  * @param syntax The expected syntax for the command's arguments.
  * @author Miłosz Gilga
  */
 class MismatchCommandArgumentsException(
-	commandBaseContext: CommandBaseContext,
+	context: CommandBaseContext,
 	command: String,
 	syntax: String,
 ) : CommandPipelineExceptionHandler(
-	commandBaseContext,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.MISMATCH_COMMAND_ARGS,
 	variables = mapOf("syntax" to syntax),
 	logMessage = "Attempt to invoke command: \"$command\" with non-exact arguments.",

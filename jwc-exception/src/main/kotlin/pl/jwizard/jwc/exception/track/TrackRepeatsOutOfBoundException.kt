@@ -11,15 +11,15 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
 /**
  * Exception thrown when the number of track repeats exceeds allowed limits.
  *
- * @param commandBaseContext The context of the command that triggered this exception.
+ * @param context The context of the command that triggered this exception.
  * @param maxRepeats The maximum number of repeats that was attempted to set.
  * @author Miłosz Gilga
  */
 class TrackRepeatsOutOfBoundException(
-	commandBaseContext: CommandBaseContext,
+	context: CommandBaseContext,
 	maxRepeats: Int,
 ) : CommandPipelineExceptionHandler(
-	commandBaseContext,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.TRACK_REPEATS_OUT_OF_BOUNDS,
 	variables = mapOf("maxRepeats" to maxRepeats),
 	logMessage = "Attempt to set out of bounds current audio track repeats number: \"$maxRepeats\".",

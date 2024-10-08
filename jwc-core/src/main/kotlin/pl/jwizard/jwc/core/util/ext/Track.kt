@@ -75,24 +75,6 @@ val Track.mdTitleLinkWithDuration get() = "(${millisToDTF(duration)}): $mdTitleL
 val Track.thumbnailUrl get() = info.artworkUrl
 
 /**
- * Extension property that calculates the elapsed time of the track. This value represents the difference between the
- * total length of the track and the current position of the track.
- *
- * @return The elapsed time of the track.
- * @author Miłosz Gilga
- */
-val Track.elapsedTime get() = info.length - info.position
-
-/**
- * Extension property that retrieves the current playback position of the track. This value indicates how far along the
- * track playback is currently.
- *
- * @return The current playback position of the track in milliseconds.
- * @author Miłosz Gilga
- */
-val Track.timestamp get() = info.position
-
-/**
  *
  * @return
  * @author Miłosz Gilga

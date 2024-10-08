@@ -11,13 +11,13 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
 /**
  * Exception thrown when an attempt is made to move a track to the same position.
  *
- * @param commandBaseContext The context of the command that triggered this exception.
+ * @param context The context of the command that triggered this exception.
  * @author Miłosz Gilga
  */
 class TrackPositionsIsTheSameException(
-	commandBaseContext: CommandBaseContext,
+	context: CommandBaseContext,
 ) : CommandPipelineExceptionHandler(
-	commandBaseContext,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.TRACK_THE_SAME_POSITION,
 	logMessage = "Attempt to move track to the same origin position.",
 )

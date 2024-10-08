@@ -15,8 +15,8 @@ import pl.jwizard.jwc.core.i18n.I18nLocaleSource
  * @see I18nBean
  */
 enum class I18nSystemSource(override val placeholder: String) : I18nLocaleSource {
-	GENERAL_HEADER("jwc.system.header.general"),
-	CONFIGURATION_HEADER("jwc.system.header.configuration"),
+	DEBUG_INFO_HEADER("jwc.system.header.debugInfo"),
+	GUILD_SETTINGS_HEADER("jwc.system.header.guildSettings"),
 	VERSIONS_HEADER("jwc.system.header.versions"),
 	JVM_HEADER("jwc.system.header.javaVirtualMachine"),
 	BOT_LOCALE("jwc.system.botLocale"),

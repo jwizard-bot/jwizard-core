@@ -20,7 +20,6 @@ import pl.jwizard.jwc.exception.track.TrackQueueIsEmptyException
  * functionalities. It includes checks for the audio player state and user permissions related to music commands.
  *
  * @param commandEnvironment The environment context for executing the command.
- * @constructor Initializes the MusicCommandBase with the provided command environment.
  * @author Miłosz Gilga
  */
 abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : AudioCommandBase(commandEnvironment) {

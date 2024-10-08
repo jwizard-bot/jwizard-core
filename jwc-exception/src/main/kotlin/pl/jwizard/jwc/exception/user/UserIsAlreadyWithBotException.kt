@@ -13,15 +13,15 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
 /**
  * Exception thrown when a user attempts to invoke a command while already being in the same voice channel as the bot.
  *
- * @param commandBaseContext The context of the command that caused the exception.
+ * @param context The context of the command that caused the exception.
  * @param channel The voice channel where the user and bot are currently connected.
  * @author Miłosz Gilga
  */
 class UserIsAlreadyWithBotException(
-	commandBaseContext: CommandBaseContext,
+	context: CommandBaseContext,
 	channel: Channel,
 ) : CommandPipelineExceptionHandler(
-	commandBaseContext,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.USER_ID_ALREADY_WITH_BOT,
 	logMessage = "Attempt to invoke command, while user is together with bot on channel: \"${channel.qualifier}\".",
 )

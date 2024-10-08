@@ -58,26 +58,6 @@ class I18nBean(
 	}
 
 	/**
-	 * Retrieves the name of a language based on the provided language tag.
-	 *
-	 * This function checks if the list of languages is empty. If it is, it uses the default language from the
-	 * environment properties. If languages are available, it uses the provided language tag to find the corresponding
-	 * name. If no match is found, it returns a question mark.
-	 *
-	 * @param languageTag The tag of the language to retrieve the name for (ex. *en*).
-	 * @return The name of the language, or *?* if the language tag is not found.
-	 */
-	fun getLanguageName(languageTag: String): String {
-		val languages = i18nInitializerBean.languages
-		val key = if (languages.entries.isEmpty()) {
-			environmentBean.getProperty(BotProperty.I18N_DEFAULT_LANGUAGE)
-		} else {
-			languageTag
-		}
-		return languages[key] ?: ""
-	}
-
-	/**
 	 * Retrieves raw messages for all available languages based on the provided [I18nDynamicMod] and arguments.
 	 *
 	 * This method generates messages for each language by formatting the key from the provided [I18nDynamicMod] using

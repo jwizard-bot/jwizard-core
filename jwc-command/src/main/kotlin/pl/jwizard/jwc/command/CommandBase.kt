@@ -27,7 +27,6 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 	protected val eventQueueBean = commandEnvironment.eventQueueBean
 	protected val commandDataSupplier = commandEnvironment.commandDataSupplier
 	protected val commandsCacheBean = commandEnvironment.commandsCacheBean
-	protected val commandHelpMessageBean = commandEnvironment.commandHelpMessageBean
 
 	/**
 	 * A list of permissions assigned to superusers.
@@ -44,7 +43,7 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 	 * @return A configured MessageEmbedBuilder instance.
 	 */
 	protected fun createEmbedMessage(context: CommandContext) =
-		MessageEmbedBuilder(commandEnvironment.i18nBean, commandEnvironment.jdaColorStoreBean, context)
+		MessageEmbedBuilder(i18nBean, commandEnvironment.jdaColorStoreBean, context)
 
 	/**
 	 * Creates a paginator for displaying multiple pages of content.
@@ -56,7 +55,7 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 	protected fun createPaginator(context: CommandContext, pages: List<MessageEmbed>) = Paginator(
 		context,
 		i18nBean,
-		eventQueueBean = commandEnvironment.eventQueueBean,
+		eventQueueBean,
 		jdaColorStoreBean = commandEnvironment.jdaColorStoreBean,
 		pages,
 	)

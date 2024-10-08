@@ -11,13 +11,13 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
 /**
  * Exception thrown when an action is attempted on an empty track queue.
  *
- * @param commandBaseContext The context of the command that triggered this exception.
+ * @param context The context of the command that triggered this exception.
  * @author Miłosz Gilga
  */
 class TrackQueueIsEmptyException(
-	commandBaseContext: CommandBaseContext,
+	context: CommandBaseContext,
 ) : CommandPipelineExceptionHandler(
-	commandBaseContext,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.TRACK_QUEUE_IS_EMPTY,
 	logMessage = "Attempt to perform action on empty track queue.",
 )

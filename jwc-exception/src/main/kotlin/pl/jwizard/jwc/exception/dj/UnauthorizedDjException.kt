@@ -11,15 +11,15 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
 /**
  * Exception thrown when a user attempts to invoke a DJ command without the required DJ role.
  *
- * @param commandBaseContext The context of the command that triggered this exception.
+ * @param context The context of the command that triggered this exception.
  * @param djRoleName The name of the missing DJ role required to execute the command.
  * @author Miłosz Gilga
  */
 class UnauthorizedDjException(
-	commandBaseContext: CommandBaseContext,
+	context: CommandBaseContext,
 	djRoleName: String,
 ) : CommandPipelineExceptionHandler(
-	commandBaseContext,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.UNAUTHORIZED_DJ,
 	logMessage = "Attempt to invoke DJ command without DJ role: \"$djRoleName\".",
 )

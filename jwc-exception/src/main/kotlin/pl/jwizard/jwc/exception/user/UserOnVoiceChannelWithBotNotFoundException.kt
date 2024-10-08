@@ -13,17 +13,17 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
 /**
  * Exception thrown when a command is invoked but the user is not in the same voice channel as the bot.
  *
- * @param commandBaseContext The context of the command that caused the exception.
+ * @param context The context of the command that caused the exception.
  * @param userChannel The voice channel where the user is currently connected.
  * @param botChannel The voice channel where the bot is currently connected.
  * @author Miłosz Gilga
  */
 class UserOnVoiceChannelWithBotNotFoundException(
-	commandBaseContext: CommandBaseContext,
+	context: CommandBaseContext,
 	userChannel: Channel?,
 	botChannel: Channel?,
 ) : CommandPipelineExceptionHandler(
-	commandBaseContext,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.USER_ON_VOICE_CHANNEL_WITH_BOT_NOT_FOUND,
 	logMessage = """
 		Attempt to invoke command while user is not in voice channel with bot.

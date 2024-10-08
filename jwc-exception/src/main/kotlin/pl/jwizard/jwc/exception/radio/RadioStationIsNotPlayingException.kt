@@ -12,16 +12,16 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
 /**
  * Exception thrown when a command is invoked but there is no radio station currently playing.
  *
- * @param commandBaseContext The context of the command that caused the exception.
+ * @param context The context of the command that caused the exception.
  * @param command The radio command prefix for retrying the operation if necessary.
  * @author Miłosz Gilga
  */
 class RadioStationIsNotPlayingException(
-	commandBaseContext: CommandBaseContext,
+	context: CommandBaseContext,
 	command: CommandPrefix,
 ) : CommandPipelineExceptionHandler(
-	commandBaseContext,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.RADIO_STATION_IS_NOT_PLAYING,
-	variables = mapOf("playRadioStationCmd" to command.parseWithPrefix(commandBaseContext)),
+	variables = mapOf("playRadioStationCmd" to command.parseWithPrefix(context)),
 	logMessage = "Attempt to invoke command, while radio station is not playing.",
 )

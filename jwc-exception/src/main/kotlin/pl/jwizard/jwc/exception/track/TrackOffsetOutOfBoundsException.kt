@@ -11,17 +11,17 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
 /**
  * Exception thrown when an offset is attempted outside the valid range in a track queue.
  *
- * @param commandBaseContext The context of the command that triggered this exception.
+ * @param context The context of the command that triggered this exception.
  * @param offset The attempted offset value.
  * @param maxOffset The maximum allowable offset value.
  * @author Miłosz Gilga
  */
 class TrackOffsetOutOfBoundsException(
-	commandBaseContext: CommandBaseContext,
+	context: CommandBaseContext,
 	offset: Int,
 	maxOffset: Int,
 ) : CommandPipelineExceptionHandler(
-	commandBaseContext,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.TRACK_OFFSET_OUT_OF_BOUNDS,
 	variables = mapOf("maxOffset" to maxOffset),
 	logMessage = """

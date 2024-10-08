@@ -36,8 +36,8 @@ class GuildSettingsEventActionBean(
 ) : GuildSettingsEventAction {
 
 	/**
-	 * Creates settings for a specific guild in the system. If the guild already has settings,
-	 * no action is taken and false is returned.
+	 * Creates settings for a specific guild in the system. If the guild already has settings, no action is taken and
+	 * false is returned.
 	 *
 	 * @param guildId Unique identifier of the guild.
 	 * @param guildLocale Locale used by the guild for language settings.

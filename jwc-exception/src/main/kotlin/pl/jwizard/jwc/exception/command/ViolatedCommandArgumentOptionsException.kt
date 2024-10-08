@@ -14,7 +14,7 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
  * This exception is triggered when a user provides a value for a command argument that is not among the accepted
  * options, indicating that the invocation of the command failed due to invalid argument input.
  *
- * @param commandBaseContext The context in which the command was invoked.
+ * @param context The context in which the command was invoked.
  * @param violatedArgName The name of the argument that has been violated.
  * @param violatedValue The value provided for the violated argument. Might be null.
  * @param acceptedValueList A list of accepted values for the argument.
@@ -22,13 +22,13 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
  * @author Miłosz Gilga
  */
 class ViolatedCommandArgumentOptionsException(
-	commandBaseContext: CommandBaseContext,
+	context: CommandBaseContext,
 	violatedArgName: String,
 	violatedValue: Any?,
 	acceptedValueList: List<String>,
 	acceptedValuesFormatted: String,
 ) : CommandPipelineExceptionHandler(
-	commandBaseContext,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.VIOLATED_COMMAND_ARG_OPTIONS,
 	variables = mapOf(
 		"violatedArgName" to violatedArgName,

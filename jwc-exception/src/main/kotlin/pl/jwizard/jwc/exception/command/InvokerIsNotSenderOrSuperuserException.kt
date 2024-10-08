@@ -12,13 +12,13 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
  * Exception thrown when an action is invoked by a user who is neither the sender nor a superuser (moderator, owner,
  * or DJ).
  *
- * @param commandBaseContext The context of the command that triggered this exception.
+ * @param context The context of the command that triggered this exception.
  * @author Miłosz Gilga
  */
 class InvokerIsNotSenderOrSuperuserException(
-	commandBaseContext: CommandBaseContext,
+	context: CommandBaseContext,
 ) : CommandPipelineExceptionHandler(
-	commandBaseContext,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.INVOKER_IS_NOT_SENDER_OR_SUPERUSER,
 	logMessage = "Attempt to invoke action while invoker is not sender or super-user (moderator, owner or dj).",
 )

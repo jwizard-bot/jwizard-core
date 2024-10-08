@@ -12,15 +12,15 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
  * Exception thrown when an attempt is made to perform an action on tracks from a user who has not added any tracks to
  * the queue.
  *
- * @param commandBaseContext the context of the command where the exception occurred.
+ * @param context the context of the command where the exception occurred.
  * @param userId the ID of the user who attempted to perform the action without having added tracks to the queue.
  * @author Miłosz Gilga
  */
 class UserNotAddedTracksToQueueException(
-	commandBaseContext: CommandBaseContext,
+	context: CommandBaseContext,
 	userId: Long,
 ) : CommandPipelineExceptionHandler(
-	commandBaseContext,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.USER_NOT_ADDED_TRACKS_TO_QUEUE,
 	logMessage = "Attempt to perform action on tracks from user: \"$userId\" which not added any track in queue.",
 )

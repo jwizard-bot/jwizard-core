@@ -72,7 +72,7 @@ class JdbcKtTemplateBean(private val datasource: DataSource) : JdbcTemplate(data
 	 * @return A map where each key-value pair is derived from the specified columns in the query result.
 	 */
 	fun <U : Any, V : Any> queryForListMap(sql: String, key: ColumnDef<U>, value: ColumnDef<V>, vararg args: Any) =
-		query(sql, { rs, _ ->
+		query(sql.trimIndent(), { rs, _ ->
 			key.type.cast(rs.getObject(key.columnName)) to value.type.cast(rs.getObject(value.columnName))
 		}, *args).toMap()
 
@@ -172,7 +172,7 @@ class JdbcKtTemplateBean(private val datasource: DataSource) : JdbcTemplate(data
 	 * @return The result of the query mapped to type [T], or null if no result is found.
 	 */
 	fun <T : Any> queryForDataClass(sql: String, type: KClass<T>, vararg args: Any): T? =
-		super.query(sql, DataClassRowMapper(type.java), *args).firstOrNull()
+		super.query(sql.trimIndent(), DataClassRowMapper(type.java), *args).firstOrNull()
 
 	/**
 	 * Executes a query and retrieves a single result, which may be null.
@@ -187,7 +187,7 @@ class JdbcKtTemplateBean(private val datasource: DataSource) : JdbcTemplate(data
 	 * @return The result of the query cast to type [T], or null if no result is found.
 	 */
 	fun <T : Any> queryForObject(sql: String, type: KClass<T>, vararg args: Any): T? =
-		super.queryForObject(sql, type.java, *args)
+		super.queryForObject(sql.trimIndent(), type.java, *args)
 
 	/**
 	 * Executes a query and retrieves a list of results.
@@ -202,7 +202,7 @@ class JdbcKtTemplateBean(private val datasource: DataSource) : JdbcTemplate(data
 	 * @return A list of results cast to type [T], or an empty list if no results are found.
 	 */
 	fun <T : Any> queryForList(sql: String, type: KClass<T>, vararg args: Any): List<T> =
-		super.queryForList(sql, type.java, *args) ?: emptyList()
+		super.queryForList(sql.trimIndent(), type.java, *args) ?: emptyList()
 
 	/**
 	 * Executes a query and retrieves a single boolean result, defaulting to false if no result is found.
@@ -215,5 +215,5 @@ class JdbcKtTemplateBean(private val datasource: DataSource) : JdbcTemplate(data
 	 * @return The result of the query as a boolean value, or false if no result is found.
 	 */
 	fun queryForBool(sql: String, vararg args: Any) =
-		queryForNullableObject(sql, Boolean::class, *args) ?: false
+		queryForNullableObject(sql.trimIndent(), Boolean::class, *args) ?: false
 }

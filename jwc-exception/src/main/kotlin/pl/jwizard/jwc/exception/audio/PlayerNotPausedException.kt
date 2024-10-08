@@ -11,13 +11,13 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
 /**
  * Exception thrown when a command is invoked while the audio player is not paused.
  *
- * @param commandBaseContext The context of the command that triggered this exception.
+ * @param context The context of the command that triggered this exception.
  * @author Miłosz Gilga
  */
 class PlayerNotPausedException(
-	commandBaseContext: CommandBaseContext,
+	context: CommandBaseContext,
 ) : CommandPipelineExceptionHandler(
-	commandBaseContext,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.PLAYER_NOT_PAUSED,
 	logMessage = "Attempt to invoke command while audio player is not paused.",
 )

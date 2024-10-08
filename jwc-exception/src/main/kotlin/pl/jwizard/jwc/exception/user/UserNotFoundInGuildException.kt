@@ -11,15 +11,15 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
 /**
  * Exception thrown when an attempt is made to find a user in the current guild, but the user is not a member.
  *
- * @param commandBaseContext the context of the command where the exception occurred.
+ * @param context the context of the command where the exception occurred.
  * @param userId the ID of the user who was attempted to be found in the guild but is not present.
  * @author Miłosz Gilga
  */
 class UserNotFoundInGuildException(
-	commandBaseContext: CommandBaseContext,
+	context: CommandBaseContext,
 	userId: Long,
 ) : CommandPipelineExceptionHandler(
-	commandBaseContext,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.USER_NOT_FOUND_IN_GUILD,
 	logMessage = "Attempt to find user with ID: \"$userId\" which is not member of current guild.",
 )

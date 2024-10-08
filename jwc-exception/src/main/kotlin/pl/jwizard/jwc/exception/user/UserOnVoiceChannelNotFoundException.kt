@@ -11,13 +11,13 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
 /**
  * Exception thrown when a command is invoked while the user is not connected to any voice channel.
  *
- * @param commandBaseContext The context of the command that caused the exception.
+ * @param context The context of the command that caused the exception.
  * @author Miłosz Gilga
  */
 class UserOnVoiceChannelNotFoundException(
-	commandBaseContext: CommandBaseContext,
+	context: CommandBaseContext,
 ) : CommandPipelineExceptionHandler(
-	commandBaseContext,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.USER_ON_VOICE_CHANNEL_NOT_FOUND,
 	logMessage = "Attempt to invoke command while user is not in voice channel.",
 )

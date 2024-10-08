@@ -13,17 +13,17 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
 /**
  * Exception thrown when a command is attempted in a forbidden channel that does not allow the execution of that command.
  *
- * @param commandBaseContext The context of the command that caused the exception.
+ * @param context The context of the command that caused the exception.
  * @param forbiddenChannel The channel where the command was attempted but not allowed.
  * @param acceptedChannel The channel where the command is accepted.
  * @author Miłosz Gilga
  */
 class ForbiddenChannelException(
-	commandBaseContext: CommandBaseContext,
+	context: CommandBaseContext,
 	forbiddenChannel: Channel?,
 	acceptedChannel: Channel?,
 ) : CommandPipelineExceptionHandler(
-	commandBaseContext,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.FORBIDDEN_CHANNEL,
 	variables = mapOf("acceptChannel" to acceptedChannel?.name),
 	logMessage = """

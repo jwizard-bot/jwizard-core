@@ -11,13 +11,13 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
 /**
  * Exception thrown when a command is invoked while the bot is not playing any audio content.
  *
- * @param commandBaseContext The context of the command that triggered this exception.
+ * @param context The context of the command that triggered this exception.
  * @author Miłosz Gilga
  */
 class ActiveAudioPlayingNotFoundException(
-	commandBaseContext: CommandBaseContext,
+	context: CommandBaseContext,
 ) : CommandPipelineExceptionHandler(
-	commandBaseContext,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.ACTIVE_AUDIO_PLAYING_NOT_FOUND,
 	logMessage = "Attempt to invoke command while bot is not playing any audio content.",
 )

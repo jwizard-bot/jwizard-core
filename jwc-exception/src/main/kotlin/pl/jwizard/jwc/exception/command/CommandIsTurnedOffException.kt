@@ -14,17 +14,16 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
  * This exception indicates that a command cannot be executed because it is currently disabled. It provides context
  * about the command that was attempted to be executed.
  *
- * @param commandBaseContext The context of the command invocation, providing details about the command's execution
- *        environment.
+ * @param context The context of the command invocation, providing details about the command's execution environment.
  * @param commandName The name of the command that was attempted to be executed.
  * @author Miłosz Gilga
  */
 class CommandIsTurnedOffException(
-	commandBaseContext: CommandBaseContext,
+	context: CommandBaseContext,
 	commandName: String
 ) : CommandPipelineExceptionHandler(
-	commandBaseContext,
+	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.COMMAND_IS_TURNED_OFF,
-	variables = mapOf("command" to commandName),
+	variables = mapOf("command" to "${context.prefix}$commandName"),
 	logMessage = "Attempt to execute turned off command. Command: \"$commandName\".",
 )
