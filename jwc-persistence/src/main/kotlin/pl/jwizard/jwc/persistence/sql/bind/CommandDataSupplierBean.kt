@@ -31,43 +31,43 @@ class CommandDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean
 	override fun getCommands(): Map<String, CommandDetails> {
 		val sql = """
 			SELECT
-				c.name, c.id, alias, arg argI18nKey, cm.id module, /* command */
-				ca.name argName, ca.casted_type type, ca.is_required required, cab.arg_pos position, /* argument */
-				cao.option_key optionKey /* argument option */
-			FROM bot_commands c
-			LEFT JOIN command_arg_options cao ON cao.command_id = c.id
-			LEFT JOIN commands_args_binding cab ON cab.command_id = c.id
-			LEFT JOIN command_args ca ON ca.id = cab.arg_id 
-			INNER JOIN command_modules cm ON cm.id = c.module_id
+				c.name cmdName, c.id cmdId, alias cmdAlias, arg argI18nKey, m.id cmdModule, /* command */
+				ca.name argName, ca.casted_type argType, ca.required argRequired, csa.position argPosition, /* argument */
+				ao.name optName /* argument option */
+			FROM commands c
+			LEFT JOIN argument_options ao ON ao.command_id = c.id
+			LEFT JOIN commands_arguments csa ON csa.command_id = c.id
+			LEFT JOIN command_arguments ca ON ca.id = csa.argument_id 
+			INNER JOIN modules m ON m.id = c.module_id
 		""".trimIndent()
 
 		val commands = mutableMapOf<String, CommandDetails>()
 		val rawCommands = jdbcKtTemplateBean.queryForList(sql)
 
 		rawCommands.forEach {
-			val commandDetails = commands.getOrPut(it["name"] as String) {
+			val commandDetails = commands.getOrPut(it["cmdName"] as String) {
 				val argI18nKey = it["argI18nKey"]
 				CommandDetails(
-					id = it["id"] as BigInteger,
-					name = it["name"] as String,
-					alias = it["alias"] as String,
+					id = it["cmdId"] as BigInteger,
+					name = it["cmdName"] as String,
+					alias = it["cmdAlias"] as String,
 					argI18nKey = if (argI18nKey != null) argI18nKey as String else null,
-					moduleId = it["module"] as BigInteger,
-					args = mutableListOf()
+					moduleId = it["cmdModule"] as BigInteger,
+					args = mutableListOf(),
 				)
 			}
 			val argName = it["argName"]
 			if (argName != null && commandDetails.args.none { arg -> arg.name == argName }) {
 				val arg = CommandArgumentDetails(
 					name = argName as String,
-					type = it["type"] as String,
-					required = it["required"] as Boolean,
-					position = it["position"] as Long,
-					options = mutableListOf()
+					type = it["argType"] as String,
+					required = it["argRequired"] as Boolean,
+					position = it["argPosition"] as Long,
+					options = mutableListOf(),
 				)
 				commandDetails.args.add(arg)
 			}
-			val optionKey = it["optionKey"]
+			val optionKey = it["optName"]
 			if (optionKey != null) {
 				val arg = commandDetails.args.find { arg -> arg.name == argName }
 				arg?.options?.add(optionKey as String)
@@ -90,11 +90,11 @@ class CommandDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean
 	override fun getEnabledGuildCommandKeys(guildDbId: BigInteger, slashCommands: Boolean): List<String> {
 		val sql = jdbcKtTemplateBean.parse(
 			"""
-				SELECT c.name FROM guilds_commands_binding cb
-				INNER JOIN bot_commands c ON cb.command_id = c.id
-				WHERE cb.guild_id = ? {{condition}}
+				SELECT c.name FROM commands c
+				LEFT JOIN guilds_disabled_commands gdc ON c.id = gdc.command_id AND gdc.guild_id = ?
+				WHERE gdc.command_id IS NULL {{condition}}
 			""",
-			mapOf("condition" to if (slashCommands) "AND cb.is_slash_enabled = TRUE" else "")
+			mapOf("condition" to if (slashCommands) "OR gdc.slash_disabled = FALSE" else "")
 		)
 		return jdbcKtTemplateBean.queryForList(sql, String::class.java, guildDbId)
 	}
@@ -105,7 +105,7 @@ class CommandDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean
 	 * @return A list of strings representing the names of all command arguments.
 	 */
 	override fun getCommandArgumentKeys(): List<String> =
-		jdbcKtTemplateBean.queryForList("SELECT name FROM command_args", String::class.java)
+		jdbcKtTemplateBean.queryForList("SELECT name FROM command_arguments", String::class.java)
 
 	/**
 	 * Retrieves the command properties for a specific guild using its Discord ID.
@@ -118,7 +118,7 @@ class CommandDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean
 		val sql = """
 			SELECT g.id guildDbId, tag lang, legacy_prefix prefix, dj_role_name, slash_enabled, music_text_channel_id
 			FROM guilds g
-			INNER JOIN bot_langs l ON g.lang_id = l.id
+			INNER JOIN languages l ON g.lang_id = l.id
 			WHERE discord_id = ?
 		""".trimIndent()
 		return jdbcKtTemplateBean.queryForDataClass(sql, GuildCommandProperties::class, guildId)
@@ -134,8 +134,8 @@ class CommandDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean
 	 */
 	override fun isCommandEnabled(guildDbId: BigInteger, commandDbId: BigInteger, slashCommand: Boolean): Boolean {
 		val sql = jdbcKtTemplateBean.parse(
-			input = "SELECT COUNT(*) > 0 FROM guilds_commands_binding WHERE command_id = ? AND guild_id = ? {{statement}}",
-			replacements = mapOf("statement" to if (slashCommand) "AND is_slash_enabled = TRUE" else "")
+			input = "SELECT COUNT(*) = 0 FROM guilds_disabled_commands WHERE command_id = ? AND guild_id = ? {{statement}}",
+			replacements = mapOf("statement" to if (slashCommand) "AND slash_disabled = FALSE" else "")
 		)
 		return jdbcKtTemplateBean.queryForBool(sql, commandDbId, guildDbId)
 	}

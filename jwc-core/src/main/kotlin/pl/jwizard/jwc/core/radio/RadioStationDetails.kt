@@ -10,14 +10,14 @@ package pl.jwizard.jwc.core.radio
  * This data class holds information about a radio station including its name, slug, stream URL, proxy stream URL,
  * and an optional cover image.
  *
- * @property radioKey The unique slug identifier for the radio station.
+ * @property name The unique name identifier for the radio station.
  * @property streamUrl The URL for streaming the radio station.
  * @property playbackApiUrl The optional URL for the playback API of the radio station.
  * @property parserClassName The optional name of the class used to parse the playback data.
  * @author Miłosz Gilga
  */
 data class RadioStationDetails(
-	val radioKey: String,
+	val name: String,
 	val streamUrl: String,
 	val playbackApiUrl: String?,
 	val parserClassName: String?,

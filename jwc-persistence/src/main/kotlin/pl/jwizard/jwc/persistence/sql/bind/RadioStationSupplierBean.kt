@@ -6,7 +6,6 @@ package pl.jwizard.jwc.persistence.sql.bind
 
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.radio.RadioStationDetails
-import pl.jwizard.jwc.persistence.sql.ColumnDef
 import pl.jwizard.jwc.persistence.sql.JdbcKtTemplateBean
 import pl.jwizard.jwc.radio.spi.RadioStationSupplier
 import java.math.BigInteger
@@ -24,27 +23,19 @@ import java.math.BigInteger
 class RadioStationSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean) : RadioStationSupplier {
 
 	/**
-	 * Retrieves a map of radio stations from the database.
-	 *
-	 * This method executes a SQL query to fetch radio station names and slugs, and returns them as a map where
-	 * the slug is the key and the name are the value.
+	 * Retrieves a map of radio stations from the database. This method executes a SQL query to fetch radio station
+	 * slugs, and returns them as a list.
 	 *
 	 * @param guildDbId The ID of the guild to filter the radio stations.
-	 * @return A map of radio stations with slugs as keys and names as values.
+	 * @return A list of radio stations slugs.
 	 */
-	override fun getRadioStations(guildDbId: BigInteger): Map<String, String> {
+	override fun getRadioStations(guildDbId: BigInteger): List<String> {
 		val sql = """
-			SELECT name, slug
-			FROM guilds_radio_stations_binding rsb
-			INNER JOIN radio_stations rs ON rsb.radio_station_id = rs.id
-			WHERE guild_id = ?
-		""".trimIndent()
-		return jdbcKtTemplateBean.queryForListMap(
-			sql,
-			ColumnDef("slug", String::class),
-			ColumnDef("name", String::class),
-			guildDbId
-		)
+			SELECT name, slug FROM radios r
+			LEFT JOIN guilds_disabled_radios gdr ON gdr.radio_id = r.id AND gdr.guild_id = ?
+			WHERE gdr.guild_id IS NULL
+		"""
+		return jdbcKtTemplateBean.queryForList(sql, String::class, guildDbId)
 	}
 
 	/**
@@ -59,12 +50,12 @@ class RadioStationSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBea
 	 */
 	override fun getRadioStation(slug: String, guildDbId: BigInteger): RadioStationDetails? {
 		val sql = """
-			SELECT radio_key, stream_url, CONCAT(rspp.url, '/', playback_api) playbackApiUrl, parser_class_name
-			FROM guilds_radio_stations_binding rsb
-			INNER JOIN radio_stations rs ON rsb.radio_station_id = rs.id
-			INNER JOIN radio_station_playback_providers rspp ON rs.api_provider_id = rspp.id
-			WHERE radio_key = ? AND guild_id = ?
-		""".trimIndent()
+			SELECT name, stream_url, CONCAT(rpa.url, '/', playback_api_suffix) playbackApiUrl, parser_class_name
+			FROM radios r
+			INNER JOIN radio_playback_apis rpa ON r.playback_api_id = rpa.id
+			LEFT JOIN guilds_disabled_radios gdr ON gdr.radio_id = r.id AND gdr.guild_id = ?
+			WHERE name = ? AND gdr.guild_id IS NULL
+		"""
 		return jdbcKtTemplateBean.queryForDataClass(sql, RadioStationDetails::class, slug, guildDbId)
 	}
 }

@@ -22,7 +22,7 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
  */
 class ModuleIsTurnedOffException(
 	commandBaseContext: CommandBaseContext,
-	moduleId: String,
+	moduleId: String?,
 	moduleName: String,
 	commandName: String,
 ) : CommandPipelineExceptionHandler(

@@ -67,7 +67,7 @@ class I18nBean(
 	 * @param args Arguments to format the key pattern.
 	 * @return A map where the keys are language tags and the values are the formatted localized messages.
 	 */
-	fun tRaw(i18nDynamicMod: I18nDynamicMod, args: Array<String>) = i18nInitializerBean.languages.keys.associateWith {
+	fun tRaw(i18nDynamicMod: I18nDynamicMod, args: Array<String?>) = i18nInitializerBean.languages.keys.associateWith {
 		tRaw(i18nDynamicMod, args, it)
 	}
 
@@ -82,7 +82,7 @@ class I18nBean(
 	 * @param lang The language tag representing the desired locale (ex. *en*).
 	 * @return The formatted localized message with placeholders replaced by the corresponding parameters.
 	 */
-	fun tRaw(i18nDynamicMod: I18nDynamicMod, args: Array<String>, lang: String) =
+	fun tRaw(i18nDynamicMod: I18nDynamicMod, args: Array<String?>, lang: String) =
 		tRaw(i18nDynamicMod.key.format(*args), emptyMap(), lang)
 
 	/**

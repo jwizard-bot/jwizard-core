@@ -29,10 +29,10 @@ class LanguageSupplierBean(
 	/**
 	 * Retrieves a map of all supported languages from the database.
 	 *
-	 * @return A map of language tag (keys) and names (values) retrieved from the `bot_langs` table.
+	 * @return A map of language tag (keys) and names (values) retrieved from the `languages` table.
 	 */
 	override fun getLanguages() = jdbcKtTemplateBean.queryForListMap(
-		sql = "SELECT tag, name FROM bot_langs",
+		sql = "SELECT tag, name FROM languages",
 		key = ColumnDef("tag", String::class),
 		value = ColumnDef("name", String::class)
 	)
@@ -44,7 +44,7 @@ class LanguageSupplierBean(
 	 * @return The language tag associated with the specified guild.
 	 */
 	override fun getGuildLanguage(guildId: Long): String? {
-		val sql = "SELECT tag FROM guilds AS g INNER JOIN bot_langs AS l ON g.lang_id = l.id WHERE discord_id = ?"
+		val sql = "SELECT tag FROM guilds g INNER JOIN languages l ON g.lang_id = l.id WHERE discord_id = ?"
 		return jdbcKtTemplateBean.queryForObject(sql, String::class, guildId)
 	}
 
@@ -58,12 +58,12 @@ class LanguageSupplierBean(
 	 *         the default language or the first available language ID in the list.
 	 */
 	override fun getLanguageId(tag: String): BigInteger {
-		val sql = "SELECT id FROM bot_langs WHERE tag = ?"
+		val sql = "SELECT id FROM languages WHERE tag = ?"
 		val language = jdbcKtTemplateBean.queryForObject(sql, BigInteger::class, tag)
 		if (language == null) {
 			val configLanguage = environmentBean.getProperty<String>(BotProperty.I18N_DEFAULT_LANGUAGE)
 			val defaultLanguage = jdbcKtTemplateBean.queryForObject(sql, BigInteger::class, configLanguage)
-				?: return jdbcKtTemplateBean.queryForList("SELECT id FROM bot_langs WHERE", BigInteger::class).first()
+				?: return jdbcKtTemplateBean.queryForList("SELECT id FROM languages", BigInteger::class).first()
 			return defaultLanguage
 		}
 		return language

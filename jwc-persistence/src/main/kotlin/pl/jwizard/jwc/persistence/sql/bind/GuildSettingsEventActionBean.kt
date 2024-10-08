@@ -12,10 +12,8 @@ import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.BotProperty.*
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.property.GuildProperty
-import pl.jwizard.jwc.persistence.sql.BindingTable
 import pl.jwizard.jwc.persistence.sql.JdbcKtTemplateBean
 import pl.jwizard.jwc.persistence.sql.SqlColumn
-import java.math.BigInteger
 import java.sql.JDBCType.*
 
 /**
@@ -53,13 +51,7 @@ class GuildSettingsEventActionBean(
 			return Pair(false, null)
 		}
 		val languageTag = guildLocale.substring(0, 2)
-		val bindingLeftColName = "guild_id"
-		val bindingTables = mapOf(
-			"command_modules" to BindingTable("guilds_modules_binding", bindingLeftColName, "module_id"),
-			"bot_commands" to BindingTable("guilds_commands_binding", bindingLeftColName, "command_id"),
-			"radio_stations" to BindingTable("guilds_radio_stations_binding", bindingLeftColName, "radio_station_id"),
-		)
-		return translationTemplate.execute { st ->
+		return translationTemplate.execute {
 			try {
 				val columns = mapOf(
 					"discord_id" to SqlColumn(guildId, VARCHAR),
@@ -77,15 +69,10 @@ class GuildSettingsEventActionBean(
 					"max_repeats_of_track" to SqlColumn(getProperty(GUILD_MAX_REPEATS_OF_TRACK), INTEGER),
 					"default_volume" to SqlColumn(getProperty(GUILD_DEFAULT_VOLUME), INTEGER),
 				)
-				val keyHolder = jdbcKtTemplateBean.insertMultiples("guilds", columns)
-				val guildDbId = keyHolder.key as BigInteger?
-					?: throw Exception("Could not find generated identifier.")
-				bindingTables.forEach { (key, value) ->
-					jdbcKtTemplateBean.insertIndexesToBindingTable(value, key, guildDbId)
-				}
+				jdbcKtTemplateBean.insertMultiples("guilds", columns)
 				Pair(true, null)
 			} catch (ex: Exception) {
-				st.setRollbackOnly()
+				it.setRollbackOnly()
 				Pair(false, ex.message)
 			}
 		} ?: Pair(false, null)

@@ -63,7 +63,7 @@ abstract class RadioPlaybackMapperHandler(
 	 */
 	override fun createPlaybackDataMessage(details: RadioStationDetails, context: CommandBaseContext): MessageEmbed {
 		if (details.playbackApiUrl == null) {
-			throw RadioStationNotProvidedPlaybackDataException(context, details.radioKey)
+			throw RadioStationNotProvidedPlaybackDataException(context, details.name)
 		}
 		val requestUri = URI.create(details.playbackApiUrl!!)
 		val httpRequest = HttpRequest.newBuilder()
@@ -72,14 +72,14 @@ abstract class RadioPlaybackMapperHandler(
 
 		val response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString())
 		if (response.statusCode() != 200) {
-			throw RadioStationNotProvidedPlaybackDataException(context, details.radioKey)
+			throw RadioStationNotProvidedPlaybackDataException(context, details.name)
 		}
 		val parsedResponse = parsePlaybackData(response.body(), details)
-			?: throw RadioStationNotProvidedPlaybackDataException(context, details.radioKey)
+			?: throw RadioStationNotProvidedPlaybackDataException(context, details.name)
 
 		val radioStationName = i18nBean.tRaw(
 			i18nDynamicMod = I18nDynamicMod.ARG_OPTION_MOD,
-			args = arrayOf("radio", details.radioKey),
+			args = arrayOf("radio", details.name),
 			lang = context.guildLanguage,
 		)
 		val messageBuilder = MessageEmbedBuilder(i18nBean, jdaColorStoreBean, context)

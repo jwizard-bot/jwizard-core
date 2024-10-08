@@ -30,7 +30,7 @@ class ExceptionSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean) 
 	 * @return A map of property keys to tracker integers.
 	 */
 	override fun loadTrackers(): Map<String, Int> = jdbcKtTemplateBean.queryForListMap(
-		sql = "SELECT property_key propKey, tracker FROM bot_exceptions",
+		sql = "SELECT property_key propKey, tracker FROM exceptions",
 		key = ColumnDef("propKey", String::class),
 		value = ColumnDef("tracker", Int::class)
 	)

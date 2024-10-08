@@ -32,10 +32,10 @@ class RemotePropertySupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateB
 	 *         property value and type.
 	 */
 	override fun getGlobalProperties(): MutableMap<String, Pair<String, String>> {
-		val sql = "SELECT prop_key, prop_value, type FROM global_configs"
+		val sql = "SELECT name, value, type FROM default_configs"
 		val properties = mutableMapOf<String, Pair<String, String>>()
 		jdbcKtTemplateBean.query(sql) {
-			properties[it.getString("prop_key")] = it.getString("prop_value") to it.getString("type")
+			properties[it.getString("name")] = it.getString("value") to it.getString("type")
 		}
 		return properties
 	}

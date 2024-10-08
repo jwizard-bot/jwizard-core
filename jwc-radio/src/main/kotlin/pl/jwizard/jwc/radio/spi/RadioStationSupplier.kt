@@ -18,15 +18,13 @@ import java.math.BigInteger
 interface RadioStationSupplier {
 
 	/**
-	 * Retrieves a map of radio stations.
-	 *
-	 * This method should return a map where each entry consists of a radio station slug as the key and its name as
-	 * the value.
+	 * Retrieves a map of radio stations. This method should return a list where each property consists of a radio
+	 * station slug
 	 *
 	 * @param guildDbId The ID of the guild to filter the radio stations.
-	 * @return A map of radio stations with slugs as keys and names as values.
+	 * @return A list of radio stations slugs.
 	 */
-	fun getRadioStations(guildDbId: BigInteger): Map<String, String>
+	fun getRadioStations(guildDbId: BigInteger): List<String>
 
 	/**
 	 * Retrieves a specific radio station based on its slug and guild ID.
