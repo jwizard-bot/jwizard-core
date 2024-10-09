@@ -45,7 +45,7 @@ class StopClearQueueCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandB
 		val playingTrack = manager.cachedPlayer?.track
 		val countOfTracks = manager.audioScheduler.queue.queueSize()
 
-		manager.audioScheduler.stopAndDestroyQueue()
+		manager.audioScheduler.stopAndDestroy()
 
 		val (i18nSourceKey, args) = if (playingTrack == null) {
 			I18nResponseSource.CLEAR_QUEUE to mapOf("countOfTracks" to countOfTracks)

@@ -35,6 +35,14 @@ class MessageEmbedBuilder(
 	fun setTitle(title: String) = apply { super.setTitle(title) }
 
 	/**
+	 * Sets the title of the embed.
+	 *
+	 * @param i18nLocaleSource The title text to set as [I18nLocaleSource].
+	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
+	 */
+	fun setTitle(i18nLocaleSource: I18nLocaleSource) = setTitle(i18nBean.t(i18nLocaleSource, context?.guildLanguage))
+
+	/**
 	 * Sets the author of the embed if context is available.
 	 *
 	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
