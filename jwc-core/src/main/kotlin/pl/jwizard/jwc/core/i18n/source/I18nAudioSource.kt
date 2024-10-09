@@ -35,5 +35,7 @@ enum class I18nAudioSource(override val placeholder: String) : I18nLocaleSource 
 	APPROX_TO_NEXT_TRACK_FROM_QUEUE("jwc.audio.approxToNextTrackFromQueue"),
 	PLAYLIST_AVERAGE_TRACK_DURATION("jwc.audio.playlistAverageTrackDuration"),
 	PLAYLIST_REPEATING_MODE("jwc.audio.playlistRepeatingMode"),
+	ADD_NEW_PLAYLIST("jwc.audio.addNewPlaylist"),
+	ADD_NEW_TRACK("jwc.audio.addNewTrack"),
 	;
 }

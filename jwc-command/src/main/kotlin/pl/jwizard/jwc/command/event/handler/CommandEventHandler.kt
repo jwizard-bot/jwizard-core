@@ -104,7 +104,8 @@ abstract class CommandEventHandler<E : Event>(
 					val moduleName = i18nBean.tRaw(I18nDynamicMod.MODULES_MOD, arrayOf(moduleId), context.guildLanguage)
 					throw ModuleIsTurnedOffException(context, moduleId, moduleName, commandDetails.name)
 				}
-				val enabled = commandDataSupplier.isCommandEnabled(properties.guildDbId, commandDetails.id, false)
+				val enabled = commandDataSupplier
+					.isCommandEnabled(properties.guildDbId, commandDetails.id, commandType == CommandType.SLASH)
 				if (!enabled) {
 					throw CommandIsTurnedOffException(context, commandNameOrAlias)
 				}

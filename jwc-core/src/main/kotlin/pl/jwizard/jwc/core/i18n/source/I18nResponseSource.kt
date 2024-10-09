@@ -23,8 +23,6 @@ enum class I18nResponseSource(override val placeholder: String) : I18nLocaleSour
 	ON_TRACK_START_ON_PAUSED("jwc.response.onTrackStartOnPause"),
 	ON_END_PLAYBACK_QUEUE("jwc.response.onEndPlaybackQueue"),
 	MULTIPLE_REPEATING_TRACK_INFO("jwc.response.multipleRepeatingTrackInfo"),
-	ADD_NEW_PLAYLIST("jwc.response.addNewPlaylist"),
-	ADD_NEW_TRACK("jwc.response.addNewTrack"),
 	PAUSE_TRACK_ON_FORCE_MUTE("jwc.response.pauseTrackOnForceMute"),
 	RESUME_TRACK_ON_FORCE_UNMUTE("jwc.response.resumeTrackOnForceUnmute"),
 

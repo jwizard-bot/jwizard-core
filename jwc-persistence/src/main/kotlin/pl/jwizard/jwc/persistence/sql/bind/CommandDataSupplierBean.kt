@@ -92,9 +92,9 @@ class CommandDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean
 			"""
 				SELECT c.name FROM commands c
 				LEFT JOIN guilds_disabled_commands gdc ON c.id = gdc.command_id AND gdc.guild_id = ?
-				WHERE gdc.command_id IS NULL {{condition}}
+				WHERE gdc.command_id IS NULL OR gdc.{{disabledColName}} = FALSE
 			""",
-			mapOf("condition" to if (slashCommands) "OR gdc.slash_disabled = FALSE" else "")
+			mapOf("disabledColName" to if (slashCommands) "slash_disabled " else "prefix_disabled")
 		)
 		return jdbcKtTemplateBean.queryForList(sql, String::class.java, guildDbId)
 	}
@@ -134,8 +134,12 @@ class CommandDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean
 	 */
 	override fun isCommandEnabled(guildDbId: BigInteger, commandDbId: BigInteger, slashCommand: Boolean): Boolean {
 		val sql = jdbcKtTemplateBean.parse(
-			input = "SELECT COUNT(*) = 0 FROM guilds_disabled_commands WHERE command_id = ? AND guild_id = ? {{statement}}",
-			replacements = mapOf("statement" to if (slashCommand) "AND slash_disabled = FALSE" else "")
+			input = """
+				SELECT IF(COUNT(*) = 0, TRUE, IF(MAX({{disabledColName}}), FALSE, TRUE))
+				FROM guilds_disabled_commands
+				WHERE command_id = ? AND guild_id = ?;
+			""",
+			replacements = mapOf("disabledColName" to if (slashCommand) "slash_disabled" else "prefix_disabled"),
 		)
 		return jdbcKtTemplateBean.queryForBool(sql, commandDbId, guildDbId)
 	}
