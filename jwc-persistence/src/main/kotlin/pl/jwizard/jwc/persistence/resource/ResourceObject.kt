@@ -15,6 +15,7 @@ package pl.jwizard.jwc.persistence.resource
  * - [LOGO]: Represents the logo resource.
  * - [BANNER]: Represents the Discord banner resource.
  * - [I18N_BUNDLE]: Represents the path to internationalization (i18n) resource files.
+ * - [RADIO_STATION]: Represents the path to a radio station's thumbnail image.
  *
  * @property resourcePath The relative path to the resource in the S3 storage.
  * @author Miłosz Gilga
@@ -41,6 +42,14 @@ enum class ResourceObject(val resourcePath: String) {
 	 *
 	 * Example bundle source path: `configuration/i18n-commands_en.properties`
 	 */
-	I18N_BUNDLE("configuration/%s_%s.properties")
+	I18N_BUNDLE("configuration/%s_%s.properties"),
+
+	/**
+	 * Represents the path to a radio station's thumbnail image. The `%s` placeholder is replaced by the station's slug,
+	 * which typically matches the station's identifier in the system.
+	 *
+	 * Example path: `brand/radio-station/{station-slug}.jpg`
+	 */
+	RADIO_STATION("brand/radio-station/%s.jpg"),
 	;
 }
