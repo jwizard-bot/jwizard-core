@@ -44,9 +44,9 @@ class ClearQueueCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBase(
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeDj(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		val audioScheduler = manager.audioScheduler
+		val queueTrackScheduler = manager.state.queueTrackScheduler
 
-		val queueSize = audioScheduler.queue.clearAndGetSize()
+		val queueSize = queueTrackScheduler.queue.clearAndGetSize()
 		log.jdaInfo(context, "Queue was cleared. Removed: %d audio tracks from queue.", queueSize)
 
 		val message = createEmbedMessage(context)

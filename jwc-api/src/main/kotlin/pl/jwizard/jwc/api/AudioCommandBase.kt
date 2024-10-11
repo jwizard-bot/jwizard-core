@@ -73,8 +73,8 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 */
 	protected fun checkPermissions(context: CommandContext, manager: MusicManager): Triple<Boolean, Boolean, Boolean> {
 		val isSender = manager.getAudioSenderId(manager.cachedPlayer?.track) == context.author.idLong
-		val isSuperUser = context.checkIfUserHasPermissions(*(superuserPermissions.toTypedArray()))
-		val isDj = context.checkIfUserHasRoles(context.djRoleName)
+		val isSuperUser = context.checkIfAuthorHasPermissions(*(superuserPermissions.toTypedArray()))
+		val isDj = context.checkIfAuthorHasRoles(context.djRoleName)
 		return Triple(isSender, isDj, isSuperUser)
 	}
 

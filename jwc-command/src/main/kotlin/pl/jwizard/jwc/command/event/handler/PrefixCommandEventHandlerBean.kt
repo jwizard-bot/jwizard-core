@@ -66,7 +66,7 @@ class PrefixCommandEventHandlerBean(
 	 * Defines the command type as legacy for this handler.
 	 */
 	override val commandType
-		get() = CommandType.LEGACY
+		get() = CommandType.PREFIX
 
 	/**
 	 * Handles the message received event by initializing the command processing pipeline.

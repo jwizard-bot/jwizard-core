@@ -74,7 +74,9 @@ class CommandResponse private constructor(
 		 * @param actionRows The action rows to be included in the response.
 		 * @return The Builder instance for chaining.
 		 */
-		fun addActionRows(vararg actionRows: ActionRow) = apply { this.actionRows = actionRows.toList() }
+		fun addActionRows(vararg actionRows: ActionRow?) = apply {
+			this.actionRows = actionRows.filterNotNull().filter { !it.isEmpty }.toList()
+		}
 
 		/**
 		 * Sets whether interaction components (buttons, etc.) should be disabled after certain of time.

@@ -37,18 +37,18 @@ abstract class RadioCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 	 */
 	final override fun executeAudio(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
 		val voiceState = checkUserVoiceState(context)
-		val openedConnection = userIsWithBotOnAudioChannel(voiceState, context)
+		userIsWithBotOnAudioChannel(voiceState, context)
 		val currentContent = manager.cachedPlayer?.track
 		val isQueueTrackState = manager.state.isQueueTrackState()
 		if (isQueueTrackState && currentContent != null) {
-			throw DiscreteAudioStreamIsPlayingException(context, Command.STOP_RADIO)
+			throw DiscreteAudioStreamIsPlayingException(context, Command.STOP)
 		}
 		if (shouldRadioPlaying && (isQueueTrackState || currentContent == null)) {
 			throw RadioStationIsNotPlayingException(context, Command.PLAY_RADIO)
 		} else if (shouldRadioIdle && (!isQueueTrackState && currentContent != null)) {
 			throw RadioStationIsPlayingException(context, Command.STOP_RADIO)
 		}
-		executeRadio(context, manager, response, openedConnection)
+		executeRadio(context, manager, response)
 	}
 
 	/**
@@ -67,12 +67,6 @@ abstract class RadioCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 	 * @param context The context of the command.
 	 * @param manager The music manager handling audio playback.
 	 * @param response The future response object for deferred handling.
-	 * @param openedConnection Whether the bot is already connected to a voice channel with the user.
 	 */
-	protected abstract fun executeRadio(
-		context: CommandContext,
-		manager: MusicManager,
-		response: TFutureResponse,
-		openedConnection: Boolean,
-	)
+	protected abstract fun executeRadio(context: CommandContext, manager: MusicManager, response: TFutureResponse)
 }

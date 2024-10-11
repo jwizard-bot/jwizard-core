@@ -64,9 +64,9 @@ abstract class DjCommandBase(commandEnvironment: CommandEnvironmentBean) : Music
 	 * @return `true` if all tracks were added by the same user; `false` otherwise.
 	 */
 	private fun checkIfAllTracksIsFromSelectedMember(manager: MusicManager, context: CommandContext): Boolean {
-		val audioScheduler = manager.audioScheduler
-		if (audioScheduler.queue.queueSize() == 0) {
-			return manager.getAudioSenderId(manager.cachedPlayer?.track) == context.authorId
+		val audioScheduler = manager.state.queueTrackScheduler
+		if (audioScheduler.queue.size == 0) {
+			return manager.getAudioSenderId(manager.cachedPlayer?.track) == context.author.idLong
 		}
 		return audioScheduler.queue.asList().all { manager.getAudioSenderId(it) == context.author.idLong }
 	}

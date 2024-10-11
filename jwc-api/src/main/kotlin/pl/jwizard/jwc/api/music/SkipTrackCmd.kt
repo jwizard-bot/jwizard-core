@@ -53,7 +53,7 @@ class SkipTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBas
 	override fun executeMusic(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
 		val skippingTrack = manager.cachedPlayer?.track
 
-		manager.audioScheduler.stopAudio()
+		manager.state.queueTrackScheduler.stopTrackAndMayNext()
 		log.jdaInfo(context, "Current playing track: %s was skipped.", skippingTrack?.qualifier)
 
 		val message = createEmbedMessage(context)

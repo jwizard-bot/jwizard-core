@@ -21,6 +21,7 @@ import pl.jwizard.jwc.core.util.ext.thumbnailUrl
 import pl.jwizard.jwc.core.util.millisToDTF
 import pl.jwizard.jwc.exception.audio.ActiveAudioPlayingNotFoundException
 import pl.jwizard.jwc.exception.audio.PlayerNotPausedException
+import pl.jwizard.jwc.exception.command.CommandAvailableOnlyForDiscreteTrackException
 import pl.jwizard.jwc.exception.track.TrackQueueIsEmptyException
 import java.time.Duration
 
@@ -52,8 +53,9 @@ abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 	 * @throws TrackQueueIsEmptyException If the command requires tracks in the queue but none are present.
 	 */
 	final override fun executeAudio(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		// TODO: check, if player is radio station player
-
+		if (!manager.state.isQueueTrackState()) {
+			throw CommandAvailableOnlyForDiscreteTrackException(context)
+		}
 		val player = manager.cachedPlayer
 		val isActive = context.selfMember.voiceState?.channel?.type == ChannelType.VOICE
 		val inPlayingMode = isActive && player?.track != null
@@ -70,7 +72,7 @@ abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 				joinAndOpenAudioConnection(context)
 			}
 		}
-		if (queueShouldNotBeEmpty && manager.audioScheduler.queue.queueSize() == 0) {
+		if (queueShouldNotBeEmpty && manager.state.queueTrackScheduler.queue.size == 0) {
 			throw TrackQueueIsEmptyException(context)
 		}
 		executeMusic(context, manager, response)

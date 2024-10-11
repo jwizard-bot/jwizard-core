@@ -52,7 +52,7 @@ class LoopTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBas
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeMusic(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		val isInLoop = manager.audioScheduler.audioRepeat.toggleTrackLoop()
+		val isInLoop = manager.state.queueTrackScheduler.audioRepeat.toggleTrackLoop()
 		val currentPlayingTrack = manager.cachedPlayer?.track
 		log.jdaInfo(
 			context,

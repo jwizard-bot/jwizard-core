@@ -34,7 +34,7 @@ class HttpResourceRetrieverBean(
 	/**
 	 * The base URL for accessing the public S3 API, used to construct the complete URL for fetching public resources.
 	 */
-	private final val s3PublicApiUrl = environmentBean.getProperty<String>(BotProperty.S3_PUBLIC_API_URL)
+	final val s3PublicApiUrl = environmentBean.getProperty<String>(BotProperty.S3_PUBLIC_API_URL)
 
 	init {
 		log.info("Init HTTP resource retriever with path: {}.", s3PublicApiUrl)

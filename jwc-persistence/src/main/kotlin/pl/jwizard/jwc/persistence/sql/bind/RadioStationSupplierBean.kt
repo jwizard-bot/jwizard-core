@@ -56,6 +56,6 @@ class RadioStationSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBea
 			LEFT JOIN guilds_disabled_radios gdr ON gdr.radio_id = r.id AND gdr.guild_id = ?
 			WHERE name = ? AND gdr.guild_id IS NULL
 		"""
-		return jdbcKtTemplateBean.queryForDataClass(sql, RadioStationDetails::class, slug, guildDbId)
+		return jdbcKtTemplateBean.queryForDataClass(sql, RadioStationDetails::class, guildDbId, slug)
 	}
 }

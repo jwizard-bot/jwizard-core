@@ -41,9 +41,11 @@ class MessageEmbedBuilder(
 	 * Sets the title of the embed.
 	 *
 	 * @param i18nLocaleSource The title text to set as [I18nLocaleSource].
+	 * @param args Arguments to replace placeholders in the description.
 	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
 	 */
-	fun setTitle(i18nLocaleSource: I18nLocaleSource) = setTitle(i18nBean.t(i18nLocaleSource, context?.guildLanguage))
+	fun setTitle(i18nLocaleSource: I18nLocaleSource, args: Map<String, Any?> = emptyMap()) =
+		setTitle(i18nBean.t(i18nLocaleSource, context?.guildLanguage, args))
 
 	/**
 	 * Sets the author of the embed if context is available.
@@ -107,7 +109,7 @@ class MessageEmbedBuilder(
 	 * @param url The URL of the artwork image. If url is `null`, image cannot be rendered.
 	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
 	 */
-	fun setArtwork(url: String?) = apply { url?.let { super.setThumbnail(url) } }
+	fun setArtwork(url: String?) = apply { url?.let { setThumbnail(url) } }
 
 	/**
 	 * Sets a value field in the embed with an optional inline display.

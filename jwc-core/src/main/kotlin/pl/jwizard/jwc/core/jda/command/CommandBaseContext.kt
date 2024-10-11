@@ -49,6 +49,12 @@ interface CommandBaseContext {
 	val author: Member
 
 	/**
+	 * The member object representing the command author within the guild. This is used to determine the context of the
+	 * command's execution.
+	 */
+	val selfMember: Member
+
+	/**
 	 * The text channel in which the command was executed. This is the context where the interaction happens.
 	 */
 	val textChannel: TextChannel

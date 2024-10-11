@@ -7,6 +7,8 @@ package pl.jwizard.jwc.command
 import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.command.event.context.CommandContext
 import pl.jwizard.jwc.command.interaction.component.Paginator
+import pl.jwizard.jwc.command.interaction.component.RefreshableComponent
+import pl.jwizard.jwc.command.interaction.component.RefreshableContent
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotListProperty
@@ -59,6 +61,18 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 		jdaColorStoreBean = commandEnvironment.jdaColorStoreBean,
 		pages,
 	)
+
+	/**
+	 * Creates a refreshable component, which allows dynamic content to be refreshed during its lifecycle by pressing
+	 * a button.
+	 *
+	 * @param T The type of content to refresh.
+	 * @param refer The refreshable content that can be updated.
+	 * @param payload The actual data to be used for refreshing the content.
+	 * @return A [RefreshableComponent] that handles dynamic content updates.
+	 */
+	protected fun <T> createRefreshable(refer: RefreshableContent<T>, payload: T) =
+		RefreshableComponent(i18nBean, eventQueueBean, refer, payload)
 
 	/**
 	 * Executes the command logic and returns the command response.

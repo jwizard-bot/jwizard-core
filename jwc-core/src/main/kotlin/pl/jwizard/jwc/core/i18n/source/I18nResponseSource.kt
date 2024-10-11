@@ -53,6 +53,7 @@ enum class I18nResponseSource(override val placeholder: String) : I18nLocaleSour
 
 	// misc
 	PRIVATE_MESSAGE_SEND("jwc.response.privateMessageSend"),
+	CHECK_INBOX("jwc.response.checkInbox"),
 	HELP("jwc.response.help"),
 	HELPFUL_LINKS("jwc.response.helpfulLinks"),
 	COMMANDS("jwc.response.commands"),

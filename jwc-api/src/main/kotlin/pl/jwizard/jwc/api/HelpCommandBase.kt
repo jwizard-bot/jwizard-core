@@ -14,7 +14,6 @@ import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
-import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.util.mdBold
 import pl.jwizard.jwc.core.util.mdLink
@@ -149,12 +148,11 @@ abstract class HelpCommandBase(commandEnvironment: CommandEnvironmentBean) : Com
 		}
 		val messages = mutableListOf<MessageEmbed>()
 
-		for ((index, chunk) in listOfChunkedCommands.withIndex()) {
-			val messageBuilder = MessageEmbedBuilder(i18nBean, commandEnvironment.jdaColorStoreBean, context)
-			if (index == 0) {
-				messageBuilder.setTitle(i18nBean.t(I18nResponseSource.HELP, lang))
-				messageBuilder.setDescription(descriptionElements.joinToString("\n"))
-			}
+		for (chunk in listOfChunkedCommands) {
+			val messageBuilder = createEmbedMessage(context)
+				.setTitle(i18nBean.t(I18nResponseSource.HELP, lang))
+				.setDescription(descriptionElements.joinToString("\n"))
+
 			for ((commandKey, commandDescription) in chunk) {
 				messageBuilder.setKeyValueField(commandKey, commandDescription, inline = false)
 			}

@@ -14,7 +14,7 @@ enum class CommandType {
 	/**
 	 * Represents a legacy command type, typically used with prefixes.
 	 */
-	LEGACY,
+	PREFIX,
 
 	/**
 	 * Represents a slash command type, utilized in newer Discord interactions.
