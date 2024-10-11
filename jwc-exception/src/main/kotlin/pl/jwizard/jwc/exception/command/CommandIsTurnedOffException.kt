@@ -15,15 +15,11 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
  * about the command that was attempted to be executed.
  *
  * @param context The context of the command invocation, providing details about the command's execution environment.
- * @param commandName The name of the command that was attempted to be executed.
  * @author Miłosz Gilga
  */
-class CommandIsTurnedOffException(
-	context: CommandBaseContext,
-	commandName: String
-) : CommandPipelineExceptionHandler(
+class CommandIsTurnedOffException(context: CommandBaseContext) : CommandPipelineExceptionHandler(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.COMMAND_IS_TURNED_OFF,
-	variables = mapOf("command" to "${context.prefix}$commandName"),
-	logMessage = "Attempt to execute turned off command. Command: \"$commandName\".",
+	variables = mapOf("command" to "${context.prefix}$${context.commandName}"),
+	logMessage = "Attempt to execute turned off command. Command: \"${context.commandName}\".",
 )

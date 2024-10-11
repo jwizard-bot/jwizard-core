@@ -14,9 +14,7 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
  * @param context The context of the command that caused the exception.
  * @author Miłosz Gilga
  */
-class TemporaryHaltedBotException(
-	context: CommandBaseContext,
-) : CommandPipelineExceptionHandler(
+class TemporaryHaltedBotException(context: CommandBaseContext) : CommandPipelineExceptionHandler(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.TEMPORARY_HALTED_BOT,
 	logMessage = "Attempt to use music command on halted (muted) bot.",

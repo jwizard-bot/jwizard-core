@@ -4,7 +4,6 @@
  */
 package pl.jwizard.jwc.exception.command
 
-import net.dv8tion.jda.api.entities.User
 import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.util.ext.qualifier
@@ -14,16 +13,12 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
  * Exception thrown when a non-superuser attempts to invoke a restricted command that requires elevated permissions.
  *
  * @param context The context of the command that caused the exception.
- * @param commandName The name of the command that was attempted.
- * @param user The user who attempted to invoke the restricted command.
  * @author Miłosz Gilga
  */
-class UnauthorizedManagerException(
-	context: CommandBaseContext,
-	commandName: String,
-	user: User?,
-) : CommandPipelineExceptionHandler(
+class UnauthorizedManagerException(context: CommandBaseContext) : CommandPipelineExceptionHandler(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.UNAUTHORIZED_MANAGER,
-	logMessage = "Attempt to invoke command: \"$commandName\" by: \"${user?.qualifier}\" without superuser role.",
+	logMessage = """
+		Attempt to invoke command: "${context.commandName}" by: "${context.author.qualifier}" without superuser role.
+	""",
 )

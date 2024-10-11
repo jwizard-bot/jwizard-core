@@ -59,7 +59,7 @@ class RepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandB
 
 		val multipleProperties = environmentBean.getGuildMultipleProperties(
 			guildProperties = listOf(GuildProperty.MIN_REPEATS_OF_TRACK, GuildProperty.MAX_REPEATS_OF_TRACK),
-			guildId = context.guildId
+			guildId = context.guild.idLong
 		)
 		val minRepeats = multipleProperties.getProperty<Int>(GuildProperty.MIN_REPEATS_OF_TRACK)
 		val maxRepeats = multipleProperties.getProperty<Int>(GuildProperty.MAX_REPEATS_OF_TRACK)

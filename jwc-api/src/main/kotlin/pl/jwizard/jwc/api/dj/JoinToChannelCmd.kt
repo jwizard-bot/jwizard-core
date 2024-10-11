@@ -51,7 +51,7 @@ class JoinToChannelCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBa
 	 */
 	override fun executeDj(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
 		val voiceChannelWithMember = context.guild?.voiceChannels
-			?.find { mapMembersToIds(it).contains(context.authorId) }
+			?.find { mapMembersToIds(it).contains(context.author.idLong) }
 			?: throw UserOnVoiceChannelNotFoundException(context)
 
 		if (mapMembersToIds(voiceChannelWithMember).contains(context.selfMember?.idLong)) {

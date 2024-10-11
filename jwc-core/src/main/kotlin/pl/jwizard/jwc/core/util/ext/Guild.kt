@@ -13,4 +13,4 @@ import pl.jwizard.jwc.core.util.formatQualifier
  *
  * @author Miłosz Gilga
  */
-val Guild.qualifier get() = formatQualifier(name, id)
+val Guild.qualifier get() = formatQualifier(name, idLong)

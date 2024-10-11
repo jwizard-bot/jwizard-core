@@ -4,19 +4,17 @@
  */
 package pl.jwizard.jwc.core.jda.command
 
-import pl.jwizard.jwc.core.jda.embed.MessageBaseContext
+import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import java.math.BigInteger
 
 /**
- * Base context interface for commands within a guild.
- *
- * This interface extends [MessageBaseContext] and provides additional context specific to guild commands, such as
- * guild information and command author details.
+ * TODO
  *
  * @author Miłosz Gilga
- * @see MessageBaseContext
  */
-interface CommandBaseContext : MessageBaseContext {
+interface CommandBaseContext {
 
 	/**
 	 * Definition of the command on which the event was invoked.
@@ -24,27 +22,34 @@ interface CommandBaseContext : MessageBaseContext {
 	val commandName: String
 
 	/**
-	 * The unique identifier of the guild where the command is issued.
+	 * The command prefix used for executing commands in this guild.
 	 */
-	val guildId: Long
+	val prefix: String
 
 	/**
-	 * The database identifier of the guild, used for data persistence.
+	 * The language used in the guild. This helps in localizing the content of the embed based on the guild's language
+	 * preference.
+	 */
+	val guildLanguage: String
+
+	/**
+	 * The unique database identifier of the guild, which is useful for data persistence and accessing guild-specific
+	 * data.
 	 */
 	val guildDbId: BigInteger
 
 	/**
-	 * The name of the guild where the command is executed.
+	 * The guild (server) where the command was executed.
 	 */
-	val guildName: String
+	val guild: Guild
 
 	/**
-	 * The unique identifier of the user who issued the command.
+	 * The member who invoked the command. This represents the user executing the command.
 	 */
-	val authorId: Long
+	val author: Member
 
 	/**
-	 * The command prefix used for executing commands in this guild.
+	 * The text channel in which the command was executed. This is the context where the interaction happens.
 	 */
-	val prefix: String
+	val textChannel: TextChannel
 }

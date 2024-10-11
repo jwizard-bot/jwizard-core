@@ -7,8 +7,7 @@ package pl.jwizard.jwc.core.util
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
-import pl.jwizard.jwc.core.util.ext.authorQualifier
-import pl.jwizard.jwc.core.util.ext.guildQualifier
+import pl.jwizard.jwc.core.util.ext.qualifier
 
 /**
  * Creates a logger instance for the specified class type.
@@ -56,7 +55,7 @@ fun Logger.jdaError(context: CommandBaseContext, message: String, vararg args: A
  */
 private fun loggerMessageContent(commandBaseContext: CommandBaseContext, message: String, vararg args: Any?) =
 	"G: %s, A: %s -> %s".format(
-		commandBaseContext.guildQualifier,
-		commandBaseContext.authorQualifier,
+		commandBaseContext.guild.qualifier,
+		commandBaseContext.author.qualifier,
 		message.format(*args)
 	)

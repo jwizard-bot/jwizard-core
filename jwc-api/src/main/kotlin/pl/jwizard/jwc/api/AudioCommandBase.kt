@@ -43,16 +43,15 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 		val musicManager = commandEnvironment.musicManagersBean
 			.getOrCreateMusicManager(context, commandEnvironment.distributedAudioClientSupplier)
 
-		val musicTextChannel = context.musicTextChannelId?.let { context.getTextChannel(it) }
+		val musicTextChannel = context.musicTextChannelId?.let { context.guild.getTextChannelById(it) }
 		val musicTextChannelId = musicTextChannel?.idLong
 
 		// check invoking channel id
-		if (musicTextChannelId != null && context.textChannelId != musicTextChannelId) {
-			val forbiddenChannel = context.getTextChannel(context.textChannelId)
-			throw ForbiddenChannelException(context, forbiddenChannel, musicTextChannel)
+		if (musicTextChannelId != null && context.textChannel.idLong != musicTextChannelId) {
+			throw ForbiddenChannelException(context, context.textChannel, musicTextChannel)
 		}
 		// check, if bot (self member) is not currently muted
-		if (context.selfMember?.voiceState?.isMuted == true) {
+		if (context.selfMember.voiceState?.isMuted == true) {
 			throw TemporaryHaltedBotException(context)
 		}
 		// check, if content sender is sender or superuser
@@ -73,7 +72,7 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 * @return A Triple indicating whether the user is the sender, a DJ, or a superuser.
 	 */
 	protected fun checkPermissions(context: CommandContext, manager: MusicManager): Triple<Boolean, Boolean, Boolean> {
-		val isSender = manager.getAudioSenderId(manager.cachedPlayer?.track) == context.authorId
+		val isSender = manager.getAudioSenderId(manager.cachedPlayer?.track) == context.author.idLong
 		val isSuperUser = context.checkIfUserHasPermissions(*(superuserPermissions.toTypedArray()))
 		val isDj = context.checkIfUserHasRoles(context.djRoleName)
 		return Triple(isSender, isDj, isSuperUser)
@@ -88,14 +87,13 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 * @throws ForbiddenChannelException if the user is in the AFK channel.
 	 */
 	protected fun checkUserVoiceState(context: CommandContext): GuildVoiceState {
-		val userVoiceState = context.member?.voiceState
+		val userVoiceState = context.author.voiceState
 		if (userVoiceState?.channel?.type != ChannelType.VOICE) {
 			throw UserOnVoiceChannelNotFoundException(context)
 		}
-		val afkChannel = context.guild?.afkChannel
+		val afkChannel = context.guild.afkChannel
 		if (userVoiceState.channel == afkChannel) {
-			val acceptedChannel = context.getTextChannel(context.textChannelId)
-			throw ForbiddenChannelException(context, afkChannel, acceptedChannel)
+			throw ForbiddenChannelException(context, afkChannel, context.textChannel)
 		}
 		return userVoiceState
 	}
@@ -109,13 +107,13 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 * @throws UserOnVoiceChannelWithBotNotFoundException if the user is not in the same channel as the bot.
 	 */
 	protected fun userIsWithBotOnAudioChannel(voiceState: GuildVoiceState, context: CommandContext): Boolean {
-		val botVoiceState = context.selfMember?.voiceState
+		val botVoiceState = context.selfMember.voiceState
 		// bot not yet joined to any channel, join to channel with invoker
 		if (shouldAutoJoinBotToChannel && botVoiceState?.member?.voiceState?.inAudioChannel() == false) {
 			return true
 		}
 		val superuserPermissions = environmentBean.getListProperty<String>(BotListProperty.JDA_SUPERUSER_PERMISSIONS)
-		val isRegularUser = superuserPermissions.none { context.member?.hasPermission(Permission.valueOf(it)) == true }
+		val isRegularUser = superuserPermissions.none { context.author.hasPermission(Permission.valueOf(it)) }
 
 		// check, if regular user is on the same channel with bot (omit for admin and server moderator)
 		if (shouldOnSameChannelWithBot && botVoiceState?.channel?.id != voiceState.channel?.id && isRegularUser) {
@@ -130,8 +128,8 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 * @param context The context of the command, containing user interaction details.
 	 */
 	protected fun joinAndOpenAudioConnection(context: CommandContext) {
-		if (context.selfMember?.voiceState?.inAudioChannel() == false) {
-			context.member?.voiceState?.channel?.let { jdaInstance.directAudioController.connect(it) }
+		if (context.selfMember.voiceState?.inAudioChannel() == false) {
+			context.author.voiceState?.channel?.let { jdaInstance.directAudioController.connect(it) }
 		}
 	}
 

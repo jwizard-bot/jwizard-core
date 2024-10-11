@@ -37,5 +37,5 @@ class HelpMeCmd(commandEnvironment: CommandEnvironmentBean) : HelpCommandBase(co
 	 * @param context The command context, which contains information about the guild, user, and message event.
 	 * @return The author's ID if the command is invoked in a private context, otherwise null.
 	 */
-	override fun isPrivate(context: CommandContext) = context.authorId
+	override fun isPrivate(context: CommandContext) = context.author.idLong
 }

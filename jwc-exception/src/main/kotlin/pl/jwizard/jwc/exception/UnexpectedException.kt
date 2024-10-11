@@ -21,7 +21,7 @@ import pl.jwizard.jwc.core.jda.command.CommandBaseContext
  */
 class UnexpectedException(
 	context: CommandBaseContext?,
-	cause: String? = "Unknown command pipeline exception"
+	cause: String? = "Unknown command pipeline exception",
 ) : CommandPipelineExceptionHandler(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.UNEXPECTED_EXCEPTION,

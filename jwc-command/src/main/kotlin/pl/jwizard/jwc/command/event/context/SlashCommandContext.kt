@@ -6,7 +6,7 @@ package pl.jwizard.jwc.command.event.context
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import pl.jwizard.jwc.command.GuildCommandProperties
-import pl.jwizard.jwc.core.util.ext.avatarOrDefaultUrl
+import pl.jwizard.jwc.command.event.exception.CommandInvocationException
 
 /**
  * Context for handling slash commands within a guild.
@@ -25,24 +25,10 @@ class SlashCommandContext(
 	private val guildCommandProperties: GuildCommandProperties,
 ) : CommandContext(guildCommandProperties) {
 
-	override val guildId
-		get() = event.guild!!.idLong
-
-	override val guildName
-		get() = event.guild!!.name
-
-	override val authorId
-		get() = event.user.idLong
-
-	override val authorAvatarUrl
-		get() = event.user.avatarOrDefaultUrl
-
-	override val authorName
-		get() = event.user.name
-
-	override val guildLanguage
-		get() = guildCommandProperties.lang
-
-	override val prefix
-		get() = "/"
+	override val prefix = "/"
+	override val guild = event.guild ?: throw CommandInvocationException("Guild is NULL.", this)
+	override val author = event.member ?: throw CommandInvocationException("Author is NULL.", this)
+	override val textChannel = event.channel.asTextChannel()
+	override val selfMember = event.guild?.selfMember ?: throw CommandInvocationException("Bot is NULL.", this)
+	override val isSlashEvent = true
 }

@@ -11,8 +11,8 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
 /**
  * Exception thrown when a radio station does not provide playback data while attempting to invoke a radio command.
  *
- * @param context the context of the command where the exception occurred.
- * @param radioStation the identifier of the radio station that failed to provide playback data.
+ * @param context The context of the command where the exception occurred.
+ * @param radioStation The identifier of the radio station that failed to provide playback data.
  * @author Miłosz Gilga
  */
 class RadioStationNotProvidedPlaybackDataException(

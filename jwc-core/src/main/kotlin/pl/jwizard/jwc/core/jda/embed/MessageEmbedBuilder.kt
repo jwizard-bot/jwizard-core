@@ -10,6 +10,9 @@ import pl.jwizard.jwc.core.i18n.I18nBean
 import pl.jwizard.jwc.core.i18n.I18nLocaleSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
+import pl.jwizard.jwc.core.jda.command.CommandBaseContext
+import pl.jwizard.jwc.core.util.ext.avatarOrDefaultUrl
+import pl.jwizard.jwc.core.util.ext.name
 import pl.jwizard.jwc.core.util.keyValueFormat
 
 /**
@@ -23,7 +26,7 @@ import pl.jwizard.jwc.core.util.keyValueFormat
 class MessageEmbedBuilder(
 	private val i18nBean: I18nBean,
 	private val jdaColorStoreBean: JdaColorStoreBean,
-	private val context: MessageBaseContext? = null,
+	private val context: CommandBaseContext? = null,
 ) : EmbedBuilder() {
 
 	/**
@@ -47,7 +50,9 @@ class MessageEmbedBuilder(
 	 *
 	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
 	 */
-	fun setAuthor() = apply { context?.let { super.setAuthor(it.authorName, null, it.authorAvatarUrl) } }
+	fun setAuthor() = apply {
+		context?.let { super.setAuthor(it.author.name, null, it.author.avatarOrDefaultUrl) }
+	}
 
 	/**
 	 * Sets the description of the embed using internationalization.

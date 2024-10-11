@@ -55,7 +55,7 @@ abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 		// TODO: check, if player is radio station player
 
 		val player = manager.cachedPlayer
-		val isActive = context.selfMember?.voiceState?.channel?.type == ChannelType.VOICE
+		val isActive = context.selfMember.voiceState?.channel?.type == ChannelType.VOICE
 		val inPlayingMode = isActive && player?.track != null
 
 		if (shouldPlayingMode && (!inPlayingMode || player?.paused == true) && !shouldPaused) {
@@ -100,7 +100,7 @@ abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 		track: Track,
 	): MessageEmbed {
 		val elapsedTime = manager.cachedPlayer?.position ?: 0
-		val audioSender = manager.getAudioSenderId(track)?.let { context.guild?.getMemberById(it) }
+		val audioSender = manager.getAudioSenderId(track)?.let { context.guild.getMemberById(it) }
 		val percentageIndicatorBar = PercentageIndicatorBar(
 			start = Duration.ofMillis(elapsedTime),
 			total = Duration.ofMillis(track.duration),

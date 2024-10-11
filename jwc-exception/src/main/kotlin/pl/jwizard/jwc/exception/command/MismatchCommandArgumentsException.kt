@@ -15,17 +15,15 @@ import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
  * structure and what was actually provided by the user.
  *
  * @param context The context in which the command was invoked.
- * @param command The name of the command that was attempted to be executed.
  * @param syntax The expected syntax for the command's arguments.
  * @author Miłosz Gilga
  */
 class MismatchCommandArgumentsException(
 	context: CommandBaseContext,
-	command: String,
 	syntax: String,
 ) : CommandPipelineExceptionHandler(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.MISMATCH_COMMAND_ARGS,
 	variables = mapOf("syntax" to syntax),
-	logMessage = "Attempt to invoke command: \"$command\" with non-exact arguments.",
+	logMessage = "Attempt to invoke command: \"${context.commandName}\" with non-exact arguments.",
 )

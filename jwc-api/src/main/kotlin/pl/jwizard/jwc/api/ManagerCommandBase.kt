@@ -34,7 +34,7 @@ abstract class ManagerCommandBase(commandEnvironment: CommandEnvironmentBean) : 
 	 */
 	final override fun execute(context: CommandContext, response: TFutureResponse) {
 		if (!context.checkIfUserHasPermissions(*(superuserPermissions.toTypedArray()))) {
-			throw UnauthorizedManagerException(context, context.commandName, context.member?.user)
+			throw UnauthorizedManagerException(context)
 		}
 		executeManager(context, response)
 	}

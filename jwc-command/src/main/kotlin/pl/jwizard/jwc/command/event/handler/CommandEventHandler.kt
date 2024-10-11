@@ -107,14 +107,14 @@ abstract class CommandEventHandler<E : Event>(
 				val enabled = commandDataSupplier
 					.isCommandEnabled(properties.guildDbId, commandDetails.id, commandType == CommandType.SLASH)
 				if (!enabled) {
-					throw CommandIsTurnedOffException(context, commandNameOrAlias)
+					throw CommandIsTurnedOffException(context)
 				}
 				val parsedArguments = parseCommandArguments(context, commandDetails, commandArguments)
 				parsedArguments.forEach { (key, value) -> context.commandArguments[key] = value }
 
 				val commandSyntax = createCommandSyntax(context, commandDetails)
 				val command = commandsCacheBean.instancesContainer[commandDetails.name]
-					?: throw CommandIsTurnedOffException(context, commandNameOrAlias)
+					?: throw CommandIsTurnedOffException(context)
 
 				commandResponse = CompletableFuture<CommandResponse>()
 				try {
@@ -122,7 +122,7 @@ abstract class CommandEventHandler<E : Event>(
 					deferAction(event, privateMessageUserId != null)
 					command.execute(context, commandResponse)
 				} catch (ex: CommandParserException) {
-					throw MismatchCommandArgumentsException(context, commandDetails.name, commandSyntax)
+					throw MismatchCommandArgumentsException(context, commandSyntax)
 				}
 			} catch (ex: CommandInvocationException) {
 				if (commandType == CommandType.LEGACY) {
@@ -258,7 +258,7 @@ abstract class CommandEventHandler<E : Event>(
 		val options = LinkedList(arguments)
 		val requiredArgs = details.args.filter(CommandArgumentDetails::required)
 		if (options.size < requiredArgs.size) {
-			throw MismatchCommandArgumentsException(context, details.name, commandSyntax)
+			throw MismatchCommandArgumentsException(context, commandSyntax)
 		}
 		return details.args.associate {
 			val optionMapping: String? = options.poll()
@@ -269,7 +269,7 @@ abstract class CommandEventHandler<E : Event>(
 			val argKey = CommandArgument.entries.find { arg -> arg.propName == it.name }
 			val type = CommandArgumentType.entries.find { type -> type.name == it.type }
 			if (argKey == null || type == null || (optionMapping == null && it.required)) {
-				throw MismatchCommandArgumentsException(context, details.name, commandSyntax)
+				throw MismatchCommandArgumentsException(context, commandSyntax)
 			}
 			argKey to CommandArgumentParsingData(optionMapping, type, it.required)
 		}
