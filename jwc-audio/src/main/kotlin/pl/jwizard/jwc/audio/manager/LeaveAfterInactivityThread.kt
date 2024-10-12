@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.audio
+package pl.jwizard.jwc.audio.manager
 
 import net.dv8tion.jda.api.entities.Guild
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource

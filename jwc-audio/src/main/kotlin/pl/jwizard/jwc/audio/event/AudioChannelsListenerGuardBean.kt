@@ -7,7 +7,7 @@ package pl.jwizard.jwc.audio.event
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.audio.MusicManagersBean
+import pl.jwizard.jwc.audio.manager.MusicManagersBean
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.spi.ChannelListenerGuard

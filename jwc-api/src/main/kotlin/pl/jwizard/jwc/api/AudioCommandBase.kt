@@ -14,6 +14,7 @@ import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.mono.AsyncUpdatableHandler
 import pl.jwizard.jwc.command.mono.AsyncUpdatableHook
+import pl.jwizard.jwc.core.audio.AudioContentType
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotListProperty
@@ -169,6 +170,12 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 * Flag indicating whether the command requires the content sender to be the sender or a superuser.
 	 */
 	protected open val shouldBeContentSenderOrSuperuser = false
+
+	/**
+	 * Flag representing the different states of audio processing within the application.
+	 * @see AudioContentType
+	 */
+	protected open val audioContentType = AudioContentType.QUEUE_TRACK
 
 	/**
 	 * Executes the audio command.

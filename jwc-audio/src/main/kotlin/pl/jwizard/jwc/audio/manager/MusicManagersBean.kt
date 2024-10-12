@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.audio
+package pl.jwizard.jwc.audio.manager
 
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.audio.spi.RadioStationThumbnailSupplier
@@ -65,7 +65,7 @@ class MusicManagersBean(
 		distributedAudioClientSupplier: DistributedAudioClientSupplier,
 	): MusicManager = synchronized(this) {
 		val manager = musicManagers.getOrPut(context.guild.idLong) {
-			GuildMusicManager(context, future, this, distributedAudioClientSupplier)
+			GuildMusicManager(this, context, future, distributedAudioClientSupplier)
 		}
 		manager.state.updateFutureResponse(future)
 		manager

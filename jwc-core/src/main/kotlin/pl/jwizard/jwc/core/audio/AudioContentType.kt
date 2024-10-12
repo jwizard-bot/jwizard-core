@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.audio
+package pl.jwizard.jwc.core.audio
 
 /**
  * Enum representing the different states of audio processing within the application. Each state indicates a specific
@@ -10,7 +10,7 @@ package pl.jwizard.jwc.audio
  *
  * @author Miłosz Gilga
  */
-enum class AudioState {
+enum class AudioContentType {
 
 	/**
 	 * Indicates that tracks are being queued for playback. This state is typically used when a user requests to add

@@ -7,6 +7,7 @@ package pl.jwizard.jwc.api
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.refer.Command
+import pl.jwizard.jwc.core.audio.AudioContentType
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.exception.radio.DiscreteAudioStreamIsPlayingException
@@ -39,7 +40,7 @@ abstract class RadioCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 		val voiceState = checkUserVoiceState(context)
 		userIsWithBotOnAudioChannel(voiceState, context)
 		val currentContent = manager.cachedPlayer?.track
-		val isQueueTrackState = manager.state.isQueueTrackState()
+		val isQueueTrackState = manager.state.isDeclaredAudioContentType(audioContentType)
 		if (isQueueTrackState && currentContent != null) {
 			throw DiscreteAudioStreamIsPlayingException(context, Command.STOP)
 		}
@@ -50,6 +51,12 @@ abstract class RadioCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 		}
 		executeRadio(context, manager, response)
 	}
+
+	/**
+	 * Indicated audio content type as stream (more detailed as radio stream source).
+	 * @see AudioContentType.STREAM
+	 */
+	final override val audioContentType = AudioContentType.STREAM
 
 	/**
 	 * Available only if radio is currently playing.

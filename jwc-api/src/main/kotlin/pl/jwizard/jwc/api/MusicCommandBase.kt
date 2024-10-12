@@ -53,7 +53,7 @@ abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 	 * @throws TrackQueueIsEmptyException If the command requires tracks in the queue but none are present.
 	 */
 	final override fun executeAudio(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		if (!manager.state.isQueueTrackState()) {
+		if (!manager.state.isDeclaredAudioContentType(audioContentType)) {
 			throw CommandAvailableOnlyForDiscreteTrackException(context)
 		}
 		val player = manager.cachedPlayer

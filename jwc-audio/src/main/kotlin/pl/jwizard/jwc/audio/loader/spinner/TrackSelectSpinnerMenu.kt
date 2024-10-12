@@ -5,7 +5,7 @@
 package pl.jwizard.jwc.audio.loader.spinner
 
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent
-import pl.jwizard.jwc.audio.GuildMusicManager
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.interaction.SelectSpinnerMenu
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.property.GuildMultipleProperties
