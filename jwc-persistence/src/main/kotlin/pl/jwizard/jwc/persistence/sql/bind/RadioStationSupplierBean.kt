@@ -6,6 +6,7 @@ package pl.jwizard.jwc.persistence.sql.bind
 
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.radio.RadioStationDetails
+import pl.jwizard.jwc.persistence.sql.ColumnDef
 import pl.jwizard.jwc.persistence.sql.JdbcKtTemplateBean
 import pl.jwizard.jwc.radio.spi.RadioStationSupplier
 import java.math.BigInteger
@@ -27,15 +28,20 @@ class RadioStationSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBea
 	 * slugs, and returns them as a list.
 	 *
 	 * @param guildDbId The ID of the guild to filter the radio stations.
-	 * @return A list of radio stations slugs.
+	 * @return A list of radio stations infos (name as key and website as value).
 	 */
-	override fun getRadioStations(guildDbId: BigInteger): List<String> {
+	override fun getRadioStations(guildDbId: BigInteger): Map<String, String> {
 		val sql = """
-			SELECT name, slug FROM radios r
+			SELECT name, webpage_url webpageUrl FROM radios r
 			LEFT JOIN guilds_disabled_radios gdr ON gdr.radio_id = r.id AND gdr.guild_id = ?
 			WHERE gdr.guild_id IS NULL
 		"""
-		return jdbcKtTemplateBean.queryForList(sql, String::class, guildDbId)
+		return jdbcKtTemplateBean.queryForListMap(
+			sql,
+			key = ColumnDef("name", String::class),
+			value = ColumnDef("webpageUrl", String::class),
+			guildDbId
+		)
 	}
 
 	/**

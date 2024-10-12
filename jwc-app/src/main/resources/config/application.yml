@@ -70,6 +70,8 @@ jda:
   superuser-permissions:
     - ADMINISTRATOR
     - MANAGE_SERVER
+  pagination:
+    chunk-size: 8
 
 link:
   website: https://jwizard.pl
@@ -89,6 +91,7 @@ radio:
 s3:
   region: eu-central-1
   path-style-access-enabled: true
+  public-api-url: https://cdn.jwizard.pl
 
 i18n:
   default-language: pl

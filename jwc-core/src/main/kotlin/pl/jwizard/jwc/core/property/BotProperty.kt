@@ -46,6 +46,7 @@ import kotlin.reflect.KClass
  * - [JDA_EXCEPTION_SEGMENT_SIZE]: Specifies the maximum size of the segment in exception group.
  * - [JDA_EXCEPTION_URL_REFER_TEMPLATE]: Defines the URL template used for referring to detailed exception information
  *   in bot website.
+ * - [JDA_PAGINATION_CHUNK_SIZE]: Defines chunk size for custom paginator for embed messages in command handlers.
  * - [LINK_WEBSITE]: The official website for the bot. It contains general information and features.
  * - [LINK_REPOSITORY]: The repository URL where the bot's source code is hosted.
  * - [LINK_DOCS]: The official website with documentation.
@@ -225,6 +226,11 @@ enum class BotProperty(
 	 * Defines the URL template used for referring to detailed exception information in bot website.
 	 */
 	JDA_EXCEPTION_URL_REFER_TEMPLATE("jda.exception.url-refer-template"),
+
+	/**
+	 * Defines chunk size for custom paginator for embed messages in command handlers.
+	 */
+	JDA_PAGINATION_CHUNK_SIZE("jda.pagination.chunk-size", Int::class),
 
 	/**
 	 * The official website for the bot. It contains general information and features.

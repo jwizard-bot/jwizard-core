@@ -18,7 +18,6 @@ service:
   front-url: http://localhost:8766
 
 s3:
-  public-api-url: http://localhost:8763/jwizard-static
   host-url: http://localhost:8763
   access-key: ${vault:V_S3_USERNAME}
   secret-key: ${vault:V_S3_PASSWORD}

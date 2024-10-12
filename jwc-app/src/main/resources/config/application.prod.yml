@@ -18,7 +18,6 @@ service:
   front-url: https://jwizard.pl
 
 s3:
-  public-api-url: https://cdn.jwizard.pl
   host-url: https://s3.api.miloszgilga.pl
   access-key: ${vault:V_S3_ACCESS_KEY}
   secret-key: ${vault:V_S3_SECRET_KEY}

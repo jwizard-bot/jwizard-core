@@ -28,13 +28,11 @@ import java.util.*
  */
 abstract class HelpCommandBase(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
 
-	companion object {
-		/**
-		 * The size of chunks used to split commands when creating embed messages. Each chunk will contain up to 8 commands
-		 * to be displayed in one embed message.
-		 */
-		private const val COMMANDS_CHUNK_SIZE = 8
-	}
+	/**
+	 * The size of chunks used to split commands when creating embed messages. Each chunk will contain up to 8 commands
+	 * to be displayed in one embed message.
+	 */
+	private val paginatorChunkSize = environmentBean.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 
 	/**
 	 * Executes the help command, generating and displaying paginated help information for all available commands.
@@ -143,7 +141,7 @@ abstract class HelpCommandBase(commandEnvironment: CommandEnvironmentBean) : Com
 		descriptionElements: List<String>,
 	): List<MessageEmbed> {
 		val lang = context.guildLanguage
-		val listOfChunkedCommands = commands.entries.chunked(COMMANDS_CHUNK_SIZE).map { chunk ->
+		val listOfChunkedCommands = commands.entries.chunked(paginatorChunkSize).map { chunk ->
 			chunk.associate { it.toPair() }
 		}
 		val messages = mutableListOf<MessageEmbed>()

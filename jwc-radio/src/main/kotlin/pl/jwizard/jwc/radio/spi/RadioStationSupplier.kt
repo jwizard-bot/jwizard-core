@@ -22,9 +22,9 @@ interface RadioStationSupplier {
 	 * station slug
 	 *
 	 * @param guildDbId The ID of the guild to filter the radio stations.
-	 * @return A list of radio stations slugs.
+	 * @return A list of radio stations infos (name as key and website as value).
 	 */
-	fun getRadioStations(guildDbId: BigInteger): List<String>
+	fun getRadioStations(guildDbId: BigInteger): Map<String, String>
 
 	/**
 	 * Retrieves a specific radio station based on its slug and guild ID.
