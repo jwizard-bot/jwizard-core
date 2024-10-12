@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.channel.ChannelType
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.core.audio.AudioContentType
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.I18nLocaleSource
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
@@ -53,7 +54,7 @@ abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 	 * @throws TrackQueueIsEmptyException If the command requires tracks in the queue but none are present.
 	 */
 	final override fun executeAudio(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		if (!manager.state.isDeclaredAudioContentType(audioContentType)) {
+		if (manager.state.isDeclaredAudioContentType(AudioContentType.STREAM)) {
 			throw CommandAvailableOnlyForDiscreteTrackException(context)
 		}
 		val player = manager.cachedPlayer

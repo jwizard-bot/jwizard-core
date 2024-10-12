@@ -40,23 +40,17 @@ abstract class RadioCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 		val voiceState = checkUserVoiceState(context)
 		userIsWithBotOnAudioChannel(voiceState, context)
 		val currentContent = manager.cachedPlayer?.track
-		val isQueueTrackState = manager.state.isDeclaredAudioContentType(audioContentType)
-		if (isQueueTrackState && currentContent != null) {
+		val isStreamContent = manager.state.isDeclaredAudioContentType(AudioContentType.STREAM)
+		if (!isStreamContent && currentContent != null) {
 			throw DiscreteAudioStreamIsPlayingException(context, Command.STOP)
 		}
-		if (shouldRadioPlaying && (isQueueTrackState || currentContent == null)) {
+		if (shouldRadioPlaying && (!isStreamContent || currentContent == null)) {
 			throw RadioStationIsNotPlayingException(context, Command.PLAY_RADIO)
-		} else if (shouldRadioIdle && (!isQueueTrackState && currentContent != null)) {
+		} else if (shouldRadioIdle && (isStreamContent && currentContent != null)) {
 			throw RadioStationIsPlayingException(context, Command.STOP_RADIO)
 		}
 		executeRadio(context, manager, response)
 	}
-
-	/**
-	 * Indicated audio content type as stream (more detailed as radio stream source).
-	 * @see AudioContentType.STREAM
-	 */
-	final override val audioContentType = AudioContentType.STREAM
 
 	/**
 	 * Available only if radio is currently playing.
