@@ -25,7 +25,7 @@ class ForbiddenChannelException(
 ) : CommandPipelineExceptionHandler(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.FORBIDDEN_CHANNEL,
-	variables = mapOf("acceptChannel" to acceptedChannel?.name),
+	args = mapOf("acceptChannel" to acceptedChannel?.name),
 	logMessage = """
 		Attempt to use song request command on forbidden channel: "${forbiddenChannel?.qualifier}".
 		Accepted channel: "${acceptedChannel?.qualifier}".

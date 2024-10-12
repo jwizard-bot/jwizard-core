@@ -22,9 +22,9 @@ abstract class JvmFixedPayloadThreadExecutor<T>(
 ) : JvmThreadExecutor(countOfThreads) {
 
 	/**
-	 * Future representing the scheduled task.
+	 * Future representing the scheduled tasks.
 	 */
-	private var future: ScheduledFuture<*>? = null
+	private val futures = mutableListOf<ScheduledFuture<*>>()
 
 	/**
 	 * Schedules a single execution of a task with the provided payload after a specified delay.
@@ -34,13 +34,20 @@ abstract class JvmFixedPayloadThreadExecutor<T>(
 	 * @param payload The payload to be processed by the thread.
 	 */
 	fun startOnce(delay: Long, unit: TimeUnit, payload: T) {
-		future = executor.schedule({ executeJvmThreadWithPayload(payload) }, delay, unit)
+		futures.add(executor.schedule({ executeJvmThreadWithPayload(payload) }, delay, unit))
 	}
 
 	/**
-	 * Cancels the scheduled task if it has not yet executed.
+	 * Cancels the scheduled tasks if it has not yet executed.
+	 *
+	 * @return Count of cancels tasks.
 	 */
-	fun gracefullyShutdown() = future?.cancel(false)
+	fun cancelQueuedTasks(): Int {
+		val futuresSize = futures.size
+		futures.forEach { it.cancel(false) }
+		futures.clear()
+		return futuresSize
+	}
 
 	/**
 	 * Returns the future execution time based on the given delay.

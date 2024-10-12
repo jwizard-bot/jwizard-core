@@ -87,10 +87,12 @@ class ShowQueueCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBas
 
 				val valueJoiner = StringJoiner("")
 				valueJoiner.add(mdLink("[link]", track.info.uri))
-				valueJoiner.add(", `${millisToDTF(track.duration)}`, ")
-				valueJoiner.add(i18nBean.t(I18nAudioSource.TRACK_ADDED_BY, lang))
-				senderName?.let { valueJoiner.add(": ${mdBold(it.name)}") }
-
+				valueJoiner.add(", `${millisToDTF(track.duration)}`")
+				senderName?.let {
+					valueJoiner.add(", ")
+					valueJoiner.add(i18nBean.t(I18nAudioSource.TRACK_ADDED_BY, lang))
+					valueJoiner.add(": ${mdBold(it.name)}")
+				}
 				messageBuilder.setKeyValueField(
 					key = "${trackIndex++}. ${track.normalizedTitle}",
 					value = valueJoiner.toString(),

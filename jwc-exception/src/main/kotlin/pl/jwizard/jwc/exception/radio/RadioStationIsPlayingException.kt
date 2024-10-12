@@ -22,6 +22,6 @@ class RadioStationIsPlayingException(
 ) : CommandPipelineExceptionHandler(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.RADIO_STATION_IS_PLAYING,
-	variables = mapOf("stopRadioStationCmd" to command.parseWithPrefix(context)),
+	args = mapOf("stopRadioStationCmd" to command.parseWithPrefix(context)),
 	logMessage = "Attempt to invoke command, while radio station is currently playing.",
 )

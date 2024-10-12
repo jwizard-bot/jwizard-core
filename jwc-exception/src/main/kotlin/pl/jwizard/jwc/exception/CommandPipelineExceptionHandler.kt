@@ -19,14 +19,14 @@ import pl.jwizard.jwc.core.util.jdaError
  * @property commandBaseContext The context of the command being executed, which may contain relevant information for
  *           logging.
  * @property i18nExceptionSource Source for internationalized exception messages.
- * @property variables A map of additional variables to be used for message formatting.
+ * @property args A map of additional variables to be used for message formatting.
  * @property logMessage A custom message to log when the exception occurs.
  * @author Miłosz Gilga
  */
 abstract class CommandPipelineExceptionHandler(
 	override val commandBaseContext: CommandBaseContext? = null,
 	override val i18nExceptionSource: I18nExceptionSource,
-	override val variables: Map<String, Any?> = emptyMap(),
+	override val args: Map<String, Any?> = emptyMap(),
 	override val logMessage: String? = null,
 ) : RuntimeException(), CommandPipelineException {
 

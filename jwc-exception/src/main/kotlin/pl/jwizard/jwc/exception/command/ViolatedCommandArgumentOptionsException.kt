@@ -30,7 +30,7 @@ class ViolatedCommandArgumentOptionsException(
 ) : CommandPipelineExceptionHandler(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.VIOLATED_COMMAND_ARG_OPTIONS,
-	variables = mapOf(
+	args = mapOf(
 		"violatedArgName" to violatedArgName,
 		"acceptedValueList" to acceptedValuesFormatted,
 	),

@@ -24,6 +24,6 @@ class MismatchCommandArgumentsException(
 ) : CommandPipelineExceptionHandler(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.MISMATCH_COMMAND_ARGS,
-	variables = mapOf("syntax" to syntax),
+	args = mapOf("syntax" to syntax),
 	logMessage = "Attempt to invoke command: \"${context.commandName}\" with non-exact arguments.",
 )

@@ -23,6 +23,6 @@ class DiscreteAudioStreamIsPlayingException(
 ) : CommandPipelineExceptionHandler(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.DISCRETE_AUDIO_STREAM_IS_PLAYING,
-	variables = mapOf("stopCmd" to stopCommand.parseWithPrefix(context)),
+	args = mapOf("stopCmd" to stopCommand.parseWithPrefix(context)),
 	logMessage = "Attempt to invoke radio command, while non-continuous audio stream is active.",
 )

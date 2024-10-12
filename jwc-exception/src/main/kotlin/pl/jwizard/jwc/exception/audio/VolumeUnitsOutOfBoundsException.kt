@@ -25,7 +25,7 @@ class VolumeUnitsOutOfBoundsException(
 ) : CommandPipelineExceptionHandler(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.VOLUME_UNITS_OUT_OF_BOUNDS,
-	variables = mapOf(
+	args = mapOf(
 		"minVolume" to minVolume,
 		"maxVolume" to maxVolume,
 	),

@@ -21,6 +21,6 @@ class TrackRepeatsOutOfBoundException(
 ) : CommandPipelineExceptionHandler(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.TRACK_REPEATS_OUT_OF_BOUNDS,
-	variables = mapOf("maxRepeats" to maxRepeats),
+	args = mapOf("maxRepeats" to maxRepeats),
 	logMessage = "Attempt to set out of bounds current audio track repeats number: \"$maxRepeats\".",
 )

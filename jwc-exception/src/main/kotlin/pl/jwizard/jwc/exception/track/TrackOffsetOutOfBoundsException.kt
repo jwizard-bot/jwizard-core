@@ -23,7 +23,7 @@ class TrackOffsetOutOfBoundsException(
 ) : CommandPipelineExceptionHandler(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.TRACK_OFFSET_OUT_OF_BOUNDS,
-	variables = mapOf("maxOffset" to maxOffset),
+	args = mapOf("maxOffset" to maxOffset),
 	logMessage = """
 		Attempt to offset to out of bounds track position in queue.
 		Offset: "$offset". Max offset: "$maxOffset".

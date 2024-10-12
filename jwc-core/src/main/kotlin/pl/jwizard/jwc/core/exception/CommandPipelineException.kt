@@ -28,7 +28,7 @@ interface CommandPipelineException {
 	/**
 	 * A map containing additional variables that can be used to populate exception messages or logs.
 	 */
-	val variables: Map<String, Any?>
+	val args: Map<String, Any?>
 
 	/**
 	 * The log message associated with the exception, used for debugging or tracking purposes. This may be null if no
