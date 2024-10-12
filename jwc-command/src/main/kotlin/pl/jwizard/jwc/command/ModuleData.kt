@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.command.event
+package pl.jwizard.jwc.command
 
 /**
  * Data class representing a module's metadata in the command system.

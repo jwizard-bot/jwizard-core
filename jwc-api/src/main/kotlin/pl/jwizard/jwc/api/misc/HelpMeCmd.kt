@@ -6,7 +6,7 @@ package pl.jwizard.jwc.api.misc
 
 import pl.jwizard.jwc.api.HelpCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
-import pl.jwizard.jwc.command.event.context.CommandContext
+import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.jda.command.TFutureResponse

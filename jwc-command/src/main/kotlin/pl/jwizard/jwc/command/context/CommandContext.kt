@@ -2,12 +2,12 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.command.event.context
+package pl.jwizard.jwc.command.context
 
 import net.dv8tion.jda.api.Permission
 import pl.jwizard.jwc.command.GuildCommandProperties
-import pl.jwizard.jwc.command.event.arg.CommandArgumentParsingData
-import pl.jwizard.jwc.command.event.exception.CommandParserException
+import pl.jwizard.jwc.command.arg.CommandArgumentParsingData
+import pl.jwizard.jwc.command.exception.CommandParserException
 import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 

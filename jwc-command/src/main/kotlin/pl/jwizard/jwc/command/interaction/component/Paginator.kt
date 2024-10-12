@@ -7,7 +7,7 @@ package pl.jwizard.jwc.command.interaction.component
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.interactions.components.ActionRow
-import pl.jwizard.jwc.command.event.context.CommandContext
+import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.interaction.ButtonInteractionHandler
 import pl.jwizard.jwc.command.interaction.InteractionButton
 import pl.jwizard.jwc.command.interaction.InteractionResponse

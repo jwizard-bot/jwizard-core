@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.command.event.handler
+package pl.jwizard.jwc.command.handler
 
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.interactions.components.ActionComponent

@@ -6,7 +6,7 @@ package pl.jwizard.jwc.api.radio
 
 import pl.jwizard.jwc.command.CommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
-import pl.jwizard.jwc.command.event.context.CommandContext
+import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nDynamicMod

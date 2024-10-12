@@ -2,13 +2,13 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.command.event.handler
+package pl.jwizard.jwc.command.handler
 
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.command.CommandsCacheBean
-import pl.jwizard.jwc.command.event.transport.LooselyTransportHandlerBean
 import pl.jwizard.jwc.command.spi.CommandDataSupplier
 import pl.jwizard.jwc.command.spi.ModuleDataSupplier
+import pl.jwizard.jwc.command.transport.LooselyTransportHandlerBean
 import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
 import pl.jwizard.jwc.core.i18n.I18nBean
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean

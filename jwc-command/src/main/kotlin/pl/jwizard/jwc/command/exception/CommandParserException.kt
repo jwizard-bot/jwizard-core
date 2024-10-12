@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.command.event.exception
+package pl.jwizard.jwc.command.exception
 
 /**
  * Exception thrown when there is an error parsing a command.

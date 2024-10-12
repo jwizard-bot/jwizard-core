@@ -5,7 +5,7 @@
 package pl.jwizard.jwc.persistence.sql.bind
 
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.command.event.ModuleData
+import pl.jwizard.jwc.command.ModuleData
 import pl.jwizard.jwc.command.spi.ModuleDataSupplier
 import pl.jwizard.jwc.persistence.sql.ColumnDef
 import pl.jwizard.jwc.persistence.sql.JdbcKtTemplateBean

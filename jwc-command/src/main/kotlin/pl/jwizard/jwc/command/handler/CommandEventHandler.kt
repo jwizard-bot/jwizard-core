@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.command.event.handler
+package pl.jwizard.jwc.command.handler
 
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Message
@@ -10,13 +10,13 @@ import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.events.Event
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.requests.RestAction
+import pl.jwizard.jwc.command.CommandType
 import pl.jwizard.jwc.command.GuildCommandProperties
-import pl.jwizard.jwc.command.event.CommandType
-import pl.jwizard.jwc.command.event.arg.CommandArgumentParsingData
-import pl.jwizard.jwc.command.event.arg.CommandArgumentType
-import pl.jwizard.jwc.command.event.context.CommandContext
-import pl.jwizard.jwc.command.event.exception.CommandInvocationException
-import pl.jwizard.jwc.command.event.exception.CommandParserException
+import pl.jwizard.jwc.command.arg.CommandArgumentParsingData
+import pl.jwizard.jwc.command.arg.CommandArgumentType
+import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.exception.CommandInvocationException
+import pl.jwizard.jwc.command.exception.CommandParserException
 import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.reflect.CommandArgumentDetails
 import pl.jwizard.jwc.command.reflect.CommandDetails

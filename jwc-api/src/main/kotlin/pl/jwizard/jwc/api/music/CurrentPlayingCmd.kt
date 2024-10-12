@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
-import pl.jwizard.jwc.command.event.context.CommandContext
+import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.interaction.component.RefreshableComponent
 import pl.jwizard.jwc.command.interaction.component.RefreshableContent
 import pl.jwizard.jwc.command.refer.Command

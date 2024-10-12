@@ -2,14 +2,14 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.command.event.transport
+package pl.jwizard.jwc.command.transport
 
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.command.event.handler.InteractionRemovalThread
+import pl.jwizard.jwc.command.handler.InteractionRemovalThread
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.property.BotProperty

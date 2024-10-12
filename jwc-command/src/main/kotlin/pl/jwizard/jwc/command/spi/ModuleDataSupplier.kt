@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.command.spi
 
-import pl.jwizard.jwc.command.event.ModuleData
+import pl.jwizard.jwc.command.ModuleData
 import java.math.BigInteger
 
 /**

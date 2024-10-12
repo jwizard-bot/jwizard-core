@@ -6,7 +6,7 @@ package pl.jwizard.jwc.command.reflect
 
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.command.CommandBase
-import pl.jwizard.jwc.command.event.context.CommandContext
+import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.refer.Command
 
 /**

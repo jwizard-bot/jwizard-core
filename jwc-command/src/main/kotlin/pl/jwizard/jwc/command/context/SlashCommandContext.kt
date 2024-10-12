@@ -2,11 +2,11 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.command.event.context
+package pl.jwizard.jwc.command.context
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import pl.jwizard.jwc.command.GuildCommandProperties
-import pl.jwizard.jwc.command.event.exception.CommandInvocationException
+import pl.jwizard.jwc.command.exception.CommandInvocationException
 
 /**
  * Context for handling slash commands within a guild.

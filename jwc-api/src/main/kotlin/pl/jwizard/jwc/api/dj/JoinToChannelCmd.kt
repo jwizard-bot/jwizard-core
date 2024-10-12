@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel
 import pl.jwizard.jwc.api.DjCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
-import pl.jwizard.jwc.command.event.context.CommandContext
+import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
@@ -50,15 +50,15 @@ class JoinToChannelCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBa
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeDj(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		val voiceChannelWithMember = context.guild?.voiceChannels
+		val voiceChannelWithMember = context.guild.voiceChannels
 			?.find { mapMembersToIds(it).contains(context.author.idLong) }
 			?: throw UserOnVoiceChannelNotFoundException(context)
 
-		if (mapMembersToIds(voiceChannelWithMember).contains(context.selfMember?.idLong)) {
+		if (mapMembersToIds(voiceChannelWithMember).contains(context.selfMember.idLong)) {
 			throw UserIsAlreadyWithBotException(context, voiceChannelWithMember)
 		}
-		context.selfMember?.let {
-			context.guild?.moveVoiceMember(it, voiceChannelWithMember)?.queue {
+		context.selfMember.let {
+			context.guild.moveVoiceMember(it, voiceChannelWithMember)?.queue {
 				log.jdaInfo(context, "Bot was successfully moved to channel: %s", voiceChannelWithMember.qualifier)
 			}
 		}

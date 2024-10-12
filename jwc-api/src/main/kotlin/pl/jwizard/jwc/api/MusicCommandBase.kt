@@ -8,7 +8,7 @@ import dev.arbjerg.lavalink.client.player.Track
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.channel.ChannelType
 import pl.jwizard.jwc.command.CommandEnvironmentBean
-import pl.jwizard.jwc.command.event.context.CommandContext
+import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.I18nLocaleSource
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource

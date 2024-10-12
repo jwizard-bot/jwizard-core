@@ -6,7 +6,7 @@ package pl.jwizard.jwc.api.radio
 
 import pl.jwizard.jwc.api.RadioCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
-import pl.jwizard.jwc.command.event.context.CommandContext
+import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.reflect.JdaCommand

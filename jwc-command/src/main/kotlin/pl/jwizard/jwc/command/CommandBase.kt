@@ -5,7 +5,7 @@
 package pl.jwizard.jwc.command
 
 import net.dv8tion.jda.api.entities.MessageEmbed
-import pl.jwizard.jwc.command.event.context.CommandContext
+import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.interaction.component.Paginator
 import pl.jwizard.jwc.command.interaction.component.RefreshableComponent
 import pl.jwizard.jwc.command.interaction.component.RefreshableContent

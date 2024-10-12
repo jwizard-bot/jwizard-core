@@ -5,7 +5,7 @@
 package pl.jwizard.jwc.api
 
 import pl.jwizard.jwc.command.CommandEnvironmentBean
-import pl.jwizard.jwc.command.event.context.CommandContext
+import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.exception.dj.UnauthorizedDjException
