@@ -38,7 +38,7 @@ class CurrentPlayingCmd(
 	 * @param context The context of the command, containing user interaction details.
 	 * @param manager The music manager responsible for handling the audio queue and playback.
 	 * @param response The future response object used to send the result of the command execution.
-	 * @throws ActiveAudioPlayingNotFoundException if no track is currently playing.
+	 * @throws ActiveAudioPlayingNotFoundException If no track is currently playing.
 	 */
 	override fun executeMusic(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
 		val playingTrack = manager.cachedPlayer?.track ?: throw ActiveAudioPlayingNotFoundException(context)

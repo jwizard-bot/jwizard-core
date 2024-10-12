@@ -35,7 +35,7 @@ class PlayRadioStationCmd(commandEnvironment: CommandEnvironmentBean) : RadioCom
 	 * @param context The command context containing information about the command's execution environment.
 	 * @param manager The music manager responsible for handling audio streaming.
 	 * @param response A future response handler to manage command feedback asynchronously.
-	 * @throws RadioStationNotExistsOrTurnedOffException if the requested radio station does not exist or is inactive.
+	 * @throws RadioStationNotExistsOrTurnedOffException If the requested radio station does not exist or is inactive.
 	 */
 	override fun executeRadio(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
 		val radioStationSlug = context.getArg<String>(CommandArgument.RADIO_STATION)

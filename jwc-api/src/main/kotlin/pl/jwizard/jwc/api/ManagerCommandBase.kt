@@ -30,7 +30,7 @@ abstract class ManagerCommandBase(commandEnvironment: CommandEnvironmentBean) : 
 	 *
 	 * @param context The context of the command, containing user interaction details.
 	 * @param response The future response object used to send the result of the command execution.
-	 * @throws UnauthorizedManagerException if the user does not have managerial permissions.
+	 * @throws UnauthorizedManagerException If the user does not have managerial permissions.
 	 */
 	final override fun execute(context: CommandContext, response: TFutureResponse) {
 		if (!context.checkIfAuthorHasPermissions(*(superuserPermissions.toTypedArray()))) {

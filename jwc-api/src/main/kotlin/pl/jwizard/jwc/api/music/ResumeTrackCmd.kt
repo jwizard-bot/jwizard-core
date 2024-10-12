@@ -75,7 +75,7 @@ class ResumeTrackCmd(
 	 * @param result The result of the async operation, in this case, the updated [LavalinkPlayer].
 	 * @param payload The music manager used for handling audio playback and queue management.
 	 * @return A MessageEmbed containing detailed information about the resumed track.
-	 * @throws UnexpectedException if the resumed track is not found.
+	 * @throws UnexpectedException If the resumed track is not found.
 	 */
 	override fun onAsyncSuccess(context: CommandContext, result: LavalinkPlayer, payload: MusicManager): MessageEmbed {
 		val resumedTrack = payload.cachedPlayer?.track ?: throw UnexpectedException(context, "Resumed track is NULL.")

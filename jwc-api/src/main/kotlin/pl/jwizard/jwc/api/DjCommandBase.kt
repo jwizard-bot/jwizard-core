@@ -34,8 +34,8 @@ abstract class DjCommandBase(commandEnvironment: CommandEnvironmentBean) : Music
 	 * @param context The context of the command, containing user interaction details.
 	 * @param manager The music manager responsible for handling audio playback.
 	 * @param response The future response object used to send the result of the command execution.
-	 * @throws UnauthorizedDjException if the user is not a DJ and does not meet the conditions.
-	 * @throws UnauthorizedDjOrSenderException if the user is a normal user and all tracks in the queue are sent by them.
+	 * @throws UnauthorizedDjException If the user is not a DJ and does not meet the conditions.
+	 * @throws UnauthorizedDjOrSenderException If the user is a normal user and all tracks in the queue are sent by them.
 	 */
 	final override fun executeMusic(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
 		val (isSender, isDj, isSuperUser) = checkPermissions(context, manager)

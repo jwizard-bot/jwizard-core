@@ -87,8 +87,8 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 *
 	 * @param context The context of the command, containing user interaction details.
 	 * @return The voice state of the user in the guild.
-	 * @throws UserOnVoiceChannelNotFoundException if the user is not in a voice channel.
-	 * @throws ForbiddenChannelException if the user is in the AFK channel.
+	 * @throws UserOnVoiceChannelNotFoundException If the user is not in a voice channel.
+	 * @throws ForbiddenChannelException If the user is in the AFK channel.
 	 */
 	protected fun checkUserVoiceState(context: CommandContext): GuildVoiceState {
 		val userVoiceState = context.author.voiceState
@@ -108,7 +108,7 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 * @param voiceState The voice state of the user.
 	 * @param context The context of the command, containing user interaction details.
 	 * @return Boolean indicating whether the user is with the bot in the same channel.
-	 * @throws UserOnVoiceChannelWithBotNotFoundException if the user is not in the same channel as the bot.
+	 * @throws UserOnVoiceChannelWithBotNotFoundException If the user is not in the same channel as the bot.
 	 */
 	protected fun userIsWithBotOnAudioChannel(voiceState: GuildVoiceState, context: CommandContext): Boolean {
 		val botVoiceState = context.selfMember.voiceState

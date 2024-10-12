@@ -59,7 +59,7 @@ abstract class RadioPlaybackMapperHandler(
 	 * @param details The details of the radio station.
 	 * @param context The command context containing guild-specific information.
 	 * @return A MessageEmbed containing the playback data for the radio station.
-	 * @throws RadioStationNotProvidedPlaybackDataException if the playback data cannot be retrieved.
+	 * @throws RadioStationNotProvidedPlaybackDataException If the playback data cannot be retrieved.
 	 */
 	override fun createPlaybackDataMessage(details: RadioStationDetails, context: CommandBaseContext): MessageEmbed {
 		if (details.playbackApiUrl == null) {

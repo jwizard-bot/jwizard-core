@@ -29,7 +29,7 @@ interface ReferentialIntegrityChecker {
 		 * @param T The type of enum implementing ReferentialIntegrityChecker.
 		 * @param clazz The class type associated with the integrity check.
 		 * @param source The collection of property names to validate.
-		 * @throws DataIntegrityViolationException if the integrity check fails.
+		 * @throws DataIntegrityViolationException If the integrity check fails.
 		 */
 		@JvmStatic
 		inline fun <reified T> checkIntegrity(
