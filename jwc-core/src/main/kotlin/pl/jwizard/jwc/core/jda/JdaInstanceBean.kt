@@ -21,6 +21,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag
 import net.dv8tion.jda.internal.managers.AccountManagerImpl
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.SpringKtContextFactory
+import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
@@ -76,10 +77,11 @@ final class JdaInstanceBean(
 	 * sets cache settings, activity status, and adds event listeners (to be defined). It also logs the
 	 * initialization progress and provides an invitation URL for adding the bot to a Discord server once ready.
 	 *
+	 * @param audioClientSupplier Provides access to the distributed client for audio streaming functionalities.
 	 * @throws InterruptedException If waiting for the JDA client to be ready is interrupted.
 	 * @throws InvalidTokenException If there is an issue with the bot token or login process.
 	 */
-	fun createJdaWrapper() {
+	fun createJdaWrapper(audioClientSupplier: DistributedAudioClientSupplier) {
 		log.info("JDA instance is warming up...")
 		jdaColorStoreBean.loadColors()
 
@@ -102,6 +104,7 @@ final class JdaInstanceBean(
 
 		jda = JDABuilder
 			.create(jdaToken, gatewayIntents.map { GatewayIntent.valueOf(it) })
+			.setVoiceDispatchInterceptor(audioClientSupplier.voiceDispatchInterceptor)
 			.enableCache(enabledCacheFlags.map { CacheFlag.valueOf(it) })
 			.disableCache(disabledCacheFlags.map { CacheFlag.valueOf(it) })
 			.setActivity(Activity.listening("Loading..."))

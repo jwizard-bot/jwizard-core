@@ -2,17 +2,21 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.audio
+package pl.jwizard.jwc.audio.event
 
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
 import org.springframework.stereotype.Component
+import pl.jwizard.jwc.audio.MusicManagersBean
+import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
+import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.spi.ChannelListenerGuard
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.jvm.thread.JvmFixedThreadExecutor
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.property.GuildProperty
 import pl.jwizard.jwc.core.util.ext.qualifier
+import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.core.util.logger
 import java.time.Instant
 
@@ -23,7 +27,7 @@ import java.time.Instant
  *
  * @property jdaInstance Provide access to the JDA API, used to retrieve guild information.
  * @property environmentBean Provides access to application properties.
- * @property playerManagersBean Manage audio players and their connections in guilds.
+ * @property musicManagersBean
  * @author Miłosz Gilga
  * @see ChannelListenerGuard
  * @see JvmFixedThreadExecutor
@@ -32,7 +36,7 @@ import java.time.Instant
 class AudioChannelsListenerGuardBean(
 	private val jdaInstance: JdaInstance,
 	private val environmentBean: EnvironmentBean,
-	private val playerManagersBean: PlayerManagersBean,
+	private val musicManagersBean: MusicManagersBean,
 ) : ChannelListenerGuard, JvmFixedThreadExecutor() {
 
 	companion object {
@@ -97,10 +101,25 @@ class AudioChannelsListenerGuardBean(
 			if (time.epochSecond > (Instant.now().epochSecond - maxInactivity)) {
 				continue
 			}
-			val playerManager = playerManagersBean.getManager(guildId)
-			playerManager?.destroyAndDisconnect()
+			val musicManager = musicManagersBean.getCachedMusicManager(guildId)
+			if (musicManager != null) {
+				musicManager.state.audioScheduler.stopAndDestroy()
+				jdaInstance.directAudioController.disconnect(guild)
 
-			log.info("Leave voice channel in guild: {}. Cause: not found any active user.", guild.qualifier)
+				val message = musicManager.createEmbedBuilder()
+					.setDescription(I18nResponseSource.LEAVE_EMPTY_CHANNEL)
+					.setColor(JdaColor.PRIMARY)
+					.build()
+
+				musicManagersBean.removeMusicManager(guildId)
+				musicManager.sendMessage(message)
+
+				log.jdaInfo(
+					musicManager.state.context,
+					"Leave voice channel in guild: {}. Cause: not found any active user.",
+					guild.qualifier
+				)
+			}
 			removeFromGuild.add(guildId)
 		}
 		removeFromGuild.forEach { aloneFromTime.remove(it) }
