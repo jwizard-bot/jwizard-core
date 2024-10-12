@@ -18,6 +18,7 @@ lavalinkClientVersion = "3.1.0"
 commonsCodecVersion = "1.17.1"
 commonsValidatorVersion = "1.9.0"
 commonsIoVersion = "2.17.0"
+reactorVersion = "3.6.10"
 
 [libraries]
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinVersion" }
@@ -44,6 +45,7 @@ lavalinkClient = { module = "dev.arbjerg:lavalink-client", version.ref = "lavali
 commonsCodec = { module = "commons-codec:commons-codec", version.ref = "commonsCodecVersion" }
 commonsValidator = { module = "commons-validator:commons-validator", version.ref = "commonsValidatorVersion" }
 commonsIo = { module = "commons-io:commons-io", version.ref = "commonsIoVersion" }
+reactor = { module = "io.projectreactor:reactor-core", version.ref = "reactorVersion" }
 
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }

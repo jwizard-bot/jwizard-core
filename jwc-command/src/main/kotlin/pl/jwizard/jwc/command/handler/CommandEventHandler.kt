@@ -46,7 +46,7 @@ import java.util.concurrent.CompletableFuture
  * @author Miłosz Gilga
  */
 abstract class CommandEventHandler<E : Event>(
-	private val commandEventHandlerEnvironmentBean: CommandEventHandlerEnvironmentBean
+	private val commandEventHandlerEnvironmentBean: CommandEventHandlerEnvironmentBean,
 ) : ListenerAdapter() {
 
 	private val i18nBean = commandEventHandlerEnvironmentBean.i18nBean

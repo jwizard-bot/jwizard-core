@@ -28,7 +28,7 @@ import java.time.Duration
 /**
  * Base class for commands related to music playback.
  *
- * This class extends the AudioCommandBase and provides a foundation for commands that involve music playback
+ * This class extends the [AudioCommandBase] and provides a foundation for commands that involve music playback
  * functionalities. It includes checks for the audio player state and user permissions related to music commands.
  *
  * @param commandEnvironment The environment context for executing the command.

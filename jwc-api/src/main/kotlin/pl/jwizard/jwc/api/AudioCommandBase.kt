@@ -4,12 +4,16 @@
  */
 package pl.jwizard.jwc.api
 
+import dev.arbjerg.lavalink.client.player.LavalinkPlayer
+import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.GuildVoiceState
 import net.dv8tion.jda.api.entities.channel.ChannelType
 import pl.jwizard.jwc.command.CommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.mono.AsyncUpdatableHandler
+import pl.jwizard.jwc.command.mono.AsyncUpdatableHook
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotListProperty
@@ -132,6 +136,24 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 			context.author.voiceState?.channel?.let { jdaInstance.directAudioController.connect(it) }
 		}
 	}
+
+	/**
+	 * Creates an asynchronous handler for the Lavalink player updates.
+	 *
+	 * This method sets up an async handler using a hook to manage the update flow, which can then be processed for
+	 * either success or failure.
+	 *
+	 * @param P Additional payload object.
+	 * @param context The context of the command, containing user interaction details.
+	 * @param response The future response object used to send the result of the command execution.
+	 * @param hook The hook to handle success and failure of the asynchronous operation.
+	 * @return An instance of AsyncUpdatableHandler for processing the async updates.
+	 */
+	protected fun <P> createAsyncUpdatablePlayerHandler(
+		context: CommandContext,
+		response: TFutureResponse,
+		hook: AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, P>,
+	) = AsyncUpdatableHandler(context, response, this::class, hook, exceptionTrackerStore)
 
 	/**
 	 * Flag indicating whether the command requires the user to be in the same channel as the bot.
