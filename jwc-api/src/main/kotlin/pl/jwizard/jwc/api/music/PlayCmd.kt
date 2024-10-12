@@ -41,6 +41,6 @@ class PlayCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(com
 	override fun executeMusic(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
 		val track = context.getArg<String>(CommandArgument.TRACK)
 		joinAndOpenAudioConnection(context)
-		manager.loadAndPlay(track, context, response)
+		manager.loadAndPlay(track, context)
 	}
 }

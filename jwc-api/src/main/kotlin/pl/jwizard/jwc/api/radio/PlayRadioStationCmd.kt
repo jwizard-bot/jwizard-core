@@ -44,6 +44,6 @@ class PlayRadioStationCmd(commandEnvironment: CommandEnvironmentBean) : RadioCom
 			?: throw RadioStationNotExistsOrTurnedOffException(context, radioStationSlug)
 
 		joinAndOpenAudioConnection(context)
-		manager.loadAndStream(radioStation.name, radioStation.streamUrl, context, response)
+		manager.loadAndStream(radioStation.name, radioStation.streamUrl, context)
 	}
 }
