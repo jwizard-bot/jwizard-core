@@ -5,55 +5,24 @@
 package pl.jwizard.jwc.command.event.handler
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
-import pl.jwizard.jwc.command.CommandsCacheBean
 import pl.jwizard.jwc.command.GuildCommandProperties
 import pl.jwizard.jwc.command.event.CommandType
 import pl.jwizard.jwc.command.event.context.PrefixCommandContext
-import pl.jwizard.jwc.command.event.transport.LooselyTransportHandlerBean
-import pl.jwizard.jwc.command.spi.CommandDataSupplier
-import pl.jwizard.jwc.command.spi.ModuleDataSupplier
-import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
-import pl.jwizard.jwc.core.i18n.I18nBean
-import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
-import pl.jwizard.jwc.core.property.EnvironmentBean
 
 /**
  * Handles prefix commands received in messages.
  *
- * @property commandDataSupplier Supplies command data.
- * @property moduleDataSupplier Supplies module data.
- * @property commandsCacheBean Cache for command execution.
- * @property exceptionTrackerStore Tracks exceptions for reporting.
- * @property i18nBean Provides internationalization support.
- * @property environmentBean Accesses environment-specific properties.
- * @property jdaColorStoreBean Accesses to JDA defined colors for embed messages.
- * @property looselyTransportHandlerBean
+ * @property commandEventHandlerEnvironmentBean Stored all beans for command event handler.
  * @author Miłosz Gilga
  * @see CommandEventHandler
  * @see MessageReceivedEvent
  */
 @JdaEventListenerBean
 class PrefixCommandEventHandlerBean(
-	private val commandDataSupplier: CommandDataSupplier,
-	private val moduleDataSupplier: ModuleDataSupplier,
-	private val commandsCacheBean: CommandsCacheBean,
-	private val exceptionTrackerStore: ExceptionTrackerStore,
-	private val i18nBean: I18nBean,
-	private val environmentBean: EnvironmentBean,
-	private val jdaColorStoreBean: JdaColorStoreBean,
-	private val looselyTransportHandlerBean: LooselyTransportHandlerBean,
-) : CommandEventHandler<MessageReceivedEvent>(
-	commandDataSupplier,
-	moduleDataSupplier,
-	commandsCacheBean,
-	exceptionTrackerStore,
-	i18nBean,
-	environmentBean,
-	jdaColorStoreBean,
-	looselyTransportHandlerBean,
-) {
+	private val commandEventHandlerEnvironmentBean: CommandEventHandlerEnvironmentBean,
+) : CommandEventHandler<MessageReceivedEvent>(commandEventHandlerEnvironmentBean) {
 
 	companion object {
 		/**

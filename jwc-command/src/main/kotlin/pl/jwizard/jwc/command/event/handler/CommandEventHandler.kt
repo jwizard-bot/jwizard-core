@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.events.Event
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.requests.RestAction
-import pl.jwizard.jwc.command.CommandsCacheBean
 import pl.jwizard.jwc.command.GuildCommandProperties
 import pl.jwizard.jwc.command.event.CommandType
 import pl.jwizard.jwc.command.event.arg.CommandArgumentParsingData
@@ -18,23 +17,16 @@ import pl.jwizard.jwc.command.event.arg.CommandArgumentType
 import pl.jwizard.jwc.command.event.context.CommandContext
 import pl.jwizard.jwc.command.event.exception.CommandInvocationException
 import pl.jwizard.jwc.command.event.exception.CommandParserException
-import pl.jwizard.jwc.command.event.transport.LooselyTransportHandlerBean
 import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.reflect.CommandArgumentDetails
 import pl.jwizard.jwc.command.reflect.CommandDetails
-import pl.jwizard.jwc.command.spi.CommandDataSupplier
-import pl.jwizard.jwc.command.spi.ModuleDataSupplier
-import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
-import pl.jwizard.jwc.core.i18n.I18nBean
 import pl.jwizard.jwc.core.i18n.source.I18nDynamicMod
 import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
-import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
-import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
 import pl.jwizard.jwc.exception.UnexpectedException
 import pl.jwizard.jwc.exception.command.CommandIsTurnedOffException
@@ -50,25 +42,14 @@ import java.util.concurrent.CompletableFuture
  * This class is responsible for processing incoming events, executing commands, managing exceptions, and responding
  * to the user appropriately.
  *
- * @property commandDataSupplier The supplier for command data.
- * @property moduleDataSupplier The supplier for module data.
- * @property commandsCacheBean The bean for storing command cache.
- * @property exceptionTrackerStore The bean for tracking exceptions.
- * @property i18nBean The bean for internationalization.
- * @property environmentBean The bean for environment properties.
- * @property jdaColorStoreBean Accesses to JDA defined colors for embed messages.
+ * @property commandEventHandlerEnvironmentBean Stored all beans for command event handler.
  * @author Miłosz Gilga
  */
 abstract class CommandEventHandler<E : Event>(
-	private val commandDataSupplier: CommandDataSupplier,
-	private val moduleDataSupplier: ModuleDataSupplier,
-	private val commandsCacheBean: CommandsCacheBean,
-	private val exceptionTrackerStore: ExceptionTrackerStore,
-	private val i18nBean: I18nBean,
-	private val environmentBean: EnvironmentBean,
-	private val jdaColorStoreBean: JdaColorStoreBean,
-	private val looselyTransportHandlerBean: LooselyTransportHandlerBean,
+	private val commandEventHandlerEnvironmentBean: CommandEventHandlerEnvironmentBean
 ) : ListenerAdapter() {
+
+	private val i18nBean = commandEventHandlerEnvironmentBean.i18nBean
 
 	/**
 	 * Initializes the command pipeline and performs the command based on the event. This method handles the main logic
@@ -82,6 +63,8 @@ abstract class CommandEventHandler<E : Event>(
 		var privateMessageUserId: Long? = null
 		try {
 			try {
+				val commandDataSupplier = commandEventHandlerEnvironmentBean.commandDataSupplier
+				val commandsCacheBean = commandEventHandlerEnvironmentBean.commandsCacheBean
 				if (forbiddenInvocationCondition(event)) {
 					throw CommandInvocationException("forbidden invocation condition")
 				}
@@ -98,7 +81,8 @@ abstract class CommandEventHandler<E : Event>(
 					?: throw CommandInvocationException("command by command name could not be found")
 				context = createCommandContext(event, commandDetails.name, properties)
 
-				val (moduleId, isEnabled) = moduleDataSupplier.isEnabled(commandDetails.name, properties.guildDbId)
+				val (moduleId, isEnabled) = commandEventHandlerEnvironmentBean.moduleDataSupplier
+					.isEnabled(commandDetails.name, properties.guildDbId)
 					?: throw CommandInvocationException("module by command name could not be found", context)
 				if (!isEnabled) {
 					val moduleName = i18nBean.tRaw(I18nDynamicMod.MODULES_MOD, arrayOf(moduleId), context.guildLanguage)
@@ -125,7 +109,7 @@ abstract class CommandEventHandler<E : Event>(
 					throw MismatchCommandArgumentsException(context, commandSyntax)
 				}
 			} catch (ex: CommandInvocationException) {
-				if (commandType == CommandType.LEGACY) {
+				if (commandType == CommandType.PREFIX) {
 					return
 				}
 				throw UnexpectedException(ex.context, ex.message)
@@ -151,6 +135,7 @@ abstract class CommandEventHandler<E : Event>(
 	 * @param privateUserId User id used to send private message. If it is `null`, message is public.
 	 */
 	private fun sendResponse(event: E, response: CommandResponse, context: CommandContext?, privateUserId: Long?) {
+		val looselyTransportHandlerBean = commandEventHandlerEnvironmentBean.looselyTransportHandlerBean
 		var directEphemeralUser: User? = null
 		val truncatedResponse = try {
 			if (response.embedMessages.isEmpty() && commandType == CommandType.SLASH) {
@@ -188,6 +173,7 @@ abstract class CommandEventHandler<E : Event>(
 	 */
 	private fun createExceptionMessage(ex: CommandPipelineExceptionHandler): CommandResponse {
 		ex.printLogStatement()
+		val exceptionTrackerStore = commandEventHandlerEnvironmentBean.exceptionTrackerStore
 		val trackerMessage = exceptionTrackerStore.createTrackerMessage(ex)
 		val trackerLink = exceptionTrackerStore.createTrackerLink(ex)
 		return CommandResponse.Builder()
@@ -211,8 +197,11 @@ abstract class CommandEventHandler<E : Event>(
 	 *        interactive components.
 	 */
 	private fun sendPrivateMessage(event: E, user: User, context: CommandContext?, response: CommandResponse) {
-		val successMessage = MessageEmbedBuilder(i18nBean, jdaColorStoreBean, context)
-			.setDescription(I18nResponseSource.PRIVATE_MESSAGE_SEND)
+		val looselyTransportHandlerBean = commandEventHandlerEnvironmentBean.looselyTransportHandlerBean
+		val exceptionTrackerStore = commandEventHandlerEnvironmentBean.exceptionTrackerStore
+		val successMessage = MessageEmbedBuilder(i18nBean, commandEventHandlerEnvironmentBean.jdaColorStoreBean, context)
+			.setTitle(I18nResponseSource.PRIVATE_MESSAGE_SEND)
+			.setDescription(I18nResponseSource.CHECK_INBOX)
 			.setColor(JdaColor.PRIMARY)
 			.build()
 
@@ -263,8 +252,9 @@ abstract class CommandEventHandler<E : Event>(
 		return details.args.associate {
 			val optionMapping: String? = options.poll()
 			if (it.options.isNotEmpty() && !it.options.contains(optionMapping)) {
-				val syntax = createArgumentsOptionsSyntax(options, context.guildLanguage)
-				throw ViolatedCommandArgumentOptionsException(context, it.name, optionMapping, it.options, syntax)
+				val syntax = createArgumentsOptionsSyntax(context.commandName, it.options, context.guildLanguage)
+				val argsDescription = i18nBean.tRaw(I18nDynamicMod.ARGS_MOD, arrayOf(it.name), context.guildLanguage)
+				throw ViolatedCommandArgumentOptionsException(context, argsDescription, optionMapping, it.options, syntax)
 			}
 			val argKey = CommandArgument.entries.find { arg -> arg.propName == it.name }
 			val type = CommandArgumentType.entries.find { type -> type.name == it.type }
@@ -308,11 +298,12 @@ abstract class CommandEventHandler<E : Event>(
 	 * @param lang The language for internationalization.
 	 * @return A string listing all valid options.
 	 */
-	private fun createArgumentsOptionsSyntax(options: Queue<String>, lang: String): String {
+	private fun createArgumentsOptionsSyntax(commandName: String, options: List<String>, lang: String): String {
 		val stringJoiner = StringJoiner("")
 		stringJoiner.add("\n\n")
 		options.forEachIndexed { index, option ->
-			stringJoiner.add("* `$option` - ${i18nBean.tRaw(I18nDynamicMod.ARG_OPTION_MOD, arrayOf(option), lang)}")
+			val optionName = i18nBean.tRaw(I18nDynamicMod.ARG_OPTION_MOD, arrayOf(commandName, option), lang)
+			stringJoiner.add("* `$option` - $optionName\n")
 			if (index < options.size - 1 && options.size != 1) {
 				stringJoiner.add("\n")
 			}
