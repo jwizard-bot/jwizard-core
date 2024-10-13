@@ -54,7 +54,7 @@ class GuildSettingsEventActionBean(
 		return translationTemplate.execute {
 			try {
 				val columns = mapOf(
-					"discord_id" to SqlColumn(guildId, VARCHAR),
+					"discord_id" to SqlColumn(guildId, BIGINT),
 					"legacy_prefix" to SqlColumn(getProperty(GUILD_DEFAULT_LEGACY_PREFIX), CHAR),
 					"lang_id" to SqlColumn(languageSupplier.getLanguageId(languageTag), BIGINT),
 					"dj_role_name" to SqlColumn(getProperty(GUILD_DJ_ROLE_NAME), VARCHAR),
