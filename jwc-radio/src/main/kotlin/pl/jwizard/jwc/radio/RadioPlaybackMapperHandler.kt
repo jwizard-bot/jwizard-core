@@ -94,7 +94,7 @@ abstract class RadioPlaybackMapperHandler(
 			messageBuilder.setKeyValueField(I18nAudioSource.NEXT_TRACK_INDEX_MESS, it)
 		}
 		if (parsedResponse.elapsedNowSec != null && parsedResponse.trackDuration != null) {
-			val bar = PercentageIndicatorBar(parsedResponse.elapsedNowSec, parsedResponse.trackDuration)
+			val bar = PercentageIndicatorBar(parsedResponse.elapsedNowSec.seconds, parsedResponse.trackDuration.seconds)
 			messageBuilder.setValueField(bar.generateBar(), false)
 		}
 		parsedResponse.trackDuration?.let {

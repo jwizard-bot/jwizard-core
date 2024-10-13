@@ -26,19 +26,9 @@ enum class SystemProperty(
 	JVM_NAME(BotProperty.JVM_NAME, I18nSystemSource.JVM_NAME),
 
 	/**
-	 * Retrieves the name of the Java Runtime Environment (JRE).
-	 */
-	JRE_NAME(BotProperty.JRE_NAME, I18nSystemSource.JRE_NAME),
-
-	/**
 	 * Retrieves the version of the Java Runtime Environment (JRE).
 	 */
 	JRE_VERSION(BotProperty.JRE_VERSION, I18nSystemSource.JRE_VERSION),
-
-	/**
-	 * Retrieves the specification version of the Java Runtime Environment (JRE).
-	 */
-	JRE_SPEC_VERSION(BotProperty.JRE_SPEC_VERSION, I18nSystemSource.JRE_SPEC_VERSION),
 
 	/**
 	 * Retrieves the name of the operating system.

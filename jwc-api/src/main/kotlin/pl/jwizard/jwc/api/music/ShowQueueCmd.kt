@@ -22,6 +22,7 @@ import pl.jwizard.jwc.core.util.ext.duration
 import pl.jwizard.jwc.core.util.ext.name
 import pl.jwizard.jwc.core.util.ext.normalizedTitle
 import pl.jwizard.jwc.core.util.mdBold
+import pl.jwizard.jwc.core.util.mdCode
 import pl.jwizard.jwc.core.util.mdLink
 import pl.jwizard.jwc.core.util.millisToDTF
 import java.util.*
@@ -84,7 +85,7 @@ class ShowQueueCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBas
 
 				val valueJoiner = StringJoiner("")
 				valueJoiner.add(mdLink("[link]", track.info.uri))
-				valueJoiner.add(", `${millisToDTF(track.duration)}`")
+				valueJoiner.add(", ${mdCode(millisToDTF(track.duration))}")
 				senderName?.let {
 					valueJoiner.add(", ")
 					valueJoiner.add(i18nBean.t(I18nAudioSource.TRACK_ADDED_BY, lang))

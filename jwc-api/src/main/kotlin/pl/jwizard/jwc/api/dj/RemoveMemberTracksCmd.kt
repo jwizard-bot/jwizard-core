@@ -18,14 +18,11 @@ import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotProperty
+import pl.jwizard.jwc.core.util.*
 import pl.jwizard.jwc.core.util.ext.duration
 import pl.jwizard.jwc.core.util.ext.name
 import pl.jwizard.jwc.core.util.ext.normalizedTitle
 import pl.jwizard.jwc.core.util.ext.qualifier
-import pl.jwizard.jwc.core.util.jdaInfo
-import pl.jwizard.jwc.core.util.logger
-import pl.jwizard.jwc.core.util.mdLink
-import pl.jwizard.jwc.core.util.millisToDTF
 import pl.jwizard.jwc.exception.user.UserNotAddedTracksToQueueException
 import pl.jwizard.jwc.exception.user.UserNotFoundInGuildException
 
@@ -86,7 +83,7 @@ class RemoveMemberTracksCmd(commandEnvironment: CommandEnvironmentBean) : DjComm
 			for (track in chunk) {
 				messageBuilder.setKeyValueField(
 					key = "${trackIndex++}. ${track.normalizedTitle}",
-					value = "${mdLink("[link]", track.info.uri)}, `${millisToDTF(track.duration)}`",
+					value = "${mdLink("[link]", track.info.uri)}, ${mdCode(millisToDTF(track.duration))}",
 					inline = false,
 				)
 			}

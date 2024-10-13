@@ -23,6 +23,7 @@ import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwc.core.util.mdCode
 import pl.jwizard.jwc.exception.spi.ExceptionSupplier
 import java.util.*
 
@@ -174,7 +175,7 @@ class ExceptionTrackerStoreBean(
 	private fun StringJoiner.addKeyValue(key: I18nLocaleSource, value: Any, lang: String?): StringJoiner {
 		add(i18nBean.t(key, lang))
 		add(":")
-		add("`$value`")
+		add(mdCode(value.toString()))
 		return this
 	}
 }

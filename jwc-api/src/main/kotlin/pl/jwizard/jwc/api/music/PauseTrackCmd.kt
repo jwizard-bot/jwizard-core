@@ -27,7 +27,6 @@ import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.core.util.logger
 import pl.jwizard.jwc.core.util.millisToDTF
 import pl.jwizard.jwc.exception.UnexpectedException
-import java.time.Duration
 
 /**
  * Command for pausing the currently playing track.
@@ -89,8 +88,8 @@ class PauseTrackCmd(
 		log.jdaInfo(context, "Current playing track: %s was paused.", pausedTrack.qualifier)
 
 		val percentageIndicatorBar = PercentageIndicatorBar(
-			start = Duration.ofMillis(elapsedTime),
-			total = Duration.ofMillis(pausedTrack.duration),
+			start = elapsedTime,
+			total = pausedTrack.duration,
 		)
 		val messageBuilder = createEmbedMessage(context)
 			.setDescription(

@@ -16,6 +16,7 @@ import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.util.mdBold
+import pl.jwizard.jwc.core.util.mdCode
 import pl.jwizard.jwc.core.util.mdLink
 import java.util.*
 
@@ -115,7 +116,7 @@ abstract class HelpCommandBase(commandEnvironment: CommandEnvironmentBean) : Com
 			keyJoiner.add(" (${details.alias}) ")
 
 			details.argI18nKey?.let {
-				keyJoiner.add("`<${i18nBean.tRaw(I18nDynamicMod.ARG_PER_COMMAND_MOD, arrayOf(it), lang)}>`")
+				keyJoiner.add(mdCode("<${i18nBean.tRaw(I18nDynamicMod.ARG_PER_COMMAND_MOD, arrayOf(it), lang)}>"))
 			}
 			descriptionJoiner.add(mdLink("[link]", command.format(website, key)))
 			descriptionJoiner.add(" ")

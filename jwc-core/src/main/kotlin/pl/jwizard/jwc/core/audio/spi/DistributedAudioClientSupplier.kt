@@ -4,6 +4,7 @@
  */
 package pl.jwizard.jwc.core.audio.spi
 
+import dev.arbjerg.lavalink.client.LavalinkNode
 import dev.arbjerg.lavalink.client.Link
 import net.dv8tion.jda.api.hooks.VoiceDispatchInterceptor
 
@@ -34,4 +35,10 @@ interface DistributedAudioClientSupplier {
 	 * and dispatching audio events.
 	 */
 	val voiceDispatchInterceptor: VoiceDispatchInterceptor
+
+	/**
+	 * Retrieves a list of currently available Lavalink nodes that can handle audio streams. These nodes are responsible
+	 * for processing and distributing audio playback across guilds.
+	 */
+	val availableNodes: List<LavalinkNode>
 }

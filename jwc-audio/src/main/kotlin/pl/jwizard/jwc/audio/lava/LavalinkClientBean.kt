@@ -5,6 +5,7 @@
 package pl.jwizard.jwc.audio.lava
 
 import dev.arbjerg.lavalink.client.LavalinkClient
+import dev.arbjerg.lavalink.client.LavalinkNode
 import dev.arbjerg.lavalink.client.event.*
 import dev.arbjerg.lavalink.client.getUserIdFromToken
 import dev.arbjerg.lavalink.client.loadbalancing.RegionGroup
@@ -122,4 +123,11 @@ class LavalinkClientBean(
 	 */
 	override val voiceDispatchInterceptor
 		get() = JDAVoiceUpdateListener(client)
+
+	/**
+	 * Retrieves a list of currently available Lavalink nodes that can handle audio streams. These nodes are responsible
+	 * for processing and distributing audio playback across guilds.
+	 */
+	override val availableNodes
+		get() = client.nodes.filter(LavalinkNode::available)
 }

@@ -40,6 +40,16 @@ fun mdLink(name: String, link: String?) = "[$name]($link)"
 fun mdBold(text: String) = "**$text**"
 
 /**
+ * Wraps the provided text in Markdown inline code formatting (using backticks) for embedding it in Discord messages.
+ * If the text is null, it will wrap `null` instead.
+ *
+ * @param text The text to be wrapped in inline code formatting.
+ * @return The text wrapped in backticks, suitable for Discord Markdown formatting.
+ * @author Miłosz Gilga
+ */
+fun mdCode(text: String?) = "`$text`"
+
+/**
  * Formats a key-value pair as a string.
  *
  * This function takes a key and a value, and formats them into a string representation.  If the value is null, it will

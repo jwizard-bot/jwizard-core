@@ -4,8 +4,6 @@
  */
 package pl.jwizard.jwc.core.jda.embed
 
-import java.time.Duration
-
 /**
  * A class that represents a progress indicator bar, showing the percentage of completion between a start and total
  * duration.
@@ -19,8 +17,8 @@ import java.time.Duration
  * @author Miłosz Gilga
  */
 class PercentageIndicatorBar(
-	private val start: Duration,
-	private val total: Duration,
+	private val start: Long,
+	private val total: Long,
 	private val length: Int = MAX_INDICATOR_LENGTH,
 ) {
 
@@ -60,11 +58,14 @@ class PercentageIndicatorBar(
 	 * @return A string representing the progress indicator bar, showing the current progress.
 	 */
 	fun generateBar(): String {
-		val progressPercentage = start.seconds.toDouble() / total.seconds.toDouble() * 100.0
+		val progressPercentage = start.toDouble() / total.toDouble() * 100.0
 
 		val blocksCount = Math.round(length * progressPercentage / 100).toInt()
 		val emptyBlocksCount = length - blocksCount
 
-		return formatToBlocks(blocksCount, INDICATOR_FULL) + formatToBlocks(emptyBlocksCount, INDICATOR_EMPTY)
+		return formatToBlocks(blocksCount, INDICATOR_FULL) + formatToBlocks(
+			emptyBlocksCount,
+			INDICATOR_EMPTY
+		) + " %.2f%%".format(progressPercentage)
 	}
 }

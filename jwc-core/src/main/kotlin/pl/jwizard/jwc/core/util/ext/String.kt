@@ -20,3 +20,12 @@ package pl.jwizard.jwc.core.util.ext
  * @author Miłosz Gilga
  */
 val String.fromCamelToDashCase get() = replace(Regex("([a-z])([A-Z]+)"), "$1-$2").lowercase()
+
+/**
+ * Formats the current string as a version string by prepending "v" to it. This is useful for displaying version
+ * numbers in a standard format.
+ *
+ * @return The version string with a "v" prefix.
+ * @author Miłosz Gilga
+ */
+val String.versionFormat get() = "v$this"

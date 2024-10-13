@@ -24,7 +24,6 @@ import pl.jwizard.jwc.exception.audio.ActiveAudioPlayingNotFoundException
 import pl.jwizard.jwc.exception.audio.PlayerNotPausedException
 import pl.jwizard.jwc.exception.command.CommandAvailableOnlyForDiscreteTrackException
 import pl.jwizard.jwc.exception.track.TrackQueueIsEmptyException
-import java.time.Duration
 
 /**
  * Base class for commands related to music playback.
@@ -105,8 +104,8 @@ abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 		val elapsedTime = manager.cachedPlayer?.position ?: 0
 		val audioSender = manager.getAudioSenderId(track)?.let { context.guild.getMemberById(it) }
 		val percentageIndicatorBar = PercentageIndicatorBar(
-			start = Duration.ofMillis(elapsedTime),
-			total = Duration.ofMillis(track.duration),
+			start = elapsedTime,
+			total = track.duration,
 		)
 		val messageBuilder = createEmbedMessage(context)
 			.setTitle(i18nTitle)
