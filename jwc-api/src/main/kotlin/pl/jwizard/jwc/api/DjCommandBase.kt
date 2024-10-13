@@ -68,7 +68,7 @@ abstract class DjCommandBase(commandEnvironment: CommandEnvironmentBean) : Music
 		if (audioScheduler.queue.size == 0) {
 			return manager.getAudioSenderId(manager.cachedPlayer?.track) == context.author.idLong
 		}
-		return audioScheduler.queue.asList().all { manager.getAudioSenderId(it) == context.author.idLong }
+		return audioScheduler.queue.iterable.all { manager.getAudioSenderId(it) == context.author.idLong }
 	}
 
 	/**

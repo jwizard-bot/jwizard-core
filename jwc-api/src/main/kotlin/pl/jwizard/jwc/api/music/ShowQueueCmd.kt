@@ -52,7 +52,7 @@ class ShowQueueCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBas
 		val paginatorChunkSize = environmentBean.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 
 		val scheduler = manager.state.queueTrackScheduler
-		val queue = scheduler.queue.asList()
+		val queue = scheduler.queue.iterable
 		val lang = context.guildLanguage
 		val embedMessages = mutableListOf<MessageEmbed>()
 

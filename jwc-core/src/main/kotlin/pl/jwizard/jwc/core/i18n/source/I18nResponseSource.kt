@@ -48,9 +48,6 @@ enum class I18nResponseSource(override val placeholder: String) : I18nLocaleSour
 	SKIPPED_CURRENT_TRACK_AND_CLEAR_QUEUE("jwc.response.skippedCurrentTrackAndClearQueue"),
 	CLEAR_QUEUE("jwc.response.clearQueue"),
 
-	// manager
-	SYSTEM_DATA("jwc.response.systemData"),
-
 	// misc
 	PRIVATE_MESSAGE_SEND("jwc.response.privateMessageSend"),
 	CHECK_INBOX("jwc.response.checkInbox"),

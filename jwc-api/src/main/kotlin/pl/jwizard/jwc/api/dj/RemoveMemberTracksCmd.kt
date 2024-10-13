@@ -58,7 +58,7 @@ class RemoveMemberTracksCmd(commandEnvironment: CommandEnvironmentBean) : DjComm
 			?: throw UserNotFoundInGuildException(context, userId)
 
 		val queue = manager.state.queueTrackScheduler.queue
-		val userAddAnyTrackToQueue = queue.asList().any {
+		val userAddAnyTrackToQueue = queue.iterable.any {
 			manager.getAudioSenderId(manager.cachedPlayer?.track) == member.idLong
 		}
 		if (!userAddAnyTrackToQueue) {
