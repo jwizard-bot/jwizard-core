@@ -28,11 +28,6 @@ import pl.jwizard.jwc.core.util.mdLink
 class ShowRadioStationsCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
 
 	/**
-	 * The chunk size used for pagination in the radio stations display.
-	 */
-	private val paginatorChunkSize = environmentBean.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
-
-	/**
 	 * Executes the command to display radio stations.
 	 *
 	 * This method retrieves radio stations for the specified guild, constructs embed messages for each page of radio
@@ -45,6 +40,7 @@ class ShowRadioStationsCmd(commandEnvironment: CommandEnvironmentBean) : Command
 		val radioStations = radioStationSupplier.getRadioStations(context.guildDbId)
 		val lang = context.guildLanguage
 
+		val paginatorChunkSize = environmentBean.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 		val radioCmd = Command.PLAY_RADIO.propName
 		val responseBuilder = CommandResponse.Builder()
 

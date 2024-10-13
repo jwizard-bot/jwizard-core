@@ -38,11 +38,6 @@ class ShowQueueCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBas
 	override val queueShouldNotBeEmpty = true
 
 	/**
-	 * The chunk size used for pagination in the queue display.
-	 */
-	private val paginatorChunkSize = environmentBean.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
-
-	/**
 	 * Executes the logic for displaying the music queue.
 	 *
 	 * This method retrieves the current queue of tracks, calculates total and average durations, and builds paginated
@@ -53,6 +48,8 @@ class ShowQueueCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBas
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeMusic(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
+		val paginatorChunkSize = environmentBean.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
+
 		val scheduler = manager.state.queueTrackScheduler
 		val queue = scheduler.queue.asList()
 		val lang = context.guildLanguage

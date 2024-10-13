@@ -38,5 +38,6 @@ enum class I18nAudioSource(override val placeholder: String) : I18nLocaleSource 
 	ADD_NEW_PLAYLIST("jwc.audio.addNewPlaylist"),
 	ADD_NEW_TRACK("jwc.audio.addNewTrack"),
 	QUEUE("jwc.audio.queue"),
+	REMOVED_POSITIONS("jwc.audio.removedPositions"),
 	;
 }
