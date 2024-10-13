@@ -29,9 +29,9 @@ fun secToDTF(sec: Long) = dtFormat(Duration.ofSeconds(sec))
  * Converts a duration in seconds to a human-readable string format.
  *
  * This function returns a string representing the duration in minutes and seconds. The output varies:
- * - If there are no minutes, it returns seconds (e.g., "30s").
- * - If there are no remaining seconds, it returns minutes (e.g., "5m").
- * - If there are both minutes and seconds, it returns them formatted as "Xm, Ys" (e.g., "5m, 30s").
+ * - If there are no minutes, it returns seconds (ex. "30s").
+ * - If there are no remaining seconds, it returns minutes (ex. "5m").
+ * - If there are both minutes and seconds, it returns them formatted as "Xm, Ys" (ex. "5m, 30s").
  *
  * @param seconds The duration in seconds.
  * @return A human-readable string representing the duration.

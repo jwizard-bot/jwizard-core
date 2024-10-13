@@ -8,7 +8,7 @@ package pl.jwizard.jwc.command.reflect
  * Represents the details of an argument associated with a command.
  *
  * @property name The name of the argument as it will be used in the command.
- * @property type The data type of the argument (e.g., String, Integer).
+ * @property type The data type of the argument (ex. [String], [Integer]).
  * @property required Indicates whether this argument is mandatory for the command execution.
  * @property position The order in which the argument appears in the command.
  * @property options A mutable list of possible values for this argument, if applicable. This is useful for arguments

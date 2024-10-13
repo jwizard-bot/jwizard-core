@@ -19,7 +19,7 @@ interface I18nPropertyFilesSupplier {
 	 *
 	 * @param charset The character set to use when decoding the property file content.
 	 * @param remoteBundle The name of the remote bundle where the property file is located.
-	 * @param language The language code (e.g., "en", "pl") for the property file to be retrieved.
+	 * @param language The language code (ex. "en", "pl") for the property file to be retrieved.
 	 * @return The raw content of the property file as a [String], or `null` if the file could not be retrieved.
 	 */
 	fun getFileRaw(remoteBundle: String, language: String, charset: Charset): String?

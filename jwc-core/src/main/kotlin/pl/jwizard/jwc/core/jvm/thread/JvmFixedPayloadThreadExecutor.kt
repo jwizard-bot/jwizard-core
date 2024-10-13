@@ -30,7 +30,7 @@ abstract class JvmFixedPayloadThreadExecutor<T>(
 	 * Schedules a single execution of a task with the provided payload after a specified delay.
 	 *
 	 * @param delay The time delay before the task is executed.
-	 * @param unit The time unit of the delay (e.g., seconds, milliseconds).
+	 * @param unit The time unit of the delay (ex. seconds, milliseconds).
 	 * @param payload The payload to be processed by the thread.
 	 */
 	fun startOnce(delay: Long, unit: TimeUnit, payload: T) {

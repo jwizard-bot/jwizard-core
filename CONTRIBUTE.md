@@ -30,9 +30,9 @@ Please follow these coding standards:
 3. Use `PascalCase` for naming classes, `camelCase` for variables and methods, and `SCREAMING_SNAKE_CASE` for constants.
 4. Each Kotlin class should reside in a separate file to avoid clutter in the project.
 5. Avoid mutable variables (`var`); whenever possible, use immutable collections or thread-safe mutable collections
-   (e.g., `ConcurrentHashMap` instead of `HashMap`).
+   (ex. `ConcurrentHashMap` instead of `HashMap`).
 6. Always use `const` for primitive constants.
-7. Avoid explicitly specifying types when unnecessary (e.g., in `get()` constructs).
+7. Avoid explicitly specifying types when unnecessary (ex. in `get()` constructs).
 8. Use braces on the same line.
 9. Do not start interface names with the *I* prefix.
 10. For two or more properties in a class’s primary constructor, place each property on a new line.
@@ -54,7 +54,7 @@ Please follow these commit message conventions:
 - **feat**: For adding a new feature.
 - **fix**: For fixing a bug.
 - **docs**: For documentation changes.
-- **style**: For changes that don’t affect the code logic (e.g., formatting).
+- **style**: For changes that don’t affect the code logic (ex. formatting).
 - **refactor**: For refactoring existing code without changing functionality.
 - **test**: For adding or changing tests.
 - **chore**: For configuration changes or maintenance tasks.
