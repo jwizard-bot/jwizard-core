@@ -15,7 +15,7 @@ import kotlin.reflect.KClass
  * Defining following properties:
  *
  * - [VOTING_PERCENTAGE_RATIO]: Ratio of voting percentage for guilds.
- * - [MAX_VOTING_TIME]: Maximum voting time for guilds in seconds.
+ * - [MAX_VOTING_TIME_SEC]: Maximum voting time for guilds in seconds.
  * - [MUSIC_TEXT_CHANNEL_ID]: ID of the music text channel in the guild. Stored as a string.
  * - [DJ_ROLE_NAME]: Name of the DJ role in the guild.
  * - [MIN_REPEATS_OF_TRACK]: Minimum number of repeats allowed for a track in the guild.
@@ -52,7 +52,7 @@ enum class GuildProperty(
 	/**
 	 * Maximum voting time for guilds in seconds.
 	 */
-	MAX_VOTING_TIME("time_to_finish_voting_sec", I18nSystemSource.VOTE_MAX_WAITING_TIME, TO_DTF_SEC),
+	MAX_VOTING_TIME_SEC("time_to_finish_voting_sec", I18nSystemSource.VOTE_MAX_WAITING_TIME, TO_DTF_SEC),
 
 	/**
 	 * ID of the music text channel in the guild. Stored as a string.

@@ -94,12 +94,14 @@ class SlashCommandEventHandlerBean(
 		privateMessage: Boolean,
 	): RestAction<Message> {
 		val embedMessages = response.embedMessages
-		val actionRows = response.actionRows
-		return if (event.hook.isExpired) {
-			event.channel.sendMessageEmbeds(embedMessages).addComponents(response.actionRows)
+		val message = if (event.hook.isExpired) {
+			event.channel.sendMessageEmbeds(embedMessages)
 		} else {
-			event.hook.sendMessageEmbeds(embedMessages).setEphemeral(privateMessage).addComponents(actionRows)
+			event.hook.sendMessageEmbeds(embedMessages).setEphemeral(privateMessage)
 		}
+		message.addComponents(response.actionRows)
+		response.pool?.let { message.setPoll(it) }
+		return message
 	}
 
 	/**

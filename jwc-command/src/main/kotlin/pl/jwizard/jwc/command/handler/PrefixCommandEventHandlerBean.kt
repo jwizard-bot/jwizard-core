@@ -4,7 +4,9 @@
  */
 package pl.jwizard.jwc.command.handler
 
+import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
+import net.dv8tion.jda.api.requests.RestAction
 import pl.jwizard.jwc.command.CommandType
 import pl.jwizard.jwc.command.GuildCommandProperties
 import pl.jwizard.jwc.command.context.PrefixCommandContext
@@ -118,5 +120,9 @@ class PrefixCommandEventHandlerBean(
 		event: MessageReceivedEvent,
 		response: CommandResponse,
 		privateMessage: Boolean,
-	) = event.channel.sendMessageEmbeds(response.embedMessages).addComponents(response.actionRows)
+	): RestAction<Message> {
+		val message = event.channel.sendMessageEmbeds(response.embedMessages).addComponents(response.actionRows)
+		response.pool?.let { message.setPoll(it) }
+		return message
+	}
 }

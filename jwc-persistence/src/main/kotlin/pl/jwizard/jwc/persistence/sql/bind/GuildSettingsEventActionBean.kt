@@ -62,7 +62,7 @@ class GuildSettingsEventActionBean(
 					"leave_empty_channel_sec" to SqlColumn(getProperty(GUILD_LEAVE_EMPTY_CHANNEL_SEC), INTEGER),
 					"leave_no_tracks_channel_sec" to SqlColumn(getProperty(GUILD_LEAVE_NO_TRACKS_SEC), INTEGER),
 					"voting_percentage_ratio" to SqlColumn(getProperty(GUILD_VOTING_PERCENTAGE_RATIO), INTEGER),
-					"time_to_finish_voting_sec" to SqlColumn(getProperty(GUILD_TIME_TO_FINISH_VOTING_SEC), INTEGER),
+					"time_to_finish_voting_sec" to SqlColumn(getProperty(GUILD_MAX_VOTING_TIME_SEC), INTEGER),
 					"random_auto_choose_track" to SqlColumn(getProperty(GUILD_RANDOM_AUTO_CHOOSE_TRACK), BOOLEAN),
 					"tracks_to_choose_max" to SqlColumn(getProperty(GUILD_MAX_TRACKS_TO_CHOOSE), INTEGER),
 					"time_after_auto_choose_sec" to SqlColumn(getProperty(GUILD_TIME_AFTER_AUTO_CHOOSE_SEC), INTEGER),

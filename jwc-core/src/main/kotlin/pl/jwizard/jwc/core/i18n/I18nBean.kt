@@ -45,16 +45,16 @@ class I18nBean(
 	 *
 	 * This method fetches a localized message for the specified locale. If no language is provided, it defaults
 	 * to the language specified in the environment properties. Placeholders within the message are replaced with
-	 * the corresponding values from the [params] map.
+	 * the corresponding values from the [args] map.
 	 *
 	 * @param i18nLocaleSource The source providing the placeholder for the message.
 	 * @param lang The language tag representing the desired locale (ex. *en*). If null, the default language is used.
-	 * @param params A map of parameters to replace placeholders within the message. Default is an empty map.
+	 * @param args A map of parameters to replace placeholders within the message. Default is an empty map.
 	 * @return The translated message with placeholders replaced by the corresponding parameters.
 	 */
-	fun t(i18nLocaleSource: I18nLocaleSource, lang: String?, params: Map<String, Any?> = emptyMap()): String {
+	fun t(i18nLocaleSource: I18nLocaleSource, lang: String?, args: Map<String, Any?> = emptyMap()): String {
 		val defaultLanguage = environmentBean.getProperty<String>(BotProperty.I18N_DEFAULT_LANGUAGE)
-		return tRaw(i18nLocaleSource.placeholder, params, lang ?: defaultLanguage)
+		return tRaw(i18nLocaleSource.placeholder, args, lang ?: defaultLanguage)
 	}
 
 	/**
@@ -74,7 +74,7 @@ class I18nBean(
 	/**
 	 * Retrieves a raw message based on the provided [I18nDynamicMod], arguments, and language.
 	 *
-	 * This method formats the key from the provided [I18nDynamicMod] using the provided `args`, and then looks up the
+	 * This method formats the key from the provided [I18nDynamicMod] using the provided [args], and then looks up the
 	 * message in the specified language. It uses an empty map for parameters.
 	 *
 	 * @param i18nDynamicMod The [I18nDynamicMod] enum that provides the key pattern for the message.
@@ -88,23 +88,23 @@ class I18nBean(
 	/**
 	 * Retrieves a raw message based on the provided i18n key, parameters, and language.
 	 *
-	 * This method fetches the message using the [MessageSource] for the given `i18nKey` and `lang`. It then replaces
+	 * This method fetches the message using the [MessageSource] for the given [i18nKey] and [lang]. It then replaces
 	 * placeholders in the message with the provided parameters. If the key is not found or if there is an exception,
-	 * it returns the `i18nKey` itself.
+	 * it returns the [i18nKey] itself.
 	 *
 	 * @param i18nKey The key used to look up the message.
-	 * @param params A map of parameters to replace placeholders in the message.
+	 * @param args A map of parameters to replace placeholders in the message.
 	 * @param lang The language tag representing the desired locale (ex. *en*).
 	 * @return The formatted localized message with placeholders replaced by the corresponding parameters.
 	 */
-	private fun tRaw(i18nKey: String, params: Map<String, Any?>, lang: String): String {
+	private fun tRaw(i18nKey: String, args: Map<String, Any?>, lang: String): String {
 		val locale = Locale.forLanguageTag(lang)
 		return try {
 			var propertyValue = messageSource.getMessage(i18nKey, null, locale)
 			if (propertyValue.isBlank()) {
 				propertyValue
 			} else {
-				for ((key, value) in params) {
+				for ((key, value) in args) {
 					propertyValue = propertyValue.replace("$START_DELIMITER${key}$END_DELIMITER", value.toString())
 				}
 				propertyValue

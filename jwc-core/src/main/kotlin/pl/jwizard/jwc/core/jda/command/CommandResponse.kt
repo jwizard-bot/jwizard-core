@@ -7,6 +7,7 @@ package pl.jwizard.jwc.core.jda.command
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.ActionRow
+import net.dv8tion.jda.api.utils.messages.MessagePollData
 
 /**
  * Class representing a response to a command in a Discord bot. The response can include embedded messages, action
@@ -14,13 +15,15 @@ import net.dv8tion.jda.api.interactions.components.ActionRow
  *
  * @property embedMessages A list of embedded messages (MessageEmbed) sent in the response.
  * @property actionRows A list of ActionRows containing interaction components (ex. buttons, dropdown menus).
+ * @property pool Discord embed message poll.
  * @property disposeComponents A flag indicating whether the interaction components should be disabled after execution.
  * @property afterSendAction A lambda function that will be executed after the message is sent. It receives the send
- *           Message as an argument.
+ *           message as an argument.
  */
 class CommandResponse private constructor(
 	val embedMessages: List<MessageEmbed>,
 	val actionRows: List<ActionRow>,
+	val pool: MessagePollData?,
 	val disposeComponents: Boolean,
 	val afterSendAction: (Message) -> Unit,
 ) {
@@ -33,7 +36,7 @@ class CommandResponse private constructor(
 	 * @return A new CommandResponse instance with the updated values.
 	 */
 	fun copy(embedMessages: List<MessageEmbed>, actionRows: List<ActionRow>) =
-		CommandResponse(embedMessages, actionRows, disposeComponents, afterSendAction)
+		CommandResponse(embedMessages, actionRows, pool, disposeComponents, afterSendAction)
 
 	/**
 	 * Builder class for constructing a CommandResponse instance with various options.
@@ -49,6 +52,11 @@ class CommandResponse private constructor(
 		 * A list of ActionRows (buttons, dropdowns, etc.) to be included in the response.
 		 */
 		private var actionRows: List<ActionRow> = emptyList()
+
+		/**
+		 * Discord embed message poll.
+		 */
+		private var pool: MessagePollData? = null
 
 		/**
 		 * A flag indicating whether interaction components (buttons, etc.) should be disabled after execution.
@@ -79,6 +87,15 @@ class CommandResponse private constructor(
 		}
 
 		/**
+		 * Adds a poll [MessagePollData] to the response. This can be used to include voting or poll functionality in the
+		 * command response.
+		 *
+		 * @param pool The poll data to be included in the response.
+		 * @return The Builder instance for chaining.
+		 */
+		fun addPool(pool: MessagePollData) = apply { this.pool = pool }
+
+		/**
 		 * Sets whether interaction components (buttons, etc.) should be disabled after certain of time.
 		 *
 		 * @param disposeComponents Flag indicating whether components should be disabled.
@@ -99,6 +116,6 @@ class CommandResponse private constructor(
 		 *
 		 * @return A new CommandResponse instance.
 		 */
-		fun build() = CommandResponse(embedMessages, actionRows, disposeComponents, onSendAction)
+		fun build() = CommandResponse(embedMessages, actionRows, pool, disposeComponents, onSendAction)
 	}
 }

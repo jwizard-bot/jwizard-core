@@ -67,7 +67,7 @@ import kotlin.reflect.KClass
  * - [I81N_REVALIDATE_CACHE_SEC]: I18n revalidate cache time interval in seconds. For non-positive value (including *0*,
  *   ex. *-1*) never revalidate cache. For more info, check `setCacheSeconds` method in [AbstractMessageSource] class.
  * - [GUILD_VOTING_PERCENTAGE_RATIO]: Ratio of voting percentage for guilds.
- * - [GUILD_TIME_TO_FINISH_VOTING_SEC]: Maximum voting time for guilds in seconds.
+ * - [GUILD_MAX_VOTING_TIME_SEC]: Maximum voting time for guilds in seconds.
  * - [GUILD_DJ_ROLE_NAME]: Name of the DJ role in guilds.
  * - [GUILD_MIN_REPEATS_OF_TRACK]: Minimum number of repeats allowed for a track in guilds.
  * - [GUILD_MAX_REPEATS_OF_TRACK]: Maximum number of repeats allowed for a track in guilds.
@@ -361,7 +361,7 @@ enum class BotProperty(
 	/**
 	 * Maximum voting time for guilds in seconds.
 	 */
-	GUILD_TIME_TO_FINISH_VOTING_SEC("guild.time-to-finish-voting-sec", Int::class),
+	GUILD_MAX_VOTING_TIME_SEC("guild.time-to-finish-voting-sec", Long::class),
 
 	/**
 	 * Name of the DJ role in guilds.
