@@ -4,6 +4,8 @@
  */
 package pl.jwizard.jwc.core.audio.spi
 
+import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
+
 /**
  * Interface for managing audio scheduling in an audio player.
  *
@@ -19,6 +21,8 @@ interface AudioScheduler {
 	 *
 	 * This method should be called when the audio playback is no longer needed, ensuring that all resources are properly
 	 * cleaned up to prevent memory leaks.
+	 *
+	 * @return The [PlayerUpdateBuilder] as an asynchronous response.
 	 */
-	fun stopAndDestroy()
+	fun stopAndDestroy(): PlayerUpdateBuilder
 }

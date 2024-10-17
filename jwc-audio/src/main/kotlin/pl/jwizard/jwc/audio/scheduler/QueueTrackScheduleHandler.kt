@@ -5,6 +5,7 @@
 package pl.jwizard.jwc.audio.scheduler
 
 import dev.arbjerg.lavalink.client.LavalinkNode
+import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import dev.arbjerg.lavalink.client.player.Track
 import dev.arbjerg.lavalink.client.player.TrackException
 import dev.arbjerg.lavalink.protocol.v4.Message.EmittedEvent.TrackEndEvent.AudioTrackEndReason
@@ -87,13 +88,15 @@ class QueueTrackScheduleHandler(
 	/**
 	 * Stops the current playback, clears the queue, and resets all repeat settings. This method also resets the flag for
 	 * the next track info message.
+	 *
+	 * @return The [PlayerUpdateBuilder] as an asynchronous response.
 	 */
-	override fun stopAndDestroy() {
+	override fun stopAndDestroy(): PlayerUpdateBuilder {
 		queue.clear()
 		audioRepeat.clear()
 		countOfRepeats.clear()
 		nextTrackInfoMessage.set(true)
-		super.stopAndDestroy()
+		return super.stopAndDestroy()
 	}
 
 	/**
