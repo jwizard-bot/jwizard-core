@@ -3,11 +3,11 @@
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 dependencies {
-  implementation libs.springContext
-  implementation libs.jda
-  implementation libs.jacksonKotlin
-  implementation libs.jacksonDatabind
+	implementation libs.springContext
+	implementation libs.jda
+	implementation libs.jacksonKotlin
+	implementation libs.jacksonDatabind
 
-  implementation project(":jwc-core")
-  implementation project(":jwc-exception")
+	implementation project(":jwc-core")
+	implementation project(":jwc-exception")
 }

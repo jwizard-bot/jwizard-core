@@ -3,13 +3,14 @@
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 dependencies {
-  implementation libs.springContext
-  implementation libs.jda
-  implementation libs.lavalinkClient
-  implementation libs.commonsIo
+	implementation libs.springContext
+	implementation libs.jda
+	implementation libs.lavalinkClient
+	implementation libs.commonsIo
 
-  implementation project(":jwc-core")
-  implementation project(":jwc-command")
-  implementation project(":jwc-exception")
-  implementation project(":jwc-radio")
+	implementation project(":jwc-core")
+	implementation project(":jwc-command")
+	implementation project(":jwc-exception")
+	implementation project(":jwc-radio")
+	implementation project(":jwc-vote")
 }

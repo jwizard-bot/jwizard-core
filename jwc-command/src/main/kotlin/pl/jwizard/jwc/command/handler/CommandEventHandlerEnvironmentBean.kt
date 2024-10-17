@@ -24,7 +24,7 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
  * @property i18nBean Provides internationalization support.
  * @property environmentBean Accesses environment-specific properties.
  * @property jdaColorStoreBean Accesses to JDA defined colors for embed messages.
- * @property looselyTransportHandlerBean
+ * @property looselyTransportHandlerBean Handles loosely-typed transport operations between services.
  * @author Miłosz Gilga
  * @see CommandEventHandler
  */

@@ -9,183 +9,183 @@ import java.time.LocalDateTime
 import java.time.Year
 
 plugins {
-  alias libs.plugins.kotlinJvm
-  alias libs.plugins.kotlinSerialization
-  alias libs.plugins.kotlinSpring apply false
-  alias libs.plugins.shadowJar apply false
-  alias libs.plugins.dokka
-  alias libs.plugins.kotlinNoArg
+	alias libs.plugins.kotlinJvm
+	alias libs.plugins.kotlinSerialization
+	alias libs.plugins.kotlinSpring apply false
+	alias libs.plugins.shadowJar apply false
+	alias libs.plugins.dokka
+	alias libs.plugins.kotlinNoArg
 }
 
 ext {
-  dokkaCommonAssets = [
-    'dokka/logo-icon.svg',
-    'dokka/logo-nav.svg',
-    'dokka/dokka-styles.css'
-  ]
-  dokkaCopyright
-    = ("&copy; ${Year.now().value} by JWizard"
-    + ". On $license license"
-    + ". Snap SHA: ${getEnv('BUILD_VERSION', 'DEVELOPMENT')}") as GStringImpl
+	dokkaCommonAssets = [
+		'dokka/logo-icon.svg',
+		'dokka/logo-nav.svg',
+		'dokka/dokka-styles.css'
+	]
+	dokkaCopyright
+		= ("&copy; ${Year.now().value} by JWizard"
+		+ ". On $license license"
+		+ ". Snap SHA: ${getEnv('BUILD_VERSION', 'DEVELOPMENT')}") as GStringImpl
 }
 
 allprojects {
-  repositories {
-    mavenCentral()
-    maven { url = uri('https://m2.dv8tion.net/releases') }
-    maven { url = uri('https://m2.chew.pro/releases') }
-    maven { url = uri('https://m2.chew.pro/snapshots') }
-    maven { url = uri('https://maven.lavalink.dev/snapshots') }
-    maven { url = uri('https://maven.lavalink.dev/releases') }
-    maven { url = uri('https://jitpack.io') }
-    mavenLocal()
-  }
-  group = groupId
-  version = version
+	repositories {
+		mavenCentral()
+		maven { url = uri('https://m2.dv8tion.net/releases') }
+		maven { url = uri('https://m2.chew.pro/releases') }
+		maven { url = uri('https://m2.chew.pro/snapshots') }
+		maven { url = uri('https://maven.lavalink.dev/snapshots') }
+		maven { url = uri('https://maven.lavalink.dev/releases') }
+		maven { url = uri('https://jitpack.io') }
+		mavenLocal()
+	}
+	group = groupId
+	version = version
 }
 
 subprojects {
-  apply plugin: getPluginId(libs.plugins.kotlinJvm)
-  apply plugin: getPluginId(libs.plugins.kotlinSpring)
-  apply plugin: getPluginId(libs.plugins.dokka)
+	apply plugin: getPluginId(libs.plugins.kotlinJvm)
+	apply plugin: getPluginId(libs.plugins.kotlinSpring)
+	apply plugin: getPluginId(libs.plugins.dokka)
 
-  if (project.name != initProjectName) {
-    apply plugin: 'java-library'
-  }
+	if (project.name != initProjectName) {
+		apply plugin: 'java-library'
+	}
 
-  java {
-    sourceCompatibility = jvmVersion
-    targetCompatibility = jvmVersion
-  }
+	java {
+		sourceCompatibility = jvmVersion
+		targetCompatibility = jvmVersion
+	}
 
-  dependencies {
-    implementation libs.kotlin
-    implementation libs.kotlinReflect
+	dependencies {
+		implementation libs.kotlin
+		implementation libs.kotlinReflect
 
-    implementation libs.logbackCore
-    implementation libs.logbackClassic
-    implementation libs.slf4jApi
-  }
+		implementation libs.logbackCore
+		implementation libs.logbackClassic
+		implementation libs.slf4jApi
+	}
 
-  test {
-    useJUnitPlatform()
-  }
+	test {
+		useJUnitPlatform()
+	}
 
-  compileKotlin {
-    kotlinOptions {
-      jvmTarget = jvmVersion.toString()
-      freeCompilerArgs = [
-        '-Xjsr305=strict',
-      ]
-    }
-  }
+	compileKotlin {
+		kotlinOptions {
+			jvmTarget = jvmVersion.toString()
+			freeCompilerArgs = [
+				'-Xjsr305=strict',
+			]
+		}
+	}
 
-  dokkaHtmlPartial {
-    pluginsMapConfiguration.set([
-      'org.jetbrains.dokka.base.DokkaBase': generateDokkaBaseConfig()
-    ])
-    dokkaSourceSets.configureEach {
-      documentedVisibilities.set([
-        DokkaConfiguration.Visibility.PUBLIC,
-        DokkaConfiguration.Visibility.PRIVATE,
-        DokkaConfiguration.Visibility.PROTECTED
-      ])
-    }
-    suppressInheritedMembers = true
-  }
+	dokkaHtmlPartial {
+		pluginsMapConfiguration.set([
+			'org.jetbrains.dokka.base.DokkaBase': generateDokkaBaseConfig()
+		])
+		dokkaSourceSets.configureEach {
+			documentedVisibilities.set([
+				DokkaConfiguration.Visibility.PUBLIC,
+				DokkaConfiguration.Visibility.PRIVATE,
+				DokkaConfiguration.Visibility.PROTECTED
+			])
+		}
+		suppressInheritedMembers = true
+	}
 
-  noArg {
-    annotation('pl.jwizard.jwc.core.util.NoArgConstructor')
-  }
+	noArg {
+		annotation('pl.jwizard.jwc.core.util.NoArgConstructor')
+	}
 
-  configurations.configureEach {
-    exclude group: 'commons-logging', module: 'commons-logging'
-  }
+	configurations.configureEach {
+		exclude group: 'commons-logging', module: 'commons-logging'
+	}
 }
 
 project(":${initProjectName}") {
-  apply plugin: getPluginId(libs.plugins.shadowJar)
+	apply plugin: getPluginId(libs.plugins.shadowJar)
 
-  jar {
-    manifest {
-      attributes(
-        'Main-Class': mainClass
-      )
-    }
-  }
+	jar {
+		manifest {
+			attributes(
+				'Main-Class': mainClass
+			)
+		}
+	}
 
-  shadowJar {
-    archiveBaseName = 'jwizard-core'
-    archiveClassifier = ''
-    archiveVersion = ''
-    destinationDirectory = file("$rootDir/.bin")
-  }
+	shadowJar {
+		archiveBaseName = 'jwizard-core'
+		archiveClassifier = ''
+		archiveVersion = ''
+		destinationDirectory = file("$rootDir/.bin")
+	}
 }
 
 dokkaHtmlMultiModule {
-  outputDirectory = file("$projectDir/docs")
-  def additionalAssets = [
-    'dokka/banner.png'
-  ]
-  pluginsMapConfiguration.set([
-    'org.jetbrains.dokka.base.DokkaBase': generateDokkaBaseConfig(additionalAssets)
-  ])
-  suppressInheritedMembers = true
-  includes.from(file('dokka/README-DOCS.md'))
+	outputDirectory = file("$projectDir/docs")
+	def additionalAssets = [
+		'dokka/banner.png'
+	]
+	pluginsMapConfiguration.set([
+		'org.jetbrains.dokka.base.DokkaBase': generateDokkaBaseConfig(additionalAssets)
+	])
+	suppressInheritedMembers = true
+	includes.from(file('dokka/README-DOCS.md'))
 }
 
 clean {
-  doLast {
-    def binDir = file("$projectDir/.bin")
-    if (binDir.exists()) {
-      binDir.deleteDir()
-    }
-  }
+	doLast {
+		def binDir = file("$projectDir/.bin")
+		if (binDir.exists()) {
+			binDir.deleteDir()
+		}
+	}
 }
 
 tasks.register('shadowJar') {
-  dependsOn ":$initProjectName:shadowJar"
+	dependsOn ":$initProjectName:shadowJar"
 }
 
 tasks.register('createEnv') {
-  def envFile = file("$projectDir/.bin/.env")
-  if (envFile.exists()) {
-    envFile.delete()
-  }
-  def currentDateTime = LocalDateTime.now()
-  def values = [
-    'VAULT_TOKEN'  : getEnv('VAULT_TOKEN'),
-    'VAULT_SERVER' : getEnv('VAULT_SERVER'),
-    'BUILD_VERSION': getEnv('BUILD_VERSION', 'DEVELOPMENT'),
-    'BUILD_DATE'   : currentDateTime.toString(),
-  ]
-  def str = values
-    .collect { key, value -> "JWIZARD_CORE_${key}=${value}" }
-    .join('\n')
-  envFile.write(str)
+	def envFile = file("$projectDir/.bin/.env")
+	if (envFile.exists()) {
+		envFile.delete()
+	}
+	def currentDateTime = LocalDateTime.now()
+	def values = [
+		'VAULT_TOKEN'  : getEnv('VAULT_TOKEN'),
+		'VAULT_SERVER' : getEnv('VAULT_SERVER'),
+		'BUILD_VERSION': getEnv('BUILD_VERSION', 'DEVELOPMENT'),
+		'BUILD_DATE'   : currentDateTime.toString(),
+	]
+	def str = values
+		.collect { key, value -> "JWIZARD_CORE_${key}=${value}" }
+		.join('\n')
+	envFile.write(str)
 }
 
 static def getEnv(String name, Object defValue = '') {
-  return System.getenv("JWIZARD_CORE_$name") ?: defValue.toString()
+	return System.getenv("JWIZARD_CORE_$name") ?: defValue.toString()
 }
 
 static def getPluginId(Provider<PluginDependency> accessor) {
-  return accessor.get().pluginId
+	return accessor.get().pluginId
 }
 
 def generateDokkaBaseConfig(List additionalAssets = []) {
-  def assets = ext.dokkaCommonAssets
-  assets.addAll(additionalAssets)
+	def assets = ext.dokkaCommonAssets
+	assets.addAll(additionalAssets)
 
-  def definedDokkaAssets = assets
-    .collect { "\"${file(it).absolutePath.replace("\\", "\\\\")}\"" }
-    .join(',')
+	def definedDokkaAssets = assets
+		.collect { "\"${file(it).absolutePath.replace("\\", "\\\\")}\"" }
+		.join(',')
 
-  return """
-      {
-        "customAssets": [${definedDokkaAssets}],
-        "footerMessage": "${ext.dokkaCopyright}",
-        "separateInheritedMembers": false
-      }
-    """
+	return """
+    {
+      "customAssets": [${definedDokkaAssets}],
+      "footerMessage": "${ext.dokkaCopyright}",
+      "separateInheritedMembers": false
+    }
+  """
 }

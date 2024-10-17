@@ -1,7 +1,7 @@
 [versions]
 kotlinVersion = "2.0.20"
 springVersion = "6.1.12"
-mysqlConnectorVersion = "9.0.0"
+mysqlConnectorVersion = "9.1.0"
 hikariCpVersion = "5.1.0"
 logbackVersion = "1.5.7"
 slf4jApiVersion = "2.0.16"

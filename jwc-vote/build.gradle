@@ -3,6 +3,10 @@
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 dependencies {
-  implementation project(":jwc-core")
-  implementation project(":jwc-exception")
+	implementation libs.jda
+	implementation libs.springContext
+
+	implementation project(":jwc-core")
+	implementation project(":jwc-exception")
+	implementation project(":jwc-command")
 }

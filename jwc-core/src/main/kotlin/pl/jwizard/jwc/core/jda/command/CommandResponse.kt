@@ -106,13 +106,13 @@ class CommandResponse private constructor(
 		/**
 		 * Adds an action to be executed after the message is sent.
 		 *
-		 * @param onSendAction A lambda function to execute after sending the message, receiving the send Message.
+		 * @param onSendAction A lambda function to execute after sending the message, receiving sent [Message].
 		 * @return The Builder instance for chaining.
 		 */
 		fun onSendAction(onSendAction: (Message) -> Unit) = apply { this.onSendAction = onSendAction }
 
 		/**
-		 * Builds and returns a CommandResponse instance with the configured options.
+		 * Builds and returns a [CommandResponse] instance with the configured options.
 		 *
 		 * @return A new CommandResponse instance.
 		 */
