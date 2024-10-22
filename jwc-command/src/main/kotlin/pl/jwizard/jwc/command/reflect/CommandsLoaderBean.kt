@@ -13,11 +13,11 @@ import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.spi.CommandDataSupplier
 import pl.jwizard.jwc.command.spi.ModuleDataSupplier
-import pl.jwizard.jwc.core.DiscordBotAppRunner.BASE_PACKAGE
-import pl.jwizard.jwc.core.SpringKtContextFactory
 import pl.jwizard.jwc.core.integrity.ReferentialIntegrityChecker
 import pl.jwizard.jwc.core.jda.spi.CommandsLoader
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.AppRunner
+import pl.jwizard.jwl.SpringKtContextFactory
+import pl.jwizard.jwl.util.logger
 
 /**
  * A bean responsible for loading command metadata and classes within the Discord bot framework.
@@ -45,7 +45,7 @@ class CommandsLoaderBean(
 		/**
 		 * Base package used for scanning command classes.
 		 */
-		private const val SCANNING_BASE_PACKAGE = "$BASE_PACKAGE.jwc.api"
+		private const val SCANNING_BASE_PACKAGE = "${AppRunner.BASE_PACKAGE}.jwc.api"
 	}
 
 	/**
