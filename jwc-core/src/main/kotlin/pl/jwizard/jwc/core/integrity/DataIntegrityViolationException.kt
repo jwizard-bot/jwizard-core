@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.core.integrity
 
-import pl.jwizard.jwc.core.IrreparableException
+import pl.jwizard.jwl.IrreparableException
 import kotlin.reflect.KClass
 
 /**

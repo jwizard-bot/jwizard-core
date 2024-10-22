@@ -7,7 +7,7 @@ package pl.jwizard.jwc.core.i18n
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import pl.jwizard.jwc.core.i18n.spi.I18nPropertyFilesSupplier
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.util.logger
 import java.nio.charset.Charset
 import java.text.MessageFormat
 import java.util.*

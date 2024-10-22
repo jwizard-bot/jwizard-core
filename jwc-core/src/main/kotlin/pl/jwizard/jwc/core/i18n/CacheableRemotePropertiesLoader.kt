@@ -6,7 +6,7 @@ package pl.jwizard.jwc.core.i18n
 
 import pl.jwizard.jwc.core.i18n.spi.I18nPropertyFilesSupplier
 import pl.jwizard.jwc.core.jvm.thread.JvmFixedThreadExecutor
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.util.logger
 import java.io.StringReader
 import java.nio.charset.Charset
 import java.util.*

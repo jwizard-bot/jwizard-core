@@ -19,7 +19,7 @@ import pl.jwizard.jwc.core.i18n.source.I18nDynamicMod
 import pl.jwizard.jwc.core.i18n.source.I18nUtilSource
 import pl.jwizard.jwc.core.jda.spi.SlashCommandRegisterer
 import pl.jwizard.jwc.core.util.ext.qualifier
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.util.logger
 
 /**
  * A Spring component responsible for registering slash commands in Discord guilds. It implements the

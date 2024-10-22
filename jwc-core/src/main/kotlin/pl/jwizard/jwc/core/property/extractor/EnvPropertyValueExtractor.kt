@@ -5,7 +5,7 @@
 package pl.jwizard.jwc.core.property.extractor
 
 import io.github.cdimascio.dotenv.Dotenv
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.util.logger
 import java.io.File
 
 /**

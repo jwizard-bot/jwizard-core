@@ -7,14 +7,14 @@ package pl.jwizard.jwc.core.property
 import jakarta.annotation.PostConstruct
 import org.springframework.core.env.StandardEnvironment
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.core.SpringKtContextFactory
 import pl.jwizard.jwc.core.property.extractor.EnvPropertyValueExtractor
 import pl.jwizard.jwc.core.property.extractor.VaultPropertyValueExtractor
 import pl.jwizard.jwc.core.property.loader.DbPropertySourceLoader
 import pl.jwizard.jwc.core.property.loader.YamlPropertySourceLoader
 import pl.jwizard.jwc.core.property.spi.RemotePropertySupplier
 import pl.jwizard.jwc.core.util.castToValue
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.SpringKtContextFactory
+import pl.jwizard.jwl.util.logger
 import kotlin.reflect.KClass
 
 /**

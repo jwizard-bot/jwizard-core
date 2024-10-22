@@ -22,8 +22,8 @@ import pl.jwizard.jwc.core.util.ext.mdTitleLink
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.ext.thumbnailUrl
 import pl.jwizard.jwc.core.util.jdaInfo
-import pl.jwizard.jwc.core.util.logger
 import pl.jwizard.jwc.exception.UnexpectedException
+import pl.jwizard.jwl.util.logger
 
 /**
  * Command to skip the currently playing track in the music player.

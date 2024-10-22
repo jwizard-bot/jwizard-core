@@ -21,7 +21,7 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.util.ext.mdTitleLink
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.jdaInfo
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.util.logger
 
 /**
  * Command to stop the current track and clear the queue.

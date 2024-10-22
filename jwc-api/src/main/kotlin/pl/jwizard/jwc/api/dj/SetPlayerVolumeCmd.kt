@@ -20,8 +20,8 @@ import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.util.jdaInfo
-import pl.jwizard.jwc.core.util.logger
 import pl.jwizard.jwc.exception.audio.VolumeUnitsOutOfBoundsException
+import pl.jwizard.jwl.util.logger
 
 /**
  * Command to set the volume of the music player.

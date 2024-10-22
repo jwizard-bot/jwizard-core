@@ -4,102 +4,53 @@
  */
 package pl.jwizard.jwc.core
 
-import org.springframework.context.annotation.ComponentScan
 import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
 import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
 import pl.jwizard.jwc.core.jda.ActivitySplashesBean
 import pl.jwizard.jwc.core.jda.JdaInstanceBean
 import pl.jwizard.jwc.core.jda.spi.ChannelListenerGuard
 import pl.jwizard.jwc.core.jda.spi.CommandsLoader
-import pl.jwizard.jwc.core.printer.AbstractPrinter
-import pl.jwizard.jwc.core.printer.ConsolePrinter
-import pl.jwizard.jwc.core.printer.FancyFramePrinter
-import pl.jwizard.jwc.core.printer.FancyTitlePrinter
 import pl.jwizard.jwc.core.radio.spi.RadioPlaybackMappersCache
-import pl.jwizard.jwc.core.util.logger
-import kotlin.reflect.KClass
+import pl.jwizard.jwl.AppContextInitiator
+import pl.jwizard.jwl.AppRunner
+import pl.jwizard.jwl.SpringKtContextFactory
 
 /**
  * The main class that loads resources, configuration and runs the bot instance.
- * Use this class with [DiscordBotApp] annotation. Singleton instance.
+ * Use this class with [AppContextInitiator] annotation. Singleton instance.
  *
  * @author Miłosz Gilga
  */
-object DiscordBotAppRunner {
-	private val log = logger<DiscordBotAppRunner>()
+object DiscordBotAppRunner : AppRunner() {
 
 	/**
-	 * Base application package. Used for Spring Context [ComponentScan] annotation. All classes related with
-	 * Spring IoC containers will be loaded into Spring Context.
-	 */
-	const val BASE_PACKAGE = "pl.jwizard"
-
-	/**
-	 * Fancy title banner classpath location in `resources` directory.
-	 */
-	private const val BANNER_CLASSPATH_LOCATION = "util/banner.txt"
-
-	/**
-	 * Fancy frame classpath location in `resources` directory.
-	 */
-	private const val FRAME_CLASSPATH_LOCATION = "util/frame.txt"
-
-	/**
-	 * Spring Kotlin Context instance.
-	 */
-	private lateinit var context: SpringKtContextFactory
-
-	/**
-	 * Static method which starts loading configuration, resources and a new JDA instance of the bot being created.
+	 * Executes the application logic with the provided Spring context. This method is responsible for starts loading
+	 * configuration, resources and a created of new JDA bot instance.
 	 *
-	 * @param clazz main type of class that runs the bot.
+	 * @param context main type of class that runs the bot.
 	 */
-	fun run(clazz: KClass<*>) {
-		val startTimestamp = System.currentTimeMillis()
-		try {
-			val printer = ConsolePrinter()
-			val printers = arrayOf(
-				FancyTitlePrinter(BANNER_CLASSPATH_LOCATION, printer),
-				FancyFramePrinter(FRAME_CLASSPATH_LOCATION, printer),
-			)
-			AbstractPrinter.printContent(printers)
-			try {
-				log.info("Init Spring Context with base class: {}. Init packages tree: {}.", clazz.qualifiedName, BASE_PACKAGE)
-				context = SpringKtContextFactory(clazz)
+	override fun runWithContext(context: SpringKtContextFactory) {
+		val jdaInstance = context.getBean(JdaInstanceBean::class)
+		val activitySplashes = context.getBean(ActivitySplashesBean::class)
 
-				val jdaInstance = context.getBean(JdaInstanceBean::class)
-				val activitySplashes = context.getBean(ActivitySplashesBean::class)
+		val radioPlaybackMappersCache = context.getBean(RadioPlaybackMappersCache::class)
+		val exceptionTrackerStore = context.getBean(ExceptionTrackerStore::class)
+		val commandLoader = context.getBean(CommandsLoader::class)
+		val audioClientSupplier = context.getBean(DistributedAudioClientSupplier::class)
+		val channelListenerGuard = context.getBean(ChannelListenerGuard::class)
 
-				val radioPlaybackMappersCache = context.getBean(RadioPlaybackMappersCache::class)
-				val exceptionTrackerStore = context.getBean(ExceptionTrackerStore::class)
-				val commandLoader = context.getBean(CommandsLoader::class)
-				val audioClientSupplier = context.getBean(DistributedAudioClientSupplier::class)
-				val channelListenerGuard = context.getBean(ChannelListenerGuard::class)
+		radioPlaybackMappersCache.loadRadioPlaybackClasses()
+		exceptionTrackerStore.initTrackers()
 
-				radioPlaybackMappersCache.loadRadioPlaybackClasses()
-				exceptionTrackerStore.initTrackers()
+		commandLoader.loadMetadata()
+		commandLoader.loadClassesViaReflectionApi()
 
-				commandLoader.loadMetadata()
-				commandLoader.loadClassesViaReflectionApi()
+		audioClientSupplier.initClientNodes()
 
-				audioClientSupplier.initClientNodes()
+		jdaInstance.createJdaWrapper(audioClientSupplier)
+		jdaInstance.configureMetadata()
 
-				jdaInstance.createJdaWrapper(audioClientSupplier)
-				jdaInstance.configureMetadata()
-
-				activitySplashes.initSplashesSequence()
-				channelListenerGuard.initThreadPool()
-
-				val endTimestamp = System.currentTimeMillis()
-				val elapsedTime = endTimestamp - startTimestamp
-
-				log.info("Load in: {}s. Start listening incoming requests...", elapsedTime / 1000.0)
-			} catch (ex: Throwable) {
-				throw IrreparableException(ex)
-			}
-		} catch (ex: IrreparableException) {
-			ex.printLogStatement()
-			ex.killProcess()
-		}
+		activitySplashes.initSplashesSequence()
+		channelListenerGuard.initThreadPool()
 	}
 }

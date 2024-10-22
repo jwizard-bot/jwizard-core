@@ -5,9 +5,9 @@
 package pl.jwizard.jwc.radio
 
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.core.SpringKtContextFactory
 import pl.jwizard.jwc.core.radio.spi.RadioPlaybackMappersCache
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.SpringKtContextFactory
+import pl.jwizard.jwl.util.logger
 import java.util.concurrent.ConcurrentHashMap
 
 /**

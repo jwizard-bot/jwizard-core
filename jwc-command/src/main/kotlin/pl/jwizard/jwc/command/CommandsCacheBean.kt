@@ -6,7 +6,7 @@ package pl.jwizard.jwc.command
 
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.command.reflect.CommandDetails
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.util.logger
 import java.math.BigInteger
 import java.util.concurrent.ConcurrentHashMap
 

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.DisposableBean
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.util.logger
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import software.amazon.awssdk.regions.Region

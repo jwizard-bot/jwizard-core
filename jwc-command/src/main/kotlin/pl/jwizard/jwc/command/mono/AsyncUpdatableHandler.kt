@@ -10,8 +10,8 @@ import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.util.jdaError
-import pl.jwizard.jwc.core.util.logger
 import pl.jwizard.jwc.exception.UnexpectedException
+import pl.jwizard.jwl.util.logger
 import reactor.core.publisher.Mono
 import kotlin.reflect.KClass
 

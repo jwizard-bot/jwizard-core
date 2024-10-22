@@ -7,7 +7,7 @@ package pl.jwizard.jwc.core.property.loader
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean
 import org.springframework.core.io.ClassPathResource
 import pl.jwizard.jwc.core.property.PropertySourceData
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.util.logger
 
 /**
  * Loader for YAML property sources.

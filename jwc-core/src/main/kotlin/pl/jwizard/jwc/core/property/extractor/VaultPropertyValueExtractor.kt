@@ -8,7 +8,7 @@ import org.springframework.vault.authentication.TokenAuthentication
 import org.springframework.vault.client.VaultEndpoint
 import org.springframework.vault.core.VaultTemplate
 import org.springframework.vault.support.VaultResponse
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.util.logger
 import java.util.*
 
 /**
@@ -68,13 +68,11 @@ class VaultPropertyValueExtractor(
 	private fun readKvSecrets(kvStore: String): Properties {
 		val properties = Properties()
 		val qualifiedKvStorePath = "$vaultKvBackend/$kvStore"
-		val kvSecrets: VaultResponse? = vaultTemplate.read(qualifiedKvStorePath)
+		val kvSecrets: VaultResponse = vaultTemplate.read(qualifiedKvStorePath)
 
-		kvSecrets?.let { response ->
+		kvSecrets.let { response ->
 			response.data?.forEach { properties[it.key] = it.value }
 			log.info("Load: {} secrets from: {} KV store.", response.data?.size, qualifiedKvStorePath)
-		} ?: run {
-			log.warn("Not found any secrets in KV store: {}. Skipping.", qualifiedKvStorePath)
 		}
 		return properties
 	}

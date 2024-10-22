@@ -22,9 +22,9 @@ import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwc.core.util.logger
 import pl.jwizard.jwc.core.util.mdCode
 import pl.jwizard.jwc.exception.spi.ExceptionSupplier
+import pl.jwizard.jwl.util.logger
 import java.util.*
 
 /**

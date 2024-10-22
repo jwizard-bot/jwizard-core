@@ -9,7 +9,7 @@ import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.util.logger
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 

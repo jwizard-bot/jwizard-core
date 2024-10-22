@@ -6,7 +6,7 @@ package pl.jwizard.jwc.core.jda.color
 
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.util.logger
 import java.awt.Color
 
 /**

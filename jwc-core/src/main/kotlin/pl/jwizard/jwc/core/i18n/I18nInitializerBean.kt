@@ -13,7 +13,7 @@ import pl.jwizard.jwc.core.i18n.spi.LanguageSupplier
 import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.util.logger
 import java.nio.charset.StandardCharsets
 
 /**

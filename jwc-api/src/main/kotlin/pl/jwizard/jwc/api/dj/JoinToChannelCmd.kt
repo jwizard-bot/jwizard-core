@@ -18,9 +18,9 @@ import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.jdaInfo
-import pl.jwizard.jwc.core.util.logger
 import pl.jwizard.jwc.exception.user.UserIsAlreadyWithBotException
 import pl.jwizard.jwc.exception.user.UserOnVoiceChannelNotFoundException
+import pl.jwizard.jwl.util.logger
 
 /**
  * Command that allows the bot to join or move to the same voice channel as the user.
