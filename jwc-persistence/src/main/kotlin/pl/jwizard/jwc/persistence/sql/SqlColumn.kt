@@ -17,6 +17,6 @@ import java.sql.SQLType
  * @author Miłosz Gilga
  */
 data class SqlColumn(
-	val value: Any,
+	val value: Any?,
 	val type: SQLType,
 )

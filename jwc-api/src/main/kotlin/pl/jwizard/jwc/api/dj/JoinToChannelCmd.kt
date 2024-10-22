@@ -51,14 +51,14 @@ class JoinToChannelCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBa
 	 */
 	override fun executeDj(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
 		val voiceChannelWithMember = context.guild.voiceChannels
-			?.find { mapMembersToIds(it).contains(context.author.idLong) }
+			.find { mapMembersToIds(it).contains(context.author.idLong) }
 			?: throw UserOnVoiceChannelNotFoundException(context)
 
 		if (mapMembersToIds(voiceChannelWithMember).contains(context.selfMember.idLong)) {
 			throw UserIsAlreadyWithBotException(context, voiceChannelWithMember)
 		}
 		context.selfMember.let {
-			context.guild.moveVoiceMember(it, voiceChannelWithMember)?.queue {
+			context.guild.moveVoiceMember(it, voiceChannelWithMember).queue {
 				log.jdaInfo(context, "Bot was successfully moved to channel: %s", voiceChannelWithMember.qualifier)
 			}
 		}

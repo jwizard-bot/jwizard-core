@@ -23,18 +23,10 @@ interface LanguageSupplier {
 	fun getLanguages(): Map<String, String>
 
 	/**
-	 * Fetches the language associated with a specific guild.
-	 *
-	 * @param guildId The ID of the guild for which the language is to be retrieved.
-	 * @return The language tag associated with the specified guild.
-	 */
-	fun getGuildLanguage(guildId: Long): String?
-
-	/**
 	 * Retrieves the ID of a language based on its tag.
 	 *
 	 * @param tag The tag of the language whose ID is to be retrieved (ex., *en*).
 	 * @return The ID of the language corresponding to the provided tag.
 	 */
-	fun getLanguageId(tag: String): BigInteger
+	fun getLanguageId(tag: String): BigInteger?
 }
