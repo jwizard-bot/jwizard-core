@@ -96,7 +96,7 @@ where `Xmx` and `Xms` parameters are optional and can be modified.
 
 ## Documentation
 
-For detailed documentation, please visit [JWizard Core KDoc documentation](https://docs.jwizard.pl/jwc).
+For detailed documentation, please visit [JWizard documentation](https://jwizard.pl/docs).
 
 ## Contributing
 
