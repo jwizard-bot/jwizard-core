@@ -57,6 +57,7 @@ enum class I18nResponseSource(override val placeholder: String) : I18nLocaleSour
 	BOT_WEBSITE("jwc.response.botWebsite"),
 	BOT_SOURCE_CODE("jwc.response.botSourceCode"),
 	BOT_DOCUMENTATION("jwc.response.botDocumentation"),
+	VOTE_POLL("jwc.response.votePoll"),
 
 	// music
 	REMOVE_MULTIPLE_REPEATING_TRACK("jwc.response.removeMultipleRepeatingTrack"),
@@ -73,19 +74,14 @@ enum class I18nResponseSource(override val placeholder: String) : I18nLocaleSour
 
 	// vote
 	VOTE_SHUFFLE_QUEUE("jwc.response.voteShuffleQueue"),
-	SUCCESS_VOTE_SHUFFLE_QUEUE("jwc.response.successVoteShuffleQueue"),
 	FAILURE_VOTE_SHUFFLE_QUEUE("jwc.response.failureVoteShuffleQueue"),
 	VOTE_SKIP_TRACK("jwc.response.voteSkipTrack"),
-	SUCCESS_VOTE_SKIP_TRACK("jwc.response.successVoteSkipTrack"),
 	FAILURE_VOTE_SKIP_TRACK("jwc.response.failureVoteSkipTrack"),
 	VOTE_SKIP_TO_TRACK("jwc.response.voteSkipToTrack"),
-	SUCCESS_VOTE_SKIP_TO_TRACK("jwc.response.successVoteSkipToTrack"),
 	FAILURE_VOTE_SKIP_TO_TRACK("jwc.response.failureVoteSkipToTrack"),
 	VOTE_CLEAR_QUEUE("jwc.response.voteClearQueue"),
-	SUCCESS_VOTE_CLEAR_QUEUE("jwc.response.successVoteClearQueue"),
 	FAILURE_VOTE_CLEAR_QUEUE("jwc.response.failureVoteClearQueue"),
 	VOTE_STOP_CLEAR_QUEUE("jwc.response.voteStopClearQueue"),
-	SUCCESS_VOTE_STOP_CLEAR_QUEUE("jwc.response.successVoteStopClearQueue"),
 	FAILURE_VOTE_STOP_CLEAR_QUEUE("jwc.response.failureVoteStopClearQueue"),
 	;
 }

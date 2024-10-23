@@ -43,5 +43,15 @@ enum class InteractionButton(
 	 * The button that navigates to the last page or item.
 	 */
 	LAST("last", I18nActionSource.LAST),
+
+	/**
+	 * The button that set vote in poll to YES.
+	 */
+	YES("yes", I18nActionSource.YES),
+
+	/**
+	 * The button that set vote in poll to NO.
+	 */
+	NO("no", I18nActionSource.NO),
 	;
 }

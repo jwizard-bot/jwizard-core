@@ -11,6 +11,7 @@ import net.dv8tion.jda.internal.interactions.component.ButtonImpl
 import pl.jwizard.jwc.core.i18n.I18nBean
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueListener
+import java.util.concurrent.TimeUnit
 
 /**
  * Abstract class for handling button interactions in a Discord bot.
@@ -36,6 +37,37 @@ abstract class ButtonInteractionHandler(
 	}
 
 	/**
+	 * Initializes the event listener for button interactions with a timeout. The handler will wait for button
+	 * interaction events and process them accordingly for a specified time.
+	 *
+	 * @param timeoutSec The time in seconds to wait for an interaction before timing out.
+	 */
+	fun initTimeoutEvent(timeoutSec: Long) {
+		eventQueueBean.waitForScheduledEvent(ButtonInteractionEvent::class, this, timeoutSec, TimeUnit.SECONDS)
+	}
+
+	/**
+	 * Creates a button with a label based on the provided interaction button enum.
+	 *
+	 * @param interactionButton The button enum representing the interaction type.
+	 * @param lang The language to be used for the button label.
+	 * @param args Optional arguments for localization.
+	 * @param disabled Whether the button should be disabled.
+	 * @param style The style of the button.
+	 * @return A Button instance with the specified properties.
+	 */
+	protected fun createButton(
+		interactionButton: InteractionButton,
+		lang: String,
+		args: Map<String, Any?> = emptyMap(),
+		disabled: Boolean = false,
+		style: ButtonStyle = ButtonStyle.SECONDARY,
+	): Button {
+		val label = i18nButton.t(interactionButton.i18nSource, lang, args)
+		return ButtonImpl(createComponentId(interactionButton.id), label, style, disabled, null)
+	}
+
+	/**
 	 * Creates a button with a label based on the provided interaction button enum.
 	 *
 	 * @param interactionButton The button enum representing the interaction type.
@@ -49,10 +81,7 @@ abstract class ButtonInteractionHandler(
 		lang: String,
 		disabled: Boolean = false,
 		style: ButtonStyle = ButtonStyle.SECONDARY,
-	): Button {
-		val label = i18nButton.t(interactionButton.i18nSource, lang)
-		return ButtonImpl(createComponentId(interactionButton.id), label, style, disabled, null)
-	}
+	) = createButton(interactionButton, lang, emptyMap(), disabled, style)
 
 	/**
 	 * Creates a button with a custom label and ID.

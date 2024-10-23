@@ -21,5 +21,7 @@ enum class I18nActionSource(override val placeholder: String) : I18nLocaleSource
 	PREV("jwc.action.prev"),
 	NEXT("jwc.action.next"),
 	LAST("jwc.action.last"),
+	YES("jwc.action.yes"),
+	NO("jwc.action.no"),
 	;
 }

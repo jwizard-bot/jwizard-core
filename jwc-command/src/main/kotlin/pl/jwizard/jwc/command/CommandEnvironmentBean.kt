@@ -6,6 +6,7 @@ package pl.jwizard.jwc.command
 
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.command.spi.CommandDataSupplier
+import pl.jwizard.jwc.command.transport.LooselyTransportHandlerBean
 import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
 import pl.jwizard.jwc.core.audio.spi.MusicManagersSupplier
 import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
@@ -34,6 +35,7 @@ import pl.jwizard.jwc.radio.spi.RadioStationSupplier
  * @property commandDataSupplier Supplies metadata and definitions for bot commands.
  * @property commandsCacheBean Caches command-related data to improve command lookup performance.
  * @property exceptionTrackerStore The store used to track and log exceptions.
+ * @property looselyTransportHandlerBean Handles loosely-typed transport operations between services.
  * @author Miłosz Gilga
  */
 @Component
@@ -51,4 +53,5 @@ class CommandEnvironmentBean(
 	val commandDataSupplier: CommandDataSupplier,
 	val commandsCacheBean: CommandsCacheBean,
 	val exceptionTrackerStore: ExceptionTrackerStore,
+	val looselyTransportHandlerBean: LooselyTransportHandlerBean,
 )
