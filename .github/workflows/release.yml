@@ -26,6 +26,8 @@ jobs:
 
       - name: Generate KDoc documentation
         run: ./gradlew dokkaHtml --no-daemon
+        env:
+          JWIZARD_CORE_VERSION: "${GITHUB_REF_NAME:1}"
 
       - name: Copy HTML documentation into http server
         run: |

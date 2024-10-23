@@ -47,26 +47,24 @@ jobs:
         run: ./gradlew bootJar --no-daemon
 
       - name: Revoke Vault key
+        env:
+          VAULT_ADDR=${{ secrets.GH_VAULT_ADDR }}
+          VAULT_TOKEN=${{ secrets.GH_VAULT_TOKEN }}
         run: |
-          export VAULT_ADDR=${{ secrets.GH_VAULT_ADDR }}
-          export VAULT_TOKEN=${{ secrets.GH_VAULT_TOKEN }}
           VAULT_CORE_TOKEN=$(grep '^ENV_CORE_VAULT_TOKEN=' $RUNNER_ROOT_DIR/.env | cut -d '=' -f 2-) && \
             [ -n "VAULT_CORE_TOKEN" ] && \
             vault token revoke $VAULT_CORE_TOKEN || echo "Token not exist."
-          unset VAULT_ADDR
-          unset VAULT_TOKEN
 
       - name: Generate and export Vault key
         id: vault-keygen
+        env:
+          VAULT_ADDR=${{ secrets.GH_VAULT_ADDR }}
+          VAULT_TOKEN=${{ secrets.GH_VAULT_TOKEN }}
         run: |
-          export VAULT_ADDR=${{ secrets.GH_VAULT_ADDR }}
-          export VAULT_TOKEN=${{ secrets.GH_VAULT_TOKEN }}
           JWIZARD_TOKEN=$(vault token create -policy=jwizard-readonly -ttl=30d -renewable=false --format=json | jq -r '.auth.client_token')
           sed -i "s/^ENV_CORE_VAULT_TOKEN=.*$/ENV_CORE_VAULT_TOKEN=$JWIZARD_TOKEN/" $RUNNER_ROOT_DIR/.env
           echo "::add-mask::$JWIZARD_TOKEN"
           echo "vault_key=$JWIZARD_TOKEN" >> "$GITHUB_OUTPUT"
-          unset VAULT_ADDR
-          unset VAULT_TOKEN
 
       - name: Determinate deployment version
         id: vars
@@ -74,11 +72,11 @@ jobs:
           echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Generate env file
-        run: |
-          JWIZARD_CORE_VAULT_TOKEN=${{ steps.vault-keygen.outputs.vault_key }} \
-          JWIZARD_CORE_BUILD_VERSION=${{ steps.vars.outputs.sha_short }}_${{ github.run_number }} \
-          JWIZARD_CORE_VAULT_SERVER=${{ secrets.GH_VAULT_SERVER }} \
-          ./gradlew createEnv --no-daemon
+        env:
+          JWIZARD_CORE_VAULT_TOKEN=${{ steps.vault-keygen.outputs.vault_key }}
+          JWIZARD_CORE_BUILD_VERSION=${{ steps.vars.outputs.sha_short }}_${{ github.run_number }}
+          JWIZARD_CORE_VAULT_SERVER=${{ secrets.GH_VAULT_SERVER }}
+        run: ./gradlew createEnv --no-daemon
 
   deploy:
     runs-on: self-hosted
