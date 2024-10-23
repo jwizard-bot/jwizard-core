@@ -44,7 +44,7 @@ interface TrackQueue {
 	/**
 	 * Skips to the specified position in the queue and returns the track at that position.
 	 *
-	 * @param position The zero-based index of the track to skip to.
+	 * @param position The one-based index of the track to skip to.
 	 * @return The track at the specified position, or null if the position is out of bounds.
 	 */
 	fun skipToPosition(position: Int): Track?
@@ -70,7 +70,7 @@ interface TrackQueue {
 	/**
 	 * Checks if the specified position is out of the valid bounds of the queue.
 	 *
-	 * @param position The zero-based index to check.
+	 * @param position The one-based index to check.
 	 * @return True if the position is out of bounds; otherwise, false.
 	 */
 	fun positionIsOutOfBounds(position: Int): Boolean

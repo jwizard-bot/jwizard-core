@@ -44,12 +44,12 @@ class AudioTrackQueue(private val musicManager: MusicManager) : LinkedList<Track
 	/**
 	 * Skips to the specified position in the queue and returns the track at that position.
 	 *
-	 * @param position The position to skip to (0-based index).
+	 * @param position The position to skip to (1-based index).
 	 * @return The [Track] at the specified position, or null if the position is invalid.
 	 */
 	override fun skipToPosition(position: Int): Track? {
 		var track: Track? = null
-		for (i in 0..position) {
+		for (i in 1..position) {
 			track = poll()
 		}
 		return track

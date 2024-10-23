@@ -25,6 +25,7 @@ import pl.jwizard.jwc.core.util.ext.thumbnailUrl
 import pl.jwizard.jwc.core.util.jdaError
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwl.util.logger
+import reactor.core.Disposable
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -294,6 +295,8 @@ class QueueTrackScheduleHandler(
 
 	/**
 	 * Starts the next track in the queue, if available.
+	 *
+	 * @return A [Disposable] that can be used to manage the subscription to this operation.
 	 */
 	private fun nextTrack() = queue.poll()?.let { startTrack(it) }
 }

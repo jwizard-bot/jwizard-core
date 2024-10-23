@@ -4,16 +4,20 @@
  */
 package pl.jwizard.jwc.api.dj
 
+import dev.arbjerg.lavalink.client.player.LavalinkPlayer
+import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
+import dev.arbjerg.lavalink.client.player.Track
+import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.api.DjCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.mono.AsyncUpdatableHook
 import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
-import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.util.ext.mdTitleLink
 import pl.jwizard.jwc.core.util.ext.qualifier
@@ -32,7 +36,9 @@ import pl.jwizard.jwl.util.logger
  * @author Miłosz Gilga
  */
 @JdaCommand(id = Command.SKIPTO)
-class SkipQueueToTrackCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBase(commandEnvironment) {
+class SkipQueueToTrackCmd(
+	commandEnvironment: CommandEnvironmentBean
+) : DjCommandBase(commandEnvironment), AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Pair<Track, Int>> {
 
 	companion object {
 		private val log = logger<SkipQueueToTrackCmd>()
@@ -59,24 +65,39 @@ class SkipQueueToTrackCmd(commandEnvironment: CommandEnvironmentBean) : DjComman
 		if (queue.positionIsOutOfBounds(position)) {
 			throw TrackOffsetOutOfBoundsException(context, position, queue.size)
 		}
-		val currentTrack = queue.skipToPosition(position)
-		log.jdaInfo(context, "Skipped: %d tracks in queue and started playing: %s.", position, currentTrack?.qualifier)
+		val currentTrack = queue.skipToPosition(position)!!
 
-		val message = createEmbedMessage(context)
+		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response, this)
+		asyncUpdatableHandler.performAsyncUpdate(
+			monoAction = manager.createdOrUpdatedPlayer.setTrack(currentTrack),
+			payload = Pair(currentTrack, position),
+		)
+	}
+
+	/**
+	 * TODO
+	 *
+	 * @param context
+	 * @param result
+	 * @param payload
+	 * @return
+	 */
+	override fun onAsyncSuccess(
+		context: CommandContext,
+		result: LavalinkPlayer,
+		payload: Pair<Track, Int>,
+	): MessageEmbed {
+		val (currentTrack, position) = payload
+		log.jdaInfo(context, "Skipped: %d tracks in queue and started playing: %s.", position, currentTrack.qualifier)
+		return createEmbedMessage(context)
 			.setDescription(
 				i18nLocaleSource = I18nResponseSource.SKIP_TO_SELECT_TRACK_POSITION,
 				args = mapOf(
 					"countOfSkippedTracks" to position - 1,
-					"currentTrack" to currentTrack?.mdTitleLink,
+					"currentTrack" to currentTrack.mdTitleLink,
 				)
 			)
 			.setColor(JdaColor.PRIMARY)
 			.build()
-
-		val commandResponse = CommandResponse.Builder()
-			.addEmbedMessages(message)
-			.build()
-
-		response.complete(commandResponse)
 	}
 }
