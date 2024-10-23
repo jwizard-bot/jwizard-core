@@ -12,7 +12,7 @@ import pl.jwizard.jwc.core.property.GuildMultipleProperties
 import pl.jwizard.jwc.core.property.GuildProperty
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.jdaInfo
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.util.logger
 
 /**
  * Manages the selection and processing of tracks from a spinner menu in a Discord guild. This class handles user

@@ -21,7 +21,7 @@ import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.GuildProperty
 import pl.jwizard.jwc.core.util.jdaInfo
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.util.logger
 import java.util.concurrent.TimeUnit
 
 /**

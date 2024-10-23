@@ -18,7 +18,7 @@ import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.util.jdaInfo
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.util.logger
 
 /**
  * Handles the scheduling and management of radio streams in a Discord bot context.

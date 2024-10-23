@@ -23,8 +23,8 @@ import pl.jwizard.jwc.core.util.ext.mdTitleLink
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.ext.thumbnailUrl
 import pl.jwizard.jwc.core.util.jdaInfo
-import pl.jwizard.jwc.core.util.logger
 import pl.jwizard.jwc.core.util.millisToDTF
+import pl.jwizard.jwl.util.logger
 
 /**
  * Handles the loading of tracks into the queue for the music manager.

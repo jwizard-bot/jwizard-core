@@ -13,7 +13,7 @@ import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.util.jdaError
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.util.logger
 
 /**
  * Abstract base class for handling audio loading results and managing audio loading processes. This class extends

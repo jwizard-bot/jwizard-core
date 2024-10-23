@@ -10,8 +10,8 @@ import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jvm.thread.JvmFixedPayloadThreadExecutor
 import pl.jwizard.jwc.core.util.floatingSecToMin
 import pl.jwizard.jwc.core.util.jdaInfo
-import pl.jwizard.jwc.core.util.logger
 import pl.jwizard.jwc.core.util.secToDTF
+import pl.jwizard.jwl.util.logger
 
 /**
  * Thread executor that handles the disconnection of the bot from a voice channel after a specified period of

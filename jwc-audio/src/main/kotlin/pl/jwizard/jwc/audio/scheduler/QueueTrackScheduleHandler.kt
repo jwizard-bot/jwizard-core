@@ -24,7 +24,7 @@ import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.ext.thumbnailUrl
 import pl.jwizard.jwc.core.util.jdaError
 import pl.jwizard.jwc.core.util.jdaInfo
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.util.logger
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**

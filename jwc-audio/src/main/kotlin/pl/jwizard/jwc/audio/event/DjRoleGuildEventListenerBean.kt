@@ -14,7 +14,7 @@ import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.property.GuildProperty
 import pl.jwizard.jwc.core.util.ext.qualifier
-import pl.jwizard.jwc.core.util.logger
+import pl.jwizard.jwl.util.logger
 
 /**
  * Listener for handling events related to the DJ role in a guild. Automatically creates a DJ role if it doesn't exist
