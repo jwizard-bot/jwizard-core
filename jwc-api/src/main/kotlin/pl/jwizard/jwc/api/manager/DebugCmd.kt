@@ -121,7 +121,7 @@ class DebugCmd(
 			val joiner = StringJoiner("")
 
 			joiner.add("* ${mdBold(it.name)} (CPU: $cpuStats) (MEM: $usedMem/$maxMem)\n")
-			joiner.add("  ${memoryBar.generateBar()}\n")
+			joiner.add("  ${memoryBar.generateBar(showPercentageNumber = true)}\n")
 			joiner.add("  Lavalink: ${info.version.semver.versionFormat}, Lavaplayer: ${info.lavaplayer.versionFormat}")
 			joiner.toString()
 		}
@@ -129,7 +129,11 @@ class DebugCmd(
 			.setKeyValueField(I18nSystemSource.JVM_USED_MEMORY, FileUtils.byteCountToDisplaySize(usedMemory))
 			.setSpace()
 			.setKeyValueField(I18nSystemSource.JVM_XMX_MEMORY, FileUtils.byteCountToDisplaySize(totalMemory))
-			.setKeyValueField(I18nSystemSource.JVM_MEMORY_USAGE, percentageIndicatorBar.generateBar(), inline = false)
+			.setKeyValueField(
+				I18nSystemSource.JVM_MEMORY_USAGE,
+				percentageIndicatorBar.generateBar(showPercentageNumber = true),
+				inline = false
+			)
 			.setKeyValueField(I18nSystemSource.JDA_VERSION, JDAInfo.VERSION.versionFormat)
 			.setSpace()
 			.setKeyValueField(I18nSystemSource.LAVALINK_CLIENT_VERSION, VERSION.versionFormat)

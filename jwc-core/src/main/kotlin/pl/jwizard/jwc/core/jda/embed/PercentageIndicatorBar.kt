@@ -55,17 +55,22 @@ class PercentageIndicatorBar(
 	 * This method calculates the completion percentage based on the [start] and [total] durations and creates a visual
 	 * representation of the progress using filled and empty blocks.
 	 *
+	 * @param showPercentageNumber Enable/disable showing percentage number at end of bar. By default `false`.
 	 * @return A string representing the progress indicator bar, showing the current progress.
 	 */
-	fun generateBar(): String {
+	fun generateBar(showPercentageNumber: Boolean = false): String {
 		val progressPercentage = start.toDouble() / total.toDouble() * 100.0
 
 		val blocksCount = Math.round(length * progressPercentage / 100).toInt()
 		val emptyBlocksCount = length - blocksCount
 
-		return formatToBlocks(blocksCount, INDICATOR_FULL) + formatToBlocks(
+		var blocksContent = formatToBlocks(blocksCount, INDICATOR_FULL) + formatToBlocks(
 			emptyBlocksCount,
 			INDICATOR_EMPTY
-		) + " %.2f%%".format(progressPercentage)
+		)
+		if (showPercentageNumber) {
+			blocksContent += " %.2f%%".format(progressPercentage)
+		}
+		return blocksContent
 	}
 }
