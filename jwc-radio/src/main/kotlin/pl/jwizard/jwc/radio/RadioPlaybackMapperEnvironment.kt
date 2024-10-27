@@ -6,9 +6,9 @@ package pl.jwizard.jwc.radio
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.core.i18n.I18nBean
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwl.i18n.I18nBean
 
 /**
  * Represents the environment for radio playback mappers, providing necessary dependencies

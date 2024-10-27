@@ -15,16 +15,16 @@ import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.interaction.ButtonInteractionHandler
 import pl.jwizard.jwc.command.interaction.InteractionButton
 import pl.jwizard.jwc.command.interaction.InteractionResponse
-import pl.jwizard.jwc.core.i18n.I18nLocaleSource
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.i18n.source.I18nVotingSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
-import pl.jwizard.jwc.core.property.GuildProperty
+import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.floatingSecToMin
 import pl.jwizard.jwc.core.util.jdaInfo
+import pl.jwizard.jwl.i18n.I18nLocaleSource
 import pl.jwizard.jwl.util.logger
 import java.util.concurrent.CompletableFuture
 

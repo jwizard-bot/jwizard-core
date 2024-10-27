@@ -65,7 +65,7 @@ subprojects {
 		implementation libs.logbackCore
 		implementation libs.logbackClassic
 		implementation libs.slf4jApi
-		implementation libs.jwizardLib
+		implementation "pl.jwizard:jwizard-lib:${getEnv('STD_LIB_VERSION', 'DEVELOPMENT')}"
 	}
 
 	test {

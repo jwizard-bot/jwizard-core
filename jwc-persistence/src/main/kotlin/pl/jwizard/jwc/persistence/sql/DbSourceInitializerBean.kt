@@ -12,8 +12,9 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager
 import org.springframework.stereotype.Component
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.support.TransactionTemplate
-import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwl.property.AppBaseProperty
+import pl.jwizard.jwl.property.BaseEnvironment
 
 /**
  * Configuration class for initializing the database connection pool and JDBC template.
@@ -26,7 +27,7 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
  * @author Miłosz Gilga
  */
 @Component
-class DbSourceInitializerBean(private val environmentBean: EnvironmentBean) {
+class DbSourceInitializerBean(private val environmentBean: BaseEnvironment) {
 
 	/**
 	 * Configures and creates a [HikariDataSource] bean.
@@ -39,10 +40,10 @@ class DbSourceInitializerBean(private val environmentBean: EnvironmentBean) {
 	@Bean
 	fun dataSourceBean(): HikariDataSource {
 		val config = HikariConfig()
-		config.jdbcUrl = environmentBean.getProperty(BotProperty.DB_URL)
-		config.username = environmentBean.getProperty(BotProperty.DB_USERNAME)
-		config.password = environmentBean.getProperty(BotProperty.DB_PASSWORD)
-		config.driverClassName = environmentBean.getProperty(BotProperty.DB_DRIVER_CLASS_NAME)
+		config.jdbcUrl = environmentBean.getProperty(AppBaseProperty.DB_URL)
+		config.username = environmentBean.getProperty(AppBaseProperty.DB_USERNAME)
+		config.password = environmentBean.getProperty(AppBaseProperty.DB_PASSWORD)
+		config.driverClassName = environmentBean.getProperty(AppBaseProperty.DB_DRIVER_CLASS_NAME)
 		config.maximumPoolSize = 10
 		config.minimumIdle = 5
 		config.idleTimeout = 30000

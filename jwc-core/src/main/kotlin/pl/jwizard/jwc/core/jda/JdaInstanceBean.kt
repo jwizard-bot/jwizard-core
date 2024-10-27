@@ -24,7 +24,6 @@ import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
-import pl.jwizard.jwc.core.jda.spi.JdaPermissionFlagsSupplier
 import pl.jwizard.jwc.core.jda.spi.JdaResourceSupplier
 import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
@@ -32,6 +31,7 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwl.SpringKtContextFactory
 import pl.jwizard.jwl.jvm.JvmDisposable
 import pl.jwizard.jwl.jvm.JvmDisposableHook
+import pl.jwizard.jwl.property.AppBaseListProperty
 import pl.jwizard.jwl.util.logger
 
 /**
@@ -42,15 +42,14 @@ import pl.jwizard.jwl.util.logger
  * The class also provides methods to configure additional metadata and gracefully shut down the JDA client.
  *
  * @property environmentBean Provides access to application properties, including the bot token.
- * @property jdaPermissionFlagsSupplier Provides bean supplied JDA permission flags.
  * @property jdaResourceSupplier S3 resource supplier fetching JDA resources (logo and banner).
+ * @property applicationContext The Spring context factory used to load and retrieve components.
  * @property jdaColorStoreBean Provides access to JDA colors loader.
  * @author Miłosz Gilga
  */
 @Component
 final class JdaInstanceBean(
 	private val environmentBean: EnvironmentBean,
-	private val jdaPermissionFlagsSupplier: JdaPermissionFlagsSupplier,
 	private val jdaResourceSupplier: JdaResourceSupplier,
 	private val applicationContext: SpringKtContextFactory,
 	private val jdaColorStoreBean: JdaColorStoreBean,
@@ -88,8 +87,8 @@ final class JdaInstanceBean(
 		val gatewayIntents = environmentBean.getListProperty<String>(BotListProperty.JDA_GATEWAY_INTENTS)
 		val enabledCacheFlags = environmentBean.getListProperty<String>(BotListProperty.JDA_CACHE_FLAGS_ENABLED)
 		val disabledCacheFlags = environmentBean.getListProperty<String>(BotListProperty.JDA_CACHE_FLAGS_DISABLED)
+		val permissionFlags = environmentBean.getListProperty<String>(AppBaseListProperty.JDA_PERMISSIONS)
 
-		val permissionFlags = jdaPermissionFlagsSupplier.getPermissionFlags()
 		val permissions = permissionFlags.map { Permission.valueOf(it) }
 		log.info("Load: {} JDA permissions.", permissions.size)
 

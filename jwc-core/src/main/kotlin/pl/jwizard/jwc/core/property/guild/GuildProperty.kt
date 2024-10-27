@@ -2,11 +2,13 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.core.property
+package pl.jwizard.jwc.core.property.guild
 
 import pl.jwizard.jwc.core.i18n.source.I18nSystemSource
-import pl.jwizard.jwc.core.property.GuildProperty.*
-import pl.jwizard.jwc.core.property.GuildPropertyConverter.*
+import pl.jwizard.jwc.core.property.BotProperty
+import pl.jwizard.jwc.core.property.guild.GuildProperty.*
+import pl.jwizard.jwc.core.property.guild.GuildPropertyConverter.*
+import pl.jwizard.jwl.property.Property
 import kotlin.reflect.KClass
 
 /**

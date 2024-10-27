@@ -8,9 +8,9 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
 import net.dv8tion.jda.internal.interactions.component.ButtonImpl
-import pl.jwizard.jwc.core.i18n.I18nBean
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueListener
+import pl.jwizard.jwl.i18n.I18nBean
 import java.util.concurrent.TimeUnit
 
 /**

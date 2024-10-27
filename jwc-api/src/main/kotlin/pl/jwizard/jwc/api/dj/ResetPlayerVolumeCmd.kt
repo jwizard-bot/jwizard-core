@@ -17,7 +17,7 @@ import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
-import pl.jwizard.jwc.core.property.GuildProperty
+import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwl.util.logger
 

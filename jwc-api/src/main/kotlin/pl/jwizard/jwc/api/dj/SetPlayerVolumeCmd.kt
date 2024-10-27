@@ -18,9 +18,9 @@ import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
-import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.exception.audio.VolumeUnitsOutOfBoundsException
+import pl.jwizard.jwl.property.AppBaseProperty
 import pl.jwizard.jwl.util.logger
 
 /**
@@ -55,7 +55,7 @@ class SetPlayerVolumeCmd(
 	 */
 	override fun executeDj(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
 		val newVolume = context.getArg<Int>(CommandArgument.VOLUME)
-		val maxVolume = environmentBean.getProperty<Int>(BotProperty.PLAYER_MAX_VOLUME)
+		val maxVolume = environmentBean.getProperty<Int>(AppBaseProperty.PLAYER_MAX_VOLUME)
 
 		val currentVolume = manager.cachedPlayer?.volume
 		if (newVolume < 0 || newVolume > maxVolume) {

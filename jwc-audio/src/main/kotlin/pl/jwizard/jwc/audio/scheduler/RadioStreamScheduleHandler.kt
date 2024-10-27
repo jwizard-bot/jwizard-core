@@ -12,12 +12,12 @@ import pl.jwizard.jwc.audio.RadioStationDetails
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.core.audio.spi.RadioStreamScheduler
-import pl.jwizard.jwc.core.i18n.source.I18nDynamicMod
 import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.util.jdaInfo
+import pl.jwizard.jwl.i18n.source.I18nDynamicMod
 import pl.jwizard.jwl.util.logger
 
 /**

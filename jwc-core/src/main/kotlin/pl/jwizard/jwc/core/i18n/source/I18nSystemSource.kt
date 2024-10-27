@@ -4,15 +4,13 @@
  */
 package pl.jwizard.jwc.core.i18n.source
 
-import pl.jwizard.jwc.core.i18n.I18nBean
-import pl.jwizard.jwc.core.i18n.I18nLocaleSource
+import pl.jwizard.jwl.i18n.I18nLocaleSource
 
 /**
  * Provides internationalization (i18n) placeholders for system-related messages.
  *
  * @author Miłosz Gilga
  * @see I18nLocaleSource
- * @see I18nBean
  */
 enum class I18nSystemSource(override val placeholder: String) : I18nLocaleSource {
 	DEBUG_INFO_HEADER("jwc.system.header.debugInfo"),

@@ -10,7 +10,6 @@ import pl.jwizard.jwc.command.transport.LooselyTransportHandlerBean
 import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
 import pl.jwizard.jwc.core.audio.spi.MusicManagersSupplier
 import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
-import pl.jwizard.jwc.core.i18n.I18nBean
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
 import pl.jwizard.jwc.core.jda.spi.GuildSettingsEventAction
@@ -18,6 +17,7 @@ import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.radio.spi.RadioPlaybackMappersCache
 import pl.jwizard.jwc.radio.spi.RadioStationSupplier
+import pl.jwizard.jwl.i18n.I18nBean
 
 /**
  * A Spring component that aggregates various environment-related beans used in the command processing system.

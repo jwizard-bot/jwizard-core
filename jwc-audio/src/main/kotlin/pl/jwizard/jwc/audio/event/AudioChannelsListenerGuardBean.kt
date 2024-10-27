@@ -14,7 +14,7 @@ import pl.jwizard.jwc.core.jda.spi.ChannelListenerGuard
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.jvm.thread.JvmFixedThreadExecutor
 import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwc.core.property.GuildProperty
+import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwl.util.logger

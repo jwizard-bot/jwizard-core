@@ -23,9 +23,9 @@ import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.embed.PercentageIndicatorBar
 import pl.jwizard.jwc.core.jvm.SystemProperty
-import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.util.ext.versionFormat
 import pl.jwizard.jwc.core.util.mdBold
+import pl.jwizard.jwl.property.AppBaseProperty
 import java.util.*
 
 /**
@@ -90,8 +90,8 @@ class DebugCmd(
 	 * @return The generated embed message with debug information.
 	 */
 	private fun createDebugMessage(context: CommandContext): MessageEmbed {
-		val buildVersion = environmentBean.getProperty<String>(BotProperty.DEPLOYMENT_BUILD_VERSION)
-		val buildDate = environmentBean.getProperty<String>(BotProperty.DEPLOYMENT_LAST_BUILD_DATE)
+		val buildVersion = environmentBean.getProperty<String>(AppBaseProperty.DEPLOYMENT_BUILD_VERSION)
+		val buildDate = environmentBean.getProperty<String>(AppBaseProperty.DEPLOYMENT_LAST_BUILD_DATE)
 
 		val runtime = Runtime.getRuntime()
 		val totalMemory = runtime.maxMemory()

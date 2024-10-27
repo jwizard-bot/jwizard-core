@@ -9,11 +9,11 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.commands.Command
 import pl.jwizard.jwc.command.CommandsCacheBean
 import pl.jwizard.jwc.command.reflect.CommandArgumentDetails
-import pl.jwizard.jwc.core.i18n.I18nBean
-import pl.jwizard.jwc.core.i18n.source.I18nDynamicMod
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwl.i18n.I18nBean
+import pl.jwizard.jwl.i18n.source.I18nDynamicMod
 
 /**
  * A listener for handling slash command autocomplete interactions in Discord.

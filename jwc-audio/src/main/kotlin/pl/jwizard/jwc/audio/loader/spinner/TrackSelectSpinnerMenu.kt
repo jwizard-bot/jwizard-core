@@ -8,8 +8,8 @@ import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionE
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.interaction.SelectSpinnerMenu
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
-import pl.jwizard.jwc.core.property.GuildMultipleProperties
-import pl.jwizard.jwc.core.property.GuildProperty
+import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
+import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwl.util.logger

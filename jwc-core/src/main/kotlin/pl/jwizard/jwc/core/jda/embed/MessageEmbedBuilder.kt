@@ -6,14 +6,14 @@ package pl.jwizard.jwc.core.jda.embed
 
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
-import pl.jwizard.jwc.core.i18n.I18nBean
-import pl.jwizard.jwc.core.i18n.I18nLocaleSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.util.ext.avatarOrDefaultUrl
 import pl.jwizard.jwc.core.util.ext.name
 import pl.jwizard.jwc.core.util.keyValueFormat
+import pl.jwizard.jwl.i18n.I18nBean
+import pl.jwizard.jwl.i18n.I18nLocaleSource
 
 /**
  * A builder class for creating Discord message embeds with additional customization options.

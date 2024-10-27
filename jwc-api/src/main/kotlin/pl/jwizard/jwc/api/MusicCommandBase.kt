@@ -11,7 +11,6 @@ import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.core.audio.AudioContentType
 import pl.jwizard.jwc.core.audio.spi.MusicManager
-import pl.jwizard.jwc.core.i18n.I18nLocaleSource
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
@@ -24,6 +23,7 @@ import pl.jwizard.jwc.exception.audio.ActiveAudioPlayingNotFoundException
 import pl.jwizard.jwc.exception.audio.PlayerNotPausedException
 import pl.jwizard.jwc.exception.command.CommandAvailableOnlyForDiscreteTrackException
 import pl.jwizard.jwc.exception.track.TrackQueueIsEmptyException
+import pl.jwizard.jwl.i18n.I18nLocaleSource
 
 /**
  * Base class for commands related to music playback.

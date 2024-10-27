@@ -11,12 +11,12 @@ import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.reflect.JdaCommand
-import pl.jwizard.jwc.core.i18n.I18nLocaleSource
 import pl.jwizard.jwc.core.i18n.source.I18nSystemSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotProperty
+import pl.jwizard.jwl.i18n.I18nLocaleSource
 
 /**
  * Command that displays the current guild settings in a paginated view.

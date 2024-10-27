@@ -22,25 +22,6 @@ import kotlin.reflect.KClass
 class RemotePropertySupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean) : RemotePropertySupplier {
 
 	/**
-	 * Retrieves all global properties from the database.
-	 *
-	 * This method executes a SQL query to fetch properties from the `global_configs` table.
-	 * It maps the results into a mutable map where the key is the property key and the value is a
-	 * pair consisting of the property value and its type.
-	 *
-	 * @return A mutable map of global properties where each entry consists of a key and a pair of
-	 *         property value and type.
-	 */
-	override fun getGlobalProperties(): MutableMap<String, Pair<String, String>> {
-		val sql = "SELECT name, value, type FROM default_configs"
-		val properties = mutableMapOf<String, Pair<String, String>>()
-		jdbcKtTemplateBean.query(sql) {
-			properties[it.getString("name")] = it.getString("value") to it.getString("type")
-		}
-		return properties
-	}
-
-	/**
 	 * Retrieves a specific property for a given guild from the database.
 	 *
 	 * This method constructs a SQL query to fetch a property value based on the provided column name

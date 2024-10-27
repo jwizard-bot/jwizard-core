@@ -11,13 +11,13 @@ import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.audio.spi.MusicManagersSupplier
 import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
-import pl.jwizard.jwc.core.i18n.I18nBean
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwl.i18n.I18nBean
 
 /**
  * Class responsible for managing music-related functionalities for different guilds. It provides methods for caching

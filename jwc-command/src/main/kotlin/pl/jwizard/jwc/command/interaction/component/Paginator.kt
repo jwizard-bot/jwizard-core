@@ -11,9 +11,9 @@ import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.interaction.ButtonInteractionHandler
 import pl.jwizard.jwc.command.interaction.InteractionButton
 import pl.jwizard.jwc.command.interaction.InteractionResponse
-import pl.jwizard.jwc.core.i18n.I18nBean
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
+import pl.jwizard.jwl.i18n.I18nBean
 
 /**
  * Paginator class for managing paginated content in a Discord bot.

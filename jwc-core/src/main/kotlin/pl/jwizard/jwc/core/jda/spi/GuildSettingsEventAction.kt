@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.core.jda.spi
 
-import pl.jwizard.jwc.core.property.GuildProperty
+import pl.jwizard.jwc.core.property.guild.GuildProperty
 
 /**
  * Interface defining actions related to guild settings, such as creating, deleting, and retrieving settings for a

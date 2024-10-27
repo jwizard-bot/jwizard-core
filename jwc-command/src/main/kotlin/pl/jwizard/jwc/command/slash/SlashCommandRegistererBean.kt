@@ -14,11 +14,11 @@ import org.springframework.stereotype.Component
 import pl.jwizard.jwc.command.CommandsCacheBean
 import pl.jwizard.jwc.command.reflect.CommandDetails
 import pl.jwizard.jwc.command.spi.CommandDataSupplier
-import pl.jwizard.jwc.core.i18n.I18nBean
-import pl.jwizard.jwc.core.i18n.source.I18nDynamicMod
 import pl.jwizard.jwc.core.i18n.source.I18nUtilSource
 import pl.jwizard.jwc.core.jda.spi.SlashCommandRegisterer
 import pl.jwizard.jwc.core.util.ext.qualifier
+import pl.jwizard.jwl.i18n.I18nBean
+import pl.jwizard.jwl.i18n.source.I18nDynamicMod
 import pl.jwizard.jwl.util.logger
 
 /**

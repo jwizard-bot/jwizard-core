@@ -7,8 +7,8 @@ package pl.jwizard.jwc.persistence.resource
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
-import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwl.property.AppBaseProperty
 import pl.jwizard.jwl.util.logger
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -34,7 +34,7 @@ class HttpResourceRetrieverBean(
 	/**
 	 * The base URL for accessing the public S3 API, used to construct the complete URL for fetching public resources.
 	 */
-	final val s3PublicApiUrl = environmentBean.getProperty<String>(BotProperty.S3_PUBLIC_API_URL)
+	final val s3PublicApiUrl = environmentBean.getProperty<String>(AppBaseProperty.S3_PUBLIC_API_URL)
 
 	init {
 		log.info("Init HTTP resource retriever with path: {}.", s3PublicApiUrl)

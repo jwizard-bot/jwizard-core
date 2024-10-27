@@ -1,10 +1,3 @@
-db:
-  jdbc: ${vault:V_MYSQL_JDBC}
-
-vault:
-  url: ${env:JWIZARD_CORE_VAULT_SERVER}
-  token: ${env:JWIZARD_CORE_VAULT_TOKEN}
-
 jda:
   name: JWizard
 
@@ -15,9 +8,3 @@ lavalink:
 service:
   api-url: https://api.jwizard.pl
   front-url: https://jwizard.pl
-
-s3:
-  host-url: https://s3.api.miloszgilga.pl
-  access-key: ${vault:V_S3_ACCESS_KEY}
-  secret-key: ${vault:V_S3_SECRET_KEY}
-  root-bucket: cdn.jwizard.pl

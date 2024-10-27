@@ -1,16 +1,5 @@
-deployment:
-  build-version: ${env:JWIZARD_CORE_BUILD_VERSION:UNKNOWN}
-  last-build-date: ${env:JWIZARD_CORE_BUILD_DATE:UNKNOWN}
-
-db:
-  username: ${vault:V_MYSQL_USERNAME}
-  password: ${vault:V_MYSQL_PASSWORD}
-  driver-class-name: com.mysql.cj.jdbc.Driver
-
 vault:
   kv:
-    backend: jwizard
-    default-context: common
     application-name: core
 
 jda:
@@ -87,25 +76,3 @@ lavalink:
 radio:
   playback:
     extended-link: 'https://www.youtube.com/results?search_query=%s'
-
-s3:
-  region: eu-central-1
-  path-style-access-enabled: true
-  public-api-url: https://cdn.jwizard.pl
-
-i18n:
-  default-language: pl
-  revalidate-cache-sec: 10800 # 3 hours
-  resources:
-    remote:
-      - i18n-modules/messages
-      - i18n-args/messages
-      - i18n-commands/messages
-    local:
-      - i18n-action/messages
-      - i18n-audio/messages
-      - i18n-exception/messages
-      - i18n-response/messages
-      - i18n-system/messages
-      - i18n-util/messages
-      - i18n-voting/messages

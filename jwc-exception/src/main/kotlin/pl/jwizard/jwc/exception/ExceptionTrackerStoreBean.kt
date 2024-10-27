@@ -10,8 +10,6 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.exception.CommandPipelineException
 import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
-import pl.jwizard.jwc.core.i18n.I18nBean
-import pl.jwizard.jwc.core.i18n.I18nLocaleSource
 import pl.jwizard.jwc.core.i18n.source.I18nActionSource
 import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.i18n.source.I18nUtilSource
@@ -24,6 +22,9 @@ import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.util.mdCode
 import pl.jwizard.jwc.exception.spi.ExceptionSupplier
+import pl.jwizard.jwl.i18n.I18nBean
+import pl.jwizard.jwl.i18n.I18nLocaleSource
+import pl.jwizard.jwl.property.AppBaseProperty
 import pl.jwizard.jwl.util.logger
 import java.util.*
 
@@ -96,7 +97,7 @@ class ExceptionTrackerStoreBean(
 		args: Map<String, Any?>,
 	): MessageEmbed {
 		val tracker = extractTracker(i18nSource)
-		val buildVersion = environmentBean.getProperty<String>(BotProperty.DEPLOYMENT_BUILD_VERSION)
+		val buildVersion = environmentBean.getProperty<String>(AppBaseProperty.DEPLOYMENT_BUILD_VERSION)
 		val stringJoiner = StringJoiner("")
 		if (tracker != null) {
 			val lang = context?.guildLanguage

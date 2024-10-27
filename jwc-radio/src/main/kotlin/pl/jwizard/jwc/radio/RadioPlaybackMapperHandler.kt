@@ -7,7 +7,6 @@ package pl.jwizard.jwc.radio
 import com.fasterxml.jackson.databind.JsonNode
 import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
-import pl.jwizard.jwc.core.i18n.source.I18nDynamicMod
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.i18n.source.I18nUtilSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -21,6 +20,7 @@ import pl.jwizard.jwc.core.util.dtFormat
 import pl.jwizard.jwc.core.util.ext.getAsText
 import pl.jwizard.jwc.core.util.mdLink
 import pl.jwizard.jwc.exception.radio.RadioStationNotProvidedPlaybackDataException
+import pl.jwizard.jwl.i18n.source.I18nDynamicMod
 import java.net.URI
 import java.net.URLEncoder
 import java.net.http.HttpClient

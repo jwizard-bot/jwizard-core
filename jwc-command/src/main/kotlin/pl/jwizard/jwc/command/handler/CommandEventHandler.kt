@@ -20,7 +20,6 @@ import pl.jwizard.jwc.command.exception.CommandParserException
 import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.reflect.CommandArgumentDetails
 import pl.jwizard.jwc.command.reflect.CommandDetails
-import pl.jwizard.jwc.core.i18n.source.I18nDynamicMod
 import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -33,6 +32,7 @@ import pl.jwizard.jwc.exception.command.CommandIsTurnedOffException
 import pl.jwizard.jwc.exception.command.MismatchCommandArgumentsException
 import pl.jwizard.jwc.exception.command.ModuleIsTurnedOffException
 import pl.jwizard.jwc.exception.command.ViolatedCommandArgumentOptionsException
+import pl.jwizard.jwl.i18n.source.I18nDynamicMod
 import java.util.*
 import java.util.concurrent.CompletableFuture
 

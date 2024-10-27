@@ -6,14 +6,14 @@ package pl.jwizard.jwc.persistence.sql.bind
 
 import org.springframework.stereotype.Component
 import org.springframework.transaction.support.TransactionTemplate
-import pl.jwizard.jwc.core.i18n.spi.LanguageSupplier
 import pl.jwizard.jwc.core.jda.spi.GuildSettingsEventAction
-import pl.jwizard.jwc.core.property.BotProperty
-import pl.jwizard.jwc.core.property.BotProperty.*
 import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwc.core.property.GuildProperty
+import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.persistence.sql.JdbcKtTemplateBean
 import pl.jwizard.jwc.persistence.sql.SqlColumn
+import pl.jwizard.jwl.i18n.spi.LanguageSupplier
+import pl.jwizard.jwl.property.AppBaseProperty.*
+import pl.jwizard.jwl.property.AppProperty
 import java.sql.JDBCType.*
 
 /**
@@ -115,12 +115,12 @@ class GuildSettingsEventActionBean(
 	}
 
 	/**
-	 * Retrieves a property from the environment based on the given [BotProperty].
+	 * Retrieves a property from the environment based on the given [AppProperty].
 	 *
 	 * @param T The type of the property to retrieve.
 	 * @param botProperty The bot property whose value should be fetched from the environment.
 	 * @return The value of the specified property cast to the appropriate type.
 	 */
-	private inline fun <reified T : Any> getProperty(botProperty: BotProperty) =
+	private inline fun <reified T : Any> getProperty(botProperty: AppProperty) =
 		environmentBean.getProperty<T>(botProperty)
 }

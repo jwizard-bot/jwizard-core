@@ -12,7 +12,6 @@ import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.reflect.CommandDetails
 import pl.jwizard.jwc.command.reflect.JdaCommand
-import pl.jwizard.jwc.core.i18n.source.I18nDynamicMod
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
@@ -21,6 +20,7 @@ import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.util.mdBold
 import pl.jwizard.jwc.core.util.mdCode
 import pl.jwizard.jwc.core.util.mdLink
+import pl.jwizard.jwl.i18n.source.I18nDynamicMod
 import java.util.*
 
 /**

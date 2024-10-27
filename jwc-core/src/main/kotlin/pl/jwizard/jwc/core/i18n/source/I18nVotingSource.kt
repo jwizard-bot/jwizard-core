@@ -4,15 +4,13 @@
  */
 package pl.jwizard.jwc.core.i18n.source
 
-import pl.jwizard.jwc.core.i18n.I18nBean
-import pl.jwizard.jwc.core.i18n.I18nLocaleSource
+import pl.jwizard.jwl.i18n.I18nLocaleSource
 
 /**
  * This enum class represents objects stored in an S3-compatible storage service.
  *
  * @author Miłosz Gilga
  * @see I18nLocaleSource
- * @see I18nBean
  */
 enum class I18nVotingSource(override val placeholder: String) : I18nLocaleSource {
 	ON_SUCCESS_VOTING("jwc.voting.votingSuccess"),

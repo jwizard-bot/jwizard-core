@@ -6,8 +6,8 @@ package pl.jwizard.jwc.persistence.resource
 
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwl.property.AppBaseProperty
 import pl.jwizard.jwl.util.logger
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
@@ -46,20 +46,20 @@ class S3ResourceRetrieverBean(private val environmentBean: EnvironmentBean) : Re
 	private final val rootBucket: String
 
 	init {
-		val hostUrl = environmentBean.getProperty<String>(BotProperty.S3_HOST_URL)
+		val hostUrl = environmentBean.getProperty<String>(AppBaseProperty.S3_HOST_URL)
 
 		val credentials = AwsBasicCredentials.create(
-			environmentBean.getProperty(BotProperty.S3_ACCESS_KEY),
-			environmentBean.getProperty(BotProperty.S3_SECRET_KEY)
+			environmentBean.getProperty(AppBaseProperty.S3_ACCESS_KEY),
+			environmentBean.getProperty(AppBaseProperty.S3_SECRET_KEY)
 		)
 		client = S3Client.builder()
 			.credentialsProvider(StaticCredentialsProvider.create(credentials))
-			.region(Region.of(environmentBean.getProperty(BotProperty.S3_REGION)))
+			.region(Region.of(environmentBean.getProperty(AppBaseProperty.S3_REGION)))
 			.endpointOverride(URI.create(hostUrl))
-			.forcePathStyle(environmentBean.getProperty<Boolean>(BotProperty.S3_PATH_STYLE_ACCESS_ENABLED))
+			.forcePathStyle(environmentBean.getProperty<Boolean>(AppBaseProperty.S3_PATH_STYLE_ACCESS_ENABLED))
 			.build()
 
-		rootBucket = environmentBean.getProperty(BotProperty.S3_ROOT_BUCKET)
+		rootBucket = environmentBean.getProperty(AppBaseProperty.S3_ROOT_BUCKET)
 
 		val buckets = client.listBuckets(ListBucketsRequest.builder().build()).buckets().map { it.name() }
 		log.info("Init S3 resource retriever. Connect with S3 host: {}. Buckets: {}.", hostUrl, buckets)

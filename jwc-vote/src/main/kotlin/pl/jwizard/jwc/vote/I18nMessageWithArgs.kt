@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.vote
 
-import pl.jwizard.jwc.core.i18n.I18nLocaleSource
+import pl.jwizard.jwl.i18n.I18nLocaleSource
 
 /**
  * A data class that represents a localized message with optional arguments.

@@ -5,11 +5,11 @@
 package pl.jwizard.jwc.persistence.sql.bind
 
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.core.i18n.spi.LanguageSupplier
-import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.persistence.sql.ColumnDef
 import pl.jwizard.jwc.persistence.sql.JdbcKtTemplateBean
+import pl.jwizard.jwl.i18n.spi.LanguageSupplier
+import pl.jwizard.jwl.property.AppBaseProperty
 import java.math.BigInteger
 
 /**
@@ -50,7 +50,7 @@ class LanguageSupplierBean(
 		val sql = "SELECT id FROM languages WHERE tag = ?"
 		val language = jdbcKtTemplateBean.queryForNullableObject(sql, BigInteger::class, tag)
 		if (language == null) {
-			val configLanguage = environmentBean.getProperty<String>(BotProperty.I18N_DEFAULT_LANGUAGE)
+			val configLanguage = environmentBean.getProperty<String>(AppBaseProperty.I18N_DEFAULT_LANGUAGE)
 			return jdbcKtTemplateBean.queryForNullableObject(sql, BigInteger::class, configLanguage)
 		}
 		return language

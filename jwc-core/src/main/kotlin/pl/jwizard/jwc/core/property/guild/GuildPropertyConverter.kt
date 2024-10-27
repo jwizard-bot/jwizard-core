@@ -2,10 +2,10 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.core.property
+package pl.jwizard.jwc.core.property.guild
 
 import pl.jwizard.jwc.core.i18n.source.I18nUtilSource
-import pl.jwizard.jwc.core.property.GuildPropertyConverter.*
+import pl.jwizard.jwc.core.property.guild.GuildPropertyConverter.*
 import pl.jwizard.jwc.core.util.secToDTF
 
 /**

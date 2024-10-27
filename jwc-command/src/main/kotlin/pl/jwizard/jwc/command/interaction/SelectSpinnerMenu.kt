@@ -11,8 +11,6 @@ import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.LayoutComponent
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu
 import org.apache.commons.codec.digest.DigestUtils
-import pl.jwizard.jwc.core.i18n.I18nBean
-import pl.jwizard.jwc.core.i18n.I18nLocaleSource
 import pl.jwizard.jwc.core.i18n.source.I18nVotingSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
@@ -20,6 +18,8 @@ import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueListener
+import pl.jwizard.jwl.i18n.I18nBean
+import pl.jwizard.jwl.i18n.I18nLocaleSource
 import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
