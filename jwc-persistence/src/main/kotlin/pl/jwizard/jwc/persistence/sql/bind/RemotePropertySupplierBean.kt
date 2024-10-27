@@ -6,7 +6,7 @@ package pl.jwizard.jwc.persistence.sql.bind
 
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.property.spi.RemotePropertySupplier
-import pl.jwizard.jwc.persistence.sql.JdbcKtTemplateBean
+import pl.jwizard.jwl.persistence.sql.JdbcKtTemplateBean
 import kotlin.reflect.KClass
 
 /**

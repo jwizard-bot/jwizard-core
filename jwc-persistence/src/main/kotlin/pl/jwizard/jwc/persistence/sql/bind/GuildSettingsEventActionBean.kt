@@ -9,9 +9,9 @@ import org.springframework.transaction.support.TransactionTemplate
 import pl.jwizard.jwc.core.jda.spi.GuildSettingsEventAction
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.property.guild.GuildProperty
-import pl.jwizard.jwc.persistence.sql.JdbcKtTemplateBean
-import pl.jwizard.jwc.persistence.sql.SqlColumn
-import pl.jwizard.jwl.i18n.spi.LanguageSupplier
+import pl.jwizard.jwl.persistence.sql.JdbcKtTemplateBean
+import pl.jwizard.jwl.persistence.sql.SqlColumn
+import pl.jwizard.jwl.persistence.sql.handler.LanguageSupplierBean
 import pl.jwizard.jwl.property.AppBaseProperty.*
 import pl.jwizard.jwl.property.AppProperty
 import java.sql.JDBCType.*
@@ -21,7 +21,7 @@ import java.sql.JDBCType.*
  *
  * @property jdbcKtTemplateBean Bean for executing SQL queries.
  * @property translationTemplate Template for handling transactions.
- * @property languageSupplier Supplier providing language support for guild settings.
+ * @property languageSupplierBean Supplier providing language support for guild settings.
  * @property environmentBean Bean for fetching environment properties.
  * @author Miłosz Gilga
  */
@@ -29,7 +29,7 @@ import java.sql.JDBCType.*
 class GuildSettingsEventActionBean(
 	private val jdbcKtTemplateBean: JdbcKtTemplateBean,
 	private val translationTemplate: TransactionTemplate,
-	private val languageSupplier: LanguageSupplier,
+	private val languageSupplierBean: LanguageSupplierBean,
 	private val environmentBean: EnvironmentBean,
 ) : GuildSettingsEventAction {
 
@@ -56,7 +56,7 @@ class GuildSettingsEventActionBean(
 				val columns = mapOf(
 					"discord_id" to SqlColumn(guildId, BIGINT),
 					"legacy_prefix" to SqlColumn(getProperty(GUILD_DEFAULT_LEGACY_PREFIX), CHAR),
-					"lang_id" to SqlColumn(languageSupplier.getLanguageId(languageTag), BIGINT),
+					"lang_id" to SqlColumn(languageSupplierBean.getLanguageId(languageTag), BIGINT),
 					"dj_role_name" to SqlColumn(getProperty(GUILD_DJ_ROLE_NAME), VARCHAR),
 					"slash_enabled" to SqlColumn(getProperty(GUILD_DEFAULT_SLASH_ENABLED), BOOLEAN),
 					"leave_empty_channel_sec" to SqlColumn(getProperty(GUILD_LEAVE_EMPTY_CHANNEL_SEC), INTEGER),

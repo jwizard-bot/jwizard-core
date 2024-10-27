@@ -6,8 +6,8 @@ package pl.jwizard.jwc.persistence.sql.bind
 
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.exception.spi.ExceptionSupplier
-import pl.jwizard.jwc.persistence.sql.ColumnDef
-import pl.jwizard.jwc.persistence.sql.JdbcKtTemplateBean
+import pl.jwizard.jwl.persistence.sql.ColumnDef
+import pl.jwizard.jwl.persistence.sql.JdbcKtTemplateBean
 
 /**
  * Implementation of [ExceptionSupplier] that retrieves exception tracker data from the database.

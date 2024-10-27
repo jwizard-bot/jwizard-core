@@ -6,9 +6,9 @@ package pl.jwizard.jwc.persistence.sql.bind
 
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.radio.RadioStationDetails
-import pl.jwizard.jwc.persistence.sql.ColumnDef
-import pl.jwizard.jwc.persistence.sql.JdbcKtTemplateBean
 import pl.jwizard.jwc.radio.spi.RadioStationSupplier
+import pl.jwizard.jwl.persistence.sql.ColumnDef
+import pl.jwizard.jwl.persistence.sql.JdbcKtTemplateBean
 import java.math.BigInteger
 
 /**

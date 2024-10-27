@@ -9,7 +9,7 @@ import pl.jwizard.jwc.command.GuildCommandProperties
 import pl.jwizard.jwc.command.reflect.CommandArgumentDetails
 import pl.jwizard.jwc.command.reflect.CommandDetails
 import pl.jwizard.jwc.command.spi.CommandDataSupplier
-import pl.jwizard.jwc.persistence.sql.JdbcKtTemplateBean
+import pl.jwizard.jwl.persistence.sql.JdbcKtTemplateBean
 import java.math.BigInteger
 
 /**
@@ -37,7 +37,7 @@ class CommandDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean
 			FROM commands c
 			LEFT JOIN argument_options ao ON ao.command_id = c.id
 			LEFT JOIN commands_arguments csa ON csa.command_id = c.id
-			LEFT JOIN command_arguments ca ON ca.id = csa.argument_id 
+			LEFT JOIN command_arguments ca ON ca.id = csa.argument_id
 			INNER JOIN modules m ON m.id = c.module_id
 		""".trimIndent()
 
