@@ -15,7 +15,11 @@ import pl.jwizard.jwl.property.PropertyNotFoundException
 import kotlin.reflect.KClass
 
 /**
- * TODO
+ * Component class for managing and retrieving application properties for specific guilds, using remote sources such as
+ * a database. Extends [BaseEnvironment] to utilize centralized environment configuration and property handling.
+ *
+ * Provides methods to retrieve properties in a nullable and non-nullable format, as well as multiple properties at once,
+ * with fallback to default values if necessary.
  *
  * @property springKtContextFactory Provides access to the Spring context for retrieving beans.
  * @author Miłosz Gilga
