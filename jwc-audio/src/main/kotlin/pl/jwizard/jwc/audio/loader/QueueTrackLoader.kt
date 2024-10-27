@@ -12,7 +12,6 @@ import pl.jwizard.jwc.audio.loader.spinner.TrackSelectSpinnerAction
 import pl.jwizard.jwc.audio.loader.spinner.TrackSelectSpinnerMenu
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
-import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
@@ -24,6 +23,7 @@ import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.ext.thumbnailUrl
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.core.util.millisToDTF
+import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 import pl.jwizard.jwl.util.logger
 
 /**

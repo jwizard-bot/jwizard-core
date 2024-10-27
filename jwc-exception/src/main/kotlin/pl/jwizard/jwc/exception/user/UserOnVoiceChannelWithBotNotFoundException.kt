@@ -5,10 +5,10 @@
 package pl.jwizard.jwc.exception.user
 
 import net.dv8tion.jda.api.entities.channel.Channel
-import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
+import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 
 /**
  * Exception thrown when a command is invoked but the user is not in the same voice channel as the bot.

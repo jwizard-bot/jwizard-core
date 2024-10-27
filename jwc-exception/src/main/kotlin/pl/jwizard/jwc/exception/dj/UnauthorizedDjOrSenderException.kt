@@ -4,9 +4,9 @@
  */
 package pl.jwizard.jwc.exception.dj
 
-import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
+import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 
 /**
  * Exception thrown when a user attempts to invoke a DJ command without the required DJ role or the necessary

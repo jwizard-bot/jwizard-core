@@ -29,7 +29,7 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 	protected val eventQueueBean = commandEnvironment.eventQueueBean
 	protected val commandDataSupplier = commandEnvironment.commandDataSupplier
 	protected val commandsCacheBean = commandEnvironment.commandsCacheBean
-	protected val exceptionTrackerStore = commandEnvironment.exceptionTrackerStore
+	protected val exceptionTrackerStore = commandEnvironment.exceptionTrackerHandler
 
 	/**
 	 * A list of permissions assigned to superusers.

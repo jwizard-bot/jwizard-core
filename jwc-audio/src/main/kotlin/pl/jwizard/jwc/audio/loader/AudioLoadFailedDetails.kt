@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.audio.loader
 
-import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
+import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 
 /**
  * Represents the details of a failed audio load operation.

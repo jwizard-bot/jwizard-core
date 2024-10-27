@@ -15,7 +15,6 @@ import pl.jwizard.jwc.audio.scheduler.repeat.AudioTrackRepeat
 import pl.jwizard.jwc.audio.scheduler.repeat.CountOfRepeats
 import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.core.audio.spi.QueueTrackScheduler
-import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.util.ext.mdTitleLink
@@ -24,6 +23,7 @@ import pl.jwizard.jwc.core.util.ext.thumbnailUrl
 import pl.jwizard.jwc.core.util.jdaError
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwl.i18n.I18nLocaleSource
+import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 import pl.jwizard.jwl.util.logger
 import reactor.core.Disposable
 import java.util.concurrent.atomic.AtomicBoolean
@@ -251,7 +251,7 @@ class QueueTrackScheduleHandler(
 	 */
 	private fun onError(track: Track, node: LavalinkNode, causeMessage: String?) {
 		val context = musicManager.state.context
-		val tracker = musicManager.beans.exceptionTrackerStore
+		val tracker = musicManager.beans.exceptionTrackerHandler
 
 		val i18nSource = I18nExceptionSource.ISSUE_WHILE_PLAYING_TRACK
 		val message = tracker.createTrackerMessage(i18nSource, context, args = mapOf("audioTrack" to track.mdTitleLink))

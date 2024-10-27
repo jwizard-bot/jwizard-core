@@ -9,7 +9,7 @@ import pl.jwizard.jwc.command.spi.CommandDataSupplier
 import pl.jwizard.jwc.command.transport.LooselyTransportHandlerBean
 import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
 import pl.jwizard.jwc.core.audio.spi.MusicManagersSupplier
-import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
+import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerHandler
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
 import pl.jwizard.jwc.core.jda.spi.GuildSettingsEventAction
@@ -34,7 +34,7 @@ import pl.jwizard.jwl.i18n.I18nBean
  * @property radioPlaybackMappersCache Caches radio playback mappers for efficient access.
  * @property commandDataSupplier Supplies metadata and definitions for bot commands.
  * @property commandsCacheBean Caches command-related data to improve command lookup performance.
- * @property exceptionTrackerStore The store used to track and log exceptions.
+ * @property exceptionTrackerHandler The store used to track and log exceptions.
  * @property looselyTransportHandlerBean Handles loosely-typed transport operations between services.
  * @author Miłosz Gilga
  */
@@ -52,6 +52,6 @@ class CommandEnvironmentBean(
 	val radioPlaybackMappersCache: RadioPlaybackMappersCache,
 	val commandDataSupplier: CommandDataSupplier,
 	val commandsCacheBean: CommandsCacheBean,
-	val exceptionTrackerStore: ExceptionTrackerStore,
+	val exceptionTrackerHandler: ExceptionTrackerHandler,
 	val looselyTransportHandlerBean: LooselyTransportHandlerBean,
 )

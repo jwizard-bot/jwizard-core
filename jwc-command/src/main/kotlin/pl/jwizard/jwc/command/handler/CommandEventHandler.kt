@@ -20,7 +20,6 @@ import pl.jwizard.jwc.command.exception.CommandParserException
 import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.reflect.CommandArgumentDetails
 import pl.jwizard.jwc.command.reflect.CommandDetails
-import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
@@ -33,6 +32,7 @@ import pl.jwizard.jwc.exception.command.MismatchCommandArgumentsException
 import pl.jwizard.jwc.exception.command.ModuleIsTurnedOffException
 import pl.jwizard.jwc.exception.command.ViolatedCommandArgumentOptionsException
 import pl.jwizard.jwl.i18n.source.I18nDynamicMod
+import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 import java.util.*
 import java.util.concurrent.CompletableFuture
 
@@ -173,7 +173,7 @@ abstract class CommandEventHandler<E : Event>(
 	 */
 	private fun createExceptionMessage(ex: CommandPipelineExceptionHandler): CommandResponse {
 		ex.printLogStatement()
-		val exceptionTrackerStore = commandEventHandlerEnvironmentBean.exceptionTrackerStore
+		val exceptionTrackerStore = commandEventHandlerEnvironmentBean.exceptionTrackerHandler
 		val trackerMessage = exceptionTrackerStore.createTrackerMessage(ex)
 		val trackerLink = exceptionTrackerStore.createTrackerLink(ex)
 		return CommandResponse.Builder()
@@ -198,7 +198,7 @@ abstract class CommandEventHandler<E : Event>(
 	 */
 	private fun sendPrivateMessage(event: E, user: User, context: CommandContext?, response: CommandResponse) {
 		val looselyTransportHandlerBean = commandEventHandlerEnvironmentBean.looselyTransportHandlerBean
-		val exceptionTrackerStore = commandEventHandlerEnvironmentBean.exceptionTrackerStore
+		val exceptionTrackerStore = commandEventHandlerEnvironmentBean.exceptionTrackerHandler
 		val successMessage = MessageEmbedBuilder(i18nBean, commandEventHandlerEnvironmentBean.jdaColorStoreBean, context)
 			.setTitle(I18nResponseSource.PRIVATE_MESSAGE_SEND)
 			.setDescription(I18nResponseSource.CHECK_INBOX)

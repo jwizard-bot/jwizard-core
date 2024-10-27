@@ -87,7 +87,7 @@ abstract class AudioCompletableFutureLoader(
 	 */
 	protected open fun onError(details: AudioLoadFailedDetails): CommandResponse {
 		val context = musicManager.state.context
-		val tracker = musicManager.beans.exceptionTrackerStore
+		val tracker = musicManager.beans.exceptionTrackerHandler
 		log.jdaError(context, details.logMessage, *(details.logArguments.toTypedArray()))
 		return CommandResponse.Builder()
 			.addEmbedMessages(tracker.createTrackerMessage(details.i18nLocaleSource, context, details.i18nArguments))

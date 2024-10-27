@@ -6,9 +6,9 @@ package pl.jwizard.jwc.exception
 
 import org.slf4j.LoggerFactory
 import pl.jwizard.jwc.core.exception.CommandPipelineException
-import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.util.jdaError
+import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 
 /**
  * Base class for exceptions that occur within the command processing pipeline.

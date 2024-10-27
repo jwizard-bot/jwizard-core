@@ -4,9 +4,9 @@
  */
 package pl.jwizard.jwc.exception.radio
 
-import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
+import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 
 /**
  * Exception thrown when an attempt is made to interact with a radio station that either does not exist or is turned

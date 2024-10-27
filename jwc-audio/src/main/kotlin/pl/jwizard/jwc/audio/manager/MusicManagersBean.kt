@@ -10,7 +10,7 @@ import pl.jwizard.jwc.command.transport.LooselyTransportHandlerBean
 import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.audio.spi.MusicManagersSupplier
-import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
+import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerHandler
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
@@ -23,7 +23,7 @@ import pl.jwizard.jwl.i18n.I18nBean
  * Class responsible for managing music-related functionalities for different guilds. It provides methods for caching
  * and retrieving music managers and handles their lifecycle.
  *
- * @property exceptionTrackerStore Handles exceptions and logs errors.
+ * @property exceptionTrackerHandler Handles exceptions and logs errors.
  * @property i18nBean Provides internationalization support for the bot.
  * @property jdaColorStoreBean Supplies JDA color configurations for embeds.
  * @property environmentBean Stores environment variables used for configuration.
@@ -35,7 +35,7 @@ import pl.jwizard.jwl.i18n.I18nBean
  */
 @Component
 class MusicManagersBean(
-	val exceptionTrackerStore: ExceptionTrackerStore,
+	val exceptionTrackerHandler: ExceptionTrackerHandler,
 	val i18nBean: I18nBean,
 	val jdaColorStoreBean: JdaColorStoreBean,
 	val environmentBean: EnvironmentBean,

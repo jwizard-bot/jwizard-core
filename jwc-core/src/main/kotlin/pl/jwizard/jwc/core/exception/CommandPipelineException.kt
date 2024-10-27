@@ -4,8 +4,8 @@
  */
 package pl.jwizard.jwc.core.exception
 
-import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
+import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 
 /**
  * Interface defining a structure for handling exceptions related to the command pipeline.

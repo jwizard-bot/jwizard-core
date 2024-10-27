@@ -5,12 +5,12 @@
 package pl.jwizard.jwc.command.mono
 
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
-import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
+import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerHandler
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.util.jdaError
 import pl.jwizard.jwc.exception.UnexpectedException
+import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 import pl.jwizard.jwl.util.logger
 import reactor.core.publisher.Mono
 import kotlin.reflect.KClass
@@ -27,7 +27,7 @@ import kotlin.reflect.KClass
  * @property response The future response that will be completed once the async update is done.
  * @property invokerClazz The class invoking this handler (used for logging and tracking).
  * @property asyncUpdatableHook The hook used to handle success or failure of the async operation.
- * @property exceptionTrackerStore The store used to track and log exceptions.
+ * @property exceptionTrackerHandler The store used to track and log exceptions.
  * @author Miłosz Gilga
  */
 class AsyncUpdatableHandler<R, I : Mono<R>, P>(
@@ -35,7 +35,7 @@ class AsyncUpdatableHandler<R, I : Mono<R>, P>(
 	private val response: TFutureResponse,
 	private val invokerClazz: KClass<*>,
 	private val asyncUpdatableHook: AsyncUpdatableHook<R, I, P>,
-	private val exceptionTrackerStore: ExceptionTrackerStore,
+	private val exceptionTrackerHandler: ExceptionTrackerHandler,
 ) {
 
 	companion object {
@@ -101,8 +101,8 @@ class AsyncUpdatableHandler<R, I : Mono<R>, P>(
 	private fun createErrorResponse(): CommandResponse {
 		val i18nSource = I18nExceptionSource.UNEXPECTED_EXCEPTION
 		return CommandResponse.Builder()
-			.addEmbedMessages(exceptionTrackerStore.createTrackerMessage(i18nSource, context))
-			.addActionRows(exceptionTrackerStore.createTrackerLink(i18nSource, context))
+			.addEmbedMessages(exceptionTrackerHandler.createTrackerMessage(i18nSource, context))
+			.addActionRows(exceptionTrackerHandler.createTrackerLink(i18nSource, context))
 			.build()
 	}
 }

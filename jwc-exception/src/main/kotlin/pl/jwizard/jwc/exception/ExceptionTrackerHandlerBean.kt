@@ -9,11 +9,9 @@ import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.exception.CommandPipelineException
-import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
+import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerHandler
 import pl.jwizard.jwc.core.i18n.source.I18nActionSource
-import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.i18n.source.I18nUtilSource
-import pl.jwizard.jwc.core.integrity.ReferentialIntegrityChecker
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
@@ -21,11 +19,10 @@ import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.util.mdCode
-import pl.jwizard.jwc.exception.spi.ExceptionSupplier
 import pl.jwizard.jwl.i18n.I18nBean
 import pl.jwizard.jwl.i18n.I18nLocaleSource
+import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 import pl.jwizard.jwl.property.AppBaseProperty
-import pl.jwizard.jwl.util.logger
 import java.util.*
 
 /**
@@ -35,50 +32,17 @@ import java.util.*
  * This class interacts with external sources to retrieve exception data, and formats messages for Discord embeds when
  * exceptions occur.
  *
- * @property exceptionSupplier The source of exception tracking data.
  * @property environmentBean Provides access to application properties.
  * @property i18nBean Manages internationalization for exception messages.
  * @property jdaColorStoreBean Provides color settings for JDA embeds.
  * @author Miłosz Gilga
  */
 @Component
-class ExceptionTrackerStoreBean(
-	private val exceptionSupplier: ExceptionSupplier,
+class ExceptionTrackerHandlerBean(
 	private val environmentBean: EnvironmentBean,
 	private val i18nBean: I18nBean,
 	private val jdaColorStoreBean: JdaColorStoreBean,
-) : ExceptionTrackerStore {
-
-	companion object {
-		private val log = logger<ExceptionTrackerStoreBean>()
-
-		/**
-		 * Pattern used to extract the last word from a string.
-		 */
-		private val I18N_REFER_PATTERN = Regex("\\w+\$")
-	}
-
-	/**
-	 * A map to hold tracker keys and their associated count.
-	 */
-	private val trackers: MutableMap<String, Int> = mutableMapOf()
-
-	/**
-	 * Loads exception trackers from the data source.
-	 *
-	 * It divides the tracker counts by a segment size defined in the application properties and logs the number of
-	 * trackers and segments loaded.
-	 */
-	override fun initTrackers() {
-		val segmentSize = environmentBean.getProperty<Int>(BotProperty.JDA_EXCEPTION_SEGMENT_SIZE)
-
-		val fetchedTrackers = exceptionSupplier.loadTrackers()
-		ReferentialIntegrityChecker.checkIntegrity<I18nExceptionSource>(this::class, fetchedTrackers.keys)
-		trackers.putAll(fetchedTrackers)
-
-		val segments = trackers.map { it.value / segmentSize }.distinct()
-		log.info("Load: {} exception trackers with: {} segments.", trackers.size, segments.size)
-	}
+) : ExceptionTrackerHandler {
 
 	/**
 	 * Creates a formatted message embed for the given internationalization source, including tracker details.
@@ -96,15 +60,14 @@ class ExceptionTrackerStoreBean(
 		context: CommandBaseContext?,
 		args: Map<String, Any?>,
 	): MessageEmbed {
-		val tracker = extractTracker(i18nSource)
 		val buildVersion = environmentBean.getProperty<String>(AppBaseProperty.DEPLOYMENT_BUILD_VERSION)
+		val lang = context?.guildLanguage
+
 		val stringJoiner = StringJoiner("")
-		if (tracker != null) {
-			val lang = context?.guildLanguage
-			stringJoiner.addKeyValue(I18nUtilSource.BUG_TRACKER, tracker, lang)
-			stringJoiner.add("\n")
-			stringJoiner.addKeyValue(I18nUtilSource.COMPILATION_VERSION, buildVersion, lang)
-		}
+		stringJoiner.addKeyValue(I18nUtilSource.BUG_TRACKER, i18nSource.tracker, lang)
+		stringJoiner.add("\n")
+		stringJoiner.addKeyValue(I18nUtilSource.COMPILATION_VERSION, buildVersion, lang)
+
 		return MessageEmbedBuilder(i18nBean, jdaColorStoreBean, context)
 			.setDescription(i18nSource, args)
 			.appendDescription(stringJoiner.toString())
@@ -131,14 +94,9 @@ class ExceptionTrackerStoreBean(
 	 * @return An ActionRow containing a button that links to the exception details.
 	 */
 	override fun createTrackerLink(i18nSource: I18nExceptionSource, context: CommandBaseContext?): ActionRow {
-		val tracker = extractTracker(i18nSource)
 		val baseUrl = environmentBean.getProperty<String>(BotProperty.SERVICE_FRONT_URL)
-		val trackerUrl = if (tracker != null) {
-			val urlReferTemplate = environmentBean.getProperty<String>(BotProperty.JDA_EXCEPTION_URL_REFER_TEMPLATE)
-			urlReferTemplate.format(baseUrl, tracker)
-		} else {
-			baseUrl
-		}
+		val urlReferTemplate = environmentBean.getProperty<String>(BotProperty.JDA_EXCEPTION_URL_REFER_TEMPLATE)
+		val trackerUrl = urlReferTemplate.format(baseUrl, i18nSource.tracker)
 		val detailsMessage = i18nBean.t(I18nActionSource.DETAILS, context?.guildLanguage)
 		return ActionRow.of(Button.link(trackerUrl, detailsMessage))
 	}
@@ -152,18 +110,6 @@ class ExceptionTrackerStoreBean(
 	 */
 	override fun createTrackerLink(ex: CommandPipelineException) =
 		createTrackerLink(ex.i18nExceptionSource, ex.commandBaseContext)
-
-	/**
-	 * Extracts the tracker number associated with a given internationalization exception source. This method retrieves
-	 * the last word from the `i18nExceptionSource` placeholder and looks it up in the internal trackers map.
-	 *
-	 * @param i18nExceptionSource The internationalization source from which to extract the tracker key.
-	 * @return The associated tracker count, or null if not found.
-	 */
-	private fun extractTracker(i18nExceptionSource: I18nExceptionSource): Int? {
-		val trackerKey = I18N_REFER_PATTERN.find(i18nExceptionSource.placeholder)?.value
-		return trackers[trackerKey]
-	}
 
 	/**
 	 * Adds a key-value pair to the [StringJoiner] for formatting.

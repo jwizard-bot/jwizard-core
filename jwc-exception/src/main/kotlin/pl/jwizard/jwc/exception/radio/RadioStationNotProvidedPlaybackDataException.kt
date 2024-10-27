@@ -4,9 +4,9 @@
  */
 package pl.jwizard.jwc.exception.radio
 
-import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
+import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 
 /**
  * Exception thrown when a radio station does not provide playback data while attempting to invoke a radio command.

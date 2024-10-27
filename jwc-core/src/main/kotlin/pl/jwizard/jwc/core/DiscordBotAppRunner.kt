@@ -5,7 +5,6 @@
 package pl.jwizard.jwc.core
 
 import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
-import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerStore
 import pl.jwizard.jwc.core.jda.ActivitySplashesBean
 import pl.jwizard.jwc.core.jda.JdaInstanceBean
 import pl.jwizard.jwc.core.jda.spi.ChannelListenerGuard
@@ -34,13 +33,11 @@ object DiscordBotAppRunner : AppRunner() {
 		val activitySplashes = context.getBean(ActivitySplashesBean::class)
 
 		val radioPlaybackMappersCache = context.getBean(RadioPlaybackMappersCache::class)
-		val exceptionTrackerStore = context.getBean(ExceptionTrackerStore::class)
 		val commandLoader = context.getBean(CommandsLoader::class)
 		val audioClientSupplier = context.getBean(DistributedAudioClientSupplier::class)
 		val channelListenerGuard = context.getBean(ChannelListenerGuard::class)
 
 		radioPlaybackMappersCache.loadRadioPlaybackClasses()
-		exceptionTrackerStore.initTrackers()
 
 		commandLoader.loadMetadata()
 		commandLoader.loadClassesViaReflectionApi()

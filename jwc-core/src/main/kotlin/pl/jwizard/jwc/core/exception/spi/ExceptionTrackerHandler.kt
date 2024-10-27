@@ -7,8 +7,8 @@ package pl.jwizard.jwc.core.exception.spi
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import pl.jwizard.jwc.core.exception.CommandPipelineException
-import pl.jwizard.jwc.core.i18n.source.I18nExceptionSource
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
+import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 
 /**
  * Interface for managing the creation of trackers for command pipeline exceptions, which may include messages or
@@ -16,13 +16,7 @@ import pl.jwizard.jwc.core.jda.command.CommandBaseContext
  *
  * @author Miłosz Gilga
  */
-interface ExceptionTrackerStore {
-
-	/**
-	 * Initializes the internal trackers used for monitoring exceptions. This method sets up any necessary state or
-	 * resources required for exception tracking.
-	 */
-	fun initTrackers()
+interface ExceptionTrackerHandler {
 
 	/**
 	 * Creates a message embed to represent a specific exception. The message is generated based on an
