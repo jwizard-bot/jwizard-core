@@ -7,9 +7,7 @@ on:
 
 jobs:
   generate-docs:
-    runs-on: self-hosted
-    env:
-      ROOT_PATH: "/var/www/jwizard-docs/jwc/${{ github.ref_name }}"
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
@@ -21,19 +19,33 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
+      - name: Determinate revision tag
+        id: revision
+        run: |
+          echo "revision_tag=${REVISION_TAG:1}" >> "$GITHUB_OUTPUT"
+        env:
+          REVISION_TAG: ${{ github.ref_name }}
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Generate KDoc documentation
         run: ./gradlew dokkaHtml --no-daemon
         env:
-          JWIZARD_CORE_VERSION: "${GITHUB_REF_NAME:1}"
+          JWIZARD_CORE_VERSION: ${{ steps.revision.outputs.revision_tag }}
 
-      - name: Copy HTML documentation into http server
-        run: |
-          mkdir -p $ROOT_PATH
-          rm -rf $ROOT_PATH/*
-          cp -r docs/* $ROOT_PATH
+      - name: Copy generated content on server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          source: docs/*
+          target: /var/www/jwizard-docs/jwc
+          rm: true
+          strip_components: 1
 
   release:
     runs-on: ubuntu-latest
@@ -57,8 +69,6 @@ jobs:
 
       - name: Generate Changelog
         run: |
-          echo "[KDoc for this release](https://docs.jwizard.pl/jwc/${{ github.ref_name }})" >> changelog.md
-          echo "" >> changelog.md
           echo "### Changes" >> changelog.md
           git log --oneline --no-merges --pretty=format:"* %h - %s" $tags_range >> changelog.md
 

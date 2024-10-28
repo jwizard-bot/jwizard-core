@@ -18,6 +18,8 @@ plugins {
 }
 
 ext {
+	jvmSpecification = 17
+	initProjectName = 'jwc-app'
 	dokkaCommonAssets = [
 		'dokka/logo-icon.svg',
 		'dokka/logo-nav.svg',
@@ -25,8 +27,8 @@ ext {
 	]
 	dokkaCopyright
 		= ("&copy; ${Year.now().value} by JWizard"
-		+ ". On $license license"
-		+ ". Snap SHA: ${getEnv('BUILD_VERSION', 'DEVELOPMENT')}") as GStringImpl
+		+ ". On AGPL-3.0 license"
+		+ ". Version: ${getEnv('VERSION', 'DEVELOPMENT')}") as GStringImpl
 }
 
 allprojects {
@@ -40,8 +42,8 @@ allprojects {
 		maven { url = uri('https://m2.miloszgilga.pl/releases') }
 		mavenLocal()
 	}
-	group = groupId
-	version = getEnv('JWIZARD_CORE_VERSION', 'DEVELOPMENT')
+	group = 'pl.jwizard'
+	version = getEnv('VERSION', 'DEVELOPMENT')
 }
 
 subprojects {
@@ -49,13 +51,13 @@ subprojects {
 	apply plugin: getPluginId(libs.plugins.kotlinSpring)
 	apply plugin: getPluginId(libs.plugins.dokka)
 
-	if (project.name != initProjectName) {
+	if (project.name != rootProject.ext.initProjectName) {
 		apply plugin: 'java-library'
 	}
 
 	java {
-		sourceCompatibility = jvmVersion
-		targetCompatibility = jvmVersion
+		sourceCompatibility = rootProject.ext.jvmSpecification
+		targetCompatibility = rootProject.ext.jvmSpecification
 	}
 
 	dependencies {
@@ -65,7 +67,7 @@ subprojects {
 		implementation libs.logbackCore
 		implementation libs.logbackClassic
 		implementation libs.slf4jApi
-		implementation "pl.jwizard:jwizard-lib:${getEnv('STD_LIB_VERSION', 'DEVELOPMENT')}"
+		implementation "pl.jwizard:jwizard-lib:${getEnv('LIB_VERSION', 'DEVELOPMENT')}"
 	}
 
 	test {
@@ -74,7 +76,7 @@ subprojects {
 
 	compileKotlin {
 		kotlinOptions {
-			jvmTarget = jvmVersion.toString()
+			jvmTarget = rootProject.ext.jvmSpecification.toString()
 			freeCompilerArgs = [
 				'-Xjsr305=strict',
 			]
@@ -104,13 +106,13 @@ subprojects {
 	}
 }
 
-project(":${initProjectName}") {
+project(":${rootProject.ext.initProjectName}") {
 	apply plugin: getPluginId(libs.plugins.shadowJar)
 
 	jar {
 		manifest {
 			attributes(
-				'Main-Class': mainClass
+				'Main-Class': 'pl.jwizard.jwc.app.JWizardCoreEntrypointKt'
 			)
 		}
 	}
@@ -145,7 +147,7 @@ clean {
 }
 
 tasks.register('shadowJar') {
-	dependsOn ":$initProjectName:shadowJar"
+	dependsOn ":${rootProject.ext.initProjectName}:shadowJar"
 }
 
 tasks.register('createEnv') {
