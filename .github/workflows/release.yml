@@ -1,4 +1,4 @@
-name: Release new version
+name: Release new JWizard CORE version
 
 on:
   push:
@@ -32,7 +32,7 @@ jobs:
       - name: Generate KDoc documentation
         run: ./gradlew dokkaHtml --no-daemon
         env:
-          JWIZARD_CORE_VERSION: ${{ steps.revision.outputs.revision_tag }}
+          JWIZARD_VERSION: ${{ steps.revision.outputs.revision_tag }}
 
       - name: Copy generated content on server
         uses: appleboy/scp-action@v0.1.7
