@@ -9,7 +9,6 @@ dotenvVersion = "2.2.0"
 shadowJarVersion = "8.1.1"
 dokkaVersion = "1.9.20"
 jacksonVersion = "2.18.0"
-springVaultVersion = "3.1.2"
 jdaVersion = "5.1.0"
 jeeAnnotationApiVersion = "3.0.0"
 awsS3sdkVersion = "2.27.21"
@@ -37,7 +36,6 @@ jacksonKotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin",
 jacksonDatabind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jacksonVersion" }
 jacksonDataformatYaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jacksonVersion" }
 jacksonAnnotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jacksonVersion" }
-springVaultCore = { module = "org.springframework.vault:spring-vault-core", version.ref = "springVaultVersion" }
 jda = { module = "net.dv8tion:JDA", version.ref = "jdaVersion" }
 jeeAnnotationApi = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jeeAnnotationApiVersion" }
 awsS3sdk = { module = "software.amazon.awssdk:s3", version.ref = "awsS3sdkVersion" }

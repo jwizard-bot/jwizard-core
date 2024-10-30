@@ -8,7 +8,6 @@ dependencies {
 	implementation libs.jacksonDatabind
 	implementation libs.jacksonDataformatYaml
 	implementation libs.springContext
-	implementation libs.springVaultCore
 	implementation libs.jda
 	implementation libs.jeeAnnotationApi
 	implementation libs.lavalinkClient

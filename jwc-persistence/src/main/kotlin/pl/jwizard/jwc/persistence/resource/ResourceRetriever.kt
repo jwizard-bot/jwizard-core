@@ -5,7 +5,6 @@
 package pl.jwizard.jwc.persistence.resource
 
 import java.io.InputStream
-import java.nio.charset.Charset
 
 /**
  * Abstract class for retrieving resources from different storage systems. This class provides utility methods to
@@ -24,19 +23,6 @@ abstract class ResourceRetriever {
 	 */
 	fun getObjectAsByteArray(resourceObject: ResourceObject, vararg args: String): ByteArray? =
 		getObject(resourceObject, *args).let { it.use { inputStream -> inputStream?.readBytes() } }
-
-	/**
-	 * Fetches a resource as a string using the specified character set.
-	 *
-	 * @param resourceObject Specifies which resource to retrieve.
-	 * @param charset The character set to use for decoding the resource.
-	 * @param args Additional arguments to format the resource path.
-	 * @return A [String] containing the resource content, or `null` if it could not be retrieved.
-	 */
-	fun getObjectAsText(resourceObject: ResourceObject, charset: Charset, vararg args: String): String? {
-		val inputStream = getObject(resourceObject, *args)
-		return inputStream?.bufferedReader(charset).use { it?.readText() }
-	}
 
 	/**
 	 * Parses the resource path for the given [ResourceObject], replacing placeholders in the path with the provided
