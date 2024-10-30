@@ -62,13 +62,13 @@ $ git clone https://github.com/jwizard-bot/jwizard-lib
 
 4. Build library and package to Maven Local artifacts' storage:
 
-- for UNIX based systems:
+* for UNIX based systems:
 
 ```bash
 $ ./gradlew clean publishToMavenLocal
 ```
 
-- for Windows systems:
+* for Windows systems:
 
 ```bash
 .\gradlew clean publishToMavenLocal
@@ -76,7 +76,7 @@ $ ./gradlew clean publishToMavenLocal
 
 5. Clone this repository via:
 
-```shell
+```bash
 $ git clone https://github.com/jwizard-bot/jwizard-core
 ```
 
