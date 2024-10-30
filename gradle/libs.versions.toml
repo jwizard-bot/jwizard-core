@@ -19,6 +19,7 @@ commonsValidatorVersion = "1.9.0"
 commonsIoVersion = "2.17.0"
 reactorVersion = "3.6.10"
 commonsVfsVersion = "2.9.0"
+jwizardLibVersion = "latest"
 
 [libraries]
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinVersion" }
@@ -46,6 +47,7 @@ commonsValidator = { module = "commons-validator:commons-validator", version.ref
 commonsIo = { module = "commons-io:commons-io", version.ref = "commonsIoVersion" }
 reactor = { module = "io.projectreactor:reactor-core", version.ref = "reactorVersion" }
 commonsVfs = { module = "org.apache.commons:commons-vfs2", version.ref = "commonsVfsVersion" }
+jwizardLib = { module = "pl.jwizard:jwizard-lib", version.ref = "jwizardLibVersion" }
 
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
