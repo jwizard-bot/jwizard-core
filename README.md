@@ -39,7 +39,7 @@ client for sending commands to Lavalink nodes and message broker handling events
 
 ## Clone and install
 
-1. Make sure you have at least JVM 17 and Kotlin 2.0.
+1. Make sure you have at least JDK 17 and Kotlin 2.0.
 2. Go to [JWizard Infra repository](https://github.com/jwizard-bot/jwizard-infra), configure and run all necessary
    containers defined in `README.md` file in this repository. You must have up these containers:
 
@@ -54,31 +54,57 @@ client for sending commands to Lavalink nodes and message broker handling events
 > NOTE: Alternatively, you can run single Lavalink node, but in `application-dev.yml` you must remove second Lavalink
 > node declaration. Running 2 nodes are useful for checking load-balancer in performance tests.
 
-3. Clone this repository via:
+3. Clone **JWizard Lib** from organization repository via:
+
+```bash
+$ git clone https://github.com/jwizard-bot/jwizard-lib
+```
+
+4. Build library and package to Maven Local artifacts' storage:
+
+- for UNIX based systems:
+
+```bash
+$ ./gradlew clean publishToMavenLocal
+```
+
+- for Windows systems:
+
+```bash
+.\gradlew clean publishToMavenLocal
+```
+
+5. Clone this repository via:
 
 ```shell
 $ git clone https://github.com/jwizard-bot/jwizard-core
 ```
 
-4. Create `.env` file in root of the project path (based on `example.env`) and insert Vault token:
+6. Create `.env` file in root of the project path (based on `example.env`) and insert Vault token:
 
 ```properties
 ENV_VAULT_TOKEN=<vault token>
 ```
 
-where `<value token>` property is the Vault token generated during the initial launch of the Hashicorp Vault server.
+where `<value token>` property is the Vault token stored in configured `.env` file in `jwizard-infa` repository.
 
 5. That's it. Now you can run via Intellij IDEA. Make sure, you have set JVM parameters:
 
 ```
--Druntime.profiles=dev -Denv.enabled=true -Xms128m -Xmx1G
+-Druntime.profiles=dev -Denv.enabled=true -Xms1G -Xmx1G
 ```
 
 where `Xmx` and `Xms` parameters are optional and can be modified.
 
+> NOTE: For servers running on HotSpot JVM, Oracle recommended same Xms and Xms parameter, ex. `-Xms1G` and `-Xmx1G`.
+> More information you will
+> find [here](https://docs.oracle.com/cd/E74363_01/ohi_vbp_-_installation_guide--20160224-094432-html-chunked/s66.html).
+
 ## Documentation
 
 For detailed documentation, please visit [JWizard documentation](https://jwizard.pl/docs).
+<br>
+Documentation for latest version (with SHA) you will find [here](https://docs.jwizard.pl/jwc) - in KDoc format.
 
 ## Contributing
 
