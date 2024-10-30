@@ -91,6 +91,7 @@ class DebugCmd(
 	 */
 	private fun createDebugMessage(context: CommandContext): MessageEmbed {
 		val buildVersion = environmentBean.getProperty<String>(AppBaseProperty.DEPLOYMENT_BUILD_VERSION)
+		val latestTag = environmentBean.getProperty<String>(AppBaseProperty.RELEASE_LATEST_TAG)
 		val buildDate = environmentBean.getProperty<String>(AppBaseProperty.DEPLOYMENT_LAST_BUILD_DATE)
 
 		val runtime = Runtime.getRuntime()
@@ -100,7 +101,7 @@ class DebugCmd(
 
 		val messageBuilder = createEmbedMessage(context)
 			.setTitle(I18nSystemSource.DEBUG_INFO_HEADER)
-			.setKeyValueField(I18nSystemSource.COMPILATION_VERSION, buildVersion)
+			.setKeyValueField(I18nSystemSource.COMPILATION_VERSION, "$latestTag ($buildVersion)")
 			.setSpace()
 			.setKeyValueField(I18nSystemSource.DEPLOYMENT_DATE, buildDate)
 
