@@ -6,12 +6,13 @@ package pl.jwizard.jwc.command.slash
 
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import net.dv8tion.jda.api.interactions.commands.Command
+import net.dv8tion.jda.api.interactions.commands.Command.Choice
 import pl.jwizard.jwc.command.CommandsCacheBean
-import pl.jwizard.jwc.command.reflect.CommandArgumentDetails
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwl.command.Command
+import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.i18n.I18nBean
 import pl.jwizard.jwl.i18n.source.I18nDynamicMod
 
@@ -44,32 +45,33 @@ class SlashAutocompleteEventBean(
 	 * @param event The autocomplete interaction event containing user input and context.
 	 */
 	override fun onCommandAutoCompleteInteraction(event: CommandAutoCompleteInteractionEvent) {
-		val command = commandsCacheBean.commands[event.name] ?: return event.composeEmptyList()
+		val command = Command.entries.find { it.textId == event.name } ?: return event.composeEmptyList()
 		val argName = event.interaction.focusedOption.name
 
-		val result = command.args.asSequence()
-			.flatMap { it.composeCommandArgumentTags() }
+		val result = command.exactArguments.asSequence()
+			.flatMap { it.composeCommandArgumentTags(it.extractedKey) }
 			.find { (_, i18nKey, _) -> i18nKey == argName }
 
 		val (lang, commandArg) = result
 			?.let { (languageTag, _, arg) -> languageTag to arg }
 			?: return event.composeEmptyList()
 
-		val parsedChoices = commandArg.options
+		val parsedChoices = commandArg.options.keys
 			.filter { it.startsWith(event.focusedOption.value) }
-			.map { Command.Choice(i18nBean.tRaw(I18nDynamicMod.ARG_OPTION_MOD, arrayOf(event.name, it), lang), it) }
+			.map { Choice(i18nBean.tRaw(I18nDynamicMod.ARG_OPTION_MOD, arrayOf(event.name, it), lang), it) }
 			.take(maxOptions)
 
 		event.replyChoices(parsedChoices).queue()
 	}
 
 	/**
-	 * Generates a sequence of command argument tags for localization and returns them as a tuple of language tag, i18n
-	 * key, and the command argument details.
+	 * Retrieves a sequence of triples containing the language tag, i18n key, and command argument, which are used to
+	 * generate localized command argument tags.
 	 *
+	 * @param name The identifier used to look up localized argument tags.
 	 * @return A sequence of triples containing language tag, i18n key, and command argument.
 	 */
-	private fun CommandArgumentDetails.composeCommandArgumentTags() = i18nBean
+	private fun Argument.composeCommandArgumentTags(name: String) = i18nBean
 		.tRaw(I18nDynamicMod.ARGS_MOD, arrayOf(name))
 		.map { (languageTag, i18nKey) -> Triple(languageTag, i18nKey, this) }
 

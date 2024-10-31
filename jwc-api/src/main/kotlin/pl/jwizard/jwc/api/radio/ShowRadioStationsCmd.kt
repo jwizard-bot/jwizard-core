@@ -16,6 +16,7 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.util.mdLink
 import pl.jwizard.jwl.command.Command
+import pl.jwizard.jwl.i18n.source.I18nDynamicMod
 
 /**
  * Command that displays available radio stations for the guild.
@@ -40,12 +41,12 @@ class ShowRadioStationsCmd(commandEnvironment: CommandEnvironmentBean) : Command
 		val lang = context.guildLanguage
 
 		val paginatorChunkSize = environmentBean.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
-		val radioCmd = Command.PLAY_RADIO.propName
 		val responseBuilder = CommandResponse.Builder()
 
 		val message = if (radioStations.isNotEmpty()) {
 			val radioStationsPages = radioStations.entries
 				.map {
+					val radioCmd = Command.PLAYRADIO.textId
 					val name = i18nBean.tRaw(I18nDynamicMod.ARG_OPTION_MOD, arrayOf(radioCmd, it.key), lang)
 					val link = mdLink("[${i18nBean.t(I18nUtilSource.WEBSITE, lang)}]", it.value)
 					"* $name $link"

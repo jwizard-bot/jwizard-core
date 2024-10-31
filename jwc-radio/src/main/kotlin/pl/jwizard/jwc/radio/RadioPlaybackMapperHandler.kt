@@ -20,6 +20,7 @@ import pl.jwizard.jwc.core.util.dtFormat
 import pl.jwizard.jwc.core.util.ext.getAsText
 import pl.jwizard.jwc.core.util.mdLink
 import pl.jwizard.jwc.exception.radio.RadioStationNotProvidedPlaybackDataException
+import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.i18n.source.I18nDynamicMod
 import java.net.URI
 import java.net.URLEncoder
@@ -79,7 +80,7 @@ abstract class RadioPlaybackMapperHandler(
 
 		val radioStationName = i18nBean.tRaw(
 			i18nDynamicMod = I18nDynamicMod.ARG_OPTION_MOD,
-			args = arrayOf("radio", details.name),
+			args = arrayOf(Command.PLAYRADIO.textId, details.name),
 			lang = context.guildLanguage,
 		)
 		val messageBuilder = MessageEmbedBuilder(i18nBean, jdaColorStoreBean, context)

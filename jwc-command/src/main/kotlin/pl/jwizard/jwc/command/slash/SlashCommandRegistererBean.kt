@@ -99,7 +99,7 @@ class SlashCommandRegistererBean(
 				type.canSupportChoices(),
 			)
 			if (!type.canSupportChoices() && it.options.isNotEmpty()) {
-				commandOption.addChoices(it.asOptionKeyMap.map { (key, value) -> Choice(i18nBean.t(value, lang), key) })
+				commandOption.addChoices(it.options.map { (key, value) -> Choice(i18nBean.t(value, lang), key) })
 			}
 			commandOption
 		})

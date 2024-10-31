@@ -51,6 +51,18 @@ abstract class CommandEventHandler<E : Event>(
 	private val i18nBean = commandEventHandlerEnvironmentBean.i18nBean
 
 	/**
+	 * Properties retrieved in single query at startup command pipeline.
+	 */
+	private val propertiesList = listOf(
+		GuildProperty.DB_ID,
+		GuildProperty.LANGUAGE_TAG,
+		GuildProperty.LEGACY_PREFIX,
+		GuildProperty.SLASH_ENABLED,
+		GuildProperty.DJ_ROLE_NAME,
+		GuildProperty.MUSIC_TEXT_CHANNEL_ID,
+	)
+
+	/**
 	 * Initializes the command pipeline and performs the command based on the event. This method handles the main logic
 	 * of checking command conditions, parsing arguments, and executing the command.
 	 *
@@ -69,14 +81,7 @@ abstract class CommandEventHandler<E : Event>(
 				}
 				val guild = eventGuild(event) ?: throw CommandInvocationException("guild is null")
 				val properties = commandEventHandlerEnvironmentBean.environmentBean.getGuildMultipleProperties(
-					guildProperties = listOf(
-						GuildProperty.DB_ID,
-						GuildProperty.LANGUAGE_TAG,
-						GuildProperty.LEGACY_PREFIX,
-						GuildProperty.SLASH_ENABLED,
-						GuildProperty.DJ_ROLE_NAME,
-						GuildProperty.MUSIC_TEXT_CHANNEL_ID,
-					),
+					guildProperties = propertiesList,
 					guildId = guild.idLong,
 				)
 				val dbId = properties.getProperty<BigInteger>(GuildProperty.DB_ID)
@@ -256,7 +261,7 @@ abstract class CommandEventHandler<E : Event>(
 			throw MismatchCommandArgumentsException(context, commandSyntax)
 		}
 		return details.exactArguments.associateWith {
-			val argOptions = it.asOptionKeyMap
+			val argOptions = it.options
 			val optionMapping: String? = options.poll()
 			if (argOptions.isNotEmpty() && !argOptions.keys.contains(optionMapping)) {
 				val syntax = createArgumentsOptionsSyntax(argOptions, context.guildLanguage)
@@ -279,19 +284,16 @@ abstract class CommandEventHandler<E : Event>(
 	 */
 	private fun createCommandSyntax(commandContext: CommandContext, command: Command): String {
 		val stringJoiner = StringJoiner("")
-		stringJoiner.add("\n\n")
-		val commandInvokers = arrayOf(command.name, command.alias)
-		commandInvokers.forEachIndexed { index, invoker ->
-			stringJoiner.add("`${commandContext.prefix}$invoker")
+		stringJoiner.add("\n")
+		val commandInvokers = arrayOf(command.textId, command.alias)
+		commandInvokers.forEach {
+			stringJoiner.add("\n`${commandContext.prefix}$it")
 			if (command.argumentsDefinition != null) {
 				val lang = commandContext.guildLanguage
 				val argSyntax = i18nBean.t(command.argumentsDefinition!!.i18nSource, lang)
 				stringJoiner.add(" <$argSyntax>")
 			}
 			stringJoiner.add("`")
-			if (index < commandInvokers.size - 1 && commandInvokers.size != 1) {
-				stringJoiner.add("\n")
-			}
 		}
 		return stringJoiner.toString()
 	}
@@ -305,14 +307,8 @@ abstract class CommandEventHandler<E : Event>(
 	 */
 	private fun createArgumentsOptionsSyntax(options: Map<String, I18nOptionSource>, lang: String): String {
 		val stringJoiner = StringJoiner("")
-		stringJoiner.add("\n\n")
-		options.entries.forEachIndexed { index, option ->
-			val optionName = i18nBean.t(option.value, lang)
-			stringJoiner.add("* `${option.key}` - $optionName\n")
-			if (index < options.size - 1 && options.size != 1) {
-				stringJoiner.add("\n")
-			}
-		}
+		stringJoiner.add("\n")
+		options.entries.forEach { stringJoiner.add("\n* `${it.key}` - ${i18nBean.t(it.value, lang)}") }
 		return stringJoiner.toString()
 	}
 

@@ -16,6 +16,7 @@ import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwl.command.Command
+import pl.jwizard.jwl.i18n.source.I18nDynamicMod
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 import pl.jwizard.jwl.util.logger
 
@@ -70,11 +71,11 @@ class RadioStreamScheduleHandler(
 			lang = context.guildLanguage,
 		)
 		val listElements = mapOf(
-			I18nResponseSource.START_PLAYING_RADIO_STATION_FIRST_OPTION to mapOf("stopRadioStationCmd" to Command.STOP_RADIO),
-			I18nResponseSource.START_PLAYING_RADIO_STATION_SECOND_OPTION to mapOf("radioStationInfoCmd" to Command.RADIO_INFO),
+			I18nResponseSource.START_PLAYING_RADIO_STATION_FIRST_OPTION to mapOf("stopRadioStationCmd" to Command.STOPRADIO),
+			I18nResponseSource.START_PLAYING_RADIO_STATION_SECOND_OPTION to mapOf("radioStationInfoCmd" to Command.RADIOINFO),
 		)
 		val parsedListElements = listElements.entries.joinToString("\n") { (i18nKey, i18nArgs) ->
-			"* ${i18nBean.t(i18nKey, context.guildLanguage, i18nArgs.mapValues { it.value.parseWithPrefix(context) })}"
+			"* ${i18nBean.t(i18nKey, context.guildLanguage, i18nArgs.mapValues { it.value.parseWithPrefix(context.prefix) })}"
 		}
 		val message = musicManager.createEmbedBuilder()
 			.setTitle(
