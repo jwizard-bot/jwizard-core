@@ -5,9 +5,7 @@
 package pl.jwizard.jwc.persistence.sql
 
 import org.springframework.stereotype.Component
-import pl.jwizard.jwc.command.ModuleData
 import pl.jwizard.jwc.command.spi.ModuleDataSupplier
-import pl.jwizard.jwl.persistence.sql.ColumnDef
 import pl.jwizard.jwl.persistence.sql.JdbcKtTemplateBean
 import java.math.BigInteger
 
@@ -22,31 +20,31 @@ import java.math.BigInteger
 class ModuleDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean) : ModuleDataSupplier {
 
 	/**
-	 * Retrieves a map of module IDs and names from the database.
+	 * Retrieves a list of module IDs that are disabled for a specific guild.
 	 *
-	 * @return A map where the key is the module ID ([BigInteger]) and the value is the module name ([String]).
+	 * This method executes an SQL query to fetch all module IDs that have been marked as disabled for the specified
+	 * guild ID from the `guilds_disabled_modules` table.
+	 *
+	 * @param guildDbId The database ID of the guild for which to retrieve disabled modules.
+	 * @return A list of module IDs that are disabled for the given guild.
 	 */
-	override fun getModules() = jdbcKtTemplateBean.queryForListMap(
-		"SELECT id, name FROM modules",
-		ColumnDef("id", BigInteger::class),
-		ColumnDef("name", String::class),
-	)
+	override fun getDisabledGuildModules(guildDbId: BigInteger): List<Long> {
+		val sql = "SELECT module_id FROM guilds_disabled_modules WHERE guild_id = ?"
+		return jdbcKtTemplateBean.queryForList(sql, Long::class.java, guildDbId)
+	}
 
 	/**
-	 * Checks if a module associated with a specific command is enabled for a given guild.
+	 * Checks if a specific module is disabled for a given guild.
 	 *
-	 * @param commandName The name of the command for which to check module status.
-	 * @param guildDbId The unique database ID of the guild.
-	 * @return A [ModuleData] object containing the module name and its activation status (`active`), or `null` if no
-	 *         module is found.
+	 * Executes an SQL query to determine if the specified module ID is disabled for the provided guild ID in the
+	 * `guilds_disabled_modules` table. Returns true if the module is disabled, otherwise false.
+	 *
+	 * @param moduleId The ID of the module to check.
+	 * @param guildDbId The database ID of the guild to check for the module's status.
+	 * @return True if the module is disabled for the given guild; false otherwise.
 	 */
-	override fun isEnabled(commandName: String, guildDbId: BigInteger): ModuleData? {
-		val sql = """
-			SELECT m.name, IF(gdm.guild_id IS NULL, TRUE, FALSE) active FROM commands c
-			INNER JOIN modules m ON m.id = c.module_id
-			LEFT JOIN guilds_disabled_modules gdm ON gdm.module_id = m.id AND gdm.guild_id = ?
-			WHERE c.name = ?
-		"""
-		return jdbcKtTemplateBean.queryForDataClass(sql, ModuleData::class, guildDbId, commandName)
+	override fun isDisabled(moduleId: Long, guildDbId: BigInteger): Boolean {
+		val sql = "SELECT COUNT(*) > 0 FROM guilds_disabled_modules WHERE module_id = ? AND guild_id = ?"
+		return jdbcKtTemplateBean.queryForBool(sql, moduleId, guildDbId)
 	}
 }

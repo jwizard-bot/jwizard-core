@@ -8,10 +8,10 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.requests.RestAction
 import pl.jwizard.jwc.command.CommandType
-import pl.jwizard.jwc.command.GuildCommandProperties
 import pl.jwizard.jwc.command.context.SlashCommandContext
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
+import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
 
 /**
  * Handles slash command interactions in a Discord server.
@@ -77,7 +77,7 @@ class SlashCommandEventHandlerBean(
 	override fun createCommandContext(
 		event: SlashCommandInteractionEvent,
 		command: String,
-		properties: GuildCommandProperties
+		properties: GuildMultipleProperties,
 	) = SlashCommandContext(event, command, properties)
 
 	/**

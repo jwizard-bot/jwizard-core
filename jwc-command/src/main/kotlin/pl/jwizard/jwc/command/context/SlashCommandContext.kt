@@ -5,8 +5,8 @@
 package pl.jwizard.jwc.command.context
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
-import pl.jwizard.jwc.command.GuildCommandProperties
 import pl.jwizard.jwc.command.exception.CommandInvocationException
+import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
 
 /**
  * Context for handling slash commands within a guild.
@@ -22,7 +22,7 @@ import pl.jwizard.jwc.command.exception.CommandInvocationException
 class SlashCommandContext(
 	private val event: SlashCommandInteractionEvent,
 	override val commandName: String,
-	private val guildCommandProperties: GuildCommandProperties,
+	private val guildCommandProperties: GuildMultipleProperties,
 ) : CommandContext(guildCommandProperties) {
 
 	override val prefix = "/"

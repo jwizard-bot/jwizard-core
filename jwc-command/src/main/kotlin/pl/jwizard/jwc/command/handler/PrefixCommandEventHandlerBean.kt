@@ -8,10 +8,11 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.requests.RestAction
 import pl.jwizard.jwc.command.CommandType
-import pl.jwizard.jwc.command.GuildCommandProperties
 import pl.jwizard.jwc.command.context.PrefixCommandContext
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
+import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
+import pl.jwizard.jwc.core.property.guild.GuildProperty
 
 /**
  * Handles prefix commands received in messages.
@@ -69,9 +70,10 @@ class PrefixCommandEventHandlerBean(
 	 * @param properties The command properties for the guild.
 	 * @return True if invocation details are forbidden; otherwise false.
 	 */
-	override fun forbiddenInvocationDetails(event: MessageReceivedEvent, properties: GuildCommandProperties): Boolean {
+	override fun forbiddenInvocationDetails(event: MessageReceivedEvent, properties: GuildMultipleProperties): Boolean {
 		val messageContentWithPrefix = event.message.contentRaw
-		return !messageContentWithPrefix.startsWith(properties.prefix)
+		val prefix = properties.getProperty<String>(GuildProperty.LEGACY_PREFIX)
+		return !messageContentWithPrefix.startsWith(prefix)
 	}
 
 	/**
@@ -105,7 +107,7 @@ class PrefixCommandEventHandlerBean(
 	 * @param properties The command properties for the guild.
 	 * @return The command context.
 	 */
-	override fun createCommandContext(event: MessageReceivedEvent, command: String, properties: GuildCommandProperties) =
+	override fun createCommandContext(event: MessageReceivedEvent, command: String, properties: GuildMultipleProperties) =
 		PrefixCommandContext(event, command, properties)
 
 	/**

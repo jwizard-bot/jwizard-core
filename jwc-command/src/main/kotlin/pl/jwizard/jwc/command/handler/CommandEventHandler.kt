@@ -11,28 +11,27 @@ import net.dv8tion.jda.api.events.Event
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.requests.RestAction
 import pl.jwizard.jwc.command.CommandType
-import pl.jwizard.jwc.command.GuildCommandProperties
-import pl.jwizard.jwc.command.arg.CommandArgumentParsingData
-import pl.jwizard.jwc.command.arg.CommandArgumentType
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.exception.CommandInvocationException
 import pl.jwizard.jwc.command.exception.CommandParserException
-import pl.jwizard.jwc.command.refer.CommandArgument
-import pl.jwizard.jwc.command.reflect.CommandArgumentDetails
-import pl.jwizard.jwc.command.reflect.CommandDetails
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
+import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
+import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
 import pl.jwizard.jwc.exception.UnexpectedException
 import pl.jwizard.jwc.exception.command.CommandIsTurnedOffException
 import pl.jwizard.jwc.exception.command.MismatchCommandArgumentsException
 import pl.jwizard.jwc.exception.command.ModuleIsTurnedOffException
 import pl.jwizard.jwc.exception.command.ViolatedCommandArgumentOptionsException
-import pl.jwizard.jwl.i18n.source.I18nDynamicMod
+import pl.jwizard.jwl.command.Command
+import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
+import pl.jwizard.jwl.i18n.source.I18nOptionSource
+import java.math.BigInteger
 import java.util.*
 import java.util.concurrent.CompletableFuture
 
@@ -69,35 +68,42 @@ abstract class CommandEventHandler<E : Event>(
 					throw CommandInvocationException("forbidden invocation condition")
 				}
 				val guild = eventGuild(event) ?: throw CommandInvocationException("guild is null")
-				val properties = commandDataSupplier.getCommandPropertiesFromGuild(guild.idLong)
-					?: throw CommandInvocationException("properties not exists")
-
+				val properties = commandEventHandlerEnvironmentBean.environmentBean.getGuildMultipleProperties(
+					guildProperties = listOf(
+						GuildProperty.DB_ID,
+						GuildProperty.LANGUAGE_TAG,
+						GuildProperty.LEGACY_PREFIX,
+						GuildProperty.SLASH_ENABLED,
+						GuildProperty.DJ_ROLE_NAME,
+						GuildProperty.MUSIC_TEXT_CHANNEL_ID,
+					),
+					guildId = guild.idLong,
+				)
+				val dbId = properties.getProperty<BigInteger>(GuildProperty.DB_ID)
 				if (forbiddenInvocationDetails(event, properties)) {
 					throw CommandInvocationException("forbidden invocation details")
 				}
 				val (commandNameOrAlias, commandArguments) = commandNameAndArguments(event)
 
-				val commandDetails = commandsCacheBean.commands[commandNameOrAlias]
+				val commandDetails = Command.entries
+					.find { cmd -> cmd.textId == commandNameOrAlias || cmd.alias == commandNameOrAlias }
 					?: throw CommandInvocationException("command by command name could not be found")
-				context = createCommandContext(event, commandDetails.name, properties)
 
-				val (moduleId, isEnabled) = commandEventHandlerEnvironmentBean.moduleDataSupplier
-					.isEnabled(commandDetails.name, properties.guildDbId)
-					?: throw CommandInvocationException("module by command name could not be found", context)
-				if (!isEnabled) {
-					val moduleName = i18nBean.tRaw(I18nDynamicMod.MODULES_MOD, arrayOf(moduleId), context.guildLanguage)
-					throw ModuleIsTurnedOffException(context, moduleId, moduleName, commandDetails.name)
+				context = createCommandContext(event, commandDetails.textId, properties)
+
+				val module = commandDetails.module
+				if (commandEventHandlerEnvironmentBean.moduleDataSupplier.isDisabled(module.dbId, dbId)) {
+					val moduleName = i18nBean.t(module.i18nSource, context.guildLanguage)
+					throw ModuleIsTurnedOffException(context, module.name, moduleName, commandDetails.name)
 				}
-				val enabled = commandDataSupplier
-					.isCommandEnabled(properties.guildDbId, commandDetails.id, commandType == CommandType.SLASH)
-				if (!enabled) {
+				if (commandDataSupplier.isCommandDisabled(dbId, commandDetails.dbId, commandType == CommandType.SLASH)) {
 					throw CommandIsTurnedOffException(context)
 				}
 				val parsedArguments = parseCommandArguments(context, commandDetails, commandArguments)
 				parsedArguments.forEach { (key, value) -> context.commandArguments[key] = value }
 
 				val commandSyntax = createCommandSyntax(context, commandDetails)
-				val command = commandsCacheBean.instancesContainer[commandDetails.name]
+				val command = commandsCacheBean.instancesContainer[commandDetails]
 					?: throw CommandIsTurnedOffException(context)
 
 				commandResponse = CompletableFuture<CommandResponse>()
@@ -236,32 +242,31 @@ abstract class CommandEventHandler<E : Event>(
 	 * @param context The command context, including execution details like language and guild ID.
 	 * @param details The command details, including its argument structure.
 	 * @param arguments The list of arguments passed in the command.
-	 * @return A map of parsed command arguments and their associated data.
+	 * @return A map of parsed command arguments and their associated value.
 	 */
 	private fun parseCommandArguments(
 		context: CommandContext,
-		details: CommandDetails,
+		details: Command,
 		arguments: List<String>,
-	): Map<CommandArgument, CommandArgumentParsingData> {
+	): Map<Argument, String?> {
 		val commandSyntax = createCommandSyntax(context, details)
 		val options = LinkedList(arguments)
-		val requiredArgs = details.args.filter(CommandArgumentDetails::required)
+		val requiredArgs = details.exactArguments.filter(Argument::required)
 		if (options.size < requiredArgs.size) {
 			throw MismatchCommandArgumentsException(context, commandSyntax)
 		}
-		return details.args.associate {
+		return details.exactArguments.associateWith {
+			val argOptions = it.asOptionKeyMap
 			val optionMapping: String? = options.poll()
-			if (it.options.isNotEmpty() && !it.options.contains(optionMapping)) {
-				val syntax = createArgumentsOptionsSyntax(context.commandName, it.options, context.guildLanguage)
-				val argsDescription = i18nBean.tRaw(I18nDynamicMod.ARGS_MOD, arrayOf(it.name), context.guildLanguage)
-				throw ViolatedCommandArgumentOptionsException(context, argsDescription, optionMapping, it.options, syntax)
+			if (argOptions.isNotEmpty() && !argOptions.keys.contains(optionMapping)) {
+				val syntax = createArgumentsOptionsSyntax(argOptions, context.guildLanguage)
+				val argsDescription = i18nBean.t(it.i18nSource, context.guildLanguage)
+				throw ViolatedCommandArgumentOptionsException(context, argsDescription, optionMapping, argOptions.keys, syntax)
 			}
-			val argKey = CommandArgument.entries.find { arg -> arg.propName == it.name }
-			val type = CommandArgumentType.entries.find { type -> type.name == it.type }
-			if (argKey == null || type == null || (optionMapping == null && it.required)) {
+			if (optionMapping == null && it.required) {
 				throw MismatchCommandArgumentsException(context, commandSyntax)
 			}
-			argKey to CommandArgumentParsingData(optionMapping, type, it.required)
+			optionMapping
 		}
 	}
 
@@ -272,15 +277,15 @@ abstract class CommandEventHandler<E : Event>(
 	 * @param command The command details.
 	 * @return A string representing the command syntax.
 	 */
-	private fun createCommandSyntax(commandContext: CommandContext, command: CommandDetails): String {
+	private fun createCommandSyntax(commandContext: CommandContext, command: Command): String {
 		val stringJoiner = StringJoiner("")
 		stringJoiner.add("\n\n")
 		val commandInvokers = arrayOf(command.name, command.alias)
 		commandInvokers.forEachIndexed { index, invoker ->
 			stringJoiner.add("`${commandContext.prefix}$invoker")
-			if (command.argI18nKey != null) {
+			if (command.argumentsDefinition != null) {
 				val lang = commandContext.guildLanguage
-				val argSyntax = i18nBean.tRaw(I18nDynamicMod.ARG_PER_COMMAND_MOD, arrayOf(command.argI18nKey), lang)
+				val argSyntax = i18nBean.t(command.argumentsDefinition!!.i18nSource, lang)
 				stringJoiner.add(" <$argSyntax>")
 			}
 			stringJoiner.add("`")
@@ -298,12 +303,12 @@ abstract class CommandEventHandler<E : Event>(
 	 * @param lang The language for internationalization.
 	 * @return A string listing all valid options.
 	 */
-	private fun createArgumentsOptionsSyntax(commandName: String, options: List<String>, lang: String): String {
+	private fun createArgumentsOptionsSyntax(options: Map<String, I18nOptionSource>, lang: String): String {
 		val stringJoiner = StringJoiner("")
 		stringJoiner.add("\n\n")
-		options.forEachIndexed { index, option ->
-			val optionName = i18nBean.tRaw(I18nDynamicMod.ARG_OPTION_MOD, arrayOf(commandName, option), lang)
-			stringJoiner.add("* `$option` - $optionName\n")
+		options.entries.forEachIndexed { index, option ->
+			val optionName = i18nBean.t(option.value, lang)
+			stringJoiner.add("* `${option.key}` - $optionName\n")
 			if (index < options.size - 1 && options.size != 1) {
 				stringJoiner.add("\n")
 			}
@@ -339,7 +344,7 @@ abstract class CommandEventHandler<E : Event>(
 	 * @param properties The command properties for the guild.
 	 * @return True if forbidden; otherwise, false.
 	 */
-	protected open fun forbiddenInvocationDetails(event: E, properties: GuildCommandProperties) = false
+	protected open fun forbiddenInvocationDetails(event: E, properties: GuildMultipleProperties) = false
 
 	/**
 	 * Extracts the command name and its arguments from the event.
@@ -360,7 +365,7 @@ abstract class CommandEventHandler<E : Event>(
 	protected abstract fun createCommandContext(
 		event: E,
 		command: String,
-		properties: GuildCommandProperties
+		properties: GuildMultipleProperties,
 	): CommandContext
 
 	/**

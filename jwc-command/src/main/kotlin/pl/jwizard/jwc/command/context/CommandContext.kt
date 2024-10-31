@@ -5,11 +5,12 @@
 package pl.jwizard.jwc.command.context
 
 import net.dv8tion.jda.api.Permission
-import pl.jwizard.jwc.command.GuildCommandProperties
-import pl.jwizard.jwc.command.arg.CommandArgumentParsingData
 import pl.jwizard.jwc.command.exception.CommandParserException
-import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
+import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
+import pl.jwizard.jwc.core.property.guild.GuildProperty
+import pl.jwizard.jwl.command.arg.Argument
+import java.math.BigInteger
 
 /**
  * Abstract class representing the context of a command execution within a guild. It provides access to command
@@ -18,13 +19,13 @@ import pl.jwizard.jwc.core.jda.command.CommandBaseContext
  * @property guildCommandProperties Properties related to the guild where the command is executed.
  * @author Miłosz Gilga
  */
-abstract class CommandContext(private val guildCommandProperties: GuildCommandProperties) : CommandBaseContext {
+abstract class CommandContext(private val guildCommandProperties: GuildMultipleProperties) : CommandBaseContext {
 
-	val musicTextChannelId = guildCommandProperties.musicTextChannelId
-	val djRoleName = guildCommandProperties.djRoleName
+	val musicTextChannelId = guildCommandProperties.getNullableProperty<String>(GuildProperty.MUSIC_TEXT_CHANNEL_ID)
+	val djRoleName = guildCommandProperties.getProperty<String>(GuildProperty.DJ_ROLE_NAME)
 
-	override val guildLanguage = guildCommandProperties.lang
-	override val guildDbId = guildCommandProperties.guildDbId
+	override val guildLanguage = guildCommandProperties.getProperty<String>(GuildProperty.LANGUAGE_TAG)
+	override val guildDbId = guildCommandProperties.getProperty<BigInteger>(GuildProperty.DB_ID)
 
 	/**
 	 * A boolean indicating whether the command is executed as a slash command event. This affects how the command is
@@ -33,33 +34,33 @@ abstract class CommandContext(private val guildCommandProperties: GuildCommandPr
 	abstract val isSlashEvent: Boolean
 
 	/**
-	 * A mutable map that stores the parsed command arguments, with their corresponding [CommandArgument] as keys and
-	 * their parsed data as values.
+	 * A mutable map that stores the parsed command arguments, with their corresponding [Argument] as keys and their
+	 * parsed data as values.
 	 */
-	val commandArguments: MutableMap<CommandArgument, CommandArgumentParsingData> = mutableMapOf()
+	val commandArguments: MutableMap<Argument, String?> = mutableMapOf()
 
 	/**
-	 * Retrieves and casts the argument value for the specified [CommandArgument].
+	 * Retrieves and casts the argument value for the specified [Argument].
 	 *
-	 * @param argument The [CommandArgument] whose value is to be retrieved.
+	 * @param argument The [Argument] whose value is to be retrieved.
 	 * @param T The type to cast the argument value to.
 	 * @return The cast value of the argument.
 	 * @throws CommandParserException If the argument is not found or cannot be cast to the desired type.
 	 */
-	inline fun <reified T : Any> getArg(argument: CommandArgument) = getNullableArg<T>(argument)
+	inline fun <reified T : Any> getArg(argument: Argument) = getNullableArg<T>(argument)
 		?: throw CommandParserException()
 
 	/**
-	 * Retrieves the argument value for the specified [CommandArgument], returning null if not found.
+	 * Retrieves the argument value for the specified [Argument], returning null if not found.
 	 *
-	 * @param argument The [CommandArgument] whose value is to be retrieved.
+	 * @param argument The [Argument] whose value is to be retrieved.
 	 * @param T The type to cast the argument value to.
 	 * @return The cast value of the argument, or null if not found.
 	 * @throws CommandParserException If the argument cannot be cast to the desired type.
 	 */
-	inline fun <reified T : Any> getNullableArg(argument: CommandArgument) = try {
-		val (value, type) = commandArguments[argument] ?: throw NumberFormatException()
-		if (value == null) null else type.castTo(value) as T?
+	inline fun <reified T : Any> getNullableArg(argument: Argument) = try {
+		val value = commandArguments[argument]
+		if (value == null) null else argument.type.castTo(value) as T?
 	} catch (ex: NumberFormatException) {
 		throw CommandParserException()
 	}

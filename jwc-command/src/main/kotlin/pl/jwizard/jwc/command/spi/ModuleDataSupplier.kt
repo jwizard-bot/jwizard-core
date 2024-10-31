@@ -4,33 +4,39 @@
  */
 package pl.jwizard.jwc.command.spi
 
-import pl.jwizard.jwc.command.ModuleData
 import java.math.BigInteger
 
 /**
- * An interface for providing module-related data.
+ * Interface for providing module-related data operations.
  *
- * Implementations of this interface manage the retrieval of module information and determine whether specific modules
- * or commands are enabled for a given guild.
+ * This interface defines methods to interact with and retrieve information on module states, particularly whether
+ * specific modules are enabled or disabled for a given guild. Implementations of this interface interact with a
+ * persistence layer to manage module states.
  *
  * @author Miłosz Gilga
  */
 interface ModuleDataSupplier {
 
 	/**
-	 * Retrieves a map of all available modules, where the key is the unique module ID and the value is the module name.
+	 * Retrieves a list of module IDs that are disabled for a specific guild.
 	 *
-	 * @return A map containing module IDs as keys and their corresponding names as values.
+	 * This method is used to fetch all module IDs that are marked as disabled for the given guild, identified by its
+	 * database ID. It interacts with the persistence layer to obtain the data.
+	 *
+	 * @param guildDbId The database ID of the guild for which to retrieve the disabled modules.
+	 * @return A list of module IDs that are currently disabled for the specified guild.
 	 */
-	fun getModules(): Map<BigInteger, String>
+	fun getDisabledGuildModules(guildDbId: BigInteger): List<Long>
 
 	/**
-	 * Checks if a specific command module is enabled for a given guild.
+	 * Checks if a particular module is disabled for a specific guild.
 	 *
-	 * @param commandName The name of the command to check.
-	 * @param guildDbId The unique database ID of the guild.
-	 * @return A [ModuleData] object containing module information if the command is enabled for the guild, or `null` if
-	 *         the module is disabled.
+	 * This method determines if a module, identified by its ID, is disabled for the specified guild by querying the
+	 * persistence layer. Returns true if the module is disabled, false otherwise.
+	 *
+	 * @param moduleId The ID of the module to check.
+	 * @param guildDbId The database ID of the guild for which to check the module's disabled status.
+	 * @return True if the module is disabled for the specified guild, otherwise false.
 	 */
-	fun isEnabled(commandName: String, guildDbId: BigInteger): ModuleData?
+	fun isDisabled(moduleId: Long, guildDbId: BigInteger): Boolean
 }

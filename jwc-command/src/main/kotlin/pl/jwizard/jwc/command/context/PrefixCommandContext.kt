@@ -5,8 +5,9 @@
 package pl.jwizard.jwc.command.context
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
-import pl.jwizard.jwc.command.GuildCommandProperties
 import pl.jwizard.jwc.command.exception.CommandInvocationException
+import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
+import pl.jwizard.jwc.core.property.guild.GuildProperty
 
 /**
  * Context for handling commands that use a prefix within a guild.
@@ -22,10 +23,10 @@ import pl.jwizard.jwc.command.exception.CommandInvocationException
 class PrefixCommandContext(
 	private val event: MessageReceivedEvent,
 	override val commandName: String,
-	private val guildCommandProperties: GuildCommandProperties,
+	private val guildCommandProperties: GuildMultipleProperties,
 ) : CommandContext(guildCommandProperties) {
 
-	override val prefix = guildCommandProperties.prefix
+	override val prefix = guildCommandProperties.getProperty<String>(GuildProperty.LEGACY_PREFIX)
 	override val guild = event.guild
 	override val author = event.member ?: throw CommandInvocationException("Command is NULL.", this)
 	override val textChannel = event.channel.asTextChannel()
