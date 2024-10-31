@@ -25,4 +25,17 @@ class GuildMultipleProperties(private val mapSize: Int) : HashMap<GuildProperty,
 	 * @return The property value cast to type [T].
 	 */
 	inline fun <reified T> getProperty(key: GuildProperty) = get(key) as T
+
+	/**
+	 * Retrieves a property of type [T] associated with the given [GuildProperty] key, returning null if the property
+	 * is not found or if it is null.
+	 *
+	 * This method attempts to cast the value associated with the key to the specified type [T]. If the key does not
+	 * exist in the map or the value is null, it returns null without throwing an exception.
+	 *
+	 * @param T The type to which the property value should be cast.
+	 * @param key The [GuildProperty] key for which to retrieve the property value.
+	 * @return The property value cast to type [T], or null if the property is not found or is null.
+	 */
+	inline fun <reified T> getNullableProperty(key: GuildProperty) = get(key) as T?
 }

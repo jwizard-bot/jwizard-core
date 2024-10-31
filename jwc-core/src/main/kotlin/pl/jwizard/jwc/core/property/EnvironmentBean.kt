@@ -84,12 +84,17 @@ class EnvironmentBean(
 
 		for ((key, nullableValue) in rawProperties) {
 			val propertyKey = GuildProperty.entries.find { it.key == key } ?: continue
-			val defaultProperty = try {
-				BotProperty.valueOf("GUILD_${propertyKey.name}")
-			} catch (_: IllegalArgumentException) {
-				continue
+			val checkedProperty = if (nullableValue == null) {
+				val defaultProperty = try {
+					AppBaseProperty.valueOf("GUILD_${propertyKey.name}")
+				} catch (_: IllegalArgumentException) {
+					continue
+				}
+				getProperty<Any>(defaultProperty)
+			} else {
+				nullableValue
 			}
-			multipleProperties[propertyKey] = nullableValue ?: getProperty<Any>(defaultProperty)
+			multipleProperties[propertyKey] = checkedProperty
 		}
 		return multipleProperties
 	}

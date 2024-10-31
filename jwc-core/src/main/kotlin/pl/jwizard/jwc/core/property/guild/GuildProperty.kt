@@ -9,13 +9,15 @@ import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.guild.GuildProperty.*
 import pl.jwizard.jwc.core.property.guild.GuildPropertyConverter.*
 import pl.jwizard.jwl.property.Property
+import java.math.BigInteger
 import kotlin.reflect.KClass
 
 /**
  * Enum class representing configuration properties specific to guilds.
  *
  * Defining following properties:
- *
+ * - [DB_ID]: Represents a unique identifier for a database guild entry.
+ * - [LANGUAGE_TAG]: Represents the language tag associated with guild.
  * - [VOTING_PERCENTAGE_RATIO]: Ratio of voting percentage for guilds.
  * - [MAX_VOTING_TIME_SEC]: Maximum voting time for guilds in seconds.
  * - [MUSIC_TEXT_CHANNEL_ID]: ID of the music text channel in the guild. Stored as a string.
@@ -24,7 +26,7 @@ import kotlin.reflect.KClass
  * - [MAX_REPEATS_OF_TRACK]: Maximum number of repeats allowed for a track in the guild.
  * - [LEAVE_EMPTY_CHANNEL_SEC]: Time in seconds after which the bot leaves an empty channel in the guild.
  * - [LEAVE_NO_TRACKS_SEC]: Time in seconds after which the bot leaves a channel with no tracks in the guild.
- * - [DEFAULT_VOLUME]: Default volume level for the guild.
+ * - [PLAYER_VOLUME]: Default volume level for the guild.
  * - [RANDOM_AUTO_CHOOSE_TRACK]: Indicates whether to randomly auto-choose tracks in the guild.
  * - [TIME_AFTER_AUTO_CHOOSE_SEC]: Time in seconds after which the bot automatically chooses a track in the guild.
  * - [MAX_TRACKS_TO_CHOOSE]: Maximum number of tracks to choose from in the guild.
@@ -41,10 +43,20 @@ import kotlin.reflect.KClass
  */
 enum class GuildProperty(
 	override val key: String,
-	val i18nSourceKey: I18nSystemSource,
-	val converter: GuildPropertyConverter,
+	val i18nSourceKey: I18nSystemSource? = null,
+	val converter: GuildPropertyConverter? = null,
 	val nonDefaultType: KClass<*>? = null,
 ) : Property {
+
+	/**
+	 * Represents a unique identifier for a database guild entry.
+	 */
+	DB_ID("id", null, null, BigInteger::class),
+
+	/**
+	 * Represents the language tag associated with guild.
+	 */
+	LANGUAGE_TAG("language", I18nSystemSource.LANGUAGE_TAG, BASE, String::class),
 
 	/**
 	 * Ratio of voting percentage for guilds.
@@ -57,9 +69,9 @@ enum class GuildProperty(
 	MAX_VOTING_TIME_SEC("time_to_finish_voting_sec", I18nSystemSource.VOTE_MAX_WAITING_TIME, TO_DTF_SEC),
 
 	/**
-	 * ID of the music text channel in the guild. Stored as a string.
+	 * ID of the music text channel in the guild. Stored as a number.
 	 */
-	MUSIC_TEXT_CHANNEL_ID("music_text_channel_id", I18nSystemSource.MUSIC_TEXT_CHANNEL, BASE, String::class),
+	MUSIC_TEXT_CHANNEL_ID("music_text_channel_id", I18nSystemSource.MUSIC_TEXT_CHANNEL, BASE, Long::class),
 
 	/**
 	 * Name of the DJ role in the guild.
@@ -89,7 +101,7 @@ enum class GuildProperty(
 	/**
 	 * Default volume level for the guild.
 	 */
-	DEFAULT_VOLUME("default_volume", I18nSystemSource.DEFAULT_VOLUME, TO_PERCENTAGE),
+	PLAYER_VOLUME("player_volume", I18nSystemSource.PLAYER_VOLUME, TO_PERCENTAGE),
 
 	/**
 	 * Indicates whether to randomly auto-choose tracks in the guild.
