@@ -6,6 +6,7 @@ package pl.jwizard.jwc.command
 
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.command.spi.CommandDataSupplier
+import pl.jwizard.jwc.command.spi.ModuleDataSupplier
 import pl.jwizard.jwc.command.transport.LooselyTransportHandlerBean
 import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
 import pl.jwizard.jwc.core.audio.spi.MusicManagersSupplier
@@ -33,6 +34,7 @@ import pl.jwizard.jwl.i18n.I18nBean
  * @property radioStationSupplier Supplies instances related to radio station management.
  * @property radioPlaybackMappersCache Caches radio playback mappers for efficient access.
  * @property commandDataSupplier Supplies metadata and definitions for bot commands.
+ * @property moduleDataSupplier Supplies metadata and definitions for command modules.
  * @property exceptionTrackerHandler The store used to track and log exceptions.
  * @property looselyTransportHandlerBean Handles loosely-typed transport operations between services.
  * @author Miłosz Gilga
@@ -50,6 +52,7 @@ class CommandEnvironmentBean(
 	val radioStationSupplier: RadioStationSupplier,
 	val radioPlaybackMappersCache: RadioPlaybackMappersCache,
 	val commandDataSupplier: CommandDataSupplier,
+	val moduleDataSupplier: ModuleDataSupplier,
 	val exceptionTrackerHandler: ExceptionTrackerHandler,
 	val looselyTransportHandlerBean: LooselyTransportHandlerBean,
 )

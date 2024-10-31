@@ -14,6 +14,7 @@ import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotProperty
+import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.i18n.I18nLocaleSource
@@ -36,26 +37,31 @@ class SettingsCmd(commandEnvironment: CommandEnvironmentBean) : ManagerCommandBa
 	 */
 	override fun executeManager(context: CommandContext, response: TFutureResponse) {
 		val paginatorChunkSize = environmentBean.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
-		val settings = guildSettingsEventAction.getGuildSettings(context.guild.idLong)
-
+		val properties = environmentBean.getGuildMultipleProperties(
+			guildProperties = GuildProperty.entries.filter { it.i18nSourceKey != null && it.converter != null },
+			guildId = context.guild.idLong,
+		)
 		val embedMessages = mutableListOf<MessageEmbed>()
-		for (chunk in settings.toList().chunked(paginatorChunkSize)) {
+		val sortedProps = properties.toList().sortedBy { it.first.ordinal }
+
+		for (chunk in sortedProps.chunked(paginatorChunkSize)) {
 			val messageBuilder = createEmbedMessage(context)
 				.setTitle(I18nSystemSource.GUILD_SETTINGS_HEADER)
 
 			for ((column, value) in chunk) {
-				val key = i18nBean.t(column.i18nSourceKey, context.guildLanguage)
-				val mappedValue = if (value == null) {
-					null.toString()
-				} else {
-					val convertedValue = column.converter.mapper(value)
-					if (column.converter.isI18nContent) {
-						i18nBean.t(convertedValue as I18nLocaleSource, context.guildLanguage)
-					} else {
-						convertedValue.toString()
-					}
+				val sourceKey = column.i18nSourceKey
+				val converter = column.converter
+				if (sourceKey == null || converter == null) {
+					continue
 				}
-				messageBuilder.setKeyValueField(key, mappedValue, inline = false)
+				val key = i18nBean.t(sourceKey, context.guildLanguage)
+				val convertedValue = converter.mapper(value)
+				val parsedValue = if (converter.isI18nContent) {
+					i18nBean.t(convertedValue as I18nLocaleSource, context.guildLanguage)
+				} else {
+					convertedValue.toString()
+				}
+				messageBuilder.setKeyValueField(key, parsedValue, inline = false)
 			}
 			val message = messageBuilder
 				.setColor(JdaColor.PRIMARY)

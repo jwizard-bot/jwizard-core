@@ -8,20 +8,17 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.support.TransactionTemplate
 import pl.jwizard.jwc.core.jda.spi.GuildSettingsEventAction
 import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwl.persistence.sql.JdbcKtTemplateBean
 import pl.jwizard.jwl.persistence.sql.SqlColumn
-import pl.jwizard.jwl.persistence.sql.handler.LanguageSupplierBean
-import pl.jwizard.jwl.property.AppBaseProperty.*
-import pl.jwizard.jwl.property.AppProperty
-import java.sql.JDBCType.*
+import pl.jwizard.jwl.property.AppBaseListProperty
+import pl.jwizard.jwl.property.AppBaseProperty
+import java.sql.JDBCType
 
 /**
  * Component responsible for managing guild settings, including creation, deletion, and retrieval.
  *
  * @property jdbcKtTemplateBean Bean for executing SQL queries.
  * @property translationTemplate Template for handling transactions.
- * @property languageSupplierBean Supplier providing language support for guild settings.
  * @property environmentBean Bean for fetching environment properties.
  * @author Miłosz Gilga
  */
@@ -29,7 +26,6 @@ import java.sql.JDBCType.*
 class GuildSettingsEventActionBean(
 	private val jdbcKtTemplateBean: JdbcKtTemplateBean,
 	private val translationTemplate: TransactionTemplate,
-	private val languageSupplierBean: LanguageSupplierBean,
 	private val environmentBean: EnvironmentBean,
 ) : GuildSettingsEventAction {
 
@@ -44,30 +40,24 @@ class GuildSettingsEventActionBean(
 	 */
 	override fun createGuildSettings(guildId: Long, guildLocale: String): Pair<Boolean, String?> {
 		val guildSettingsAlreadyExist = jdbcKtTemplateBean.queryForBool(
-			"SELECT COUNT(*) > 0 FROM guilds WHERE discord_id = ?",
-			guildId
+			sql = "SELECT COUNT(*) > 0 FROM guilds WHERE discord_id = ?",
+			guildId,
 		)
 		if (guildSettingsAlreadyExist) {
 			return Pair(false, null)
 		}
-		val languageTag = guildLocale.substring(0, 2)
+		val availableLanguages = environmentBean.getListProperty<String>(AppBaseListProperty.I18N_LANGUAGES)
+		val guildLanguage = guildLocale.substring(0, 2)
+		val language = if (guildLanguage in availableLanguages) {
+			guildLanguage
+		} else {
+			environmentBean.getProperty<String>(AppBaseProperty.I18N_DEFAULT_LANGUAGE)
+		}
 		return translationTemplate.execute {
 			try {
 				val columns = mapOf(
-					"discord_id" to SqlColumn(guildId, BIGINT),
-					"legacy_prefix" to SqlColumn(getProperty(GUILD_DEFAULT_LEGACY_PREFIX), CHAR),
-					"lang_id" to SqlColumn(languageSupplierBean.getLanguageId(languageTag), BIGINT),
-					"dj_role_name" to SqlColumn(getProperty(GUILD_DJ_ROLE_NAME), VARCHAR),
-					"slash_enabled" to SqlColumn(getProperty(GUILD_DEFAULT_SLASH_ENABLED), BOOLEAN),
-					"leave_empty_channel_sec" to SqlColumn(getProperty(GUILD_LEAVE_EMPTY_CHANNEL_SEC), INTEGER),
-					"leave_no_tracks_channel_sec" to SqlColumn(getProperty(GUILD_LEAVE_NO_TRACKS_SEC), INTEGER),
-					"voting_percentage_ratio" to SqlColumn(getProperty(GUILD_VOTING_PERCENTAGE_RATIO), INTEGER),
-					"time_to_finish_voting_sec" to SqlColumn(getProperty(GUILD_MAX_VOTING_TIME_SEC), INTEGER),
-					"random_auto_choose_track" to SqlColumn(getProperty(GUILD_RANDOM_AUTO_CHOOSE_TRACK), BOOLEAN),
-					"tracks_to_choose_max" to SqlColumn(getProperty(GUILD_MAX_TRACKS_TO_CHOOSE), INTEGER),
-					"time_after_auto_choose_sec" to SqlColumn(getProperty(GUILD_TIME_AFTER_AUTO_CHOOSE_SEC), INTEGER),
-					"max_repeats_of_track" to SqlColumn(getProperty(GUILD_MAX_REPEATS_OF_TRACK), INTEGER),
-					"default_volume" to SqlColumn(getProperty(GUILD_DEFAULT_VOLUME), INTEGER),
+					"discord_id" to SqlColumn(guildId, JDBCType.BIGINT),
+					"language" to SqlColumn(language, JDBCType.VARCHAR),
 				)
 				jdbcKtTemplateBean.insertMultiples("guilds", columns)
 				Pair(true, null)
@@ -95,32 +85,4 @@ class GuildSettingsEventActionBean(
 	 */
 	override fun deleteGuildSettings(guildId: Long) =
 		jdbcKtTemplateBean.update("DELETE FROM guilds WHERE discord_id = ?", guildId)
-
-	/**
-	 * Retrieves settings for a specific guild from the database.
-	 *
-	 * @param guildId Unique identifier of the guild.
-	 * @return A map containing the guild's settings, where the keys are instances of [GuildProperty] and the values
-	 *         are the associated settings.
-	 */
-	override fun getGuildSettings(guildId: Long): Map<GuildProperty, Any?> {
-		val fetchedProperties = jdbcKtTemplateBean.queryForMap("SELECT * FROM guilds WHERE discord_id = ?", guildId)
-		val combinedProperties = mutableMapOf<GuildProperty, Any?>()
-		fetchedProperties.forEach {
-			GuildProperty.entries.find { entry -> entry.key == it.key }?.let { property ->
-				combinedProperties[property] = it.value
-			}
-		}
-		return combinedProperties.toMap()
-	}
-
-	/**
-	 * Retrieves a property from the environment based on the given [AppProperty].
-	 *
-	 * @param T The type of the property to retrieve.
-	 * @param botProperty The bot property whose value should be fetched from the environment.
-	 * @return The value of the specified property cast to the appropriate type.
-	 */
-	private inline fun <reified T : Any> getProperty(botProperty: AppProperty) =
-		environmentBean.getProperty<T>(botProperty)
 }

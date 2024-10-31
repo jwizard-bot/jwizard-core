@@ -57,9 +57,7 @@ class CommandsLoaderBean(
 				clazz.getAnnotation(JdaCommand::class.java) to clazz
 			}
 			.forEach { (command, clazz) ->
-				command.value.textId?.let {
-					commandsCacheBean.addInstance(it, springKtContextFactory.getBean(clazz) as CommandBase)
-				}
+				commandsCacheBean.addInstance(command.value, springKtContextFactory.getBean(clazz) as CommandBase)
 			}
 		val loadedCommands = commandsCacheBean.instancesContainer.keys.filterNotNull()
 		val allCommands = Command.entries.size

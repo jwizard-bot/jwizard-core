@@ -20,6 +20,6 @@ import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 class CommandIsTurnedOffException(context: CommandBaseContext) : CommandPipelineExceptionHandler(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.COMMAND_IS_TURNED_OFF,
-	args = mapOf("command" to "${context.prefix}$${context.commandName}"),
+	args = mapOf("command" to "${context.prefix}${context.commandName}"),
 	logMessage = "Attempt to execute turned off command. Command: \"${context.commandName}\".",
 )

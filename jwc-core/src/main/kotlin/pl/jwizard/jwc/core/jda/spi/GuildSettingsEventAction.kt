@@ -4,8 +4,6 @@
  */
 package pl.jwizard.jwc.core.jda.spi
 
-import pl.jwizard.jwc.core.property.guild.GuildProperty
-
 /**
  * Interface defining actions related to guild settings, such as creating, deleting, and retrieving settings for a
  * specific guild.
@@ -40,12 +38,4 @@ interface GuildSettingsEventAction {
 	 * @return The number of rows affected by the delete operation.
 	 */
 	fun deleteGuildSettings(guildId: Long): Int
-
-	/**
-	 * Retrieves the settings for a specific guild from the persistent storage.
-	 *
-	 * @param guildId Unique identifier of the guild.
-	 * @return A map where the keys are instances of [GuildProperty] and the values are the associated settings.
-	 */
-	fun getGuildSettings(guildId: Long): Map<GuildProperty, Any?>
 }

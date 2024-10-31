@@ -8,9 +8,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.command.CommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.refer.Command
-import pl.jwizard.jwc.command.refer.CommandArgument
-import pl.jwizard.jwc.command.reflect.CommandDetails
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -20,7 +17,8 @@ import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.util.mdBold
 import pl.jwizard.jwc.core.util.mdCode
 import pl.jwizard.jwc.core.util.mdLink
-import pl.jwizard.jwl.i18n.source.I18nDynamicMod
+import pl.jwizard.jwl.command.Command
+import pl.jwizard.jwl.command.arg.Argument
 import java.util.*
 
 /**
@@ -30,7 +28,7 @@ import java.util.*
  * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.HELP)
+@JdaCommand(Command.HELP)
 class HelpCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
 
 	/**
@@ -40,9 +38,12 @@ class HelpCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandE
 	 * @param response The future response object used to send back the command output to Discord.
 	 */
 	override fun execute(context: CommandContext, response: TFutureResponse) {
-		val enabledCommands = commandDataSupplier.getEnabledGuildCommandKeys(context.guildDbId, context.isSlashEvent)
-		val guildCommands = commandsCacheBean.commands.filter { it.key in enabledCommands }
+		val disabledCommands = commandDataSupplier.getDisabledGuildCommands(context.guildDbId, context.isSlashEvent)
+		val disabledModules = moduleDataSupplier.getDisabledGuildModules(context.guildDbId)
 
+		val guildCommands = Command.entries.filter {
+			it.dbId !in disabledCommands && it.module.dbId !in disabledModules
+		}
 		val paginator = createPaginator(context, createHelpComponents(context, guildCommands))
 		val row = paginator.createPaginatorButtonsRow()
 		val initMessage = paginator.initPaginator()
@@ -63,7 +64,7 @@ class HelpCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandE
 	 * @return The author's ID if the command is private, or null if it is not private.
 	 */
 	override fun isPrivate(context: CommandContext): Long? {
-		val isPrivate = context.getNullableArg<Boolean>(CommandArgument.PRIVATE)
+		val isPrivate = context.getNullableArg<Boolean>(Argument.PRIVATE)
 		return if (isPrivate == true) context.author.idLong else null
 	}
 
@@ -72,14 +73,14 @@ class HelpCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandE
 	 * into chunks, and each chunk is displayed in a separate embed.
 	 *
 	 * @param context The context of the command execution, containing guild and user data.
-	 * @param commands A map of command names and their details to be included in the embed.
+	 * @param commands A list of command details to be included in the embed.
 	 * @return A list of MessageEmbed objects, each containing a chunk of commands with descriptions.
 	 */
 	private fun createHelpComponents(
 		context: CommandContext,
-		commands: Map<String, CommandDetails>,
+		commands: List<Command>,
 	): List<MessageEmbed> {
-		val sortedCommands = commands.toSortedMap()
+		val sortedCommands = commands.sorted()
 
 		val website = environmentBean.getProperty<String>(BotProperty.LINK_WEBSITE)
 		val repository = environmentBean.getProperty<String>(BotProperty.LINK_REPOSITORY)
@@ -104,13 +105,13 @@ class HelpCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandE
 	 * their descriptions.
 	 *
 	 * @param context The context of the command execution, containing guild and user data.
-	 * @param guildCommands A sorted map of command names and their details.
+	 * @param guildCommands A sorted list of command details to be included in the embed.
 	 * @param website The URL of the bot's website used for linking in descriptions.
 	 * @return A map with command names as keys and descriptions as values.
 	 */
 	private fun parseCommandsWithDescription(
 		context: CommandContext,
-		guildCommands: SortedMap<String, CommandDetails>,
+		guildCommands: List<Command>,
 		website: String,
 	): Map<String, String> {
 		val commands = mutableMapOf<String, String>()
@@ -118,20 +119,18 @@ class HelpCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandE
 
 		val command = environmentBean.getProperty<String>(BotProperty.LINK_COMMAND)
 
-		for ((key, details) in guildCommands) {
+		for (details in guildCommands) {
 			val keyJoiner = StringJoiner("")
 			val descriptionJoiner = StringJoiner("")
 
 			keyJoiner.add(context.prefix)
-			keyJoiner.add(key)
+			keyJoiner.add(details.textId)
 			keyJoiner.add(" (${details.alias}) ")
 
-			details.argI18nKey?.let {
-				keyJoiner.add(mdCode("<${i18nBean.tRaw(I18nDynamicMod.ARG_PER_COMMAND_MOD, arrayOf(it), lang)}>"))
-			}
-			descriptionJoiner.add(mdLink("[link]", command.format(website, key)))
+			details.argumentsDefinition?.let { keyJoiner.add(mdCode("<${i18nBean.t(it.i18nSource, lang)}>")) }
+			descriptionJoiner.add(mdLink("[link]", command.format(website, details.textId)))
 			descriptionJoiner.add(" ")
-			descriptionJoiner.add(i18nBean.tRaw(I18nDynamicMod.COMMANDS_MOD, arrayOf(key), lang))
+			descriptionJoiner.add(i18nBean.t(details.i18nSource, lang))
 
 			commands[keyJoiner.toString()] = descriptionJoiner.toString()
 		}
