@@ -7,7 +7,6 @@ package pl.jwizard.jwc.api.music
 import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
@@ -18,6 +17,7 @@ import pl.jwizard.jwc.core.util.ext.mdTitleLink
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.ext.thumbnailUrl
 import pl.jwizard.jwc.core.util.jdaInfo
+import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
 /**
@@ -29,7 +29,7 @@ import pl.jwizard.jwl.util.logger
  * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.REPEATCLS)
+@JdaCommand(Command.REPEATCLS)
 class ClearRepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
 
 	companion object {
@@ -59,7 +59,7 @@ class ClearRepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCom
 				i18nLocaleSource = I18nResponseSource.REMOVE_MULTIPLE_REPEATING_TRACK,
 				args = mapOf(
 					"track" to currentPlayingTrack?.mdTitleLink,
-					"repeatingCmd" to Command.REPEAT.parseWithPrefix(context),
+					"repeatingCmd" to Command.REPEAT.parseWithPrefix(context.prefix),
 				),
 			)
 			.setArtwork(currentPlayingTrack?.thumbnailUrl)

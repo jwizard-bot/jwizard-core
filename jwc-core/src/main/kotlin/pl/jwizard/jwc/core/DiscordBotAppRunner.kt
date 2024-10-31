@@ -38,8 +38,6 @@ object DiscordBotAppRunner : AppRunner() {
 		val channelListenerGuard = context.getBean(ChannelListenerGuard::class)
 
 		radioPlaybackMappersCache.loadRadioPlaybackClasses()
-
-		commandLoader.loadMetadata()
 		commandLoader.loadClassesViaReflectionApi()
 
 		audioClientSupplier.initClientNodes()

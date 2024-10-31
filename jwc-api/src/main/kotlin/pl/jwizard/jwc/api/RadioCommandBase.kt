@@ -6,7 +6,6 @@ package pl.jwizard.jwc.api
 
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.core.audio.AudioContentType
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
@@ -42,12 +41,12 @@ abstract class RadioCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 		val currentContent = manager.cachedPlayer?.track
 		val isStreamContent = manager.state.isDeclaredAudioContentType(AudioContentType.STREAM)
 		if (!isStreamContent && currentContent != null) {
-			throw DiscreteAudioStreamIsPlayingException(context, Command.STOP)
+			throw DiscreteAudioStreamIsPlayingException(context)
 		}
 		if (shouldRadioPlaying && (!isStreamContent || currentContent == null)) {
-			throw RadioStationIsNotPlayingException(context, Command.PLAY_RADIO)
+			throw RadioStationIsNotPlayingException(context)
 		} else if (shouldRadioIdle && (isStreamContent && currentContent != null)) {
-			throw RadioStationIsPlayingException(context, Command.STOP_RADIO)
+			throw RadioStationIsPlayingException(context)
 		}
 		executeRadio(context, manager, response)
 	}

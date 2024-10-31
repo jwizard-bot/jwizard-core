@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.audio.scheduler.repeat.AudioTrackRepeat
 import pl.jwizard.jwc.audio.scheduler.repeat.CountOfRepeats
-import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.core.audio.spi.QueueTrackScheduler
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -22,6 +21,7 @@ import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.ext.thumbnailUrl
 import pl.jwizard.jwc.core.util.jdaError
 import pl.jwizard.jwc.core.util.jdaInfo
+import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.i18n.I18nLocaleSource
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 import pl.jwizard.jwl.util.logger
@@ -127,7 +127,7 @@ class QueueTrackScheduleHandler(
 		if (musicManager.cachedPlayer?.paused == true) {
 			val message = createTrackStartMessage(
 				track, I18nResponseSource.ON_TRACK_START_ON_PAUSED,
-				"resumeCmd" to Command.RESUME.parseWithPrefix(context)
+				"resumeCmd" to Command.RESUME.parseWithPrefix(context.prefix)
 			)
 			log.jdaInfo(
 				context,

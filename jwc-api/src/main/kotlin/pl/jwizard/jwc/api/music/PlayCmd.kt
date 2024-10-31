@@ -7,11 +7,11 @@ package pl.jwizard.jwc.api.music
 import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.refer.Command
-import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
+import pl.jwizard.jwl.command.Command
+import pl.jwizard.jwl.command.arg.Argument
 
 /**
  * Command to play a specified track in the music player.
@@ -22,7 +22,7 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
  * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.PLAY)
+@JdaCommand(Command.PLAY)
 class PlayCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
 
 	override val shouldOnSameChannelWithBot = true
@@ -39,7 +39,7 @@ class PlayCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(com
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeMusic(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		val track = context.getArg<String>(CommandArgument.TRACK)
+		val track = context.getArg<String>(Argument.TRACK)
 		joinAndOpenAudioConnection(context)
 		manager.loadAndPlay(track, context)
 	}

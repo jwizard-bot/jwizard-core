@@ -11,7 +11,6 @@ import pl.jwizard.jwc.api.DjCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.mono.AsyncUpdatableHook
-import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
@@ -19,6 +18,7 @@ import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.core.util.jdaInfo
+import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
 /**
@@ -28,7 +28,7 @@ import pl.jwizard.jwl.util.logger
  * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.VOLUMECLS)
+@JdaCommand(Command.VOLUMECLS)
 class ResetPlayerVolumeCmd(
 	commandEnvironment: CommandEnvironmentBean
 ) : DjCommandBase(commandEnvironment), AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Int> {
@@ -48,7 +48,7 @@ class ResetPlayerVolumeCmd(
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeDj(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		val defaultVolume = environmentBean.getGuildProperty<Int>(GuildProperty.DEFAULT_VOLUME, context.guild.idLong)
+		val defaultVolume = environmentBean.getGuildProperty<Int>(GuildProperty.PLAYER_VOLUME, context.guild.idLong)
 
 		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response, this)
 		asyncUpdatableHandler.performAsyncUpdate(

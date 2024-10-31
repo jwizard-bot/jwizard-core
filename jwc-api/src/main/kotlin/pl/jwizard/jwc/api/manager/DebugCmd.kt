@@ -14,8 +14,6 @@ import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.interaction.component.RefreshableComponent
 import pl.jwizard.jwc.command.interaction.component.RefreshableContent
-import pl.jwizard.jwc.command.refer.Command
-import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nSystemSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -25,6 +23,8 @@ import pl.jwizard.jwc.core.jda.embed.PercentageIndicatorBar
 import pl.jwizard.jwc.core.jvm.SystemProperty
 import pl.jwizard.jwc.core.util.ext.versionFormat
 import pl.jwizard.jwc.core.util.mdBold
+import pl.jwizard.jwl.command.Command
+import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.property.AppBaseProperty
 import java.util.*
 
@@ -35,7 +35,7 @@ import java.util.*
  * @param commandEnvironment The environment context for command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.DEBUG)
+@JdaCommand(Command.DEBUG)
 class DebugCmd(
 	commandEnvironment: CommandEnvironmentBean
 ) : ManagerCommandBase(commandEnvironment), RefreshableContent<CommandContext> {
@@ -66,7 +66,7 @@ class DebugCmd(
 	 * @return The user ID if the message should be sent privately, or null otherwise.
 	 */
 	override fun isPrivate(context: CommandContext): Long? {
-		val isPrivate = context.getNullableArg<Boolean>(CommandArgument.PRIVATE)
+		val isPrivate = context.getNullableArg<Boolean>(Argument.PRIVATE)
 		return if (isPrivate == true) context.author.idLong else null
 	}
 

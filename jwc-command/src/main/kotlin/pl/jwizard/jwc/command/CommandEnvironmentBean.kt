@@ -33,7 +33,6 @@ import pl.jwizard.jwl.i18n.I18nBean
  * @property radioStationSupplier Supplies instances related to radio station management.
  * @property radioPlaybackMappersCache Caches radio playback mappers for efficient access.
  * @property commandDataSupplier Supplies metadata and definitions for bot commands.
- * @property commandsCacheBean Caches command-related data to improve command lookup performance.
  * @property exceptionTrackerHandler The store used to track and log exceptions.
  * @property looselyTransportHandlerBean Handles loosely-typed transport operations between services.
  * @author Miłosz Gilga
@@ -51,7 +50,6 @@ class CommandEnvironmentBean(
 	val radioStationSupplier: RadioStationSupplier,
 	val radioPlaybackMappersCache: RadioPlaybackMappersCache,
 	val commandDataSupplier: CommandDataSupplier,
-	val commandsCacheBean: CommandsCacheBean,
 	val exceptionTrackerHandler: ExceptionTrackerHandler,
 	val looselyTransportHandlerBean: LooselyTransportHandlerBean,
 )

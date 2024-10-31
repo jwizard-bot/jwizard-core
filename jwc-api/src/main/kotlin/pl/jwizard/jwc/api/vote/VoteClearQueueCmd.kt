@@ -7,7 +7,6 @@ package pl.jwizard.jwc.api.vote
 import pl.jwizard.jwc.api.MusicVoteCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
@@ -16,6 +15,7 @@ import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.vote.music.MusicVoterResponse
+import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
 /**
@@ -27,7 +27,7 @@ import pl.jwizard.jwl.util.logger
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.VCLEAR)
+@JdaCommand(Command.VCLEAR)
 class VoteClearQueueCmd(
 	commandEnvironment: CommandEnvironmentBean
 ) : MusicVoteCommandBase<MusicManager>(commandEnvironment) {

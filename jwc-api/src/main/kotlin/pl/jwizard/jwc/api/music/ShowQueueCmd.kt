@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
@@ -25,6 +24,7 @@ import pl.jwizard.jwc.core.util.mdBold
 import pl.jwizard.jwc.core.util.mdCode
 import pl.jwizard.jwc.core.util.mdLink
 import pl.jwizard.jwc.core.util.millisToDTF
+import pl.jwizard.jwl.command.Command
 import java.util.*
 
 /**
@@ -33,7 +33,7 @@ import java.util.*
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.QUEUE)
+@JdaCommand(Command.QUEUE)
 class ShowQueueCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
 
 	override val queueShouldNotBeEmpty = true

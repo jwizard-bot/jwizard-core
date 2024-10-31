@@ -8,8 +8,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.api.DjCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.refer.Command
-import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
@@ -28,6 +26,8 @@ import pl.jwizard.jwc.core.util.mdLink
 import pl.jwizard.jwc.core.util.millisToDTF
 import pl.jwizard.jwc.exception.user.UserNotAddedTracksToQueueException
 import pl.jwizard.jwc.exception.user.UserNotFoundInGuildException
+import pl.jwizard.jwl.command.Command
+import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.util.logger
 
 /**
@@ -36,7 +36,7 @@ import pl.jwizard.jwl.util.logger
  * @param commandEnvironment The environment context for command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.TRACKSRM)
+@JdaCommand(Command.TRACKSRM)
 class RemoveMemberTracksCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBase(commandEnvironment) {
 
 	companion object {
@@ -55,7 +55,7 @@ class RemoveMemberTracksCmd(commandEnvironment: CommandEnvironmentBean) : DjComm
 	 * @throws UserNotAddedTracksToQueueException If the specified user has not added any tracks to the queue.
 	 */
 	override fun executeDj(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		val userId = context.getArg<Long>(CommandArgument.MEMBER)
+		val userId = context.getArg<Long>(Argument.MEMBER)
 		val paginatorChunkSize = environmentBean.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 
 		val member = context.guild.members.find { it.idLong == userId }

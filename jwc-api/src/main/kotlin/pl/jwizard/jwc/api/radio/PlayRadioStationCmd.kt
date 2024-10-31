@@ -7,12 +7,12 @@ package pl.jwizard.jwc.api.radio
 import pl.jwizard.jwc.api.RadioCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.refer.Command
-import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.exception.radio.RadioStationNotExistsOrTurnedOffException
+import pl.jwizard.jwl.command.Command
+import pl.jwizard.jwl.command.arg.Argument
 
 /**
  * Command that handles the process of playing a radio station in a voice channel. This command automatically joins
@@ -21,7 +21,7 @@ import pl.jwizard.jwc.exception.radio.RadioStationNotExistsOrTurnedOffException
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.PLAY_RADIO)
+@JdaCommand(Command.PLAYRADIO)
 class PlayRadioStationCmd(commandEnvironment: CommandEnvironmentBean) : RadioCommandBase(commandEnvironment) {
 
 	override val shouldAutoJoinBotToChannel = true
@@ -38,7 +38,7 @@ class PlayRadioStationCmd(commandEnvironment: CommandEnvironmentBean) : RadioCom
 	 * @throws RadioStationNotExistsOrTurnedOffException If the requested radio station does not exist or is inactive.
 	 */
 	override fun executeRadio(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		val radioStationSlug = context.getArg<String>(CommandArgument.RADIO_STATION)
+		val radioStationSlug = context.getArg<String>(Argument.RADIO_STATION)
 
 		val radioStation = radioStationSupplier.getRadioStation(radioStationSlug, context.guildDbId)
 			?: throw RadioStationNotExistsOrTurnedOffException(context, radioStationSlug)

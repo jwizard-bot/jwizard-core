@@ -7,7 +7,7 @@ package pl.jwizard.jwc.command.reflect
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.command.CommandBase
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.refer.Command
+import pl.jwizard.jwl.command.Command
 
 /**
  * Annotation to mark a class as a Discord command listener for JDA (Java Discord API).
@@ -26,7 +26,7 @@ import pl.jwizard.jwc.command.refer.Command
  * }
  * ```
  *
- * @property id The command identifier that this listener will handle.
+ * @property value The command identifier that this listener will handle.
  * @author Miłosz Gilga
  * @see Command
  * @see CommandBase
@@ -36,5 +36,5 @@ import pl.jwizard.jwc.command.refer.Command
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class JdaCommand(
-	val id: Command,
+	val value: Command,
 )

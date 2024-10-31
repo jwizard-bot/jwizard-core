@@ -10,13 +10,12 @@ import dev.arbjerg.lavalink.client.player.TrackException
 import dev.arbjerg.lavalink.protocol.v4.Message.EmittedEvent.TrackEndEvent.AudioTrackEndReason
 import pl.jwizard.jwc.audio.RadioStationDetails
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
-import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.core.audio.spi.RadioStreamScheduler
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.util.jdaInfo
-import pl.jwizard.jwl.i18n.source.I18nDynamicMod
+import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 import pl.jwizard.jwl.util.logger
 
@@ -120,7 +119,7 @@ class RadioStreamScheduleHandler(
 				i18nLocaleSource = I18nResponseSource.STOP_PLAYING_RADIO_STATION,
 				args = mapOf(
 					"radioStationName" to radioStationDetails.name,
-					"startRadioStationCmd" to Command.PLAY_RADIO.parseWithPrefix(context),
+					"startRadioStationCmd" to Command.PLAYRADIO.parseWithPrefix(context.prefix),
 				),
 			)
 			.setColor(JdaColor.PRIMARY)

@@ -7,8 +7,6 @@ package pl.jwizard.jwc.api.music
 import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.refer.Command
-import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
@@ -21,6 +19,8 @@ import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.ext.thumbnailUrl
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.exception.track.TrackRepeatsOutOfBoundException
+import pl.jwizard.jwl.command.Command
+import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.util.logger
 
 /**
@@ -32,7 +32,7 @@ import pl.jwizard.jwl.util.logger
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.REPEAT)
+@JdaCommand(Command.REPEAT)
 class RepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
 
 	companion object {
@@ -55,7 +55,7 @@ class RepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandB
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeMusic(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		val repeatsCount = context.getArg<Int>(CommandArgument.COUNT)
+		val repeatsCount = context.getArg<Int>(Argument.COUNT)
 
 		val multipleProperties = environmentBean.getGuildMultipleProperties(
 			guildProperties = listOf(GuildProperty.MIN_REPEATS_OF_TRACK, GuildProperty.MAX_REPEATS_OF_TRACK),
@@ -82,7 +82,7 @@ class RepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandB
 				args = mapOf(
 					"track" to currentPlayingTrack?.mdTitleLink,
 					"times" to repeatsCount,
-					"clearRepeatingCmd" to Command.REPEATCLS.parseWithPrefix(context),
+					"clearRepeatingCmd" to Command.REPEATCLS.parseWithPrefix(context.prefix),
 				),
 			)
 			.setArtwork(currentPlayingTrack?.thumbnailUrl)

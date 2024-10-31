@@ -7,8 +7,6 @@ package pl.jwizard.jwc.api.dj
 import pl.jwizard.jwc.api.DjCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.refer.Command
-import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
@@ -20,6 +18,8 @@ import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.exception.track.TrackOffsetOutOfBoundsException
 import pl.jwizard.jwc.exception.track.TrackPositionsIsTheSameException
+import pl.jwizard.jwl.command.Command
+import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.util.logger
 import kotlin.math.abs
 
@@ -33,7 +33,7 @@ import kotlin.math.abs
  * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.MOVE)
+@JdaCommand(Command.MOVE)
 class MoveTrackCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBase(commandEnvironment) {
 
 	companion object {
@@ -51,8 +51,8 @@ class MoveTrackCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBase(c
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeDj(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		val fromPos = context.getArg<Int>(CommandArgument.FROM_POS)
-		val toPos = context.getArg<Int>(CommandArgument.TO_POS)
+		val fromPos = context.getArg<Int>(Argument.FROM_POS)
+		val toPos = context.getArg<Int>(Argument.TO_POS)
 
 		if (fromPos == toPos) {
 			throw TrackPositionsIsTheSameException(context)

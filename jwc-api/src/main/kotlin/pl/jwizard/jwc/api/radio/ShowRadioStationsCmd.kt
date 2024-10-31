@@ -7,7 +7,6 @@ package pl.jwizard.jwc.api.radio
 import pl.jwizard.jwc.command.CommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.i18n.source.I18nUtilSource
@@ -16,7 +15,7 @@ import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.util.mdLink
-import pl.jwizard.jwl.i18n.source.I18nDynamicMod
+import pl.jwizard.jwl.command.Command
 
 /**
  * Command that displays available radio stations for the guild.
@@ -24,7 +23,7 @@ import pl.jwizard.jwl.i18n.source.I18nDynamicMod
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.SHOW_RADIOS)
+@JdaCommand(Command.RADIOS)
 class ShowRadioStationsCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
 
 	/**

@@ -11,13 +11,13 @@ import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.interaction.component.RefreshableComponent
 import pl.jwizard.jwc.command.interaction.component.RefreshableContent
-import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.exception.audio.ActiveAudioPlayingNotFoundException
+import pl.jwizard.jwl.command.Command
 
 /**
  * Command for showing the currently playing track in the music queue.
@@ -25,7 +25,7 @@ import pl.jwizard.jwc.exception.audio.ActiveAudioPlayingNotFoundException
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.PLAYING)
+@JdaCommand(Command.PLAYING)
 class CurrentPlayingCmd(
 	commandEnvironment: CommandEnvironmentBean
 ) : MusicCommandBase(commandEnvironment), RefreshableContent<Pair<CommandContext, MusicManager>> {

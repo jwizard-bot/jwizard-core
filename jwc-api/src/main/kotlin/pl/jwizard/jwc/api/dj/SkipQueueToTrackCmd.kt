@@ -12,8 +12,6 @@ import pl.jwizard.jwc.api.DjCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.mono.AsyncUpdatableHook
-import pl.jwizard.jwc.command.refer.Command
-import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
@@ -23,6 +21,8 @@ import pl.jwizard.jwc.core.util.ext.mdTitleLink
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.exception.track.TrackOffsetOutOfBoundsException
+import pl.jwizard.jwl.command.Command
+import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.util.logger
 
 /**
@@ -35,7 +35,7 @@ import pl.jwizard.jwl.util.logger
  * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.SKIPTO)
+@JdaCommand(Command.SKIPTO)
 class SkipQueueToTrackCmd(
 	commandEnvironment: CommandEnvironmentBean
 ) : DjCommandBase(commandEnvironment), AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Pair<Track, Int>> {
@@ -59,7 +59,7 @@ class SkipQueueToTrackCmd(
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeDj(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		val position = context.getArg<Int>(CommandArgument.POS)
+		val position = context.getArg<Int>(Argument.POS)
 
 		val queue = manager.state.queueTrackScheduler.queue
 		if (queue.positionIsOutOfBounds(position)) {
@@ -75,12 +75,15 @@ class SkipQueueToTrackCmd(
 	}
 
 	/**
-	 * TODO
+	 * Handles successful asynchronous track skipping.
 	 *
-	 * @param context
-	 * @param result
-	 * @param payload
-	 * @return
+	 * This method is called upon successful execution of the asynchronous skip-to-track operation. It logs the skipped
+	 * track count and details about the currently playing track, then creates a message to confirm the action to the user.
+	 *
+	 * @param context The context of the command, which includes details about user interaction.
+	 * @param result The player result after the asynchronous update.
+	 * @param payload A pair containing the selected track and its position in the queue.
+	 * @return A [MessageEmbed] object with a confirmation message indicating the skipped tracks and the new track playing.
 	 */
 	override fun onAsyncSuccess(
 		context: CommandContext,

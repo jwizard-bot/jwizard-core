@@ -10,12 +10,12 @@ import pl.jwizard.jwc.api.RadioCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.interaction.component.RefreshableContent
-import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.exception.radio.RadioStationNotProvidedPlaybackDataException
+import pl.jwizard.jwl.command.Command
 
 /**
  * Command to display information about the currently playing radio station.
@@ -26,7 +26,7 @@ import pl.jwizard.jwc.exception.radio.RadioStationNotProvidedPlaybackDataExcepti
  * @param commandEnvironment The environment context containing necessary information for executing the command.
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.RADIO_INFO)
+@JdaCommand(Command.RADIOINFO)
 class RadioInfoCmd(
 	commandEnvironment: CommandEnvironmentBean
 ) : RadioCommandBase(commandEnvironment), RefreshableContent<Pair<CommandContext, MusicManager>> {

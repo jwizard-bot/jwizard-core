@@ -11,7 +11,6 @@ import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.mono.AsyncUpdatableHook
-import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
@@ -26,6 +25,7 @@ import pl.jwizard.jwc.core.util.ext.thumbnailUrl
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.core.util.millisToDTF
 import pl.jwizard.jwc.exception.UnexpectedException
+import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
 /**
@@ -37,7 +37,7 @@ import pl.jwizard.jwl.util.logger
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.PAUSE)
+@JdaCommand(Command.PAUSE)
 class PauseTrackCmd(
 	commandEnvironment: CommandEnvironmentBean
 ) : MusicCommandBase(commandEnvironment), AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, MusicManager> {
@@ -96,7 +96,7 @@ class PauseTrackCmd(
 				i18nLocaleSource = I18nResponseSource.PAUSED_TRACK,
 				args = mapOf(
 					"track" to pausedTrack.mdTitleLink,
-					"resumeCmd" to Command.RESUME.parseWithPrefix(context),
+					"resumeCmd" to Command.RESUME.parseWithPrefix(context.prefix),
 				),
 			)
 			.setValueField(percentageIndicatorBar.generateBar(), inline = false)

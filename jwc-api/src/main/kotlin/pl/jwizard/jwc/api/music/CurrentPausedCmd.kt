@@ -10,13 +10,13 @@ import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.interaction.component.RefreshableContent
-import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.exception.UnexpectedException
+import pl.jwizard.jwl.command.Command
 
 /**
  * Command responsible for displaying the currently paused track information.
@@ -27,7 +27,7 @@ import pl.jwizard.jwc.exception.UnexpectedException
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.PAUSED)
+@JdaCommand(Command.PAUSED)
 class CurrentPausedCmd(
 	commandEnvironment: CommandEnvironmentBean
 ) : MusicCommandBase(commandEnvironment), RefreshableContent<Pair<CommandContext, MusicManager>> {

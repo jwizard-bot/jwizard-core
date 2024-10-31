@@ -7,11 +7,11 @@ package pl.jwizard.jwc.api.playlist
 import pl.jwizard.jwc.command.CommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
+import pl.jwizard.jwl.command.Command
 
 /**
  * TODO
@@ -19,7 +19,7 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
  * @param commandEnvironment
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.SHOWMEMPL)
+@JdaCommand(Command.SHOWMEMPL)
 class ShowMemberPlaylistsCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
 
 	/**

@@ -7,13 +7,13 @@ package pl.jwizard.jwc.api.music
 import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.refer.Command
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
+import pl.jwizard.jwl.command.Command
 
 /**
  * Command to retrieve the current volume of the audio player.
@@ -24,7 +24,7 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
  * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.GETVOLUME)
+@JdaCommand(Command.GETVOLUME)
 class GetPlayerVolumeCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
 
 	override val shouldOnSameChannelWithBot = true

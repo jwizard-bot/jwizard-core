@@ -8,14 +8,14 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.api.ManagerCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.refer.Command
-import pl.jwizard.jwc.command.refer.CommandArgument
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nSystemSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotProperty
+import pl.jwizard.jwl.command.Command
+import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.i18n.I18nLocaleSource
 
 /**
@@ -24,7 +24,7 @@ import pl.jwizard.jwl.i18n.I18nLocaleSource
  * @param commandEnvironment The environment context for command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(id = Command.SETTINGS)
+@JdaCommand(Command.SETTINGS)
 class SettingsCmd(commandEnvironment: CommandEnvironmentBean) : ManagerCommandBase(commandEnvironment) {
 
 	/**
@@ -82,7 +82,7 @@ class SettingsCmd(commandEnvironment: CommandEnvironmentBean) : ManagerCommandBa
 	 * @return The author's ID if the command is private, or null if it is not private.
 	 */
 	override fun isPrivate(context: CommandContext): Long? {
-		val isPrivate = context.getNullableArg<Boolean>(CommandArgument.PRIVATE)
+		val isPrivate = context.getNullableArg<Boolean>(Argument.PRIVATE)
 		return if (isPrivate == true) context.author.idLong else null
 	}
 }
