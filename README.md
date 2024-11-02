@@ -96,7 +96,7 @@ where `<value token>` property is the Vault token stored in configured `.env` fi
 
 where `Xmx` and `Xms` parameters are optional and can be modified.
 
-> NOTE: For servers running on HotSpot JVM, Oracle recommended same Xms and Xms parameter, ex. `-Xms1G` and `-Xmx1G`.
+> NOTE: For servers running on HotSpot JVM, Oracle recommended same Xms and Xmx parameter, ex. `-Xms1G` and `-Xmx1G`.
 > More information you will
 > find [here](https://docs.oracle.com/cd/E74363_01/ohi_vbp_-_installation_guide--20160224-094432-html-chunked/s66.html).
 
