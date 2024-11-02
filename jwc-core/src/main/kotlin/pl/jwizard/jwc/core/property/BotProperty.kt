@@ -178,19 +178,9 @@ enum class BotProperty(
 	JVM_NAME("java.vm.name"),
 
 	/**
-	 * JRE name property, specifying the name of the Java Runtime Environment.
-	 */
-	JRE_NAME("java.runtime.name"),
-
-	/**
 	 * JRE version property, representing the version of the Java Runtime Environment.
 	 */
 	JRE_VERSION("java.runtime.version"),
-
-	/**
-	 * JRE specification version property, indicating the version of the Java specification.
-	 */
-	JRE_SPEC_VERSION("java.specification.version"),
 
 	/**
 	 * OS name property, defining the name of the operating system.

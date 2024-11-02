@@ -10,15 +10,12 @@ import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.Guild
-import net.dv8tion.jda.api.entities.Icon
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.exceptions.InvalidTokenException
 import net.dv8tion.jda.api.hooks.EventListener
-import net.dv8tion.jda.api.managers.AccountManager
 import net.dv8tion.jda.api.managers.DirectAudioController
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.cache.CacheFlag
-import net.dv8tion.jda.internal.managers.AccountManagerImpl
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
