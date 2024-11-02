@@ -4,7 +4,6 @@
  */
 package pl.jwizard.jwc.core.property
 
-import pl.jwizard.jwc.core.property.BotProperty.*
 import pl.jwizard.jwl.property.AppProperty
 import kotlin.reflect.KClass
 
@@ -13,8 +12,6 @@ import kotlin.reflect.KClass
  * their types.
  *
  * Defining following properties:
- *
- * - [JDA_NAME]: JDA instance name.
  * - [JDA_SECRET_TOKEN]: JDA secret token.
  * - [JDA_DEFAULT_ACTIVITY]: JDA default activity. Enabled when [JDA_SPLASHES_ENABLED] property is set to false.
  * - [JDA_SPLASHES_ENABLED]: JDA splashes toggle boolean property. If true, splashes are enabled, otherwise show nothing.
@@ -53,11 +50,6 @@ enum class BotProperty(
 	override val key: String,
 	override val type: KClass<*> = String::class,
 ) : AppProperty {
-
-	/**
-	 * JDA instance name.
-	 */
-	JDA_NAME("jda.name"),
 
 	/**
 	 * JDA secret token.

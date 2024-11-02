@@ -24,7 +24,6 @@ import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
-import pl.jwizard.jwc.core.jda.spi.JdaResourceSupplier
 import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
@@ -39,10 +38,8 @@ import pl.jwizard.jwl.util.logger
  *
  * This class is responsible for initializing and configuring the JDA client used to interact with the Discord API.
  * It sets up various configurations such as cache settings, gateway intents, activity status, and permissions.
- * The class also provides methods to configure additional metadata and gracefully shut down the JDA client.
  *
  * @property environmentBean Provides access to application properties, including the bot token.
- * @property jdaResourceSupplier S3 resource supplier fetching JDA resources (logo and banner).
  * @property applicationContext The Spring context factory used to load and retrieve components.
  * @property jdaColorStoreBean Provides access to JDA colors loader.
  * @author Miłosz Gilga
@@ -50,7 +47,6 @@ import pl.jwizard.jwl.util.logger
 @Component
 final class JdaInstanceBean(
 	private val environmentBean: EnvironmentBean,
-	private val jdaResourceSupplier: JdaResourceSupplier,
 	private val applicationContext: SpringKtContextFactory,
 	private val jdaColorStoreBean: JdaColorStoreBean,
 ) : JdaInstance, JvmDisposable {
@@ -115,40 +111,6 @@ final class JdaInstanceBean(
 
 		jvmDisposableHook.initHook()
 		log.info("Add bot into Discord server via link: {}", jda.getInviteUrl(permissions))
-	}
-
-	/**
-	 * Configures the metadata for the bot account, such as its name, avatar, and banner.
-	 *
-	 * This method retrieves the logo and banner images from S3, sets them as the bot's avatar and banner using the
-	 * [AccountManager], and updates the bot's name. The method also logs the metadata properties that were configured.
-	 *
-	 * It fetches the logo and banner resources from S3 and uses them to set the avatar and banner for the bot. If the
-	 * resources are successfully retrieved, they are logged along with the bot's name.
-	 *
-	 * @throws IllegalArgumentException If the name property is not present in the environment configuration.
-	 * @see JdaResourceSupplier
-	 */
-	fun configureMetadata() {
-		val logoResource = jdaResourceSupplier.getLogo()
-		val bannerResource = jdaResourceSupplier.getBanner()
-
-		val accountManager = AccountManagerImpl(jda.selfUser)
-		val metadataProperties = mutableListOf<String>()
-
-		val name = environmentBean.getProperty<String>(BotProperty.JDA_NAME)
-		accountManager.setName(name)
-		metadataProperties.add("name: $name")
-
-		logoResource?.let { (resourcePath, byteArray) ->
-			accountManager.setAvatar(Icon.from(byteArray))
-			metadataProperties.add("avatar: $resourcePath")
-		}
-		bannerResource?.let { (resourcePath, byteArray) ->
-			accountManager.setBanner(Icon.from(byteArray))
-			metadataProperties.add("banner: $resourcePath")
-		}
-		log.info("Configure metadata properties: {}.", metadataProperties)
 	}
 
 	/**

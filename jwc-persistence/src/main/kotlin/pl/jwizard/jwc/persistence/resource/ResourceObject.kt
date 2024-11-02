@@ -11,25 +11,12 @@ package pl.jwizard.jwc.persistence.resource
  * holds the relative path to the resource.
  *
  * Defining following properties:
- *
- * - [LOGO]: Represents the logo resource.
- * - [BANNER]: Represents the Discord banner resource.
  * - [RADIO_STATION]: Represents the path to a radio station's thumbnail image.
  *
  * @property resourcePath The relative path to the resource in the S3 storage.
  * @author Miłosz Gilga
  */
 enum class ResourceObject(val resourcePath: String) {
-
-	/**
-	 * Represents the logo resource.
-	 */
-	LOGO("brand/logo.png"),
-
-	/**
-	 * Represents the Discord banner resource.
-	 */
-	BANNER("brand/discord-banner.png"),
 
 	/**
 	 * Represents the path to a radio station's thumbnail image. The `%s` placeholder is replaced by the station's slug,

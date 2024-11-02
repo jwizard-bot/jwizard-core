@@ -43,7 +43,6 @@ object DiscordBotAppRunner : AppRunner() {
 		audioClientSupplier.initClientNodes()
 
 		jdaInstance.createJdaWrapper(audioClientSupplier)
-		jdaInstance.configureMetadata()
 
 		activitySplashes.initSplashesSequence()
 		channelListenerGuard.initThreadPool()
