@@ -19,6 +19,7 @@ commonsValidatorVersion = "1.9.0"
 commonsIoVersion = "2.17.0"
 reactorVersion = "3.6.10"
 commonsVfsVersion = "2.9.0"
+javalinVersion = "6.3.0"
 jwizardLibVersion = "latest"
 
 [libraries]
@@ -47,6 +48,7 @@ commonsValidator = { module = "commons-validator:commons-validator", version.ref
 commonsIo = { module = "commons-io:commons-io", version.ref = "commonsIoVersion" }
 reactor = { module = "io.projectreactor:reactor-core", version.ref = "reactorVersion" }
 commonsVfs = { module = "org.apache.commons:commons-vfs2", version.ref = "commonsVfsVersion" }
+javalin = { module = "io.javalin:javalin", version.ref = "javalinVersion" }
 jwizardLib = { module = "pl.jwizard:jwizard-lib", version.ref = "jwizardLibVersion" }
 
 [plugins]

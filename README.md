@@ -91,7 +91,7 @@ where `<value token>` property is the Vault token stored in configured `.env` fi
 5. That's it. Now you can run via Intellij IDEA. Make sure, you have set JVM parameters:
 
 ```
--Druntime.profiles=dev -Denv.enabled=true -Xms1G -Xmx1G
+-Druntime.profiles=dev -Denv.enabled=true -Dserver.port=8768 -Xms1G -Xmx1G
 ```
 
 where `Xmx` and `Xms` parameters are optional and can be modified.
@@ -99,6 +99,10 @@ where `Xmx` and `Xms` parameters are optional and can be modified.
 > NOTE: For servers running on HotSpot JVM, Oracle recommended same Xms and Xmx parameter, ex. `-Xms1G` and `-Xmx1G`.
 > More information you will
 > find [here](https://docs.oracle.com/cd/E74363_01/ohi_vbp_-_installation_guide--20160224-094432-html-chunked/s66.html).
+
+> NOTE: Application starts with embed lightweight Jetty server. It's used only for actuator functionalities. Property
+> `-Dserver.port` has no refer to others application in JWizard infrastructure and can be modified. Exposing only
+> `/actuator/health` GET endpoint.
 
 ## Documentation
 
