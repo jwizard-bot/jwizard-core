@@ -74,57 +74,38 @@ jobs:
           name: output-jar
           path: .bin/jwizard-core.jar
 
-  deploy:
+  run-tools:
     runs-on: ubuntu-latest
     needs: build
-    env:
-      SERVER_OUTPUT: "/var/www/jwizard-core"
 
     steps:
-      - name: Download generated JAR artifact
-        uses: actions/download-artifact@v4
+      - name: Checkout tools repository
+        uses: actions/checkout@v4
         with:
-          name: output-jar
+          repository: ${{ github.repository_owner }}/jwizard-tools
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Move files to server
-        uses: appleboy/scp-action@v0.1.7
+      - name: Setup Python environment
+        uses: actions/setup-python@v5
         with:
-          host: ${{ env.SSH_HOST }}
-          username: ${{ env.SSH_USERNAME }}
-          port: ${{ env.SSH_PORT }}
-          key: ${{ env.SSH_KEY }}
-          passphrase: ${{ env.SSH_PASSPHRASE }}
-          source: "jwizard-core.jar"
-          target: ${{ env.SERVER_OUTPUT }}
-          rm: true
+          python-version: '3.12'
+          cache: 'pip'
 
-      - name: Determinate build version and date
-        id: deployment
-        run: |
-          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-          echo "build_date=$(date +'%Y-%m-%dT%H:%M:%S%z %Z')" >> $GITHUB_OUTPUT
+      - name: Install requirements
+        run: pip install -r requirements.txt
 
-      - name: Re-create config file
-        uses: appleboy/ssh-action@v1.1.0
-        with:
-          host: ${{ env.SSH_HOST }}
-          username: ${{ env.SSH_USERNAME }}
-          port: ${{ env.SSH_PORT }}
-          key: ${{ env.SSH_KEY }}
-          passphrase: ${{ env.SSH_PASSPHRASE }}
-          script: ./make-conf ${{ env.SERVER_OUTPUT }} "${{ secrets.CONFIG_FILE_CONTENT }}" \
-            "JWIZARD_BUILD_VERSION=${{ steps.deployment.outputs.sha_short }}_${{ github.run_number }}" \
-            "JWIZARD_BUILD_DATE=${{ steps.deployment.outputs.build_date }}"
+      - name: Grand permissions to run packages grabber
+        run: chmod +x exec/run-with-config
 
-      - name: Start process
-        uses: appleboy/ssh-action@v1.1.0
-        with:
-          host: ${{ env.SSH_HOST }}
-          username: ${{ env.SSH_USERNAME }}
-          port: ${{ env.SSH_PORT }}
-          key: ${{ env.SSH_KEY }}
-          passphrase: ${{ env.SSH_PASSPHRASE }}
-          script: ~/exec/process start ${{ env.PM2_CORE_NAME }}
+      - name: Run packages grabber
+        run: exec/run-with-config cache_version \
+          "${{ secrets.CONFIG_FILE_CONTENT }}" \
+          --repo ${{ github.repository }}
+
+      - name: Run packages grabber
+        run: exec/run-with-config packages_grabber \
+          "${{ secrets.CONFIG_FILE_CONTENT }}" \
+          --repo ${{ github.repository }}
 
   generate-docs:
     runs-on: ubuntu-latest
@@ -167,35 +148,46 @@ jobs:
           rm: true
           strip_components: 1
 
-  run-tools:
+  deploy:
     runs-on: ubuntu-latest
-    needs: deploy
+    needs: run-tools
+    env:
+      SERVER_OUTPUT: "/var/www/jwizard-core"
 
     steps:
-      - name: Checkout tools repository
-        uses: actions/checkout@v4
+      - name: Download generated JAR artifact
+        uses: actions/download-artifact@v4
         with:
-          repository: ${{ github.repository_owner }}/jwizard-tools
-          token: ${{ secrets.GITHUB_TOKEN }}
+          name: output-jar
 
-      - name: Setup Python environment
-        uses: actions/setup-python@v5
+      - name: Move files to server
+        uses: appleboy/scp-action@v0.1.7
         with:
-          python-version: '3.12'
-          cache: 'pip'
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USERNAME }}
+          port: ${{ env.SSH_PORT }}
+          key: ${{ env.SSH_KEY }}
+          passphrase: ${{ env.SSH_PASSPHRASE }}
+          source: "jwizard-core.jar"
+          target: ${{ env.SERVER_OUTPUT }}
+          rm: true
 
-      - name: Install requirements
-        run: pip install -r requirements.txt
+      - name: Re-create config file
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USERNAME }}
+          port: ${{ env.SSH_PORT }}
+          key: ${{ env.SSH_KEY }}
+          passphrase: ${{ env.SSH_PASSPHRASE }}
+          script: ./make-conf ${{ env.SERVER_OUTPUT }} "${{ secrets.CONFIG_FILE_CONTENT }}"
 
-      - name: Grand permissions to run packages grabber
-        run: chmod +x exec/run-with-config
-
-      - name: Run packages grabber
-        run: exec/run-with-config cache_version \
-          "${{ secrets.CONFIG_FILE_CONTENT }}" \
-          --repo ${{ github.repository }}
-
-      - name: Run packages grabber
-        run: exec/run-with-config packages_grabber \
-          "${{ secrets.CONFIG_FILE_CONTENT }}" \
-          --repo ${{ github.repository }}
+      - name: Start process
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USERNAME }}
+          port: ${{ env.SSH_PORT }}
+          key: ${{ env.SSH_KEY }}
+          passphrase: ${{ env.SSH_PASSPHRASE }}
+          script: ~/exec/process start ${{ env.PM2_CORE_NAME }}
