@@ -16,7 +16,9 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
 /**
- * TODO
+ * The CommandsLoaderBean class is responsible for loading command classes annotated with [JdaCommand] using reflection.
+ * It scans the classpath for these command classes and registers them into the command cache for later use.
+
  *
  * @property springKtContextFactory The context factory for retrieving Spring beans.
  * @property commandsCacheBean The cache for commands.

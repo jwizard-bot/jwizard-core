@@ -7,7 +7,10 @@ package pl.jwizard.jwc.core.jda.spi
 import pl.jwizard.jwc.core.DiscordBotAppRunner
 
 /**
- * TODO
+ * Interface representing a mechanism to load command classes dynamically in the Discord bot framework.
+ *
+ * Implementations of this interface are responsible for finding and registering command classes from the classpath,
+ * allowing for modular command handling.
  *
  * @author Miłosz Gilga
  * @see DiscordBotAppRunner

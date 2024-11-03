@@ -10,7 +10,10 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import java.math.BigInteger
 
 /**
- * TODO
+ * Represents the context of a command execution in the Discord bot framework.
+ *
+ * This interface encapsulates the necessary information about the command invocation, including details about the
+ * guild, the member invoking the command, and the command itself.
  *
  * @author Miłosz Gilga
  */
