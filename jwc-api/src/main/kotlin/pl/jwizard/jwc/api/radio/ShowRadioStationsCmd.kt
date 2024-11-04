@@ -15,17 +15,22 @@ import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.util.mdLink
+import pl.jwizard.jwc.radio.spi.RadioStationSupplier
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.i18n.source.I18nDynamicMod
 
 /**
  * Command that displays available radio stations for the guild.
  *
+ * @param radioStationSupplier Supplies instances related to radio station management.
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
 @JdaCommand(Command.RADIOS)
-class ShowRadioStationsCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
+class ShowRadioStationsCmd(
+	private val radioStationSupplier: RadioStationSupplier,
+	commandEnvironment: CommandEnvironmentBean,
+) : CommandBase(commandEnvironment) {
 
 	/**
 	 * Executes the command to display radio stations.

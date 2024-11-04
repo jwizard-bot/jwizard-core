@@ -9,6 +9,8 @@ import pl.jwizard.jwc.command.CommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
+import pl.jwizard.jwc.command.spi.CommandDataSupplier
+import pl.jwizard.jwc.command.spi.ModuleDataSupplier
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
@@ -25,11 +27,17 @@ import java.util.*
  * Command class responsible for handling the `Help` command. This command provides a list of available commands in
  * the bot and helps the user navigate through them.
  *
+ * @property commandDataSupplier Supplies metadata and definitions for bot commands.
+ * @property moduleDataSupplier Supplies metadata and definitions for command modules.
  * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
  */
 @JdaCommand(Command.HELP)
-class HelpCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
+class HelpCmd(
+	private val commandDataSupplier: CommandDataSupplier,
+	private val moduleDataSupplier: ModuleDataSupplier,
+	commandEnvironment: CommandEnvironmentBean,
+) : CommandBase(commandEnvironment) {
 
 	/**
 	 * Retrieves and returns a map of commands that are enabled for the current guild.

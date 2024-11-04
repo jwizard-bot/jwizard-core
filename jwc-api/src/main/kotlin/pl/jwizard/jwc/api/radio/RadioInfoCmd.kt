@@ -15,6 +15,7 @@ import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.exception.radio.RadioStationNotProvidedPlaybackDataException
+import pl.jwizard.jwc.radio.spi.RadioStationSupplier
 import pl.jwizard.jwl.command.Command
 
 /**
@@ -23,12 +24,14 @@ import pl.jwizard.jwl.command.Command
  * This command fetches and displays the current radio station's information, such as its details and playback data.
  * If there is no valid radio station data, it throws an appropriate exception.
  *
+ * @param radioStationSupplier Supplies instances related to radio station management.
  * @param commandEnvironment The environment context containing necessary information for executing the command.
  * @author Miłosz Gilga
  */
 @JdaCommand(Command.RADIOINFO)
 class RadioInfoCmd(
-	commandEnvironment: CommandEnvironmentBean
+	private val radioStationSupplier: RadioStationSupplier,
+	commandEnvironment: CommandEnvironmentBean,
 ) : RadioCommandBase(commandEnvironment), RefreshableContent<Pair<CommandContext, MusicManager>> {
 
 	override val shouldOnSameChannelWithBot = true

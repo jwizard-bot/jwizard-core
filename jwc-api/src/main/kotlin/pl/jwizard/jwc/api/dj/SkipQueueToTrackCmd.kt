@@ -37,7 +37,7 @@ import pl.jwizard.jwl.util.logger
  */
 @JdaCommand(Command.SKIPTO)
 class SkipQueueToTrackCmd(
-	commandEnvironment: CommandEnvironmentBean
+	commandEnvironment: CommandEnvironmentBean,
 ) : DjCommandBase(commandEnvironment), AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Pair<Track, Int>> {
 
 	companion object {

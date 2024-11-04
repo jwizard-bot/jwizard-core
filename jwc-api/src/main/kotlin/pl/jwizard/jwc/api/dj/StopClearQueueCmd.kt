@@ -34,7 +34,7 @@ import pl.jwizard.jwl.util.logger
  */
 @JdaCommand(Command.STOP)
 class StopClearQueueCmd(
-	commandEnvironment: CommandEnvironmentBean
+	commandEnvironment: CommandEnvironmentBean,
 ) : DjCommandBase(commandEnvironment),
 	AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Pair<Track?, Int>> {
 

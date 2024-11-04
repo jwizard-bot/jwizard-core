@@ -36,7 +36,7 @@ import pl.jwizard.jwl.util.logger
  */
 @JdaCommand(Command.SKIP)
 class SkipTrackCmd(
-	commandEnvironment: CommandEnvironmentBean
+	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment), AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Track> {
 
 	companion object {

@@ -39,7 +39,7 @@ import pl.jwizard.jwl.util.logger
  */
 @JdaCommand(Command.PAUSE)
 class PauseTrackCmd(
-	commandEnvironment: CommandEnvironmentBean
+	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment), AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, MusicManager> {
 
 	companion object {

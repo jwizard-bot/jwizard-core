@@ -29,7 +29,7 @@ import pl.jwizard.jwl.util.logger
  */
 @JdaCommand(Command.VCLEAR)
 class VoteClearQueueCmd(
-	commandEnvironment: CommandEnvironmentBean
+	commandEnvironment: CommandEnvironmentBean,
 ) : MusicVoteCommandBase<MusicManager>(commandEnvironment) {
 
 	companion object {

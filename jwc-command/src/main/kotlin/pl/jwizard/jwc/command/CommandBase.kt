@@ -24,11 +24,8 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 	protected val environmentBean = commandEnvironment.environmentBean
 	protected val guildSettingsEventAction = commandEnvironment.guildSettingsEventAction
 	protected val i18nBean = commandEnvironment.i18nBean
-	protected val radioStationSupplier = commandEnvironment.radioStationSupplier
 	protected val jdaInstance = commandEnvironment.jdaInstance
 	protected val eventQueueBean = commandEnvironment.eventQueueBean
-	protected val commandDataSupplier = commandEnvironment.commandDataSupplier
-	protected val moduleDataSupplier = commandEnvironment.moduleDataSupplier
 	protected val exceptionTrackerStore = commandEnvironment.exceptionTrackerHandler
 
 	/**

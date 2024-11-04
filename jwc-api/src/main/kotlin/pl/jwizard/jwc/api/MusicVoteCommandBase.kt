@@ -29,7 +29,7 @@ import pl.jwizard.jwc.vote.music.MusicVoterResponse
  * @author Miłosz Gilga
  */
 abstract class MusicVoteCommandBase<T : Any>(
-	commandEnvironment: CommandEnvironmentBean
+	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment), VoterContent<T> {
 
 	/**

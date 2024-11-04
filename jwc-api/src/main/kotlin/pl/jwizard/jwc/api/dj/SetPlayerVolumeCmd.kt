@@ -34,7 +34,7 @@ import pl.jwizard.jwl.util.logger
  */
 @JdaCommand(Command.SETVOLUME)
 class SetPlayerVolumeCmd(
-	commandEnvironment: CommandEnvironmentBean
+	commandEnvironment: CommandEnvironmentBean,
 ) : DjCommandBase(commandEnvironment),
 	AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Pair<Int, MusicManager>> {
 

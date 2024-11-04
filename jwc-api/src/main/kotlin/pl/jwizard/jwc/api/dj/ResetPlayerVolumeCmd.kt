@@ -30,7 +30,7 @@ import pl.jwizard.jwl.util.logger
  */
 @JdaCommand(Command.VOLUMECLS)
 class ResetPlayerVolumeCmd(
-	commandEnvironment: CommandEnvironmentBean
+	commandEnvironment: CommandEnvironmentBean,
 ) : DjCommandBase(commandEnvironment), AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Int> {
 
 	companion object {

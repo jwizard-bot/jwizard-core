@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import org.springframework.stereotype.Component
+import pl.jwizard.jwc.core.config.spi.VcsDeploymentSupplier
 import pl.jwizard.jwc.core.exception.CommandPipelineException
 import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerHandler
 import pl.jwizard.jwc.core.i18n.source.I18nActionSource
@@ -18,11 +19,12 @@ import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwc.core.util.mdCode
+import pl.jwizard.jwc.core.util.mdLink
 import pl.jwizard.jwl.i18n.I18nBean
 import pl.jwizard.jwl.i18n.I18nLocaleSource
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
-import pl.jwizard.jwl.property.AppBaseProperty
+import pl.jwizard.jwl.vcs.VcsConfigBean
+import pl.jwizard.jwl.vcs.VcsRepository
 import java.util.*
 
 /**
@@ -35,6 +37,8 @@ import java.util.*
  * @property environmentBean Provides access to application properties.
  * @property i18nBean Manages internationalization for exception messages.
  * @property jdaColorStoreBean Provides color settings for JDA embeds.
+ * @property vcsDeploymentSupplier Supplies version information from version control.
+ * @property vcsConfigBean Creates URLs for specific snapshots in the version control system.
  * @author Miłosz Gilga
  */
 @Component
@@ -42,6 +46,8 @@ class ExceptionTrackerHandlerBean(
 	private val environmentBean: EnvironmentBean,
 	private val i18nBean: I18nBean,
 	private val jdaColorStoreBean: JdaColorStoreBean,
+	private val vcsDeploymentSupplier: VcsDeploymentSupplier,
+	private val vcsConfigBean: VcsConfigBean,
 ) : ExceptionTrackerHandler {
 
 	/**
@@ -60,13 +66,17 @@ class ExceptionTrackerHandlerBean(
 		context: CommandBaseContext?,
 		args: Map<String, Any?>,
 	): MessageEmbed {
-		val buildVersion = environmentBean.getProperty<String>(AppBaseProperty.DEPLOYMENT_BUILD_VERSION)
+		val repository = VcsRepository.JWIZARD_CORE
+		val deploymentVersion = vcsDeploymentSupplier.getDeploymentVersion(vcsConfigBean.getRepositoryName(repository))
+		val (name, url) = vcsConfigBean.createSnapshotUrl(repository, deploymentVersion)
+
+		val tracker = i18nSource.tracker
 		val lang = context?.guildLanguage
 
 		val stringJoiner = StringJoiner("")
-		stringJoiner.addKeyValue(I18nUtilSource.BUG_TRACKER, i18nSource.tracker, lang)
+		stringJoiner.addKeyValue(I18nUtilSource.BUG_TRACKER, mdLink(tracker, createTrackerUrl(tracker)), lang)
 		stringJoiner.add("\n")
-		stringJoiner.addKeyValue(I18nUtilSource.COMPILATION_VERSION, buildVersion, lang)
+		stringJoiner.addKeyValue(I18nUtilSource.COMPILATION_VERSION, if (url != null) mdLink(name, url) else name, lang)
 
 		return MessageEmbedBuilder(i18nBean, jdaColorStoreBean, context)
 			.setDescription(i18nSource, args)
@@ -94,11 +104,8 @@ class ExceptionTrackerHandlerBean(
 	 * @return An ActionRow containing a button that links to the exception details.
 	 */
 	override fun createTrackerLink(i18nSource: I18nExceptionSource, context: CommandBaseContext?): ActionRow {
-		val baseUrl = environmentBean.getProperty<String>(BotProperty.SERVICE_FRONT_URL)
-		val urlReferTemplate = environmentBean.getProperty<String>(BotProperty.JDA_EXCEPTION_URL_REFER_TEMPLATE)
-		val trackerUrl = urlReferTemplate.format(baseUrl, i18nSource.tracker)
 		val detailsMessage = i18nBean.t(I18nActionSource.DETAILS, context?.guildLanguage)
-		return ActionRow.of(Button.link(trackerUrl, detailsMessage))
+		return ActionRow.of(Button.link(createTrackerUrl(i18nSource.tracker), detailsMessage))
 	}
 
 	/**
@@ -112,17 +119,34 @@ class ExceptionTrackerHandlerBean(
 		createTrackerLink(ex.i18nExceptionSource, ex.commandBaseContext)
 
 	/**
-	 * Adds a key-value pair to the [StringJoiner] for formatting.
+	 * Creates the full URL for a specific exception tracker by formatting it with a base URL and the tracker ID.
 	 *
-	 * @param key The key to be translated and added.
-	 * @param value The value associated with the key.
-	 * @param lang The language for translation.
-	 * @return The updated StringJoiner.
+	 * @param tracker The tracker ID associated with a particular exception.
+	 * @return A full URL string that links to the tracker details.
 	 */
-	private fun StringJoiner.addKeyValue(key: I18nLocaleSource, value: Any, lang: String?): StringJoiner {
+	private fun createTrackerUrl(tracker: Int): String {
+		val baseUrl = environmentBean.getProperty<String>(BotProperty.SERVICE_FRONT_URL)
+		val urlReferTemplate = environmentBean.getProperty<String>(BotProperty.JDA_EXCEPTION_URL_REFER_TEMPLATE)
+		return urlReferTemplate.format(baseUrl, tracker)
+	}
+
+	/**
+	 * Helper function to add a key-value pair to a StringJoiner. Primarily used to format key-value pairs for embedding
+	 * in exception messages.
+	 *
+	 * @param key The internationalization key source.
+	 * @param value The value associated with the key.
+	 * @param lang The language code for localization.
+	 * @return The updated StringJoiner with the key-value pair added.
+	 */
+	private fun StringJoiner.addKeyValue(
+		key: I18nLocaleSource,
+		value: Any,
+		lang: String?,
+	): StringJoiner {
 		add(i18nBean.t(key, lang))
-		add(":")
-		add(mdCode(value.toString()))
+		add(": ")
+		add(value.toString())
 		return this
 	}
 }

@@ -29,7 +29,7 @@ import pl.jwizard.jwl.command.Command
  */
 @JdaCommand(Command.PAUSED)
 class CurrentPausedCmd(
-	commandEnvironment: CommandEnvironmentBean
+	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment), RefreshableContent<Pair<CommandContext, MusicManager>> {
 
 	override val shouldPaused = true

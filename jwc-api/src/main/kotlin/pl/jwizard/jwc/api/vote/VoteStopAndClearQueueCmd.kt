@@ -36,7 +36,7 @@ import pl.jwizard.jwl.util.logger
  */
 @JdaCommand(Command.VSTOP)
 class VoteStopAndClearQueueCmd(
-	commandEnvironment: CommandEnvironmentBean
+	commandEnvironment: CommandEnvironmentBean,
 ) : MusicVoteCommandBase<MusicManager>(commandEnvironment),
 	AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Pair<Track?, Int>> {
 

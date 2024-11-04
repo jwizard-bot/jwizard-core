@@ -36,7 +36,7 @@ import pl.jwizard.jwl.util.logger
  */
 @JdaCommand(Command.RESUME)
 class ResumeTrackCmd(
-	commandEnvironment: CommandEnvironmentBean
+	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment), AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, MusicManager> {
 
 	companion object {

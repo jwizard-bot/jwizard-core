@@ -15,6 +15,7 @@ import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.interaction.component.RefreshableComponent
 import pl.jwizard.jwc.command.interaction.component.RefreshableContent
 import pl.jwizard.jwc.command.reflect.JdaCommand
+import pl.jwizard.jwc.core.config.spi.VcsDeploymentSupplier
 import pl.jwizard.jwc.core.i18n.source.I18nSystemSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
@@ -23,21 +24,27 @@ import pl.jwizard.jwc.core.jda.embed.PercentageIndicatorBar
 import pl.jwizard.jwc.core.jvm.SystemProperty
 import pl.jwizard.jwc.core.util.ext.versionFormat
 import pl.jwizard.jwc.core.util.mdBold
+import pl.jwizard.jwc.core.util.mdLink
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
-import pl.jwizard.jwl.property.AppBaseProperty
+import pl.jwizard.jwl.vcs.VcsConfigBean
+import pl.jwizard.jwl.vcs.VcsRepository
 import java.util.*
 
 /**
  * Command class responsible for displaying debug information about the bot, system, and Lavalink client status. This
  * command provides details such as memory usage, build version, and Lavalink nodes information.
  *
+ * @property deploymentSupplier Provides deployment details from version control, including version and commit info.
+ * @property vcsConfigBean Handles version control configuration and builds URLs for specific VCS snapshots.
  * @param commandEnvironment The environment context for command execution.
  * @author Miłosz Gilga
  */
 @JdaCommand(Command.DEBUG)
 class DebugCmd(
-	commandEnvironment: CommandEnvironmentBean
+	private val deploymentSupplier: VcsDeploymentSupplier,
+	private val vcsConfigBean: VcsConfigBean,
+	commandEnvironment: CommandEnvironmentBean,
 ) : ManagerCommandBase(commandEnvironment), RefreshableContent<CommandContext> {
 
 	/**
@@ -90,8 +97,9 @@ class DebugCmd(
 	 * @return The generated embed message with debug information.
 	 */
 	private fun createDebugMessage(context: CommandContext): MessageEmbed {
-		val buildVersion = environmentBean.getProperty<String>(AppBaseProperty.DEPLOYMENT_BUILD_VERSION)
-		val buildDate = environmentBean.getProperty<String>(AppBaseProperty.DEPLOYMENT_LAST_BUILD_DATE)
+		val repository = VcsRepository.JWIZARD_CORE
+		val deploymentDetails = deploymentSupplier.getDeploymentDetails(vcsConfigBean.getRepositoryName(repository))
+		val (name, url) = vcsConfigBean.createSnapshotUrl(repository, deploymentDetails?.longSHA)
 
 		val runtime = Runtime.getRuntime()
 		val totalMemory = runtime.maxMemory()
@@ -100,9 +108,9 @@ class DebugCmd(
 
 		val messageBuilder = createEmbedMessage(context)
 			.setTitle(I18nSystemSource.DEBUG_INFO_HEADER)
-			.setKeyValueField(I18nSystemSource.COMPILATION_VERSION, buildVersion)
+			.setKeyValueField(I18nSystemSource.COMPILATION_VERSION, if (url != null) mdLink(name, url) else name)
 			.setSpace()
-			.setKeyValueField(I18nSystemSource.DEPLOYMENT_DATE, buildDate)
+			.setKeyValueField(I18nSystemSource.DEPLOYMENT_DATE, deploymentDetails?.lastUpdatedUtc.toString())
 
 		for ((index, entry) in SystemProperty.entries.withIndex()) {
 			messageBuilder.setKeyValueField(entry.i18nSystemSource, environmentBean.getProperty(entry.botProperty))

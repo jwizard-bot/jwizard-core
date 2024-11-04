@@ -27,7 +27,7 @@ import pl.jwizard.jwl.command.Command
  */
 @JdaCommand(Command.PLAYING)
 class CurrentPlayingCmd(
-	commandEnvironment: CommandEnvironmentBean
+	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment), RefreshableContent<Pair<CommandContext, MusicManager>> {
 
 	override val shouldPlayingMode = true

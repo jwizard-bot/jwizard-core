@@ -37,7 +37,7 @@ import pl.jwizard.jwl.util.logger
  */
 @JdaCommand(Command.VSKIPTO)
 class VoteSkipQueueToTrackCmd(
-	commandEnvironment: CommandEnvironmentBean
+	commandEnvironment: CommandEnvironmentBean,
 ) : MusicVoteCommandBase<Pair<MusicManager, Int>>(commandEnvironment),
 	AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Pair<Track, Int>> {
 
