@@ -26,7 +26,7 @@ fun formatQualifier(name: String, id: Long) = "\"%s <@%s>\"".format(name, id)
  * @return A string representing a Markdown link in the format "[name](link)".
  * @author Miłosz Gilga
  */
-fun mdLink(name: String, link: String?) = "[$name]($link)"
+fun mdLink(name: Any, link: String?) = "[$name]($link)"
 
 /**
  * Formats the given text as bold Markdown.

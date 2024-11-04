@@ -5,4 +5,4 @@ lavalink:
 
 service:
   api-url: http://localhost:8765
-  front-url: http://localhost:8766
+  front-url: http://localhost:8764
