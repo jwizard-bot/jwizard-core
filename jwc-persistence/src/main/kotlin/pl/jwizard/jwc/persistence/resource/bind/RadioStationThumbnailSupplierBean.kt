@@ -32,6 +32,6 @@ class RadioStationThumbnailSupplierBean(
 	 */
 	override fun getThumbnailUrl(slug: String): String {
 		val resourceKey = ResourceObject.RADIO_STATION.resourcePath.format(slug.fromCamelToDashCase)
-		return "${httpResourceRetrieverBean.s3PublicApiUrl}/$resourceKey"
+		return "${httpResourceRetrieverBean.staticResourcesUrl}/$resourceKey"
 	}
 }

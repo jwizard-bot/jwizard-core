@@ -11,7 +11,6 @@ dokkaVersion = "1.9.20"
 jacksonVersion = "2.18.0"
 jdaVersion = "5.1.0"
 jeeAnnotationApiVersion = "3.0.0"
-awsS3sdkVersion = "2.27.21"
 collectionUtilsVersion = "4.5.0-M2"
 lavalinkClientVersion = "3.1.0"
 commonsCodecVersion = "1.17.1"
@@ -27,7 +26,6 @@ kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinV
 kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlinVersion" }
 springContext = { module = "org.springframework:spring-context", version.ref = "springVersion" }
 springJdbc = { module = "org.springframework:spring-jdbc", version.ref = "springVersion" }
-springWeb = { module = "org.springframework:spring-web", version.ref = "springVersion" }
 mysqlConnector = { module = "com.mysql:mysql-connector-j", version.ref = "mysqlConnectorVersion" }
 hikariCp = { module = "com.zaxxer:HikariCP", version.ref = "hikariCpVersion" }
 logbackCore = { module = "ch.qos.logback:logback-core", version.ref = "logbackVersion" }
@@ -40,7 +38,6 @@ jacksonDataformatYaml = { module = "com.fasterxml.jackson.dataformat:jackson-dat
 jacksonAnnotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jacksonVersion" }
 jda = { module = "net.dv8tion:JDA", version.ref = "jdaVersion" }
 jeeAnnotationApi = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jeeAnnotationApiVersion" }
-awsS3sdk = { module = "software.amazon.awssdk:s3", version.ref = "awsS3sdkVersion" }
 collectionUtils = { module = "org.apache.commons:commons-collections4", version.ref = "collectionUtilsVersion" }
 lavalinkClient = { module = "dev.arbjerg:lavalink-client", version.ref = "lavalinkClientVersion" }
 commonsCodec = { module = "commons-codec:commons-codec", version.ref = "commonsCodecVersion" }

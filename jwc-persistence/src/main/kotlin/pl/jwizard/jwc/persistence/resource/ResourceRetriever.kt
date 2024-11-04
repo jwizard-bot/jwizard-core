@@ -15,16 +15,6 @@ import java.io.InputStream
 abstract class ResourceRetriever {
 
 	/**
-	 * Fetches a resource as a byte array.
-	 *
-	 * @param resourceObject Specifies which resource to retrieve.
-	 * @param args Additional arguments to format the resource path.
-	 * @return A byte array containing the resource, or `null` if the resource could not be retrieved.
-	 */
-	fun getObjectAsByteArray(resourceObject: ResourceObject, vararg args: String): ByteArray? =
-		getObject(resourceObject, *args).let { it.use { inputStream -> inputStream?.readBytes() } }
-
-	/**
 	 * Parses the resource path for the given [ResourceObject], replacing placeholders in the path with the provided
 	 * arguments.
 	 *

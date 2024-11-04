@@ -22,8 +22,8 @@ enum class ResourceObject(val resourcePath: String) {
 	 * Represents the path to a radio station's thumbnail image. The `%s` placeholder is replaced by the station's slug,
 	 * which typically matches the station's identifier in the system.
 	 *
-	 * Example path: `brand/radio-station/{station-slug}.jpg`
+	 * Example path: `radio-station/{station-slug}.jpg`
 	 */
-	RADIO_STATION("brand/radio-station/%s.jpg"),
+	RADIO_STATION("radio-station/%s.jpg"),
 	;
 }

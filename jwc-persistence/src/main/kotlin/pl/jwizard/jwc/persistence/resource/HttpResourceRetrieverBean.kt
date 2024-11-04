@@ -5,7 +5,6 @@
 package pl.jwizard.jwc.persistence.resource
 
 import org.springframework.stereotype.Component
-import org.springframework.web.client.RestTemplate
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwl.property.AppBaseProperty
 import pl.jwizard.jwl.util.logger
@@ -18,7 +17,7 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
 /**
- * Bean for retrieving resources via HTTP. Uses Spring's [RestTemplate] to fetch resources from an HTTP-based API.
+ * Bean for retrieving resources via HTTP. Uses Spring's [HttpClient] to fetch resources from an HTTP-based API.
  *
  * @property environmentBean Contains environment-specific properties such as API URLs.
  * @author Miłosz Gilga
@@ -32,9 +31,10 @@ class HttpResourceRetrieverBean(private val environmentBean: EnvironmentBean) : 
 	}
 
 	/**
-	 * The base URL for accessing the public S3 API, used to construct the complete URL for fetching public resources.
+	 * The base URL for accessing the static resources URL, used to construct the complete URL for fetching public
+	 * resources.
 	 */
-	final val s3PublicApiUrl = environmentBean.getProperty<String>(AppBaseProperty.S3_PUBLIC_API_URL)
+	final val staticResourcesUrl = environmentBean.getProperty<String>(AppBaseProperty.STATIC_RESOURCES_URL)
 
 	/**
 	 * The [HttpClient] used for making HTTP requests to retrieve resources.
@@ -42,7 +42,7 @@ class HttpResourceRetrieverBean(private val environmentBean: EnvironmentBean) : 
 	private val httpClient = HttpClient.newHttpClient()
 
 	init {
-		log.info("Init HTTP resource retriever with path: {}.", s3PublicApiUrl)
+		log.info("Init HTTP resource retriever with path: {}.", staticResourcesUrl)
 	}
 
 	/**
@@ -53,7 +53,7 @@ class HttpResourceRetrieverBean(private val environmentBean: EnvironmentBean) : 
 	 * @return An [InputStream] containing the resource, or `null` if it could not be retrieved.
 	 */
 	override fun getObject(resourceObject: ResourceObject, vararg args: String): InputStream? {
-		val resourceUrl = "$s3PublicApiUrl/${parseResourcePath(resourceObject, *args)}"
+		val resourceUrl = "$staticResourcesUrl/${parseResourcePath(resourceObject, *args)}"
 		return try {
 			val request = HttpRequest.newBuilder()
 				.uri(URI.create(resourceUrl))

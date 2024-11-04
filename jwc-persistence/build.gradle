@@ -4,11 +4,9 @@
  */
 dependencies {
 	implementation libs.springContext
-	implementation libs.springWeb
 	implementation libs.springJdbc
 	implementation libs.mysqlConnector
 	implementation libs.hikariCp
-	implementation libs.awsS3sdk
 
 	implementation project(":jwc-core")
 	implementation project(":jwc-audio")
