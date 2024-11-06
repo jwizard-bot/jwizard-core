@@ -1,4 +1,4 @@
-# JWizard API
+# JWizard Core
 
 ![](images/banner.png)
 
