@@ -24,7 +24,7 @@ import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwl.SpringKtContextFactory
+import pl.jwizard.jwl.IoCKtContextFactory
 import pl.jwizard.jwl.jvm.JvmDisposable
 import pl.jwizard.jwl.jvm.JvmDisposableHook
 import pl.jwizard.jwl.property.AppBaseListProperty
@@ -37,14 +37,14 @@ import pl.jwizard.jwl.util.logger
  * It sets up various configurations such as cache settings, gateway intents, activity status, and permissions.
  *
  * @property environmentBean Provides access to application properties, including the bot token.
- * @property applicationContext The Spring context factory used to load and retrieve components.
+ * @property ioCKtContextFactory Provides access to the IoC context for retrieving beans.
  * @property jdaColorStoreBean Provides access to JDA colors loader.
  * @author Miłosz Gilga
  */
 @Component
 final class JdaInstanceBean(
 	private val environmentBean: EnvironmentBean,
-	private val applicationContext: SpringKtContextFactory,
+	private val ioCKtContextFactory: IoCKtContextFactory,
 	private val jdaColorStoreBean: JdaColorStoreBean,
 ) : JdaInstance, JvmDisposable {
 
@@ -85,7 +85,7 @@ final class JdaInstanceBean(
 		val permissions = permissionFlags.map { Permission.valueOf(it) }
 		log.info("Load: {} JDA permissions.", permissions.size)
 
-		val eventListeners = applicationContext.getBeansAnnotatedWith<EventListener, JdaEventListenerBean>()
+		val eventListeners = ioCKtContextFactory.getBeansAnnotatedWith<EventListener, JdaEventListenerBean>()
 		log.info("Load: {} JDA event listeners: {}.", eventListeners.size, eventListeners.map { it.javaClass.simpleName })
 
 		val jdaToken = environmentBean.getProperty<String>(BotProperty.JDA_SECRET_TOKEN)

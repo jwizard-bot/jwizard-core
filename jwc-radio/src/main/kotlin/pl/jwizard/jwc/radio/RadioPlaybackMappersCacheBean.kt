@@ -6,7 +6,7 @@ package pl.jwizard.jwc.radio
 
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.radio.spi.RadioPlaybackMappersCache
-import pl.jwizard.jwl.SpringKtContextFactory
+import pl.jwizard.jwl.IoCKtContextFactory
 import pl.jwizard.jwl.util.logger
 import java.util.concurrent.ConcurrentHashMap
 
@@ -14,12 +14,12 @@ import java.util.concurrent.ConcurrentHashMap
  * This class implements the caching mechanism for radio playback mapper components. It loads and stores components
  * annotated with [RadioPlaybackMapper] and provides a way to retrieve them by class name from the cache.
  *
- * @property applicationContext The Spring context factory used to load and retrieve components.
+ * @property ioCKtContextFactory Provides access to the IoC context for retrieving beans.
  * @author Miłosz Gilga
  */
 @Component
 class RadioPlaybackMappersCacheBean(
-	private val applicationContext: SpringKtContextFactory,
+	private val ioCKtContextFactory: IoCKtContextFactory,
 ) : RadioPlaybackMappersCache {
 
 	companion object {
@@ -36,7 +36,7 @@ class RadioPlaybackMappersCacheBean(
 	 * their simple class names as keys.
 	 */
 	override fun loadRadioPlaybackClasses() {
-		val components = applicationContext.getBeansAnnotatedWith<RadioPlaybackMapperHandler, RadioPlaybackMapper>()
+		val components = ioCKtContextFactory.getBeansAnnotatedWith<RadioPlaybackMapperHandler, RadioPlaybackMapper>()
 		components.forEach { playbackComponents[it.javaClass.simpleName] = it }
 		log.info("Load: {} radio playback components from Spring Context.", components.size)
 	}

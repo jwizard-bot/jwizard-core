@@ -11,22 +11,21 @@ import pl.jwizard.jwc.command.CommandBase
 import pl.jwizard.jwc.command.CommandsCacheBean
 import pl.jwizard.jwc.core.jda.spi.CommandsLoader
 import pl.jwizard.jwl.AppRunner
-import pl.jwizard.jwl.SpringKtContextFactory
+import pl.jwizard.jwl.IoCKtContextFactory
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
 /**
  * The CommandsLoaderBean class is responsible for loading command classes annotated with [JdaCommand] using reflection.
  * It scans the classpath for these command classes and registers them into the command cache for later use.
-
  *
- * @property springKtContextFactory The context factory for retrieving Spring beans.
+ * @property ioCKtContextFactory Provides access to the IoC context for retrieving beans.
  * @property commandsCacheBean The cache for commands.
  * @author Miłosz Gilga
  */
 @Component
 class CommandsLoaderBean(
-	private val springKtContextFactory: SpringKtContextFactory,
+	private val ioCKtContextFactory: IoCKtContextFactory,
 	private val commandsCacheBean: CommandsCacheBean,
 ) : CommandsLoader {
 
@@ -59,7 +58,7 @@ class CommandsLoaderBean(
 				clazz.getAnnotation(JdaCommand::class.java) to clazz
 			}
 			.forEach { (command, clazz) ->
-				commandsCacheBean.addInstance(command.value, springKtContextFactory.getBean(clazz) as CommandBase)
+				commandsCacheBean.addInstance(command.value, ioCKtContextFactory.getBean(clazz) as CommandBase)
 			}
 		val loadedCommands = commandsCacheBean.instancesContainer.keys.filterNotNull()
 		val allCommands = Command.entries.size

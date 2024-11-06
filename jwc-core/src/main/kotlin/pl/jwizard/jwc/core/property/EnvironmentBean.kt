@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
 import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.core.property.spi.RemotePropertySupplier
-import pl.jwizard.jwl.SpringKtContextFactory
+import pl.jwizard.jwl.IoCKtContextFactory
 import pl.jwizard.jwl.property.AppBaseProperty
 import pl.jwizard.jwl.property.BaseEnvironment
 import pl.jwizard.jwl.property.PropertyNotFoundException
@@ -21,13 +21,13 @@ import kotlin.reflect.KClass
  * Provides methods to retrieve properties in a nullable and non-nullable format, as well as multiple properties at once,
  * with fallback to default values if necessary.
  *
- * @property springKtContextFactory Provides access to the Spring context for retrieving beans.
+ * @property ioCKtContextFactory Provides access to the IoC context for retrieving beans.
  * @author Miłosz Gilga
  */
 @Component
 class EnvironmentBean(
-	private val springKtContextFactory: SpringKtContextFactory,
-) : BaseEnvironment(springKtContextFactory) {
+	private val ioCKtContextFactory: IoCKtContextFactory,
+) : BaseEnvironment(ioCKtContextFactory) {
 
 	/**
 	 * Retrieves a nullable property of type [T] for a specific guild from a property source.
@@ -121,5 +121,5 @@ class EnvironmentBean(
 	 * This bean is used to access remote properties from the database or other external sources.
 	 */
 	val remotePropertySupplier: RemotePropertySupplier
-		get() = springKtContextFactory.getBean(RemotePropertySupplier::class)
+		get() = ioCKtContextFactory.getBean(RemotePropertySupplier::class)
 }
