@@ -1,3 +1,5 @@
+# JWizard API
+
 ![](images/banner.png)
 
 JWizard is an open-source Discord music bot handling audio content from various multimedia sources with innovative web
