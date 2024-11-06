@@ -97,7 +97,7 @@ jobs:
       - name: Grand permissions to run packages grabber
         run: chmod +x exec/run-with-config
 
-      - name: Run packages grabber
+      - name: Run cache version
         run: exec/run-with-config cache_version \
           "${{ secrets.CONFIG_FILE_CONTENT }}" \
           --repo ${{ github.repository }}
