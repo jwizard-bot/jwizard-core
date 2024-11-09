@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.CommandData
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.interactions.commands.build.OptionData
-import org.springframework.stereotype.Component
 import pl.jwizard.jwc.command.CommandsCacheBean
 import pl.jwizard.jwc.core.i18n.source.I18nUtilSource
 import pl.jwizard.jwc.core.jda.spi.SlashCommandRegisterer
@@ -19,10 +18,11 @@ import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.i18n.I18nBean
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.util.logger
 
 /**
- * A Spring component responsible for registering slash commands in Discord guilds. It implements the
+ * An IoC component responsible for registering slash commands in Discord guilds. It implements the
  * [SlashCommandRegisterer] interface and interacts with the JDA API to create and update slash commands based on the
  * application's command configuration.
  *
@@ -31,7 +31,7 @@ import pl.jwizard.jwl.util.logger
  * @property commandsCacheBean Stores command instances and their details for reflection-based registration.
  * @author Miłosz Gilga
  */
-@Component
+@SingletonComponent
 class SlashCommandRegistererBean(
 	private val i18nBean: I18nBean,
 	private val environmentBean: EnvironmentBean,

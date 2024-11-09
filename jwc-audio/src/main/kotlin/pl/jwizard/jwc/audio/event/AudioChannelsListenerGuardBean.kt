@@ -6,7 +6,6 @@ package pl.jwizard.jwc.audio.event
 
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
-import org.springframework.stereotype.Component
 import pl.jwizard.jwc.audio.manager.MusicManagersBean
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -17,6 +16,7 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.jdaInfo
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.util.logger
 import java.time.Instant
 
@@ -32,7 +32,7 @@ import java.time.Instant
  * @see ChannelListenerGuard
  * @see JvmFixedThreadExecutor
  */
-@Component
+@SingletonComponent
 class AudioChannelsListenerGuardBean(
 	private val jdaInstance: JdaInstance,
 	private val environmentBean: EnvironmentBean,

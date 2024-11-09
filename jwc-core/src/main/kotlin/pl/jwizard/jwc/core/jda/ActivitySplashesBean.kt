@@ -4,12 +4,12 @@
  */
 package pl.jwizard.jwc.core.jda
 
-import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.jvm.thread.JvmFixedThreadExecutor
 import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.util.logger
 
 /**
@@ -21,7 +21,7 @@ import pl.jwizard.jwl.util.logger
  * @author Miłosz Gilga
  * @see JvmFixedThreadExecutor
  */
-@Component
+@SingletonComponent
 class ActivitySplashesBean(
 	private val environmentBean: EnvironmentBean,
 	private val jdaInstanceBean: JdaInstance,

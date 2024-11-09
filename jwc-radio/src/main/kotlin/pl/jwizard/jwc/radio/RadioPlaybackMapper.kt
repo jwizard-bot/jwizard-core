@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.radio
 
-import org.springframework.stereotype.Component
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 
 /**
  * Annotation used to mark classes that handle radio playback mapping. These classes implement custom logic for parsing
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component
  * @see RadioPlaybackMapperHandler
  * @see RadioPlaybackResponse
  */
-@Component
+@SingletonComponent
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class RadioPlaybackMapper

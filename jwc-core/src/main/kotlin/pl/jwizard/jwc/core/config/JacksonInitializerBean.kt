@@ -6,16 +6,16 @@ package pl.jwizard.jwc.core.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
-import org.springframework.context.annotation.Bean
-import org.springframework.stereotype.Component
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
+import pl.jwizard.jwl.ioc.stereotype.SingletonObject
 
 /**
- * A Spring component that initializes the Jackson ObjectMapper. This class provides a configured instance of
+ * An IoC component that initializes the Jackson ObjectMapper. This class provides a configured instance of
  * [ObjectMapper] with specific serialization settings.
  *
  * @author Miłosz Gilga
  */
-@Component
+@SingletonComponent
 class JacksonInitializerBean {
 
 	/**
@@ -24,7 +24,7 @@ class JacksonInitializerBean {
 	 *
 	 * @return A configured instance of [ObjectMapper].
 	 */
-	@Bean
+	@SingletonObject
 	fun objectMapper(): ObjectMapper {
 		val objectMapper = ObjectMapper()
 		objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)

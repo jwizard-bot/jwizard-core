@@ -4,18 +4,18 @@
  */
 package pl.jwizard.jwc.command
 
-import org.springframework.stereotype.Component
 import pl.jwizard.jwl.command.Command
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.util.logger
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * A Spring component that manages a cache of command instances. This class provides functionality to store and
+ * An IoC component that manages a cache of command instances. This class provides functionality to store and
  * retrieve command instances in a thread-safe manner.
  *
  * @author Miłosz Gilga
  */
-@Component
+@SingletonComponent
 class CommandsCacheBean {
 
 	companion object {

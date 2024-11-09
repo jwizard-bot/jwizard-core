@@ -4,19 +4,19 @@
  */
 package pl.jwizard.jwc.persistence.sql
 
-import org.springframework.stereotype.Component
 import pl.jwizard.jwc.command.spi.ModuleDataSupplier
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.persistence.sql.JdbcKtTemplateBean
 import java.math.BigInteger
 
 /**
- * A Spring component that implements the [ModuleDataSupplier] interface. This bean provides functionality for
+ * An IoC component that implements the [ModuleDataSupplier] interface. This bean provides functionality for
  * retrieving module-related data from a SQL-based persistence layer using the [JdbcKtTemplateBean].
  *
  * @property jdbcKtTemplateBean A custom template for executing SQL queries and retrieving results.
  * @author Miłosz Gilga
  */
-@Component
+@SingletonComponent
 class ModuleDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean) : ModuleDataSupplier {
 
 	/**

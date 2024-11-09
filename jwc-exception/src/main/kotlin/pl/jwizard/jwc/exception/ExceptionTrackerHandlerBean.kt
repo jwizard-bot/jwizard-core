@@ -7,7 +7,6 @@ package pl.jwizard.jwc.exception
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.buttons.Button
-import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.config.spi.VcsDeploymentSupplier
 import pl.jwizard.jwc.core.exception.CommandPipelineException
 import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerHandler
@@ -23,6 +22,7 @@ import pl.jwizard.jwc.core.util.mdLink
 import pl.jwizard.jwl.i18n.I18nBean
 import pl.jwizard.jwl.i18n.I18nLocaleSource
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.vcs.VcsConfigBean
 import pl.jwizard.jwl.vcs.VcsRepository
 import java.util.*
@@ -41,7 +41,7 @@ import java.util.*
  * @property vcsConfigBean Creates URLs for specific snapshots in the version control system.
  * @author Miłosz Gilga
  */
-@Component
+@SingletonComponent
 class ExceptionTrackerHandlerBean(
 	private val environmentBean: EnvironmentBean,
 	private val i18nBean: I18nBean,

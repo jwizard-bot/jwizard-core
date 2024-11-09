@@ -12,7 +12,7 @@ import pl.jwizard.jwc.core.jda.spi.CommandsLoader
 import pl.jwizard.jwc.core.radio.spi.RadioPlaybackMappersCache
 import pl.jwizard.jwl.AppContextInitiator
 import pl.jwizard.jwl.AppRunner
-import pl.jwizard.jwl.IoCKtContextFactory
+import pl.jwizard.jwl.ioc.IoCKtContextFactory
 import pl.jwizard.jwl.server.HttpServer
 import pl.jwizard.jwl.server.HttpServerHook
 

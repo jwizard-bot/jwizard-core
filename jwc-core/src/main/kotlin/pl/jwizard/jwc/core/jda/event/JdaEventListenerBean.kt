@@ -4,12 +4,12 @@
  */
 package pl.jwizard.jwc.core.jda.event
 
-import org.springframework.stereotype.Component
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 
 /**
- * Custom annotation used to mark Spring beans as JDA (Java Discord API) event listeners. This annotation is a
- * specialization of the [Component] annotation, allowing automatic detection and registration of beans in the
- * Spring context. It is applied at the class level.
+ * Custom annotation used to mark IoC beans as JDA (Java Discord API) event listeners. This annotation is a
+ * specialization of the [SingletonComponent] annotation, allowing automatic detection and registration of beans in the
+ * IoC context. It is applied at the class level.
  *
  * Usage example:
  *
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component
  *
  * @author Miłosz Gilga
  */
-@Component
+@SingletonComponent
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class JdaEventListenerBean

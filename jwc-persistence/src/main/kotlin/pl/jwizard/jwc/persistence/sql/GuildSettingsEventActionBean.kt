@@ -4,10 +4,10 @@
  */
 package pl.jwizard.jwc.persistence.sql
 
-import org.springframework.stereotype.Component
 import org.springframework.transaction.support.TransactionTemplate
 import pl.jwizard.jwc.core.jda.spi.GuildSettingsEventAction
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.persistence.sql.JdbcKtTemplateBean
 import pl.jwizard.jwl.persistence.sql.SqlColumn
 import pl.jwizard.jwl.property.AppBaseListProperty
@@ -22,7 +22,7 @@ import java.sql.JDBCType
  * @property environmentBean Bean for fetching environment properties.
  * @author Miłosz Gilga
  */
-@Component
+@SingletonComponent
 class GuildSettingsEventActionBean(
 	private val jdbcKtTemplateBean: JdbcKtTemplateBean,
 	private val translationTemplate: TransactionTemplate,

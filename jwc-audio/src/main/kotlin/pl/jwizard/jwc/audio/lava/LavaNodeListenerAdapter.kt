@@ -5,11 +5,11 @@
 package pl.jwizard.jwc.audio.lava
 
 import dev.arbjerg.lavalink.client.event.*
-import org.springframework.stereotype.Component
 import pl.jwizard.jwc.audio.lava.LavalinkClientBean.Companion.WS_SESSION_INVALID
 import pl.jwizard.jwc.audio.manager.MusicManagersBean
 import pl.jwizard.jwc.audio.scheduler.AudioScheduleHandler
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 
 /**
  * Adapter class that listens to Lavalink node events and delegates audio management tasks to the appropriate music
@@ -20,7 +20,7 @@ import pl.jwizard.jwc.core.jda.spi.JdaInstance
  * @property jdaInstance Provides access to the JDA instance for guild and voice channel management.
  * @author Miłosz Gilga
  */
-@Component
+@SingletonComponent
 class LavaNodeListenerAdapter(
 	private val musicManagersBean: MusicManagersBean,
 	private val jdaInstance: JdaInstance,

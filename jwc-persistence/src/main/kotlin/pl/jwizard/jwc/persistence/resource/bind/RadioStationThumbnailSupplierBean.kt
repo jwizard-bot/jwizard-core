@@ -4,21 +4,21 @@
  */
 package pl.jwizard.jwc.persistence.resource.bind
 
-import org.springframework.stereotype.Component
 import pl.jwizard.jwc.audio.spi.RadioStationThumbnailSupplier
 import pl.jwizard.jwc.core.util.ext.fromCamelToDashCase
 import pl.jwizard.jwc.persistence.resource.HttpResourceRetrieverBean
 import pl.jwizard.jwc.persistence.resource.ResourceObject
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 
 /**
- * A Spring component that supplies the thumbnail URL for a radio station. It implements the
+ * An IoC component that supplies the thumbnail URL for a radio station. It implements the
  * [RadioStationThumbnailSupplier] interface, converting a given slug (station identifier) into the appropriate URL
  * format.
  *
  * @property httpResourceRetrieverBean Injected bean responsible for retrieving resources via HTTP.
  * @author Miłosz Gilga
  */
-@Component
+@SingletonComponent
 class RadioStationThumbnailSupplierBean(
 	private val httpResourceRetrieverBean: HttpResourceRetrieverBean
 ) : RadioStationThumbnailSupplier {

@@ -16,7 +16,6 @@ import net.dv8tion.jda.api.hooks.EventListener
 import net.dv8tion.jda.api.managers.DirectAudioController
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.utils.cache.CacheFlag
-import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
@@ -24,7 +23,8 @@ import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwl.IoCKtContextFactory
+import pl.jwizard.jwl.ioc.IoCKtContextFactory
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.jvm.JvmDisposable
 import pl.jwizard.jwl.jvm.JvmDisposableHook
 import pl.jwizard.jwl.property.AppBaseListProperty
@@ -41,7 +41,7 @@ import pl.jwizard.jwl.util.logger
  * @property jdaColorStoreBean Provides access to JDA colors loader.
  * @author Miłosz Gilga
  */
-@Component
+@SingletonComponent
 final class JdaInstanceBean(
 	private val environmentBean: EnvironmentBean,
 	private val ioCKtContextFactory: IoCKtContextFactory,

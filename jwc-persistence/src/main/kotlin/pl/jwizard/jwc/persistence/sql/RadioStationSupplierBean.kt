@@ -4,9 +4,9 @@
  */
 package pl.jwizard.jwc.persistence.sql
 
-import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.radio.RadioStationDetails
 import pl.jwizard.jwc.radio.spi.RadioStationSupplier
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.persistence.sql.ColumnDef
 import pl.jwizard.jwl.persistence.sql.JdbcKtTemplateBean
 import java.math.BigInteger
@@ -20,7 +20,7 @@ import java.math.BigInteger
  * @property jdbcKtTemplateBean The [JdbcKtTemplateBean] used for database interactions.
  * @author Miłosz Gilga
  */
-@Component
+@SingletonComponent
 class RadioStationSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean) : RadioStationSupplier {
 
 	/**

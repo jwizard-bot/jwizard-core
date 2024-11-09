@@ -4,11 +4,11 @@
  */
 package pl.jwizard.jwc.core.property
 
-import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
 import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.core.property.spi.RemotePropertySupplier
-import pl.jwizard.jwl.IoCKtContextFactory
+import pl.jwizard.jwl.ioc.IoCKtContextFactory
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.property.AppBaseProperty
 import pl.jwizard.jwl.property.BaseEnvironment
 import pl.jwizard.jwl.property.PropertyNotFoundException
@@ -24,7 +24,7 @@ import kotlin.reflect.KClass
  * @property ioCKtContextFactory Provides access to the IoC context for retrieving beans.
  * @author Miłosz Gilga
  */
-@Component
+@SingletonComponent
 class EnvironmentBean(
 	private val ioCKtContextFactory: IoCKtContextFactory,
 ) : BaseEnvironment(ioCKtContextFactory) {
@@ -116,7 +116,7 @@ class EnvironmentBean(
 		getGuildNullableProperty<T>(guildProperty, guildId, allowNullable = false) as T
 
 	/**
-	 * Retrieves the [RemotePropertySupplier] bean from the Spring context.
+	 * Retrieves the [RemotePropertySupplier] bean from the IoC context.
 	 *
 	 * This bean is used to access remote properties from the database or other external sources.
 	 */

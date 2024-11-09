@@ -5,10 +5,10 @@
 package pl.jwizard.jwc.radio
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwl.i18n.I18nBean
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 
 /**
  * Represents the environment for radio playback mappers, providing necessary dependencies
@@ -21,7 +21,7 @@ import pl.jwizard.jwl.i18n.I18nBean
  * @property environmentBean Provides access to application environment properties.
  * @author Miłosz Gilga
  */
-@Component
+@SingletonComponent
 class RadioPlaybackMapperEnvironment(
 	val i18nBean: I18nBean,
 	val jdaColorStoreBean: JdaColorStoreBean,

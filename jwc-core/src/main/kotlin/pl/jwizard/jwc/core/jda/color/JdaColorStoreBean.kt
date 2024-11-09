@@ -4,8 +4,8 @@
  */
 package pl.jwizard.jwc.core.jda.color
 
-import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.util.logger
 import java.awt.Color
 
@@ -15,7 +15,7 @@ import java.awt.Color
  * @property environmentBean Provides access to application environment properties.
  * @author Miłosz Gilga
  */
-@Component
+@SingletonComponent
 class JdaColorStoreBean(private val environmentBean: EnvironmentBean) {
 
 	companion object {

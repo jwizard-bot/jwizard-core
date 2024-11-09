@@ -4,8 +4,8 @@
  */
 package pl.jwizard.jwc.persistence.resource
 
-import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.property.AppBaseProperty
 import pl.jwizard.jwl.util.logger
 import java.io.ByteArrayInputStream
@@ -17,13 +17,13 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
 /**
- * Bean for retrieving resources via HTTP. Uses Spring's [HttpClient] to fetch resources from an HTTP-based API.
+ * Bean for retrieving resources via HTTP. Uses [HttpClient] to fetch resources from an HTTP-based API.
  *
  * @property environmentBean Contains environment-specific properties such as API URLs.
  * @author Miłosz Gilga
  * @see ResourceRetriever
  */
-@Component
+@SingletonComponent
 class HttpResourceRetrieverBean(private val environmentBean: EnvironmentBean) : ResourceRetriever() {
 
 	companion object {

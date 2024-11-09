@@ -4,8 +4,8 @@
  */
 package pl.jwizard.jwc.persistence.sql
 
-import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.property.spi.RemotePropertySupplier
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.persistence.sql.JdbcKtTemplateBean
 import kotlin.reflect.KClass
 
@@ -18,7 +18,7 @@ import kotlin.reflect.KClass
  * @property jdbcKtTemplateBean The bean responsible for JDBC operations.
  * @author Miłosz Gilga
  */
-@Component
+@SingletonComponent
 class RemotePropertySupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean) : RemotePropertySupplier {
 
 	/**

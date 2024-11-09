@@ -4,9 +4,9 @@
  */
 package pl.jwizard.jwc.persistence.sql
 
-import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.config.DeploymentDetails
 import pl.jwizard.jwc.core.config.spi.VcsDeploymentSupplier
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.persistence.sql.JdbcKtTemplateBean
 
 /**
@@ -16,7 +16,7 @@ import pl.jwizard.jwl.persistence.sql.JdbcKtTemplateBean
  * @property jdbcKtTemplateBean A custom template for executing SQL queries and retrieving results.
  * @author Miłosz Gilga
  */
-@Component
+@SingletonComponent
 class VcsDeploymentSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean) : VcsDeploymentSupplier {
 
 	/**

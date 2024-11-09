@@ -4,7 +4,6 @@
  */
 package pl.jwizard.jwc.command.handler
 
-import org.springframework.stereotype.Component
 import pl.jwizard.jwc.command.CommandsCacheBean
 import pl.jwizard.jwc.command.spi.CommandDataSupplier
 import pl.jwizard.jwc.command.spi.ModuleDataSupplier
@@ -13,6 +12,7 @@ import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerHandler
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwl.i18n.I18nBean
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 
 /**
  * Stored all beans for command event handler.
@@ -28,7 +28,7 @@ import pl.jwizard.jwl.i18n.I18nBean
  * @author Miłosz Gilga
  * @see CommandEventHandler
  */
-@Component
+@SingletonComponent
 class CommandEventHandlerEnvironmentBean(
 	val commandDataSupplier: CommandDataSupplier,
 	val moduleDataSupplier: ModuleDataSupplier,

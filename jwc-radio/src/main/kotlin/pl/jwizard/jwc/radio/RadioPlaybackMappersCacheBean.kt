@@ -4,9 +4,9 @@
  */
 package pl.jwizard.jwc.radio
 
-import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.radio.spi.RadioPlaybackMappersCache
-import pl.jwizard.jwl.IoCKtContextFactory
+import pl.jwizard.jwl.ioc.IoCKtContextFactory
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.util.logger
 import java.util.concurrent.ConcurrentHashMap
 
@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap
  * @property ioCKtContextFactory Provides access to the IoC context for retrieving beans.
  * @author Miłosz Gilga
  */
-@Component
+@SingletonComponent
 class RadioPlaybackMappersCacheBean(
 	private val ioCKtContextFactory: IoCKtContextFactory,
 ) : RadioPlaybackMappersCache {
@@ -32,13 +32,13 @@ class RadioPlaybackMappersCacheBean(
 	private val playbackComponents = ConcurrentHashMap<String, RadioPlaybackMapperHandler>()
 
 	/**
-	 * Loads all beans annotated with [RadioPlaybackMapper] from the Spring application context and caches them using
+	 * Loads all beans annotated with [RadioPlaybackMapper] from the IoC application context and caches them using
 	 * their simple class names as keys.
 	 */
 	override fun loadRadioPlaybackClasses() {
 		val components = ioCKtContextFactory.getBeansAnnotatedWith<RadioPlaybackMapperHandler, RadioPlaybackMapper>()
 		components.forEach { playbackComponents[it.javaClass.simpleName] = it }
-		log.info("Load: {} radio playback components from Spring Context.", components.size)
+		log.info("Load: {} radio playback components from IoC context.", components.size)
 	}
 
 	/**

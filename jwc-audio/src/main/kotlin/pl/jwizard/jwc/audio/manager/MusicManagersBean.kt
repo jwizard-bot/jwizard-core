@@ -4,7 +4,6 @@
  */
 package pl.jwizard.jwc.audio.manager
 
-import org.springframework.stereotype.Component
 import pl.jwizard.jwc.audio.spi.RadioStationThumbnailSupplier
 import pl.jwizard.jwc.command.transport.LooselyTransportHandlerBean
 import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
@@ -18,6 +17,7 @@ import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwl.i18n.I18nBean
+import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 
 /**
  * Class responsible for managing music-related functionalities for different guilds. It provides methods for caching
@@ -33,7 +33,7 @@ import pl.jwizard.jwl.i18n.I18nBean
  * @property radioStationThumbnailSupplier Supplies thumbnails for radio stations.
  * @author Miłosz Gilga
  */
-@Component
+@SingletonComponent
 class MusicManagersBean(
 	val exceptionTrackerHandler: ExceptionTrackerHandler,
 	val i18nBean: I18nBean,
