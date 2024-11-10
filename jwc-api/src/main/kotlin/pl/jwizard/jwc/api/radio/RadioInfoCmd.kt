@@ -14,9 +14,10 @@ import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
+import pl.jwizard.jwc.core.radio.spi.RadioPlaybackMappersCache
 import pl.jwizard.jwc.exception.radio.RadioStationNotProvidedPlaybackDataException
-import pl.jwizard.jwc.radio.spi.RadioStationSupplier
 import pl.jwizard.jwl.command.Command
+import pl.jwizard.jwl.radio.RadioStation
 
 /**
  * Command to display information about the currently playing radio station.
@@ -24,13 +25,13 @@ import pl.jwizard.jwl.command.Command
  * This command fetches and displays the current radio station's information, such as its details and playback data.
  * If there is no valid radio station data, it throws an appropriate exception.
  *
- * @param radioStationSupplier Supplies instances related to radio station management.
+ * @param radioPlaybackMappersCache Cached radio playback mappers access.
  * @param commandEnvironment The environment context containing necessary information for executing the command.
  * @author Miłosz Gilga
  */
 @JdaCommand(Command.RADIOINFO)
 class RadioInfoCmd(
-	private val radioStationSupplier: RadioStationSupplier,
+	private val radioPlaybackMappersCache: RadioPlaybackMappersCache,
 	commandEnvironment: CommandEnvironmentBean,
 ) : RadioCommandBase(commandEnvironment), RefreshableContent<Pair<CommandContext, MusicManager>> {
 
@@ -50,9 +51,10 @@ class RadioInfoCmd(
 	override fun executeRadio(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
 		val slug = manager.state.radioStreamScheduler.radioSlug
 		val message = try {
-			val details = radioStationSupplier.getRadioStation(slug, context.guildDbId) ?: throw RuntimeException()
-			val mapper = radioPlaybackMappersCache.getCachedByClassName(details.parserClassName) ?: throw RuntimeException()
-			mapper.createPlaybackDataMessage(details, context)
+			val radioStation = RadioStation.entries.find { it.textKey == slug } ?: throw RuntimeException()
+			val mapper = radioPlaybackMappersCache
+				.getCachedByProvider(radioStation.streamProvider.playbackProvider) ?: throw RuntimeException()
+			mapper.createPlaybackDataMessage(radioStation, context)
 		} catch (ex: RuntimeException) {
 			throw RadioStationNotProvidedPlaybackDataException(context, slug)
 		}
@@ -85,9 +87,9 @@ class RadioInfoCmd(
 		val (context, manager) = payload
 		val slug = manager.state.radioStreamScheduler.radioSlug
 
-		val details = radioStationSupplier.getRadioStation(slug, context.guildDbId) ?: return
-		val mapper = radioPlaybackMappersCache.getCachedByClassName(details.parserClassName) ?: return
-		val message = mapper.createPlaybackDataMessage(details, context)
+		val radioStation = RadioStation.entries.find { it.textKey == slug } ?: return
+		val mapper = radioPlaybackMappersCache.getCachedByProvider(radioStation.streamProvider.playbackProvider) ?: return
+		val message = mapper.createPlaybackDataMessage(radioStation, context)
 
 		response.add(message)
 	}

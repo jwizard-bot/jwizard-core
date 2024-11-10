@@ -13,7 +13,6 @@ import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
 import pl.jwizard.jwc.core.jda.spi.GuildSettingsEventAction
 import pl.jwizard.jwc.core.jda.spi.JdaInstance
 import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwc.core.radio.spi.RadioPlaybackMappersCache
 import pl.jwizard.jwl.i18n.I18nBean
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 
@@ -28,7 +27,6 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
  * @property distributedAudioClientSupplier Supplies distributed audio client instance for audio streaming.
  * @property jdaInstance Provides access to the JDA instance for Discord interaction.
  * @property guildSettingsEventAction Handles guild settings change events.
- * @property radioPlaybackMappersCache Caches radio playback mappers for efficient access.
  * @property exceptionTrackerHandler The store used to track and log exceptions.
  * @property looselyTransportHandlerBean Handles loosely-typed transport operations between services.
  * @author Miłosz Gilga
@@ -43,7 +41,6 @@ class CommandEnvironmentBean(
 	val distributedAudioClientSupplier: DistributedAudioClientSupplier,
 	val jdaInstance: JdaInstance,
 	val guildSettingsEventAction: GuildSettingsEventAction,
-	val radioPlaybackMappersCache: RadioPlaybackMappersCache,
 	val exceptionTrackerHandler: ExceptionTrackerHandler,
 	val looselyTransportHandlerBean: LooselyTransportHandlerBean,
 )

@@ -4,7 +4,6 @@
  */
 package pl.jwizard.jwc.audio.manager
 
-import pl.jwizard.jwc.audio.RadioStationDetails
 import pl.jwizard.jwc.audio.scheduler.AudioScheduleHandler
 import pl.jwizard.jwc.audio.scheduler.QueueTrackScheduleHandler
 import pl.jwizard.jwc.audio.scheduler.RadioStreamScheduleHandler
@@ -14,6 +13,7 @@ import pl.jwizard.jwc.core.audio.spi.QueueTrackScheduler
 import pl.jwizard.jwc.core.audio.spi.RadioStreamScheduler
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
+import pl.jwizard.jwl.radio.RadioStation
 
 /**
  * Manages the state of audio playback in a guild, providing scheduling for queued tracks and radio streams. This class
@@ -72,11 +72,11 @@ class AudioStateManagerProvider(
 	 * Switches the audio state to a radio stream and updates the scheduler to handle radio streaming.
 	 *
 	 * @param context The context of the command requesting the switch.
-	 * @param details The details of the radio station to be streamed.
+	 * @param radioStation Current selected [RadioStation] property.
 	 */
-	fun setToStream(context: CommandBaseContext, details: RadioStationDetails) {
+	fun setToStream(context: CommandBaseContext, radioStation: RadioStation) {
 		updateState(AudioContentType.STREAM, context)
-		audioScheduleHandler = RadioStreamScheduleHandler(musicManager, details)
+		audioScheduleHandler = RadioStreamScheduleHandler(musicManager, radioStation)
 	}
 
 	/**

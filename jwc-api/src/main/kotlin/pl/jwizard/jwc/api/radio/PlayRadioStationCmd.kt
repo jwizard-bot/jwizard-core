@@ -11,23 +11,19 @@ import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.exception.radio.RadioStationNotExistsOrTurnedOffException
-import pl.jwizard.jwc.radio.spi.RadioStationSupplier
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
+import pl.jwizard.jwl.radio.RadioStation
 
 /**
  * Command that handles the process of playing a radio station in a voice channel. This command automatically joins
  * the bot to a voice channel and streams the selected radio station.
  *
- * @param radioStationSupplier Supplies instances related to radio station management.
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
 @JdaCommand(Command.PLAYRADIO)
-class PlayRadioStationCmd(
-	private val radioStationSupplier: RadioStationSupplier,
-	commandEnvironment: CommandEnvironmentBean,
-) : RadioCommandBase(commandEnvironment) {
+class PlayRadioStationCmd(commandEnvironment: CommandEnvironmentBean) : RadioCommandBase(commandEnvironment) {
 
 	override val shouldAutoJoinBotToChannel = true
 	override val shouldOnSameChannelWithBot = true
@@ -45,10 +41,10 @@ class PlayRadioStationCmd(
 	override fun executeRadio(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
 		val radioStationSlug = context.getArg<String>(Argument.RADIO_STATION)
 
-		val radioStation = radioStationSupplier.getRadioStation(radioStationSlug, context.guildDbId)
+		val radioStation = RadioStation.entries.find { it.textKey == radioStationSlug }
 			?: throw RadioStationNotExistsOrTurnedOffException(context, radioStationSlug)
 
 		joinAndOpenAudioConnection(context)
-		manager.loadAndStream(radioStation.name, radioStation.streamUrl, context)
+		manager.loadAndStream(radioStation, context)
 	}
 }

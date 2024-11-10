@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import org.apache.commons.validator.routines.UrlValidator
 import pl.jwizard.jwc.audio.AudioSender
-import pl.jwizard.jwc.audio.RadioStationDetails
 import pl.jwizard.jwc.audio.loader.QueueTrackLoader
 import pl.jwizard.jwc.audio.loader.RadioStreamLoader
 import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
@@ -21,6 +20,7 @@ import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.core.util.jdaInfo
+import pl.jwizard.jwl.radio.RadioStation
 import pl.jwizard.jwl.util.logger
 import java.util.concurrent.TimeUnit
 
@@ -108,15 +108,13 @@ class GuildMusicManager(
 	/**
 	 * Loads a radio stream and begins playing it in the guild.
 	 *
-	 * @param name The name of the radio station.
-	 * @param streamUrl The URL of the radio stream.
+	 * @param radioStation Current selected [RadioStation] property.
 	 * @param context The context of the command that initiated the stream.
 	 */
-	override fun loadAndStream(name: String, streamUrl: String, context: CommandBaseContext) {
-		val details = RadioStationDetails(name, streamUrl)
+	override fun loadAndStream(radioStation: RadioStation, context: CommandBaseContext) {
 		val nodeLink = getNodeLink(context.guild.idLong)
-		state.setToStream(context, details)
-		nodeLink.loadItem(streamUrl).subscribe(RadioStreamLoader(this, details))
+		state.setToStream(context, radioStation)
+		nodeLink.loadItem(radioStation.streamUrl).subscribe(RadioStreamLoader(this, radioStation))
 	}
 
 	/**

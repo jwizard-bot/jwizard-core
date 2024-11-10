@@ -22,8 +22,6 @@ import pl.jwizard.jwc.exception.radio.RadioStationIsPlayingException
  */
 abstract class RadioCommandBase(commandEnvironment: CommandEnvironmentBean) : AudioCommandBase(commandEnvironment) {
 
-	protected val radioPlaybackMappersCache = commandEnvironment.radioPlaybackMappersCache
-
 	/**
 	 * Executes the audio-related functionality of the radio command, including checking the user's voice state,
 	 * determining if a discrete audio stream is already playing, and verifying if a radio station is playing or idle.

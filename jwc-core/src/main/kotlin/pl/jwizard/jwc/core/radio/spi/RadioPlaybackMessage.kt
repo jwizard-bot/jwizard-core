@@ -6,7 +6,7 @@ package pl.jwizard.jwc.core.radio.spi
 
 import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
-import pl.jwizard.jwc.core.radio.RadioStationDetails
+import pl.jwizard.jwl.radio.RadioStation
 
 /**
  * Interface for creating playback data messages for radio stations.
@@ -22,9 +22,9 @@ interface RadioPlaybackMessage {
 	/**
 	 * Creates a playback data message based on the provided radio station details and command context.
 	 *
-	 * @param details The details of the radio station for which the playback message is created.
+	 * @param radioStation Current selected [RadioStation] property.
 	 * @param context The command context that provides additional information for message formatting.
 	 * @return A [MessageEmbed] containing the playback information for the specified radio station.
 	 */
-	fun createPlaybackDataMessage(details: RadioStationDetails, context: CommandBaseContext): MessageEmbed
+	fun createPlaybackDataMessage(radioStation: RadioStation, context: CommandBaseContext): MessageEmbed
 }

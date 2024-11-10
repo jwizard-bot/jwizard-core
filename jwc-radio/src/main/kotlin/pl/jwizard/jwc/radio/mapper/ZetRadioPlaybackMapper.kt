@@ -4,12 +4,13 @@
  */
 package pl.jwizard.jwc.radio.mapper
 
-import pl.jwizard.jwc.core.radio.RadioStationDetails
 import pl.jwizard.jwc.core.util.ext.getAsText
 import pl.jwizard.jwc.radio.RadioPlaybackMapper
 import pl.jwizard.jwc.radio.RadioPlaybackMapperEnvironment
 import pl.jwizard.jwc.radio.RadioPlaybackMapperHandler
 import pl.jwizard.jwc.radio.RadioPlaybackResponse
+import pl.jwizard.jwl.radio.PlaybackProvider
+import pl.jwizard.jwl.radio.RadioStation
 import java.time.Duration
 
 /**
@@ -19,7 +20,7 @@ import java.time.Duration
  * @property environment The environment providing the necessary beans for playback mapping.
  * @author Miłosz Gilga
  */
-@RadioPlaybackMapper
+@RadioPlaybackMapper(PlaybackProvider.ZET_GROUP)
 class ZetRadioPlaybackMapper(
 	private val environment: RadioPlaybackMapperEnvironment
 ) : RadioPlaybackMapperHandler(environment) {
@@ -31,10 +32,10 @@ class ZetRadioPlaybackMapper(
 	 * track and its duration. It returns a [RadioPlaybackResponse] object populated with the relevant data.
 	 *
 	 * @param responseRaw The raw response string from the Zet Radio API.
-	 * @param details The details of the radio station.
+	 * @param radioStation Current selected [RadioStation] property.
 	 * @return A [RadioPlaybackResponse] object containing the parsed playback data, or null if parsing fails.
 	 */
-	override fun parsePlaybackData(responseRaw: String, details: RadioStationDetails): RadioPlaybackResponse? {
+	override fun parsePlaybackData(responseRaw: String, radioStation: RadioStation): RadioPlaybackResponse? {
 		// remove "rdsData({" and "})"
 		val jsonString = responseRaw.substring(responseRaw.indexOf("(") + 1, responseRaw.lastIndexOf(")"))
 		val jsonObject = objectMapper.readTree(jsonString)

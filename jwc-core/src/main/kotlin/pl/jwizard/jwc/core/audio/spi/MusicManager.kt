@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
+import pl.jwizard.jwl.radio.RadioStation
 
 /**
  * Interface for managing music playback and related operations within the audio system.
@@ -63,11 +64,10 @@ interface MusicManager {
 	 *
 	 * This method handles the loading of a radio stream and begins playback in the audio player.
 	 *
-	 * @param name The name of the radio station or stream.
-	 * @param streamUrl The URL of the stream to be loaded and played.
+	 * @param radioStation Current selected [RadioStation] property.
 	 * @param context The command context providing information about the command execution.
 	 */
-	fun loadAndStream(name: String, streamUrl: String, context: CommandBaseContext)
+	fun loadAndStream(radioStation: RadioStation, context: CommandBaseContext)
 
 	/**
 	 * Creates a new embed builder for constructing message embeds.

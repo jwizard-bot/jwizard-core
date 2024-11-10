@@ -5,13 +5,14 @@
 package pl.jwizard.jwc.radio
 
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
+import pl.jwizard.jwl.radio.PlaybackProvider
 
 /**
  * Annotation used to mark classes that handle radio playback mapping. These classes implement custom logic for parsing
  * radio playback data and should extend the [RadioPlaybackMapperHandler] class.
  *
  * ```kotlin
- * @RadioPlaybackFetcher
+ * @RadioPlaybackMapper(PlaybackProvider.RMF_GROUP)
  * class CustomRadioPlaybackMapper : RadioPlaybackMapperHandler() {
  *   fun parsePlaybackData(responseRaw: String, details: RadioStationDetails): RadioPlaybackResponse {
  *     // parse raw string response to object
@@ -26,4 +27,6 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 @SingletonComponent
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class RadioPlaybackMapper
+annotation class RadioPlaybackMapper(
+	val value: PlaybackProvider
+)

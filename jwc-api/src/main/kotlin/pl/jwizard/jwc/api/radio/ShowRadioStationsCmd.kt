@@ -15,22 +15,17 @@ import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.util.mdLink
-import pl.jwizard.jwc.radio.spi.RadioStationSupplier
 import pl.jwizard.jwl.command.Command
-import pl.jwizard.jwl.i18n.source.I18nDynamicMod
+import pl.jwizard.jwl.radio.RadioStation
 
 /**
  * Command that displays available radio stations for the guild.
  *
- * @param radioStationSupplier Supplies instances related to radio station management.
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
 @JdaCommand(Command.RADIOS)
-class ShowRadioStationsCmd(
-	private val radioStationSupplier: RadioStationSupplier,
-	commandEnvironment: CommandEnvironmentBean,
-) : CommandBase(commandEnvironment) {
+class ShowRadioStationsCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
 
 	/**
 	 * Executes the command to display radio stations.
@@ -42,20 +37,15 @@ class ShowRadioStationsCmd(
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun execute(context: CommandContext, response: TFutureResponse) {
-		val radioStations = radioStationSupplier.getRadioStations(context.guildDbId)
+		val radioStations = RadioStation.entries
 		val lang = context.guildLanguage
 
 		val paginatorChunkSize = environmentBean.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 		val responseBuilder = CommandResponse.Builder()
 
 		val message = if (radioStations.isNotEmpty()) {
-			val radioStationsPages = radioStations.entries
-				.map {
-					val radioCmd = Command.PLAYRADIO.textId
-					val name = i18nBean.tRaw(I18nDynamicMod.ARG_OPTION_MOD, arrayOf(radioCmd, it.key), lang)
-					val link = mdLink("[${i18nBean.t(I18nUtilSource.WEBSITE, lang)}]", it.value)
-					"* $name $link"
-				}
+			val radioStationsPages = radioStations
+				.map { "* ${i18nBean.t(it, lang)} ${mdLink("[${i18nBean.t(I18nUtilSource.WEBSITE, lang)}]", it.website)}" }
 				.chunked(paginatorChunkSize)
 
 			val pages = radioStationsPages.map {

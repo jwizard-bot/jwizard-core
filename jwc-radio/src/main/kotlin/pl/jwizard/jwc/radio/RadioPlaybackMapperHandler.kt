@@ -14,14 +14,12 @@ import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.jda.embed.PercentageIndicatorBar
 import pl.jwizard.jwc.core.property.BotProperty
-import pl.jwizard.jwc.core.radio.RadioStationDetails
 import pl.jwizard.jwc.core.radio.spi.RadioPlaybackMessage
 import pl.jwizard.jwc.core.util.dtFormat
 import pl.jwizard.jwc.core.util.ext.getAsText
 import pl.jwizard.jwc.core.util.mdLink
 import pl.jwizard.jwc.exception.radio.RadioStationNotProvidedPlaybackDataException
-import pl.jwizard.jwl.command.Command
-import pl.jwizard.jwl.i18n.source.I18nDynamicMod
+import pl.jwizard.jwl.radio.RadioStation
 import java.net.URI
 import java.net.URLEncoder
 import java.net.http.HttpClient
@@ -57,36 +55,31 @@ abstract class RadioPlaybackMapperHandler(
 	/**
 	 * Creates a playback data message for the specified radio station details.
 	 *
-	 * @param details The details of the radio station.
+	 * @param radioStation Current selected [RadioStation] property.
 	 * @param context The command context containing guild-specific information.
 	 * @return A MessageEmbed containing the playback data for the radio station.
 	 * @throws RadioStationNotProvidedPlaybackDataException If the playback data cannot be retrieved.
 	 */
-	override fun createPlaybackDataMessage(details: RadioStationDetails, context: CommandBaseContext): MessageEmbed {
-		if (details.playbackApiUrl == null) {
-			throw RadioStationNotProvidedPlaybackDataException(context, details.name)
+	override fun createPlaybackDataMessage(radioStation: RadioStation, context: CommandBaseContext): MessageEmbed {
+		if (radioStation.playbackApiUrl == null) {
+			throw RadioStationNotProvidedPlaybackDataException(context, radioStation.textKey)
 		}
-		val requestUri = URI.create(details.playbackApiUrl!!)
+		val requestUri = URI.create(radioStation.playbackApiUrl!!)
 		val httpRequest = HttpRequest.newBuilder()
 			.uri(requestUri)
 			.build()
 
 		val response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString())
 		if (response.statusCode() != 200) {
-			throw RadioStationNotProvidedPlaybackDataException(context, details.name)
+			throw RadioStationNotProvidedPlaybackDataException(context, radioStation.textKey)
 		}
-		val parsedResponse = parsePlaybackData(response.body(), details)
-			?: throw RadioStationNotProvidedPlaybackDataException(context, details.name)
+		val parsedResponse = parsePlaybackData(response.body(), radioStation)
+			?: throw RadioStationNotProvidedPlaybackDataException(context, radioStation.textKey)
 
-		val radioStationName = i18nBean.tRaw(
-			i18nDynamicMod = I18nDynamicMod.ARG_OPTION_MOD,
-			args = arrayOf(Command.PLAYRADIO.textId, details.name),
-			lang = context.guildLanguage,
-		)
 		val messageBuilder = MessageEmbedBuilder(i18nBean, jdaColorStoreBean, context)
 			.setTitle(
 				i18nLocaleSource = I18nResponseSource.CURRENTLY_PLAYING_STREAM_CONTENT,
-				args = mapOf("radioStationName" to radioStationName),
+				args = mapOf("radioStationName" to i18nBean.t(radioStation, context.guildLanguage)),
 			)
 			.setKeyValueField(I18nAudioSource.TRACK_NAME, parsedResponse.title)
 
@@ -124,7 +117,7 @@ abstract class RadioPlaybackMapperHandler(
 		val author = node.getAsText(artistKey) as String
 		if (title.isNotEmpty()) {
 			val trackUri = URLEncoder.encode("$title $author", StandardCharsets.UTF_8)
-			// remove all spaces to plus characters and encode to right URI syntax
+			// replace all spaces to plus characters and encode to right URI syntax
 			return mdLink(
 				name = "$title - $author",
 				link = redirectQuery.format(trackUri.replace("%20", "+")),
@@ -137,8 +130,8 @@ abstract class RadioPlaybackMapperHandler(
 	 * Parses the raw playback data response to create a [RadioPlaybackResponse].
 	 *
 	 * @param responseRaw The raw response string from the playback API.
-	 * @param details The details of the radio station.
+	 * @param radioStation Current selected [RadioStation] property.
 	 * @return A [RadioPlaybackResponse] object, or null if parsing fails.
 	 */
-	protected abstract fun parsePlaybackData(responseRaw: String, details: RadioStationDetails): RadioPlaybackResponse?
+	protected abstract fun parsePlaybackData(responseRaw: String, radioStation: RadioStation): RadioPlaybackResponse?
 }

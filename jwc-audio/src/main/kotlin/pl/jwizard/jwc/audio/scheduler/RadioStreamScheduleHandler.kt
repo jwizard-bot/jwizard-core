@@ -8,7 +8,6 @@ import dev.arbjerg.lavalink.client.LavalinkNode
 import dev.arbjerg.lavalink.client.player.Track
 import dev.arbjerg.lavalink.client.player.TrackException
 import dev.arbjerg.lavalink.protocol.v4.Message.EmittedEvent.TrackEndEvent.AudioTrackEndReason
-import pl.jwizard.jwc.audio.RadioStationDetails
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.core.audio.spi.RadioStreamScheduler
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
@@ -16,8 +15,8 @@ import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwl.command.Command
-import pl.jwizard.jwl.i18n.source.I18nDynamicMod
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
+import pl.jwizard.jwl.radio.RadioStation
 import pl.jwizard.jwl.util.logger
 
 /**
@@ -27,19 +26,19 @@ import pl.jwizard.jwl.util.logger
  * starting, stopping, and error handling.
  *
  * @property musicManager The [GuildMusicManager] instance used for managing audio playback.
- * @property radioStationDetails Details about the radio station, including its name and stream URL.
+ * @property radioStation Current selected [RadioStation] property.
  * @author Miłosz Gilga
  */
 class RadioStreamScheduleHandler(
 	private val musicManager: GuildMusicManager,
-	private val radioStationDetails: RadioStationDetails,
+	private val radioStation: RadioStation,
 ) : AudioScheduleHandler(musicManager), RadioStreamScheduler {
 
 	companion object {
 		private val log = logger<RadioStreamScheduleHandler>()
 	}
 
-	override val radioSlug get() = radioStationDetails.name
+	override val radioSlug get() = radioStation.textKey
 
 	/**
 	 * Loads the specified list of tracks into the queue. For radio streams, this method simply starts the first track in
@@ -65,11 +64,6 @@ class RadioStreamScheduleHandler(
 		val context = state.context
 		val i18nBean = musicManager.beans.i18nBean
 
-		val radioStationName = i18nBean.tRaw(
-			i18nDynamicMod = I18nDynamicMod.ARG_OPTION_MOD,
-			args = arrayOf("radio", radioStationDetails.name),
-			lang = context.guildLanguage,
-		)
 		val listElements = mapOf(
 			I18nResponseSource.START_PLAYING_RADIO_STATION_FIRST_OPTION to mapOf("stopRadioStationCmd" to Command.STOPRADIO),
 			I18nResponseSource.START_PLAYING_RADIO_STATION_SECOND_OPTION to mapOf("radioStationInfoCmd" to Command.RADIOINFO),
@@ -77,13 +71,14 @@ class RadioStreamScheduleHandler(
 		val parsedListElements = listElements.entries.joinToString("\n") { (i18nKey, i18nArgs) ->
 			"* ${i18nBean.t(i18nKey, context.guildLanguage, i18nArgs.mapValues { it.value.parseWithPrefix(context.prefix) })}"
 		}
+		val (name, inputStream) = musicManager.beans.radioStationThumbnailSupplier.getThumbnailResource(radioStation)
 		val message = musicManager.createEmbedBuilder()
 			.setTitle(
 				i18nLocaleSource = I18nResponseSource.START_PLAYING_RADIO_STATION,
-				args = mapOf("radioStationName" to radioStationName),
+				args = mapOf("radioStationName" to i18nBean.t(radioStation, context.guildLanguage)),
 			)
 			.setDescription(parsedListElements)
-			.setArtwork(musicManager.beans.radioStationThumbnailSupplier.getThumbnailUrl(radioStationDetails.name))
+			.setLocalArtwork(name)
 			.setColor(JdaColor.PRIMARY)
 			.build()
 
@@ -91,11 +86,12 @@ class RadioStreamScheduleHandler(
 			state.context,
 			"Node: %s. Start playing radio station: %s from stream URL: %s.",
 			node.name,
-			radioStationDetails.name,
-			radioStationDetails.streamUrl,
+			radioStation.textKey,
+			radioStation.streamUrl,
 		)
 		val response = CommandResponse.Builder()
 			.addEmbedMessages(message)
+			.addFiles(mapOf(name to inputStream))
 			.build()
 		state.future.complete(response)
 	}
@@ -113,25 +109,26 @@ class RadioStreamScheduleHandler(
 	override fun onAudioEnd(lastTrack: Track, node: LavalinkNode, endReason: AudioTrackEndReason) {
 		val state = musicManager.state
 		val context = state.context
-		val supplier = musicManager.beans.radioStationThumbnailSupplier
+		val (name, inputStream) = musicManager.beans.radioStationThumbnailSupplier.getThumbnailResource(radioStation)
 
 		val message = musicManager.createEmbedBuilder()
 			.setDescription(
 				i18nLocaleSource = I18nResponseSource.STOP_PLAYING_RADIO_STATION,
 				args = mapOf(
-					"radioStationName" to radioStationDetails.name,
+					"radioStationName" to musicManager.beans.i18nBean.t(radioStation, context.guildLanguage),
 					"startRadioStationCmd" to Command.PLAYRADIO.parseWithPrefix(context.prefix),
 				),
 			)
 			.setColor(JdaColor.PRIMARY)
-			.setArtwork(supplier.getThumbnailUrl(radioStationDetails.name))
+			.setLocalArtwork(name)
 			.build()
 
 		musicManager.startLeavingWaiter()
 
-		log.jdaInfo(context, "Node: %s. Stop playing radio station: %s.", node.name, radioStationDetails.name)
+		log.jdaInfo(context, "Node: %s. Stop playing radio station: %s.", node.name, radioStation.textKey)
 		val response = CommandResponse.Builder()
 			.addEmbedMessages(message)
+			.addFiles(mapOf(name to inputStream))
 			.build()
 		state.future.complete(response)
 	}
@@ -168,22 +165,20 @@ class RadioStreamScheduleHandler(
 		val i18nBean = musicManager.beans.i18nBean
 		val tracker = musicManager.beans.exceptionTrackerHandler
 
-		val radioStationName = i18nBean.tRaw(
-			i18nDynamicMod = I18nDynamicMod.ARG_OPTION_MOD,
-			args = arrayOf("radio", radioStationDetails.name),
-			lang = context.guildLanguage,
-		)
 		musicManager.state.audioScheduler.stopAndDestroy()
 		musicManager.startLeavingWaiter()
 
 		val i18nLocaleSource = I18nExceptionSource.UNEXPECTED_ERROR_WHILE_STREAMING_RADIO
-		val message = tracker.createTrackerMessage(i18nLocaleSource, context, mapOf("radioStation" to radioStationName))
+		val message = tracker.createTrackerMessage(
+			i18nLocaleSource, context,
+			args = mapOf("radioStation" to i18nBean.t(radioStation, context.guildLanguage))
+		)
 		val link = tracker.createTrackerLink(i18nLocaleSource, context)
 		log.jdaInfo(
 			context,
 			"Node: %s. Unexpected error while streaming radio: %s. Cause: %s.",
 			node.name,
-			radioStationDetails.name,
+			radioStation.textKey,
 			logMessage
 		)
 		musicManager.sendMessage(message, link)
