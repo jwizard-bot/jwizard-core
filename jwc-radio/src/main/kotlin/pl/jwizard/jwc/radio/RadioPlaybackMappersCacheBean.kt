@@ -6,7 +6,9 @@ package pl.jwizard.jwc.radio
 
 import pl.jwizard.jwc.core.radio.spi.RadioPlaybackMappersCache
 import pl.jwizard.jwl.ioc.IoCKtContextFactory
+import pl.jwizard.jwl.ioc.reflect.ClasspathScanner
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
+import pl.jwizard.jwl.radio.PlaybackProvider
 import pl.jwizard.jwl.util.logger
 import java.util.concurrent.ConcurrentHashMap
 
@@ -24,28 +26,39 @@ class RadioPlaybackMappersCacheBean(
 
 	companion object {
 		private val log = logger<RadioPlaybackMappersCacheBean>()
+
+		/**
+		 * Subpackage used for scanning provider classes.
+		 */
+		private const val SCANNING_SUBPACKAGE = "jwc.radio.mapper"
 	}
 
 	/**
 	 * Cache for storing radio playback mapper components, mapped by their class names.
 	 */
-	private val playbackComponents = ConcurrentHashMap<String, RadioPlaybackMapperHandler>()
+	private val playbackComponents = ConcurrentHashMap<PlaybackProvider, RadioPlaybackMapperHandler>()
+
+	/**
+	 * Scans the classpath to find classes annotated with [RadioPlaybackMapper] in the specified subpackage.
+	 */
+	private val scanner = ClasspathScanner(RadioPlaybackMapper::class, SCANNING_SUBPACKAGE)
 
 	/**
 	 * Loads all beans annotated with [RadioPlaybackMapper] from the IoC application context and caches them using
 	 * their simple class names as keys.
 	 */
 	override fun loadRadioPlaybackClasses() {
-		val components = ioCKtContextFactory.getBeansAnnotatedWith<RadioPlaybackMapperHandler, RadioPlaybackMapper>()
-		components.forEach { playbackComponents[it.javaClass.simpleName] = it }
-		log.info("Load: {} radio playback components from IoC context.", components.size)
+		scanner.findComponents().forEach { (provider, clazz) ->
+			playbackComponents[provider.value] = ioCKtContextFactory.getBean(clazz) as RadioPlaybackMapperHandler
+		}
+		log.info("Load: {} radio playback components from IoC context.", playbackComponents.size)
 	}
 
 	/**
-	 * Retrieves a cached [RadioPlaybackMapperHandler] component by its class name.
+	 * Retrieves a cached [RadioPlaybackMapperHandler] by its associated [PlaybackProvider].
 	 *
-	 * @param className The name of the class used as a key in the cache.
-	 * @return The corresponding [RadioPlaybackMapperHandler], or null if not found.
+	 * @param provider The [PlaybackProvider] key to search in the cache.
+	 * @return The cached [RadioPlaybackMapperHandler] instance for the given provider, or `null` if not found.
 	 */
-	override fun getCachedByClassName(className: String?) = className?.let { playbackComponents[it] }
+	override fun getCachedByProvider(provider: PlaybackProvider?) = provider?.let { playbackComponents[it] }
 }

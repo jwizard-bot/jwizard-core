@@ -7,30 +7,40 @@ package pl.jwizard.jwc.persistence.resource
 import java.io.InputStream
 
 /**
- * Abstract class for retrieving resources from different storage systems. This class provides utility methods to
- * retrieve resources as byte arrays or text.
+ * Abstract class responsible for retrieving resources based on a specified path.
+ *
+ * The class provides a method to retrieve resources as a pair containing the resource's filename and an [InputStream]
+ * for accessing the resource's contents.
  *
  * @author Miłosz Gilga
  */
 abstract class ResourceRetriever {
 
 	/**
-	 * Parses the resource path for the given [ResourceObject], replacing placeholders in the path with the provided
-	 * arguments.
+	 * Retrieves a resource based on the specified [ResourceObject] and optional arguments.
 	 *
-	 * @param resourceObject The [ResourceObject] whose path is to be parsed.
-	 * @param args Arguments used to format the resource path.
-	 * @return A string representing the formatted resource path.
+	 * The method formats the resource path using [args] and then retrieves an InputStream for that path. Returns a [Pair]
+	 * where the first element is the filename extracted from the resource path and the second element is the
+	 * [InputStream] of the resource.
+	 *
+	 * @param resourceObject An object representing the resource path template.
+	 * @param args Optional arguments for formatting the resource path.
+	 * @return A [Pair] containing the resource filename as a [String] and an [InputStream] to the resource contents.
 	 */
-	protected fun parseResourcePath(resourceObject: ResourceObject, vararg args: String) =
-		resourceObject.resourcePath.format(*args)
+	fun getObject(resourceObject: ResourceObject, vararg args: String): Pair<String?, InputStream?> {
+		val resourcePath = resourceObject.resourcePath.format(*args)
+		val inputStream = retrieveObject(resourcePath)
+		return Pair(resourcePath.substringAfterLast("/"), inputStream)
+	}
 
 	/**
-	 * Fetches a resource as an [InputStream].
+	 * Retrieves an InputStream for a resource specified by [resourcePath].
 	 *
-	 * @param resourceObject Specifies which resource to retrieve.
-	 * @param args Additional arguments to format the resource path.
-	 * @return An [InputStream] containing the resource, or `null` if the resource could not be retrieved.
+	 * This method is abstract and should be implemented by subclasses to provide the specific retrieval logic for the
+	 * resource.
+	 *
+	 * @param resourcePath The full path of the resource to be retrieved.
+	 * @return An [InputStream] for accessing the resource contents, or null if retrieval fails.
 	 */
-	abstract fun getObject(resourceObject: ResourceObject, vararg args: String): InputStream?
+	protected abstract fun retrieveObject(resourcePath: String): InputStream?
 }

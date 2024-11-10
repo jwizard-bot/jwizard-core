@@ -4,19 +4,29 @@
  */
 package pl.jwizard.jwc.audio.spi
 
+import pl.jwizard.jwl.radio.RadioStation
+import java.io.InputStream
+
 /**
- * Interface for supplying thumbnail URLs for radio stations. This interface allows retrieval of thumbnail images based
- * on a unique identifier (slug) representing the radio station.
+ * Interface for supplying thumbnail resources for radio stations.
  *
- * @author Miłosz Gilga
+ * This interface defines the contract for retrieving thumbnail images associated with specific radio stations.
+ * Implementations should fetch the thumbnail as an [InputStream] and return it alongside a relevant identifier.
+ *
+ * @see RadioStation
  */
 interface RadioStationThumbnailSupplier {
 
 	/**
-	 * Retrieves the thumbnail URL for a radio station based on its slug.
+	 * Retrieves the thumbnail image resource for a given [RadioStation].
 	 *
-	 * @param slug The unique identifier for the radio station, used to locate its thumbnail.
-	 * @return The URL of the thumbnail image for the specified radio station.
+	 * This method takes a [RadioStation] instance and returns a [Pair] containing the name or identifier of the thumbnail
+	 * (as a [String]) and an [InputStream] for accessing the image resource. If the resource is unavailable, both
+	 * elements of the pair may be `null`.
+	 *
+	 * @param radioStation The [RadioStation] for which to fetch the thumbnail.
+	 * @return A [Pair] where the first element is the thumbnail name or identifier, and the second is the [InputStream]
+	 *         of the image resource, or `null` values if the resource is not available.
 	 */
-	fun getThumbnailUrl(slug: String): String
+	fun getThumbnailResource(radioStation: RadioStation): Pair<String?, InputStream?>
 }

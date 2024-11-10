@@ -4,6 +4,8 @@
  */
 package pl.jwizard.jwc.core.radio.spi
 
+import pl.jwizard.jwl.radio.PlaybackProvider
+
 /**
  * Interface for managing the caching of radio playback mappers.
  *
@@ -21,11 +23,11 @@ interface RadioPlaybackMappersCache {
 	fun loadRadioPlaybackClasses()
 
 	/**
-	 * Retrieves a cached playback message by its class name.
+	 * Retrieves a cached playback mapper for a specified [PlaybackProvider].
 	 *
-	 * @param className The name of the class for which the cached playback message is requested.
-	 * @return A cached instance of [RadioPlaybackMessage] associated with the specified class name, or null if no such
-	 *         instance is found.
+	 * @param provider The [PlaybackProvider] key to use for looking up the playback mapper.
+	 * @return The [RadioPlaybackMessage] instance associated with the specified provider, or `null` if no mapper is
+	 *         cached for the provider.
 	 */
-	fun getCachedByClassName(className: String?): RadioPlaybackMessage?
+	fun getCachedByProvider(provider: PlaybackProvider?): RadioPlaybackMessage?
 }

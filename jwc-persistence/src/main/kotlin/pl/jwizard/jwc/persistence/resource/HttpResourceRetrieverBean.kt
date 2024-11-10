@@ -34,7 +34,7 @@ class HttpResourceRetrieverBean(private val environmentBean: EnvironmentBean) : 
 	 * The base URL for accessing the static resources URL, used to construct the complete URL for fetching public
 	 * resources.
 	 */
-	final val staticResourcesUrl = environmentBean.getProperty<String>(AppBaseProperty.STATIC_RESOURCES_URL)
+	private val staticResourcesUrl = environmentBean.getProperty<String>(AppBaseProperty.STATIC_RESOURCES_URL)
 
 	/**
 	 * The [HttpClient] used for making HTTP requests to retrieve resources.
@@ -46,14 +46,17 @@ class HttpResourceRetrieverBean(private val environmentBean: EnvironmentBean) : 
 	}
 
 	/**
-	 * Fetches a resource from the HTTP API as an [InputStream].
+	 * Retrieves a resource from an HTTP URL and returns an [InputStream] for reading its contents.
 	 *
-	 * @param resourceObject Specifies which resource to retrieve.
-	 * @param args Additional arguments to format the resource path.
-	 * @return An [InputStream] containing the resource, or `null` if it could not be retrieved.
+	 * Constructs the complete URL using the base URL and [resourcePath]. Sends an HTTP GET request using [HttpClient]
+	 * and converts the response body to an [InputStream] if successful. Logs an error and returns `null` if the resource
+	 * could not be retrieved (ex. if the response status is not 200).
+	 *
+	 * @param resourcePath The path to the specific resource, appended to the base URL.
+	 * @return An [InputStream] of the resource content, or `null` if an error occurred or resource is unavailable.
 	 */
-	override fun getObject(resourceObject: ResourceObject, vararg args: String): InputStream? {
-		val resourceUrl = "$staticResourcesUrl/${parseResourcePath(resourceObject, *args)}"
+	override fun retrieveObject(resourcePath: String): InputStream? {
+		val resourceUrl = "$staticResourcesUrl/${resourcePath}"
 		return try {
 			val request = HttpRequest.newBuilder()
 				.uri(URI.create(resourceUrl))
