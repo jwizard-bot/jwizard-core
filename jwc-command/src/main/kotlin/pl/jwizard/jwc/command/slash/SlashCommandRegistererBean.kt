@@ -83,23 +83,23 @@ class SlashCommandRegistererBean(
 	 * Maps a command and its details to a [Command], which is used by JDA to create slash commands. It also configures
 	 * the options (arguments) of the command, including their types, localization, and whether they support choices.
 	 *
-	 * @param details The [Command] containing information about the command's arguments and options.
+	 * @param command The [Command] containing information about the command's arguments and options.
 	 * @param lang The language to use for localizing the command's name and arguments.
 	 * @return A [CommandData] object representing the command, ready to be registered with the guild.
 	 */
-	private fun mapToCommandData(details: Command, lang: String): CommandData {
-		val commandData = Commands.slash(details.textId, i18nBean.t(details.i18nSource, lang))
-		commandData.addOptions(details.exactArguments.map {
+	private fun mapToCommandData(command: Command, lang: String): CommandData {
+		val commandData = Commands.slash(command.textKey, i18nBean.t(command, lang))
+		commandData.addOptions(command.exactArguments.map {
 			val type = OptionType.valueOf(it.type.name)
 			val commandOption = OptionData(
 				type,
-				i18nBean.t(it.i18nSource, lang),
+				i18nBean.t(it, lang),
 				i18nBean.t(if (it.required) I18nUtilSource.REQUIRED else I18nUtilSource.OPTIONAL, lang),
 				it.required,
 				type.canSupportChoices(),
 			)
 			if (!type.canSupportChoices() && it.options.isNotEmpty()) {
-				commandOption.addChoices(it.options.map { (key, value) -> Choice(i18nBean.t(value, lang), key) })
+				commandOption.addChoices(it.options.map { option -> Choice(i18nBean.t(option, lang), option.textKey) })
 			}
 			commandOption
 		})

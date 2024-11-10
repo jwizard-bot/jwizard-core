@@ -14,7 +14,6 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.i18n.I18nBean
-import pl.jwizard.jwl.i18n.source.I18nDynamicMod
 
 /**
  * A listener for handling slash command autocomplete interactions in Discord.
@@ -45,20 +44,20 @@ class SlashAutocompleteEventBean(
 	 * @param event The autocomplete interaction event containing user input and context.
 	 */
 	override fun onCommandAutoCompleteInteraction(event: CommandAutoCompleteInteractionEvent) {
-		val command = Command.entries.find { it.textId == event.name } ?: return event.composeEmptyList()
+		val command = Command.entries.find { it.textKey == event.name } ?: return event.composeEmptyList()
 		val argName = event.interaction.focusedOption.name
 
 		val result = command.exactArguments.asSequence()
-			.flatMap { it.composeCommandArgumentTags(it.extractedKey) }
+			.flatMap { it.composeCommandArgumentTags(it) }
 			.find { (_, i18nKey, _) -> i18nKey == argName }
 
 		val (lang, commandArg) = result
 			?.let { (languageTag, _, arg) -> languageTag to arg }
 			?: return event.composeEmptyList()
 
-		val parsedChoices = commandArg.options.keys
-			.filter { it.startsWith(event.focusedOption.value) }
-			.map { Choice(i18nBean.tRaw(I18nDynamicMod.ARG_OPTION_MOD, arrayOf(event.name, it), lang), it) }
+		val parsedChoices = commandArg.options
+			.filter { it.textKey.startsWith(event.focusedOption.value) }
+			.map { Choice(i18nBean.t(it, lang), it.textKey) }
 			.take(maxOptions)
 
 		event.replyChoices(parsedChoices).queue()
@@ -68,11 +67,10 @@ class SlashAutocompleteEventBean(
 	 * Retrieves a sequence of triples containing the language tag, i18n key, and command argument, which are used to
 	 * generate localized command argument tags.
 	 *
-	 * @param name The identifier used to look up localized argument tags.
+	 * @param argument
 	 * @return A sequence of triples containing language tag, i18n key, and command argument.
 	 */
-	private fun Argument.composeCommandArgumentTags(name: String) = i18nBean
-		.tRaw(I18nDynamicMod.ARGS_MOD, arrayOf(name))
+	private fun Argument.composeCommandArgumentTags(argument: Argument) = i18nBean.t(argument)
 		.map { (languageTag, i18nKey) -> Triple(languageTag, i18nKey, this) }
 
 	/**

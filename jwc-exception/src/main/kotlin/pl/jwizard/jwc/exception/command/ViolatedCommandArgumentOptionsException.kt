@@ -25,7 +25,7 @@ class ViolatedCommandArgumentOptionsException(
 	context: CommandBaseContext,
 	violatedArgName: String,
 	violatedValue: Any?,
-	acceptedValueList: Set<String>,
+	acceptedValueList: List<String>,
 	acceptedValuesFormatted: String,
 ) : CommandPipelineExceptionHandler(
 	commandBaseContext = context,

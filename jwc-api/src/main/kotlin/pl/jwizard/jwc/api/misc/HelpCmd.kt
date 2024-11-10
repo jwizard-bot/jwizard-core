@@ -132,13 +132,13 @@ class HelpCmd(
 			val descriptionJoiner = StringJoiner("")
 
 			keyJoiner.add(context.prefix)
-			keyJoiner.add(details.textId)
+			keyJoiner.add(details.textKey)
 			keyJoiner.add(" (${details.alias}) ")
 
-			details.argumentsDefinition?.let { keyJoiner.add(mdCode("<${i18nBean.t(it.i18nSource, lang)}>")) }
-			descriptionJoiner.add(mdLink("[link]", command.format(website, details.textId)))
+			details.argumentsDefinition?.let { keyJoiner.add(mdCode("<${i18nBean.t(it, lang)}>")) }
+			descriptionJoiner.add(mdLink("[link]", command.format(website, details.textKey)))
 			descriptionJoiner.add(" ")
-			descriptionJoiner.add(i18nBean.t(details.i18nSource, lang))
+			descriptionJoiner.add(i18nBean.t(details, lang))
 
 			commands[keyJoiner.toString()] = descriptionJoiner.toString()
 		}

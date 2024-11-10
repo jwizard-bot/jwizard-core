@@ -27,10 +27,10 @@ import pl.jwizard.jwc.exception.command.CommandIsTurnedOffException
 import pl.jwizard.jwc.exception.command.MismatchCommandArgumentsException
 import pl.jwizard.jwc.exception.command.ModuleIsTurnedOffException
 import pl.jwizard.jwc.exception.command.ViolatedCommandArgumentOptionsException
+import pl.jwizard.jwl.command.ArgumentOption
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
-import pl.jwizard.jwl.i18n.source.I18nOptionSource
 import java.math.BigInteger
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -91,14 +91,14 @@ abstract class CommandEventHandler<E : Event>(
 				val (commandNameOrAlias, commandArguments) = commandNameAndArguments(event)
 
 				val commandDetails = Command.entries
-					.find { cmd -> cmd.textId == commandNameOrAlias || cmd.alias == commandNameOrAlias }
+					.find { cmd -> cmd.textKey == commandNameOrAlias || cmd.alias == commandNameOrAlias }
 					?: throw CommandInvocationException("command by command name could not be found")
 
-				context = createCommandContext(event, commandDetails.textId, properties)
+				context = createCommandContext(event, commandDetails.textKey, properties)
 
 				val module = commandDetails.module
 				if (commandEventHandlerEnvironmentBean.moduleDataSupplier.isDisabled(module.dbId, dbId)) {
-					val moduleName = i18nBean.t(module.i18nSource, context.guildLanguage)
+					val moduleName = i18nBean.t(module, context.guildLanguage)
 					throw ModuleIsTurnedOffException(context, module.name, moduleName, commandDetails.name)
 				}
 				if (commandDataSupplier.isCommandDisabled(dbId, commandDetails.dbId, commandType == CommandType.SLASH)) {
@@ -261,12 +261,12 @@ abstract class CommandEventHandler<E : Event>(
 			throw MismatchCommandArgumentsException(context, commandSyntax)
 		}
 		return details.exactArguments.associateWith {
-			val argOptions = it.options
+			val argOptions = it.options.map(ArgumentOption::textKey)
 			val optionMapping: String? = options.poll()
-			if (argOptions.isNotEmpty() && !argOptions.keys.contains(optionMapping)) {
-				val syntax = createArgumentsOptionsSyntax(argOptions, context.guildLanguage)
-				val argsDescription = i18nBean.t(it.i18nSource, context.guildLanguage)
-				throw ViolatedCommandArgumentOptionsException(context, argsDescription, optionMapping, argOptions.keys, syntax)
+			if (argOptions.isNotEmpty() && !argOptions.contains(optionMapping)) {
+				val syntax = createArgumentsOptionsSyntax(it.options, context.guildLanguage)
+				val argsDescription = i18nBean.t(it, context.guildLanguage)
+				throw ViolatedCommandArgumentOptionsException(context, argsDescription, optionMapping, argOptions, syntax)
 			}
 			if (optionMapping == null && it.required) {
 				throw MismatchCommandArgumentsException(context, commandSyntax)
@@ -285,12 +285,12 @@ abstract class CommandEventHandler<E : Event>(
 	private fun createCommandSyntax(commandContext: CommandContext, command: Command): String {
 		val stringJoiner = StringJoiner("")
 		stringJoiner.add("\n")
-		val commandInvokers = arrayOf(command.textId, command.alias)
+		val commandInvokers = arrayOf(command.textKey, command.alias)
 		commandInvokers.forEach {
 			stringJoiner.add("\n`${commandContext.prefix}$it")
 			if (command.argumentsDefinition != null) {
 				val lang = commandContext.guildLanguage
-				val argSyntax = i18nBean.t(command.argumentsDefinition!!.i18nSource, lang)
+				val argSyntax = i18nBean.t(command.argumentsDefinition!!, lang)
 				stringJoiner.add(" <$argSyntax>")
 			}
 			stringJoiner.add("`")
@@ -305,10 +305,10 @@ abstract class CommandEventHandler<E : Event>(
 	 * @param lang The language for internationalization.
 	 * @return A string listing all valid options.
 	 */
-	private fun createArgumentsOptionsSyntax(options: Map<String, I18nOptionSource>, lang: String): String {
+	private fun createArgumentsOptionsSyntax(options: List<ArgumentOption>, lang: String): String {
 		val stringJoiner = StringJoiner("")
 		stringJoiner.add("\n")
-		options.entries.forEach { stringJoiner.add("\n* `${it.key}` - ${i18nBean.t(it.value, lang)}") }
+		options.forEach { stringJoiner.add("\n* `${it.textKey}` - ${i18nBean.t(it, lang)}") }
 		return stringJoiner.toString()
 	}
 
