@@ -35,7 +35,7 @@ class CommandDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean
 			""",
 			replacements = mapOf("disabledColName" to if (slashCommands) "slash_disabled " else "prefix_disabled")
 		)
-		return jdbcKtTemplateBean.queryForList(sql, Long::class.java, guildDbId)
+		return jdbcKtTemplateBean.queryForList(sql, Long::class, guildDbId)
 	}
 
 	/**

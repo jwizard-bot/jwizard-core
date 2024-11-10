@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.command.mono
+package pl.jwizard.jwc.command.async
 
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerHandler
@@ -46,11 +46,11 @@ class AsyncUpdatableHandler<R, I : Mono<R>, P>(
 	 * Executes an asynchronous update using the provided [Mono] action. The hook is used to handle both success and failure
 	 * outcomes. In case of failure, the error is logged and handled accordingly.
 	 *
-	 * @param monoAction The Mono representing the asynchronous action.
+	 * @param asyncAction The Mono representing the asynchronous action.
 	 * @param payload The additional payload that may be needed for handling the response.
 	 */
-	fun performAsyncUpdate(monoAction: I, payload: P) {
-		monoAction.subscribe({ onSuccess(it, payload) }, { onError(it, payload) })
+	fun performAsyncUpdate(asyncAction: I, payload: P) {
+		asyncAction.subscribe({ onSuccess(it, payload) }, { onError(it, payload) })
 	}
 
 	/**

@@ -30,7 +30,7 @@ class ModuleDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean)
 	 */
 	override fun getDisabledGuildModules(guildDbId: BigInteger): List<Long> {
 		val sql = "SELECT module_id FROM guilds_disabled_modules WHERE guild_id = ?"
-		return jdbcKtTemplateBean.queryForList(sql, Long::class.java, guildDbId)
+		return jdbcKtTemplateBean.queryForList(sql, Long::class, guildDbId)
 	}
 
 	/**

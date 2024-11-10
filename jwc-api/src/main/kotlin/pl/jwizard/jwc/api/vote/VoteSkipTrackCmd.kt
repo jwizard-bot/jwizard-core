@@ -10,8 +10,8 @@ import dev.arbjerg.lavalink.client.player.Track
 import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.api.MusicVoteCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.command.async.AsyncUpdatableHook
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.mono.AsyncUpdatableHook
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
@@ -87,7 +87,7 @@ class VoteSkipTrackCmd(
 		val track = payload.cachedPlayer?.track ?: return
 		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response, this)
 		asyncUpdatableHandler.performAsyncUpdate(
-			monoAction = payload.createdOrUpdatedPlayer.stopTrack(),
+			asyncAction = payload.createdOrUpdatedPlayer.stopTrack(),
 			payload = track,
 		)
 	}

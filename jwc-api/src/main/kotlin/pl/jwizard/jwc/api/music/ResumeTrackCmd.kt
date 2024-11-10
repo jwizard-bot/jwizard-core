@@ -9,8 +9,8 @@ import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.command.async.AsyncUpdatableHook
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.mono.AsyncUpdatableHook
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
@@ -60,7 +60,7 @@ class ResumeTrackCmd(
 	override fun executeMusic(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
 		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response, this)
 		asyncUpdatableHandler.performAsyncUpdate(
-			monoAction = manager.createdOrUpdatedPlayer.setPaused(false),
+			asyncAction = manager.createdOrUpdatedPlayer.setPaused(false),
 			payload = manager,
 		)
 	}

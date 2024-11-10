@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.command.mono
+package pl.jwizard.jwc.command.async
 
 import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.command.context.CommandContext
