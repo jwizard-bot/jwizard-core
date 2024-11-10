@@ -99,7 +99,7 @@ class SlashCommandEventHandlerBean(
 		} else {
 			event.hook.sendMessageEmbeds(embedMessages).setEphemeral(privateMessage)
 		}
-		message.addComponents(response.actionRows)
+		message.addComponents(response.actionRows).setFiles(response.files)
 		response.pool?.let { message.setPoll(it) }
 		return message
 	}

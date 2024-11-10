@@ -7,7 +7,9 @@ package pl.jwizard.jwc.core.jda.command
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.ActionRow
+import net.dv8tion.jda.api.utils.FileUpload
 import net.dv8tion.jda.api.utils.messages.MessagePollData
+import java.io.InputStream
 
 /**
  * Class representing a response to a command in a Discord bot. The response can include embedded messages, action
@@ -16,6 +18,7 @@ import net.dv8tion.jda.api.utils.messages.MessagePollData
  * @property embedMessages A list of embedded messages (MessageEmbed) sent in the response.
  * @property actionRows A list of ActionRows containing interaction components (ex. buttons, dropdown menus).
  * @property pool Discord embed message poll.
+ * @property files Discord embed attachments.
  * @property disposeComponents A flag indicating whether the interaction components should be disabled after execution.
  * @property afterSendAction A lambda function that will be executed after the message is sent. It receives the send
  *           message as an argument.
@@ -24,6 +27,7 @@ class CommandResponse private constructor(
 	val embedMessages: List<MessageEmbed>,
 	val actionRows: List<ActionRow>,
 	val pool: MessagePollData?,
+	val files: List<FileUpload>,
 	val disposeComponents: Boolean,
 	val afterSendAction: (Message) -> Unit,
 ) {
@@ -36,7 +40,7 @@ class CommandResponse private constructor(
 	 * @return A new CommandResponse instance with the updated values.
 	 */
 	fun copy(embedMessages: List<MessageEmbed>, actionRows: List<ActionRow>) =
-		CommandResponse(embedMessages, actionRows, pool, disposeComponents, afterSendAction)
+		CommandResponse(embedMessages, actionRows, pool, files, disposeComponents, afterSendAction)
 
 	/**
 	 * Builder class for constructing a CommandResponse instance with various options.
@@ -57,6 +61,11 @@ class CommandResponse private constructor(
 		 * Discord embed message poll.
 		 */
 		private var pool: MessagePollData? = null
+
+		/**
+		 * Discord embed attachments.
+		 */
+		private var files: List<FileUpload> = emptyList()
 
 		/**
 		 * A flag indicating whether interaction components (buttons, etc.) should be disabled after execution.
@@ -96,6 +105,19 @@ class CommandResponse private constructor(
 		fun addPool(pool: MessagePollData) = apply { this.pool = pool }
 
 		/**
+		 * Adds a collection of files to be uploaded.
+		 *
+		 * @param files A map where keys are file names (as [String]) and values are file data streams ([InputStream]).
+		 *        Entries with `null` keys or values are ignored.
+		 * @return The Builder instance for chaining.
+		 */
+		fun addFiles(files: Map<String?, InputStream?>) = apply {
+			this.files = files.entries
+				.filter { it.key != null && it.value != null }
+				.map { (fileName, stream) -> FileUpload.fromData(stream!!, fileName!!) }
+		}
+
+		/**
 		 * Sets whether interaction components (buttons, etc.) should be disabled after certain of time.
 		 *
 		 * @param disposeComponents Flag indicating whether components should be disabled.
@@ -116,6 +138,6 @@ class CommandResponse private constructor(
 		 *
 		 * @return A new CommandResponse instance.
 		 */
-		fun build() = CommandResponse(embedMessages, actionRows, pool, disposeComponents, onSendAction)
+		fun build() = CommandResponse(embedMessages, actionRows, pool, files, disposeComponents, onSendAction)
 	}
 }

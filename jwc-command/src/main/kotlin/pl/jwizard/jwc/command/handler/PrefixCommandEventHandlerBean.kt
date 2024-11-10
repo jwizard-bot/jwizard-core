@@ -123,7 +123,10 @@ class PrefixCommandEventHandlerBean(
 		response: CommandResponse,
 		privateMessage: Boolean,
 	): RestAction<Message> {
-		val message = event.channel.sendMessageEmbeds(response.embedMessages).addComponents(response.actionRows)
+		val message = event.channel
+			.sendMessageEmbeds(response.embedMessages)
+			.addComponents(response.actionRows)
+			.setFiles(response.files)
 		response.pool?.let { message.setPoll(it) }
 		return message
 	}

@@ -112,6 +112,14 @@ class MessageEmbedBuilder(
 	fun setArtwork(url: String?) = apply { url?.let { setThumbnail(url) } }
 
 	/**
+	 * Sets the local artwork thumbnail for an attachment, if a valid name is provided.
+	 *
+	 * @param name The name of the artwork file. If null, no action is taken.
+	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
+	 */
+	fun setLocalArtwork(name: String?) = apply { name?.let { setThumbnail("attachment://$it") } }
+
+	/**
 	 * Sets a value field in the embed with an optional inline display.
 	 *
 	 * @param value The value to display in the field.
