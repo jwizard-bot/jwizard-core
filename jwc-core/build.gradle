@@ -11,6 +11,5 @@ dependencies {
 	implementation libs.jda
 	implementation libs.jeeAnnotationApi
 	implementation libs.lavalinkClient
-	implementation libs.commonsVfs
 	implementation libs.javalin
 }
