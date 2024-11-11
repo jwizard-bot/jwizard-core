@@ -4,6 +4,8 @@
  */
 package pl.jwizard.jwc.persistence.resource
 
+import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwl.property.AppBaseProperty
 import java.io.InputStream
 
 /**
@@ -12,9 +14,15 @@ import java.io.InputStream
  * The class provides a method to retrieve resources as a pair containing the resource's filename and an [InputStream]
  * for accessing the resource's contents.
  *
+ * @property environmentBean Provides access to application environment properties.
  * @author Miłosz Gilga
  */
-abstract class ResourceRetriever {
+abstract class ResourceRetriever(private val environmentBean: EnvironmentBean) {
+
+	/**
+	 * Prefix used for accessing static resources in the application.
+	 */
+	private val staticResourcesPrefix = environmentBean.getProperty<String>(AppBaseProperty.STATIC_RESOURCES_PREFIX)
 
 	/**
 	 * Retrieves a resource based on the specified [ResourceObject] and optional arguments.
@@ -28,7 +36,7 @@ abstract class ResourceRetriever {
 	 * @return A [Pair] containing the resource filename as a [String] and an [InputStream] to the resource contents.
 	 */
 	fun getObject(resourceObject: ResourceObject, vararg args: String): Pair<String?, InputStream?> {
-		val resourcePath = resourceObject.resourcePath.format(*args)
+		val resourcePath = "${staticResourcesPrefix}/${resourceObject.resourcePath.format(*args)}"
 		val inputStream = retrieveObject(resourcePath)
 		return Pair(resourcePath.substringAfterLast("/"), inputStream)
 	}

@@ -4,6 +4,9 @@
  */
 package pl.jwizard.jwc.persistence.resource
 
+import pl.jwizard.jwc.persistence.resource.ResourceObject.RADIO_STATION
+import pl.jwizard.jwl.property.AppBaseProperty
+
 /**
  * This enum class represents resource objects.
  *
@@ -15,6 +18,7 @@ package pl.jwizard.jwc.persistence.resource
  *
  * @property resourcePath The relative path to the resource in the S3 storage.
  * @author Miłosz Gilga
+ * @see AppBaseProperty.STATIC_RESOURCES_PREFIX
  */
 enum class ResourceObject(val resourcePath: String) {
 
@@ -22,8 +26,8 @@ enum class ResourceObject(val resourcePath: String) {
 	 * Represents the path to a radio station's thumbnail image. The `%s` placeholder is replaced by the station's slug,
 	 * which typically matches the station's identifier in the system.
 	 *
-	 * Example path: `assets/radio-station/{station-slug}.jpg`
+	 * Example path: `/<default static path>/radio-station/{station-slug}.jpg`
 	 */
-	RADIO_STATION("assets/radio-station/%s.jpg"),
+	RADIO_STATION("radio-station/%s.jpg"),
 	;
 }

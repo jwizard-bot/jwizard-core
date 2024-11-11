@@ -5,7 +5,7 @@
 package pl.jwizard.jwc.persistence.resource
 
 import org.springframework.core.io.ClassPathResource
-import pl.jwizard.jwl.ioc.IoCKtContextFactory
+import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.util.logger
 import java.io.IOException
@@ -15,11 +15,11 @@ import java.io.InputStream
  * Implementation of [ResourceRetriever] that retrieves resources specifically from the classpath. This class uses
  * Spring's [ClassPathResource] to access resources located in the classpath of the project.
  *
+ * @param environmentBean Provides access to application environment properties.
  * @author Miłosz Gilga
- * @see ResourceRetriever
  */
 @SingletonComponent
-class LibraryClasspathRetrieverBean : ResourceRetriever() {
+class StaticClasspathRetrieverBean(environmentBean: EnvironmentBean) : ResourceRetriever(environmentBean) {
 
 	companion object {
 		private val log = logger<HttpResourceRetrieverBean>()
@@ -35,7 +35,7 @@ class LibraryClasspathRetrieverBean : ResourceRetriever() {
 	 */
 	override fun retrieveObject(resourcePath: String): InputStream? {
 		val resourceUri = if (!resourcePath.startsWith("/")) "/$resourcePath" else resourcePath
-		val resource = ClassPathResource(resourceUri, IoCKtContextFactory::class.java)
+		val resource = ClassPathResource(resourceUri)
 		return try {
 			resource.inputStream
 		} catch (ex: IOException) {

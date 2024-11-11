@@ -6,7 +6,6 @@ package pl.jwizard.jwc.persistence.resource
 
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
-import pl.jwizard.jwl.property.AppBaseProperty
 import pl.jwizard.jwl.util.logger
 import java.io.ByteArrayInputStream
 import java.io.IOException
@@ -21,29 +20,18 @@ import java.net.http.HttpResponse
  *
  * @property environmentBean Contains environment-specific properties such as API URLs.
  * @author Miłosz Gilga
- * @see ResourceRetriever
  */
 @SingletonComponent
-class HttpResourceRetrieverBean(private val environmentBean: EnvironmentBean) : ResourceRetriever() {
+class HttpResourceRetrieverBean(private val environmentBean: EnvironmentBean) : ResourceRetriever(environmentBean) {
 
 	companion object {
 		private val log = logger<HttpResourceRetrieverBean>()
 	}
 
 	/**
-	 * The base URL for accessing the static resources URL, used to construct the complete URL for fetching public
-	 * resources.
-	 */
-	private val staticResourcesUrl = environmentBean.getProperty<String>(AppBaseProperty.STATIC_RESOURCES_URL)
-
-	/**
 	 * The [HttpClient] used for making HTTP requests to retrieve resources.
 	 */
 	private val httpClient = HttpClient.newHttpClient()
-
-	init {
-		log.info("Init HTTP resource retriever with path: {}.", staticResourcesUrl)
-	}
 
 	/**
 	 * Retrieves a resource from an HTTP URL and returns an [InputStream] for reading its contents.
@@ -56,15 +44,13 @@ class HttpResourceRetrieverBean(private val environmentBean: EnvironmentBean) : 
 	 * @return An [InputStream] of the resource content, or `null` if an error occurred or resource is unavailable.
 	 */
 	override fun retrieveObject(resourcePath: String): InputStream? {
-		val resourceUrl = "$staticResourcesUrl/${resourcePath}"
 		return try {
 			val request = HttpRequest.newBuilder()
-				.uri(URI.create(resourceUrl))
-				.GET()
+				.uri(URI.create(resourcePath))
 				.build()
 			val response = httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray())
 			if (response.statusCode() != 200) {
-				throw IOException("Could not found resource with url: $resourceUrl.")
+				throw IOException("Could not found resource with url: $resourcePath.")
 			}
 			ByteArrayInputStream(response.body())
 		} catch (ex: IOException) {
