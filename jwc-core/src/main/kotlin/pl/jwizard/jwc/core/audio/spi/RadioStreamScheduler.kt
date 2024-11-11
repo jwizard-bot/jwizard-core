@@ -4,6 +4,8 @@
  */
 package pl.jwizard.jwc.core.audio.spi
 
+import pl.jwizard.jwl.radio.RadioStation
+
 /**
  * Interface for managing the scheduling of radio streams.
  *
@@ -16,7 +18,7 @@ package pl.jwizard.jwc.core.audio.spi
 interface RadioStreamScheduler : AudioScheduler {
 
 	/**
-	 * Gets the unique slug (identifier) for the radio station.
+	 * Gets the [RadioStation] for the current saved radio station.
 	 */
-	val radioSlug: String
+	val radioStation: RadioStation
 }

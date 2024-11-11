@@ -17,7 +17,6 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.radio.spi.RadioPlaybackMappersCache
 import pl.jwizard.jwc.exception.radio.RadioStationNotProvidedPlaybackDataException
 import pl.jwizard.jwl.command.Command
-import pl.jwizard.jwl.radio.RadioStation
 
 /**
  * Command to display information about the currently playing radio station.
@@ -49,15 +48,11 @@ class RadioInfoCmd(
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeRadio(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		val slug = manager.state.radioStreamScheduler.radioSlug
-		val message = try {
-			val radioStation = RadioStation.entries.find { it.textKey == slug } ?: throw RuntimeException()
-			val mapper = radioPlaybackMappersCache
-				.getCachedByProvider(radioStation.streamProvider.playbackProvider) ?: throw RuntimeException()
-			mapper.createPlaybackDataMessage(radioStation, context)
-		} catch (ex: RuntimeException) {
-			throw RadioStationNotProvidedPlaybackDataException(context, slug)
-		}
+		val radioStation = manager.state.radioStreamScheduler.radioStation
+		val mapper = radioPlaybackMappersCache.getCachedByProvider(radioStation.streamProvider.playbackProvider)
+			?: throw RadioStationNotProvidedPlaybackDataException(context, radioStation)
+
+		val message = mapper.createPlaybackDataMessage(radioStation, context)
 		val refreshableComponent = createRefreshable(this, Pair(context, manager))
 		refreshableComponent.initEvent()
 
@@ -85,9 +80,8 @@ class RadioInfoCmd(
 		payload: Pair<CommandContext, MusicManager>,
 	) {
 		val (context, manager) = payload
-		val slug = manager.state.radioStreamScheduler.radioSlug
+		val radioStation = manager.state.radioStreamScheduler.radioStation
 
-		val radioStation = RadioStation.entries.find { it.textKey == slug } ?: return
 		val mapper = radioPlaybackMappersCache.getCachedByProvider(radioStation.streamProvider.playbackProvider) ?: return
 		val message = mapper.createPlaybackDataMessage(radioStation, context)
 

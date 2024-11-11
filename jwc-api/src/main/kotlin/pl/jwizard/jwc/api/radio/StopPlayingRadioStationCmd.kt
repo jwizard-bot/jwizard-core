@@ -36,6 +36,7 @@ class StopPlayingRadioStationCmd(commandEnvironment: CommandEnvironmentBean) : R
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeRadio(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		manager.state.radioStreamScheduler.stopAndDestroy()
+		val radioStreamScheduler = manager.state.radioStreamScheduler
+		radioStreamScheduler.stopAndDestroy().subscribe()
 	}
 }

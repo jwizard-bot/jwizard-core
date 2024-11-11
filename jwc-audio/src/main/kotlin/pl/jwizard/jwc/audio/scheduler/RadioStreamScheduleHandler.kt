@@ -31,14 +31,12 @@ import pl.jwizard.jwl.util.logger
  */
 class RadioStreamScheduleHandler(
 	private val musicManager: GuildMusicManager,
-	private val radioStation: RadioStation,
+	override val radioStation: RadioStation,
 ) : AudioScheduleHandler(musicManager), RadioStreamScheduler {
 
 	companion object {
 		private val log = logger<RadioStreamScheduleHandler>()
 	}
-
-	override val radioSlug get() = radioStation.textKey
 
 	/**
 	 * Loads the specified list of tracks into the queue. For radio streams, this method simply starts the first track in
