@@ -116,17 +116,20 @@ class PrefixCommandEventHandlerBean(
 	 * @param event The message received event.
 	 * @param response The command response to send.
 	 * @param privateMessage The value defined, if sending message should be private or public.
+	 * @param suppressNotifications Determines if notifications from bot responses should be suppressed.
 	 * @return The action to send the message.
 	 */
 	override fun deferMessage(
 		event: MessageReceivedEvent,
 		response: CommandResponse,
 		privateMessage: Boolean,
+		suppressNotifications: Boolean?,
 	): RestAction<Message> {
 		val message = event.channel
 			.sendMessageEmbeds(response.embedMessages)
 			.addComponents(response.actionRows)
 			.setFiles(response.files)
+		suppressNotifications?.let { message.setSuppressedNotifications(it) }
 		response.pool?.let { message.setPoll(it) }
 		return message
 	}

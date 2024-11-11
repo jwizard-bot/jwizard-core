@@ -60,6 +60,7 @@ abstract class CommandEventHandler<E : Event>(
 		GuildProperty.SLASH_ENABLED,
 		GuildProperty.DJ_ROLE_NAME,
 		GuildProperty.MUSIC_TEXT_CHANNEL_ID,
+		GuildProperty.SUPPRESS_RESPONSE_NOTIFICATIONS,
 	)
 
 	/**
@@ -170,7 +171,8 @@ abstract class CommandEventHandler<E : Event>(
 			}
 			truncatedResponse.afterSendAction(it)
 		}
-		deferMessage(event, truncatedResponse, privateMessage = false).queue(onMessageSend)
+		deferMessage(event, truncatedResponse, privateMessage = false, context?.suppressResponseNotifications)
+			.queue(onMessageSend)
 	}
 
 	/**
@@ -228,11 +230,13 @@ abstract class CommandEventHandler<E : Event>(
 		val onSuccess: (Message) -> Unit = { privateMessage ->
 			if (commandType == CommandType.SLASH) {
 				val message = CommandResponse.Builder().addEmbedMessages(successMessage).build()
-				deferMessage(event, message, privateMessage = true)
+				deferMessage(event, message, privateMessage = true, context?.suppressResponseNotifications)
 					.queue { looselyTransportHandlerBean.startRemovalInteractionThread(privateMessage) }
 			}
 		}
-		val onError: (Throwable) -> Unit = { deferMessage(event, errorMessage, privateMessage = true).queue() }
+		val onError: (Throwable) -> Unit = {
+			deferMessage(event, errorMessage, privateMessage = true, context?.suppressResponseNotifications).queue()
+		}
 		user.openPrivateChannel().queue({
 			it.sendMessageEmbeds(response.embedMessages).addComponents(response.actionRows).queue(onSuccess, onError)
 		}, onError)
@@ -370,9 +374,15 @@ abstract class CommandEventHandler<E : Event>(
 	 * @param event The event being processed.
 	 * @param response The response generated from executing the command.
 	 * @param privateMessage The value defined, if sending message should be private or public.
+	 * @param suppressNotifications Determines if notifications from bot responses should be suppressed.
 	 * @return A RestAction that sends the deferred message.
 	 */
-	protected abstract fun deferMessage(event: E, response: CommandResponse, privateMessage: Boolean): RestAction<Message>
+	protected abstract fun deferMessage(
+		event: E,
+		response: CommandResponse,
+		privateMessage: Boolean,
+		suppressNotifications: Boolean?,
+	): RestAction<Message>
 
 	/**
 	 * Defers an action for the given event, which can be configured to be either public or private (ephemeral).

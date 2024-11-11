@@ -167,7 +167,8 @@ abstract class VoterComponent<T : Any>(
 			.build()
 		commandEnvironment.looselyTransportHandlerBean.sendViaChannelTransport(
 			textChannel = context.textChannel,
-			response = CommandResponse.Builder().addEmbedMessages(message).build()
+			response = CommandResponse.Builder().addEmbedMessages(message).build(),
+			notificationsSuppressed = context.suppressResponseNotifications,
 		)
 	}
 
@@ -188,7 +189,11 @@ abstract class VoterComponent<T : Any>(
 			val endedResult = if (voteState.isPassed) {
 				val futureResponse = CompletableFuture<CommandResponse>()
 				futureResponse.thenAccept {
-					commandEnvironment.looselyTransportHandlerBean.sendViaChannelTransport(context.textChannel, it)
+					commandEnvironment.looselyTransportHandlerBean.sendViaChannelTransport(
+						context.textChannel,
+						it,
+						context.suppressResponseNotifications
+					)
 				}
 				voterContent.afterSuccess(context, futureResponse, response.payload)
 				"successfully"

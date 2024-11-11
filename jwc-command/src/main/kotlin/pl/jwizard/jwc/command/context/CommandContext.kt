@@ -26,6 +26,8 @@ abstract class CommandContext(private val guildCommandProperties: GuildMultipleP
 
 	override val guildLanguage = guildCommandProperties.getProperty<String>(GuildProperty.LANGUAGE_TAG)
 	override val guildDbId = guildCommandProperties.getProperty<BigInteger>(GuildProperty.DB_ID)
+	override val suppressResponseNotifications =
+		guildCommandProperties.getProperty<Boolean>(GuildProperty.SUPPRESS_RESPONSE_NOTIFICATIONS)
 
 	/**
 	 * A boolean indicating whether the command is executed as a slash command event. This affects how the command is

@@ -65,11 +65,16 @@ class LooselyTransportHandlerBean(
 	 *
 	 * @param textChannel The text channel where the response should be sent.
 	 * @param response The command response to be sent, containing embed messages and action rows.
+	 * @param notificationsSuppressed Determines if notifications from bot responses should be suppressed.
 	 * @param privateUserId User id used to send private message. If it is `null`, message is public.
 	 */
-	fun sendViaChannelTransport(textChannel: TextChannel, response: CommandResponse, privateUserId: Long? = null) {
+	fun sendViaChannelTransport(
+		textChannel: TextChannel,
+		response: CommandResponse,
+		notificationsSuppressed: Boolean,
+		privateUserId: Long? = null,
+	) {
 		val truncated = truncateComponents(response)
-
 		val onSend: (Message) -> Unit = {
 			if (response.disposeComponents) {
 				startRemovalInteractionThread(it)
@@ -77,12 +82,18 @@ class LooselyTransportHandlerBean(
 			response.afterSendAction(it)
 		}
 		if (privateUserId == null) {
-			textChannel.sendMessageEmbeds(response.embedMessages).addComponents(response.actionRows).queue(onSend)
+			textChannel.sendMessageEmbeds(response.embedMessages)
+				.addComponents(response.actionRows)
+				.setSuppressedNotifications(notificationsSuppressed)
+				.queue(onSend)
 			return
 		}
 		val user = jdaInstance.getUserById(privateUserId)
 		user?.openPrivateChannel()?.queue {
-			it.sendMessageEmbeds(truncated.embedMessages).addComponents(truncated.actionRows).queue(onSend)
+			it.sendMessageEmbeds(truncated.embedMessages)
+				.addComponents(truncated.actionRows)
+				.setSuppressedNotifications(notificationsSuppressed)
+				.queue(onSend)
 		}
 	}
 

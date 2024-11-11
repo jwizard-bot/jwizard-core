@@ -38,7 +38,7 @@ class SettingsCmd(commandEnvironment: CommandEnvironmentBean) : ManagerCommandBa
 	override fun executeManager(context: CommandContext, response: TFutureResponse) {
 		val paginatorChunkSize = environmentBean.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 		val properties = environmentBean.getGuildMultipleProperties(
-			guildProperties = GuildProperty.entries.filter { it.i18nSourceKey != null && it.converter != null },
+			guildProperties = GuildProperty.entries.filter { it.placeholder.isNotEmpty() && it.converter != null },
 			guildId = context.guild.idLong,
 		)
 		val embedMessages = mutableListOf<MessageEmbed>()
@@ -49,12 +49,11 @@ class SettingsCmd(commandEnvironment: CommandEnvironmentBean) : ManagerCommandBa
 				.setTitle(I18nSystemSource.GUILD_SETTINGS_HEADER)
 
 			for ((column, value) in chunk) {
-				val sourceKey = column.i18nSourceKey
 				val converter = column.converter
-				if (sourceKey == null || converter == null) {
+				if (column.placeholder.isEmpty() || converter == null) {
 					continue
 				}
-				val key = i18nBean.t(sourceKey, context.guildLanguage)
+				val key = i18nBean.t(column, context.guildLanguage)
 				val convertedValue = converter.mapper(value)
 				val parsedValue = if (converter.isI18nContent) {
 					i18nBean.t(convertedValue as I18nLocaleSource, context.guildLanguage)

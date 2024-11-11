@@ -131,8 +131,14 @@ class GuildMusicManager(
 	 * @param actionRows Optional action rows to include in the message.
 	 */
 	override fun sendMessage(message: MessageEmbed, vararg actionRows: ActionRow) {
-		val response = CommandResponse.Builder().addEmbedMessages(message).addActionRows(*actionRows).build()
-		state.context.textChannel.let { beans.looselyTransportHandlerBean.sendViaChannelTransport(it, response) }
+		val context = state.context
+		val response = CommandResponse.Builder()
+			.addEmbedMessages(message)
+			.addActionRows(*actionRows)
+			.build()
+		context.textChannel.let {
+			beans.looselyTransportHandlerBean.sendViaChannelTransport(it, response, context.suppressResponseNotifications)
+		}
 	}
 
 	/**

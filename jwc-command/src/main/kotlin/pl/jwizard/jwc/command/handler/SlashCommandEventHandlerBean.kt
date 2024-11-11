@@ -86,12 +86,14 @@ class SlashCommandEventHandlerBean(
 	 * @param event The slash command interaction event.
 	 * @param response The command response to send.
 	 * @param privateMessage The value defined, if sending message should be private or public.
+	 * @param suppressNotifications Determines if notifications from bot responses should be suppressed.
 	 * @return The action to send the message.
 	 */
 	override fun deferMessage(
 		event: SlashCommandInteractionEvent,
 		response: CommandResponse,
 		privateMessage: Boolean,
+		suppressNotifications: Boolean?,
 	): RestAction<Message> {
 		val embedMessages = response.embedMessages
 		val message = if (event.hook.isExpired) {
@@ -100,6 +102,7 @@ class SlashCommandEventHandlerBean(
 			event.hook.sendMessageEmbeds(embedMessages).setEphemeral(privateMessage)
 		}
 		message.addComponents(response.actionRows).setFiles(response.files)
+		suppressNotifications?.let { message.setSuppressedNotifications(it) }
 		response.pool?.let { message.setPoll(it) }
 		return message
 	}

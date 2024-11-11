@@ -61,4 +61,9 @@ interface CommandBaseContext {
 	 * The text channel in which the command was executed. This is the context where the interaction happens.
 	 */
 	val textChannel: TextChannel
+
+	/**
+	 * Determines if notifications from bot responses should be suppressed.
+	 */
+	val suppressResponseNotifications: Boolean
 }
