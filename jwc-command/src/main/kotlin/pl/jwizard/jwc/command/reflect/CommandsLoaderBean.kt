@@ -53,7 +53,7 @@ class CommandsLoaderBean(
 		val allCommands = Command.entries.size
 		log.info("Load: {} commands ({} defined in library) classes.", loadedCommands.size, allCommands)
 		if (loadedCommands.size != allCommands) {
-			val nonLoadedCommands = Command.entries.map(Command::textId) - loadedCommands.toSet()
+			val nonLoadedCommands = Command.entries.map(Command::textKey) - loadedCommands.toSet()
 			log.warn("Unable to load: {} commands: {}.", nonLoadedCommands.size, nonLoadedCommands)
 		}
 	}
