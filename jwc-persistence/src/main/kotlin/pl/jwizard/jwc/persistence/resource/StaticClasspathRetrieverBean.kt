@@ -7,6 +7,8 @@ package pl.jwizard.jwc.persistence.resource
 import org.springframework.core.io.ClassPathResource
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
+import pl.jwizard.jwl.property.AppBaseListProperty
+import pl.jwizard.jwl.util.findResourceInMultipleContainers
 import pl.jwizard.jwl.util.logger
 import java.io.IOException
 import java.io.InputStream
@@ -26,6 +28,11 @@ class StaticClasspathRetrieverBean(environmentBean: EnvironmentBean) : ResourceR
 	}
 
 	/**
+	 * Prefix used for accessing static resources in the application.
+	 */
+	private val prefixes = environmentBean.getListProperty<String>(AppBaseListProperty.STATIC_RESOURCES_PREFIXES)
+
+	/**
 	 * Retrieves an InputStream for a resource located in the classpath, specified by the [resourcePath]. Adds a leading
 	 * "/" to the [resourcePath] if not already present, and logs an error if the resource cannot be accessed due to an
 	 * [IOException].
@@ -34,10 +41,9 @@ class StaticClasspathRetrieverBean(environmentBean: EnvironmentBean) : ResourceR
 	 * @return An [InputStream] to read the contents of the resource, or null if retrieval fails.
 	 */
 	override fun retrieveObject(resourcePath: String): InputStream? {
-		val resourceUri = if (!resourcePath.startsWith("/")) "/$resourcePath" else resourcePath
-		val resource = ClassPathResource(resourceUri)
+		val resource = findResourceInMultipleContainers(prefixes, resourcePath)
 		return try {
-			resource.inputStream
+			resource?.inputStream
 		} catch (ex: IOException) {
 			log.error(ex.message)
 			null

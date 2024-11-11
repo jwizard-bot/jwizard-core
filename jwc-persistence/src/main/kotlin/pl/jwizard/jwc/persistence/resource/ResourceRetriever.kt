@@ -5,7 +5,6 @@
 package pl.jwizard.jwc.persistence.resource
 
 import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwl.property.AppBaseProperty
 import java.io.InputStream
 
 /**
@@ -20,11 +19,6 @@ import java.io.InputStream
 abstract class ResourceRetriever(private val environmentBean: EnvironmentBean) {
 
 	/**
-	 * Prefix used for accessing static resources in the application.
-	 */
-	private val staticResourcesPrefix = environmentBean.getProperty<String>(AppBaseProperty.STATIC_RESOURCES_PREFIX)
-
-	/**
 	 * Retrieves a resource based on the specified [ResourceObject] and optional arguments.
 	 *
 	 * The method formats the resource path using [args] and then retrieves an InputStream for that path. Returns a [Pair]
@@ -36,7 +30,7 @@ abstract class ResourceRetriever(private val environmentBean: EnvironmentBean) {
 	 * @return A [Pair] containing the resource filename as a [String] and an [InputStream] to the resource contents.
 	 */
 	fun getObject(resourceObject: ResourceObject, vararg args: String): Pair<String?, InputStream?> {
-		val resourcePath = "${staticResourcesPrefix}/${resourceObject.resourcePath.format(*args)}"
+		val resourcePath = resourceObject.resourcePath.format(*args)
 		val inputStream = retrieveObject(resourcePath)
 		return Pair(resourcePath.substringAfterLast("/"), inputStream)
 	}
