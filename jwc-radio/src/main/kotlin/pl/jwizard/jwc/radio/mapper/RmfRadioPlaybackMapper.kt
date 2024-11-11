@@ -5,8 +5,6 @@
 package pl.jwizard.jwc.radio.mapper
 
 import com.fasterxml.jackson.databind.node.ArrayNode
-import pl.jwizard.jwc.core.util.ext.getAsLong
-import pl.jwizard.jwc.core.util.ext.getAsText
 import pl.jwizard.jwc.core.util.fromNowToTime
 import pl.jwizard.jwc.core.util.fromTimeToNow
 import pl.jwizard.jwc.radio.RadioPlaybackMapper
@@ -15,6 +13,9 @@ import pl.jwizard.jwc.radio.RadioPlaybackMapperHandler
 import pl.jwizard.jwc.radio.RadioPlaybackResponse
 import pl.jwizard.jwl.radio.PlaybackProvider
 import pl.jwizard.jwl.radio.RadioStation
+import pl.jwizard.jwl.util.ext.getAsInt
+import pl.jwizard.jwl.util.ext.getAsLong
+import pl.jwizard.jwl.util.ext.getAsNullableText
 import java.time.Duration
 
 /**
@@ -45,7 +46,7 @@ class RmfRadioPlaybackMapper(
 		val current = getByOrder(jsonArray, 0)
 		val next = getByOrder(jsonArray, 1)
 
-		val coverImage = current?.getAsText("coverBigUrl")
+		val coverImage = current?.getAsNullableText("coverBigUrl")
 		val artistKey = "author"
 
 		// check if data provided next playback, if not show only current audio playback content
@@ -78,5 +79,5 @@ class RmfRadioPlaybackMapper(
 	 * @param order The order of the track to retrieve (0 for current track, 1 for next track).
 	 * @return The JSON node representing the track, or null if no match is found.
 	 */
-	private fun getByOrder(jsonArray: ArrayNode, order: Int) = jsonArray.find { it.get("order").asInt() == order }
+	private fun getByOrder(jsonArray: ArrayNode, order: Int) = jsonArray.find { it.getAsInt("order") == order }
 }

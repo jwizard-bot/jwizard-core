@@ -4,13 +4,13 @@
  */
 package pl.jwizard.jwc.radio.mapper
 
-import pl.jwizard.jwc.core.util.ext.getAsText
 import pl.jwizard.jwc.radio.RadioPlaybackMapper
 import pl.jwizard.jwc.radio.RadioPlaybackMapperEnvironment
 import pl.jwizard.jwc.radio.RadioPlaybackMapperHandler
 import pl.jwizard.jwc.radio.RadioPlaybackResponse
 import pl.jwizard.jwl.radio.PlaybackProvider
 import pl.jwizard.jwl.radio.RadioStation
+import pl.jwizard.jwl.util.ext.getAsNullableText
 import java.time.Duration
 
 /**
@@ -41,7 +41,7 @@ class ZetRadioPlaybackMapper(
 		val jsonObject = objectMapper.readTree(jsonString)
 
 		val now = jsonObject.get("now")
-		val rawDuration = now.getAsText("duration")
+		val rawDuration = now.getAsNullableText("duration")
 
 		return RadioPlaybackResponse(
 			title = parseToExternalAudioServiceProvider(now, "artist"),
@@ -50,7 +50,7 @@ class ZetRadioPlaybackMapper(
 			} else {
 				Duration.ofSeconds(rawDuration.toLong())
 			},
-			streamThumbnailUrl = now.getAsText("img"),
+			streamThumbnailUrl = now.getAsNullableText("img"),
 		)
 	}
 }

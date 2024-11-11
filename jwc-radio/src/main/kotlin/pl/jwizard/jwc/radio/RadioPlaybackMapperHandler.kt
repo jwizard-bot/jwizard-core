@@ -16,10 +16,10 @@ import pl.jwizard.jwc.core.jda.embed.PercentageIndicatorBar
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.radio.spi.RadioPlaybackMessage
 import pl.jwizard.jwc.core.util.dtFormat
-import pl.jwizard.jwc.core.util.ext.getAsText
 import pl.jwizard.jwc.core.util.mdLink
 import pl.jwizard.jwc.exception.radio.RadioStationNotProvidedPlaybackDataException
 import pl.jwizard.jwl.radio.RadioStation
+import pl.jwizard.jwl.util.ext.getAsText
 import java.net.URI
 import java.net.URLEncoder
 import java.net.http.HttpClient
@@ -113,8 +113,8 @@ abstract class RadioPlaybackMapperHandler(
 	 * @return A formatted Markdown link to the track, or the author's name if the title is empty.
 	 */
 	protected fun parseToExternalAudioServiceProvider(node: JsonNode, artistKey: String): String {
-		val title = node.getAsText("title") as String
-		val author = node.getAsText(artistKey) as String
+		val title = node.getAsText("title")
+		val author = node.getAsText(artistKey)
 		if (title.isNotEmpty()) {
 			val trackUri = URLEncoder.encode("$title $author", StandardCharsets.UTF_8)
 			// replace all spaces to plus characters and encode to right URI syntax
