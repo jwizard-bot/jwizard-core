@@ -67,7 +67,7 @@ class MusicManagersBean(
 		val manager = musicManagers.getOrPut(context.guild.idLong) {
 			GuildMusicManager(this, context, future, distributedAudioClientSupplier)
 		}
-		manager.state.updateFutureResponse(future)
+		manager.state.updateFutureResponseAndContext(future, context)
 		manager
 	}
 

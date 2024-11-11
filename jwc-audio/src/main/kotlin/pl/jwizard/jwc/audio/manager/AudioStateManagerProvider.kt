@@ -80,12 +80,14 @@ class AudioStateManagerProvider(
 	}
 
 	/**
-	 * Updates the future response object to be used for asynchronous command responses.
+	 * Updates the future response and context for the current operation.
 	 *
 	 * @param future The new future response object.
+	 * @param context The context of the command.
 	 */
-	fun updateFutureResponse(future: TFutureResponse) {
+	fun updateFutureResponseAndContext(future: TFutureResponse, context: CommandBaseContext) {
 		this.future = future
+		this.context = context
 	}
 
 	/**
