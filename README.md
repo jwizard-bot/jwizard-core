@@ -40,25 +40,24 @@ client for sending commands to Lavalink nodes and message broker handling events
 ## Clone and install
 
 1. Make sure you have at least JDK 17 and Kotlin 2.0.
-2. Go to [JWizard Infra repository](https://github.com/jwizard-bot/jwizard-infra), configure and run all necessary
-   containers defined in `README.md` file in this repository. You must have up these containers:
-
-| Name                | Port(s)    | Description                  |
-|---------------------|------------|------------------------------|
-| jwizard-minio-s3    | 8763, 8764 | Storage objects service.     |
-| jwizard-vault       | 8761       | Secret keys storage service. |
-| jwizard-mysql-db    | 8762       | MySQL database.              |
-| jwizard-lava-node-1 | 8766       | Lavalink #1 node.            |
-| jwizard-lava-node-2 | 8767       | Lavalink #2 node.            |
-
-> NOTE: Alternatively, you can run single Lavalink node, but in `application.dev.yml` you must remove second Lavalink
-> node declaration. Running 2 nodes are useful for checking load-balancer in performance tests.
-
-3. Clone **JWizard Lib** from organization repository via:
+2. Clone **JWizard Lib** from organization repository via:
 
 ```bash
 $ git clone https://github.com/jwizard-bot/jwizard-lib
 ```
+
+3. Configure and run all necessary containers defined in `README.md` file in this repository. You must have up these
+   containers:
+
+| Name                | Port(s) | Description                  |
+|---------------------|---------|------------------------------|
+| jwizard-vault       | 8761    | Secret keys storage service. |
+| jwizard-mysql-db    | 8762    | MySQL database.              |
+| jwizard-lava-node-1 | 8766    | Lavalink #1 node.            |
+| jwizard-lava-node-2 | 8767    | Lavalink #2 node.            |
+
+> NOTE: Alternatively, you can run single Lavalink node, but in `application.dev.yml` you must remove second Lavalink~~
+> node declaration. Running 2 nodes are useful for checking load-balancer in performance tests.
 
 4. Build library and package to Maven Local artifacts' storage:
 
