@@ -139,6 +139,8 @@ jobs:
         run: ./gradlew dokkaHtml --no-daemon
         env:
           JWIZARD_VERSION: ${{ steps.version.outputs.sha_short }}
+          JWIZARD_MAVEN_NAME: ${{ secrets.MVN_LIB_READER_NAME }}
+          JWIZARD_MAVEN_SECRET: ${{ secrets.MVN_LIB_READER_SECRET }}
 
       - name: Copy generated content on server
         uses: appleboy/scp-action@v0.1.7
@@ -185,7 +187,7 @@ jobs:
           port: ${{ env.SSH_PORT }}
           key: ${{ env.SSH_KEY }}
           passphrase: ${{ env.SSH_PASSPHRASE }}
-          script: ./make-conf ${{ env.SERVER_OUTPUT }} "${{ secrets.CONFIG_FILE_CONTENT }}"
+          script: exec/make-conf ${{ env.SERVER_OUTPUT }} "${{ secrets.CONFIG_FILE_CONTENT }}"
 
       - name: Start process
         uses: appleboy/ssh-action@v1.1.0
