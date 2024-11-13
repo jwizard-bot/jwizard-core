@@ -42,7 +42,7 @@ allprojects {
 			url = uri('https://m2.miloszgilga.pl/private')
 			credentials {
 				username = getEnv('MAVEN_NAME')
-				username = getEnv('MAVEN_SECRET')
+				password = getEnv('MAVEN_SECRET')
 			}
 		}
 	}
