@@ -65,8 +65,8 @@ jobs:
         run: ./gradlew shadowJar --no-daemon
         env:
           JWIZARD_VERSION: ${{ steps.version.outputs.sha_short }}
-          MAVEN_NAME: ${{ secrets.MVN_LIB_READER_NAME }}
-          MAVEN_SECRET: ${{ secrets.MVN_LIB_READER_SECRET }}
+          JWIZARD_MAVEN_NAME: ${{ secrets.MVN_LIB_READER_NAME }}
+          JWIZARD_MAVEN_SECRET: ${{ secrets.MVN_LIB_READER_SECRET }}
 
       - name: Upload generated JAR artifact
         uses: actions/upload-artifact@v4
