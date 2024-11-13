@@ -136,7 +136,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Generate KDoc documentation
-        run: ./gradlew dokkaHtml --no-daemon
+        run: ./gradlew dokkaHtmlMultiModule --no-daemon
         env:
           JWIZARD_VERSION: ${{ steps.version.outputs.sha_short }}
           JWIZARD_MAVEN_NAME: ${{ secrets.MVN_LIB_READER_NAME }}
