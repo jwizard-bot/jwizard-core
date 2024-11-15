@@ -53,6 +53,7 @@ enum class I18nResponseSource(override val placeholder: String) : I18nLocaleSour
 	HELPFUL_LINKS("jw.response.helpfulLinks"),
 	COMMANDS("jw.response.commands"),
 	BOT_WEBSITE("jw.response.botWebsite"),
+	INFRA_CURRENT_STATUS("jw.response.infraCurrentStatus"),
 	BOT_SOURCE_CODE("jw.response.botSourceCode"),
 	BOT_DOCUMENTATION("jw.response.botDocumentation"),
 	VOTE_POLL("jw.response.votePoll"),

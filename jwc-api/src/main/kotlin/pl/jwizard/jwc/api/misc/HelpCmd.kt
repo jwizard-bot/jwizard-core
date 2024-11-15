@@ -91,8 +91,9 @@ class HelpCmd(
 		val sortedCommands = commands.sorted()
 
 		val website = environmentBean.getProperty<String>(BotProperty.LINK_WEBSITE)
+		val statusPage = environmentBean.getProperty<String>(BotProperty.LINK_STATUS)
 		val repository = environmentBean.getProperty<String>(BotProperty.LINK_REPOSITORY)
-		val docs = environmentBean.getProperty<String>(BotProperty.LINK_DOCS)
+		val docsLink = createLinkFromFragment(BotProperty.LINK_FRAGMENT_DOCS)
 
 		val parsedCommands = parseCommandsWithDescription(context, sortedCommands, website)
 		val lang = context.guildLanguage
@@ -100,8 +101,9 @@ class HelpCmd(
 		val descriptionElements = listOf(
 			mdBold(i18nBean.t(I18nResponseSource.HELPFUL_LINKS, lang).uppercase(Locale.getDefault())),
 			mdLink(i18nBean.t(I18nResponseSource.BOT_WEBSITE, lang), website),
+			mdLink(i18nBean.t(I18nResponseSource.INFRA_CURRENT_STATUS, lang), statusPage),
 			mdLink(i18nBean.t(I18nResponseSource.BOT_SOURCE_CODE, lang), repository),
-			mdLink(i18nBean.t(I18nResponseSource.BOT_DOCUMENTATION, lang), docs.format(website)),
+			mdLink(i18nBean.t(I18nResponseSource.BOT_DOCUMENTATION, lang), docsLink),
 			"",
 			mdBold("${i18nBean.t(I18nResponseSource.COMMANDS, lang).uppercase(Locale.getDefault())} (${commands.size})"),
 		)
@@ -125,7 +127,7 @@ class HelpCmd(
 		val commands = mutableMapOf<String, String>()
 		val lang = context.guildLanguage
 
-		val command = environmentBean.getProperty<String>(BotProperty.LINK_COMMAND)
+		val command = environmentBean.getProperty<String>(BotProperty.LINK_FRAGMENT_COMMAND)
 
 		for (details in guildCommands) {
 			val keyJoiner = StringJoiner("")

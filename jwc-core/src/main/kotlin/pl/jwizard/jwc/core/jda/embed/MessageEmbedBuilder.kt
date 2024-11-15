@@ -122,21 +122,21 @@ class MessageEmbedBuilder(
 	/**
 	 * Sets a value field in the embed with an optional inline display.
 	 *
-	 * @param value The value to display in the field.
+	 * @param value The value to display in the field. Might be null.
 	 * @param inline Whether to display the field inline with others (default is true).
 	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
 	 */
-	fun setValueField(value: Any, inline: Boolean = true) = apply { addField("", value.toString(), inline) }
+	fun setValueField(value: Any?, inline: Boolean = true) = apply { addField("", value.toString(), inline) }
 
 	/**
 	 * Sets a key-value field in the embed with a localized key.
 	 *
 	 * @param key The key for the localization of the field name.
-	 * @param value The value to display in the field.
+	 * @param value The value to display in the field. Might be null.
 	 * @param inline Whether to display the field inline with others (default is true).
 	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
 	 */
-	fun setKeyValueField(key: I18nLocaleSource, value: Any, inline: Boolean = true) =
+	fun setKeyValueField(key: I18nLocaleSource, value: Any?, inline: Boolean = true) =
 		setKeyValueField(i18nBean.t(key, context?.guildLanguage), value, inline)
 
 	/**
@@ -145,11 +145,11 @@ class MessageEmbedBuilder(
 	 * The key is set as a string, and the value will be displayed in the field.
 	 *
 	 * @param key The key to be displayed in the field.
-	 * @param value The value to display in the field.
+	 * @param value The value to display in the field. Might be null.
 	 * @param inline Whether to display the field inline with others (default is true).
 	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
 	 */
-	fun setKeyValueField(key: String, value: Any, inline: Boolean = true) = apply {
+	fun setKeyValueField(key: String, value: Any?, inline: Boolean = true) = apply {
 		addField(MessageEmbed.Field("$key:", value.toString(), inline))
 	}
 

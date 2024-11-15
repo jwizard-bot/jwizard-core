@@ -8,6 +8,7 @@ import dev.arbjerg.lavalink.VERSION
 import net.dv8tion.jda.api.JDAInfo
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
+import net.dv8tion.jda.api.interactions.components.ActionRow
 import org.apache.commons.io.FileUtils
 import pl.jwizard.jwc.api.ManagerCommandBase
 import pl.jwizard.jwc.command.CommandEnvironmentBean
@@ -16,12 +17,14 @@ import pl.jwizard.jwc.command.interaction.component.RefreshableComponent
 import pl.jwizard.jwc.command.interaction.component.RefreshableContent
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.config.spi.VcsDeploymentSupplier
+import pl.jwizard.jwc.core.i18n.source.I18nActionSource
 import pl.jwizard.jwc.core.i18n.source.I18nSystemSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.embed.PercentageIndicatorBar
 import pl.jwizard.jwc.core.jvm.SystemProperty
+import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.util.ext.versionFormat
 import pl.jwizard.jwc.core.util.mdBold
 import pl.jwizard.jwc.core.util.mdLink
@@ -58,9 +61,13 @@ class DebugCmd(
 		val refreshableComponent = RefreshableComponent(i18nBean, eventQueueBean, this, context)
 		refreshableComponent.initEvent()
 
+		val actionRow = ActionRow.of(
+			refreshableComponent.createRefreshButton(context),
+			createLinkButton(I18nActionSource.STATUS, BotProperty.LINK_STATUS, context),
+		)
 		val commandResponse = CommandResponse.Builder()
 			.addEmbedMessages(createDebugMessage(context))
-			.addActionRows(refreshableComponent.createRefreshButtonRow(context))
+			.addActionRows(actionRow)
 			.build()
 		response.complete(commandResponse)
 	}

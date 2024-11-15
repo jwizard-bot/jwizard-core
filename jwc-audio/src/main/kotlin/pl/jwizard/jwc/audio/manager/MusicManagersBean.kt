@@ -14,7 +14,7 @@ import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
-import pl.jwizard.jwc.core.jda.spi.JdaInstance
+import pl.jwizard.jwc.core.jda.spi.JdaShardManager
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwl.i18n.I18nBean
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
@@ -29,7 +29,7 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
  * @property environmentBean Stores environment variables used for configuration.
  * @property eventQueueBean Manages event queue interactions.
  * @property looselyTransportHandlerBean Handles loosely-typed transport operations between services.
- * @property jdaInstance Instance of the JDA client for interacting with Discord.
+ * @property jdaShardManager Manages multiple shards of the JDA bot, responsible for handling Discord API interactions.
  * @property radioStationThumbnailSupplier Supplies thumbnails for radio stations.
  * @author Miłosz Gilga
  */
@@ -41,7 +41,7 @@ class MusicManagersBean(
 	val environmentBean: EnvironmentBean,
 	val eventQueueBean: EventQueueBean,
 	val looselyTransportHandlerBean: LooselyTransportHandlerBean,
-	val jdaInstance: JdaInstance,
+	val jdaShardManager: JdaShardManager,
 	val radioStationThumbnailSupplier: RadioStationThumbnailSupplier,
 ) : MusicManagersSupplier {
 

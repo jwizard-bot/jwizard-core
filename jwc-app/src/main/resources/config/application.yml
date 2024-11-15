@@ -71,8 +71,11 @@ jda:
 link:
   website: https://jwizard.pl
   repository: https://github.com/jwizard-bot
-  docs: '%s/docs'
-  command: '%s/command/%s'
+  status: https://status.jwizard.pl
+  fragment:
+    docs: '%s/docs'
+    command: '%s/command/%s'
+    shards: '%s/shards'
 
 lavalink:
   timeout-ms: 5000

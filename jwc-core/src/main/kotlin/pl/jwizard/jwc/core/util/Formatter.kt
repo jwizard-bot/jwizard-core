@@ -21,12 +21,12 @@ fun formatQualifier(name: String, id: Long) = "\"%s <@%s>\"".format(name, id)
  *
  * This function generates a markdown-formatted link using the provided name and link.
  *
- * @param name The text that will be displayed for the link.
+ * @param name The text that will be displayed for the link. Can be null.
  * @param link The URL to which the link points. Can be null, in which case the link will be created without a URL.
  * @return A string representing a Markdown link in the format "[name](link)".
  * @author Miłosz Gilga
  */
-fun mdLink(name: Any, link: String?) = "[$name]($link)"
+fun mdLink(name: Any?, link: String?) = "[$name]($link)"
 
 /**
  * Formats the given text as bold Markdown.

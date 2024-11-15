@@ -13,6 +13,7 @@ import pl.jwizard.jwc.command.interaction.InteractionResponse
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
 import pl.jwizard.jwl.i18n.I18nBean
+import java.awt.Button
 
 /**
  * A component that allows for refreshing content in response to button interactions.
@@ -67,6 +68,16 @@ class RefreshableComponent<T>(
 	 * @param content The command base context to determine language for the button label.
 	 * @return An ActionRow containing the refresh button.
 	 */
-	fun createRefreshButtonRow(content: CommandBaseContext) =
-		ActionRow.of(createButton(InteractionButton.REFRESH, content.guildLanguage))
+	fun createRefreshButtonRow(content: CommandBaseContext) = ActionRow.of(createRefreshButton(content))
+
+	/**
+	 * Creates a refresh button for the content. The button will trigger the content refresh when pressed.
+	 *
+	 * This method creates a button labeled according to the current language context (using the `guildLanguage`). The
+	 * button will be associated with the `REFRESH` interaction type.
+	 *
+	 * @param content The command base context to determine language for the button label.
+	 * @return A [Button] that, when pressed, triggers the content refresh.
+	 */
+	fun createRefreshButton(content: CommandBaseContext) = createButton(InteractionButton.REFRESH, content.guildLanguage)
 }

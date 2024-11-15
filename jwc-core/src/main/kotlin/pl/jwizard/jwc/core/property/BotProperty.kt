@@ -34,10 +34,12 @@ import kotlin.reflect.KClass
  * - [JDA_EXCEPTION_URL_REFER_TEMPLATE]: Defines the URL template used for referring to detailed exception information
  *   in bot website.
  * - [JDA_PAGINATION_CHUNK_SIZE]: Defines chunk size for custom paginator for embed messages in command handlers.
- * - [LINK_WEBSITE]: The official website for the bot. It contains general information and features.
+ * - [LINK_WEBSITE]: The official website for the bot.
+ * - [LINK_STATUS]: Link to the bot external status page.
  * - [LINK_REPOSITORY]: The repository URL where the bot's source code is hosted.
- * - [LINK_DOCS]: The official website with documentation.
- * - [LINK_COMMAND]: Direct link to the bot command reference, detailing all available commands and their usage.
+ * - [LINK_FRAGMENT_DOCS]: Fragment link to the official website with documentation.
+ * - [LINK_FRAGMENT_COMMAND]: Fragment link to the bot command reference, detailing all available commands and their usage.
+ * - [LINK_FRAGMENT_SHARDS]: Fragment link to the bot shards details.
  * - [LAVALINK_TIMEOUT_MS]: Represents the timeout duration (in milliseconds) for Lavalink connections.
  * - [LAVALINK_SEARCH_CONTENT_PREFIX]: Represents the prefix used to search for content in Lavalink.
  * - [RADIO_PLAYBACK_EXTENDED_LINK]: Extended link for radio playback content.
@@ -141,9 +143,14 @@ enum class BotProperty(
 	JDA_PAGINATION_CHUNK_SIZE("jda.pagination.chunk-size", Int::class),
 
 	/**
-	 * The official website for the bot. It contains general information and features.
+	 * The official website for the bot.
 	 */
 	LINK_WEBSITE("link.website"),
+
+	/**
+	 * Link to the bot external status page.
+	 */
+	LINK_STATUS("link.status"),
 
 	/**
 	 * The repository URL where the bot's source code is hosted.
@@ -151,14 +158,19 @@ enum class BotProperty(
 	LINK_REPOSITORY("link.repository"),
 
 	/**
-	 * The official website with documentation.
+	 * Fragment link to the official website with documentation.
 	 */
-	LINK_DOCS("link.docs"),
+	LINK_FRAGMENT_DOCS("link.fragment.docs"),
 
 	/**
-	 * Direct link to the bot command reference, detailing all available commands and their usage.
+	 * Fragment link to the bot command reference, detailing all available commands and their usage.
 	 */
-	LINK_COMMAND("link.command"),
+	LINK_FRAGMENT_COMMAND("link.fragment.command"),
+
+	/**
+	 * Fragment link to the bot shards details.
+	 */
+	LINK_FRAGMENT_SHARDS("link.fragment.shards"),
 
 	/**
 	 * Represents the timeout duration (in milliseconds) for Lavalink connections.
