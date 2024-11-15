@@ -16,6 +16,7 @@ import kotlin.reflect.KClass
  * - [JDA_SECRET_TOKEN]: JDA secret token.
  * - [JDA_SHARDING_FRAGMENT_MIN_ID]: Start offset of JDA shard ID.
  * - [JDA_SHARDING_FRAGMENT_MAX_ID]: End offset of JDA shard ID.
+ * - [JDA_INSTANCE_PREFIX]: Instance legacy prefix specified for running multiple instances.
  * - [JDA_DEFAULT_ACTIVITY]: JDA default activity. Enabled when [JDA_SPLASHES_ENABLED] property is set to false.
  * - [JDA_SPLASHES_ENABLED]: JDA splashes toggle boolean property. If true, splashes are enabled, otherwise show nothing.
  * - [JDA_SPLASHES_INTERVAL_SEC]: JDA splashes interval in seconds.
@@ -70,6 +71,11 @@ enum class BotProperty(
 	 * End offset of JDA shard ID.
 	 */
 	JDA_SHARDING_FRAGMENT_MAX_ID("jda.sharding.fragment.max-id", Int::class),
+
+	/**
+	 * Instance legacy prefix specified for running multiple instances.
+	 */
+	JDA_INSTANCE_PREFIX("jda.instance.prefix"),
 
 	/**
 	 * JDA default activity. Enabled when [JDA_SPLASHES_ENABLED] property is set to false.

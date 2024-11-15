@@ -95,7 +95,7 @@ class HelpCmd(
 		val repository = environmentBean.getProperty<String>(BotProperty.LINK_REPOSITORY)
 		val docsLink = createLinkFromFragment(BotProperty.LINK_FRAGMENT_DOCS)
 
-		val parsedCommands = parseCommandsWithDescription(context, sortedCommands, website)
+		val parsedCommands = parseCommandsWithDescription(context, sortedCommands)
 		val lang = context.guildLanguage
 
 		val descriptionElements = listOf(
@@ -116,20 +116,13 @@ class HelpCmd(
 	 *
 	 * @param context The context of the command execution, containing guild and user data.
 	 * @param guildCommands A sorted list of command details to be included in the embed.
-	 * @param website The URL of the bot's website used for linking in descriptions.
 	 * @return A map with command names as keys and descriptions as values.
 	 */
-	private fun parseCommandsWithDescription(
-		context: CommandContext,
-		guildCommands: List<Command>,
-		website: String,
-	): Map<String, String> {
+	private fun parseCommandsWithDescription(context: CommandContext, guildCommands: List<Command>): Map<String, String> {
 		val commands = mutableMapOf<String, String>()
 		val lang = context.guildLanguage
-
-		val command = environmentBean.getProperty<String>(BotProperty.LINK_FRAGMENT_COMMAND)
-
 		for (details in guildCommands) {
+			val commandLink = createLinkFromFragment(BotProperty.LINK_FRAGMENT_COMMAND, details.textKey)
 			val keyJoiner = StringJoiner("")
 			val descriptionJoiner = StringJoiner("")
 
@@ -138,7 +131,7 @@ class HelpCmd(
 			keyJoiner.add(" (${details.alias}) ")
 
 			details.argumentsDefinition?.let { keyJoiner.add(mdCode("<${i18nBean.t(it, lang)}>")) }
-			descriptionJoiner.add(mdLink("[link]", command.format(website, details.textKey)))
+			descriptionJoiner.add(mdLink("[link]", commandLink))
 			descriptionJoiner.add(" ")
 			descriptionJoiner.add(i18nBean.t(details, lang))
 

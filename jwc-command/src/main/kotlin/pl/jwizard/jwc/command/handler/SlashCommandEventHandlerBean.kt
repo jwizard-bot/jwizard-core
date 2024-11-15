@@ -61,9 +61,10 @@ class SlashCommandEventHandlerBean(
 	 * Extracts the command name and its arguments from the event.
 	 *
 	 * @param event The slash command interaction event.
+	 * @param properties The command properties for the guild.
 	 * @return A pair containing the command name and its arguments.
 	 */
-	override fun commandNameAndArguments(event: SlashCommandInteractionEvent) =
+	override fun commandNameAndArguments(event: SlashCommandInteractionEvent, properties: GuildMultipleProperties) =
 		Pair(event.fullCommandName, event.options.map { it.asString })
 
 	/**

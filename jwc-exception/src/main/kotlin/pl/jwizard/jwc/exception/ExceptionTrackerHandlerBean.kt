@@ -141,7 +141,7 @@ class ExceptionTrackerHandlerBean(
 	 */
 	private fun StringJoiner.addKeyValue(
 		key: I18nLocaleSource,
-		value: Any,
+		value: Any?,
 		lang: String?,
 	): StringJoiner {
 		add(i18nBean.t(key, lang))

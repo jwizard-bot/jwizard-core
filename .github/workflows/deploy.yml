@@ -15,7 +15,8 @@ on:
   workflow_dispatch:
 
 env:
-  PM2_CORE_NAME: JWizardCore
+  PM2_CORE_NAME_INSTANCE_1: JWizardCore1
+  PM2_CORE_NAME_INSTANCE_2: JWizardCore2
   SSH_HOST: ${{ secrets.SSH_HOST }}
   SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
   SSH_PORT: ${{ secrets.SSH_PORT }}
@@ -35,7 +36,7 @@ jobs:
           port: ${{ env.SSH_PORT }}
           key: ${{ env.SSH_KEY }}
           passphrase: ${{ env.SSH_PASSPHRASE }}
-          script: ~/exec/process stop ${{ env.PM2_CORE_NAME }}
+          script: ~/exec/process stop ${{ env.PM2_CORE_NAME_INSTANCE_1 }} ${{ env.PM2_CORE_NAME_INSTANCE_2 }}
 
   build:
     runs-on: ubuntu-latest
@@ -197,4 +198,4 @@ jobs:
           port: ${{ env.SSH_PORT }}
           key: ${{ env.SSH_KEY }}
           passphrase: ${{ env.SSH_PASSPHRASE }}
-          script: ~/exec/process start ${{ env.PM2_CORE_NAME }}
+          script: ~/exec/process start ${{ env.PM2_CORE_NAME_INSTANCE_1 }} ${{ env.PM2_CORE_NAME_INSTANCE_2 }}

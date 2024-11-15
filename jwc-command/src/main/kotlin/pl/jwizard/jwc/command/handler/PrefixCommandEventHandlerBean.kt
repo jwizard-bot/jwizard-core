@@ -8,9 +8,11 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.requests.RestAction
 import pl.jwizard.jwc.command.CommandType
+import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.context.PrefixCommandContext
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
+import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
 import pl.jwizard.jwc.core.property.guild.GuildProperty
 
@@ -73,19 +75,29 @@ class PrefixCommandEventHandlerBean(
 	override fun forbiddenInvocationDetails(event: MessageReceivedEvent, properties: GuildMultipleProperties): Boolean {
 		val messageContentWithPrefix = event.message.contentRaw
 		val prefix = properties.getProperty<String>(GuildProperty.LEGACY_PREFIX)
-		return !messageContentWithPrefix.startsWith(prefix)
+		val instancePrefix = environmentBean.getProperty<String>(BotProperty.JDA_INSTANCE_PREFIX)
+		return !messageContentWithPrefix.startsWith(prefix + instancePrefix)
 	}
 
 	/**
 	 * Parses the command name and arguments from the received message.
 	 *
 	 * @param event The message received event.
+	 * @param properties The command properties for the guild.
 	 * @return A pair containing the command name and its arguments.
 	 */
-	override fun commandNameAndArguments(event: MessageReceivedEvent): Pair<String, List<String>> {
+	override fun commandNameAndArguments(
+		event: MessageReceivedEvent,
+		properties: GuildMultipleProperties
+	): Pair<String, List<String>> {
 		val messageContentWithPrefix = event.message.contentRaw
-		val commandWithArguments = messageContentWithPrefix.substring(1)
-		val endPosition = messageContentWithPrefix.indexOf(' ')
+
+		val prefix = properties.getProperty<String>(GuildProperty.LEGACY_PREFIX)
+		val instancePrefix = environmentBean.getProperty<String>(BotProperty.JDA_INSTANCE_PREFIX)
+		val lengthToOmit = (prefix + instancePrefix).length
+
+		val commandWithArguments = messageContentWithPrefix.substring(lengthToOmit + 1)
+		val endPosition = commandWithArguments.indexOf(' ')
 		val commandNameOrAlias = if (endPosition > -1) {
 			commandWithArguments.substring(0, commandWithArguments.indexOf(' '))
 		} else {
@@ -107,8 +119,14 @@ class PrefixCommandEventHandlerBean(
 	 * @param properties The command properties for the guild.
 	 * @return The command context.
 	 */
-	override fun createCommandContext(event: MessageReceivedEvent, command: String, properties: GuildMultipleProperties) =
-		PrefixCommandContext(event, command, properties)
+	override fun createCommandContext(
+		event: MessageReceivedEvent,
+		command: String,
+		properties: GuildMultipleProperties
+	): CommandContext {
+		val instancePrefix = environmentBean.getProperty<String>(BotProperty.JDA_INSTANCE_PREFIX)
+		return PrefixCommandContext(event, instancePrefix, command, properties)
+	}
 
 	/**
 	 * Sends a response message based on the command execution result.

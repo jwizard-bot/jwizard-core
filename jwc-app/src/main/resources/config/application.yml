@@ -10,6 +10,8 @@ jda:
     fragment:
       min-id: ${vault:V_MIN_SHARD_ID}
       max-id: ${vault:V_MAX_SHARD_ID}
+  instance:
+    prefix: ${vault:V_JDA_INSTANCE_PREFIX}
   default-activity: tracks
   splashes:
     enabled: true

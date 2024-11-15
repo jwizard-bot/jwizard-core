@@ -49,6 +49,7 @@ abstract class CommandEventHandler<E : Event>(
 ) : ListenerAdapter() {
 
 	private val i18nBean = commandEventHandlerEnvironmentBean.i18nBean
+	protected val environmentBean = commandEventHandlerEnvironmentBean.environmentBean
 
 	/**
 	 * Properties retrieved in single query at startup command pipeline.
@@ -89,7 +90,7 @@ abstract class CommandEventHandler<E : Event>(
 				if (forbiddenInvocationDetails(event, properties)) {
 					throw CommandInvocationException("forbidden invocation details")
 				}
-				val (commandNameOrAlias, commandArguments) = commandNameAndArguments(event)
+				val (commandNameOrAlias, commandArguments) = commandNameAndArguments(event, properties)
 
 				val commandDetails = Command.entries
 					.find { cmd -> cmd.textKey == commandNameOrAlias || cmd.alias == commandNameOrAlias }
@@ -350,9 +351,13 @@ abstract class CommandEventHandler<E : Event>(
 	 * Extracts the command name and its arguments from the event.
 	 *
 	 * @param event The event being processed.
+	 * @param properties The command properties for the guild.
 	 * @return A pair containing the command name and a list of arguments.
 	 */
-	protected abstract fun commandNameAndArguments(event: E): Pair<String, List<String>>
+	protected abstract fun commandNameAndArguments(
+		event: E,
+		properties: GuildMultipleProperties,
+	): Pair<String, List<String>>
 
 	/**
 	 * Creates the command context from the event and the guild properties.
