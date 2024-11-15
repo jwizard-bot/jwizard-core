@@ -56,7 +56,7 @@ $ git clone https://github.com/jwizard-bot/jwizard-lib
 | jwizard-lava-node-1 | 8766    | Lavalink #1 node.            |
 | jwizard-lava-node-2 | 8767    | Lavalink #2 node.            |
 
-> NOTE: Alternatively, you can run single Lavalink node, but in `application.dev.yml` you must remove second Lavalink~~
+> NOTE: Alternatively, you can run single Lavalink node, but in `application.dev.yml` you must remove second Lavalink
 > node declaration. Running 2 nodes are useful for checking load-balancer in performance tests.
 
 4. Build library and package to Maven Local artifacts' storage:
