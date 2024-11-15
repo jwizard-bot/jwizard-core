@@ -1,7 +1,7 @@
 lavalink:
   nodes:
-    - LAVA-NODE-1::EUROPE::${vault:V_LAVA_NODE_1_TOKEN}::ws://localhost:8766
-    - LAVA-NODE-2::EUROPE::${vault:V_LAVA_NODE_2_TOKEN}::ws://localhost:8767
+    - LAVA-NODE-1::EUROPE::${vault:V_LAVA_NODE_1}
+    - LAVA-NODE-2::EUROPE::${vault:V_LAVA_NODE_2}
 
 service:
   api-url: http://localhost:8765
