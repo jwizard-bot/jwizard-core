@@ -57,37 +57,37 @@ enum class GuildProperty(
 	/**
 	 * Represents the language tag associated with guild.
 	 */
-	LANGUAGE_TAG("language", "jw.system.languageTag", BASE, String::class),
+	LANGUAGE_TAG("language", "jw.guild.prop.languageTag", BASE, String::class),
 
 	/**
 	 * Ratio of voting percentage for guilds.
 	 */
-	VOTING_PERCENTAGE_RATIO("voting_percentage_ratio", "jw.system.votingPercentageRatio", TO_PERCENTAGE),
+	VOTING_PERCENTAGE_RATIO("voting_percentage_ratio", "jw.guild.prop.votingPercentageRatio", TO_PERCENTAGE),
 
 	/**
 	 * Maximum voting time for guilds in seconds.
 	 */
-	MAX_VOTING_TIME_SEC("time_to_finish_voting_sec", "jw.system.voteMaxWaitingTime", TO_DTF_SEC),
+	MAX_VOTING_TIME_SEC("time_to_finish_voting_sec", "jw.guild.prop.voteMaxWaitingTime", TO_DTF_SEC),
 
 	/**
 	 * ID of the music text channel in the guild. Stored as a number.
 	 */
-	MUSIC_TEXT_CHANNEL_ID("music_text_channel_id", "jw.system.musicTextChannel", BASE, Long::class),
+	MUSIC_TEXT_CHANNEL_ID("music_text_channel_id", "jw.guild.prop.musicTextChannel", BASE, Long::class),
 
 	/**
 	 * Name of the DJ role in the guild.
 	 */
-	DJ_ROLE_NAME("dj_role_name", "jw.system.djRole", BASE),
+	DJ_ROLE_NAME("dj_role_name", "jw.guild.prop.djRole", BASE),
 
 	/**
 	 * Minimum number of repeats allowed for a track in the guild.
 	 */
-	MIN_REPEATS_OF_TRACK("min_repeats_of_track", "jw.system.minRepeatsOfTrack", BASE),
+	MIN_REPEATS_OF_TRACK("min_repeats_of_track", "jw.guild.prop.minRepeatsOfTrack", BASE),
 
 	/**
 	 * Maximum number of repeats allowed for a track in the guild.
 	 */
-	MAX_REPEATS_OF_TRACK("max_repeats_of_track", "jw.system.maxRepeatsOfTrack", BASE),
+	MAX_REPEATS_OF_TRACK("max_repeats_of_track", "jw.guild.prop.maxRepeatsOfTrack", BASE),
 
 	/**
 	 * Time in seconds after which the bot leaves an empty channel in the guild.
@@ -97,41 +97,41 @@ enum class GuildProperty(
 	/**
 	 * Time in seconds after which the bot leaves a channel with no tracks in the guild.
 	 */
-	LEAVE_NO_TRACKS_SEC("leave_no_tracks_channel_sec", "jw.system.leaveNoTracksSec", TO_DTF_SEC),
+	LEAVE_NO_TRACKS_SEC("leave_no_tracks_channel_sec", "jw.guild.prop.leaveNoTracksSec", TO_DTF_SEC),
 
 	/**
 	 * Default volume level for the guild.
 	 */
-	PLAYER_VOLUME("player_volume", "jw.system.playerVolume", TO_PERCENTAGE),
+	PLAYER_VOLUME("player_volume", "jw.guild.prop.playerVolume", TO_PERCENTAGE),
 
 	/**
 	 * Indicates whether to randomly auto-choose tracks in the guild.
 	 */
-	RANDOM_AUTO_CHOOSE_TRACK("random_auto_choose_track", "jw.system.randomAutoChooseTrack", TO_BOOL),
+	RANDOM_AUTO_CHOOSE_TRACK("random_auto_choose_track", "jw.guild.prop.randomAutoChooseTrack", TO_BOOL),
 
 	/**
 	 * Time in seconds after which the bot automatically chooses a track in the guild.
 	 */
-	TIME_AFTER_AUTO_CHOOSE_SEC("time_after_auto_choose_sec", "jw.system.timeAfterAutoChooseTrack", TO_DTF_SEC),
+	TIME_AFTER_AUTO_CHOOSE_SEC("time_after_auto_choose_sec", "jw.guild.prop.timeAfterAutoChooseTrack", TO_DTF_SEC),
 
 	/**
 	 * Maximum number of tracks to choose from in the guild.
 	 */
-	MAX_TRACKS_TO_CHOOSE("tracks_to_choose_max", "jw.system.maxTracksToChoose", BASE),
+	MAX_TRACKS_TO_CHOOSE("tracks_to_choose_max", "jw.guild.prop.maxTracksToChoose", BASE),
 
 	/**
 	 * The legacy command prefix used by the bot in guilds.
 	 */
-	LEGACY_PREFIX("legacy_prefix", "jw.system.legacyPrefix", BASE),
+	LEGACY_PREFIX("legacy_prefix", "jw.guild.prop.legacyPrefix", BASE),
 
 	/**
 	 * Indicates whether slash commands are enabled for the guild.
 	 */
-	SLASH_ENABLED("slash_enabled", "jw.system.slashEnabled", TO_BOOL),
+	SLASH_ENABLED("slash_enabled", "jw.guild.prop.slashEnabled", TO_BOOL),
 
 	/**
 	 * Determines if notifications from bot responses should be suppressed.
 	 */
-	SUPPRESS_RESPONSE_NOTIFICATIONS("suppress_response_notifications", "jw.system.suppressNotificationsState", TO_BOOL),
+	SUPPRESS_RESPONSE_NOTIFICATIONS("suppress_response_notifications", "jw.guild.prop.suppressNotifications", TO_BOOL),
 	;
 }
