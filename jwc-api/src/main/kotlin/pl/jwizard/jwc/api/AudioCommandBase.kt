@@ -133,7 +133,7 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 */
 	protected fun joinAndOpenAudioConnection(context: CommandContext) {
 		if (context.selfMember.voiceState?.inAudioChannel() == false) {
-			context.author.voiceState?.channel?.let { jdaInstance.directAudioController.connect(it) }
+			context.author.voiceState?.channel?.let { jdaShardManager.getDirectAudioController(context.guild)?.connect(it) }
 		}
 	}
 

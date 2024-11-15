@@ -14,6 +14,8 @@ import kotlin.reflect.KClass
  *
  * Defining following properties:
  * - [JDA_SECRET_TOKEN]: JDA secret token.
+ * - [JDA_SHARDING_FRAGMENT_MIN_ID]: Start offset of JDA shard ID.
+ * - [JDA_SHARDING_FRAGMENT_MAX_ID]: End offset of JDA shard ID.
  * - [JDA_DEFAULT_ACTIVITY]: JDA default activity. Enabled when [JDA_SPLASHES_ENABLED] property is set to false.
  * - [JDA_SPLASHES_ENABLED]: JDA splashes toggle boolean property. If true, splashes are enabled, otherwise show nothing.
  * - [JDA_SPLASHES_INTERVAL_SEC]: JDA splashes interval in seconds.
@@ -58,6 +60,16 @@ enum class BotProperty(
 	JDA_SECRET_TOKEN("jda.secret-token"),
 
 	/**
+	 * Start offset of JDA shard ID.
+	 */
+	JDA_SHARDING_FRAGMENT_MIN_ID("jda.sharding.fragment.min-id", Int::class),
+
+	/**
+	 * End offset of JDA shard ID.
+	 */
+	JDA_SHARDING_FRAGMENT_MAX_ID("jda.sharding.fragment.max-id", Int::class),
+
+	/**
 	 * JDA default activity. Enabled when [JDA_SPLASHES_ENABLED] property is set to false.
 	 */
 	JDA_DEFAULT_ACTIVITY("jda.default-activity"),
@@ -75,12 +87,12 @@ enum class BotProperty(
 	/**
 	 * JDA primary color in embed messages.
 	 */
-	JDA_COLOR_PRIMARY("jda.color.primary", Int::class),
+	JDA_COLOR_PRIMARY("jda.color.primary"),
 
 	/**
 	 * JDA danger color in embed messages.
 	 */
-	JDA_COLOR_DANGER("jda.color.danger", Int::class),
+	JDA_COLOR_DANGER("jda.color.danger"),
 
 	/**
 	 * Maximum embeds messages in single JDA command interaction.

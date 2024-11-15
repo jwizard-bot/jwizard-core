@@ -8,7 +8,7 @@ import dev.arbjerg.lavalink.client.event.*
 import pl.jwizard.jwc.audio.lava.LavalinkClientBean.Companion.WS_SESSION_INVALID
 import pl.jwizard.jwc.audio.manager.MusicManagersBean
 import pl.jwizard.jwc.audio.scheduler.AudioScheduleHandler
-import pl.jwizard.jwc.core.jda.spi.JdaInstance
+import pl.jwizard.jwc.core.jda.spi.JdaShardManager
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 
 /**
@@ -17,13 +17,13 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
  * audio playback.
  *
  * @property musicManagersBean Manages music-related resources and states across multiple guilds.
- * @property jdaInstance Provides access to the JDA instance for guild and voice channel management.
+ * @property jdaShardManager Manages multiple shards of the JDA bot, responsible for handling Discord API interactions.
  * @author Miłosz Gilga
  */
 @SingletonComponent
 class LavaNodeListenerAdapter(
 	private val musicManagersBean: MusicManagersBean,
-	private val jdaInstance: JdaInstance,
+	private val jdaShardManager: JdaShardManager,
 ) : LavaNodeListener {
 
 	/**
@@ -78,9 +78,9 @@ class LavaNodeListenerAdapter(
 	 */
 	override fun onCloseWsConnection(event: WebSocketClosedEvent) {
 		if (event.code == WS_SESSION_INVALID) {
-			val guild = jdaInstance.getGuildById(event.guildId)
+			val guild = jdaShardManager.getGuildById(event.guildId)
 			val connectionChannel = guild?.selfMember?.voiceState?.channel ?: return
-			jdaInstance.directAudioController.reconnect(connectionChannel)
+			jdaShardManager.getDirectAudioController(guild)?.reconnect(connectionChannel)
 		}
 	}
 

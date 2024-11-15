@@ -45,7 +45,7 @@ class LeaveAfterInactivityThread(
 			.build()
 
 		musicManager.state.audioScheduler.stopAndDestroy()
-		guild?.let { musicManager.beans.jdaInstance.directAudioController.disconnect(it) }
+		guild?.let { musicManager.beans.jdaShardManager.getDirectAudioController(guild)?.disconnect(it) }
 
 		log.jdaInfo(musicManager.state.context, "Leaved voice channel after: %s time of inactivity.", secToDTF(timeSec))
 		musicManager.sendMessage(message)

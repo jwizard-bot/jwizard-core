@@ -11,7 +11,7 @@ import pl.jwizard.jwc.audio.manager.MusicManagersBean
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
-import pl.jwizard.jwc.core.jda.spi.JdaInstance
+import pl.jwizard.jwc.core.jda.spi.JdaShardManager
 
 /**
  * Event listener for managing audio events in a Discord guild. This listener automatically handles bot deafen actions
@@ -19,14 +19,14 @@ import pl.jwizard.jwc.core.jda.spi.JdaInstance
  *
  * @property audioChannelsListenerGuardBean A guard responsible for handling additional voice channel update events.
  * @property musicManagersBean Provides access to the cached music manager for controlling audio playback.
- * @property jdaInstance JDA instance for interacting with Discord API and retrieving guild information.
+ * @property jdaShardManager Manages multiple shards of the JDA bot, responsible for handling Discord API interactions.
  * @author Miłosz Gilga
  */
 @JdaEventListenerBean
 class AudioEventListenerBean(
 	private val audioChannelsListenerGuardBean: AudioChannelsListenerGuardBean,
 	private val musicManagersBean: MusicManagersBean,
-	private val jdaInstance: JdaInstance,
+	private val jdaShardManager: JdaShardManager,
 ) : ListenerAdapter() {
 
 	/**

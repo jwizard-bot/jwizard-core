@@ -37,7 +37,7 @@ class JdaColorStoreBean(private val environmentBean: EnvironmentBean) {
 	 * Logs the number of colors loaded and their values.
 	 */
 	fun loadColors() {
-		colors.putAll(JdaColor.entries.associateWith { environmentBean.getProperty<Int>(it.botProperty) })
+		colors.putAll(JdaColor.entries.associateWith { Integer.decode(environmentBean.getProperty(it.botProperty)) })
 		val loadedColors = colors.map { (key, value) -> "$key: ${"#%06X".format(value)}" }
 		log.info("Load: {} colors: {}.", loadedColors.size, loadedColors)
 	}

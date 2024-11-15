@@ -10,7 +10,7 @@ import pl.jwizard.jwc.audio.manager.MusicManagersBean
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.spi.ChannelListenerGuard
-import pl.jwizard.jwc.core.jda.spi.JdaInstance
+import pl.jwizard.jwc.core.jda.spi.JdaShardManager
 import pl.jwizard.jwc.core.jvm.thread.JvmFixedThreadExecutor
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.property.guild.GuildProperty
@@ -25,7 +25,7 @@ import java.time.Instant
  * extends [JvmFixedThreadExecutor] to periodically check voice channels and uses [ChannelListenerGuard] to handle voice
  * channel events.
  *
- * @property jdaInstance Provide access to the JDA API, used to retrieve guild information.
+ * @property jdaShardManager Manages multiple shards of the JDA bot, responsible for handling Discord API interactions.
  * @property environmentBean Provides access to application properties.
  * @property musicManagersBean
  * @author Miłosz Gilga
@@ -34,7 +34,7 @@ import java.time.Instant
  */
 @SingletonComponent
 class AudioChannelsListenerGuardBean(
-	private val jdaInstance: JdaInstance,
+	private val jdaShardManager: JdaShardManager,
 	private val environmentBean: EnvironmentBean,
 	private val musicManagersBean: MusicManagersBean,
 ) : ChannelListenerGuard, JvmFixedThreadExecutor() {
@@ -92,7 +92,7 @@ class AudioChannelsListenerGuardBean(
 	override fun executeJvmThread() {
 		val removeFromGuild = mutableSetOf<Long>()
 		for ((guildId, time) in aloneFromTime) {
-			val guild = jdaInstance.getGuildById(guildId)
+			val guild = jdaShardManager.getGuildById(guildId)
 			if (guild == null) {
 				removeFromGuild.add(guildId)
 				continue
@@ -104,7 +104,7 @@ class AudioChannelsListenerGuardBean(
 			val musicManager = musicManagersBean.getCachedMusicManager(guildId)
 			if (musicManager != null) {
 				musicManager.state.audioScheduler.stopAndDestroy()
-				jdaInstance.directAudioController.disconnect(guild)
+				jdaShardManager.getDirectAudioController(guild)?.disconnect(guild)
 
 				val message = musicManager.createEmbedBuilder()
 					.setDescription(I18nResponseSource.LEAVE_EMPTY_CHANNEL)

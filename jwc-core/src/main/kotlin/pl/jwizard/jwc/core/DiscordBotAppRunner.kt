@@ -6,7 +6,7 @@ package pl.jwizard.jwc.core
 
 import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
 import pl.jwizard.jwc.core.jda.ActivitySplashesBean
-import pl.jwizard.jwc.core.jda.JdaInstanceBean
+import pl.jwizard.jwc.core.jda.JdaShardManagerBean
 import pl.jwizard.jwc.core.jda.spi.ChannelListenerGuard
 import pl.jwizard.jwc.core.jda.spi.CommandsLoader
 import pl.jwizard.jwc.core.radio.spi.RadioPlaybackMappersCache
@@ -41,7 +41,7 @@ object DiscordBotAppRunner : AppRunner(), HttpServerHook {
 	 * @param context The pre-configured [IoCKtContextFactory] class representing the IoC context.
 	 */
 	override fun afterStartServer(context: IoCKtContextFactory) {
-		val jdaInstance = context.getBean(JdaInstanceBean::class)
+		val shardsManagerInstance = context.getBean(JdaShardManagerBean::class)
 		val activitySplashes = context.getBean(ActivitySplashesBean::class)
 
 		val radioPlaybackMappersCache = context.getBean(RadioPlaybackMappersCache::class)
@@ -54,7 +54,7 @@ object DiscordBotAppRunner : AppRunner(), HttpServerHook {
 
 		audioClientSupplier.initClientNodes()
 
-		jdaInstance.createJdaWrapper(audioClientSupplier)
+		shardsManagerInstance.createShardsManager(audioClientSupplier)
 
 		activitySplashes.initSplashesSequence()
 		channelListenerGuard.initThreadPool()

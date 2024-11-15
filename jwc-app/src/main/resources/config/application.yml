@@ -1,9 +1,15 @@
 vault:
   kv:
-    application-name: core
+    application-names:
+      - core
+      - ${cmd:jda.shards.name}
 
 jda:
   secret-token: ${vault:V_JDA_SECRET}
+  sharding:
+    fragment:
+      min-id: ${vault:V_MIN_SHARD_ID}
+      max-id: ${vault:V_MAX_SHARD_ID}
   default-activity: tracks
   splashes:
     enabled: true
@@ -40,7 +46,7 @@ jda:
       - SCHEDULED_EVENTS
       - STICKER
   color:
-    primary: 0x4E5058
+    primary: ${vault:V_JDA_PRIMARY_COLOR}
     danger: 0xEF4444
   interaction:
     message:

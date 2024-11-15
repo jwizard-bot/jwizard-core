@@ -9,11 +9,29 @@ import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.managers.DirectAudioController
 
 /**
- * Interface for interacting with the JDA (Java Discord API) bean instance.
+ * Interface for managing shards in a JDA (Java Discord API) bot.
+ *
+ * This interface provides methods to interact with multiple shards, manage bot presence, and access important JDA
+ * resources like guilds, users, and audio controllers.
  *
  * @author Miłosz Gilga
  */
-interface JdaInstance {
+interface JdaShardManager {
+
+	/**
+	 * The total number of shards currently queued for processing.
+	 */
+	val queuedShardsCount: Int
+
+	/**
+	 * The total number of shards that are currently running.
+	 */
+	val runningShardsCount: Int
+
+	/**
+	 * The average gateway ping across all active shards.
+	 */
+	val averageGatewayPing: Double
 
 	/**
 	 * Sets the presence activity of the bot.
@@ -45,10 +63,13 @@ interface JdaInstance {
 	fun getUserById(userId: Long): User?
 
 	/**
-	 * Accesses the [DirectAudioController] for managing audio playback directly in voice channels.
+	 * Retrieves the [DirectAudioController] for a specific guild.
 	 *
-	 * This property provides an interface to control audio playback, allowing the bot to join and leave voice channels,
-	 * play audio, and manage audio-related tasks.
+	 * This method returns the DirectAudioController for a particular guild, which is responsible for handling voice
+	 * connections and audio features in the guild. It is used to control the bot’s voice chat in a guild.
+	 *
+	 * @param guild The guild for which the audio controller is required.
+	 * @return The [DirectAudioController] for the specified guild, or null if the controller is not available.
 	 */
-	val directAudioController: DirectAudioController
+	fun getDirectAudioController(guild: Guild): DirectAudioController?
 }

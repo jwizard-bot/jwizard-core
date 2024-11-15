@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import pl.jwizard.jwc.command.handler.InteractionRemovalThread
 import pl.jwizard.jwc.core.jda.command.CommandResponse
-import pl.jwizard.jwc.core.jda.spi.JdaInstance
+import pl.jwizard.jwc.core.jda.spi.JdaShardManager
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwl.ioc.CleanupAfterIoCDestroy
@@ -20,13 +20,13 @@ import java.util.concurrent.TimeUnit
  * A component responsible for handling the transportation of command responses in a loosely coupled manner. It manages
  * the sending of messages to Discord channels and handles the removal of interaction components after a delay.
  *
- * @property jdaInstance The JDA instance used for interacting with Discord.
+ * @property jdaShardManager Manages multiple shards of the JDA bot, responsible for handling Discord API interactions.
  * @property environmentBean The environment configuration for the bot.
  * @author Miłosz Gilga
  */
 @SingletonComponent
 class LooselyTransportHandlerBean(
-	private val jdaInstance: JdaInstance,
+	private val jdaShardManager: JdaShardManager,
 	private val environmentBean: EnvironmentBean,
 ) : CleanupAfterIoCDestroy {
 
@@ -88,7 +88,7 @@ class LooselyTransportHandlerBean(
 				.queue(onSend)
 			return
 		}
-		val user = jdaInstance.getUserById(privateUserId)
+		val user = jdaShardManager.getUserById(privateUserId)
 		user?.openPrivateChannel()?.queue {
 			it.sendMessageEmbeds(truncated.embedMessages)
 				.addComponents(truncated.actionRows)

@@ -4,8 +4,6 @@
  */
 package pl.jwizard.jwc.core.jda
 
-import net.dv8tion.jda.api.JDA
-import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Activity
@@ -15,11 +13,13 @@ import net.dv8tion.jda.api.exceptions.InvalidTokenException
 import net.dv8tion.jda.api.hooks.EventListener
 import net.dv8tion.jda.api.managers.DirectAudioController
 import net.dv8tion.jda.api.requests.GatewayIntent
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
+import net.dv8tion.jda.api.sharding.ShardManager
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
-import pl.jwizard.jwc.core.jda.spi.JdaInstance
+import pl.jwizard.jwc.core.jda.spi.JdaShardManager
 import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
@@ -31,10 +31,8 @@ import pl.jwizard.jwl.property.AppBaseListProperty
 import pl.jwizard.jwl.util.logger
 
 /**
- * Manages the JDA (Java Discord API) client instance.
- *
- * This class is responsible for initializing and configuring the JDA client used to interact with the Discord API.
- * It sets up various configurations such as cache settings, gateway intents, activity status, and permissions.
+ * Manages the initialization, lifecycle, and interaction with the JDA (Java Discord API) instance for a bot.
+ * This includes managing the shards, setting bot presence, and handling events for guilds and users.
  *
  * @property environmentBean Provides access to application properties, including the bot token.
  * @property ioCKtContextFactory Provides access to the IoC context for retrieving beans.
@@ -42,20 +40,20 @@ import pl.jwizard.jwl.util.logger
  * @author Miłosz Gilga
  */
 @SingletonComponent
-final class JdaInstanceBean(
+final class JdaShardManagerBean(
 	private val environmentBean: EnvironmentBean,
 	private val ioCKtContextFactory: IoCKtContextFactory,
 	private val jdaColorStoreBean: JdaColorStoreBean,
-) : JdaInstance, JvmDisposable {
+) : JdaShardManager, JvmDisposable {
 
 	companion object {
-		private val log = logger<JdaInstanceBean>()
+		private val log = logger<JdaShardManagerBean>()
 	}
 
 	/**
-	 * The JDA (Java Discord API) client instance. Initializing in [createJdaWrapper] method.
+	 * The ShardManager instance responsible for managing all the JDA shards.
 	 */
-	private final lateinit var jda: JDA
+	private final lateinit var shardManager: ShardManager
 
 	/**
 	 * Instance of [JvmDisposableHook] responsible for managing JVM shutdown hooks.
@@ -63,17 +61,16 @@ final class JdaInstanceBean(
 	private val jvmDisposableHook = JvmDisposableHook(this)
 
 	/**
-	 * Initializes and configures a JDA (Java Discord API) client.
+	 * Creates and initializes the JDA shard manager, responsible for managing the bot's connection to Discord.
 	 *
-	 * This method creates and configures the JDA client with the specified bot token and gateway intents,
-	 * sets cache settings, activity status, and adds event listeners (to be defined). It also logs the
-	 * initialization progress and provides an invitation URL for adding the bot to a Discord server once ready.
+	 * This method configures the JDA instance, sets the bot’s token, permissions, and gateway intents, initializes event
+	 * listeners, and handles audio functionality.
 	 *
 	 * @param audioClientSupplier Provides access to the distributed client for audio streaming functionalities.
 	 * @throws InterruptedException If waiting for the JDA client to be ready is interrupted.
 	 * @throws InvalidTokenException If there is an issue with the bot token or login process.
 	 */
-	fun createJdaWrapper(audioClientSupplier: DistributedAudioClientSupplier) {
+	fun createShardsManager(audioClientSupplier: DistributedAudioClientSupplier) {
 		log.info("JDA instance is warming up...")
 		jdaColorStoreBean.loadColors()
 
@@ -94,8 +91,15 @@ final class JdaInstanceBean(
 		log.info("Load: {} enabled cache flags: {}.", enabledCacheFlags.size, enabledCacheFlags)
 		log.info("Load: {} disabled cache flags: {}.", disabledCacheFlags.size, disabledCacheFlags)
 
-		jda = JDABuilder
+		val shardingMinId = environmentBean.getProperty<Int>(BotProperty.JDA_SHARDING_FRAGMENT_MIN_ID)
+		val shardingMaxId = environmentBean.getProperty<Int>(BotProperty.JDA_SHARDING_FRAGMENT_MAX_ID)
+		val shardsCount = (shardingMaxId - shardingMinId) + 1
+
+		shardManager = DefaultShardManagerBuilder
 			.create(jdaToken, gatewayIntents.map { GatewayIntent.valueOf(it) })
+			.setUseShutdownNow(true)
+			.setShardsTotal(shardsCount)
+			.setShards(shardingMinId, shardingMaxId)
 			.setVoiceDispatchInterceptor(audioClientSupplier.voiceDispatchInterceptor)
 			.enableCache(enabledCacheFlags.map { CacheFlag.valueOf(it) })
 			.disableCache(disabledCacheFlags.map { CacheFlag.valueOf(it) })
@@ -104,20 +108,21 @@ final class JdaInstanceBean(
 			.addEventListeners(*eventListeners.toTypedArray())
 			.setBulkDeleteSplittingEnabled(true)
 			.build()
-			.awaitReady()
 
 		jvmDisposableHook.initHook()
-		log.info("Add bot into Discord server via link: {}", jda.getInviteUrl(permissions))
+
+		log.info("Init shards manager from shard id: {} to: {} (total: {}).", shardingMinId, shardingMaxId, shardsCount)
+		log.info("Add bot into Discord server via link: {}", shardManager.getShardById(0)?.getInviteUrl(permissions))
 	}
 
 	/**
-	 * Cleans up resources before JVM shutdown. This method shuts down the JDA client and logs the state transition
-	 * of the JDA instance.
+	 * Cleans up resources before JVM shutdown. This method shuts down the JDA clients from all shards and logs the state
+	 * transition of the JDA instance.
 	 */
 	override fun cleanBeforeDisposeJvm() {
-		val previousState = jda.status
-		jda.shutdownNow()
-		log.info("JDA instance change state from: {} to: {}.", previousState, jda.status)
+		val shardsCount = shardManager.shards.size
+		shardManager.shutdown()
+		log.info("JDA instances in: {} shards change was disposed.", shardsCount)
 	}
 
 	/**
@@ -126,7 +131,7 @@ final class JdaInstanceBean(
 	 * @param activity The activity description to set for the presence.
 	 */
 	override fun setPresenceActivity(activity: String) {
-		jda.presence.activity = Activity.listening(activity)
+		shardManager.shards.forEach { it.presence.activity = Activity.listening(activity) }
 	}
 
 	/**
@@ -135,7 +140,7 @@ final class JdaInstanceBean(
 	 * @param guildId The ID of the guild to retrieve.
 	 * @return The [Guild] object associated with the given ID, or `null` if no such guild is found.
 	 */
-	override fun getGuildById(guildId: Long) = jda.getGuildById(guildId)
+	override fun getGuildById(guildId: Long) = shardManager.getGuildById(guildId)
 
 	/**
 	 * Retrieves a [User] object associated with the specified userId.
@@ -146,14 +151,20 @@ final class JdaInstanceBean(
 	 * @param userId The ID of the user to retrieve.
 	 * @return The [User] object associated with the given ID, or `null` if no such user is found.
 	 */
-	override fun getUserById(userId: Long) = jda.getUserById(userId)
+	override fun getUserById(userId: Long) = shardManager.getUserById(userId)
 
 	/**
-	 * Provides access to the [DirectAudioController] for managing audio playback in voice channels.
+	 * Retrieves the [DirectAudioController] for the specified guild.
 	 *
-	 * This property allows interaction with the audio functionalities of the JDA instance, enabling the bot to play
-	 * audio in voice channels and manage audio-related tasks.
+	 * This controller is used for managing audio functionality in voice channels within a guild.
+	 *
+	 * @param guild The guild for which the audio controller is requested.
+	 * @return The [DirectAudioController] for the specified guild, or `null` if the controller is not available.
 	 */
-	override val directAudioController
-		get() = jda.directAudioController
+	override fun getDirectAudioController(guild: Guild) =
+		shardManager.getShardById(guild.jda.shardInfo.shardId)?.directAudioController
+
+	override val runningShardsCount get() = shardManager.shardsRunning
+	override val queuedShardsCount get() = shardManager.shardsQueued
+	override val averageGatewayPing get() = shardManager.averageGatewayPing
 }

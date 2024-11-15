@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.core.jda
 
-import pl.jwizard.jwc.core.jda.spi.JdaInstance
+import pl.jwizard.jwc.core.jda.spi.JdaShardManager
 import pl.jwizard.jwc.core.jvm.thread.JvmFixedThreadExecutor
 import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
@@ -17,14 +17,14 @@ import pl.jwizard.jwl.util.logger
  * This component handles rotating through a list of splash texts or statuses at a specified interval.
  *
  * @property environmentBean Provide access to environment properties, used to configure splash settings and intervals.
- * @property jdaInstanceBean Provide access to the JDA instance, used to set the bot's activity status.
+ * @property jdaShardManager Manages multiple shards of the JDA bot, responsible for handling Discord API interactions.
  * @author Miłosz Gilga
  * @see JvmFixedThreadExecutor
  */
 @SingletonComponent
 class ActivitySplashesBean(
 	private val environmentBean: EnvironmentBean,
-	private val jdaInstanceBean: JdaInstance,
+	private val jdaShardManager: JdaShardManager,
 ) : JvmFixedThreadExecutor() {
 
 	companion object {
@@ -54,7 +54,7 @@ class ActivitySplashesBean(
 
 		if (!splashesEnabled || splashes.isEmpty()) {
 			val defaultActivity = environmentBean.getProperty<String>(BotProperty.JDA_DEFAULT_ACTIVITY)
-			jdaInstanceBean.setPresenceActivity(defaultActivity)
+			jdaShardManager.setPresenceActivity(defaultActivity)
 			return
 		}
 		log.info("Start single thread executor service for activity splashes: {}", splashes)
@@ -67,7 +67,7 @@ class ActivitySplashesBean(
 	 * The splash text list is cycled through, so after reaching the end, it starts again from the beginning.
 	 */
 	override fun executeJvmThread() {
-		jdaInstanceBean.setPresenceActivity(splashes[position])
+		jdaShardManager.setPresenceActivity(splashes[position])
 		position = (position + 1) % splashes.size
 	}
 }

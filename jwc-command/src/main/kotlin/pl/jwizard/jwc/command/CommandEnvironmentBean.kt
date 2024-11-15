@@ -11,7 +11,7 @@ import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerHandler
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
 import pl.jwizard.jwc.core.jda.spi.GuildSettingsEventAction
-import pl.jwizard.jwc.core.jda.spi.JdaInstance
+import pl.jwizard.jwc.core.jda.spi.JdaShardManager
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwl.i18n.I18nBean
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
@@ -25,7 +25,7 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
  * @property eventQueueBean Manages event queue for asynchronous processing of JDA events.
  * @property musicManagersBean Supplies music manager instances for voice channel management.
  * @property distributedAudioClientSupplier Supplies distributed audio client instance for audio streaming.
- * @property jdaInstance Provides access to the JDA instance for Discord interaction.
+ * @property jdaShardManager Manages multiple shards of the JDA bot, responsible for handling Discord API interactions.
  * @property guildSettingsEventAction Handles guild settings change events.
  * @property exceptionTrackerHandler The store used to track and log exceptions.
  * @property looselyTransportHandlerBean Handles loosely-typed transport operations between services.
@@ -39,7 +39,7 @@ class CommandEnvironmentBean(
 	val eventQueueBean: EventQueueBean,
 	val musicManagersBean: MusicManagersSupplier,
 	val distributedAudioClientSupplier: DistributedAudioClientSupplier,
-	val jdaInstance: JdaInstance,
+	val jdaShardManager: JdaShardManager,
 	val guildSettingsEventAction: GuildSettingsEventAction,
 	val exceptionTrackerHandler: ExceptionTrackerHandler,
 	val looselyTransportHandlerBean: LooselyTransportHandlerBean,

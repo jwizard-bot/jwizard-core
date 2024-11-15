@@ -89,8 +89,9 @@ where `<value token>` property is the Vault token stored in configured `.env` fi
 
 5. That's it. Now you can run via Intellij IDEA. Make sure, you have set JVM parameters:
 
-```
--Druntime.profiles=dev -Denv.enabled=true -Dserver.port=8768 -Xms1G -Xmx1G
+```bash
+-Druntime.profiles=dev -Denv.enabled=true -Dserver.port=8768 -Djda.shards.name=core-instance-01 -Xms1G -Xmx1G # for first instance
+-Druntime.profiles=dev -Denv.enabled=true -Dserver.port=8769 -Djda.shards.name=core-instance-02 -Xms1G -Xmx1G # for second instance
 ```
 
 where `Xmx` and `Xms` parameters are optional and can be modified.
@@ -99,9 +100,13 @@ where `Xmx` and `Xms` parameters are optional and can be modified.
 > More information you will
 > find [here](https://docs.oracle.com/cd/E74363_01/ohi_vbp_-_installation_guide--20160224-094432-html-chunked/s66.html).
 
-> NOTE: Application starts with embed lightweight Jetty server. It's used only for actuator functionalities. Property
-> `-Dserver.port` has no refer to others application in JWizard infrastructure and can be modified. Exposing only
-> `/actuator/health` GET endpoint.
+> NOTE: You can run concurrently 2 instances, but you must set JVM parameter `-Djda.shards.name` to identify separated
+> bot instances (with predefined shards pool range). Concurrent instances can share same Lavalink node/nodes.
+
+More about sharding, multiple concurrent and distributed instances and shards fragmentation (different shard ranges for
+distributed JVM architecture) you will find here:
+
+* [https://discord.com/developers/docs/events/gateway#sharding](https://discord.com/developers/docs/events/gateway#sharding)
 
 ## Documentation
 
