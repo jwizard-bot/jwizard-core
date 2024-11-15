@@ -15,6 +15,7 @@ import pl.jwizard.jwl.i18n.I18nLocaleSource
 enum class I18nSystemSource(override val placeholder: String) : I18nLocaleSource {
 	DEBUG_INFO_HEADER("jw.system.header.debugInfo"),
 	GUILD_SETTINGS_HEADER("jw.system.header.guildSettings"),
+	SHARDS_INFO_HEADER("jw.system.header.shardsInfoHeader"),
 	DEPLOYMENT_DATE("jw.system.deploymentDate"),
 	COMPILATION_VERSION("jw.system.compilationVersion"),
 	JVM_NAME("jw.system.java.jvmName"),
@@ -27,5 +28,11 @@ enum class I18nSystemSource(override val placeholder: String) : I18nLocaleSource
 	JDA_VERSION("jw.system.jdaVersion"),
 	LAVALINK_CLIENT_VERSION("jw.system.lavalinkClientVersion"),
 	AVAILABLE_LAVALINK_NODES("jw.system.availableLavalinkNodes"),
+	SHARDS_START_OFFSET("jw.system.shardsStartOffset"),
+	SHARDS_END_OFFSET("jw.system.shardsEndOffset"),
+	SHARDS_OFFSET_LENGTH("jw.system.shardsOffsetLength"),
+	QUEUED_SHARDS("jw.system.queuedShards"),
+	RUNNING_SHARDS("jw.system.runningShards"),
+	AVG_GATEWAY_PING("jw.system.avgGatewayPing"),
 	;
 }
