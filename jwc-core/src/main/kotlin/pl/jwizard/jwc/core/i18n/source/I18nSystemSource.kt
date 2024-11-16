@@ -28,6 +28,7 @@ enum class I18nSystemSource(override val placeholder: String) : I18nLocaleSource
 	JDA_VERSION("jw.system.jdaVersion"),
 	LAVALINK_CLIENT_VERSION("jw.system.lavalinkClientVersion"),
 	AVAILABLE_LAVALINK_NODES("jw.system.availableLavalinkNodes"),
+	CLUSTER_NAME_KEY("jw.system.clusterNameKey"),
 	SHARDS_START_OFFSET("jw.system.shardsStartOffset"),
 	SHARDS_END_OFFSET("jw.system.shardsEndOffset"),
 	SHARDS_OFFSET_LENGTH("jw.system.shardsOffsetLength"),

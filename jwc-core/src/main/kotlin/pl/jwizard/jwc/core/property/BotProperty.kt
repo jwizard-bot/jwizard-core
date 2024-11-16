@@ -14,9 +14,10 @@ import kotlin.reflect.KClass
  *
  * Defining following properties:
  * - [JDA_SECRET_TOKEN]: JDA secret token.
- * - [JDA_SHARDING_FRAGMENT_MIN_ID]: Start offset of JDA shard ID.
- * - [JDA_SHARDING_FRAGMENT_MAX_ID]: End offset of JDA shard ID.
  * - [JDA_INSTANCE_PREFIX]: Instance legacy prefix specified for running multiple instances.
+ * - [JDA_SHARDING_CLUSTER]: Cluster name (also cluster key) for selected shard offsets.
+ * - [JDA_SHARDING_OFFSET_START]: Start offset of JDA shard ID.
+ * - [JDA_SHARDING_OFFSET_END]: End offset of JDA shard ID.
  * - [JDA_DEFAULT_ACTIVITY]: JDA default activity. Enabled when [JDA_SPLASHES_ENABLED] property is set to false.
  * - [JDA_SPLASHES_ENABLED]: JDA splashes toggle boolean property. If true, splashes are enabled, otherwise show nothing.
  * - [JDA_SPLASHES_INTERVAL_SEC]: JDA splashes interval in seconds.
@@ -63,19 +64,24 @@ enum class BotProperty(
 	JDA_SECRET_TOKEN("jda.secret-token"),
 
 	/**
+	 * Instance legacy prefix specified for running multiple instances.
+	 */
+	JDA_INSTANCE_PREFIX("jda.instance.prefix"),
+
+	/**
+	 * Cluster name (also cluster key) for selected shard offsets.
+	 */
+	JDA_SHARDING_CLUSTER("jda.sharding.cluster"),
+
+	/**
 	 * Start offset of JDA shard ID.
 	 */
-	JDA_SHARDING_FRAGMENT_MIN_ID("jda.sharding.fragment.min-id", Int::class),
+	JDA_SHARDING_OFFSET_START("jda.sharding.offset.start", Int::class),
 
 	/**
 	 * End offset of JDA shard ID.
 	 */
-	JDA_SHARDING_FRAGMENT_MAX_ID("jda.sharding.fragment.max-id", Int::class),
-
-	/**
-	 * Instance legacy prefix specified for running multiple instances.
-	 */
-	JDA_INSTANCE_PREFIX("jda.instance.prefix"),
+	JDA_SHARDING_OFFSET_END("jda.sharding.offset.end", Int::class),
 
 	/**
 	 * JDA default activity. Enabled when [JDA_SPLASHES_ENABLED] property is set to false.

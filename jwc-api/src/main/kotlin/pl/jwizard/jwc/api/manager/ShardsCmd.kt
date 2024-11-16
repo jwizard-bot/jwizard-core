@@ -91,10 +91,12 @@ class ShardsCmd(
 	 * @return A [MessageEmbed] containing shard details.
 	 */
 	private fun createShardsInfoMessage(context: CommandContext): MessageEmbed {
-		val shardsStartOffset = environmentBean.getProperty<Int>(BotProperty.JDA_SHARDING_FRAGMENT_MIN_ID)
-		val endStartOffset = environmentBean.getProperty<Int>(BotProperty.JDA_SHARDING_FRAGMENT_MAX_ID)
+		val clusterIdentifier = environmentBean.getProperty<String>(BotProperty.JDA_SHARDING_CLUSTER)
+		val shardsStartOffset = environmentBean.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_START)
+		val endStartOffset = environmentBean.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_END)
 		return createEmbedMessage(context)
 			.setTitle(I18nSystemSource.SHARDS_INFO_HEADER)
+			.setKeyValueField(I18nSystemSource.CLUSTER_NAME_KEY, clusterIdentifier, inline = false)
 			.setKeyValueField(I18nSystemSource.SHARDS_START_OFFSET, shardsStartOffset)
 			.setSpace()
 			.setKeyValueField(I18nSystemSource.SHARDS_END_OFFSET, endStartOffset)

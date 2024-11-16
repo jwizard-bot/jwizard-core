@@ -90,23 +90,35 @@ where `<value token>` property is the Vault token stored in configured `.env` fi
 5. That's it. Now you can run via Intellij IDEA. Make sure, you have set JVM parameters:
 
 ```bash
--Druntime.profiles=dev -Denv.enabled=true -Dserver.port=8768 -Djda.shards.name=core-instance-01 -Xms1G -Xmx1G # for first instance
--Druntime.profiles=dev -Denv.enabled=true -Dserver.port=8769 -Djda.shards.name=core-instance-02 -Xms1G -Xmx1G # for second instance
+-Druntime.profiles=dev
+-Denv.enabled=true # optional, if false JWizard will prevent read .env file
+
+-Djda.instance.name=core-instance-N # bot instance (WARN, this refer to Vault backend prefix, not for clustering key)
+-Djda.sharding.cluster=<cluster name (key)> # name of the cluster (also cluster key)
+-Djda.sharding.offset.start=<number> # shard ID which starts (inclusive) shards pool in this cluster
+-Djda.sharding.offset.end=<number> # shard ID which end (inclusive) shards pool in this cluster
+
+-Xms1G -Xmx1G # optional, see NOTE
+# ... rest parameters, ex. JVM GC configuration
 ```
 
-where `Xmx` and `Xms` parameters are optional and can be modified.
+where:
+
+* `N` is instance number (`0` or `1`),
+* `Xmx` and `Xms` parameters are optional and can be modified.
 
 > NOTE: For servers running on HotSpot JVM, Oracle recommended same Xms and Xmx parameter, ex. `-Xms1G` and `-Xmx1G`.
 > More information you will
 > find [here](https://docs.oracle.com/cd/E74363_01/ohi_vbp_-_installation_guide--20160224-094432-html-chunked/s66.html).
 
-> NOTE: You can run concurrently 2 instances, but you must set JVM parameter `-Djda.shards.name` to identify separated
-> bot instances (with predefined shards pool range). Concurrent instances can share same Lavalink node/nodes.
+> NOTE: You can run concurrently 2 instances, but you must set valid offsets in `-Djda.sharding.offset.start` and
+> `-Djda.sharding.offset.end`. Concurrent instances can share same Lavalink node/nodes.
 
-More about sharding, multiple concurrent and distributed instances and shards fragmentation (different shard ranges for
+More about sharding, clustering multiple concurrent instances and shards fragmentation (different shard ranges for
 distributed JVM architecture) you will find here:
 
 * [https://discord.com/developers/docs/events/gateway#sharding](https://discord.com/developers/docs/events/gateway#sharding)
+* [https://skelmis.co.nz/posts/discord-bot-sharding-and-clustering](https://skelmis.co.nz/posts/discord-bot-sharding-and-clustering)
 
 ## Documentation
 

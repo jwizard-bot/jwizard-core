@@ -2,14 +2,13 @@ vault:
   kv:
     application-names:
       - core
-      - ${cmd:jda.shards.name}
+      - ${cmd:jda.instance.name}
+
+server:
+  port: ${vault:V_SERVER_PORT}
 
 jda:
   secret-token: ${vault:V_JDA_SECRET}
-  sharding:
-    fragment:
-      min-id: ${vault:V_MIN_SHARD_ID}
-      max-id: ${vault:V_MAX_SHARD_ID}
   instance:
     prefix: ${vault:V_JDA_INSTANCE_PREFIX}
   default-activity: tracks

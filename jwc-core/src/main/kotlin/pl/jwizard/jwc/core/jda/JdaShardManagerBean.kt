@@ -91,8 +91,8 @@ final class JdaShardManagerBean(
 		log.info("Load: {} enabled cache flags: {}.", enabledCacheFlags.size, enabledCacheFlags)
 		log.info("Load: {} disabled cache flags: {}.", disabledCacheFlags.size, disabledCacheFlags)
 
-		val shardingMinId = environmentBean.getProperty<Int>(BotProperty.JDA_SHARDING_FRAGMENT_MIN_ID)
-		val shardingMaxId = environmentBean.getProperty<Int>(BotProperty.JDA_SHARDING_FRAGMENT_MAX_ID)
+		val shardingMinId = environmentBean.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_START)
+		val shardingMaxId = environmentBean.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_END)
 		val shardsCount = (shardingMaxId - shardingMinId) + 1
 
 		shardManager = DefaultShardManagerBuilder
@@ -111,7 +111,9 @@ final class JdaShardManagerBean(
 
 		jvmDisposableHook.initHook()
 
-		log.info("Init shards manager from shard id: {} to: {} (total: {}).", shardingMinId, shardingMaxId, shardsCount)
+		val clusterName = environmentBean.getProperty<String>(BotProperty.JDA_SHARDING_CLUSTER)
+		log.info("******* Init: {} shards for cluster: {}.", shardsCount, clusterName)
+		log.info("******* Init shards manager from shard id: {} to: {}.", shardingMinId, shardingMaxId)
 		log.info("Add bot into Discord server via link: {}", shardManager.getShardById(0)?.getInviteUrl(permissions))
 	}
 
