@@ -4,9 +4,9 @@
  */
 package pl.jwizard.jwc.audio.manager
 
-import net.dv8tion.jda.api.entities.Guild
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
+import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jvm.thread.JvmFixedPayloadThreadExecutor
 import pl.jwizard.jwc.core.util.floatingSecToMin
 import pl.jwizard.jwc.core.util.jdaInfo
@@ -22,7 +22,7 @@ import pl.jwizard.jwl.util.logger
  */
 class LeaveAfterInactivityThread(
 	private val musicManager: GuildMusicManager,
-) : JvmFixedPayloadThreadExecutor<Pair<Long, Guild?>>() {
+) : JvmFixedPayloadThreadExecutor<Pair<Long, CommandBaseContext>>() {
 
 	companion object {
 		private val log = logger<LeaveAfterInactivityThread>()
@@ -31,11 +31,14 @@ class LeaveAfterInactivityThread(
 	/**
 	 * Executes the thread to disconnect from the voice channel after a defined period of inactivity.
 	 *
-	 * @param payload A pair consisting of the elapsed time in seconds and the guild from which to disconnect.
+	 * @param payload A pair consisting of the elapsed time in seconds and the [CommandBaseContext].
 	 */
-	override fun executeJvmThreadWithPayload(payload: Pair<Long, Guild?>) {
-		val (timeSec, guild) = payload
-
+	override fun executeJvmThreadWithPayload(payload: Pair<Long, CommandBaseContext>) {
+		val (timeSec, context) = payload
+		if (context.selfMember.voiceState?.inAudioChannel() == false) {
+			return // skip, when bot already leaved channel
+		}
+		val guild = context.guild
 		val message = musicManager.createEmbedBuilder()
 			.setDescription(
 				i18nLocaleSource = I18nResponseSource.LEAVE_END_PLAYBACK_QUEUE,
@@ -45,7 +48,7 @@ class LeaveAfterInactivityThread(
 			.build()
 
 		musicManager.state.audioScheduler.stopAndDestroy()
-		guild?.let { musicManager.beans.jdaShardManager.getDirectAudioController(guild)?.disconnect(it) }
+		guild.let { musicManager.beans.jdaShardManager.getDirectAudioController(guild)?.disconnect(it) }
 
 		log.jdaInfo(musicManager.state.context, "Leaved voice channel after: %s time of inactivity.", secToDTF(timeSec))
 		musicManager.sendMessage(message)

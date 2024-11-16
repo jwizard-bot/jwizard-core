@@ -66,7 +66,7 @@ class GuildMusicManager(
 		val time = beans.environmentBean.getGuildProperty<Long>(GuildProperty.LEAVE_NO_TRACKS_SEC, context.guild.idLong)
 		val timeUnit = TimeUnit.SECONDS
 		val futureTime = leaveAfterInactivityThread.getFutureTime(time, timeUnit)
-		leaveAfterInactivityThread.startOnce(time, timeUnit, Pair(time, context.guild))
+		leaveAfterInactivityThread.startOnce(time, timeUnit, Pair(time, context))
 		log.jdaInfo(context, "Start leaving channel executor. Execute at: %s.", futureTime)
 	}
 
