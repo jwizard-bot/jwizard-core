@@ -13,6 +13,7 @@ import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwl.util.logger
+import kotlin.math.min
 
 /**
  * Manages the selection and processing of tracks from a spinner menu in a Discord guild. This class handles user
@@ -84,7 +85,7 @@ class TrackSelectSpinnerMenu(
 	 * Defines the maximum number of tracks that can be selected from the spinner menu.
 	 */
 	override val maxElementsToChoose
-		get() = guildMultipleProperties.getProperty<Int>(GuildProperty.MAX_TRACKS_TO_CHOOSE)
+		get() = min(options.size, guildMultipleProperties.getProperty<Int>(GuildProperty.MAX_TRACKS_TO_CHOOSE))
 
 	/**
 	 * Specifies if the track should be chosen randomly after the timeout.
