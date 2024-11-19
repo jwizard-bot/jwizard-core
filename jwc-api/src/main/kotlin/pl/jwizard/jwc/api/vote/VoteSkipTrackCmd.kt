@@ -4,8 +4,6 @@
  */
 package pl.jwizard.jwc.api.vote
 
-import dev.arbjerg.lavalink.client.player.LavalinkPlayer
-import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import dev.arbjerg.lavalink.client.player.Track
 import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.api.CommandEnvironmentBean
@@ -42,8 +40,7 @@ import pl.jwizard.jwl.util.logger
 class VoteSkipTrackCmd(
 	voterEnvironment: VoterEnvironmentBean,
 	commandEnvironment: CommandEnvironmentBean,
-) : MusicVoteCommandBase<GuildMusicManager>(voterEnvironment, commandEnvironment),
-	AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Track> {
+) : MusicVoteCommandBase<GuildMusicManager>(voterEnvironment, commandEnvironment), AsyncUpdatableHook<Track> {
 
 	companion object {
 		private val log = logger<VoteSkipTrackCmd>()
@@ -102,11 +99,10 @@ class VoteSkipTrackCmd(
 	 * the track that was skipped.
 	 *
 	 * @param context The command context for creating the message.
-	 * @param result The resulting Lavalink player after the async operation.
 	 * @param payload The track that was skipped.
 	 * @return A message embed detailing the outcome of the skip operation.
 	 */
-	override fun onAsyncSuccess(context: CommandContext, result: LavalinkPlayer, payload: Track): MessageEmbed {
+	override fun onAsyncSuccess(context: CommandContext, payload: Track): MessageEmbed {
 		log.jdaInfo(context, "Current playing track: %s was skipped by voting.", payload.qualifier)
 		return createVoteSuccessMessage(context)
 			.setDescription(

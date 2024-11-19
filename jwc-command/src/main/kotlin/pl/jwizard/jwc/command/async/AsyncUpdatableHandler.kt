@@ -20,9 +20,7 @@ import kotlin.reflect.KClass
  * and failure scenarios after an async action completes. The handler provides a structured response using the provided
  * context, response, and exception handling mechanisms.
  *
- * @param R The type of the result returned by the async operation.
- * @param I The type of the [Mono] that contains the async result.
- * @param P The type of the payload passed to the async operation.
+ * @param T The type of the payload passed to the async operation.
  * @property context The context in which the command is executed.
  * @property response The future response that will be completed once the async update is done.
  * @property invokerClazz The class invoking this handler (used for logging and tracking).
@@ -30,16 +28,16 @@ import kotlin.reflect.KClass
  * @property exceptionTrackerHandler The store used to track and log exceptions.
  * @author Miłosz Gilga
  */
-class AsyncUpdatableHandler<R, I : Mono<R>, P>(
+class AsyncUpdatableHandler<T>(
 	private val context: CommandContext,
 	private val response: TFutureResponse,
 	private val invokerClazz: KClass<*>,
-	private val asyncUpdatableHook: AsyncUpdatableHook<R, I, P>,
+	private val asyncUpdatableHook: AsyncUpdatableHook<T>,
 	private val exceptionTrackerHandler: ExceptionTrackerHandlerBean,
 ) {
 
 	companion object {
-		private val log = logger<AsyncUpdatableHandler<*, *, *>>()
+		private val log = logger<AsyncUpdatableHandler<*>>()
 	}
 
 	/**
@@ -49,20 +47,19 @@ class AsyncUpdatableHandler<R, I : Mono<R>, P>(
 	 * @param asyncAction The Mono representing the asynchronous action.
 	 * @param payload The additional payload that may be needed for handling the response.
 	 */
-	fun performAsyncUpdate(asyncAction: I, payload: P) {
-		asyncAction.subscribe({ onSuccess(it, payload) }, { onError(it, payload) })
+	fun performAsyncUpdate(asyncAction: Mono<*>, payload: T) {
+		asyncAction.subscribe({ onSuccess(payload) }, { onError(it, payload) })
 	}
 
 	/**
 	 * Called when the asynchronous operation completes successfully. It delegates to the hook to process the result and
 	 * create a response message, which is then used to complete the future response.
 	 *
-	 * @param result The result of the async operation.
 	 * @param payload Additional information or context for handling the result.
 	 */
-	private fun onSuccess(result: R, payload: P) {
+	private fun onSuccess(payload: T) {
 		val futureMessage = try {
-			val responseMessage = asyncUpdatableHook.onAsyncSuccess(context, result, payload)
+			val responseMessage = asyncUpdatableHook.onAsyncSuccess(context, payload)
 			CommandResponse.Builder()
 				.addEmbedMessages(responseMessage)
 				.build()
@@ -80,7 +77,7 @@ class AsyncUpdatableHandler<R, I : Mono<R>, P>(
 	 * @param throwable The error encountered during the async operation.
 	 * @param payload Additional information or context for handling the error.
 	 */
-	private fun onError(throwable: Throwable, payload: P) {
+	private fun onError(throwable: Throwable, payload: T) {
 		val errorResponse = asyncUpdatableHook.onFailedUpdate(context, throwable, payload)
 		val message = errorResponse ?: createErrorResponse()
 		log.jdaError(

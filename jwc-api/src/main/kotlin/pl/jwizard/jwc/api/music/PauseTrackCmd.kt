@@ -4,8 +4,6 @@
  */
 package pl.jwizard.jwc.api.music
 
-import dev.arbjerg.lavalink.client.player.LavalinkPlayer
-import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicCommandBase
@@ -40,7 +38,7 @@ import pl.jwizard.jwl.util.logger
 @JdaCommand(Command.PAUSE)
 class PauseTrackCmd(
 	commandEnvironment: CommandEnvironmentBean,
-) : MusicCommandBase(commandEnvironment), AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, GuildMusicManager> {
+) : MusicCommandBase(commandEnvironment), AsyncUpdatableHook<GuildMusicManager> {
 
 	companion object {
 		private val log = logger<PauseTrackCmd>()
@@ -76,16 +74,11 @@ class PauseTrackCmd(
 	 * visual elements.
 	 *
 	 * @param context The context of the command, containing user interaction details.
-	 * @param result The result of the async operation, in this case, the updated [LavalinkPlayer].
 	 * @param payload The guild music manager used for handling audio playback and queue management.
 	 * @return A MessageEmbed containing detailed information about the paused track.
 	 * @throws UnexpectedException If the paused track is not found.
 	 */
-	override fun onAsyncSuccess(
-		context: CommandContext,
-		result: LavalinkPlayer,
-		payload: GuildMusicManager,
-	): MessageEmbed {
+	override fun onAsyncSuccess(context: CommandContext, payload: GuildMusicManager): MessageEmbed {
 		val pausedTrack = payload.cachedPlayer?.track ?: throw UnexpectedException(context, "Paused track is NULL.")
 		val elapsedTime = payload.cachedPlayer?.position ?: 0
 

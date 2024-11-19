@@ -4,8 +4,6 @@
  */
 package pl.jwizard.jwc.api.dj
 
-import dev.arbjerg.lavalink.client.player.LavalinkPlayer
-import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import dev.arbjerg.lavalink.client.player.Track
 import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.api.CommandEnvironmentBean
@@ -35,8 +33,7 @@ import pl.jwizard.jwl.util.logger
 @JdaCommand(Command.STOP)
 class StopClearQueueCmd(
 	commandEnvironment: CommandEnvironmentBean,
-) : DjCommandBase(commandEnvironment),
-	AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Pair<Track?, Int>> {
+) : DjCommandBase(commandEnvironment), AsyncUpdatableHook<Pair<Track?, Int>> {
 
 	companion object {
 		private val log = logger<StopClearQueueCmd>()
@@ -72,15 +69,10 @@ class StopClearQueueCmd(
 	 * to the user indicating whether a track was skipped and how many tracks were cleared from the queue.
 	 *
 	 * @param context The context of the command, including user interaction details.
-	 * @param result The result of the async operation, which is the updated [LavalinkPlayer].
 	 * @param payload A pair containing the previous volume level and the guild music manager.
 	 * @return A MessageEmbed containing a confirmation of the volume change and the new volume level.
 	 */
-	override fun onAsyncSuccess(
-		context: CommandContext,
-		result: LavalinkPlayer,
-		payload: Pair<Track?, Int>,
-	): MessageEmbed {
+	override fun onAsyncSuccess(context: CommandContext, payload: Pair<Track?, Int>): MessageEmbed {
 		val (playingTrack, queueSize) = payload
 		log.jdaInfo(
 			context,

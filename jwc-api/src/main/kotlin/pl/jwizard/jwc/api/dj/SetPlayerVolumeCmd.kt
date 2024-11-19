@@ -4,8 +4,6 @@
  */
 package pl.jwizard.jwc.api.dj
 
-import dev.arbjerg.lavalink.client.player.LavalinkPlayer
-import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.DjCommandBase
@@ -35,8 +33,7 @@ import pl.jwizard.jwl.util.logger
 @JdaCommand(Command.SETVOLUME)
 class SetPlayerVolumeCmd(
 	commandEnvironment: CommandEnvironmentBean,
-) : DjCommandBase(commandEnvironment),
-	AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Pair<Int, GuildMusicManager>> {
+) : DjCommandBase(commandEnvironment), AsyncUpdatableHook<Pair<Int, GuildMusicManager>> {
 
 	companion object {
 		private val log = logger<SetPlayerVolumeCmd>()
@@ -75,15 +72,10 @@ class SetPlayerVolumeCmd(
 	 * volume level and the newly set volume.
 	 *
 	 * @param context The context of the command, including user interaction details.
-	 * @param result The result of the async operation, which is the updated [LavalinkPlayer].
 	 * @param payload A pair containing the previous volume level and the guild music manager.
 	 * @return A MessageEmbed containing a confirmation of the volume change and the new volume level.
 	 */
-	override fun onAsyncSuccess(
-		context: CommandContext,
-		result: LavalinkPlayer,
-		payload: Pair<Int, GuildMusicManager>,
-	): MessageEmbed {
+	override fun onAsyncSuccess(context: CommandContext, payload: Pair<Int, GuildMusicManager>): MessageEmbed {
 		val (previousVolume, manager) = payload
 		val currentVolume = manager.cachedPlayer?.volume
 		log.jdaInfo(context, "Changed volume from: %d%% to: %d%%.", previousVolume, currentVolume)

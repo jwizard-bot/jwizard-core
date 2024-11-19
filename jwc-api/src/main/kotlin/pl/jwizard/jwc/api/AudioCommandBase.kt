@@ -4,8 +4,6 @@
  */
 package pl.jwizard.jwc.api
 
-import dev.arbjerg.lavalink.client.player.LavalinkPlayer
-import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.GuildVoiceState
 import net.dv8tion.jda.api.entities.channel.ChannelType
@@ -153,7 +151,7 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	protected fun <P> createAsyncUpdatablePlayerHandler(
 		context: CommandContext,
 		response: TFutureResponse,
-		hook: AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, P>,
+		hook: AsyncUpdatableHook<P>,
 	) = AsyncUpdatableHandler(context, response, this::class, hook, exceptionTrackerStore)
 
 	/**

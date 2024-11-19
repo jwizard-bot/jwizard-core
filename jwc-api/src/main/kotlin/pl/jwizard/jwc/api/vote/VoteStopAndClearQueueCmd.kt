@@ -4,8 +4,6 @@
  */
 package pl.jwizard.jwc.api.vote
 
-import dev.arbjerg.lavalink.client.player.LavalinkPlayer
-import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import dev.arbjerg.lavalink.client.player.Track
 import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.api.CommandEnvironmentBean
@@ -41,7 +39,7 @@ class VoteStopAndClearQueueCmd(
 	voterEnvironment: VoterEnvironmentBean,
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicVoteCommandBase<GuildMusicManager>(voterEnvironment, commandEnvironment),
-	AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Pair<Track?, Int>> {
+	AsyncUpdatableHook<Pair<Track?, Int>> {
 
 	companion object {
 		private val log = logger<VoteSkipTrackCmd>()
@@ -91,15 +89,10 @@ class VoteStopAndClearQueueCmd(
 	 * the track that was playing and the number of tracks removed from the queue.
 	 *
 	 * @param context The command context for creating the message.
-	 * @param result The resulting Lavalink player after the async operation.
 	 * @param payload A pair containing the currently playing track and the size of the queue.
 	 * @return A message embed detailing the outcome of the stop and clear operation.
 	 */
-	override fun onAsyncSuccess(
-		context: CommandContext,
-		result: LavalinkPlayer,
-		payload: Pair<Track?, Int>,
-	): MessageEmbed {
+	override fun onAsyncSuccess(context: CommandContext, payload: Pair<Track?, Int>): MessageEmbed {
 		val (playingTrack, queueSize) = payload
 		log.jdaInfo(
 			context,

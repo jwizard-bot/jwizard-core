@@ -4,8 +4,6 @@
  */
 package pl.jwizard.jwc.api.dj
 
-import dev.arbjerg.lavalink.client.player.LavalinkPlayer
-import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import dev.arbjerg.lavalink.client.player.Track
 import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.api.CommandEnvironmentBean
@@ -38,7 +36,7 @@ import pl.jwizard.jwl.util.logger
 @JdaCommand(Command.SKIPTO)
 class SkipQueueToTrackCmd(
 	commandEnvironment: CommandEnvironmentBean,
-) : DjCommandBase(commandEnvironment), AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Pair<Track, Int>> {
+) : DjCommandBase(commandEnvironment), AsyncUpdatableHook<Pair<Track, Int>> {
 
 	companion object {
 		private val log = logger<SkipQueueToTrackCmd>()
@@ -81,15 +79,10 @@ class SkipQueueToTrackCmd(
 	 * track count and details about the currently playing track, then creates a message to confirm the action to the user.
 	 *
 	 * @param context The context of the command, which includes details about user interaction.
-	 * @param result The player result after the asynchronous update.
 	 * @param payload A pair containing the selected track and its position in the queue.
 	 * @return A [MessageEmbed] object with a confirmation message indicating the skipped tracks and the new track playing.
 	 */
-	override fun onAsyncSuccess(
-		context: CommandContext,
-		result: LavalinkPlayer,
-		payload: Pair<Track, Int>,
-	): MessageEmbed {
+	override fun onAsyncSuccess(context: CommandContext, payload: Pair<Track, Int>): MessageEmbed {
 		val (currentTrack, position) = payload
 		log.jdaInfo(context, "Skipped: %d tracks in queue and started playing: %s.", position, currentTrack.qualifier)
 		return createEmbedMessage(context)

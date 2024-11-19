@@ -5,7 +5,6 @@
 package pl.jwizard.jwc.audio.scheduler
 
 import dev.arbjerg.lavalink.client.player.FilterBuilder
-import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import dev.arbjerg.lavalink.client.player.Track
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import reactor.core.Disposable
@@ -27,7 +26,7 @@ abstract class AudioScheduleHandler(private val guildMusicManager: GuildMusicMan
 	 *
 	 * @return The [Mono] as an asynchronous response.
 	 */
-	open fun stopAndDestroy(): PlayerUpdateBuilder {
+	open fun stopAndDestroy(): Mono<*> {
 		guildMusicManager.state.clearAudioType()
 		return guildMusicManager.createdOrUpdatedPlayer
 			.setPaused(false)
