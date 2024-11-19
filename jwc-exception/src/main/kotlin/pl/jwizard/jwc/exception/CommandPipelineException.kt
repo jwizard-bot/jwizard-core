@@ -39,7 +39,7 @@ abstract class CommandPipelineException(
 	 */
 	fun printLogStatement() {
 		if (logMessage != null) {
-			val message = logMessage.trimIndent()
+			val message = logMessage.lineSequence().map { it.trim() }.joinToString(" ")
 			if (commandBaseContext != null) {
 				log.jdaError(commandBaseContext, message)
 			} else {

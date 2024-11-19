@@ -19,6 +19,6 @@ class UnauthorizedManagerException(context: CommandBaseContext) : CommandPipelin
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.UNAUTHORIZED_MANAGER,
 	logMessage = """
-		Attempt to invoke command: "${context.commandName}" by: "${context.author.qualifier}" without superuser role.
+		Attempt to invoke command: "${context.commandName}" by: ${context.author.qualifier} without superuser role.
 	""",
 )

@@ -27,6 +27,6 @@ class UserOnVoiceChannelWithBotNotFoundException(
 	i18nExceptionSource = I18nExceptionSource.USER_ON_VOICE_CHANNEL_WITH_BOT_NOT_FOUND,
 	logMessage = """
 		Attempt to invoke command while user is not in voice channel with bot.
-		User channel: "${userChannel?.qualifier}". Bot channel: "${botChannel?.qualifier}".
+		User channel: ${userChannel?.qualifier}. Bot channel: ${botChannel?.qualifier}.
   """,
 )

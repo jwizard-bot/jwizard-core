@@ -23,5 +23,5 @@ class UserIsAlreadyWithBotException(
 ) : CommandPipelineException(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.USER_ID_ALREADY_WITH_BOT,
-	logMessage = "Attempt to invoke command, while user is together with bot on channel: \"${channel.qualifier}\".",
+	logMessage = "Attempt to invoke command, while user is together with bot on channel: ${channel.qualifier}.",
 )

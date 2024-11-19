@@ -27,7 +27,7 @@ class ForbiddenChannelException(
 	i18nExceptionSource = I18nExceptionSource.FORBIDDEN_CHANNEL,
 	args = mapOf("acceptChannel" to acceptedChannel?.name),
 	logMessage = """
-		Attempt to use song request command on forbidden channel: "${forbiddenChannel?.qualifier}".
-		Accepted channel: "${acceptedChannel?.qualifier}".
+		Attempt to use song request command on forbidden channel: ${forbiddenChannel?.qualifier}.
+		Accepted channel: ${acceptedChannel?.qualifier}.
 	""",
 )

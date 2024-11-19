@@ -6,6 +6,7 @@ package pl.jwizard.jwc.api.dj
 
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel
+import net.dv8tion.jda.api.exceptions.PermissionException
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.DjCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
@@ -17,6 +18,8 @@ import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.jdaInfo
+import pl.jwizard.jwc.core.util.mdCode
+import pl.jwizard.jwc.exception.command.InsufficientPermissionsException
 import pl.jwizard.jwc.exception.user.UserIsAlreadyWithBotException
 import pl.jwizard.jwc.exception.user.UserOnVoiceChannelNotFoundException
 import pl.jwizard.jwl.command.Command
@@ -58,8 +61,11 @@ class JoinToChannelCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBa
 			throw UserIsAlreadyWithBotException(context, voiceChannelWithMember)
 		}
 		context.selfMember.let {
-			context.guild.moveVoiceMember(it, voiceChannelWithMember).queue {
+			try {
+				context.guild.moveVoiceMember(it, voiceChannelWithMember).complete()
 				log.jdaInfo(context, "Bot was successfully moved to channel: %s", voiceChannelWithMember.qualifier)
+			} catch (ex: PermissionException) {
+				throw InsufficientPermissionsException(context, mdCode(ex.permission.name), ex.permission)
 			}
 		}
 		val message = createEmbedMessage(context)
