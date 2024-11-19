@@ -2,7 +2,7 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.core.audio
+package pl.jwizard.jwc.audio
 
 /**
  * Enum representing the different states of audio processing within the application. Each state indicates a specific

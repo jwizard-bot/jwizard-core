@@ -8,8 +8,8 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import pl.jwizard.jwc.command.handler.InteractionRemovalThread
+import pl.jwizard.jwc.core.jda.JdaShardManagerBean
 import pl.jwizard.jwc.core.jda.command.CommandResponse
-import pl.jwizard.jwc.core.jda.spi.JdaShardManager
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwl.ioc.CleanupAfterIoCDestroy
@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit
  */
 @SingletonComponent
 class LooselyTransportHandlerBean(
-	private val jdaShardManager: JdaShardManager,
+	private val jdaShardManager: JdaShardManagerBean,
 	private val environmentBean: EnvironmentBean,
 ) : CleanupAfterIoCDestroy {
 

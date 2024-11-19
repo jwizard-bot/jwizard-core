@@ -8,12 +8,12 @@ import dev.arbjerg.lavalink.client.player.LavalinkPlayer
 import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import dev.arbjerg.lavalink.client.player.Track
 import net.dv8tion.jda.api.entities.MessageEmbed
+import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicVoteCommandBase
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
-import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
@@ -22,6 +22,7 @@ import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.ext.thumbnailUrl
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.exception.UnexpectedException
+import pl.jwizard.jwc.vote.VoterEnvironmentBean
 import pl.jwizard.jwc.vote.music.MusicVoterResponse
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
@@ -33,13 +34,15 @@ import pl.jwizard.jwl.util.logger
  * same voice channel and that the current track is available to skip. After the voting process, if successful, the
  * track is skipped and the next track in the queue is played.
  *
+ * @param voterEnvironment The environment related to voting, including merged beans in single data class.
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
 @JdaCommand(Command.VSKIP)
 class VoteSkipTrackCmd(
+	voterEnvironment: VoterEnvironmentBean,
 	commandEnvironment: CommandEnvironmentBean,
-) : MusicVoteCommandBase<MusicManager>(commandEnvironment),
+) : MusicVoteCommandBase<GuildMusicManager>(voterEnvironment, commandEnvironment),
 	AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Track> {
 
 	companion object {
@@ -59,14 +62,14 @@ class VoteSkipTrackCmd(
 	 * including track details for localization.
 	 *
 	 * @param context The command context containing information about the command execution.
-	 * @param manager The music manager responsible for handling music-related operations.
+	 * @param manager The guild music manager responsible for handling music-related operations.
 	 * @return A response containing the result of the music voting process.
 	 * @throws UnexpectedException if the currently playing track is null.
 	 */
 	override fun executeMusicVote(
 		context: CommandContext,
-		manager: MusicManager,
-	): MusicVoterResponse<MusicManager> {
+		manager: GuildMusicManager,
+	): MusicVoterResponse<GuildMusicManager> {
 		val track = manager.cachedPlayer?.track ?: throw UnexpectedException(context, "Playing track is NULL.")
 		return MusicVoterResponse(
 			payload = manager,
@@ -81,9 +84,9 @@ class VoteSkipTrackCmd(
 	 *
 	 * @param context The command context for executing the action.
 	 * @param response The future response object to complete.
-	 * @param payload The music manager containing the current player state.
+	 * @param payload The guild music manager containing the current player state.
 	 */
-	override fun afterSuccess(context: CommandContext, response: TFutureResponse, payload: MusicManager) {
+	override fun afterSuccess(context: CommandContext, response: TFutureResponse, payload: GuildMusicManager) {
 		val track = payload.cachedPlayer?.track ?: return
 		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response, this)
 		asyncUpdatableHandler.performAsyncUpdate(

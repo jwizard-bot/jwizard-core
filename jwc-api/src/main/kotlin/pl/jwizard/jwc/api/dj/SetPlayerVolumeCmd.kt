@@ -7,12 +7,12 @@ package pl.jwizard.jwc.api.dj
 import dev.arbjerg.lavalink.client.player.LavalinkPlayer
 import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
+import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.DjCommandBase
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
-import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
@@ -36,7 +36,7 @@ import pl.jwizard.jwl.util.logger
 class SetPlayerVolumeCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : DjCommandBase(commandEnvironment),
-	AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Pair<Int, MusicManager>> {
+	AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Pair<Int, GuildMusicManager>> {
 
 	companion object {
 		private val log = logger<SetPlayerVolumeCmd>()
@@ -50,10 +50,10 @@ class SetPlayerVolumeCmd(
 	 * valid range, it throws a [VolumeUnitsOutOfBoundsException].
 	 *
 	 * @param context The context of the command, including user interaction details.
-	 * @param manager The music manager responsible for handling the audio queue and playback.
+	 * @param manager The guild music manager responsible for handling the audio queue and playback.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun executeDj(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
+	override fun executeDj(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val newVolume = context.getArg<Int>(Argument.VOLUME)
 		val maxVolume = environmentBean.getProperty<Int>(AppBaseProperty.PLAYER_MAX_VOLUME)
 
@@ -76,13 +76,13 @@ class SetPlayerVolumeCmd(
 	 *
 	 * @param context The context of the command, including user interaction details.
 	 * @param result The result of the async operation, which is the updated [LavalinkPlayer].
-	 * @param payload A pair containing the previous volume level and the music manager.
+	 * @param payload A pair containing the previous volume level and the guild music manager.
 	 * @return A MessageEmbed containing a confirmation of the volume change and the new volume level.
 	 */
 	override fun onAsyncSuccess(
 		context: CommandContext,
 		result: LavalinkPlayer,
-		payload: Pair<Int, MusicManager>,
+		payload: Pair<Int, GuildMusicManager>,
 	): MessageEmbed {
 		val (previousVolume, manager) = payload
 		val currentVolume = manager.cachedPlayer?.volume

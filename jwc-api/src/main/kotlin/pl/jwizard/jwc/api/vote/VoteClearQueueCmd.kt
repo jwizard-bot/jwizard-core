@@ -4,16 +4,17 @@
  */
 package pl.jwizard.jwc.api.vote
 
+import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicVoteCommandBase
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
-import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.util.jdaInfo
+import pl.jwizard.jwc.vote.VoterEnvironmentBean
 import pl.jwizard.jwc.vote.music.MusicVoterResponse
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
@@ -24,13 +25,15 @@ import pl.jwizard.jwl.util.logger
  * This command allows users to initiate a vote to clear all tracks from the music queue. If the vote passes, the queue
  * will be emptied, removing all audio tracks.
  *
+ * @param voterEnvironment The environment related to voting, including merged beans in single data class.
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
 @JdaCommand(Command.VCLEAR)
 class VoteClearQueueCmd(
+	voterEnvironment: VoterEnvironmentBean,
 	commandEnvironment: CommandEnvironmentBean,
-) : MusicVoteCommandBase<MusicManager>(commandEnvironment) {
+) : MusicVoteCommandBase<GuildMusicManager>(voterEnvironment, commandEnvironment) {
 
 	companion object {
 		private val log = logger<VoteSkipTrackCmd>()
@@ -48,10 +51,10 @@ class VoteClearQueueCmd(
 	 * This method prepares the voting response, including the number of tracks currently in the queue.
 	 *
 	 * @param context The command context containing information about the command execution.
-	 * @param manager The music manager responsible for handling music-related operations.
+	 * @param manager The guild music manager responsible for handling music-related operations.
 	 * @return A response containing the result of the music voting process.
 	 */
-	override fun executeMusicVote(context: CommandContext, manager: MusicManager) = MusicVoterResponse(
+	override fun executeMusicVote(context: CommandContext, manager: GuildMusicManager) = MusicVoterResponse(
 		payload = manager,
 		args = mapOf("countOfTracks" to manager.state.queueTrackScheduler.queue.size),
 	)
@@ -64,9 +67,9 @@ class VoteClearQueueCmd(
 	 *
 	 * @param context The command context for executing the action.
 	 * @param response The future response object to complete.
-	 * @param payload The music manager that contains the current state of the queue.
+	 * @param payload The guild music manager that contains the current state of the queue.
 	 */
-	override fun afterSuccess(context: CommandContext, response: TFutureResponse, payload: MusicManager) {
+	override fun afterSuccess(context: CommandContext, response: TFutureResponse, payload: GuildMusicManager) {
 		val queueTrackScheduler = payload.state.queueTrackScheduler
 
 		val queueSize = queueTrackScheduler.queue.clearAndGetSize()

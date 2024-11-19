@@ -20,14 +20,14 @@ import pl.jwizard.jwl.util.logger
  * Listener for handling events related to the DJ role in a guild. Automatically creates a DJ role if it doesn't exist
  * when the guild becomes ready, or if the role is deleted.
  *
- * @property environmentBean Provides access to environment-specific configurations and properties.
- * @property jdaColorStoreBean Stores color information for customizing the DJ role color.
+ * @property environment Provides access to environment-specific configurations and properties.
+ * @property jdaColorStore Stores color information for customizing the DJ role color.
  * @author Miłosz Gilga
  */
 @JdaEventListenerBean
 class DjRoleGuildEventListenerBean(
-	private val environmentBean: EnvironmentBean,
-	private val jdaColorStoreBean: JdaColorStoreBean,
+	private val environment: EnvironmentBean,
+	private val jdaColorStore: JdaColorStoreBean,
 ) : ListenerAdapter() {
 
 	companion object {
@@ -80,7 +80,7 @@ class DjRoleGuildEventListenerBean(
 	 */
 	private fun generateDjRole(guild: Guild, roleName: String) = guild.createRole()
 		.setName(roleName)
-		.setColor(jdaColorStoreBean.getHexColor(JdaColor.PRIMARY))
+		.setColor(jdaColorStore.getHexColor(JdaColor.PRIMARY))
 
 	/**
 	 * Retrieves the name of the DJ role from the guild's configuration properties.
@@ -88,6 +88,6 @@ class DjRoleGuildEventListenerBean(
 	 * @param guild The guild from which the DJ role name is fetched.
 	 * @return The name of the DJ role as a string.
 	 */
-	private fun getDjRoleName(guild: Guild) = environmentBean
+	private fun getDjRoleName(guild: Guild) = environment
 		.getGuildProperty<String>(GuildProperty.DJ_ROLE_NAME, guild.idLong)
 }

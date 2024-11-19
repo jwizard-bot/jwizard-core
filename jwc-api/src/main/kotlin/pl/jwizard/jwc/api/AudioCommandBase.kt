@@ -9,12 +9,10 @@ import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.GuildVoiceState
 import net.dv8tion.jda.api.entities.channel.ChannelType
-import pl.jwizard.jwc.command.CommandBase
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHandler
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.exception.audio.TemporaryHaltedBotException
@@ -44,8 +42,8 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	final override fun execute(context: CommandContext, response: TFutureResponse) {
-		val musicManager = commandEnvironment.musicManagersBean
-			.getOrCreateMusicManager(context, response, commandEnvironment.distributedAudioClientSupplier)
+		val musicManager = commandEnvironment.musicManagers
+			.getOrCreateMusicManager(context, response, commandEnvironment.audioClient)
 
 		val musicTextChannel = context.musicTextChannelId?.let { context.guild.getTextChannelById(it) }
 		val musicTextChannelId = musicTextChannel?.idLong
@@ -72,10 +70,13 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 * Checks the permissions of the user in the context of the command.
 	 *
 	 * @param context The context of the command, containing user interaction details.
-	 * @param manager The music manager responsible for handling the audio queue and playback.
+	 * @param manager The guild music manager responsible for handling the audio queue and playback.
 	 * @return A Triple indicating whether the user is the sender, a DJ, or a superuser.
 	 */
-	protected fun checkPermissions(context: CommandContext, manager: MusicManager): Triple<Boolean, Boolean, Boolean> {
+	protected fun checkPermissions(
+		context: CommandContext,
+		manager: GuildMusicManager,
+	): Triple<Boolean, Boolean, Boolean> {
 		val isSender = manager.getAudioSenderId(manager.cachedPlayer?.track) == context.author.idLong
 		val isSuperUser = context.checkIfAuthorHasPermissions(*(superuserPermissions.toTypedArray()))
 		val isDj = context.checkIfAuthorHasRoles(context.djRoleName)
@@ -176,8 +177,8 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 * This method must be implemented by subclasses to define the specific functionality of the audio command.
 	 *
 	 * @param context The context of the command, containing user interaction details.
-	 * @param manager The music manager responsible for handling the audio queue and playback.
+	 * @param manager The guild music manager responsible for handling the audio queue and playback.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	protected abstract fun executeAudio(context: CommandContext, manager: MusicManager, response: TFutureResponse)
+	protected abstract fun executeAudio(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse)
 }

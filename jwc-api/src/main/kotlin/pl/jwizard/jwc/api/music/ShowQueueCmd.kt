@@ -6,11 +6,11 @@ package pl.jwizard.jwc.api.music
 
 import dev.arbjerg.lavalink.client.player.Track
 import net.dv8tion.jda.api.entities.MessageEmbed
+import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicCommandBase
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
-import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
 import pl.jwizard.jwc.core.i18n.source.I18nUtilSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -45,10 +45,10 @@ class ShowQueueCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBas
 	 * embed messages to show the queue. It also handles displaying the currently playing track with its remaining time.
 	 *
 	 * @param context The context of the command, containing user interaction details.
-	 * @param manager The music manager responsible for handling the audio queue and playback.
+	 * @param manager The guild music manager responsible for handling the audio queue and playback.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun executeMusic(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
+	override fun executeMusic(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val paginatorChunkSize = environmentBean.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 
 		val scheduler = manager.state.queueTrackScheduler

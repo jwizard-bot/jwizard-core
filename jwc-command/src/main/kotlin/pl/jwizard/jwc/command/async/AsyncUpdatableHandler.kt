@@ -5,10 +5,10 @@
 package pl.jwizard.jwc.command.async
 
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerHandler
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.util.jdaError
+import pl.jwizard.jwc.exception.ExceptionTrackerHandlerBean
 import pl.jwizard.jwc.exception.UnexpectedException
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 import pl.jwizard.jwl.util.logger
@@ -35,7 +35,7 @@ class AsyncUpdatableHandler<R, I : Mono<R>, P>(
 	private val response: TFutureResponse,
 	private val invokerClazz: KClass<*>,
 	private val asyncUpdatableHook: AsyncUpdatableHook<R, I, P>,
-	private val exceptionTrackerHandler: ExceptionTrackerHandler,
+	private val exceptionTrackerHandler: ExceptionTrackerHandlerBean,
 ) {
 
 	companion object {

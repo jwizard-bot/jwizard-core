@@ -11,7 +11,7 @@ import dev.arbjerg.lavalink.client.getUserIdFromToken
 import dev.arbjerg.lavalink.client.loadbalancing.RegionGroup
 import dev.arbjerg.lavalink.client.loadbalancing.builtin.VoiceRegionPenaltyProvider
 import dev.arbjerg.lavalink.libraries.jda.JDAVoiceUpdateListener
-import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
+import pl.jwizard.jwc.core.audio.spi.AudioClient
 import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
@@ -24,15 +24,15 @@ import reactor.core.Disposable
  * Component responsible for managing Lavalink client and nodes, handling audio connections and interactions for
  * different guilds in a distributed manner.
  *
- * @property environmentBean Provides access to environment configurations and properties.
+ * @property environment Provides access to environment configurations and properties.
  * @property lavaNodeListener Listener for handling various Lavalink events.
  * @author Miłosz Gilga
  */
 @SingletonComponent
 class LavalinkClientBean(
-	private val environmentBean: EnvironmentBean,
+	private val environment: EnvironmentBean,
 	private val lavaNodeListener: LavaNodeListener,
-) : DistributedAudioClientSupplier, CleanupAfterIoCDestroy {
+) : AudioClient, CleanupAfterIoCDestroy {
 
 	companion object {
 		private val log = logger<LavalinkClientBean>()
@@ -41,11 +41,6 @@ class LavalinkClientBean(
 		 * Separator used to split node definitions from environment properties.
 		 */
 		private const val NODE_DEFINITION_SEPARATOR = "::"
-
-		/**
-		 * WebSocket error code for invalid sessions.
-		 */
-		internal const val WS_SESSION_INVALID = 4006
 	}
 
 	/**
@@ -64,7 +59,7 @@ class LavalinkClientBean(
 	private lateinit var client: LavalinkClient
 
 	init {
-		val lavalinkNodes = environmentBean.getListProperty<String>(BotListProperty.LAVALINK_NODES)
+		val lavalinkNodes = environment.getListProperty<String>(BotListProperty.LAVALINK_NODES)
 		val nodes = lavalinkNodes.map {
 			val nodeDefinition = it.split(NODE_DEFINITION_SEPARATOR)
 			LavaNode(
@@ -81,9 +76,9 @@ class LavalinkClientBean(
 	 * Initializes the Lavalink client nodes, sets up event listeners, and configures node load balancing based on
 	 * regions.
 	 */
-	override fun initClientNodes() {
-		val jdaSecretToken = environmentBean.getProperty<String>(BotProperty.JDA_SECRET_TOKEN)
-		val lavaTimeout = environmentBean.getProperty<Long>(BotProperty.LAVALINK_TIMEOUT_MS)
+	override fun initClient() {
+		val jdaSecretToken = environment.getProperty<String>(BotProperty.JDA_SECRET_TOKEN)
+		val lavaTimeout = environment.getProperty<Long>(BotProperty.LAVALINK_TIMEOUT_MS)
 
 		client = LavalinkClient(getUserIdFromToken(jdaSecretToken))
 		client.loadBalancer.addPenaltyProvider(VoiceRegionPenaltyProvider())
@@ -106,7 +101,7 @@ class LavalinkClientBean(
 	 * @param guildId The ID of the guild.
 	 * @return The Lavalink link for the guild.
 	 */
-	override fun getOrCreateLink(guildId: Long) = client.getOrCreateLink(guildId)
+	fun getOrCreateLink(guildId: Long) = client.getOrCreateLink(guildId)
 
 	/**
 	 * Cleans up resources by disposing of all event handlers and closing the Lavalink client.
@@ -128,6 +123,6 @@ class LavalinkClientBean(
 	 * Retrieves a list of currently available Lavalink nodes that can handle audio streams. These nodes are responsible
 	 * for processing and distributing audio playback across guilds.
 	 */
-	override val availableNodes
+	val availableNodes
 		get() = client.nodes.filter(LavalinkNode::available)
 }

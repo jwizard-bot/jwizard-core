@@ -5,41 +5,31 @@
 package pl.jwizard.jwc.audio.scheduler
 
 import dev.arbjerg.lavalink.client.player.Track
-import pl.jwizard.jwc.core.audio.spi.MusicManager
-import pl.jwizard.jwc.core.audio.spi.TrackQueue
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import java.util.*
 
 /**
  * Represents a queue of audio tracks for a music manager.
  *
- * This class extends [LinkedList] and implements the [TrackQueue] interface, providing functionality for managing a
- * queue of audio tracks, including methods for shuffling, skipping, and removing tracks.
+ * This class extends [LinkedList], providing functionality for managing a queue of audio tracks, including methods for
+ * shuffling, skipping, and removing tracks.
  *
- * @property musicManager The [MusicManager] instance used for managing audio tracks and interactions.
+ * @property guildMusicManager The [GuildMusicManager] instance used for managing audio tracks and interactions.
  * @constructor Creates an instance of [AudioTrackQueue] with the specified music manager.
  */
-class AudioTrackQueue(private val musicManager: MusicManager) : LinkedList<Track>(), TrackQueue {
+class AudioTrackQueue(private val guildMusicManager: GuildMusicManager) : LinkedList<Track>() {
 
 	/**
 	 * Returns the tracks in the queue as an iterable list.
 	 */
-	override val iterable
+	val iterable
 		get() = toList()
-
-	/**
-	 * Retrieves the track at the specified position in the queue.
-	 *
-	 * @param positionIndex The position of the track (1-based index).
-	 * @return The [Track] at the specified position.
-	 * @throws IndexOutOfBoundsException if the positionIndex is out of range.
-	 */
-	override fun getTrackByPosition(positionIndex: Int): Track = ArrayList(this)[positionIndex - 1]
 
 	/**
 	 * Shuffles the order of the tracks in the queue. This method randomizes the order of tracks in the queue using
 	 * the built-in shuffle functionality.
 	 */
-	override fun shuffle() = (this as MutableList<*>).shuffle()
+	fun shuffle() = (this as MutableList<*>).shuffle()
 
 	/**
 	 * Skips to the specified position in the queue and returns the track at that position.
@@ -47,7 +37,7 @@ class AudioTrackQueue(private val musicManager: MusicManager) : LinkedList<Track
 	 * @param position The position to skip to (1-based index).
 	 * @return The [Track] at the specified position, or null if the position is invalid.
 	 */
-	override fun skipToPosition(position: Int): Track? {
+	fun skipToPosition(position: Int): Track? {
 		var track: Track? = null
 		for (i in 1..position) {
 			track = poll()
@@ -63,7 +53,7 @@ class AudioTrackQueue(private val musicManager: MusicManager) : LinkedList<Track
 	 * @return The [Track] that was moved.
 	 * @throws IndexOutOfBoundsException if either position is out of bounds.
 	 */
-	override fun moveToPosition(previous: Int, selected: Int): Track {
+	fun moveToPosition(previous: Int, selected: Int): Track {
 		val copiedTracks = ArrayList(this)
 		val selectedTrack = copiedTracks.removeAt(previous - 1)
 		copiedTracks.add(selected - 1, selectedTrack)
@@ -78,9 +68,9 @@ class AudioTrackQueue(private val musicManager: MusicManager) : LinkedList<Track
 	 * @param userId The ID of the user whose tracks should be removed.
 	 * @return A list of tracks that were removed from the queue.
 	 */
-	override fun removePositionsFromUser(userId: Long): List<Track> {
+	fun removePositionsFromUser(userId: Long): List<Track> {
 		val copiedTracks = ArrayList(this)
-		val omitFromMember = copiedTracks.filter { musicManager.getAudioSenderId(it) != userId }
+		val omitFromMember = copiedTracks.filter { guildMusicManager.getAudioSenderId(it) != userId }
 		clear()
 		addAll(omitFromMember)
 		return copiedTracks - omitFromMember.toSet()
@@ -92,14 +82,14 @@ class AudioTrackQueue(private val musicManager: MusicManager) : LinkedList<Track
 	 * @param position The position to check (1-based index).
 	 * @return True if the position is out of bounds; false otherwise.
 	 */
-	override fun positionIsOutOfBounds(position: Int) = position < 1 || position > size
+	fun positionIsOutOfBounds(position: Int) = position < 1 || position > size
 
 	/**
 	 * Clears the queue and returns the size of the queue before clearing.
 	 *
 	 * @return The size of the queue before it was cleared.
 	 */
-	override fun clearAndGetSize(): Int {
+	fun clearAndGetSize(): Int {
 		val queueSize = size
 		clear()
 		return queueSize

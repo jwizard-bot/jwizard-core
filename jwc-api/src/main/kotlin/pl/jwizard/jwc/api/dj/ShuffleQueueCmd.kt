@@ -4,11 +4,11 @@
  */
 package pl.jwizard.jwc.api.dj
 
+import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.DjCommandBase
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
-import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
@@ -45,10 +45,10 @@ class ShuffleQueueCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBas
 	 * command will not proceed.
 	 *
 	 * @param context The context of the command, including user interaction details.
-	 * @param manager The music manager responsible for handling the audio queue.
+	 * @param manager The guild music manager responsible for handling the audio queue.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun executeDj(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
+	override fun executeDj(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val queue = manager.state.queueTrackScheduler.queue
 
 		queue.shuffle()

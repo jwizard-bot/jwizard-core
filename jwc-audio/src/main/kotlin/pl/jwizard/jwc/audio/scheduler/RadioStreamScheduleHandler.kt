@@ -9,7 +9,6 @@ import dev.arbjerg.lavalink.client.player.Track
 import dev.arbjerg.lavalink.client.player.TrackException
 import dev.arbjerg.lavalink.protocol.v4.Message.EmittedEvent.TrackEndEvent.AudioTrackEndReason
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
-import pl.jwizard.jwc.core.audio.spi.RadioStreamScheduler
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
@@ -25,14 +24,14 @@ import pl.jwizard.jwl.util.logger
  * This class is responsible for loading radio streams, managing their playback, and responding to events such as
  * starting, stopping, and error handling.
  *
- * @property musicManager The [GuildMusicManager] instance used for managing audio playback.
+ * @property guildMusicManager The [GuildMusicManager] instance used for managing audio playback.
  * @property radioStation Current selected [RadioStation] property.
  * @author Miłosz Gilga
  */
 class RadioStreamScheduleHandler(
-	private val musicManager: GuildMusicManager,
-	override val radioStation: RadioStation,
-) : AudioScheduleHandler(musicManager), RadioStreamScheduler {
+	private val guildMusicManager: GuildMusicManager,
+	val radioStation: RadioStation,
+) : AudioScheduleHandler(guildMusicManager) {
 
 	companion object {
 		private val log = logger<RadioStreamScheduleHandler>()
@@ -58,9 +57,9 @@ class RadioStreamScheduleHandler(
 	 * @param node The [LavalinkNode] on which the track is playing.
 	 */
 	override fun onAudioStart(track: Track, node: LavalinkNode) {
-		val state = musicManager.state
+		val state = guildMusicManager.state
 		val context = state.context
-		val i18nBean = musicManager.beans.i18nBean
+		val i18nBean = guildMusicManager.bean.i18n
 
 		val listElements = mapOf(
 			I18nResponseSource.START_PLAYING_RADIO_STATION_FIRST_OPTION to mapOf("stopRadioStationCmd" to Command.STOPRADIO),
@@ -69,8 +68,8 @@ class RadioStreamScheduleHandler(
 		val parsedListElements = listElements.entries.joinToString("\n") { (i18nKey, i18nArgs) ->
 			"* ${i18nBean.t(i18nKey, context.guildLanguage, i18nArgs.mapValues { it.value.parseWithPrefix(context.prefix) })}"
 		}
-		val (name, inputStream) = musicManager.beans.radioStationThumbnailSupplier.getThumbnailResource(radioStation)
-		val message = musicManager.createEmbedBuilder()
+		val (name, inputStream) = guildMusicManager.bean.radioStationThumbnailSupplier.getThumbnailResource(radioStation)
+		val message = guildMusicManager.createEmbedBuilder()
 			.setTitle(
 				i18nLocaleSource = I18nResponseSource.START_PLAYING_RADIO_STATION,
 				args = mapOf("radioStationName" to i18nBean.t(radioStation, context.guildLanguage)),
@@ -105,15 +104,15 @@ class RadioStreamScheduleHandler(
 	 * @param endReason The reason for the track ending.
 	 */
 	override fun onAudioEnd(lastTrack: Track, node: LavalinkNode, endReason: AudioTrackEndReason) {
-		val state = musicManager.state
+		val state = guildMusicManager.state
 		val context = state.context
-		val (name, inputStream) = musicManager.beans.radioStationThumbnailSupplier.getThumbnailResource(radioStation)
+		val (name, inputStream) = guildMusicManager.bean.radioStationThumbnailSupplier.getThumbnailResource(radioStation)
 
-		val message = musicManager.createEmbedBuilder()
+		val message = guildMusicManager.createEmbedBuilder()
 			.setDescription(
 				i18nLocaleSource = I18nResponseSource.STOP_PLAYING_RADIO_STATION,
 				args = mapOf(
-					"radioStationName" to musicManager.beans.i18nBean.t(radioStation, context.guildLanguage),
+					"radioStationName" to guildMusicManager.bean.i18n.t(radioStation, context.guildLanguage),
 					"startRadioStationCmd" to Command.PLAYRADIO.parseWithPrefix(context.prefix),
 				),
 			)
@@ -121,7 +120,7 @@ class RadioStreamScheduleHandler(
 			.setLocalArtwork(name)
 			.build()
 
-		musicManager.startLeavingWaiter()
+		guildMusicManager.startLeavingWaiter()
 
 		log.jdaInfo(context, "Node: %s. Stop playing radio station: %s.", node.name, radioStation.textKey)
 		val response = CommandResponse.Builder()
@@ -159,12 +158,12 @@ class RadioStreamScheduleHandler(
 	 * @param logMessage A message explaining the cause of the error.
 	 */
 	private fun onError(node: LavalinkNode, logMessage: String?) {
-		val context = musicManager.state.context
-		val i18nBean = musicManager.beans.i18nBean
-		val tracker = musicManager.beans.exceptionTrackerHandler
+		val context = guildMusicManager.state.context
+		val i18nBean = guildMusicManager.bean.i18n
+		val tracker = guildMusicManager.bean.exceptionTrackerHandler
 
-		musicManager.state.audioScheduler.stopAndDestroy()
-		musicManager.startLeavingWaiter()
+		guildMusicManager.state.audioScheduler.stopAndDestroy().subscribe()
+		guildMusicManager.startLeavingWaiter()
 
 		val i18nLocaleSource = I18nExceptionSource.UNEXPECTED_ERROR_WHILE_STREAMING_RADIO
 		val message = tracker.createTrackerMessage(
@@ -179,6 +178,6 @@ class RadioStreamScheduleHandler(
 			radioStation.textKey,
 			logMessage
 		)
-		musicManager.sendMessage(message, link)
+		guildMusicManager.sendMessage(message, link)
 	}
 }

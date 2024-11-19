@@ -5,7 +5,7 @@
 package pl.jwizard.jwc.exception.command
 
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
-import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
+import pl.jwizard.jwc.exception.CommandPipelineException
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 
 /**
@@ -17,7 +17,7 @@ import pl.jwizard.jwl.i18n.source.I18nExceptionSource
  * @param context The context of the command invocation, providing details about the command's execution environment.
  * @author Miłosz Gilga
  */
-class CommandIsTurnedOffException(context: CommandBaseContext) : CommandPipelineExceptionHandler(
+class CommandIsTurnedOffException(context: CommandBaseContext) : CommandPipelineException(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.COMMAND_IS_TURNED_OFF,
 	args = mapOf("command" to "${context.prefix}${context.commandName}"),

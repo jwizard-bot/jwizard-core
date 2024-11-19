@@ -5,8 +5,8 @@
 package pl.jwizard.jwc.api.misc
 
 import net.dv8tion.jda.api.entities.MessageEmbed
-import pl.jwizard.jwc.command.CommandBase
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.api.CommandBase
+import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.command.spi.CommandDataSupplier

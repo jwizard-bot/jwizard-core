@@ -4,8 +4,8 @@
  */
 package pl.jwizard.jwc.api.playlist
 
-import pl.jwizard.jwc.command.CommandBase
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.api.CommandBase
+import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -16,7 +16,7 @@ import pl.jwizard.jwl.command.Command
 /**
  * TODO
  *
- * @param commandEnvironment
+ * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
  */
 @JdaCommand(Command.SHOWPLTRACKS)
@@ -25,9 +25,8 @@ class ShowPlaylistTracksCmd(commandEnvironment: CommandEnvironmentBean) : Comman
 	/**
 	 * TODO
 	 *
-	 * @param context
-	 * @param response
-	 * @return
+	 * @param context The context of the command, including user interaction details.
+	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun execute(context: CommandContext, response: TFutureResponse) {
 

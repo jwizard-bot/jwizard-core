@@ -4,11 +4,11 @@
  */
 package pl.jwizard.jwc.api.radio
 
+import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.RadioCommandBase
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
-import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.exception.radio.RadioStationNotExistsOrTurnedOffException
 import pl.jwizard.jwl.command.Command
@@ -34,11 +34,11 @@ class PlayRadioStationCmd(commandEnvironment: CommandEnvironmentBean) : RadioCom
 	 * provided slug, joins the voice channel and streams the radio station.
 	 *
 	 * @param context The command context containing information about the command's execution environment.
-	 * @param manager The music manager responsible for handling audio streaming.
+	 * @param manager The guild music manager responsible for handling audio streaming.
 	 * @param response A future response handler to manage command feedback asynchronously.
 	 * @throws RadioStationNotExistsOrTurnedOffException If the requested radio station does not exist or is inactive.
 	 */
-	override fun executeRadio(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
+	override fun executeRadio(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val radioStationSlug = context.getArg<String>(Argument.RADIO_STATION)
 
 		val radioStation = RadioStation.entries.find { it.textKey == radioStationSlug }

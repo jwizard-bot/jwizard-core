@@ -9,24 +9,24 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import pl.jwizard.jwc.audio.manager.MusicManagersBean
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
+import pl.jwizard.jwc.core.jda.JdaShardManagerBean
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
-import pl.jwizard.jwc.core.jda.spi.JdaShardManager
 
 /**
  * Event listener for managing audio events in a Discord guild. This listener automatically handles bot deafen actions
  * when joining a voice channel and pauses/resumes music playback when the bot is muted or unmuted.
  *
- * @property audioChannelsListenerGuardBean A guard responsible for handling additional voice channel update events.
- * @property musicManagersBean Provides access to the cached music manager for controlling audio playback.
+ * @property audioChannelsListenerGuard A guard responsible for handling additional voice channel update events.
+ * @property musicManagers Provides access to the cached music manager for controlling audio playback.
  * @property jdaShardManager Manages multiple shards of the JDA bot, responsible for handling Discord API interactions.
  * @author Miłosz Gilga
  */
 @JdaEventListenerBean
 class AudioEventListenerBean(
-	private val audioChannelsListenerGuardBean: AudioChannelsListenerGuardBean,
-	private val musicManagersBean: MusicManagersBean,
-	private val jdaShardManager: JdaShardManager,
+	private val audioChannelsListenerGuard: AudioChannelsListenerGuardBean,
+	private val musicManagers: MusicManagersBean,
+	private val jdaShardManager: JdaShardManagerBean,
 ) : ListenerAdapter() {
 
 	/**
@@ -40,7 +40,7 @@ class AudioEventListenerBean(
 		if (event.channelJoined != null && event.member.id == guild.selfMember.id) { // join to channel
 			guild.selfMember.deafen(true).queue()
 		}
-		audioChannelsListenerGuardBean.onEveryVoiceUpdate(event)
+		audioChannelsListenerGuard.onEveryVoiceUpdate(event)
 	}
 
 	/**
@@ -56,7 +56,7 @@ class AudioEventListenerBean(
 		if (event.member.idLong != event.guild.selfMember.idLong || voiceState == null) {
 			return
 		}
-		musicManagersBean.getCachedMusicManager(event.guild.idLong)?.let { // perform only if music manager is cached
+		musicManagers.getCachedMusicManager(event.guild.idLong)?.let { // perform only if music manager is cached
 			val musicManager = it
 			val placeholder = if (botMember.voiceState?.isMuted == true) {
 				I18nResponseSource.PAUSE_TRACK_ON_FORCE_MUTE

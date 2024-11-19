@@ -6,7 +6,6 @@ package pl.jwizard.jwc.audio.loader
 
 import dev.arbjerg.lavalink.client.player.*
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
-import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 import pl.jwizard.jwl.radio.RadioStation
@@ -14,14 +13,14 @@ import pl.jwizard.jwl.radio.RadioStation
 /**
  * Handles loading and managing radio streams for the music manager.
  *
- * @property musicManager The music manager responsible for managing the guild's audio playback.
+ * @property guildMusicManager The music manager responsible for managing the guild's audio playback.
  * @property radioStation Current selected [RadioStation] property.
  * @author Miłosz Gilga
  */
 class RadioStreamLoader(
-	private val musicManager: GuildMusicManager,
+	private val guildMusicManager: GuildMusicManager,
 	private val radioStation: RadioStation,
-) : AudioCompletableFutureLoader(musicManager) {
+) : AudioCompletableFutureLoader(guildMusicManager) {
 
 	override fun onCompletableTrackLoaded(result: TrackLoaded, future: TFutureResponse) = onStreamLoaded(result.track)
 
@@ -65,12 +64,11 @@ class RadioStreamLoader(
 	 * Handles the error that occurs during the audio loading process.
 	 *
 	 * @param details The details of the error that occurred.
-	 * @return A command response indicating the error.
 	 */
-	override fun onError(details: AudioLoadFailedDetails): CommandResponse {
-		musicManager.state.audioScheduler.stopAndDestroy()
-		musicManager.startLeavingWaiter()
-		return super.onError(details)
+	override fun onError(details: AudioLoadFailedDetails) {
+		guildMusicManager.state.audioScheduler.stopAndDestroy()
+		guildMusicManager.startLeavingWaiter()
+		super.onError(details)
 	}
 
 	/**
@@ -78,11 +76,11 @@ class RadioStreamLoader(
 	 *
 	 * @param track The track to be loaded for the radio stream.
 	 */
-	private fun onStreamLoaded(track: Track) = musicManager.state.audioScheduler.loadContent(listOf(track))
+	private fun onStreamLoaded(track: Track) = guildMusicManager.state.audioScheduler.loadContent(listOf(track))
 
 	/**
 	 * Retrieves the name of the radio station for localization purposes.
 	 */
 	private val radioStationName
-		get() = musicManager.beans.i18nBean.t(radioStation, musicManager.state.context.guildLanguage)
+		get() = guildMusicManager.bean.i18n.t(radioStation, guildMusicManager.state.context.guildLanguage)
 }

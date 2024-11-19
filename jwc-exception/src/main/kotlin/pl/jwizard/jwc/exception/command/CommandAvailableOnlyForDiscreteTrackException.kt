@@ -5,7 +5,7 @@
 package pl.jwizard.jwc.exception.command
 
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
-import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
+import pl.jwizard.jwc.exception.CommandPipelineException
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 
 /**
@@ -17,7 +17,7 @@ import pl.jwizard.jwl.i18n.source.I18nExceptionSource
  */
 class CommandAvailableOnlyForDiscreteTrackException(
 	context: CommandBaseContext,
-) : CommandPipelineExceptionHandler(
+) : CommandPipelineException(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.COMMAND_AVAILABLE_ONLY_FOR_DISCRETE_TRACK,
 	logMessage = """

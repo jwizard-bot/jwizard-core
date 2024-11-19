@@ -4,13 +4,10 @@
  */
 package pl.jwizard.jwc.audio.manager
 
+import pl.jwizard.jwc.audio.AudioContentType
 import pl.jwizard.jwc.audio.scheduler.AudioScheduleHandler
 import pl.jwizard.jwc.audio.scheduler.QueueTrackScheduleHandler
 import pl.jwizard.jwc.audio.scheduler.RadioStreamScheduleHandler
-import pl.jwizard.jwc.core.audio.AudioContentType
-import pl.jwizard.jwc.core.audio.spi.AudioStateManager
-import pl.jwizard.jwc.core.audio.spi.QueueTrackScheduler
-import pl.jwizard.jwc.core.audio.spi.RadioStreamScheduler
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwl.radio.RadioStation
@@ -19,30 +16,30 @@ import pl.jwizard.jwl.radio.RadioStation
  * Manages the state of audio playback in a guild, providing scheduling for queued tracks and radio streams. This class
  * is responsible for switching between audio types and ensuring the correct scheduler is used for each type.
  *
- * @property musicManager Manages the guild's audio player and track scheduler.
+ * @property guildMusicManager Manages the guild's audio player and track scheduler.
  * @property derivedContext The base command context, containing information about the current command execution.
  * @property derivedFuture The future response object to handle command responses asynchronously.
  * @author Miłosz Gilga
  */
 class AudioStateManagerProvider(
-	private val musicManager: GuildMusicManager,
+	private val guildMusicManager: GuildMusicManager,
 	private val derivedContext: CommandBaseContext,
 	private val derivedFuture: TFutureResponse,
-) : AudioStateManager {
+) {
 
-	override val audioScheduler get() = audioScheduleHandler
-	override val queueTrackScheduler get() = audioScheduler as QueueTrackScheduler
-	override val radioStreamScheduler get() = audioScheduler as RadioStreamScheduler
+	val audioScheduler get() = audioScheduleHandler
+	val queueTrackScheduler get() = audioScheduler as QueueTrackScheduleHandler
+	val radioStreamScheduler get() = audioScheduler as RadioStreamScheduleHandler
 
 	/**
 	 * The current type of audio content being played (either queued tracks or radio streams).
 	 */
-	private var audioType = AudioContentType.QUEUE_TRACK
+	private var audioType: AudioContentType? = null
 
 	/**
 	 * The handler responsible for managing the current audio playback, either for queued tracks or radio streams.
 	 */
-	private var audioScheduleHandler: AudioScheduleHandler = QueueTrackScheduleHandler(musicManager)
+	private var audioScheduleHandler: AudioScheduleHandler = QueueTrackScheduleHandler(guildMusicManager)
 
 	/**
 	 * The context of the current command, used to maintain information related to the ongoing operation.
@@ -64,7 +61,7 @@ class AudioStateManagerProvider(
 	fun setToQueueTrack(context: CommandBaseContext) {
 		updateState(AudioContentType.QUEUE_TRACK, context)
 		if (audioScheduleHandler !is QueueTrackScheduleHandler) {
-			audioScheduleHandler = QueueTrackScheduleHandler(musicManager)
+			audioScheduleHandler = QueueTrackScheduleHandler(guildMusicManager)
 		}
 	}
 
@@ -76,7 +73,7 @@ class AudioStateManagerProvider(
 	 */
 	fun setToStream(context: CommandBaseContext, radioStation: RadioStation) {
 		updateState(AudioContentType.STREAM, context)
-		audioScheduleHandler = RadioStreamScheduleHandler(musicManager, radioStation)
+		audioScheduleHandler = RadioStreamScheduleHandler(guildMusicManager, radioStation)
 	}
 
 	/**
@@ -85,18 +82,26 @@ class AudioStateManagerProvider(
 	 * @param future The new future response object.
 	 * @param context The context of the command.
 	 */
-	fun updateFutureResponseAndContext(future: TFutureResponse, context: CommandBaseContext) {
+	fun updateStateHandlers(future: TFutureResponse, context: CommandBaseContext) {
 		this.future = future
 		this.context = context
 	}
 
 	/**
-	 * Checks if the current audio content type matches the specified type.
+	 * Clears the currently set audio type after ended audio stream.
+	 */
+	fun clearAudioType() {
+		audioType = null
+	}
+
+	/**
+	 * Checks if the current audio content type matches the specified type or if is not yet set.
 	 *
 	 * @param audioType The type of audio content to check against.
 	 * @return True if the current audio type matches the specified type, false otherwise.
 	 */
-	override fun isDeclaredAudioContentType(audioType: AudioContentType) = this.audioType == audioType
+	fun isDeclaredAudioContentTypeOrNotYetSet(audioType: AudioContentType) =
+		this.audioType == null || this.audioType == audioType
 
 	/**
 	 * Updates the internal state with the new audio content type and command context.

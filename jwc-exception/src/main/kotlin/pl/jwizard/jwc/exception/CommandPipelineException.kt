@@ -5,7 +5,6 @@
 package pl.jwizard.jwc.exception
 
 import org.slf4j.LoggerFactory
-import pl.jwizard.jwc.core.exception.CommandPipelineException
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.util.jdaError
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
@@ -23,12 +22,12 @@ import pl.jwizard.jwl.i18n.source.I18nExceptionSource
  * @property logMessage A custom message to log when the exception occurs.
  * @author Miłosz Gilga
  */
-abstract class CommandPipelineExceptionHandler(
-	override val commandBaseContext: CommandBaseContext? = null,
-	override val i18nExceptionSource: I18nExceptionSource,
-	override val args: Map<String, Any?> = emptyMap(),
-	override val logMessage: String? = null,
-) : RuntimeException(), CommandPipelineException {
+abstract class CommandPipelineException(
+	val commandBaseContext: CommandBaseContext? = null,
+	val i18nExceptionSource: I18nExceptionSource,
+	val args: Map<String, Any?> = emptyMap(),
+	val logMessage: String? = null,
+) : RuntimeException() {
 
 	private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -40,9 +39,9 @@ abstract class CommandPipelineExceptionHandler(
 	 */
 	fun printLogStatement() {
 		if (logMessage != null) {
-			val message = logMessage!!.trimIndent()
+			val message = logMessage.trimIndent()
 			if (commandBaseContext != null) {
-				log.jdaError(commandBaseContext!!, message)
+				log.jdaError(commandBaseContext, message)
 			} else {
 				log.error(message)
 			}

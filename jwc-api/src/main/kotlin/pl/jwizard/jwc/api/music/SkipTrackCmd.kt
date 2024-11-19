@@ -8,12 +8,12 @@ import dev.arbjerg.lavalink.client.player.LavalinkPlayer
 import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import dev.arbjerg.lavalink.client.player.Track
 import net.dv8tion.jda.api.entities.MessageEmbed
+import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicCommandBase
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
-import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
@@ -54,10 +54,10 @@ class SkipTrackCmd(
 	 * playback. If there is no track currently playing, an [UnexpectedException] is thrown.
 	 *
 	 * @param context The context of the command, containing user interaction details.
-	 * @param manager The music manager responsible for handling the audio queue and playback.
+	 * @param manager The guild music manager responsible for handling the audio queue and playback.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun executeMusic(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
+	override fun executeMusic(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val skippingTrack = manager.cachedPlayer?.track ?: throw UnexpectedException(context, "Skipping track is NULL.")
 
 		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response, this)

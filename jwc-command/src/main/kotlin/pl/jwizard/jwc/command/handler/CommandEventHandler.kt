@@ -21,7 +21,7 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
 import pl.jwizard.jwc.core.property.guild.GuildProperty
-import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
+import pl.jwizard.jwc.exception.CommandPipelineException
 import pl.jwizard.jwc.exception.UnexpectedException
 import pl.jwizard.jwc.exception.command.CommandIsTurnedOffException
 import pl.jwizard.jwc.exception.command.MismatchCommandArgumentsException
@@ -41,15 +41,15 @@ import java.util.concurrent.CompletableFuture
  * This class is responsible for processing incoming events, executing commands, managing exceptions, and responding
  * to the user appropriately.
  *
- * @property commandEventHandlerEnvironmentBean Stored all beans for command event handler.
+ * @property commandEventHandlerEnvironment Stored all beans for command event handler.
  * @author Miłosz Gilga
  */
 abstract class CommandEventHandler<E : Event>(
-	private val commandEventHandlerEnvironmentBean: CommandEventHandlerEnvironmentBean,
+	private val commandEventHandlerEnvironment: CommandEventHandlerEnvironmentBean,
 ) : ListenerAdapter() {
 
-	private val i18nBean = commandEventHandlerEnvironmentBean.i18nBean
-	protected val environmentBean = commandEventHandlerEnvironmentBean.environmentBean
+	private val i18nBean = commandEventHandlerEnvironment.i18n
+	protected val environmentBean = commandEventHandlerEnvironment.environment
 
 	/**
 	 * Properties retrieved in single query at startup command pipeline.
@@ -76,13 +76,13 @@ abstract class CommandEventHandler<E : Event>(
 		var privateMessageUserId: Long? = null
 		try {
 			try {
-				val commandDataSupplier = commandEventHandlerEnvironmentBean.commandDataSupplier
-				val commandsCacheBean = commandEventHandlerEnvironmentBean.commandsCacheBean
+				val commandDataSupplier = commandEventHandlerEnvironment.commandDataSupplier
+				val commandsCacheBean = commandEventHandlerEnvironment.commandsCache
 				if (forbiddenInvocationCondition(event)) {
 					throw CommandInvocationException("forbidden invocation condition")
 				}
 				val guild = eventGuild(event) ?: throw CommandInvocationException("guild is null")
-				val properties = commandEventHandlerEnvironmentBean.environmentBean.getGuildMultipleProperties(
+				val properties = commandEventHandlerEnvironment.environment.getGuildMultipleProperties(
 					guildProperties = propertiesList,
 					guildId = guild.idLong,
 				)
@@ -99,7 +99,7 @@ abstract class CommandEventHandler<E : Event>(
 				context = createCommandContext(event, commandDetails.textKey, properties)
 
 				val module = commandDetails.module
-				if (commandEventHandlerEnvironmentBean.moduleDataSupplier.isDisabled(module.dbId, dbId)) {
+				if (commandEventHandlerEnvironment.moduleDataSupplier.isDisabled(module.dbId, dbId)) {
 					val moduleName = i18nBean.t(module, context.guildLanguage)
 					throw ModuleIsTurnedOffException(context, module.name, moduleName, commandDetails.name)
 				}
@@ -127,7 +127,7 @@ abstract class CommandEventHandler<E : Event>(
 				}
 				throw UnexpectedException(ex.context, ex.message)
 			}
-		} catch (ex: CommandPipelineExceptionHandler) {
+		} catch (ex: CommandPipelineException) {
 			deferAction(event, privateMessageUserId != null)
 			commandResponse = CompletableFuture()
 			commandResponse.complete(createExceptionMessage(ex))
@@ -148,7 +148,7 @@ abstract class CommandEventHandler<E : Event>(
 	 * @param privateUserId User id used to send private message. If it is `null`, message is public.
 	 */
 	private fun sendResponse(event: E, response: CommandResponse, context: CommandContext?, privateUserId: Long?) {
-		val looselyTransportHandlerBean = commandEventHandlerEnvironmentBean.looselyTransportHandlerBean
+		val looselyTransportHandlerBean = commandEventHandlerEnvironment.looselyTransportHandler
 		var directEphemeralUser: User? = null
 		val truncatedResponse = try {
 			if (response.embedMessages.isEmpty() && commandType == CommandType.SLASH) {
@@ -159,7 +159,7 @@ abstract class CommandEventHandler<E : Event>(
 					?: throw UnexpectedException(context, "ephemeral user cannot be null")
 			}
 			looselyTransportHandlerBean.truncateComponents(response)
-		} catch (ex: CommandPipelineExceptionHandler) {
+		} catch (ex: CommandPipelineException) {
 			createExceptionMessage(ex)
 		}
 		if (directEphemeralUser != null && context != null) {
@@ -185,9 +185,9 @@ abstract class CommandEventHandler<E : Event>(
 	 * @param ex The exception thrown during command execution.
 	 * @return A [CommandResponse] containing the formatted exception message and optional tracking link.
 	 */
-	private fun createExceptionMessage(ex: CommandPipelineExceptionHandler): CommandResponse {
+	private fun createExceptionMessage(ex: CommandPipelineException): CommandResponse {
 		ex.printLogStatement()
-		val exceptionTrackerStore = commandEventHandlerEnvironmentBean.exceptionTrackerHandler
+		val exceptionTrackerStore = commandEventHandlerEnvironment.exceptionTrackerHandler
 		val trackerMessage = exceptionTrackerStore.createTrackerMessage(ex)
 		val trackerLink = exceptionTrackerStore.createTrackerLink(ex)
 		return CommandResponse.Builder()
@@ -211,9 +211,9 @@ abstract class CommandEventHandler<E : Event>(
 	 *        interactive components.
 	 */
 	private fun sendPrivateMessage(event: E, user: User, context: CommandContext?, response: CommandResponse) {
-		val looselyTransportHandlerBean = commandEventHandlerEnvironmentBean.looselyTransportHandlerBean
-		val exceptionTrackerStore = commandEventHandlerEnvironmentBean.exceptionTrackerHandler
-		val successMessage = MessageEmbedBuilder(i18nBean, commandEventHandlerEnvironmentBean.jdaColorStoreBean, context)
+		val looselyTransportHandlerBean = commandEventHandlerEnvironment.looselyTransportHandler
+		val exceptionTrackerStore = commandEventHandlerEnvironment.exceptionTrackerHandler
+		val successMessage = MessageEmbedBuilder(i18nBean, commandEventHandlerEnvironment.jdaColorStore, context)
 			.setTitle(I18nResponseSource.PRIVATE_MESSAGE_SEND)
 			.setDescription(I18nResponseSource.CHECK_INBOX)
 			.setColor(JdaColor.PRIMARY)

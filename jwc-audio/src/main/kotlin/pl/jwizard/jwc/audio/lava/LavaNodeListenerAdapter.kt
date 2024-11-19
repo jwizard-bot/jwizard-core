@@ -5,10 +5,9 @@
 package pl.jwizard.jwc.audio.lava
 
 import dev.arbjerg.lavalink.client.event.*
-import pl.jwizard.jwc.audio.lava.LavalinkClientBean.Companion.WS_SESSION_INVALID
 import pl.jwizard.jwc.audio.manager.MusicManagersBean
 import pl.jwizard.jwc.audio.scheduler.AudioScheduleHandler
-import pl.jwizard.jwc.core.jda.spi.JdaShardManager
+import pl.jwizard.jwc.core.jda.JdaShardManagerBean
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 
 /**
@@ -16,15 +15,22 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
  * managers and schedulers. Handles events like track start, track end, and WebSocket disconnection to ensure smooth
  * audio playback.
  *
- * @property musicManagersBean Manages music-related resources and states across multiple guilds.
+ * @property musicManagers Manages music-related resources and states across multiple guilds.
  * @property jdaShardManager Manages multiple shards of the JDA bot, responsible for handling Discord API interactions.
  * @author Miłosz Gilga
  */
 @SingletonComponent
 class LavaNodeListenerAdapter(
-	private val musicManagersBean: MusicManagersBean,
-	private val jdaShardManager: JdaShardManager,
+	private val musicManagers: MusicManagersBean,
+	private val jdaShardManager: JdaShardManagerBean,
 ) : LavaNodeListener {
+
+	companion object {
+		/**
+		 * WebSocket error code for invalid sessions.
+		 */
+		private const val WS_SESSION_INVALID = 4006
+	}
 
 	/**
 	 * Triggered when a track starts playing on a Lavalink node. It delegates the event to the audio scheduler to handle
@@ -92,7 +98,7 @@ class LavaNodeListenerAdapter(
 	 * @return The [AudioScheduleHandler] instance or null if no scheduler is available.
 	 */
 	private fun getAudioScheduler(guildId: Long): AudioScheduleHandler? {
-		val musicManager = musicManagersBean.getCachedMusicManager(guildId)
+		val musicManager = musicManagers.getCachedMusicManager(guildId)
 		return musicManager?.state?.audioScheduler
 	}
 }

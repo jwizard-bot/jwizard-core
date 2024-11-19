@@ -20,18 +20,18 @@ import kotlin.math.min
  * interaction with track selection, as well as automatic selection when a timeout occurs. It integrates with the music
  * manager to queue tracks and display responses.
  *
- * @property musicManager The guild's music manager to handle audio playback.
+ * @property guildMusicManager The guild's music manager to handle audio playback.
  * @property options The list of available track options for the user to choose from.
  * @property guildMultipleProperties Manages the properties related to track selection timing and limits.
  * @property action Provides actions for queuing tracks and creating response messages.
  * @author Miłosz Gilga
  */
 class TrackSelectSpinnerMenu(
-	private val musicManager: GuildMusicManager,
+	private val guildMusicManager: GuildMusicManager,
 	private val options: List<TrackMenuOption>,
 	private val guildMultipleProperties: GuildMultipleProperties,
 	private val action: TrackSelectSpinnerAction,
-) : SelectSpinnerMenu<TrackMenuOption>(musicManager.state.context, options) {
+) : SelectSpinnerMenu<TrackMenuOption>(guildMusicManager.state.context, options) {
 
 	companion object {
 		private val log = logger<TrackSelectSpinnerMenu>()
@@ -52,7 +52,7 @@ class TrackSelectSpinnerMenu(
 	) {
 		val option = options[0]
 		action.onEnqueueTrack(option.track)
-		musicManager.sendMessage(action.createTrackResponseMessage((option.track)))
+		guildMusicManager.sendMessage(action.createTrackResponseMessage((option.track)))
 		log.jdaInfo(context, "Add track: %s after self-choose choice.", option.track.qualifier)
 	}
 
@@ -65,7 +65,7 @@ class TrackSelectSpinnerMenu(
 	 */
 	override fun onTimeout(context: CommandBaseContext, option: TrackMenuOption) {
 		action.onEnqueueTrack(option.track)
-		musicManager.sendMessage(action.createTrackResponseMessage(option.track))
+		guildMusicManager.sendMessage(action.createTrackResponseMessage(option.track))
 		log.jdaInfo(context, "Add track: %s after timeout: (%ds).", option.track.qualifier, elapsedTimeSec)
 	}
 

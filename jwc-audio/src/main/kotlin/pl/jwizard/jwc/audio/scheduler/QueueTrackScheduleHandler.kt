@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.audio.scheduler.repeat.AudioTrackRepeat
 import pl.jwizard.jwc.audio.scheduler.repeat.CountOfRepeats
-import pl.jwizard.jwc.core.audio.spi.QueueTrackScheduler
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.util.ext.mdTitleLink
@@ -31,22 +30,22 @@ import java.util.concurrent.atomic.AtomicBoolean
 /**
  * Handles the scheduling and management of audio tracks in a queue.
  *
- * This class extends [AudioScheduleHandler] and implements the [QueueTrackScheduler] interface, providing
- * functionality for loading tracks, managing playback, and handling events related to audio track playback.
+ * This class extends [AudioScheduleHandler], providing functionality for loading tracks, managing playback, and
+ * handling events related to audio track playback.
  *
- * @property musicManager The [GuildMusicManager] instance used for managing audio tracks and interactions.
+ * @property guildMusicManager The [GuildMusicManager] instance used for managing audio tracks and interactions.
  * @author Miłosz Gilga
  */
 class QueueTrackScheduleHandler(
-	private val musicManager: GuildMusicManager
-) : AudioScheduleHandler(musicManager), QueueTrackScheduler {
+	private val guildMusicManager: GuildMusicManager,
+) : AudioScheduleHandler(guildMusicManager) {
 
 	companion object {
 		private val log = logger<QueueTrackScheduleHandler>()
 	}
 
-	override val queue = AudioTrackQueue(musicManager)
-	override val audioRepeat = AudioTrackRepeat()
+	val queue = AudioTrackQueue(guildMusicManager)
+	val audioRepeat = AudioTrackRepeat()
 
 	/**
 	 * The current count of repeats for the selected track.
@@ -70,7 +69,7 @@ class QueueTrackScheduleHandler(
 		if (tracks.isEmpty()) {
 			return
 		}
-		val noTrackPlaying = musicManager.cachedPlayer?.track == null
+		val noTrackPlaying = guildMusicManager.cachedPlayer?.track == null
 		if (tracks.size == 1) {
 			val track = tracks[0]
 			if (noTrackPlaying) {
@@ -106,7 +105,7 @@ class QueueTrackScheduleHandler(
 	 *
 	 * @param count The number of repeats to be set.
 	 */
-	override fun updateCountOfRepeats(count: Int) {
+	fun updateCountOfRepeats(count: Int) {
 		countOfRepeats.set(count)
 		if (count > 0) {
 			nextTrackInfoMessage.set(false)
@@ -123,8 +122,8 @@ class QueueTrackScheduleHandler(
 	 * @param node The [LavalinkNode] on which the track is playing.
 	 */
 	override fun onAudioStart(track: Track, node: LavalinkNode) {
-		val context = musicManager.state.context
-		if (musicManager.cachedPlayer?.paused == true) {
+		val context = guildMusicManager.state.context
+		if (guildMusicManager.cachedPlayer?.paused == true) {
 			val message = createTrackStartMessage(
 				track, I18nResponseSource.ON_TRACK_START_ON_PAUSED,
 				"resumeCmd" to Command.RESUME.parseWithPrefix(context.prefix)
@@ -135,12 +134,12 @@ class QueueTrackScheduleHandler(
 				node.name,
 				track.qualifier
 			)
-			musicManager.sendMessage(message)
+			guildMusicManager.sendMessage(message)
 		} else {
 			val message = createTrackStartMessage(track, I18nResponseSource.ON_TRACK_START)
 			if (nextTrackInfoMessage.get()) {
 				log.jdaInfo(context, "Node: %s. Start playing audio track: %s.", node.name, track.qualifier)
-				musicManager.sendMessage(message)
+				guildMusicManager.sendMessage(message)
 			}
 		}
 	}
@@ -156,7 +155,7 @@ class QueueTrackScheduleHandler(
 	 * @param endReason The reason for the track ending.
 	 */
 	override fun onAudioEnd(lastTrack: Track, node: LavalinkNode, endReason: AudioTrackEndReason) {
-		val context = musicManager.state.context
+		val context = guildMusicManager.state.context
 		if (audioRepeat.trackRepeat) {
 			nextTrackInfoMessage.set(false) // disable for prevent spamming
 			startTrack(lastTrack.makeClone())
@@ -173,7 +172,7 @@ class QueueTrackScheduleHandler(
 			startTrack(lastTrack.makeClone())
 			nextTrackInfoMessage.set(false) // disable for prevent spamming
 			countOfRepeats.decrease()
-			val trackRepeatMessage = musicManager.createEmbedBuilder()
+			val trackRepeatMessage = guildMusicManager.createEmbedBuilder()
 				.setDescription(
 					i18nLocaleSource = I18nResponseSource.MULTIPLE_REPEATING_TRACK_INFO,
 					args = mapOf(
@@ -193,14 +192,14 @@ class QueueTrackScheduleHandler(
 				lastTrack.qualifier,
 				countOfRepeats.current
 			)
-			musicManager.sendMessage(trackRepeatMessage)
+			guildMusicManager.sendMessage(trackRepeatMessage)
 			return
 		}
 		if (queue.isEmpty()) {
-			val connectionInterrupted = musicManager.cachedPlayer?.state == null
+			val connectionInterrupted = guildMusicManager.cachedPlayer?.state == null
 			nextTrackInfoMessage.set(true)
 
-			val endQueueMessage = musicManager.createEmbedBuilder()
+			val endQueueMessage = guildMusicManager.createEmbedBuilder()
 				.setDescription(I18nResponseSource.ON_END_PLAYBACK_QUEUE)
 				.setColor(JdaColor.PRIMARY)
 				.build()
@@ -211,9 +210,9 @@ class QueueTrackScheduleHandler(
 				countOfRepeats.clear()
 				nextTrackInfoMessage.set(true)
 			} else {
-				musicManager.startLeavingWaiter()
+				guildMusicManager.startLeavingWaiter()
 			}
-			musicManager.sendMessage(endQueueMessage)
+			guildMusicManager.sendMessage(endQueueMessage)
 			return
 		}
 		if (endReason.mayStartNext || queue.isNotEmpty()) {
@@ -250,15 +249,15 @@ class QueueTrackScheduleHandler(
 	 * @param causeMessage A message explaining the cause of the error.
 	 */
 	private fun onError(track: Track, node: LavalinkNode, causeMessage: String?) {
-		val context = musicManager.state.context
-		val tracker = musicManager.beans.exceptionTrackerHandler
+		val context = guildMusicManager.state.context
+		val tracker = guildMusicManager.bean.exceptionTrackerHandler
 
 		val i18nSource = I18nExceptionSource.ISSUE_WHILE_PLAYING_TRACK
 		val message = tracker.createTrackerMessage(i18nSource, context, args = mapOf("audioTrack" to track.mdTitleLink))
 		val trackerLink = tracker.createTrackerLink(i18nSource, context)
 
-		if (queue.isEmpty() && musicManager.cachedPlayer?.track == null) {
-			musicManager.startLeavingWaiter()
+		if (queue.isEmpty() && guildMusicManager.cachedPlayer?.track == null) {
+			guildMusicManager.startLeavingWaiter()
 		}
 		log.jdaError(
 			context,
@@ -267,7 +266,7 @@ class QueueTrackScheduleHandler(
 			track.qualifier,
 			causeMessage
 		)
-		musicManager.sendMessage(message, trackerLink)
+		guildMusicManager.sendMessage(message, trackerLink)
 	}
 
 	/**
@@ -286,7 +285,7 @@ class QueueTrackScheduleHandler(
 		val mapArgs = mutableMapOf<String, Any?>()
 		mapArgs += "track" to track.mdTitleLink
 		args.forEach { mapArgs += it }
-		return musicManager.createEmbedBuilder()
+		return guildMusicManager.createEmbedBuilder()
 			.setDescription(i18nSource, mapArgs)
 			.setArtwork(track.thumbnailUrl)
 			.setColor(JdaColor.PRIMARY)

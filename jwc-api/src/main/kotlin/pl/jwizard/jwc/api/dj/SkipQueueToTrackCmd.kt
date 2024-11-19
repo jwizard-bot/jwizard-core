@@ -8,12 +8,12 @@ import dev.arbjerg.lavalink.client.player.LavalinkPlayer
 import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import dev.arbjerg.lavalink.client.player.Track
 import net.dv8tion.jda.api.entities.MessageEmbed
+import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.DjCommandBase
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
-import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
@@ -55,10 +55,10 @@ class SkipQueueToTrackCmd(
 	 * selected track. If the position is out of bounds, an exception is thrown.
 	 *
 	 * @param context The context of the command, including user interaction details.
-	 * @param manager The music manager responsible for handling the audio queue.
+	 * @param manager The guild music manager responsible for handling the audio queue.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun executeDj(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
+	override fun executeDj(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val position = context.getArg<Int>(Argument.POS)
 
 		val queue = manager.state.queueTrackScheduler.queue

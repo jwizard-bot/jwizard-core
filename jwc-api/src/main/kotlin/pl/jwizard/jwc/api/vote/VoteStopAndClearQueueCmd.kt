@@ -8,18 +8,19 @@ import dev.arbjerg.lavalink.client.player.LavalinkPlayer
 import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import dev.arbjerg.lavalink.client.player.Track
 import net.dv8tion.jda.api.entities.MessageEmbed
+import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicVoteCommandBase
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
-import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.util.ext.mdTitleLink
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.jdaInfo
+import pl.jwizard.jwc.vote.VoterEnvironmentBean
 import pl.jwizard.jwc.vote.music.MusicVoterResponse
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
@@ -31,13 +32,15 @@ import pl.jwizard.jwl.util.logger
  * player. The command ensures that the bot is in the same voice channel as the user and that voting messages are
  * properly localized.
  *
+ * @param voterEnvironment The environment related to voting, including merged beans in single data class.
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
 @JdaCommand(Command.VSTOP)
 class VoteStopAndClearQueueCmd(
+	voterEnvironment: VoterEnvironmentBean,
 	commandEnvironment: CommandEnvironmentBean,
-) : MusicVoteCommandBase<MusicManager>(commandEnvironment),
+) : MusicVoteCommandBase<GuildMusicManager>(voterEnvironment, commandEnvironment),
 	AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Pair<Track?, Int>> {
 
 	companion object {
@@ -56,10 +59,11 @@ class VoteStopAndClearQueueCmd(
 	 * current music manager as payload.
 	 *
 	 * @param context The command context containing information about the command execution.
-	 * @param manager The music manager responsible for handling music-related operations.
+	 * @param manager The guild music manager responsible for handling music-related operations.
 	 * @return A response containing the result of the music voting process.
 	 */
-	override fun executeMusicVote(context: CommandContext, manager: MusicManager) = MusicVoterResponse(payload = manager)
+	override fun executeMusicVote(context: CommandContext, manager: GuildMusicManager) =
+		MusicVoterResponse(payload = manager)
 
 	/**
 	 * Handles actions to be performed after a successful voting operation.
@@ -68,9 +72,9 @@ class VoteStopAndClearQueueCmd(
 	 *
 	 * @param context The command context for executing the action.
 	 * @param response The future response object to complete.
-	 * @param payload The music manager containing the current player state.
+	 * @param payload The guild music manager containing the current player state.
 	 */
-	override fun afterSuccess(context: CommandContext, response: TFutureResponse, payload: MusicManager) {
+	override fun afterSuccess(context: CommandContext, response: TFutureResponse, payload: GuildMusicManager) {
 		val playingTrack = payload.cachedPlayer?.track
 		val queueTrackScheduler = payload.state.queueTrackScheduler
 		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response, this)

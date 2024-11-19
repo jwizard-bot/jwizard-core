@@ -8,8 +8,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import pl.jwizard.jwc.core.config.spi.VcsDeploymentSupplier
-import pl.jwizard.jwc.core.exception.CommandPipelineException
-import pl.jwizard.jwc.core.exception.spi.ExceptionTrackerHandler
 import pl.jwizard.jwc.core.i18n.source.I18nActionSource
 import pl.jwizard.jwc.core.i18n.source.I18nUtilSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -48,7 +46,7 @@ class ExceptionTrackerHandlerBean(
 	private val jdaColorStoreBean: JdaColorStoreBean,
 	private val vcsDeploymentSupplier: VcsDeploymentSupplier,
 	private val vcsConfigBean: VcsConfigBean,
-) : ExceptionTrackerHandler {
+) {
 
 	/**
 	 * Creates a formatted message embed for the given internationalization source, including tracker details.
@@ -61,10 +59,10 @@ class ExceptionTrackerHandlerBean(
 	 * @param args A map of variables to be included in the message (optional).
 	 * @return A MessageEmbed containing the formatted message.
 	 */
-	override fun createTrackerMessage(
+	fun createTrackerMessage(
 		i18nSource: I18nExceptionSource,
-		context: CommandBaseContext?,
-		args: Map<String, Any?>,
+		context: CommandBaseContext? = null,
+		args: Map<String, Any?> = emptyMap(),
 	): MessageEmbed {
 		val repository = VcsRepository.JWIZARD_CORE
 		val deploymentVersion = vcsDeploymentSupplier.getDeploymentVersion(vcsConfigBean.getRepositoryName(repository))
@@ -86,13 +84,13 @@ class ExceptionTrackerHandlerBean(
 	}
 
 	/**
-	 * Creates a tracker message embed for a specific CommandPipelineException. This overload uses the exception's
+	 * Creates a tracker message embed for a specific [CommandPipelineException]. This overload uses the exception's
 	 * internal properties to construct the message.
 	 *
-	 * @param ex The CommandPipelineException containing the necessary information for the tracker message.
+	 * @param ex The [CommandPipelineException] containing the necessary information for the tracker message.
 	 * @return A MessageEmbed formatted for the exception.
 	 */
-	override fun createTrackerMessage(ex: CommandPipelineException) =
+	fun createTrackerMessage(ex: CommandPipelineException) =
 		createTrackerMessage(ex.i18nExceptionSource, ex.commandBaseContext, ex.args)
 
 	/**
@@ -103,19 +101,19 @@ class ExceptionTrackerHandlerBean(
 	 * @param context The context of the command execution, which may include localization information (optional).
 	 * @return An ActionRow containing a button that links to the exception details.
 	 */
-	override fun createTrackerLink(i18nSource: I18nExceptionSource, context: CommandBaseContext?): ActionRow {
+	fun createTrackerLink(i18nSource: I18nExceptionSource, context: CommandBaseContext? = null): ActionRow {
 		val detailsMessage = i18nBean.t(I18nActionSource.DETAILS, context?.guildLanguage)
 		return ActionRow.of(Button.link(createTrackerUrl(i18nSource.tracker), detailsMessage))
 	}
 
 	/**
-	 * Creates a link action row for a specific CommandPipelineException. This overload uses the exception's internal
+	 * Creates a link action row for a specific [CommandPipelineException]. This overload uses the exception's internal
 	 * properties to construct the link.
 	 *
-	 * @param ex The CommandPipelineException containing the necessary information for the tracker link.
+	 * @param ex The [CommandPipelineException] containing the necessary information for the tracker link.
 	 * @return An ActionRow containing a button that links to the exception details.
 	 */
-	override fun createTrackerLink(ex: CommandPipelineException) =
+	fun createTrackerLink(ex: CommandPipelineException) =
 		createTrackerLink(ex.i18nExceptionSource, ex.commandBaseContext)
 
 	/**

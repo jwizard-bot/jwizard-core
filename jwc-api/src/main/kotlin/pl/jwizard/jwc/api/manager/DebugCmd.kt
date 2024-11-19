@@ -10,8 +10,8 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import org.apache.commons.io.FileUtils
+import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.ManagerCommandBase
-import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.interaction.component.RefreshableComponent
 import pl.jwizard.jwc.command.interaction.component.RefreshableContent
@@ -125,7 +125,8 @@ class DebugCmd(
 				messageBuilder.setSpace()
 			}
 		}
-		val lavaNodesInfo = commandEnvironment.distributedAudioClientSupplier.availableNodes.joinToString("\n") {
+		val availableNodes = commandEnvironment.audioClient.availableNodes
+		val lavaNodesInfo = availableNodes.joinToString("\n") {
 			val memory = it.stats?.memory
 			val usedMem = FileUtils.byteCountToDisplaySize(memory?.used)
 			val maxMem = FileUtils.byteCountToDisplaySize(memory?.reservable)

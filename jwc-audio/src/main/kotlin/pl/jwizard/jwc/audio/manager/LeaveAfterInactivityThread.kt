@@ -17,11 +17,11 @@ import pl.jwizard.jwl.util.logger
  * Thread executor that handles the disconnection of the bot from a voice channel after a specified period of
  * inactivity in the music playback.
  *
- * @property musicManager The music manager responsible for handling audio playback and state.
+ * @property guildMusicManager The guild music manager responsible for handling audio playback and state.
  * @author Miłosz Gilga
  */
 class LeaveAfterInactivityThread(
-	private val musicManager: GuildMusicManager,
+	private val guildMusicManager: GuildMusicManager,
 ) : JvmFixedPayloadThreadExecutor<Pair<Long, CommandBaseContext>>() {
 
 	companion object {
@@ -39,7 +39,7 @@ class LeaveAfterInactivityThread(
 			return // skip, when bot already leaved channel
 		}
 		val guild = context.guild
-		val message = musicManager.createEmbedBuilder()
+		val message = guildMusicManager.createEmbedBuilder()
 			.setDescription(
 				i18nLocaleSource = I18nResponseSource.LEAVE_END_PLAYBACK_QUEUE,
 				args = mapOf("elapsed" to floatingSecToMin(timeSec))
@@ -47,10 +47,14 @@ class LeaveAfterInactivityThread(
 			.setColor(JdaColor.PRIMARY)
 			.build()
 
-		musicManager.state.audioScheduler.stopAndDestroy()
-		guild.let { musicManager.beans.jdaShardManager.getDirectAudioController(guild)?.disconnect(it) }
+		guildMusicManager.state.audioScheduler.stopAndDestroy().subscribe()
+		guild.let { guildMusicManager.bean.jdaShardManager.getDirectAudioController(guild)?.disconnect(it) }
 
-		log.jdaInfo(musicManager.state.context, "Leaved voice channel after: %s time of inactivity.", secToDTF(timeSec))
-		musicManager.sendMessage(message)
+		log.jdaInfo(
+			guildMusicManager.state.context,
+			"Leaved voice channel after: %s time of inactivity.",
+			secToDTF(timeSec)
+		)
+		guildMusicManager.sendMessage(message)
 	}
 }

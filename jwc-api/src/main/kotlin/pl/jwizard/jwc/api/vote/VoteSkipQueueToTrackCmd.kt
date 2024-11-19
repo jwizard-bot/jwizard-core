@@ -8,12 +8,12 @@ import dev.arbjerg.lavalink.client.player.LavalinkPlayer
 import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import dev.arbjerg.lavalink.client.player.Track
 import net.dv8tion.jda.api.entities.MessageEmbed
+import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicVoteCommandBase
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
-import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
@@ -21,6 +21,7 @@ import pl.jwizard.jwc.core.util.ext.mdTitleLink
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.exception.track.TrackOffsetOutOfBoundsException
+import pl.jwizard.jwc.vote.VoterEnvironmentBean
 import pl.jwizard.jwc.vote.music.MusicVoterResponse
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
@@ -32,13 +33,15 @@ import pl.jwizard.jwl.util.logger
  * This command allows users to initiate a vote to skip to a specific track position in the current queue. It checks
  * whether the specified position is within bounds and executes the skip operation if the vote is successful.
  *
+ * @param voterEnvironment The environment related to voting, including merged beans in single data class.
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
 @JdaCommand(Command.VSKIPTO)
 class VoteSkipQueueToTrackCmd(
+	voterEnvironment: VoterEnvironmentBean,
 	commandEnvironment: CommandEnvironmentBean,
-) : MusicVoteCommandBase<Pair<MusicManager, Int>>(commandEnvironment),
+) : MusicVoteCommandBase<Pair<GuildMusicManager, Int>>(voterEnvironment, commandEnvironment),
 	AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, Pair<Track, Int>> {
 
 	companion object {
@@ -58,14 +61,14 @@ class VoteSkipQueueToTrackCmd(
 	 * the current queue. If valid, it prepares the voting response.
 	 *
 	 * @param context The command context containing information about the command execution.
-	 * @param manager The music manager responsible for handling music-related operations.
+	 * @param manager The guild music manager responsible for handling music-related operations.
 	 * @return A response containing the result of the music voting process.
 	 * @throws TrackOffsetOutOfBoundsException If the specified position is out of bounds of the queue.
 	 */
 	override fun executeMusicVote(
 		context: CommandContext,
-		manager: MusicManager,
-	): MusicVoterResponse<Pair<MusicManager, Int>> {
+		manager: GuildMusicManager,
+	): MusicVoterResponse<Pair<GuildMusicManager, Int>> {
 		val position = context.getArg<Int>(Argument.POS)
 
 		val queue = manager.state.queueTrackScheduler.queue
@@ -89,9 +92,9 @@ class VoteSkipQueueToTrackCmd(
 	 *
 	 * @param context The command context for executing the action.
 	 * @param response The future response object to complete.
-	 * @param payload The pair containing the music manager and the track position to skip to.
+	 * @param payload The pair containing the guild music manager and the track position to skip to.
 	 */
-	override fun afterSuccess(context: CommandContext, response: TFutureResponse, payload: Pair<MusicManager, Int>) {
+	override fun afterSuccess(context: CommandContext, response: TFutureResponse, payload: Pair<GuildMusicManager, Int>) {
 		val (manager, position) = payload
 		val currentTrack = manager.state.queueTrackScheduler.queue.skipToPosition(position)!!
 

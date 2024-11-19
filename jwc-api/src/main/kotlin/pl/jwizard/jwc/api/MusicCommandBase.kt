@@ -7,10 +7,9 @@ package pl.jwizard.jwc.api
 import dev.arbjerg.lavalink.client.player.Track
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.channel.ChannelType
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.audio.AudioContentType
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.core.audio.AudioContentType
-import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
@@ -46,14 +45,14 @@ abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 	 * - Validating that the track queue is not empty if required.
 	 *
 	 * @param context The context of the command, containing user interaction details.
-	 * @param manager The music manager handling the audio playback.
+	 * @param manager The guild music manager handling the audio playback.
 	 * @param response The future response object used to send the result of the command execution.
 	 * @throws ActiveAudioPlayingNotFoundException If the player is not playing any audio.
 	 * @throws PlayerNotPausedException If the command requires the player to be paused, but it is not.
 	 * @throws TrackQueueIsEmptyException If the command requires tracks in the queue but none are present.
 	 */
-	final override fun executeAudio(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
-		if (manager.state.isDeclaredAudioContentType(AudioContentType.STREAM)) {
+	final override fun executeAudio(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+		if (!manager.state.isDeclaredAudioContentTypeOrNotYetSet(AudioContentType.QUEUE_TRACK)) {
 			throw CommandAvailableOnlyForDiscreteTrackException(context)
 		}
 		val player = manager.cachedPlayer
@@ -88,7 +87,7 @@ abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 	 * - A visual progress bar indicating the percentage of the track that has been played.
 	 *
 	 * @param context The context of the command, containing user interaction details.
-	 * @param manager The music manager responsible for handling the audio queue and playback.
+	 * @param manager The guild music manager responsible for handling the audio queue and playback.
 	 * @param i18nTitle The localized title text for the track (ex. "Now Playing").
 	 * @param i18nPosition The localized text indicating the current position in the track.
 	 * @param track The track that is currently being played.
@@ -96,7 +95,7 @@ abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 	 */
 	protected fun createDetailedTrackMessage(
 		context: CommandContext,
-		manager: MusicManager,
+		manager: GuildMusicManager,
 		i18nTitle: I18nLocaleSource,
 		i18nPosition: I18nLocaleSource,
 		track: Track,
@@ -150,8 +149,8 @@ abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 	 * only after the necessary checks for the player state and user permissions have passed.
 	 *
 	 * @param context The context of the command, containing user interaction details.
-	 * @param manager The music manager handling the audio playback.
+	 * @param manager The guild music manager handling the audio playback.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	protected abstract fun executeMusic(context: CommandContext, manager: MusicManager, response: TFutureResponse)
+	protected abstract fun executeMusic(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse)
 }

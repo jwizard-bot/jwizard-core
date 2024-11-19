@@ -5,7 +5,7 @@
 package pl.jwizard.jwc.exception.audio
 
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
-import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
+import pl.jwizard.jwc.exception.CommandPipelineException
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 
 /**
@@ -14,7 +14,7 @@ import pl.jwizard.jwl.i18n.source.I18nExceptionSource
  * @param context The context of the command that triggered this exception.
  * @author Miłosz Gilga
  */
-class PlayerNotPausedException(context: CommandBaseContext) : CommandPipelineExceptionHandler(
+class PlayerNotPausedException(context: CommandBaseContext) : CommandPipelineException(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.PLAYER_NOT_PAUSED,
 	logMessage = "Attempt to invoke command while audio player is not paused.",

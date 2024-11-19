@@ -16,10 +16,9 @@ import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.api.sharding.ShardManager
 import net.dv8tion.jda.api.utils.cache.CacheFlag
-import pl.jwizard.jwc.core.audio.spi.DistributedAudioClientSupplier
+import pl.jwizard.jwc.core.audio.spi.AudioClient
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
-import pl.jwizard.jwc.core.jda.spi.JdaShardManager
 import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
@@ -34,17 +33,17 @@ import pl.jwizard.jwl.util.logger
  * Manages the initialization, lifecycle, and interaction with the JDA (Java Discord API) instance for a bot.
  * This includes managing the shards, setting bot presence, and handling events for guilds and users.
  *
- * @property environmentBean Provides access to application properties, including the bot token.
+ * @property environment Provides access to application properties, including the bot token.
+ * @property jdaColorStore Provides access to JDA colors loader.
  * @property ioCKtContextFactory Provides access to the IoC context for retrieving beans.
- * @property jdaColorStoreBean Provides access to JDA colors loader.
  * @author Miłosz Gilga
  */
 @SingletonComponent
 final class JdaShardManagerBean(
-	private val environmentBean: EnvironmentBean,
+	private val environment: EnvironmentBean,
+	private val jdaColorStore: JdaColorStoreBean,
 	private val ioCKtContextFactory: IoCKtContextFactory,
-	private val jdaColorStoreBean: JdaColorStoreBean,
-) : JdaShardManager, JvmDisposable {
+) : JvmDisposable {
 
 	companion object {
 		private val log = logger<JdaShardManagerBean>()
@@ -70,14 +69,14 @@ final class JdaShardManagerBean(
 	 * @throws InterruptedException If waiting for the JDA client to be ready is interrupted.
 	 * @throws InvalidTokenException If there is an issue with the bot token or login process.
 	 */
-	fun createShardsManager(audioClientSupplier: DistributedAudioClientSupplier) {
+	fun createShardsManager(audioClientSupplier: AudioClient) {
 		log.info("JDA instance is warming up...")
-		jdaColorStoreBean.loadColors()
+		jdaColorStore.loadColors()
 
-		val gatewayIntents = environmentBean.getListProperty<String>(BotListProperty.JDA_GATEWAY_INTENTS)
-		val enabledCacheFlags = environmentBean.getListProperty<String>(BotListProperty.JDA_CACHE_FLAGS_ENABLED)
-		val disabledCacheFlags = environmentBean.getListProperty<String>(BotListProperty.JDA_CACHE_FLAGS_DISABLED)
-		val permissionFlags = environmentBean.getListProperty<String>(AppBaseListProperty.JDA_PERMISSIONS)
+		val gatewayIntents = environment.getListProperty<String>(BotListProperty.JDA_GATEWAY_INTENTS)
+		val enabledCacheFlags = environment.getListProperty<String>(BotListProperty.JDA_CACHE_FLAGS_ENABLED)
+		val disabledCacheFlags = environment.getListProperty<String>(BotListProperty.JDA_CACHE_FLAGS_DISABLED)
+		val permissionFlags = environment.getListProperty<String>(AppBaseListProperty.JDA_PERMISSIONS)
 
 		val permissions = permissionFlags.map { Permission.valueOf(it) }
 		log.info("Load: {} JDA permissions.", permissions.size)
@@ -85,14 +84,14 @@ final class JdaShardManagerBean(
 		val eventListeners = ioCKtContextFactory.getBeansAnnotatedWith<EventListener, JdaEventListenerBean>()
 		log.info("Load: {} JDA event listeners: {}.", eventListeners.size, eventListeners.map { it.javaClass.simpleName })
 
-		val jdaToken = environmentBean.getProperty<String>(BotProperty.JDA_SECRET_TOKEN)
+		val jdaToken = environment.getProperty<String>(BotProperty.JDA_SECRET_TOKEN)
 
 		log.info("Load: {} gateway intents: {}.", gatewayIntents.size, gatewayIntents)
 		log.info("Load: {} enabled cache flags: {}.", enabledCacheFlags.size, enabledCacheFlags)
 		log.info("Load: {} disabled cache flags: {}.", disabledCacheFlags.size, disabledCacheFlags)
 
-		val shardingMinId = environmentBean.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_START)
-		val shardingMaxId = environmentBean.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_END)
+		val shardingMinId = environment.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_START)
+		val shardingMaxId = environment.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_END)
 		val shardsCount = (shardingMaxId - shardingMinId) + 1
 
 		shardManager = DefaultShardManagerBuilder
@@ -111,9 +110,10 @@ final class JdaShardManagerBean(
 
 		jvmDisposableHook.initHook()
 
-		val clusterName = environmentBean.getProperty<String>(BotProperty.JDA_SHARDING_CLUSTER)
+		val clusterName = environment.getProperty<String>(BotProperty.JDA_SHARDING_CLUSTER)
 		log.info("******* Init: {} shards for cluster: {}.", shardsCount, clusterName)
 		log.info("******* Init shards manager from shard id: {} to: {}.", shardingMinId, shardingMaxId)
+
 		log.info("Add bot into Discord server via link: {}", shardManager.getShardById(0)?.getInviteUrl(permissions))
 	}
 
@@ -132,7 +132,7 @@ final class JdaShardManagerBean(
 	 *
 	 * @param activity The activity description to set for the presence.
 	 */
-	override fun setPresenceActivity(activity: String) {
+	fun setPresenceActivity(activity: String) {
 		shardManager.shards.forEach { it.presence.activity = Activity.listening(activity) }
 	}
 
@@ -142,7 +142,7 @@ final class JdaShardManagerBean(
 	 * @param guildId The ID of the guild to retrieve.
 	 * @return The [Guild] object associated with the given ID, or `null` if no such guild is found.
 	 */
-	override fun getGuildById(guildId: Long) = shardManager.getGuildById(guildId)
+	fun getGuildById(guildId: Long) = shardManager.getGuildById(guildId)
 
 	/**
 	 * Retrieves a [User] object associated with the specified userId.
@@ -153,7 +153,7 @@ final class JdaShardManagerBean(
 	 * @param userId The ID of the user to retrieve.
 	 * @return The [User] object associated with the given ID, or `null` if no such user is found.
 	 */
-	override fun getUserById(userId: Long) = shardManager.getUserById(userId)
+	fun getUserById(userId: Long) = shardManager.getUserById(userId)
 
 	/**
 	 * Retrieves the [DirectAudioController] for the specified guild.
@@ -163,10 +163,10 @@ final class JdaShardManagerBean(
 	 * @param guild The guild for which the audio controller is requested.
 	 * @return The [DirectAudioController] for the specified guild, or `null` if the controller is not available.
 	 */
-	override fun getDirectAudioController(guild: Guild) =
+	fun getDirectAudioController(guild: Guild) =
 		shardManager.getShardById(guild.jda.shardInfo.shardId)?.directAudioController
 
-	override val runningShardsCount get() = shardManager.shardsRunning
-	override val queuedShardsCount get() = shardManager.shardsQueued
-	override val averageGatewayPing get() = shardManager.averageGatewayPing
+	val runningShardsCount get() = shardManager.shardsRunning
+	val queuedShardsCount get() = shardManager.shardsQueued
+	val averageGatewayPing get() = shardManager.averageGatewayPing
 }

@@ -8,9 +8,9 @@ import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
 import pl.jwizard.jwc.audio.manager.MusicManagersBean
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
+import pl.jwizard.jwc.core.jda.JdaShardManagerBean
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.spi.ChannelListenerGuard
-import pl.jwizard.jwc.core.jda.spi.JdaShardManager
 import pl.jwizard.jwc.core.jvm.thread.JvmFixedThreadExecutor
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.property.guild.GuildProperty
@@ -26,17 +26,17 @@ import java.time.Instant
  * channel events.
  *
  * @property jdaShardManager Manages multiple shards of the JDA bot, responsible for handling Discord API interactions.
- * @property environmentBean Provides access to application properties.
- * @property musicManagersBean
+ * @property environment Provides access to application properties.
+ * @property musicManagers Provides access to the cached music manager for controlling audio playback.
  * @author Miłosz Gilga
  * @see ChannelListenerGuard
  * @see JvmFixedThreadExecutor
  */
 @SingletonComponent
 class AudioChannelsListenerGuardBean(
-	private val jdaShardManager: JdaShardManager,
-	private val environmentBean: EnvironmentBean,
-	private val musicManagersBean: MusicManagersBean,
+	private val jdaShardManager: JdaShardManagerBean,
+	private val environment: EnvironmentBean,
+	private val musicManagers: MusicManagersBean,
 ) : ChannelListenerGuard, JvmFixedThreadExecutor() {
 
 	companion object {
@@ -97,13 +97,13 @@ class AudioChannelsListenerGuardBean(
 				removeFromGuild.add(guildId)
 				continue
 			}
-			val maxInactivity = environmentBean.getGuildProperty<Long>(GuildProperty.LEAVE_EMPTY_CHANNEL_SEC, guildId)
+			val maxInactivity = environment.getGuildProperty<Long>(GuildProperty.LEAVE_EMPTY_CHANNEL_SEC, guildId)
 			if (time.epochSecond > (Instant.now().epochSecond - maxInactivity)) {
 				continue
 			}
-			val musicManager = musicManagersBean.getCachedMusicManager(guildId)
+			val musicManager = musicManagers.getCachedMusicManager(guildId)
 			if (musicManager != null) {
-				musicManager.state.audioScheduler.stopAndDestroy()
+				musicManager.state.audioScheduler.stopAndDestroy().subscribe()
 				jdaShardManager.getDirectAudioController(guild)?.disconnect(guild)
 
 				val message = musicManager.createEmbedBuilder()
@@ -111,7 +111,7 @@ class AudioChannelsListenerGuardBean(
 					.setColor(JdaColor.PRIMARY)
 					.build()
 
-				musicManagersBean.removeMusicManager(guildId)
+				musicManagers.removeMusicManager(guildId)
 				musicManager.sendMessage(message)
 
 				log.jdaInfo(

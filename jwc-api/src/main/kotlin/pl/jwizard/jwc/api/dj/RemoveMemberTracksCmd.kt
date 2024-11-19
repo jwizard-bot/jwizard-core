@@ -5,11 +5,11 @@
 package pl.jwizard.jwc.api.dj
 
 import net.dv8tion.jda.api.entities.MessageEmbed
+import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.DjCommandBase
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
-import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -49,12 +49,12 @@ class RemoveMemberTracksCmd(commandEnvironment: CommandEnvironmentBean) : DjComm
 	 * Executes the command to remove tracks added by a specific member from the queue.
 	 *
 	 * @param context The context of the command, which contains details of the user interaction.
-	 * @param manager The music manager responsible for handling the audio queue and playback.
+	 * @param manager The guild music manager responsible for handling the audio queue and playback.
 	 * @param response The future response object used to send the result of the command execution.
 	 * @throws UserNotFoundInGuildException If the specified user is not found in the guild.
 	 * @throws UserNotAddedTracksToQueueException If the specified user has not added any tracks to the queue.
 	 */
-	override fun executeDj(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
+	override fun executeDj(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val userId = context.getArg<Long>(Argument.MEMBER)
 		val paginatorChunkSize = environmentBean.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 

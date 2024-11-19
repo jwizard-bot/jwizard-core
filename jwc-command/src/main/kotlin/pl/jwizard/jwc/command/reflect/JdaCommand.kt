@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.command.reflect
 
-import pl.jwizard.jwc.command.CommandBase
+import pl.jwizard.jwc.command.CommandHandler
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
@@ -19,9 +19,10 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
  *
  * ```kotlin
  * @JdaCommand(id = BotCommand.HELP)
- * class MyJdaCommandListener : CommandBase() {
- *   fun execute(event: CompoundCommandEvent) {
+ * class MyCommandHandler : CommandHandler {
+ *   fun execute(context: CommandContext, response: TFutureResponse) {
  *     // command body
+ *     response.complete(/* embed response */)
  *   }
  * }
  * ```
@@ -29,7 +30,7 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
  * @property value The command identifier that this listener will handle.
  * @author Miłosz Gilga
  * @see Command
- * @see CommandBase
+ * @see CommandHandler
  * @see CommandContext
  */
 @SingletonComponent

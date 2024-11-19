@@ -2,16 +2,16 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.command
+package pl.jwizard.jwc.api
 
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.buttons.Button
+import pl.jwizard.jwc.command.CommandHandler
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.interaction.component.Paginator
 import pl.jwizard.jwc.command.interaction.component.RefreshableComponent
 import pl.jwizard.jwc.command.interaction.component.RefreshableContent
 import pl.jwizard.jwc.core.i18n.source.I18nActionSource
-import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
@@ -23,13 +23,13 @@ import pl.jwizard.jwl.property.AppProperty
  * @property commandEnvironment The environment dependencies required for command execution.
  * @author Miłosz Gilga
  */
-abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentBean) {
+abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentBean) : CommandHandler {
 
-	protected val environmentBean = commandEnvironment.environmentBean
+	protected val environmentBean = commandEnvironment.environment
 	protected val guildSettingsEventAction = commandEnvironment.guildSettingsEventAction
-	protected val i18nBean = commandEnvironment.i18nBean
+	protected val i18nBean = commandEnvironment.i18n
 	protected val jdaShardManager = commandEnvironment.jdaShardManager
-	protected val eventQueueBean = commandEnvironment.eventQueueBean
+	protected val eventQueueBean = commandEnvironment.eventQueue
 	protected val exceptionTrackerStore = commandEnvironment.exceptionTrackerHandler
 
 	/**
@@ -47,7 +47,7 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 	 * @return A configured MessageEmbedBuilder instance.
 	 */
 	protected fun createEmbedMessage(context: CommandContext) =
-		MessageEmbedBuilder(i18nBean, commandEnvironment.jdaColorStoreBean, context)
+		MessageEmbedBuilder(i18nBean, commandEnvironment.jdaColorStore, context)
 
 	/**
 	 * Creates a paginator for displaying multiple pages of content.
@@ -60,7 +60,7 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 		context,
 		i18nBean,
 		eventQueueBean,
-		jdaColorStoreBean = commandEnvironment.jdaColorStoreBean,
+		jdaColorStoreBean = commandEnvironment.jdaColorStore,
 		pages,
 	)
 
@@ -113,21 +113,4 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 	 */
 	protected fun createLinkButton(name: I18nActionSource, link: String, context: CommandContext) =
 		Button.link(link, i18nBean.t(name, context.guildLanguage))
-
-	/**
-	 * Executes the command logic and returns the command response.
-	 *
-	 * @param context The context of the command execution.
-	 * @param response
-	 */
-	abstract fun execute(context: CommandContext, response: TFutureResponse)
-
-	/**
-	 * Determines if the command should be executed in a private context. This method can be overridden by subclasses to
-	 * specify if the command is intended to be used in a private message context.
-	 *
-	 * @param context The context of the command execution.
-	 * @return An optional value indicating the channel ID if the command is private, or null if it is not.
-	 */
-	open fun isPrivate(context: CommandContext): Long? = null
 }

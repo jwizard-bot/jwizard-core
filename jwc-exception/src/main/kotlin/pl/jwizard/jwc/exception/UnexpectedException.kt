@@ -22,7 +22,7 @@ import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 class UnexpectedException(
 	context: CommandBaseContext?,
 	cause: String? = "Unknown command pipeline exception",
-) : CommandPipelineExceptionHandler(
+) : CommandPipelineException(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.UNEXPECTED_EXCEPTION,
 	logMessage = "Unexpected bot exception. Cause: \"$cause\"."

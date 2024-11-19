@@ -29,12 +29,12 @@ import pl.jwizard.jwl.util.logger
 /**
  * Handles the loading of tracks into the queue for the music manager.
  *
- * @property musicManager The music manager responsible for managing the guild's audio playback.
+ * @property guildMusicManager The music manager responsible for managing the guild's audio playback.
  * @author Miłosz Gilga
  */
 class QueueTrackLoader(
-	private val musicManager: GuildMusicManager,
-) : AudioCompletableFutureLoader(musicManager), TrackSelectSpinnerAction {
+	private val guildMusicManager: GuildMusicManager,
+) : AudioCompletableFutureLoader(guildMusicManager), TrackSelectSpinnerAction {
 
 	companion object {
 		private val log = logger<QueueTrackLoader>()
@@ -43,13 +43,13 @@ class QueueTrackLoader(
 	/**
 	 * Properties of the guild that may affect track selection behavior.
 	 */
-	private val guildProperties = musicManager.beans.environmentBean.getGuildMultipleProperties(
+	private val guildProperties = guildMusicManager.bean.environment.getGuildMultipleProperties(
 		guildProperties = listOf(
 			GuildProperty.RANDOM_AUTO_CHOOSE_TRACK,
 			GuildProperty.TIME_AFTER_AUTO_CHOOSE_SEC,
 			GuildProperty.MAX_TRACKS_TO_CHOOSE,
 		),
-		guildId = musicManager.state.context.guild.idLong,
+		guildId = guildMusicManager.state.context.guild.idLong,
 	)
 
 	/**
@@ -59,7 +59,7 @@ class QueueTrackLoader(
 	 * @param future The future response to complete once the track is loaded.
 	 */
 	override fun onCompletableTrackLoaded(result: TrackLoaded, future: TFutureResponse) {
-		val context = musicManager.state.context
+		val context = guildMusicManager.state.context
 		result.track.setUserData(AudioSender(context.author.idLong))
 
 		onEnqueueTrack(result.track)
@@ -78,31 +78,31 @@ class QueueTrackLoader(
 	 * @param future The future response to complete with the search results.
 	 */
 	override fun onCompletableSearchResultLoaded(result: SearchResult, future: TFutureResponse) {
-		val response = if (result.tracks.isEmpty()) {
+		if (result.tracks.isEmpty()) {
 			onError(
 				AudioLoadFailedDetails.Builder()
 					.setLogMessage("Unable to find any audio track.")
 					.setI18nLocaleSource(I18nExceptionSource.NOT_FOUND_TRACK)
 					.build()
 			)
-		} else {
-			result.tracks.forEach { it.setUserData(AudioSender(musicManager.state.context.author.idLong)) }
-			val options = result.tracks.map { TrackMenuOption(it) }
-
-			val trackSelectSpinnerMenu = TrackSelectSpinnerMenu(musicManager, options, guildProperties, this)
-
-			val (message, components) = trackSelectSpinnerMenu.createMenuComponent(
-				i18nBean = musicManager.beans.i18nBean,
-				jdaColorStoreBean = musicManager.beans.jdaColorStoreBean,
-				i18nSource = I18nResponseSource.SELECT_SONG_SEQUENCER
-			)
-			CommandResponse.Builder()
-				.addEmbedMessages(message)
-				.addActionRows(components)
-				.disposeComponents(false)
-				.onSendAction { trackSelectSpinnerMenu.initEvent(musicManager.beans.eventQueueBean, it) }
-				.build()
+			return
 		}
+		result.tracks.forEach { it.setUserData(AudioSender(guildMusicManager.state.context.author.idLong)) }
+		val options = result.tracks.map { TrackMenuOption(it) }
+
+		val trackSelectSpinnerMenu = TrackSelectSpinnerMenu(guildMusicManager, options, guildProperties, this)
+
+		val (message, components) = trackSelectSpinnerMenu.createMenuComponent(
+			i18nBean = guildMusicManager.bean.i18n,
+			jdaColorStoreBean = guildMusicManager.bean.jdaColorStore,
+			i18nSource = I18nResponseSource.SELECT_SONG_SEQUENCER
+		)
+		val response = CommandResponse.Builder()
+			.addEmbedMessages(message)
+			.addActionRows(components)
+			.disposeComponents(false)
+			.onSendAction { trackSelectSpinnerMenu.initEvent(guildMusicManager.bean.eventQueue, it) }
+			.build()
 		future.complete(response)
 	}
 
@@ -113,13 +113,13 @@ class QueueTrackLoader(
 	 * @param future The future response to complete once the playlist is loaded.
 	 */
 	override fun onCompletablePlaylistLoaded(result: PlaylistLoaded, future: TFutureResponse) {
-		val context = musicManager.state.context
+		val context = guildMusicManager.state.context
 		result.tracks.forEach { it.setUserData(AudioSender(context.author.idLong)) }
 
-		musicManager.state.audioScheduler.loadContent(result.tracks)
+		guildMusicManager.state.audioScheduler.loadContent(result.tracks)
 		val durationTime = millisToDTF(result.tracks.sumOf { it.duration })
 
-		val messageBuilder = musicManager.createEmbedBuilder()
+		val messageBuilder = guildMusicManager.createEmbedBuilder()
 			.setTitle(I18nAudioSource.ADD_NEW_PLAYLIST)
 			.setKeyValueField(I18nAudioSource.COUNT_OF_TRACKS, result.tracks.size)
 			.setSpace()
@@ -167,7 +167,7 @@ class QueueTrackLoader(
 	 * @param track The track to be added to the queue.
 	 */
 	override fun onEnqueueTrack(track: Track) {
-		musicManager.state.audioScheduler.loadContent(listOf(track))
+		guildMusicManager.state.audioScheduler.loadContent(listOf(track))
 	}
 
 	/**
@@ -177,14 +177,14 @@ class QueueTrackLoader(
 	 * @return The created embed message.
 	 */
 	override fun createTrackResponseMessage(track: Track): MessageEmbed {
-		val context = musicManager.state.context
-		val queueSize = musicManager.state.queueTrackScheduler.queue.size
+		val context = guildMusicManager.state.context
+		val queueSize = guildMusicManager.state.queueTrackScheduler.queue.size
 		val trackPosition = if (queueSize == 1) {
-			musicManager.beans.i18nBean.t(I18nAudioSource.NEXT_TRACK_INDEX_MESS, context.guildLanguage)
+			guildMusicManager.bean.i18n.t(I18nAudioSource.NEXT_TRACK_INDEX_MESS, context.guildLanguage)
 		} else {
 			queueSize.toString()
 		}
-		val messageBuilder = musicManager.createEmbedBuilder()
+		val messageBuilder = guildMusicManager.createEmbedBuilder()
 			.setTitle(I18nAudioSource.ADD_NEW_TRACK)
 			.setKeyValueField(I18nAudioSource.TRACK_NAME, track.mdTitleLink)
 			.setSpace()
@@ -205,13 +205,14 @@ class QueueTrackLoader(
 	 * Handles the error that occurs during the audio loading process.
 	 *
 	 * @param details The details of the error that occurred.
-	 * @return A command response indicating the error.
 	 */
-	override fun onError(details: AudioLoadFailedDetails): CommandResponse {
+	override fun onError(details: AudioLoadFailedDetails) {
+		val state = guildMusicManager.state
 		// If there are no tracks in the queue and no current track playing, start the leave waiter.
-		if (musicManager.state.queueTrackScheduler.queue.size == 0 && musicManager.cachedPlayer?.track == null) {
-			musicManager.startLeavingWaiter()
+		if (state.queueTrackScheduler.queue.size == 0 && guildMusicManager.cachedPlayer?.track == null) {
+			state.clearAudioType()
+			guildMusicManager.startLeavingWaiter()
 		}
-		return super.onError(details)
+		super.onError(details)
 	}
 }

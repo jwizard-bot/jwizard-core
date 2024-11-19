@@ -4,15 +4,15 @@
  */
 package pl.jwizard.jwc.api
 
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.i18n.source.I18nVotingSource
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.vote.I18nVoterResponse
 import pl.jwizard.jwc.vote.VoterContent
+import pl.jwizard.jwc.vote.VoterEnvironmentBean
 import pl.jwizard.jwc.vote.music.MusicVoterComponent
 import pl.jwizard.jwc.vote.music.MusicVoterResponse
 
@@ -24,11 +24,13 @@ import pl.jwizard.jwc.vote.music.MusicVoterResponse
  * facilitate interaction with the voting process.
  *
  * @param T The type of the payload associated with the music voting process.
- * @property commandEnvironment The environment in which the command is executed, providing access to various services
+ * @property voterEnvironment The environment related to voting, including merged beans in single data class.
+ * @param commandEnvironment The environment in which the command is executed, providing access to various services
  *           and functionalities.
  * @author Miłosz Gilga
  */
 abstract class MusicVoteCommandBase<T : Any>(
+	private val voterEnvironment: VoterEnvironmentBean,
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment), VoterContent<T> {
 
@@ -40,17 +42,17 @@ abstract class MusicVoteCommandBase<T : Any>(
 	 * row.
 	 *
 	 * @param context The command context containing information about the command execution.
-	 * @param manager The music manager responsible for handling music-related operations.
+	 * @param manager The guild music manager responsible for handling music-related operations.
 	 * @param response A future response object to be completed with the command response.
 	 */
-	final override fun executeMusic(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
+	final override fun executeMusic(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val voterResponse = executeMusicVote(context, manager)
 		val i18nResponse = I18nVoterResponse.Builder<T>()
 			.setInitMessage(initMessage, voterResponse.args)
 			.setFailedMessage(failedMessage, voterResponse.args)
 			.setPayload(voterResponse.payload)
 			.build()
-		val musicVoter = MusicVoterComponent(context, i18nResponse, this, commandEnvironment)
+		val musicVoter = MusicVoterComponent(context, i18nResponse, this, voterEnvironment)
 		val (message, actionRow) = musicVoter.createInitVoterMessage()
 		val commandResponse = CommandResponse.Builder()
 			.addEmbedMessages(message)
@@ -92,8 +94,8 @@ abstract class MusicVoteCommandBase<T : Any>(
 	 * [MusicVoterResponse] containing the result of the vote.
 	 *
 	 * @param context The command context for executing the vote.
-	 * @param manager The music manager responsible for managing music-related operations.
+	 * @param manager The guild music manager responsible for managing music-related operations.
 	 * @return A response containing the result of the music voting process.
 	 */
-	protected abstract fun executeMusicVote(context: CommandContext, manager: MusicManager): MusicVoterResponse<T>
+	protected abstract fun executeMusicVote(context: CommandContext, manager: GuildMusicManager): MusicVoterResponse<T>
 }

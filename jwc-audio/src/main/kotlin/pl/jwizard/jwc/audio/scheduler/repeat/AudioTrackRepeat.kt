@@ -4,26 +4,24 @@
  */
 package pl.jwizard.jwc.audio.scheduler.repeat
 
-import pl.jwizard.jwc.core.audio.spi.AudioRepeat
-
 /**
  * Implementation of the AudioRepeat interface for managing track and playlist repetition. This class allows toggling
  * the repeat status for both individual tracks and entire playlists.
  *
  * @author Miłosz Gilga
  */
-class AudioTrackRepeat : AudioRepeat {
+class AudioTrackRepeat {
 
 	/**
 	 * Indicates whether the current track should be repeated.
 	 */
-	override var trackRepeat = false
+	var trackRepeat = false
 		private set
 
 	/**
 	 * Indicates whether the current playlist should be repeated.
 	 */
-	override var playlistRepeat = false
+	var playlistRepeat = false
 		private set
 
 	/**
@@ -31,7 +29,7 @@ class AudioTrackRepeat : AudioRepeat {
 	 *
 	 * @return The new status of track repetition after toggling (true if now repeating, false otherwise).
 	 */
-	override fun toggleTrackLoop(): Boolean {
+	fun toggleTrackLoop(): Boolean {
 		trackRepeat = !trackRepeat
 		return trackRepeat
 	}
@@ -41,7 +39,7 @@ class AudioTrackRepeat : AudioRepeat {
 	 *
 	 * @return The new status of playlist repetition after toggling (true if now repeating, false otherwise).
 	 */
-	override fun togglePlaylistLoop(): Boolean {
+	fun togglePlaylistLoop(): Boolean {
 		playlistRepeat = !playlistRepeat
 		return playlistRepeat
 	}

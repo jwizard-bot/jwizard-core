@@ -5,7 +5,7 @@
 package pl.jwizard.jwc.exception.command
 
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
-import pl.jwizard.jwc.exception.CommandPipelineExceptionHandler
+import pl.jwizard.jwc.exception.CommandPipelineException
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 
 /**
@@ -27,7 +27,7 @@ class ViolatedCommandArgumentOptionsException(
 	violatedValue: Any?,
 	acceptedValueList: List<String>,
 	acceptedValuesFormatted: String,
-) : CommandPipelineExceptionHandler(
+) : CommandPipelineException(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.VIOLATED_COMMAND_ARG_OPTIONS,
 	args = mapOf(

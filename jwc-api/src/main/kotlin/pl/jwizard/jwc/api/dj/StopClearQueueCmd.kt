@@ -8,12 +8,12 @@ import dev.arbjerg.lavalink.client.player.LavalinkPlayer
 import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import dev.arbjerg.lavalink.client.player.Track
 import net.dv8tion.jda.api.entities.MessageEmbed
+import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.DjCommandBase
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
-import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
@@ -51,10 +51,10 @@ class StopClearQueueCmd(
 	 * if there is a track playing and if the queue has any remaining tracks, then asynchronously stops and clears them.
 	 *
 	 * @param context The context of the command, including user interaction details.
-	 * @param manager The music manager responsible for handling the audio queue.
+	 * @param manager The guild music manager responsible for handling the audio queue.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun executeDj(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
+	override fun executeDj(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val playingTrack = manager.cachedPlayer?.track
 		val queueTrackScheduler = manager.state.queueTrackScheduler
 
@@ -73,7 +73,7 @@ class StopClearQueueCmd(
 	 *
 	 * @param context The context of the command, including user interaction details.
 	 * @param result The result of the async operation, which is the updated [LavalinkPlayer].
-	 * @param payload A pair containing the previous volume level and the music manager.
+	 * @param payload A pair containing the previous volume level and the guild music manager.
 	 * @return A MessageEmbed containing a confirmation of the volume change and the new volume level.
 	 */
 	override fun onAsyncSuccess(

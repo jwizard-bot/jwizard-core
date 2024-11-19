@@ -5,11 +5,11 @@
 package pl.jwizard.jwc.vote.music
 
 import net.dv8tion.jda.api.entities.Member
-import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.vote.I18nVoterResponse
 import pl.jwizard.jwc.vote.VoterComponent
 import pl.jwizard.jwc.vote.VoterContent
+import pl.jwizard.jwc.vote.VoterEnvironmentBean
 
 /**
  * A component that manages music voting within a voice channel.
@@ -21,15 +21,15 @@ import pl.jwizard.jwc.vote.VoterContent
  * @property context The context in which the command is executed, providing access to command-related data.
  * @property i18nResponse The internationalized response associated with the voting process.
  * @property voterContent The content that will be processed after a successful vote.
- * @property commandEnvironment The environment in which the command is executed, providing access to various services.
+ * @property voterEnvironment The environment related to voting, including merged beans in single data class.
  * @author Miłosz Gilga
  */
 class MusicVoterComponent<T : Any>(
 	private val context: CommandContext,
 	private val i18nResponse: I18nVoterResponse<T>,
 	private val voterContent: VoterContent<T>,
-	private val commandEnvironment: CommandEnvironmentBean,
-) : VoterComponent<T>(context, i18nResponse, voterContent, commandEnvironment) {
+	private val voterEnvironment: VoterEnvironmentBean,
+) : VoterComponent<T>(context, i18nResponse, voterContent, voterEnvironment) {
 
 	/**
 	 * Filters votes based on the interaction author's membership in the voice channel with the bot.

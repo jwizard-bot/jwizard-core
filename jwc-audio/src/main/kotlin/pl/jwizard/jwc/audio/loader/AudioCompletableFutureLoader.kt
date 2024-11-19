@@ -20,11 +20,11 @@ import pl.jwizard.jwl.util.logger
  * [AbstractAudioLoadResultHandler] to handle various audio load results and complete futures associated with audio
  * commands.
  *
- * @property musicManager The music manager instance used for managing audio playback in the guild.
+ * @property guildMusicManager The guild music manager instance used for managing audio playback in the guild.
  * @author Miłosz Gilga
  */
 abstract class AudioCompletableFutureLoader(
-	private val musicManager: GuildMusicManager
+	private val guildMusicManager: GuildMusicManager,
 ) : AbstractAudioLoadResultHandler() {
 
 	companion object {
@@ -37,8 +37,8 @@ abstract class AudioCompletableFutureLoader(
 	 * @param result The loaded track result.
 	 */
 	final override fun ontrackLoaded(result: TrackLoaded) {
-		musicManager.stopLeavingWaiter()
-		onCompletableTrackLoaded(result, musicManager.state.future)
+		guildMusicManager.stopLeavingWaiter()
+		onCompletableTrackLoaded(result, guildMusicManager.state.future)
 	}
 
 	/**
@@ -47,8 +47,8 @@ abstract class AudioCompletableFutureLoader(
 	 * @param result The loaded search results.
 	 */
 	final override fun onSearchResultLoaded(result: SearchResult) {
-		musicManager.stopLeavingWaiter()
-		onCompletableSearchResultLoaded(result, musicManager.state.future)
+		guildMusicManager.stopLeavingWaiter()
+		onCompletableSearchResultLoaded(result, guildMusicManager.state.future)
 	}
 
 	/**
@@ -57,8 +57,8 @@ abstract class AudioCompletableFutureLoader(
 	 * @param result The loaded playlist result.
 	 */
 	final override fun onPlaylistLoaded(result: PlaylistLoaded) {
-		musicManager.stopLeavingWaiter()
-		onCompletablePlaylistLoaded(result, musicManager.state.future)
+		guildMusicManager.stopLeavingWaiter()
+		onCompletablePlaylistLoaded(result, guildMusicManager.state.future)
 	}
 
 	/**
@@ -66,33 +66,29 @@ abstract class AudioCompletableFutureLoader(
 	 *
 	 * @param result The load failure result.
 	 */
-	final override fun loadFailed(result: LoadFailed) {
-		val details = onCompletableLoadFailed(result)
-		musicManager.state.future.complete(onError(details))
-	}
+	final override fun loadFailed(result: LoadFailed) = onError(details = onCompletableLoadFailed(result))
 
 	/**
 	 * Called when no matches are found during the load process. Completes the future with an error response.
 	 */
-	final override fun noMatches() {
-		val details = onCompletableNoMatches()
-		musicManager.state.future.complete(onError(details))
-	}
+	final override fun noMatches() = onError(details = onCompletableNoMatches())
 
 	/**
 	 * Handles the error case when loading fails or no matches are found. Logs the error and creates a command response.
 	 *
 	 * @param details The details of the load failure.
-	 * @return A command response containing the error message.
 	 */
-	protected open fun onError(details: AudioLoadFailedDetails): CommandResponse {
-		val context = musicManager.state.context
-		val tracker = musicManager.beans.exceptionTrackerHandler
-		log.jdaError(context, details.logMessage, *(details.logArguments.toTypedArray()))
-		return CommandResponse.Builder()
+	protected open fun onError(details: AudioLoadFailedDetails) {
+		val context = guildMusicManager.state.context
+		val tracker = guildMusicManager.bean.exceptionTrackerHandler
+
+		val response = CommandResponse.Builder()
 			.addEmbedMessages(tracker.createTrackerMessage(details.i18nLocaleSource, context, details.i18nArguments))
 			.addActionRows(tracker.createTrackerLink(details.i18nLocaleSource))
 			.build()
+
+		log.jdaError(context, details.logMessage, *(details.logArguments.toTypedArray()))
+		guildMusicManager.state.future.complete(response)
 	}
 
 	/**

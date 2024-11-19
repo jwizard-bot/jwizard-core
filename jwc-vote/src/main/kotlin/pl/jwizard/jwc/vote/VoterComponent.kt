@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.buttons.Button
-import pl.jwizard.jwc.command.CommandEnvironmentBean
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.interaction.ButtonInteractionHandler
 import pl.jwizard.jwc.command.interaction.InteractionButton
@@ -36,24 +35,29 @@ import java.util.concurrent.CompletableFuture
  * @property context The command context related to the vote.
  * @property response Contains the response details and messages for the vote.
  * @property voterContent The content to process after a successful vote.
- * @property commandEnvironment Provides access to environment beans, handlers, and configurations.
+ * @property voterEnvironment The environment settings related to voting, including configurations or metadata.
  * @author Miłosz Gilga
  */
 abstract class VoterComponent<T : Any>(
 	private val context: CommandContext,
 	private val response: I18nVoterResponse<T>,
 	private val voterContent: VoterContent<T>,
-	private val commandEnvironment: CommandEnvironmentBean,
-) : ButtonInteractionHandler(commandEnvironment.i18nBean, commandEnvironment.eventQueueBean) {
+	private val voterEnvironment: VoterEnvironmentBean,
+) : ButtonInteractionHandler(voterEnvironment.i18n, voterEnvironment.eventQueue) {
 
 	companion object {
 		private val log = logger<VoterComponent<*>>()
 	}
 
+	private val i18n = voterEnvironment.i18n
+	private val environment = voterEnvironment.environment
+	private val jdaColorStore = voterEnvironment.jdaColorStore
+	private val looselyTransportHandler = voterEnvironment.looselyTransportHandler
+
 	/**
 	 * The maximum time allowed for voting, retrieved from the guild's settings.
 	 */
-	private val maxVotingTime = commandEnvironment.environmentBean.getGuildProperty<Long>(
+	private val maxVotingTime = environment.getGuildProperty<Long>(
 		guildProperty = GuildProperty.MAX_VOTING_TIME_SEC,
 		guildId = context.guild.idLong
 	)
@@ -61,7 +65,7 @@ abstract class VoterComponent<T : Any>(
 	/**
 	 * The percentage ratio required for the vote to pass, retrieved from the guild's settings.
 	 */
-	private val percentageRatio = commandEnvironment.environmentBean.getGuildProperty<Int>(
+	private val percentageRatio = environment.getGuildProperty<Int>(
 		guildProperty = GuildProperty.VOTING_PERCENTAGE_RATIO,
 		guildId = context.guild.idLong,
 	)
@@ -93,10 +97,8 @@ abstract class VoterComponent<T : Any>(
 	 */
 	fun createInitVoterMessage(): Pair<MessageEmbed, ActionRow> {
 		val initMessage = response.initMessage
-		val i18nBean = commandEnvironment.i18nBean
-		val jdaColorsStoreBean = commandEnvironment.jdaColorStoreBean
 
-		val message = MessageEmbedBuilder(i18nBean, jdaColorsStoreBean, context)
+		val message = MessageEmbedBuilder(i18n, jdaColorStore, context)
 			.setTitle(I18nResponseSource.VOTE_POLL)
 			.setDescription(initMessage.message, initMessage.args)
 			.setFooter(I18nVotingSource.MAX_TIME_VOTING, floatingSecToMin(maxVotingTime))
@@ -160,12 +162,12 @@ abstract class VoterComponent<T : Any>(
 	 * @param messageWithArgs The localized message with arguments.
 	 */
 	private fun sendEndVoteMessage(i18nTitle: I18nLocaleSource, messageWithArgs: I18nMessageWithArgs<*>) {
-		val message = MessageEmbedBuilder(commandEnvironment.i18nBean, commandEnvironment.jdaColorStoreBean, context)
+		val message = MessageEmbedBuilder(i18n, jdaColorStore, context)
 			.setTitle(i18nTitle)
 			.setDescription(messageWithArgs.message, messageWithArgs.args)
 			.setColor(JdaColor.PRIMARY)
 			.build()
-		commandEnvironment.looselyTransportHandlerBean.sendViaChannelTransport(
+		looselyTransportHandler.sendViaChannelTransport(
 			textChannel = context.textChannel,
 			response = CommandResponse.Builder().addEmbedMessages(message).build(),
 			notificationsSuppressed = context.suppressResponseNotifications,
@@ -189,10 +191,10 @@ abstract class VoterComponent<T : Any>(
 			val endedResult = if (voteState.isPassed) {
 				val futureResponse = CompletableFuture<CommandResponse>()
 				futureResponse.thenAccept {
-					commandEnvironment.looselyTransportHandlerBean.sendViaChannelTransport(
+					looselyTransportHandler.sendViaChannelTransport(
 						context.textChannel,
 						it,
-						context.suppressResponseNotifications
+						context.suppressResponseNotifications,
 					)
 				}
 				voterContent.afterSuccess(context, futureResponse, response.payload)

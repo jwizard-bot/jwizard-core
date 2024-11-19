@@ -4,9 +4,8 @@
  */
 package pl.jwizard.jwc.api
 
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.exception.dj.UnauthorizedDjException
 import pl.jwizard.jwc.exception.dj.UnauthorizedDjOrSenderException
@@ -32,12 +31,12 @@ abstract class DjCommandBase(commandEnvironment: CommandEnvironmentBean) : Music
 	 * they are the sender of all tracks in the queue.
 	 *
 	 * @param context The context of the command, containing user interaction details.
-	 * @param manager The music manager responsible for handling audio playback.
+	 * @param manager The guild music manager responsible for handling audio playback.
 	 * @param response The future response object used to send the result of the command execution.
 	 * @throws UnauthorizedDjException If the user is not a DJ and does not meet the conditions.
 	 * @throws UnauthorizedDjOrSenderException If the user is a normal user and all tracks in the queue are sent by them.
 	 */
-	final override fun executeMusic(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
+	final override fun executeMusic(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val (isSender, isDj, isSuperUser) = checkPermissions(context, manager)
 		val isNormalUser = !isSender && !isDj && !isSuperUser
 		val djRoleName = context.djRoleName
@@ -59,11 +58,11 @@ abstract class DjCommandBase(commandEnvironment: CommandEnvironmentBean) : Music
 	 * This method is used to determine if the user is allowed to execute certain commands based on their ownership of
 	 * all tracks in the queue. If the queue is empty, the method checks the sender of the currently playing track.
 	 *
-	 * @param manager The music manager responsible for handling audio playback.
+	 * @param manager The guild music manager responsible for handling audio playback.
 	 * @param context The context of the command, containing user interaction details.
 	 * @return `true` if all tracks were added by the same user; `false` otherwise.
 	 */
-	private fun checkIfAllTracksIsFromSelectedMember(manager: MusicManager, context: CommandContext): Boolean {
+	private fun checkIfAllTracksIsFromSelectedMember(manager: GuildMusicManager, context: CommandContext): Boolean {
 		val audioScheduler = manager.state.queueTrackScheduler
 		if (audioScheduler.queue.size == 0) {
 			return manager.getAudioSenderId(manager.cachedPlayer?.track) == context.author.idLong
@@ -82,8 +81,8 @@ abstract class DjCommandBase(commandEnvironment: CommandEnvironmentBean) : Music
 	 * This method must be implemented by subclasses to define the specific behavior of the DJ command.
 	 *
 	 * @param context The context of the command, containing user interaction details.
-	 * @param manager The music manager responsible for handling audio playback.
+	 * @param manager The guild music manager responsible for handling audio playback.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	protected abstract fun executeDj(context: CommandContext, manager: MusicManager, response: TFutureResponse)
+	protected abstract fun executeDj(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse)
 }

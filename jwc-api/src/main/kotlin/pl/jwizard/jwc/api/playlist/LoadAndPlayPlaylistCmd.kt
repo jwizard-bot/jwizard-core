@@ -4,11 +4,11 @@
  */
 package pl.jwizard.jwc.api.playlist
 
+import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicCommandBase
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
-import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
@@ -17,7 +17,7 @@ import pl.jwizard.jwl.command.Command
 /**
  * TODO
  *
- * @param commandEnvironment
+ * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
  */
 @JdaCommand(Command.PLAYPL)
@@ -29,11 +29,11 @@ class LoadAndPlayPlaylistCmd(commandEnvironment: CommandEnvironmentBean) : Music
 	/**
 	 * TODO
 	 *
-	 * @param context
-	 * @param response
-	 * @return
+	 * @param context The context of the command, including user interaction details.
+	 * @param manager The guild music manager responsible for handling the audio queue and playback.
+	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun executeMusic(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
+	override fun executeMusic(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val message = createEmbedMessage(context)
 			.setDescription("Not implemented yet")
 			.setColor(JdaColor.PRIMARY)

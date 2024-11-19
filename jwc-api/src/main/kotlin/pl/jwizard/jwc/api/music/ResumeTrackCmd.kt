@@ -7,12 +7,12 @@ package pl.jwizard.jwc.api.music
 import dev.arbjerg.lavalink.client.player.LavalinkPlayer
 import dev.arbjerg.lavalink.client.player.PlayerUpdateBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
+import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicCommandBase
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
-import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
@@ -37,7 +37,7 @@ import pl.jwizard.jwl.util.logger
 @JdaCommand(Command.RESUME)
 class ResumeTrackCmd(
 	commandEnvironment: CommandEnvironmentBean,
-) : MusicCommandBase(commandEnvironment), AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, MusicManager> {
+) : MusicCommandBase(commandEnvironment), AsyncUpdatableHook<LavalinkPlayer, PlayerUpdateBuilder, GuildMusicManager> {
 
 	companion object {
 		private val log = logger<ResumeTrackCmd>()
@@ -54,10 +54,10 @@ class ResumeTrackCmd(
 	 * change. The result is sent to the user through the provided response object.
 	 *
 	 * @param context The context of the command, containing user interaction details.
-	 * @param manager The music manager responsible for handling the audio queue and playback.
+	 * @param manager The guild music manager responsible for handling the audio queue and playback.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun executeMusic(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
+	override fun executeMusic(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response, this)
 		asyncUpdatableHandler.performAsyncUpdate(
 			asyncAction = manager.createdOrUpdatedPlayer.setPaused(false),
@@ -73,11 +73,15 @@ class ResumeTrackCmd(
 	 *
 	 * @param context The context of the command, containing user interaction details.
 	 * @param result The result of the async operation, in this case, the updated [LavalinkPlayer].
-	 * @param payload The music manager used for handling audio playback and queue management.
+	 * @param payload The guild music manager used for handling audio playback and queue management.
 	 * @return A MessageEmbed containing detailed information about the resumed track.
 	 * @throws UnexpectedException If the resumed track is not found.
 	 */
-	override fun onAsyncSuccess(context: CommandContext, result: LavalinkPlayer, payload: MusicManager): MessageEmbed {
+	override fun onAsyncSuccess(
+		context: CommandContext,
+		result: LavalinkPlayer,
+		payload: GuildMusicManager,
+	): MessageEmbed {
 		val resumedTrack = payload.cachedPlayer?.track ?: throw UnexpectedException(context, "Resumed track is NULL.")
 		log.jdaInfo(context, "Current paused track: %s was resumed.", resumedTrack.qualifier)
 

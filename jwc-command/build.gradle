@@ -3,11 +3,11 @@
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 dependencies {
-	implementation libs.springContext
-	implementation libs.jda
 	implementation libs.collectionUtils
 	implementation libs.commonsCodec
+	implementation libs.jda
 	implementation libs.reactor
+	implementation libs.springContext
 
 	implementation project(':jwc-core')
 	implementation project(':jwc-exception')

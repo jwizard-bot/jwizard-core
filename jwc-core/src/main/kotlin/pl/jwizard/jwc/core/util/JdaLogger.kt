@@ -21,6 +21,18 @@ fun Logger.jdaInfo(context: CommandBaseContext, message: String, vararg args: An
 }
 
 /**
+ * Extension function for logging debug messages with context.
+ *
+ * @param context The context for the command, providing guild and author information.
+ * @param message The message to log.
+ * @param args Additional arguments for message formatting.
+ * @author Miłosz Gilga
+ */
+fun Logger.jdaDebug(context: CommandBaseContext, message: String, vararg args: Any?) {
+	debug(loggerMessageContent(context, message, *args))
+}
+
+/**
  * Extension function for logging error messages with context.
  *
  * @param context The context for the command, providing guild and author information.

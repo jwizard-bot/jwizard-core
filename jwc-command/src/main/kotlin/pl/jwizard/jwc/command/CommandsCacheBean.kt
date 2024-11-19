@@ -24,17 +24,17 @@ class CommandsCacheBean {
 
 	/**
 	 * A concurrent map that stores command instances, indexed by their name. The key is the command name, and the value
-	 * is the [CommandBase] instance.
+	 * is the [CommandHandler] instance.
 	 */
-	val instancesContainer = ConcurrentHashMap<Command, CommandBase>()
+	val instancesContainer = ConcurrentHashMap<Command, CommandHandler>()
 
 	/**
 	 * Adds a command instance to the [instancesContainer] map.
 	 *
 	 * @param name The name of the command to be added.
-	 * @param command The [CommandBase] instance of the command to be stored.
+	 * @param command The [CommandHandler] instance of the command to be stored.
 	 */
-	fun addInstance(name: Command, command: CommandBase) {
+	fun addInstance(name: Command, command: CommandHandler) {
 		instancesContainer[name] = command
 		log.info("Command: \"{}\" ({}) appended via reflection.", name, command.javaClass.name)
 	}

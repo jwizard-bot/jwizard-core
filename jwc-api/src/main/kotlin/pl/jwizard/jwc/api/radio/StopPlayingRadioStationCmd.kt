@@ -4,11 +4,11 @@
  */
 package pl.jwizard.jwc.api.radio
 
+import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.RadioCommandBase
-import pl.jwizard.jwc.command.CommandEnvironmentBean
+import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
-import pl.jwizard.jwc.core.audio.spi.MusicManager
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwl.command.Command
 
@@ -32,10 +32,10 @@ class StopPlayingRadioStationCmd(commandEnvironment: CommandEnvironmentBean) : R
 	 * any related resources, ensuring a clean shutdown.
 	 *
 	 * @param context The context of the command, containing user interaction details and guild information.
-	 * @param manager The music manager responsible for handling the audio playback and stream management.
+	 * @param manager The guild music manager responsible for handling the audio playback and stream management.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun executeRadio(context: CommandContext, manager: MusicManager, response: TFutureResponse) {
+	override fun executeRadio(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val radioStreamScheduler = manager.state.radioStreamScheduler
 		radioStreamScheduler.stopAndDestroy().subscribe()
 	}

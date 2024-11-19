@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.command.reflect
 
-import pl.jwizard.jwc.command.CommandBase
+import pl.jwizard.jwc.command.CommandHandler
 import pl.jwizard.jwc.command.CommandsCacheBean
 import pl.jwizard.jwc.core.jda.spi.CommandsLoader
 import pl.jwizard.jwl.command.Command
@@ -47,7 +47,7 @@ class CommandsLoaderBean(
 	 */
 	override fun loadClassesViaReflectionApi() {
 		scanner.findComponents().forEach { (command, clazz) ->
-			commandsCacheBean.addInstance(command.value, ioCKtContextFactory.getBean(clazz) as CommandBase)
+			commandsCacheBean.addInstance(command.value, ioCKtContextFactory.getBean(clazz) as CommandHandler)
 		}
 		val loadedCommands = commandsCacheBean.instancesContainer.keys.filterNotNull()
 		val allCommands = Command.entries.size
