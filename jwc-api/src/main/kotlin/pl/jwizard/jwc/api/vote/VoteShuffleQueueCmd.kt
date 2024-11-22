@@ -56,7 +56,7 @@ class VoteShuffleQueueCmd(
 	 */
 	override fun executeMusicVote(context: CommandContext, manager: GuildMusicManager) = MusicVoterResponse(
 		payload = manager,
-		args = mapOf("countOfTracks" to manager.state.queueTrackScheduler.queue.size),
+		args = mapOf("queueTracksCount" to manager.state.queueTrackScheduler.queue.size),
 	)
 
 	/**

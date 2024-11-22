@@ -106,15 +106,10 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 *
 	 * @param voiceState The voice state of the user.
 	 * @param context The context of the command, containing user interaction details.
-	 * @return Boolean indicating whether the user is with the bot in the same channel.
 	 * @throws UserOnVoiceChannelWithBotNotFoundException If the user is not in the same channel as the bot.
 	 */
-	protected fun userIsWithBotOnAudioChannel(voiceState: GuildVoiceState, context: CommandContext): Boolean {
+	protected fun userIsWithBotOnAudioChannel(voiceState: GuildVoiceState, context: CommandContext) {
 		val botVoiceState = context.selfMember.voiceState
-		// bot not yet joined to any channel, join to channel with invoker
-		if (shouldAutoJoinBotToChannel && botVoiceState?.member?.voiceState?.inAudioChannel() == false) {
-			return true
-		}
 		val superuserPermissions = environmentBean.getListProperty<String>(BotListProperty.JDA_SUPERUSER_PERMISSIONS)
 		val isRegularUser = superuserPermissions.none { context.author.hasPermission(Permission.valueOf(it)) }
 
@@ -122,7 +117,6 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 		if (shouldOnSameChannelWithBot && botVoiceState?.channel?.id != voiceState.channel?.id && isRegularUser) {
 			throw UserOnVoiceChannelWithBotNotFoundException(context, voiceState.channel, botVoiceState?.channel)
 		}
-		return false
 	}
 
 	/**
@@ -158,11 +152,6 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 * Flag indicating whether the command requires the user to be in the same channel as the bot.
 	 */
 	protected open val shouldOnSameChannelWithBot = false
-
-	/**
-	 * Flag indicating whether the bot should automatically join the user's voice channel.
-	 */
-	protected open val shouldAutoJoinBotToChannel = false
 
 	/**
 	 * Flag indicating whether the command requires the content sender to be the sender or a superuser.

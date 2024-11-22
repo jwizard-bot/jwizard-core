@@ -4,7 +4,6 @@
  */
 package pl.jwizard.jwc.api.manager
 
-import dev.arbjerg.lavalink.VERSION
 import net.dv8tion.jda.api.JDAInfo
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
@@ -152,7 +151,7 @@ class DebugCmd(
 			)
 			.setKeyValueField(I18nSystemSource.JDA_VERSION, JDAInfo.VERSION.versionFormat)
 			.setSpace()
-			.setKeyValueField(I18nSystemSource.LAVALINK_CLIENT_VERSION, VERSION.versionFormat)
+			.setKeyValueField(I18nSystemSource.LAVALINK_CLIENT_VERSION, "?" /* TODO */)
 			.setKeyValueField(I18nSystemSource.AVAILABLE_LAVALINK_NODES, lavaNodesInfo, inline = false)
 			.setColor(JdaColor.PRIMARY)
 			.build()

@@ -66,7 +66,7 @@ class RadioStreamLoader(
 	 * @param details The details of the error that occurred.
 	 */
 	override fun onError(details: AudioLoadFailedDetails) {
-		guildMusicManager.state.audioScheduler.stopAndDestroy()
+		guildMusicManager.state.audioScheduler.stopAndDestroy().subscribe()
 		guildMusicManager.startLeavingWaiter()
 		super.onError(details)
 	}

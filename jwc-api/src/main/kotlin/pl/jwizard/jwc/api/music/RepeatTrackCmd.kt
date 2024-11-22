@@ -65,7 +65,7 @@ class RepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandB
 		val maxRepeats = multipleProperties.getProperty<Int>(GuildProperty.MAX_REPEATS_OF_TRACK)
 
 		if (repeatsCount < minRepeats || repeatsCount > maxRepeats) {
-			throw TrackRepeatsOutOfBoundException(context, maxRepeats)
+			throw TrackRepeatsOutOfBoundException(context, minRepeats, maxRepeats)
 		}
 		manager.state.queueTrackScheduler.updateCountOfRepeats(repeatsCount)
 

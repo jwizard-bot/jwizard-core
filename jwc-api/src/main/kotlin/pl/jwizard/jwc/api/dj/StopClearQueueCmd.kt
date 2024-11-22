@@ -18,6 +18,7 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.util.ext.mdTitleLink
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.jdaInfo
+import pl.jwizard.jwc.exception.track.TrackQueueIsEmptyException
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
@@ -52,13 +53,15 @@ class StopClearQueueCmd(
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeDj(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
-		val playingTrack = manager.cachedPlayer?.track
+		val currentTrack = manager.cachedPlayer?.track
 		val queueTrackScheduler = manager.state.queueTrackScheduler
-
+		if (currentTrack == null && queueTrackScheduler.queue.isEmpty()) {
+			throw TrackQueueIsEmptyException(context)
+		}
 		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response, this)
 		asyncUpdatableHandler.performAsyncUpdate(
 			asyncAction = queueTrackScheduler.stopAndDestroy(),
-			payload = Pair(playingTrack, queueTrackScheduler.queue.size),
+			payload = Pair(currentTrack, queueTrackScheduler.queue.size),
 		)
 	}
 

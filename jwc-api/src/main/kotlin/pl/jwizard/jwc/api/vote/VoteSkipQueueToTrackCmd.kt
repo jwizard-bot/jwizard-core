@@ -17,6 +17,7 @@ import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.util.ext.mdTitleLink
 import pl.jwizard.jwc.core.util.ext.qualifier
+import pl.jwizard.jwc.core.util.ext.thumbnailUrl
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.exception.track.TrackOffsetOutOfBoundsException
 import pl.jwizard.jwc.vote.VoterEnvironmentBean
@@ -76,9 +77,9 @@ class VoteSkipQueueToTrackCmd(
 		return MusicVoterResponse(
 			payload = Pair(manager, position),
 			args = mapOf(
-				"audioTrack" to manager.state.queueTrackScheduler.queue.size,
-				"countOfTracks" to manager.state.queueTrackScheduler.queue.size,
-				"countOfTracks" to manager.state.queueTrackScheduler.queue.size,
+				"audioTrack" to manager.cachedPlayer?.track?.mdTitleLink,
+				"nextAudioTrack" to manager.state.queueTrackScheduler.queue.getTrackByPosition(position).mdTitleLink,
+				"countOfSkipped" to position - 1,
 			)
 		)
 	}
@@ -129,6 +130,7 @@ class VoteSkipQueueToTrackCmd(
 					"currentTrack" to currentTrack.mdTitleLink,
 				)
 			)
+			.setArtwork(currentTrack.thumbnailUrl)
 			.setColor(JdaColor.PRIMARY)
 			.build()
 	}

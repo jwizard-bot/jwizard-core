@@ -3,12 +3,12 @@
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 dependencies {
-	implementation libs.springContext
-	implementation libs.jda
-	implementation libs.lavalinkClient
 	implementation libs.commonsCodec
 	implementation libs.commonsValidator
 	implementation libs.jacksonAnnotations
+	implementation libs.jda
+	implementation libs.lavalinkClient
+	implementation libs.springContext
 
 	implementation project(':jwc-command')
 	implementation project(':jwc-core')

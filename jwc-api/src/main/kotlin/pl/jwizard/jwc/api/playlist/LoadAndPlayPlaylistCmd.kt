@@ -24,7 +24,6 @@ import pl.jwizard.jwl.command.Command
 class LoadAndPlayPlaylistCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
 
 	override val shouldOnSameChannelWithBot = true
-	override val shouldAutoJoinBotToChannel = true
 
 	/**
 	 * TODO

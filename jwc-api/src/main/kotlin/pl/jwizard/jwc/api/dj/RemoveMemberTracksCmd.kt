@@ -72,9 +72,7 @@ class RemoveMemberTracksCmd(commandEnvironment: CommandEnvironmentBean) : DjComm
 		log.jdaInfo(context, "Remove: %d tracks added by user: %s.", removedTracks.size, member.qualifier)
 
 		val embedMessages = mutableListOf<MessageEmbed>()
-		var trackIndex = 1
-
-		for (chunk in removedTracks.chunked(paginatorChunkSize)) {
+		for ((index, chunk) in removedTracks.chunked(paginatorChunkSize).withIndex()) {
 			val messageBuilder = createEmbedMessage(context)
 				.setTitle(I18nAudioSource.REMOVED_POSITIONS)
 				.setDescription(
@@ -86,7 +84,7 @@ class RemoveMemberTracksCmd(commandEnvironment: CommandEnvironmentBean) : DjComm
 				)
 			for (track in chunk) {
 				messageBuilder.setKeyValueField(
-					key = "${trackIndex++}. ${track.normalizedTitle}",
+					key = "${index + 1}. ${track.normalizedTitle}",
 					value = "${mdLink("[link]", track.info.uri)}, ${mdCode(millisToDTF(track.duration))}",
 					inline = false,
 				)

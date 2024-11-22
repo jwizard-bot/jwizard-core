@@ -26,6 +26,15 @@ class AudioTrackQueue(private val guildMusicManager: GuildMusicManager) : Linked
 		get() = toList()
 
 	/**
+	 * Retrieves the track at the specified position in the queue.
+	 *
+	 * @param positionIndex The position of the track (1-based index).
+	 * @return The [Track] at the specified position.
+	 * @throws IndexOutOfBoundsException if the positionIndex is out of range.
+	 */
+	fun getTrackByPosition(positionIndex: Int): Track = ArrayList(this)[positionIndex - 1]
+
+	/**
 	 * Shuffles the order of the tracks in the queue. This method randomizes the order of tracks in the queue using
 	 * the built-in shuffle functionality.
 	 */

@@ -17,6 +17,7 @@ import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.util.ext.mdTitleLink
 import pl.jwizard.jwc.core.util.ext.qualifier
+import pl.jwizard.jwc.core.util.ext.thumbnailUrl
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.vote.VoterEnvironmentBean
 import pl.jwizard.jwc.vote.music.MusicVoterResponse
@@ -107,6 +108,7 @@ class VoteStopAndClearQueueCmd(
 		}
 		return createVoteSuccessMessage(context)
 			.setDescription(i18nSourceKey, args)
+			.apply { playingTrack?.let { setArtwork(it.thumbnailUrl) } }
 			.setColor(JdaColor.PRIMARY)
 			.build()
 	}

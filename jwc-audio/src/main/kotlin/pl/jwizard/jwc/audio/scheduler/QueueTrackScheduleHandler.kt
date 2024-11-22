@@ -162,10 +162,8 @@ class QueueTrackScheduleHandler(
 			return
 		}
 		if (audioRepeat.playlistRepeat) {
+			nextTrack()
 			queue.add(lastTrack.makeClone())
-			if (endReason.mayStartNext) {
-				nextTrack()
-			}
 			return
 		}
 		if (countOfRepeats.current > 0) { // repeat selected track multiple times
@@ -195,7 +193,7 @@ class QueueTrackScheduleHandler(
 			guildMusicManager.sendMessage(trackRepeatMessage)
 			return
 		}
-		if (queue.isEmpty()) {
+		if (queue.isEmpty() && endReason != AudioTrackEndReason.REPLACED) {
 			val connectionInterrupted = guildMusicManager.cachedPlayer?.state == null
 			nextTrackInfoMessage.set(true)
 
@@ -208,14 +206,13 @@ class QueueTrackScheduleHandler(
 				queue.clear()
 				audioRepeat.clear()
 				countOfRepeats.clear()
-				nextTrackInfoMessage.set(true)
 			} else {
 				guildMusicManager.startLeavingWaiter()
 			}
 			guildMusicManager.sendMessage(endQueueMessage)
 			return
 		}
-		if (endReason.mayStartNext || queue.isNotEmpty()) {
+		if (endReason.mayStartNext || (endReason == AudioTrackEndReason.STOPPED && queue.isNotEmpty())) {
 			nextTrackInfoMessage.set(true)
 			nextTrack()
 		}

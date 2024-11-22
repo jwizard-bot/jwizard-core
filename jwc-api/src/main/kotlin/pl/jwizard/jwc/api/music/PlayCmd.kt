@@ -26,7 +26,6 @@ import pl.jwizard.jwl.command.arg.Argument
 class PlayCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
 
 	override val shouldOnSameChannelWithBot = true
-	override val shouldAutoJoinBotToChannel = true
 
 	/**
 	 * Executes the play command to load and play the specified track.
@@ -40,7 +39,6 @@ class PlayCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(com
 	 */
 	override fun executeMusic(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val track = context.getArg<String>(Argument.TRACK)
-		joinAndOpenAudioConnection(context)
 		manager.loadAndPlay(track, context)
 	}
 }

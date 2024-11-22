@@ -25,7 +25,6 @@ import pl.jwizard.jwl.radio.RadioStation
 @JdaCommand(Command.PLAYRADIO)
 class PlayRadioStationCmd(commandEnvironment: CommandEnvironmentBean) : RadioCommandBase(commandEnvironment) {
 
-	override val shouldAutoJoinBotToChannel = true
 	override val shouldOnSameChannelWithBot = true
 	override val shouldRadioIdle = true
 
@@ -44,7 +43,6 @@ class PlayRadioStationCmd(commandEnvironment: CommandEnvironmentBean) : RadioCom
 		val radioStation = RadioStation.entries.find { it.textKey == radioStationSlug }
 			?: throw RadioStationNotExistsOrTurnedOffException(context, radioStationSlug)
 
-		joinAndOpenAudioConnection(context)
 		manager.loadAndStream(radioStation, context)
 	}
 }

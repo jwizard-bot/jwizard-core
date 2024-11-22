@@ -92,7 +92,7 @@ enum class GuildProperty(
 	/**
 	 * Time in seconds after which the bot leaves an empty channel in the guild.
 	 */
-	LEAVE_EMPTY_CHANNEL_SEC("leave_empty_channel_sec", "jw.system.leaveEmptyChannelSec", TO_DTF_SEC),
+	LEAVE_EMPTY_CHANNEL_SEC("leave_empty_channel_sec", "jw.guild.prop.leaveEmptyChannelSec", TO_DTF_SEC),
 
 	/**
 	 * Time in seconds after which the bot leaves a channel with no tracks in the guild.
