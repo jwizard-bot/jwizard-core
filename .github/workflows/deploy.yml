@@ -13,10 +13,6 @@ on:
       - "gradle.properties"
       - "settings.gradle"
   workflow_dispatch:
-    inputs:
-      pipeline_name:
-        description: "Pipeline execution name"
-        required: true
 
 env:
   PM2_CORE_NAME_INSTANCE_1: JWizardCore1
