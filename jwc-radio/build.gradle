@@ -3,10 +3,7 @@
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 dependencies {
-	implementation libs.jacksonDatabind
-	implementation libs.jacksonKotlin
 	implementation libs.jda
-	implementation libs.springContext
 
 	implementation project(":jwc-core")
 	implementation project(":jwc-exception")

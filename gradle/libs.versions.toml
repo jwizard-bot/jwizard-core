@@ -1,55 +1,35 @@
 [versions]
-kotlinVersion = "2.0.20"
-springVersion = "6.1.14"
-mysqlConnectorVersion = "9.1.0"
-hikariCpVersion = "5.1.0"
-logbackVersion = "1.5.7"
-slf4jApiVersion = "2.0.16"
-dotenvVersion = "2.2.0"
-shadowJarVersion = "8.1.1"
-dokkaVersion = "1.9.20"
-jacksonVersion = "2.18.0"
-jdaVersion = "5.1.0"
-jeeAnnotationApiVersion = "3.0.0"
-collectionUtilsVersion = "4.5.0-M2"
-lavalinkClientVersion = "3.1.0"
 commonsCodecVersion = "1.17.1"
-commonsValidatorVersion = "1.9.0"
 commonsIoVersion = "2.17.0"
-reactorVersion = "3.6.10"
-javalinVersion = "6.3.0"
+commonsValidatorVersion = "1.9.0"
+dokkaVersion = "1.9.20"
+jdaVersion = "5.1.0"
 jwizardLibVersion = "latest"
+jwizardAudioClientVersion = "latest"
+kotlinVersion = "2.0.20"
+logbackVersion = "1.5.7"
+reactorVersion = "3.7.0"
+shadowJarVersion = "8.1.1"
+slf4jApiVersion = "2.0.16"
 
 [libraries]
+commonsCodec = { module = "commons-codec:commons-codec", version.ref = "commonsCodecVersion" }
+commonsIo = { module = "commons-io:commons-io", version.ref = "commonsIoVersion" }
+commonsValidator = { module = "commons-validator:commons-validator", version.ref = "commonsValidatorVersion" }
+jda = { module = "net.dv8tion:JDA", version.ref = "jdaVersion" }
+jwizardLib = { module = "pl.jwizard:jwizard-lib", version.ref = "jwizardLibVersion" }
+jwizardAudioClient = { module = "pl.jwizard:jwizard-audio-client", version.ref = "jwizardAudioClientVersion" }
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinVersion" }
 kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlinVersion" }
-springContext = { module = "org.springframework:spring-context", version.ref = "springVersion" }
-springJdbc = { module = "org.springframework:spring-jdbc", version.ref = "springVersion" }
-mysqlConnector = { module = "com.mysql:mysql-connector-j", version.ref = "mysqlConnectorVersion" }
-hikariCp = { module = "com.zaxxer:HikariCP", version.ref = "hikariCpVersion" }
 logbackCore = { module = "ch.qos.logback:logback-core", version.ref = "logbackVersion" }
 logbackClassic = { module = "ch.qos.logback:logback-classic", version.ref = "logbackVersion" }
-slf4jApi = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApiVersion" }
-dotEnv = { module = "io.github.cdimascio:dotenv-java", version.ref = "dotenvVersion" }
-jacksonKotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jacksonVersion" }
-jacksonDatabind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jacksonVersion" }
-jacksonDataformatYaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jacksonVersion" }
-jacksonAnnotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jacksonVersion" }
-jda = { module = "net.dv8tion:JDA", version.ref = "jdaVersion" }
-jeeAnnotationApi = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jeeAnnotationApiVersion" }
-collectionUtils = { module = "org.apache.commons:commons-collections4", version.ref = "collectionUtilsVersion" }
-lavalinkClient = { module = "dev.arbjerg:lavalink-client", version.ref = "lavalinkClientVersion" }
-commonsCodec = { module = "commons-codec:commons-codec", version.ref = "commonsCodecVersion" }
-commonsValidator = { module = "commons-validator:commons-validator", version.ref = "commonsValidatorVersion" }
-commonsIo = { module = "commons-io:commons-io", version.ref = "commonsIoVersion" }
 reactor = { module = "io.projectreactor:reactor-core", version.ref = "reactorVersion" }
-javalin = { module = "io.javalin:javalin", version.ref = "javalinVersion" }
-jwizardLib = { module = "pl.jwizard:jwizard-lib", version.ref = "jwizardLibVersion" }
+slf4jApi = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApiVersion" }
 
 [plugins]
-kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
-kotlinSpring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlinVersion" }
-kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
-shadowJar = { id = "com.github.johnrengelman.shadow", version.ref = "shadowJarVersion" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokkaVersion" }
+kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
 kotlinNoArg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = "kotlinVersion" }
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
+kotlinSpring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlinVersion" }
+shadowJar = { id = "com.github.johnrengelman.shadow", version.ref = "shadowJarVersion" }

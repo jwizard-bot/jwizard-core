@@ -5,8 +5,7 @@
 dependencies {
 	implementation libs.commonsIo
 	implementation libs.jda
-	implementation libs.lavalinkClient
-	implementation libs.springContext
+	implementation libs.jwizardAudioClient
 
 	implementation project(":jwc-audio")
 	implementation project(":jwc-command")

@@ -3,13 +3,6 @@
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 dependencies {
-	implementation libs.dotEnv
-	implementation libs.jacksonDatabind
-	implementation libs.jacksonDataformatYaml
-	implementation libs.jacksonKotlin
-	implementation libs.javalin
 	implementation libs.jda
-	implementation libs.jeeAnnotationApi
-	implementation libs.lavalinkClient
-	implementation libs.springContext
+	implementation libs.jwizardAudioClient
 }
