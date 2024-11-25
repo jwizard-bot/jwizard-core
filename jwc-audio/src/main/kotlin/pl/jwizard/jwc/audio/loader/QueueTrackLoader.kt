@@ -4,9 +4,10 @@
  */
 package pl.jwizard.jwc.audio.loader
 
-import dev.arbjerg.lavalink.client.player.*
 import net.dv8tion.jda.api.entities.MessageEmbed
-import pl.jwizard.jwc.audio.AudioSender
+import pl.jwizard.jwac.event.onload.*
+import pl.jwizard.jwac.player.track.AudioSender
+import pl.jwizard.jwac.player.track.Track
 import pl.jwizard.jwc.audio.loader.spinner.TrackMenuOption
 import pl.jwizard.jwc.audio.loader.spinner.TrackSelectSpinnerAction
 import pl.jwizard.jwc.audio.loader.spinner.TrackSelectSpinnerMenu
@@ -17,10 +18,8 @@ import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.guild.GuildProperty
-import pl.jwizard.jwc.core.util.ext.duration
 import pl.jwizard.jwc.core.util.ext.mdTitleLink
 import pl.jwizard.jwc.core.util.ext.qualifier
-import pl.jwizard.jwc.core.util.ext.thumbnailUrl
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.core.util.millisToDTF
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
@@ -58,9 +57,9 @@ class QueueTrackLoader(
 	 * @param result The result of the loaded track.
 	 * @param future The future response to complete once the track is loaded.
 	 */
-	override fun onCompletableTrackLoaded(result: TrackLoaded, future: TFutureResponse) {
+	override fun onCompletableTrackLoaded(result: KTrackLoadedEvent, future: TFutureResponse) {
 		val context = guildMusicManager.state.context
-		result.track.setUserData(AudioSender(context.author.idLong))
+		result.track.setSenderData(AudioSender(context.author.idLong))
 
 		onEnqueueTrack(result.track)
 		log.jdaInfo(context, "Added to queue: %s track by: %s.", result.track.qualifier, context.author.qualifier)
@@ -77,7 +76,7 @@ class QueueTrackLoader(
 	 * @param result The search result containing tracks.
 	 * @param future The future response to complete with the search results.
 	 */
-	override fun onCompletableSearchResultLoaded(result: SearchResult, future: TFutureResponse) {
+	override fun onCompletableSearchResultLoaded(result: KSearchResultEvent, future: TFutureResponse) {
 		if (result.tracks.isEmpty()) {
 			onError(
 				AudioLoadFailedDetails.Builder()
@@ -87,7 +86,7 @@ class QueueTrackLoader(
 			)
 			return
 		}
-		result.tracks.forEach { it.setUserData(AudioSender(guildMusicManager.state.context.author.idLong)) }
+		result.tracks.forEach { it.setSenderData(AudioSender(guildMusicManager.state.context.author.idLong)) }
 		val options = result.tracks.map { TrackMenuOption(it) }
 
 		val trackSelectSpinnerMenu = TrackSelectSpinnerMenu(guildMusicManager, options, guildProperties, this)
@@ -112,9 +111,9 @@ class QueueTrackLoader(
 	 * @param result The result of the loaded playlist.
 	 * @param future The future response to complete once the playlist is loaded.
 	 */
-	override fun onCompletablePlaylistLoaded(result: PlaylistLoaded, future: TFutureResponse) {
+	override fun onCompletablePlaylistLoaded(result: KPlaylistLoadedEvent, future: TFutureResponse) {
 		val context = guildMusicManager.state.context
-		result.tracks.forEach { it.setUserData(AudioSender(context.author.idLong)) }
+		result.tracks.forEach { it.setSenderData(AudioSender(context.author.idLong)) }
 
 		guildMusicManager.state.audioScheduler.loadContent(result.tracks)
 		val durationTime = millisToDTF(result.tracks.sumOf { it.duration })
@@ -146,7 +145,7 @@ class QueueTrackLoader(
 	 * @param result The result containing the details of the load failure.
 	 * @return The details of the load failure.
 	 */
-	override fun onCompletableLoadFailed(result: LoadFailed) = AudioLoadFailedDetails.Builder()
+	override fun onCompletableLoadFailed(result: KLoadFailedEvent) = AudioLoadFailedDetails.Builder()
 		.setLogMessage("Unexpected exception during load audio track/playlist. Cause: %s.", result.exception.message)
 		.setI18nLocaleSource(I18nExceptionSource.ISSUE_WHILE_LOADING_TRACK)
 		.build()
@@ -154,9 +153,10 @@ class QueueTrackLoader(
 	/**
 	 * Handles cases where no tracks or playlists match the search.
 	 *
+	 * @param result The no matches result.
 	 * @return The details indicating no matches were found.
 	 */
-	override fun onCompletableNoMatches() = AudioLoadFailedDetails.Builder()
+	override fun onCompletableNoMatches(result: KNoMatchesEvent) = AudioLoadFailedDetails.Builder()
 		.setLogMessage("Unable to find any audio track/playlist.")
 		.setI18nLocaleSource(I18nExceptionSource.NOT_FOUND_TRACK)
 		.build()

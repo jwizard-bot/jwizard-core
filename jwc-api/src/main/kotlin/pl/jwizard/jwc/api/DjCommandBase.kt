@@ -65,9 +65,9 @@ abstract class DjCommandBase(commandEnvironment: CommandEnvironmentBean) : Music
 	private fun checkIfAllTracksIsFromSelectedMember(manager: GuildMusicManager, context: CommandContext): Boolean {
 		val audioScheduler = manager.state.queueTrackScheduler
 		if (audioScheduler.queue.size == 0) {
-			return manager.getAudioSenderId(manager.cachedPlayer?.track) == context.author.idLong
+			return manager.cachedPlayer?.track?.audioSender?.authorId == context.author.idLong
 		}
-		return audioScheduler.queue.iterable.all { manager.getAudioSenderId(it) == context.author.idLong }
+		return audioScheduler.queue.iterable.all { it.audioSender.authorId == context.author.idLong }
 	}
 
 	/**

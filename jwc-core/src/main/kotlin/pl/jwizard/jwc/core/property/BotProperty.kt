@@ -14,6 +14,7 @@ import kotlin.reflect.KClass
  *
  * Defining following properties:
  * - [JDA_SECRET_TOKEN]: JDA secret token.
+ * - [JDA_INSTANCE_NAME]: Instance name specified for running multiple instances.
  * - [JDA_INSTANCE_PREFIX]: Instance legacy prefix specified for running multiple instances.
  * - [JDA_SHARDING_CLUSTER]: Cluster name (also cluster key) for selected shard offsets.
  * - [JDA_SHARDING_OFFSET_START]: Start offset of JDA shard ID.
@@ -62,6 +63,11 @@ enum class BotProperty(
 	 * JDA secret token.
 	 */
 	JDA_SECRET_TOKEN("jda.secret-token"),
+
+	/**
+	 * Instance name specified for running multiple instances.
+	 */
+	JDA_INSTANCE_NAME("jda.instance.name"),
 
 	/**
 	 * Instance legacy prefix specified for running multiple instances.

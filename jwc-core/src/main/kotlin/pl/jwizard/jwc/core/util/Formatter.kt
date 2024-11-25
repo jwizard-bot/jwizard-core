@@ -50,6 +50,16 @@ fun mdBold(text: String) = "**$text**"
 fun mdCode(text: String?) = "`$text`"
 
 /**
+ * Creates a Markdown-style list item, optionally adding a newline at the end.
+ *
+ * @param text the text to include in the list item; can be null.
+ * @param eol a boolean flag indicating if a newline should be appended at the end of the list item. Default is `false`.
+ * @return a formatted Markdown-style list item as a [String].
+ * @author Miłosz Gilga
+ */
+fun mdList(text: String?, eol: Boolean = false) = "* $text${if (eol) "\n" else ""}"
+
+/**
  * Formats a key-value pair as a string.
  *
  * This function takes a key and a value, and formats them into a string representation.  If the value is null, it will

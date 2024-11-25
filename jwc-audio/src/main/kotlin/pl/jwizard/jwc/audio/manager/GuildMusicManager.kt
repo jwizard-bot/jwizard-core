@@ -4,12 +4,11 @@
  */
 package pl.jwizard.jwc.audio.manager
 
-import dev.arbjerg.lavalink.client.player.Track
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import org.apache.commons.validator.routines.UrlValidator
-import pl.jwizard.jwc.audio.AudioSender
-import pl.jwizard.jwc.audio.lava.LavalinkClientBean
+import pl.jwizard.jwc.audio.client.AudioNodePool
+import pl.jwizard.jwc.audio.client.DistributedAudioClientBean
 import pl.jwizard.jwc.audio.loader.QueueTrackLoader
 import pl.jwizard.jwc.audio.loader.RadioStreamLoader
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
@@ -37,15 +36,17 @@ class GuildMusicManager(
 	val bean: MusicManagersBean,
 	private val commandContext: CommandBaseContext,
 	private val future: TFutureResponse,
-	private val audioClient: LavalinkClientBean,
+	private val audioClient: DistributedAudioClientBean,
 ) {
 
 	companion object {
 		private val log = logger<GuildMusicManager>()
 	}
 
-	val cachedPlayer get() = getNodeLink(state.context.guild.idLong).cachedPlayer
-	val createdOrUpdatedPlayer get() = getNodeLink(state.context.guild.idLong).createOrUpdatePlayer()
+	val audioController = audioClient.audioController
+
+	val cachedPlayer get() = audioClient.getLink(state.context.guild.idLong)?.cachedPlayer
+	val createdOrUpdatedPlayer get() = audioClient.getLink(state.context.guild.idLong)!!.createOrUpdatePlayer()
 
 	/**
 	 * A thread that manages the process of leaving the voice channel after inactivity.
@@ -79,14 +80,6 @@ class GuildMusicManager(
 	}
 
 	/**
-	 * Retrieves the ID of the user who initiated the audio track.
-	 *
-	 * @param track The audio track being played.
-	 * @return The ID of the user who initiated the track.
-	 */
-	fun getAudioSenderId(track: Track?) = track?.getUserData(AudioSender::class.java)?.authorId
-
-	/**
 	 * Loads a track or playlist and begins playing it in the guild.
 	 *
 	 * @param trackName The name or URL of the track to load.
@@ -94,15 +87,17 @@ class GuildMusicManager(
 	 */
 	fun loadAndPlay(trackName: String, context: CommandBaseContext) {
 		val searchPrefix = bean.environment.getProperty<String>(BotProperty.LAVALINK_SEARCH_CONTENT_PREFIX)
-		val nodeLink = getNodeLink(context.guild.idLong)
-		state.setToQueueTrack(context)
+
 		val urlValidator = UrlValidator()
 		val parsedTrackName = if (urlValidator.isValid(trackName)) {
 			trackName.replace(" ", "")
 		} else {
 			searchPrefix.format(trackName)
 		}
-		nodeLink.loadItem(parsedTrackName).subscribe(QueueTrackLoader(this))
+		audioController.loadAndTransferToNode(context.guild, AudioNodePool.QUEUED, context.author, context.selfMember) {
+			state.setToQueueTrack(context)
+			it.loadItem(parsedTrackName).subscribe(QueueTrackLoader(this))
+		}
 	}
 
 	/**
@@ -112,9 +107,10 @@ class GuildMusicManager(
 	 * @param context The context of the command that initiated the stream.
 	 */
 	fun loadAndStream(radioStation: RadioStation, context: CommandBaseContext) {
-		val nodeLink = getNodeLink(context.guild.idLong)
-		state.setToStream(context, radioStation)
-		nodeLink.loadItem(radioStation.streamUrl).subscribe(RadioStreamLoader(this, radioStation))
+		audioController.loadAndTransferToNode(context.guild, AudioNodePool.CONTINUOUS, context.author, context.selfMember) {
+			state.setToStream(context, radioStation)
+			it.loadItem(radioStation.streamUrl).subscribe(RadioStreamLoader(this, radioStation))
+		}
 	}
 
 	/**
@@ -148,12 +144,4 @@ class GuildMusicManager(
 		state.audioScheduler.stopAndDestroy().subscribe()
 		leaveAfterInactivityThread.destroy()
 	}
-
-	/**
-	 * Retrieves or creates a link to the audio node for the specified guild.
-	 *
-	 * @param guildId The ID of the guild for which to get the node link.
-	 * @return The node link associated with the guild.
-	 */
-	private fun getNodeLink(guildId: Long) = audioClient.getOrCreateLink(guildId)
 }

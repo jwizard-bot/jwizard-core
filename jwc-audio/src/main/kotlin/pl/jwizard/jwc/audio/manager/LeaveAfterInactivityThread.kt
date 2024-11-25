@@ -48,7 +48,7 @@ class LeaveAfterInactivityThread(
 			.build()
 
 		guildMusicManager.state.audioScheduler.stopAndDestroy().subscribe()
-		guild.let { guildMusicManager.bean.jdaShardManager.getDirectAudioController(guild)?.disconnect(it) }
+		guildMusicManager.audioController.disconnectWithAudioChannel(guild)
 
 		log.jdaInfo(
 			guildMusicManager.state.context,

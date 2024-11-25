@@ -15,6 +15,7 @@ import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.util.mdLink
+import pl.jwizard.jwc.core.util.mdList
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.radio.RadioStation
 
@@ -45,7 +46,10 @@ class ShowRadioStationsCmd(commandEnvironment: CommandEnvironmentBean) : Command
 
 		val message = if (radioStations.isNotEmpty()) {
 			val radioStationsPages = radioStations
-				.map { "* ${i18nBean.t(it, lang)} ${mdLink("[${i18nBean.t(I18nUtilSource.WEBSITE, lang)}]", it.website)}" }
+				.map {
+					val link = mdLink("[${i18nBean.t(I18nUtilSource.WEBSITE, lang)}]", it.website)
+					mdList("${i18nBean.t(it, lang)} $link")
+				}
 				.chunked(paginatorChunkSize)
 
 			val pages = radioStationsPages.map {

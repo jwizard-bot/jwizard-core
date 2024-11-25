@@ -94,6 +94,8 @@ class ShardsCmd(
 		val clusterIdentifier = environmentBean.getProperty<String>(BotProperty.JDA_SHARDING_CLUSTER)
 		val shardsStartOffset = environmentBean.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_START)
 		val endStartOffset = environmentBean.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_END)
+
+		val (runningShards, queuedShards, avgGatewayPing) = jdaShardManager.getShardDetails()
 		return createEmbedMessage(context)
 			.setTitle(I18nSystemSource.SHARDS_INFO_HEADER)
 			.setKeyValueField(I18nSystemSource.CLUSTER_NAME_KEY, clusterIdentifier, inline = false)
@@ -102,10 +104,10 @@ class ShardsCmd(
 			.setKeyValueField(I18nSystemSource.SHARDS_END_OFFSET, endStartOffset)
 			.setKeyValueField(I18nSystemSource.SHARDS_OFFSET_LENGTH, (endStartOffset - shardsStartOffset) + 1)
 			.setSpace()
-			.setKeyValueField(I18nSystemSource.QUEUED_SHARDS, jdaShardManager.queuedShardsCount)
-			.setKeyValueField(I18nSystemSource.RUNNING_SHARDS, jdaShardManager.runningShardsCount)
+			.setKeyValueField(I18nSystemSource.QUEUED_SHARDS, queuedShards)
+			.setKeyValueField(I18nSystemSource.RUNNING_SHARDS, runningShards)
 			.setSpace()
-			.setKeyValueField(I18nSystemSource.AVG_GATEWAY_PING, "%.2f ms".format(jdaShardManager.averageGatewayPing))
+			.setKeyValueField(I18nSystemSource.AVG_GATEWAY_PING, "%.2f ms".format(avgGatewayPing))
 			.setColor(JdaColor.PRIMARY)
 			.build()
 	}

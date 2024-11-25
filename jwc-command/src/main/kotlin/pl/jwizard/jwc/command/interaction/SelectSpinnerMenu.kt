@@ -18,6 +18,7 @@ import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueListener
+import pl.jwizard.jwc.core.util.mdList
 import pl.jwizard.jwl.i18n.I18nBean
 import pl.jwizard.jwl.i18n.I18nLocaleSource
 import java.util.concurrent.TimeUnit
@@ -87,7 +88,7 @@ abstract class SelectSpinnerMenu<T : MenuOption>(
 		)
 		val message = MessageEmbedBuilder(i18nBean, jdaColorStoreBean, context)
 			.setDescription(i18nSource, args)
-			.appendDescription(trimmedOptions.joinToString("") { "* ${it.formattedToEmbed}\n" })
+			.appendDescription(trimmedOptions.joinToString("") { mdList(it.formattedToEmbed, eol = true) })
 			.setColor(JdaColor.PRIMARY)
 			.build()
 

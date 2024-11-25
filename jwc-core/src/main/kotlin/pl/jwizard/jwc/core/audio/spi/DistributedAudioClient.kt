@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.hooks.VoiceDispatchInterceptor
  *
  * @author Miłosz Gilga
  */
-interface AudioClient {
+interface DistributedAudioClient {
 
 	/**
 	 * Initializes the client nodes for distributed audio processing. This method should set up the necessary connections

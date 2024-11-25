@@ -4,8 +4,8 @@
  */
 package pl.jwizard.jwc.api.music
 
-import dev.arbjerg.lavalink.client.player.Track
 import net.dv8tion.jda.api.entities.MessageEmbed
+import pl.jwizard.jwac.player.track.Track
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
@@ -17,9 +17,7 @@ import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotProperty
-import pl.jwizard.jwc.core.util.ext.duration
 import pl.jwizard.jwc.core.util.ext.name
-import pl.jwizard.jwc.core.util.ext.normalizedTitle
 import pl.jwizard.jwc.core.util.mdBold
 import pl.jwizard.jwc.core.util.mdCode
 import pl.jwizard.jwc.core.util.mdLink
@@ -80,19 +78,18 @@ class ShowQueueCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBas
 				.setKeyValueField(I18nAudioSource.PLAYLIST_AVERAGE_TRACK_DURATION, millisToDTF(averageDurationMillis))
 
 			for (track in chunk) {
-				val senderId = manager.getAudioSenderId(track)
-				val senderName = senderId?.let { context.guild.getMemberById(it) }
+				val sender = context.guild.getMemberById(track.audioSender.authorId)
 
 				val valueJoiner = StringJoiner("")
-				valueJoiner.add(mdLink("[link]", track.info.uri))
+				valueJoiner.add(mdLink("[link]", track.uri))
 				valueJoiner.add(", ${mdCode(millisToDTF(track.duration))}")
-				senderName?.let {
+				sender?.let {
 					valueJoiner.add(", ")
 					valueJoiner.add(i18nBean.t(I18nAudioSource.TRACK_ADDED_BY, lang))
 					valueJoiner.add(": ${mdBold(it.name)}")
 				}
 				messageBuilder.setKeyValueField(
-					key = "${trackIndex++}. ${track.normalizedTitle}",
+					key = "${trackIndex++}. ${track.getTitle(normalized = true)}",
 					value = valueJoiner.toString(),
 					inline = false,
 				)

@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.audio.scheduler
 
-import dev.arbjerg.lavalink.client.player.Track
+import pl.jwizard.jwac.player.track.Track
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import java.util.*
 
@@ -79,7 +79,7 @@ class AudioTrackQueue(private val guildMusicManager: GuildMusicManager) : Linked
 	 */
 	fun removePositionsFromUser(userId: Long): List<Track> {
 		val copiedTracks = ArrayList(this)
-		val omitFromMember = copiedTracks.filter { guildMusicManager.getAudioSenderId(it) != userId }
+		val omitFromMember = copiedTracks.filter { it.audioSender.authorId != userId }
 		clear()
 		addAll(omitFromMember)
 		return copiedTracks - omitFromMember.toSet()

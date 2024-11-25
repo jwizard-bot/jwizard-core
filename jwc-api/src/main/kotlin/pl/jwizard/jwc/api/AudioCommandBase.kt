@@ -75,7 +75,7 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 		context: CommandContext,
 		manager: GuildMusicManager,
 	): Triple<Boolean, Boolean, Boolean> {
-		val isSender = manager.getAudioSenderId(manager.cachedPlayer?.track) == context.author.idLong
+		val isSender = manager.cachedPlayer?.track?.audioSender?.authorId == context.author.idLong
 		val isSuperUser = context.checkIfAuthorHasPermissions(*(superuserPermissions.toTypedArray()))
 		val isDj = context.checkIfAuthorHasRoles(context.djRoleName)
 		return Triple(isSender, isDj, isSuperUser)
@@ -116,17 +116,6 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 		// check, if regular user is on the same channel with bot (omit for admin and server moderator)
 		if (shouldOnSameChannelWithBot && botVoiceState?.channel?.id != voiceState.channel?.id && isRegularUser) {
 			throw UserOnVoiceChannelWithBotNotFoundException(context, voiceState.channel, botVoiceState?.channel)
-		}
-	}
-
-	/**
-	 * Joins the user's voice channel if the bot is not already connected.
-	 *
-	 * @param context The context of the command, containing user interaction details.
-	 */
-	protected fun joinAndOpenAudioConnection(context: CommandContext) {
-		if (context.selfMember.voiceState?.inAudioChannel() == false) {
-			context.author.voiceState?.channel?.let { jdaShardManager.getDirectAudioController(context.guild)?.connect(it) }
 		}
 	}
 

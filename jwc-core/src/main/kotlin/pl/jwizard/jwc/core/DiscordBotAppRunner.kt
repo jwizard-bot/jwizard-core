@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.core
 
-import pl.jwizard.jwc.core.audio.spi.AudioClient
+import pl.jwizard.jwc.core.audio.spi.DistributedAudioClient
 import pl.jwizard.jwc.core.jda.ActivitySplashesBean
 import pl.jwizard.jwc.core.jda.JdaShardManagerBean
 import pl.jwizard.jwc.core.jda.spi.ChannelListenerGuard
@@ -46,15 +46,15 @@ object DiscordBotAppRunner : AppRunner(), HttpServerHook {
 
 		val radioPlaybackMappersCache = context.getBean(RadioPlaybackMappersCache::class)
 		val commandLoader = context.getBean(CommandsLoader::class)
-		val audioClientSupplier = context.getBean(AudioClient::class)
+		val distributedAudioClientSupplier = context.getBean(DistributedAudioClient::class)
 		val channelListenerGuard = context.getBean(ChannelListenerGuard::class)
 
 		radioPlaybackMappersCache.loadRadioPlaybackClasses()
 		commandLoader.loadClassesViaReflectionApi()
 
-		audioClientSupplier.initClient()
+		distributedAudioClientSupplier.initClient()
 
-		shardsManagerInstance.createShardsManager(audioClientSupplier)
+		shardsManagerInstance.createShardsManager(distributedAudioClientSupplier)
 
 		activitySplashes.initSplashesSequence()
 		channelListenerGuard.initThreadPool()

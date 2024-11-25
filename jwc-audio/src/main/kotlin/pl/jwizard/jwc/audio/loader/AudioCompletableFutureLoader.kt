@@ -4,11 +4,8 @@
  */
 package pl.jwizard.jwc.audio.loader
 
-import dev.arbjerg.lavalink.client.AbstractAudioLoadResultHandler
-import dev.arbjerg.lavalink.client.player.LoadFailed
-import dev.arbjerg.lavalink.client.player.PlaylistLoaded
-import dev.arbjerg.lavalink.client.player.SearchResult
-import dev.arbjerg.lavalink.client.player.TrackLoaded
+import pl.jwizard.jwac.AudioLoadResultHandler
+import pl.jwizard.jwac.event.onload.*
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
@@ -17,7 +14,7 @@ import pl.jwizard.jwl.util.logger
 
 /**
  * Abstract base class for handling audio loading results and managing audio loading processes. This class extends
- * [AbstractAudioLoadResultHandler] to handle various audio load results and complete futures associated with audio
+ * [AudioLoadResultHandler] to handle various audio load results and complete futures associated with audio
  * commands.
  *
  * @property guildMusicManager The guild music manager instance used for managing audio playback in the guild.
@@ -25,7 +22,7 @@ import pl.jwizard.jwl.util.logger
  */
 abstract class AudioCompletableFutureLoader(
 	private val guildMusicManager: GuildMusicManager,
-) : AbstractAudioLoadResultHandler() {
+) : AudioLoadResultHandler() {
 
 	companion object {
 		private val log = logger<AudioCompletableFutureLoader>()
@@ -36,7 +33,7 @@ abstract class AudioCompletableFutureLoader(
 	 *
 	 * @param result The loaded track result.
 	 */
-	final override fun ontrackLoaded(result: TrackLoaded) {
+	final override fun onTrackLoaded(result: KTrackLoadedEvent) {
 		guildMusicManager.stopLeavingWaiter()
 		onCompletableTrackLoaded(result, guildMusicManager.state.future)
 	}
@@ -46,7 +43,7 @@ abstract class AudioCompletableFutureLoader(
 	 *
 	 * @param result The loaded search results.
 	 */
-	final override fun onSearchResultLoaded(result: SearchResult) {
+	final override fun onSearchResultLoaded(result: KSearchResultEvent) {
 		guildMusicManager.stopLeavingWaiter()
 		onCompletableSearchResultLoaded(result, guildMusicManager.state.future)
 	}
@@ -56,7 +53,7 @@ abstract class AudioCompletableFutureLoader(
 	 *
 	 * @param result The loaded playlist result.
 	 */
-	final override fun onPlaylistLoaded(result: PlaylistLoaded) {
+	final override fun onPlaylistLoaded(result: KPlaylistLoadedEvent) {
 		guildMusicManager.stopLeavingWaiter()
 		onCompletablePlaylistLoaded(result, guildMusicManager.state.future)
 	}
@@ -66,12 +63,14 @@ abstract class AudioCompletableFutureLoader(
 	 *
 	 * @param result The load failure result.
 	 */
-	final override fun loadFailed(result: LoadFailed) = onError(details = onCompletableLoadFailed(result))
+	final override fun loadFailed(result: KLoadFailedEvent) = onError(details = onCompletableLoadFailed(result))
 
 	/**
 	 * Called when no matches are found during the load process. Completes the future with an error response.
+	 *
+	 * @param result The no matches result.
 	 */
-	final override fun noMatches() = onError(details = onCompletableNoMatches())
+	final override fun noMatches(result: KNoMatchesEvent) = onError(details = onCompletableNoMatches(result))
 
 	/**
 	 * Handles the error case when loading fails or no matches are found. Logs the error and creates a command response.
@@ -97,7 +96,7 @@ abstract class AudioCompletableFutureLoader(
 	 * @param result The loaded track result.
 	 * @param future The future response associated with the audio command.
 	 */
-	protected abstract fun onCompletableTrackLoaded(result: TrackLoaded, future: TFutureResponse)
+	protected abstract fun onCompletableTrackLoaded(result: KTrackLoadedEvent, future: TFutureResponse)
 
 	/**
 	 * Called when search results are successfully loaded. Must be implemented by subclasses to handle the search results.
@@ -105,7 +104,7 @@ abstract class AudioCompletableFutureLoader(
 	 * @param result The loaded search results.
 	 * @param future The future response associated with the audio command.
 	 */
-	protected abstract fun onCompletableSearchResultLoaded(result: SearchResult, future: TFutureResponse)
+	protected abstract fun onCompletableSearchResultLoaded(result: KSearchResultEvent, future: TFutureResponse)
 
 	/**
 	 * Called when a playlist is successfully loaded. Must be implemented by subclasses to handle the loaded playlist.
@@ -113,7 +112,7 @@ abstract class AudioCompletableFutureLoader(
 	 * @param result The loaded playlist result.
 	 * @param future The future response associated with the audio command.
 	 */
-	protected abstract fun onCompletablePlaylistLoaded(result: PlaylistLoaded, future: TFutureResponse)
+	protected abstract fun onCompletablePlaylistLoaded(result: KPlaylistLoadedEvent, future: TFutureResponse)
 
 	/**
 	 * Called when loading fails. Must be implemented by subclasses to provide details about the load failure.
@@ -121,12 +120,13 @@ abstract class AudioCompletableFutureLoader(
 	 * @param result The load failure result.
 	 * @return Details about the audio load failure.
 	 */
-	protected abstract fun onCompletableLoadFailed(result: LoadFailed): AudioLoadFailedDetails
+	protected abstract fun onCompletableLoadFailed(result: KLoadFailedEvent): AudioLoadFailedDetails
 
 	/**
 	 * Called when no matches are found during the load process. Must be implemented by subclasses to provide details.
 	 *
+	 * @param result The no matches result.
 	 * @return Details about the audio load failure when no matches are found.
 	 */
-	protected abstract fun onCompletableNoMatches(): AudioLoadFailedDetails
+	protected abstract fun onCompletableNoMatches(result: KNoMatchesEvent): AudioLoadFailedDetails
 }

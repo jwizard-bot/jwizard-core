@@ -16,7 +16,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.api.sharding.ShardManager
 import net.dv8tion.jda.api.utils.cache.CacheFlag
-import pl.jwizard.jwc.core.audio.spi.AudioClient
+import pl.jwizard.jwc.core.audio.spi.DistributedAudioClient
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
 import pl.jwizard.jwc.core.property.BotListProperty
@@ -65,11 +65,11 @@ final class JdaShardManagerBean(
 	 * This method configures the JDA instance, sets the bot’s token, permissions, and gateway intents, initializes event
 	 * listeners, and handles audio functionality.
 	 *
-	 * @param audioClientSupplier Provides access to the distributed client for audio streaming functionalities.
+	 * @param distributedAudioClientSupplier Provides access to the distributed client for audio streaming functionalities.
 	 * @throws InterruptedException If waiting for the JDA client to be ready is interrupted.
 	 * @throws InvalidTokenException If there is an issue with the bot token or login process.
 	 */
-	fun createShardsManager(audioClientSupplier: AudioClient) {
+	fun createShardsManager(distributedAudioClientSupplier: DistributedAudioClient) {
 		log.info("JDA instance is warming up...")
 		jdaColorStore.loadColors()
 
@@ -99,7 +99,7 @@ final class JdaShardManagerBean(
 			.setUseShutdownNow(true)
 			.setShardsTotal(shardsCount)
 			.setShards(shardingMinId, shardingMaxId)
-			.setVoiceDispatchInterceptor(audioClientSupplier.voiceDispatchInterceptor)
+			.setVoiceDispatchInterceptor(distributedAudioClientSupplier.voiceDispatchInterceptor)
 			.enableCache(enabledCacheFlags.map { CacheFlag.valueOf(it) })
 			.disableCache(disabledCacheFlags.map { CacheFlag.valueOf(it) })
 			.setActivity(Activity.listening("Loading..."))
@@ -166,7 +166,15 @@ final class JdaShardManagerBean(
 	fun getDirectAudioController(guild: Guild) =
 		shardManager.getShardById(guild.jda.shardInfo.shardId)?.directAudioController
 
-	val runningShardsCount get() = shardManager.shardsRunning
-	val queuedShardsCount get() = shardManager.shardsQueued
-	val averageGatewayPing get() = shardManager.averageGatewayPing
+	/**
+	 * Retrieves detailed statistics about the bot's Discord shards, including the number of running and queued shards,
+	 * and the average gateway ping.
+	 *
+	 * @return A [ShardStatsDetails] instance containing shard statistics.
+	 */
+	fun getShardDetails() = ShardStatsDetails(
+		shardManager.shardsRunning,
+		shardManager.shardsQueued,
+		shardManager.averageGatewayPing,
+	)
 }

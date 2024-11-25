@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.core.util.ext
 
-import dev.arbjerg.lavalink.client.player.Track
+import pl.jwizard.jwac.player.track.Track
 import pl.jwizard.jwc.core.util.mdLink
 import pl.jwizard.jwc.core.util.millisToDTF
 
@@ -17,7 +17,7 @@ import pl.jwizard.jwc.core.util.millisToDTF
  * @return A string representing the track's title and author.
  * @author Miłosz Gilga
  */
-val Track.qualifier get() = "\"${info.title} (${info.author})\""
+val Track.qualifier get() = "\"${getTitle(normalized = true)}\""
 
 /**
  * Extension property that creates a Markdown-formatted link for the track's normalized title, pointing to its URI.
@@ -28,7 +28,7 @@ val Track.qualifier get() = "\"${info.title} (${info.author})\""
  * @return A Markdown link for the track's normalized title.
  * @author Miłosz Gilga
  */
-val Track.mdTitleLink get() = mdLink(normalizedTitle, info.uri)
+val Track.mdTitleLink get() = mdLink(getTitle(normalized = true), uri)
 
 /**
  * Extension property that provides a normalized title for the track by removing asterisks from the title and including
@@ -40,19 +40,7 @@ val Track.mdTitleLink get() = mdLink(normalizedTitle, info.uri)
  * @return The normalized title of the track without asterisks.
  * @author Miłosz Gilga
  */
-val Track.normalizedTitle get() = "${info.title.replace("*", "")} (${info.author})"
-
-/**
- * Extension property that provides a normalized title for the track by removing asterisks from the title and including
- * the author's name.
- *
- * The resulting string is formatted as:
- * "Title (Author)"
- *
- * @return The normalized title of the track without asterisks.
- * @author Miłosz Gilga
- */
-val Track.titleWithDuration get() = "(${millisToDTF(duration)}): $normalizedTitle"
+val Track.titleWithDuration get() = "(${millisToDTF(duration)}): ${getTitle(normalized = true)}"
 
 /**
  * Extension property that generates a string representation of the track's duration and its normalized title.
@@ -64,19 +52,3 @@ val Track.titleWithDuration get() = "(${millisToDTF(duration)}): $normalizedTitl
  * @author Miłosz Gilga
  */
 val Track.mdTitleLinkWithDuration get() = "(${millisToDTF(duration)}): $mdTitleLink"
-
-/**
- * Extension property that retrieves the URL of the track's artwork. This URL can be used to display the track's
- * thumbnail image.
- *
- * @return The artwork URL of the track.
- * @author Miłosz Gilga
- */
-val Track.thumbnailUrl get() = info.artworkUrl
-
-/**
- *
- * @return
- * @author Miłosz Gilga
- */
-val Track.duration get() = info.length

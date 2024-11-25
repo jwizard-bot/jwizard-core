@@ -16,9 +16,7 @@ import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotProperty
-import pl.jwizard.jwc.core.util.ext.duration
 import pl.jwizard.jwc.core.util.ext.name
-import pl.jwizard.jwc.core.util.ext.normalizedTitle
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.core.util.mdCode
@@ -63,7 +61,7 @@ class RemoveMemberTracksCmd(commandEnvironment: CommandEnvironmentBean) : DjComm
 
 		val queue = manager.state.queueTrackScheduler.queue
 		val userAddAnyTrackToQueue = queue.iterable.any {
-			manager.getAudioSenderId(manager.cachedPlayer?.track) == member.idLong
+			manager.cachedPlayer?.track?.audioSender?.authorId == member.idLong
 		}
 		if (!userAddAnyTrackToQueue) {
 			throw UserNotAddedTracksToQueueException(context, userId)
@@ -84,8 +82,8 @@ class RemoveMemberTracksCmd(commandEnvironment: CommandEnvironmentBean) : DjComm
 				)
 			for (track in chunk) {
 				messageBuilder.setKeyValueField(
-					key = "${index + 1}. ${track.normalizedTitle}",
-					value = "${mdLink("[link]", track.info.uri)}, ${mdCode(millisToDTF(track.duration))}",
+					key = "${index + 1}. ${track.getTitle(normalized = true)}",
+					value = "${mdLink("[link]", track.uri)}, ${mdCode(millisToDTF(track.duration))}",
 					inline = false,
 				)
 			}

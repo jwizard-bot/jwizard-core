@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.audio.loader.spinner
 
-import dev.arbjerg.lavalink.client.player.Track
+import pl.jwizard.jwac.player.track.Track
 import pl.jwizard.jwc.command.interaction.MenuOption
 import pl.jwizard.jwc.core.util.ext.mdTitleLinkWithDuration
 import pl.jwizard.jwc.core.util.ext.titleWithDuration

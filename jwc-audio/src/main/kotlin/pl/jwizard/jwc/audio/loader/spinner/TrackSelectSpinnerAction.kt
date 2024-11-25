@@ -4,8 +4,8 @@
  */
 package pl.jwizard.jwc.audio.loader.spinner
 
-import dev.arbjerg.lavalink.client.player.Track
 import net.dv8tion.jda.api.entities.MessageEmbed
+import pl.jwizard.jwac.player.track.Track
 
 /**
  * Defines actions related to selecting and managing tracks from a spinner menu. It provides methods for handling track

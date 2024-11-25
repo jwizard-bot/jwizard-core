@@ -2,13 +2,15 @@
  * Copyright (c) 2024 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
-package pl.jwizard.jwc.audio.lava
+package pl.jwizard.jwc.audio.client
 
-import dev.arbjerg.lavalink.client.event.*
+import pl.jwizard.jwac.AudioNodeListener
+import pl.jwizard.jwac.event.player.*
 import pl.jwizard.jwc.audio.manager.MusicManagersBean
 import pl.jwizard.jwc.audio.scheduler.AudioScheduleHandler
 import pl.jwizard.jwc.core.jda.JdaShardManagerBean
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
+import pl.jwizard.jwl.util.logger
 
 /**
  * Adapter class that listens to Lavalink node events and delegates audio management tasks to the appropriate music
@@ -20,16 +22,13 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
  * @author Miłosz Gilga
  */
 @SingletonComponent
-class LavaNodeListenerAdapter(
+class AudioNodeListenerAdapter(
 	private val musicManagers: MusicManagersBean,
 	private val jdaShardManager: JdaShardManagerBean,
-) : LavaNodeListener {
+) : AudioNodeListener {
 
 	companion object {
-		/**
-		 * WebSocket error code for invalid sessions.
-		 */
-		private const val WS_SESSION_INVALID = 4006
+		private val log = logger<AudioNodeListenerAdapter>()
 	}
 
 	/**
@@ -38,9 +37,9 @@ class LavaNodeListenerAdapter(
 	 *
 	 * @param event The event containing track and node information.
 	 */
-	override fun onTrackStart(event: TrackStartEvent) {
+	override fun onTrackStart(event: KTrackStartEvent) {
 		val audioScheduler = getAudioScheduler(event.guildId)
-		audioScheduler?.onAudioStart(event.track, event.node)
+		audioScheduler?.onAudioStart(event.track, event.audioNode)
 	}
 
 	/**
@@ -49,9 +48,9 @@ class LavaNodeListenerAdapter(
 	 *
 	 * @param event The event containing track, node, and end reason information.
 	 */
-	override fun onTrackEnd(event: TrackEndEvent) {
+	override fun onTrackEnd(event: KTrackEndEvent) {
 		val audioScheduler = getAudioScheduler(event.guildId)
-		audioScheduler?.onAudioEnd(event.track, event.node, event.endReason)
+		audioScheduler?.onAudioEnd(event.track, event.audioNode, event.endReason)
 	}
 
 	/**
@@ -60,9 +59,9 @@ class LavaNodeListenerAdapter(
 	 *
 	 * @param event The event containing track and node information.
 	 */
-	override fun onTrackStuck(event: TrackStuckEvent) {
+	override fun onTrackStuck(event: KTrackStuckEvent) {
 		val audioScheduler = getAudioScheduler(event.guildId)
-		audioScheduler?.onAudioStuck(event.track, event.node)
+		audioScheduler?.onAudioStuck(event.track, event.audioNode)
 	}
 
 	/**
@@ -71,23 +70,18 @@ class LavaNodeListenerAdapter(
 	 *
 	 * @param event The event containing track, node, and exception information.
 	 */
-	override fun onTrackException(event: TrackExceptionEvent) {
+	override fun onTrackException(event: KTrackExceptionEvent) {
 		val audioScheduler = getAudioScheduler(event.guildId)
-		audioScheduler?.onAudioException(event.track, event.node, event.exception)
+		audioScheduler?.onAudioException(event.track, event.audioNode, event.exception)
 	}
 
 	/**
-	 * Triggered when the WebSocket connection to a Lavalink node is closed. If the closure is due to an invalid session,
-	 * attempts to reconnect the bot to the voice channel.
+	 * TODO
 	 *
 	 * @param event The event containing details about the WebSocket closure.
 	 */
-	override fun onCloseWsConnection(event: WebSocketClosedEvent) {
-		if (event.code == WS_SESSION_INVALID) {
-			val guild = jdaShardManager.getGuildById(event.guildId)
-			val connectionChannel = guild?.selfMember?.voiceState?.channel ?: return
-			jdaShardManager.getDirectAudioController(guild)?.reconnect(connectionChannel)
-		}
+	override fun onCloseWsConnection(event: KWsClosedEvent) {
+		log.debug("(node: {}) Close WS connection with code: {}. ", event.audioNode, event.code)
 	}
 
 	/**

@@ -4,7 +4,8 @@
  */
 package pl.jwizard.jwc.audio.loader
 
-import dev.arbjerg.lavalink.client.player.*
+import pl.jwizard.jwac.event.onload.*
+import pl.jwizard.jwac.player.track.Track
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
@@ -22,12 +23,13 @@ class RadioStreamLoader(
 	private val radioStation: RadioStation,
 ) : AudioCompletableFutureLoader(guildMusicManager) {
 
-	override fun onCompletableTrackLoaded(result: TrackLoaded, future: TFutureResponse) = onStreamLoaded(result.track)
+	override fun onCompletableTrackLoaded(result: KTrackLoadedEvent, future: TFutureResponse) =
+		onStreamLoaded(result.track)
 
-	override fun onCompletableSearchResultLoaded(result: SearchResult, future: TFutureResponse) =
+	override fun onCompletableSearchResultLoaded(result: KSearchResultEvent, future: TFutureResponse) =
 		onStreamLoaded(result.tracks[0])
 
-	override fun onCompletablePlaylistLoaded(result: PlaylistLoaded, future: TFutureResponse) =
+	override fun onCompletablePlaylistLoaded(result: KPlaylistLoadedEvent, future: TFutureResponse) =
 		onStreamLoaded(result.tracks[0])
 
 	/**
@@ -36,7 +38,7 @@ class RadioStreamLoader(
 	 * @param result The result containing the details of the load failure.
 	 * @return The details of the load failure.
 	 */
-	override fun onCompletableLoadFailed(result: LoadFailed) = AudioLoadFailedDetails.Builder()
+	override fun onCompletableLoadFailed(result: KLoadFailedEvent) = AudioLoadFailedDetails.Builder()
 		.setLogMessage(
 			logMessage = "Unexpected error on load radio stream: %s. Cause: %s.",
 			args = arrayOf(radioStation.textKey, result.exception.message)
@@ -52,7 +54,7 @@ class RadioStreamLoader(
 	 *
 	 * @return The details indicating no matches were found.
 	 */
-	override fun onCompletableNoMatches() = AudioLoadFailedDetails.Builder()
+	override fun onCompletableNoMatches(result: KNoMatchesEvent) = AudioLoadFailedDetails.Builder()
 		.setLogMessage("Unexpected error on load radio stream: %s. Audio stuck.", radioStation.textKey)
 		.setI18nLocaleSource(
 			i18nLocaleSource = I18nExceptionSource.UNEXPECTED_ERROR_ON_LOAD_RADIO,

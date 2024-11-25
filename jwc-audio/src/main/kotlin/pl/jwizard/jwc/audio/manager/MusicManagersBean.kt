@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.audio.manager
 
-import pl.jwizard.jwc.audio.lava.LavalinkClientBean
+import pl.jwizard.jwc.audio.client.DistributedAudioClientBean
 import pl.jwizard.jwc.audio.spi.RadioStationThumbnailSupplier
 import pl.jwizard.jwc.command.transport.LooselyTransportHandlerBean
 import pl.jwizard.jwc.core.jda.JdaShardManagerBean
@@ -60,7 +60,7 @@ class MusicManagersBean(
 	fun getOrCreateMusicManager(
 		context: CommandBaseContext,
 		future: TFutureResponse,
-		audioClient: LavalinkClientBean,
+		audioClient: DistributedAudioClientBean,
 	) = synchronized(this) {
 		val manager = musicManagers.getOrPut(context.guild.idLong) {
 			GuildMusicManager(this, context, future, audioClient)

@@ -4,9 +4,9 @@
  */
 package pl.jwizard.jwc.api
 
-import dev.arbjerg.lavalink.client.player.Track
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.channel.ChannelType
+import pl.jwizard.jwac.player.track.Track
 import pl.jwizard.jwc.audio.AudioContentType
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.CommandContext
@@ -14,9 +14,7 @@ import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.embed.PercentageIndicatorBar
-import pl.jwizard.jwc.core.util.ext.duration
 import pl.jwizard.jwc.core.util.ext.mdTitleLink
-import pl.jwizard.jwc.core.util.ext.thumbnailUrl
 import pl.jwizard.jwc.core.util.millisToDTF
 import pl.jwizard.jwc.exception.audio.ActiveAudioPlayingNotFoundException
 import pl.jwizard.jwc.exception.audio.PlayerNotPausedException
@@ -99,7 +97,7 @@ abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 		track: Track,
 	): MessageEmbed {
 		val elapsedTime = manager.cachedPlayer?.position ?: 0
-		val audioSender = manager.getAudioSenderId(track)?.let { context.guild.getMemberById(it) }
+		val audioSender = context.guild.getMemberById(track.audioSender.authorId)
 		val percentageIndicatorBar = PercentageIndicatorBar(
 			start = elapsedTime,
 			total = track.duration,

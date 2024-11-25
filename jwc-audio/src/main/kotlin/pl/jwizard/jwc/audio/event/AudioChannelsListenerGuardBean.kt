@@ -6,6 +6,7 @@ package pl.jwizard.jwc.audio.event
 
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
+import pl.jwizard.jwc.audio.client.DistributedAudioClientBean
 import pl.jwizard.jwc.audio.manager.MusicManagersBean
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.JdaShardManagerBean
@@ -28,15 +29,15 @@ import java.time.Instant
  * @property jdaShardManager Manages multiple shards of the JDA bot, responsible for handling Discord API interactions.
  * @property environment Provides access to application properties.
  * @property musicManagers Provides access to the cached music manager for controlling audio playback.
+ * @property audioClient Supplies distributed audio client instance for audio streaming.
  * @author Miłosz Gilga
- * @see ChannelListenerGuard
- * @see JvmFixedThreadExecutor
  */
 @SingletonComponent
 class AudioChannelsListenerGuardBean(
 	private val jdaShardManager: JdaShardManagerBean,
 	private val environment: EnvironmentBean,
 	private val musicManagers: MusicManagersBean,
+	private val audioClient: DistributedAudioClientBean,
 ) : ChannelListenerGuard, JvmFixedThreadExecutor() {
 
 	companion object {
@@ -104,7 +105,7 @@ class AudioChannelsListenerGuardBean(
 			val musicManager = musicManagers.getCachedMusicManager(guildId)
 			if (musicManager != null) {
 				musicManager.state.audioScheduler.stopAndDestroy().subscribe()
-				jdaShardManager.getDirectAudioController(guild)?.disconnect(guild)
+				audioClient.audioController.disconnectWithAudioChannel(guild)
 
 				val message = musicManager.createEmbedBuilder()
 					.setDescription(I18nResponseSource.LEAVE_EMPTY_CHANNEL)

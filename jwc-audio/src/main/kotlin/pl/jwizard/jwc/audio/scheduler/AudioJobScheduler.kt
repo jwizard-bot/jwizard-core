@@ -4,10 +4,10 @@
  */
 package pl.jwizard.jwc.audio.scheduler
 
-import dev.arbjerg.lavalink.client.LavalinkNode
-import dev.arbjerg.lavalink.client.player.Track
-import dev.arbjerg.lavalink.client.player.TrackException
 import dev.arbjerg.lavalink.protocol.v4.Message.EmittedEvent.TrackEndEvent.AudioTrackEndReason
+import pl.jwizard.jwac.node.AudioNode
+import pl.jwizard.jwac.player.track.Track
+import pl.jwizard.jwac.player.track.TrackException
 
 /**
  * Interface for managing audio job scheduling in a music player context.
@@ -35,9 +35,9 @@ interface AudioJobScheduler {
 	 * such as updating the UI or tracking playback statistics.
 	 *
 	 * @param track The track that has started playing.
-	 * @param node The Lavalink node responsible for handling the track.
+	 * @param audioNode The Lavalink node responsible for handling the track.
 	 */
-	fun onAudioStart(track: Track, node: LavalinkNode)
+	fun onAudioStart(track: Track, audioNode: AudioNode)
 
 	/**
 	 * Handles the event when an audio track ends.
@@ -46,10 +46,10 @@ interface AudioJobScheduler {
 	 * transition to the next track in the queue. It also provides the reason for the end.
 	 *
 	 * @param lastTrack The track that has just finished playing.
-	 * @param node The Lavalink node that handled the playback of the track.
+	 * @param audioNode The Lavalink node that handled the playback of the track.
 	 * @param endReason The reason why the track ended, such as completion or being skipped.
 	 */
-	fun onAudioEnd(lastTrack: Track, node: LavalinkNode, endReason: AudioTrackEndReason)
+	fun onAudioEnd(lastTrack: Track, audioNode: AudioNode, endReason: AudioTrackEndReason)
 
 	/**
 	 * Handles the event when an audio track gets stuck during playback.
@@ -58,9 +58,9 @@ interface AudioJobScheduler {
 	 * the audio source or network.
 	 *
 	 * @param track The track that has become stuck.
-	 * @param node The Lavalink node responsible for the stuck playback.
+	 * @param audioNode The Lavalink node responsible for the stuck playback.
 	 */
-	fun onAudioStuck(track: Track, node: LavalinkNode)
+	fun onAudioStuck(track: Track, audioNode: AudioNode)
 
 	/**
 	 * Handles exceptions that occur during audio playback.
@@ -69,8 +69,8 @@ interface AudioJobScheduler {
 	 * take appropriate actions such as logging the error or notifying the user.
 	 *
 	 * @param track The track that caused the exception.
-	 * @param node The Lavalink node that was handling the track.
+	 * @param audioNode The Lavalink node that was handling the track.
 	 * @param exception The exception that was thrown during playback.
 	 */
-	fun onAudioException(track: Track, node: LavalinkNode, exception: TrackException)
+	fun onAudioException(track: Track, audioNode: AudioNode, exception: TrackException)
 }

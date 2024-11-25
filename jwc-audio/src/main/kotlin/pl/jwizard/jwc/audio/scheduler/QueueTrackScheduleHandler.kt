@@ -4,11 +4,11 @@
  */
 package pl.jwizard.jwc.audio.scheduler
 
-import dev.arbjerg.lavalink.client.LavalinkNode
-import dev.arbjerg.lavalink.client.player.Track
-import dev.arbjerg.lavalink.client.player.TrackException
 import dev.arbjerg.lavalink.protocol.v4.Message.EmittedEvent.TrackEndEvent.AudioTrackEndReason
 import net.dv8tion.jda.api.entities.MessageEmbed
+import pl.jwizard.jwac.node.AudioNode
+import pl.jwizard.jwac.player.track.Track
+import pl.jwizard.jwac.player.track.TrackException
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.audio.scheduler.repeat.AudioTrackRepeat
 import pl.jwizard.jwc.audio.scheduler.repeat.CountOfRepeats
@@ -16,7 +16,6 @@ import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.util.ext.mdTitleLink
 import pl.jwizard.jwc.core.util.ext.qualifier
-import pl.jwizard.jwc.core.util.ext.thumbnailUrl
 import pl.jwizard.jwc.core.util.jdaError
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwl.command.Command
@@ -119,9 +118,9 @@ class QueueTrackScheduleHandler(
 	 * a command to resume playback.
 	 *
 	 * @param track The [Track] that started playing.
-	 * @param node The [LavalinkNode] on which the track is playing.
+	 * @param audioNode The [AudioNode] on which the track is playing.
 	 */
-	override fun onAudioStart(track: Track, node: LavalinkNode) {
+	override fun onAudioStart(track: Track, audioNode: AudioNode) {
 		val context = guildMusicManager.state.context
 		if (guildMusicManager.cachedPlayer?.paused == true) {
 			val message = createTrackStartMessage(
@@ -131,14 +130,14 @@ class QueueTrackScheduleHandler(
 			log.jdaInfo(
 				context,
 				"Node: %s. Start playing audio track: %s when audio player is paused.",
-				node.name,
+				audioNode.name,
 				track.qualifier
 			)
 			guildMusicManager.sendMessage(message)
 		} else {
 			val message = createTrackStartMessage(track, I18nResponseSource.ON_TRACK_START)
 			if (nextTrackInfoMessage.get()) {
-				log.jdaInfo(context, "Node: %s. Start playing audio track: %s.", node.name, track.qualifier)
+				log.jdaInfo(context, "Node: %s. Start playing audio track: %s.", audioNode.name, track.qualifier)
 				guildMusicManager.sendMessage(message)
 			}
 		}
@@ -151,10 +150,10 @@ class QueueTrackScheduleHandler(
 	 * or move to the next track. It also handles the situation where the queue is empty.
 	 *
 	 * @param lastTrack The [Track] that just finished playing.
-	 * @param node The [LavalinkNode] on which the track was playing.
+	 * @param audioNode The [AudioNode] on which the track was playing.
 	 * @param endReason The reason for the track ending.
 	 */
-	override fun onAudioEnd(lastTrack: Track, node: LavalinkNode, endReason: AudioTrackEndReason) {
+	override fun onAudioEnd(lastTrack: Track, audioNode: AudioNode, endReason: AudioTrackEndReason) {
 		val context = guildMusicManager.state.context
 		if (audioRepeat.trackRepeat) {
 			nextTrackInfoMessage.set(false) // disable for prevent spamming
@@ -185,7 +184,7 @@ class QueueTrackScheduleHandler(
 			log.jdaInfo(
 				context,
 				"Node: %s. Repeat: %d times of track: %s from elapsed: %d repeats.",
-				node.name,
+				audioNode.name,
 				countOfRepeats.currentRepeat,
 				lastTrack.qualifier,
 				countOfRepeats.current
@@ -223,29 +222,29 @@ class QueueTrackScheduleHandler(
 	 * handling process.
 	 *
 	 * @param track The [Track] that is stuck.
-	 * @param node The [LavalinkNode] on which the track was playing.
+	 * @param audioNode The [AudioNode] on which the track was playing.
 	 */
-	override fun onAudioStuck(track: Track, node: LavalinkNode) = onError(track, node, "Track stuck.")
+	override fun onAudioStuck(track: Track, audioNode: AudioNode) = onError(track, audioNode, "Track stuck.")
 
 	/**
 	 * Handles the event when an error occurs while playing an audio track. Logs the error and sends an appropriate
 	 * message to the context.
 	 *
 	 * @param track The [Track] that encountered an error.
-	 * @param node The [LavalinkNode] on which the error occurred.
+	 * @param audioNode The [AudioNode] on which the error occurred.
 	 * @param exception The [TrackException] that contains the error details.
 	 */
-	override fun onAudioException(track: Track, node: LavalinkNode, exception: TrackException) =
-		onError(track, node, exception.message)
+	override fun onAudioException(track: Track, audioNode: AudioNode, exception: TrackException) =
+		onError(track, audioNode, exception.message)
 
 	/**
 	 * Handles errors that occur during track playback. Logs the error and sends a message with details about the issue.
 	 *
 	 * @param track The [Track] that caused the error.
-	 * @param node The [LavalinkNode] on which the error occurred.
+	 * @param audioNode The [AudioNode] on which the error occurred.
 	 * @param causeMessage A message explaining the cause of the error.
 	 */
-	private fun onError(track: Track, node: LavalinkNode, causeMessage: String?) {
+	private fun onError(track: Track, audioNode: AudioNode, causeMessage: String?) {
 		val context = guildMusicManager.state.context
 		val tracker = guildMusicManager.bean.exceptionTrackerHandler
 
@@ -259,7 +258,7 @@ class QueueTrackScheduleHandler(
 		log.jdaError(
 			context,
 			"Node: %s. Unexpected issue while playing track: %s. Cause: %s.",
-			node.name,
+			audioNode.name,
 			track.qualifier,
 			causeMessage
 		)

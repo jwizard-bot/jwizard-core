@@ -41,8 +41,8 @@ class AsyncUpdatableHandler<T>(
 	}
 
 	/**
-	 * Executes an asynchronous update using the provided [Mono] action. The hook is used to handle both success and failure
-	 * outcomes. In case of failure, the error is logged and handled accordingly.
+	 * Executes an asynchronous update using the provided [Mono] action. The hook is used to handle both success and
+	 * failure outcomes. In case of failure, the error is logged and handled accordingly.
 	 *
 	 * @param asyncAction The Mono representing the asynchronous action.
 	 * @param payload The additional payload that may be needed for handling the response.

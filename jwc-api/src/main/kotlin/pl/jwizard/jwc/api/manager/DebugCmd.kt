@@ -27,6 +27,7 @@ import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.util.ext.versionFormat
 import pl.jwizard.jwc.core.util.mdBold
 import pl.jwizard.jwc.core.util.mdLink
+import pl.jwizard.jwc.core.util.mdList
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.vcs.VcsConfigBean
@@ -135,7 +136,7 @@ class DebugCmd(
 			val info = it.getNodeInfo().toFuture().get()
 			val joiner = StringJoiner("")
 
-			joiner.add("* ${mdBold(it.name)} (CPU: $cpuStats) (MEM: $usedMem/$maxMem)\n")
+			joiner.add(mdList("${mdBold(it.name)} (CPU: $cpuStats) (MEM: $usedMem/$maxMem)", eol = true))
 			joiner.add("  ${memoryBar.generateBar(showPercentageNumber = true)}\n")
 			joiner.add("  Lavalink: ${info.version.semver.versionFormat}, Lavaplayer: ${info.lavaplayer.versionFormat}")
 			joiner.toString()

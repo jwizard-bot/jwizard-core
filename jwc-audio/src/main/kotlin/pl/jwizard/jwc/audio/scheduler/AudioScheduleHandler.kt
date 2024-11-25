@@ -4,8 +4,8 @@
  */
 package pl.jwizard.jwc.audio.scheduler
 
-import dev.arbjerg.lavalink.client.player.FilterBuilder
-import dev.arbjerg.lavalink.client.player.Track
+import pl.jwizard.jwac.player.FilterBuilder
+import pl.jwizard.jwac.player.track.Track
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import reactor.core.Disposable
 import reactor.core.publisher.Mono

@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.api
 
-import pl.jwizard.jwc.audio.lava.LavalinkClientBean
+import pl.jwizard.jwc.audio.client.DistributedAudioClientBean
 import pl.jwizard.jwc.audio.manager.MusicManagersBean
 import pl.jwizard.jwc.command.transport.LooselyTransportHandlerBean
 import pl.jwizard.jwc.core.jda.JdaShardManagerBean
@@ -38,7 +38,7 @@ class CommandEnvironmentBean(
 	val jdaColorStore: JdaColorStoreBean,
 	val eventQueue: EventQueueBean,
 	val musicManagers: MusicManagersBean,
-	val audioClient: LavalinkClientBean,
+	val audioClient: DistributedAudioClientBean,
 	val jdaShardManager: JdaShardManagerBean,
 	val guildSettingsEventAction: GuildSettingsEventAction,
 	val exceptionTrackerHandler: ExceptionTrackerHandlerBean,
