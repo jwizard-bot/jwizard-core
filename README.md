@@ -40,10 +40,11 @@ client for sending commands to Lavalink nodes and message broker handling events
 ## Clone and install
 
 1. Make sure you have at least JDK 17 and Kotlin 2.0.
-2. Clone **JWizard Lib** from organization repository via:
+2. Clone **JWizard Lib** and **JWizard Audio Client** from organization repository via:
 
 ```bash
 $ git clone https://github.com/jwizard-bot/jwizard-lib
+$ git clone https://github.com/jwizard-bot/jwizard-audio-client
 ```
 
 3. Configure and run all necessary containers defined in `README.md` file in this repository. You must have up these
@@ -59,7 +60,7 @@ $ git clone https://github.com/jwizard-bot/jwizard-lib
 > NOTE: Alternatively, you can run single Lavalink node, but in `application.dev.yml` you must remove second Lavalink
 > node declaration. Running 2 nodes are useful for checking load-balancer in performance tests.
 
-4. Build library and package to Maven Local artifacts' storage:
+4. Build library and package to Maven Local artifacts' storage (for **JWizard Lib** and **JWizard Audio Client**):
 
 * for UNIX based systems:
 
