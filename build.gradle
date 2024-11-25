@@ -95,7 +95,9 @@ subprojects {
 			documentedVisibilities.set([
 				DokkaConfiguration.Visibility.PUBLIC,
 				DokkaConfiguration.Visibility.PRIVATE,
-				DokkaConfiguration.Visibility.PROTECTED
+				DokkaConfiguration.Visibility.PROTECTED,
+				DokkaConfiguration.Visibility.INTERNAL,
+				DokkaConfiguration.Visibility.PACKAGE,
 			])
 		}
 		suppressInheritedMembers = true
