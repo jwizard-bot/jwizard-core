@@ -76,7 +76,7 @@ class AudioNodeListenerAdapter(
 	}
 
 	/**
-	 * TODO
+	 * Handles the WebSocket closure event, logging the details of the closure.
 	 *
 	 * @param event The event containing details about the WebSocket closure.
 	 */
