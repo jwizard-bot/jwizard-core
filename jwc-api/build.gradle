@@ -3,7 +3,6 @@
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 dependencies {
-	implementation libs.commonsIo
 	implementation libs.jda
 	implementation libs.jwizardAudioClient
 

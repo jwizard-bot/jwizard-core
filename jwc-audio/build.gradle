@@ -3,8 +3,6 @@
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 dependencies {
-	implementation libs.commonsCodec
-	implementation libs.commonsValidator
 	implementation libs.jda
 	implementation libs.jwizardAudioClient
 

@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionE
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.LayoutComponent
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu
-import org.apache.commons.codec.digest.DigestUtils
 import pl.jwizard.jwc.core.i18n.source.I18nVotingSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
@@ -19,6 +18,7 @@ import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueListener
 import pl.jwizard.jwc.core.util.mdList
+import pl.jwizard.jwc.core.util.toMD5
 import pl.jwizard.jwl.i18n.I18nBean
 import pl.jwizard.jwl.i18n.I18nLocaleSource
 import java.util.concurrent.TimeUnit
@@ -98,7 +98,7 @@ abstract class SelectSpinnerMenu<T : MenuOption>(
 			.setMaxValues(minValues)
 			.setMinValues(maxValues)
 
-		trimmedOptions.forEach { menuBuilder.addOption(it.key.take(100), DigestUtils.md2Hex(it.value)) }
+		trimmedOptions.forEach { menuBuilder.addOption(it.key.take(100), toMD5(it.value)) }
 		return Pair(message, ActionRow.of(menuBuilder.build()))
 	}
 
@@ -119,7 +119,7 @@ abstract class SelectSpinnerMenu<T : MenuOption>(
 	 */
 	final override fun onEvent(event: StringSelectInteractionEvent) {
 		event.deferEdit().queue()
-		val selectedOptions = trimmedOptions.filter { event.values.contains(DigestUtils.md2Hex(it.value)) }
+		val selectedOptions = trimmedOptions.filter { event.values.contains(toMD5(it.value)) }
 		onEvent(event, context, selectedOptions)
 		val components = event.message.components.map(LayoutComponent::asDisabled)
 		event.hook.editOriginalComponents(components).queue()

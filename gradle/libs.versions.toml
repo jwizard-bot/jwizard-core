@@ -1,7 +1,4 @@
 [versions]
-commonsCodecVersion = "1.17.1"
-commonsIoVersion = "2.17.0"
-commonsValidatorVersion = "1.9.0"
 dokkaVersion = "1.9.20"
 jdaVersion = "5.1.0"
 jwizardLibVersion = "latest"
@@ -13,9 +10,6 @@ shadowJarVersion = "8.1.1"
 slf4jApiVersion = "2.0.16"
 
 [libraries]
-commonsCodec = { module = "commons-codec:commons-codec", version.ref = "commonsCodecVersion" }
-commonsIo = { module = "commons-io:commons-io", version.ref = "commonsIoVersion" }
-commonsValidator = { module = "commons-validator:commons-validator", version.ref = "commonsValidatorVersion" }
 jda = { module = "net.dv8tion:JDA", version.ref = "jdaVersion" }
 jwizardLib = { module = "pl.jwizard:jwizard-lib", version.ref = "jwizardLibVersion" }
 jwizardAudioClient = { module = "pl.jwizard:jwizard-audio-client", version.ref = "jwizardAudioClientVersion" }
@@ -29,7 +23,6 @@ slf4jApi = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApiVersion" }
 [plugins]
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokkaVersion" }
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
-kotlinNoArg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = "kotlinVersion" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
 kotlinSpring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlinVersion" }
 shadowJar = { id = "com.github.johnrengelman.shadow", version.ref = "shadowJarVersion" }

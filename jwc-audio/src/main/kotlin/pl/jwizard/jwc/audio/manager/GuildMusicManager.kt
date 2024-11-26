@@ -6,7 +6,6 @@ package pl.jwizard.jwc.audio.manager
 
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.ActionRow
-import org.apache.commons.validator.routines.UrlValidator
 import pl.jwizard.jwc.audio.client.AudioNodePool
 import pl.jwizard.jwc.audio.client.DistributedAudioClientBean
 import pl.jwizard.jwc.audio.loader.QueueTrackLoader
@@ -17,6 +16,7 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.guild.GuildProperty
+import pl.jwizard.jwc.core.util.isValidUrl
 import pl.jwizard.jwc.core.util.jdaDebug
 import pl.jwizard.jwl.radio.RadioStation
 import pl.jwizard.jwl.util.logger
@@ -88,8 +88,7 @@ class GuildMusicManager(
 	fun loadAndPlay(trackName: String, context: CommandBaseContext) {
 		val searchPrefix = bean.environment.getProperty<String>(BotProperty.LAVALINK_SEARCH_CONTENT_PREFIX)
 
-		val urlValidator = UrlValidator()
-		val parsedTrackName = if (urlValidator.isValid(trackName)) {
+		val parsedTrackName = if (isValidUrl(trackName)) {
 			trackName.replace(" ", "")
 		} else {
 			searchPrefix.format(trackName)

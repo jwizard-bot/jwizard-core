@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.JDAInfo
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.interactions.components.ActionRow
-import org.apache.commons.io.FileUtils
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.ManagerCommandBase
 import pl.jwizard.jwc.command.context.CommandContext
@@ -30,6 +29,7 @@ import pl.jwizard.jwc.core.util.mdLink
 import pl.jwizard.jwc.core.util.mdList
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
+import pl.jwizard.jwl.util.formatBytes
 import pl.jwizard.jwl.vcs.VcsConfigBean
 import pl.jwizard.jwl.vcs.VcsRepository
 import java.util.*
@@ -128,8 +128,8 @@ class DebugCmd(
 		val availableNodes = commandEnvironment.audioClient.availableNodes
 		val lavaNodesInfo = availableNodes.joinToString("\n") {
 			val memory = it.stats?.memory
-			val usedMem = FileUtils.byteCountToDisplaySize(memory?.used)
-			val maxMem = FileUtils.byteCountToDisplaySize(memory?.reservable)
+			val usedMem = formatBytes(memory?.used)
+			val maxMem = formatBytes(memory?.reservable)
 			val memoryBar = PercentageIndicatorBar(memory?.used ?: 0, memory?.reservable ?: 0)
 			val cpuStats = "%.2f%%".format(it.stats?.cpu?.lavalinkLoad)
 
@@ -142,9 +142,9 @@ class DebugCmd(
 			joiner.toString()
 		}
 		return messageBuilder
-			.setKeyValueField(I18nSystemSource.JVM_USED_MEMORY, FileUtils.byteCountToDisplaySize(usedMemory))
+			.setKeyValueField(I18nSystemSource.JVM_USED_MEMORY, formatBytes(usedMemory))
 			.setSpace()
-			.setKeyValueField(I18nSystemSource.JVM_XMX_MEMORY, FileUtils.byteCountToDisplaySize(totalMemory))
+			.setKeyValueField(I18nSystemSource.JVM_XMX_MEMORY, formatBytes(totalMemory))
 			.setKeyValueField(
 				I18nSystemSource.JVM_MEMORY_USAGE,
 				percentageIndicatorBar.generateBar(showPercentageNumber = true),

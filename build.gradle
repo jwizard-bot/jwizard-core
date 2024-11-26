@@ -13,7 +13,6 @@ plugins {
 	alias libs.plugins.kotlinSpring apply false
 	alias libs.plugins.shadowJar apply false
 	alias libs.plugins.dokka
-	alias libs.plugins.kotlinNoArg
 }
 
 ext {
@@ -65,17 +64,12 @@ subprojects {
 	}
 
 	dependencies {
+		implementation libs.jwizardLib
 		implementation libs.kotlin
 		implementation libs.kotlinReflect
-
 		implementation libs.logbackCore
 		implementation libs.logbackClassic
 		implementation libs.slf4jApi
-		implementation libs.jwizardLib
-	}
-
-	test {
-		useJUnitPlatform()
 	}
 
 	compileKotlin {
@@ -101,10 +95,6 @@ subprojects {
 			])
 		}
 		suppressInheritedMembers = true
-	}
-
-	noArg {
-		annotation('pl.jwizard.jwc.core.util.NoArgConstructor')
 	}
 
 	configurations.configureEach {
