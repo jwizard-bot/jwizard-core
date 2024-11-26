@@ -124,7 +124,7 @@ class ExceptionTrackerHandlerBean(
 	 */
 	private fun createTrackerUrl(tracker: Int): String {
 		val baseUrl = environmentBean.getProperty<String>(BotProperty.SERVICE_FRONT_URL)
-		val urlReferTemplate = environmentBean.getProperty<String>(BotProperty.JDA_EXCEPTION_URL_REFER_TEMPLATE)
+		val urlReferTemplate = environmentBean.getProperty<String>(BotProperty.LINK_FRAGMENT_ERROR_CODE)
 		return urlReferTemplate.format(baseUrl, tracker)
 	}
 

@@ -60,9 +60,6 @@ jda:
     slash:
       autocomplete:
         max-options: 25
-  exception:
-    segment-size: 100
-    url-refer-template: '%s/error-codes/%d'
   superuser-permissions:
     - ADMINISTRATOR
     - MANAGE_SERVER
@@ -77,6 +74,7 @@ link:
     docs: '%s/docs'
     command: '%s/command/%s'
     shards: '%s/shards'
+    error-code: '%s/error-codes/%d'
 
 lavalink:
   timeout-ms: 5000

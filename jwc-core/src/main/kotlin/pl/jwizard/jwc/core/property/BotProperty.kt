@@ -33,9 +33,6 @@ import kotlin.reflect.KClass
  *   components in JDA.
  * - [JDA_INTERACTION_SLASH_AUTOCOMPLETE_MAX_OPTIONS]: JDA maximum number of options in single autocomplete interaction
  *   request.
- * - [JDA_EXCEPTION_SEGMENT_SIZE]: Specifies the maximum size of the segment in exception group.
- * - [JDA_EXCEPTION_URL_REFER_TEMPLATE]: Defines the URL template used for referring to detailed exception information
- *   in bot website.
  * - [JDA_PAGINATION_CHUNK_SIZE]: Defines chunk size for custom paginator for embed messages in command handlers.
  * - [LINK_WEBSITE]: The official website for the bot.
  * - [LINK_STATUS]: Link to the bot external status page.
@@ -43,6 +40,7 @@ import kotlin.reflect.KClass
  * - [LINK_FRAGMENT_DOCS]: Fragment link to the official website with documentation.
  * - [LINK_FRAGMENT_COMMAND]: Fragment link to the bot command reference, detailing all available commands and their usage.
  * - [LINK_FRAGMENT_SHARDS]: Fragment link to the bot shards details.
+ * - [LINK_FRAGMENT_ERROR_CODE]: Fragment link to the error code details.
  * - [LAVALINK_TIMEOUT_MS]: Represents the timeout duration (in milliseconds) for Lavalink connections.
  * - [LAVALINK_SEARCH_CONTENT_PREFIX]: Represents the prefix used to search for content in Lavalink.
  * - [RADIO_PLAYBACK_EXTENDED_LINK]: Extended link for radio playback content.
@@ -146,16 +144,6 @@ enum class BotProperty(
 	JDA_INTERACTION_SLASH_AUTOCOMPLETE_MAX_OPTIONS("jda.interaction.slash.autocomplete.max-options", Int::class),
 
 	/**
-	 * Specifies the maximum size of the segment in exception group.
-	 */
-	JDA_EXCEPTION_SEGMENT_SIZE("jda.exception.segment-size", Int::class),
-
-	/**
-	 * Defines the URL template used for referring to detailed exception information in bot website.
-	 */
-	JDA_EXCEPTION_URL_REFER_TEMPLATE("jda.exception.url-refer-template"),
-
-	/**
 	 * Defines chunk size for custom paginator for embed messages in command handlers.
 	 */
 	JDA_PAGINATION_CHUNK_SIZE("jda.pagination.chunk-size", Int::class),
@@ -189,6 +177,11 @@ enum class BotProperty(
 	 * Fragment link to the bot shards details.
 	 */
 	LINK_FRAGMENT_SHARDS("link.fragment.shards"),
+
+	/**
+	 * Fragment link to the error code details.
+	 */
+	LINK_FRAGMENT_ERROR_CODE("link.fragment.error-code"),
 
 	/**
 	 * Represents the timeout duration (in milliseconds) for Lavalink connections.
