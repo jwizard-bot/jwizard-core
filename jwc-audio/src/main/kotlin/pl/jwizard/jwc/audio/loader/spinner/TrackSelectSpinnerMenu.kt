@@ -72,24 +72,21 @@ class TrackSelectSpinnerMenu(
 	/**
 	 * Provides the ID of the menu, used to identify the track selection menu.
 	 */
-	override val menuId
-		get() = "track"
+	override val menuId = "track"
 
 	/**
 	 * Retrieves the time in seconds after which a track is automatically selected if the user doesn't choose.
 	 */
-	override val elapsedTimeSec
-		get() = guildMultipleProperties.getProperty<Long>(GuildProperty.TIME_AFTER_AUTO_CHOOSE_SEC)
+	override val elapsedTimeSec = guildMultipleProperties.getProperty<Long>(GuildProperty.TIME_AFTER_AUTO_CHOOSE_SEC)
 
 	/**
 	 * Defines the maximum number of tracks that can be selected from the spinner menu.
 	 */
-	override val maxElementsToChoose
-		get() = min(options.size, guildMultipleProperties.getProperty<Int>(GuildProperty.MAX_TRACKS_TO_CHOOSE))
+	override val maxElementsToChoose =
+		min(options.size, guildMultipleProperties.getProperty<Int>(GuildProperty.MAX_TRACKS_TO_CHOOSE))
 
 	/**
 	 * Specifies if the track should be chosen randomly after the timeout.
 	 */
-	override val randomChoice
-		get() = guildMultipleProperties.getProperty<Boolean>(GuildProperty.RANDOM_AUTO_CHOOSE_TRACK)
+	override val randomChoice = guildMultipleProperties.getProperty<Boolean>(GuildProperty.RANDOM_AUTO_CHOOSE_TRACK)
 }

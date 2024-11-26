@@ -46,7 +46,7 @@ allprojects {
 		}
 	}
 	group = 'pl.jwizard'
-	version = getEnv('VERSION', 'DEVELOPMENT')
+	version = getEnv('VERSION', 'latest')
 }
 
 subprojects {
