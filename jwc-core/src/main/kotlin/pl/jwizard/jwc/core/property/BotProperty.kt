@@ -41,11 +41,12 @@ import kotlin.reflect.KClass
  * - [LINK_FRAGMENT_COMMAND]: Fragment link to the bot command reference, detailing all available commands and their usage.
  * - [LINK_FRAGMENT_SHARDS]: Fragment link to the bot shards details.
  * - [LINK_FRAGMENT_ERROR_CODE]: Fragment link to the error code details.
- * - [LAVALINK_TIMEOUT_MS]: Represents the timeout duration (in milliseconds) for Lavalink connections.
- * - [LAVALINK_SEARCH_CONTENT_PREFIX]: Represents the prefix used to search for content in Lavalink.
+ * - [AUDIO_SERVER_TIMEOUT_MS]: Represents the timeout duration (in milliseconds) for audio server connections.
+ * - [AUDIO_SERVER_SEARCH_DEFAULT_CONTENT_PREFIX]: Represents the prefix used to search for content in audio server.
  * - [RADIO_PLAYBACK_EXTENDED_LINK]: Extended link for radio playback content.
  * - [SERVICE_API_URL]: JWizard API service host URL.
  * - [SERVICE_FRONT_URL]: JWizard front-end service host url.
+ * - [SERVICE_DISCORD_API]: Discord api base path.
  *
  * @property key The key used to retrieve the property value from various property sources.
  * @property type The type of the property value. Defaults to [String] if not specified.
@@ -184,14 +185,14 @@ enum class BotProperty(
 	LINK_FRAGMENT_ERROR_CODE("link.fragment.error-code"),
 
 	/**
-	 * Represents the timeout duration (in milliseconds) for Lavalink connections.
+	 * Represents the timeout duration (in milliseconds) for audio server connections.
 	 */
-	LAVALINK_TIMEOUT_MS("lavalink.timeout-ms", Long::class),
+	AUDIO_SERVER_TIMEOUT_MS("audio.server.timeout-ms", Long::class),
 
 	/**
-	 * Represents the prefix used to search for content in Lavalink.
+	 * Represents the prefix used to search for content in audio server.
 	 */
-	LAVALINK_SEARCH_CONTENT_PREFIX("lavalink.search.content-prefix"),
+	AUDIO_SERVER_SEARCH_DEFAULT_CONTENT_PREFIX("audio.server.search.default-content-prefix"),
 
 	/**
 	 * Extended link for radio playback content.
@@ -207,6 +208,11 @@ enum class BotProperty(
 	 * JWizard front-end service host url.
 	 */
 	SERVICE_FRONT_URL("service.front-url"),
+
+	/**
+	 * Discord api base path.
+	 */
+	SERVICE_DISCORD_API("service.discord-api"),
 
 	/**
 	 * JVM name property, indicating the name of the Java Virtual Machine.

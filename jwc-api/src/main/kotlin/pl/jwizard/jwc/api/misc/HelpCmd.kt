@@ -99,11 +99,11 @@ class HelpCmd(
 		val lang = context.guildLanguage
 
 		val descriptionElements = listOf(
-			mdBold(i18nBean.t(I18nResponseSource.HELPFUL_LINKS, lang).uppercase(Locale.getDefault())),
-			mdLink(i18nBean.t(I18nResponseSource.BOT_WEBSITE, lang), website),
-			mdLink(i18nBean.t(I18nResponseSource.INFRA_CURRENT_STATUS, lang), statusPage),
-			mdLink(i18nBean.t(I18nResponseSource.BOT_SOURCE_CODE, lang), repository),
-			mdLink(i18nBean.t(I18nResponseSource.BOT_DOCUMENTATION, lang), docsLink),
+			mdBold(i18n.t(I18nResponseSource.HELPFUL_LINKS, lang).uppercase(Locale.getDefault())),
+			mdLink(i18n.t(I18nResponseSource.BOT_WEBSITE, lang), website),
+			mdLink(i18n.t(I18nResponseSource.INFRA_CURRENT_STATUS, lang), statusPage),
+			mdLink(i18n.t(I18nResponseSource.BOT_SOURCE_CODE, lang), repository),
+			mdLink(i18n.t(I18nResponseSource.BOT_DOCUMENTATION, lang), docsLink),
 			"",
 			mdBold("${i18n.t(I18nResponseSource.COMMANDS, lang).uppercase(Locale.getDefault())} (${commands.size})"),
 		)

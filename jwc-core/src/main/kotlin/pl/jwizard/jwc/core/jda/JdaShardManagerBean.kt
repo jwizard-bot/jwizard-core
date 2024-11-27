@@ -17,7 +17,8 @@ import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.api.sharding.ShardManager
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 import pl.jwizard.jwc.core.audio.spi.DistributedAudioClient
-import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
+import pl.jwizard.jwc.core.jda.color.JdaColorsCacheBean
+import pl.jwizard.jwc.core.jda.emoji.BotEmojisCacheBean
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
 import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
@@ -28,6 +29,7 @@ import pl.jwizard.jwl.jvm.JvmDisposable
 import pl.jwizard.jwl.jvm.JvmDisposableHook
 import pl.jwizard.jwl.property.AppBaseListProperty
 import pl.jwizard.jwl.util.logger
+import java.util.*
 
 /**
  * Manages the initialization, lifecycle, and interaction with the JDA (Java Discord API) instance for a bot.
@@ -36,6 +38,7 @@ import pl.jwizard.jwl.util.logger
  * @property environment Provides access to application properties, including the bot token.
  * @property jdaColorStore Provides access to JDA colors loader.
  * @property ioCKtContextFactory Provides access to the IoC context for retrieving beans.
+ * @property botEmojisCache Cache containing the bot's custom emojis.
  * @author Miłosz Gilga
  */
 @SingletonComponent
@@ -43,6 +46,7 @@ final class JdaShardManagerBean(
 	private val environment: EnvironmentBean,
 	private val jdaColorStore: JdaColorsCacheBean,
 	private val ioCKtContextFactory: IoCKtContextFactory,
+	private val botEmojisCache: BotEmojisCacheBean,
 ) : JvmDisposable {
 
 	companion object {
@@ -58,6 +62,11 @@ final class JdaShardManagerBean(
 	 * Instance of [JvmDisposableHook] responsible for managing JVM shutdown hooks.
 	 */
 	private val jvmDisposableHook = JvmDisposableHook(this)
+
+	/**
+	 * Discord bot secret token.
+	 */
+	private final lateinit var jdaToken: String
 
 	/**
 	 * Creates and initializes the JDA shard manager, responsible for managing the bot's connection to Discord.
@@ -84,7 +93,8 @@ final class JdaShardManagerBean(
 		val eventListeners = ioCKtContextFactory.getBeansAnnotatedWith<EventListener, JdaEventListenerBean>()
 		log.info("Load: {} JDA event listeners: {}.", eventListeners.size, eventListeners.map { it.javaClass.simpleName })
 
-		val jdaToken = environment.getProperty<String>(BotProperty.JDA_SECRET_TOKEN)
+		jdaToken = environment.getProperty<String>(BotProperty.JDA_SECRET_TOKEN)
+		botEmojisCache.loadCustomEmojis(this)
 
 		log.info("Load: {} gateway intents: {}.", gatewayIntents.size, gatewayIntents)
 		log.info("Load: {} enabled cache flags: {}.", enabledCacheFlags.size, enabledCacheFlags)
@@ -154,6 +164,25 @@ final class JdaShardManagerBean(
 	 * @return The [User] object associated with the given ID, or `null` if no such user is found.
 	 */
 	fun getUserById(userId: Long) = shardManager.getUserById(userId)
+
+	/**
+	 * Retrieves the bot's user ID by decoding the provided JDA token. The token is expected to follow the standard bot
+	 * token structure: a dot-separated string containing three parts.
+	 *
+	 * The first part of the token, when decoded using Base64, represents the bot's user ID.
+	 *
+	 * @return The bot's user ID as a `Long`.
+	 * @throws IllegalArgumentException If the token is invalid or the decoding process fails.
+	 */
+	fun getSelfUserId() = try {
+		val parts = jdaToken.split(".")
+		if (parts.size != 3) {
+			throw IllegalArgumentException("Token is not a valid bot token.")
+		}
+		String(Base64.getDecoder().decode(parts[0])).toLong()
+	} catch (e: Exception) {
+		throw IllegalArgumentException("Decoding failed: ${e.message}", e)
+	}
 
 	/**
 	 * Retrieves the [DirectAudioController] for the specified guild.

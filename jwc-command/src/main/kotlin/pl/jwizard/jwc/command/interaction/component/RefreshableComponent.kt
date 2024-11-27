@@ -11,6 +11,7 @@ import pl.jwizard.jwc.command.interaction.ButtonInteractionHandler
 import pl.jwizard.jwc.command.interaction.InteractionButton
 import pl.jwizard.jwc.command.interaction.InteractionResponse
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
+import pl.jwizard.jwc.core.jda.emoji.BotEmojisCacheBean
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
 import pl.jwizard.jwl.i18n.I18nBean
 import java.awt.Button
@@ -26,6 +27,7 @@ import java.awt.Button
  * @property eventQueueBean The event queue manager for handling events.
  * @property refreshableContent The content that can be refreshed.
  * @property payload The data payload that will be used for refreshing the content.
+ * @property botEmojisCache Cache containing the bot's custom emojis.
  * @author Miłosz Gilga
  */
 class RefreshableComponent<T>(
@@ -33,7 +35,8 @@ class RefreshableComponent<T>(
 	private val eventQueueBean: EventQueueBean,
 	private val refreshableContent: RefreshableContent<T>,
 	private val payload: T,
-) : ButtonInteractionHandler(i18nBean, eventQueueBean) {
+	private val botEmojisCache: BotEmojisCacheBean,
+) : ButtonInteractionHandler(i18nBean, eventQueueBean, botEmojisCache) {
 
 	/**
 	 * The buttons that this handler will respond to.

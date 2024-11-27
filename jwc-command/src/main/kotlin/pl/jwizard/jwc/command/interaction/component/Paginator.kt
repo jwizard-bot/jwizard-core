@@ -11,7 +11,8 @@ import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.interaction.ButtonInteractionHandler
 import pl.jwizard.jwc.command.interaction.InteractionButton
 import pl.jwizard.jwc.command.interaction.InteractionResponse
-import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
+import pl.jwizard.jwc.core.jda.color.JdaColorsCacheBean
+import pl.jwizard.jwc.core.jda.emoji.BotEmojisCacheBean
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
 import pl.jwizard.jwl.i18n.I18nBean
 
@@ -26,6 +27,7 @@ import pl.jwizard.jwl.i18n.I18nBean
  * @property eventQueue The event queue manager for handling events.
  * @property jdaColorsCache The color store bean for managing colors in embeds.
  * @property pages The list of MessageEmbed objects representing the pages of content.
+ * @property botEmojisCache Cache containing the bot's custom emojis.
  * @author Miłosz Gilga
  */
 class Paginator(
@@ -34,7 +36,8 @@ class Paginator(
 	private val eventQueue: EventQueueBean,
 	private val jdaColorsCache: JdaColorsCacheBean,
 	private val pages: List<MessageEmbed>,
-) : ButtonInteractionHandler(i18nBean, eventQueueBean) {
+	private val botEmojisCache: BotEmojisCacheBean,
+) : ButtonInteractionHandler(i18n, eventQueue, botEmojisCache) {
 
 	companion object {
 		/**

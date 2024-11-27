@@ -29,8 +29,8 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 	protected val guildSettingsEventAction = commandEnvironment.guildSettingsEventAction
 	protected val i18n = commandEnvironment.i18n
 	protected val jdaShardManager = commandEnvironment.jdaShardManager
-	protected val eventQueueBean = commandEnvironment.eventQueue
-	protected val exceptionTrackerStore = commandEnvironment.exceptionTrackerHandler
+	protected val exceptionTrackerHandler = commandEnvironment.exceptionTrackerHandler
+	protected val botEmojisCache = commandEnvironment.botEmojisCache
 
 	/**
 	 * A list of permissions assigned to superusers.
@@ -58,10 +58,11 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 	 */
 	protected fun createPaginator(context: CommandContext, pages: List<MessageEmbed>) = Paginator(
 		context,
-		i18nBean,
-		eventQueueBean,
-		jdaColorStoreBean = commandEnvironment.jdaColorStore,
+		i18n,
+		eventQueue = commandEnvironment.eventQueue,
+		jdaColorsCache = commandEnvironment.jdaColorStore,
 		pages,
+		botEmojisCache,
 	)
 
 	/**
@@ -74,7 +75,7 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 	 * @return A [RefreshableComponent] that handles dynamic content updates.
 	 */
 	protected fun <T> createRefreshable(refer: RefreshableContent<T>, payload: T) =
-		RefreshableComponent(i18nBean, eventQueueBean, refer, payload)
+		RefreshableComponent(i18n, commandEnvironment.eventQueue, refer, payload, botEmojisCache)
 
 	/**
 	 * Creates a URL link by formatting a base URL with the provided fragment value. This is typically used to generate

@@ -85,3 +85,6 @@ audio:
 radio:
   playback:
     extended-link: 'https://www.youtube.com/results?search_query=%s'
+
+service:
+  discord-api: https://discord.com/api/v10

@@ -52,7 +52,7 @@ abstract class MusicVoteCommandBase<T : Any>(
 			.setFailedMessage(failedMessage, voterResponse.args)
 			.setPayload(voterResponse.payload)
 			.build()
-		val musicVoter = MusicVoterComponent(context, i18nResponse, this, voterEnvironment)
+		val musicVoter = MusicVoterComponent(context, i18nResponse, this, voterEnvironment, botEmojisCache)
 		val (message, actionRow) = musicVoter.createInitVoterMessage()
 		val commandResponse = CommandResponse.Builder()
 			.addEmbedMessages(message)

@@ -7,7 +7,8 @@ package pl.jwizard.jwc.api
 import pl.jwizard.jwc.audio.client.DistributedAudioClientBean
 import pl.jwizard.jwc.audio.manager.MusicManagersBean
 import pl.jwizard.jwc.core.jda.JdaShardManagerBean
-import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
+import pl.jwizard.jwc.core.jda.color.JdaColorsCacheBean
+import pl.jwizard.jwc.core.jda.emoji.BotEmojisCacheBean
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
 import pl.jwizard.jwc.core.jda.spi.GuildSettingsEventAction
 import pl.jwizard.jwc.core.property.EnvironmentBean
@@ -27,7 +28,7 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
  * @property jdaShardManager Manages multiple shards of the JDA bot, responsible for handling Discord API interactions.
  * @property guildSettingsEventAction Handles guild settings change events.
  * @property exceptionTrackerHandler The store used to track and log exceptions.
- * @property looselyTransportHandler Handles loosely-typed transport operations between services.
+ * @property botEmojisCache Cache containing the bot's custom emojis.
  * @author Miłosz Gilga
  */
 @SingletonComponent
@@ -41,5 +42,5 @@ class CommandEnvironmentBean(
 	val jdaShardManager: JdaShardManagerBean,
 	val guildSettingsEventAction: GuildSettingsEventAction,
 	val exceptionTrackerHandler: ExceptionTrackerHandlerBean,
-	val looselyTransportHandler: LooselyTransportHandlerBean,
+	val botEmojisCache: BotEmojisCacheBean,
 )

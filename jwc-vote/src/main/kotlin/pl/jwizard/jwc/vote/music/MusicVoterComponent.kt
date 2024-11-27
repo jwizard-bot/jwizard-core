@@ -6,6 +6,7 @@ package pl.jwizard.jwc.vote.music
 
 import net.dv8tion.jda.api.entities.Member
 import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.core.jda.emoji.BotEmojisCacheBean
 import pl.jwizard.jwc.vote.I18nVoterResponse
 import pl.jwizard.jwc.vote.VoterComponent
 import pl.jwizard.jwc.vote.VoterContent
@@ -22,6 +23,7 @@ import pl.jwizard.jwc.vote.VoterEnvironmentBean
  * @property i18nResponse The internationalized response associated with the voting process.
  * @property voterContent The content that will be processed after a successful vote.
  * @property voterEnvironment The environment related to voting, including merged beans in single data class.
+ * @property botEmojisCache Cache containing the bot's custom emojis.
  * @author Miłosz Gilga
  */
 class MusicVoterComponent<T : Any>(
@@ -29,7 +31,8 @@ class MusicVoterComponent<T : Any>(
 	private val i18nResponse: I18nVoterResponse<T>,
 	private val voterContent: VoterContent<T>,
 	private val voterEnvironment: VoterEnvironmentBean,
-) : VoterComponent<T>(context, i18nResponse, voterContent, voterEnvironment) {
+	private val botEmojisCache: BotEmojisCacheBean,
+) : VoterComponent<T>(context, i18nResponse, voterContent, voterEnvironment, botEmojisCache) {
 
 	/**
 	 * Filters votes based on the interaction author's membership in the voice channel with the bot.

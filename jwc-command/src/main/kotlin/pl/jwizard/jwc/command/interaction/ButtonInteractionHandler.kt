@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
 import net.dv8tion.jda.internal.interactions.component.ButtonImpl
+import pl.jwizard.jwc.core.jda.emoji.BotEmojisCacheBean
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueListener
 import pl.jwizard.jwl.i18n.I18nBean
@@ -21,11 +22,13 @@ import java.util.concurrent.TimeUnit
  *
  * @property i18nButton The internationalization bean used for translating button labels.
  * @property eventQueue The event queue manager used for handling events.
+ * @property botEmojisCache Cache containing the bot's custom emojis.
  * @author Miłosz Gilga
  */
 abstract class ButtonInteractionHandler(
 	private val i18nButton: I18nBean,
-	private val eventQueueBean: EventQueueBean,
+	private val eventQueue: EventQueueBean,
+	private val botEmojisCache: BotEmojisCacheBean,
 ) : EventQueueListener<ButtonInteractionEvent>, Component() {
 
 	/**
@@ -64,7 +67,13 @@ abstract class ButtonInteractionHandler(
 		style: ButtonStyle = ButtonStyle.SECONDARY,
 	): Button {
 		val label = i18nButton.t(interactionButton.i18nSource, lang, args)
-		return ButtonImpl(createComponentId(interactionButton.id), label, style, disabled, null)
+		return ButtonImpl(
+			createComponentId(interactionButton.id),
+			label,
+			style,
+			disabled,
+			interactionButton.emoji?.toEmoji(botEmojisCache)
+		)
 	}
 
 	/**

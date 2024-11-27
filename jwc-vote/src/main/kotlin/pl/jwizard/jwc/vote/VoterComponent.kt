@@ -19,6 +19,7 @@ import pl.jwizard.jwc.core.i18n.source.I18nVotingSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
+import pl.jwizard.jwc.core.jda.emoji.BotEmojisCacheBean
 import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.floatingSecToMin
@@ -36,6 +37,7 @@ import java.util.concurrent.CompletableFuture
  * @property response Contains the response details and messages for the vote.
  * @property voterContent The content to process after a successful vote.
  * @property voterEnvironment The environment settings related to voting, including configurations or metadata.
+ * @property botEmojisCache Cache containing the bot's custom emojis.
  * @author Miłosz Gilga
  */
 abstract class VoterComponent<T : Any>(
@@ -43,7 +45,8 @@ abstract class VoterComponent<T : Any>(
 	private val response: I18nVoterResponse<T>,
 	private val voterContent: VoterContent<T>,
 	private val voterEnvironment: VoterEnvironmentBean,
-) : ButtonInteractionHandler(voterEnvironment.i18n, voterEnvironment.eventQueue) {
+	private val botEmojisCache: BotEmojisCacheBean,
+) : ButtonInteractionHandler(voterEnvironment.i18n, voterEnvironment.eventQueue, botEmojisCache) {
 
 	companion object {
 		private val log = logger<VoterComponent<*>>()
