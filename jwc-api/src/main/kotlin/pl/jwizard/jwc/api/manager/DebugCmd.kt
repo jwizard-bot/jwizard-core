@@ -35,8 +35,8 @@ import pl.jwizard.jwl.vcs.VcsRepository
 import java.util.*
 
 /**
- * Command class responsible for displaying debug information about the bot, system, and Lavalink client status. This
- * command provides details such as memory usage, build version, and Lavalink nodes information.
+ * Command class responsible for displaying debug information about the bot, system, and audio client status. This
+ * command provides details such as memory usage, build version, and audio nodes information.
  *
  * @property deploymentSupplier Provides deployment details from version control, including version and commit info.
  * @property vcsConfigBean Handles version control configuration and builds URLs for specific VCS snapshots.
@@ -51,8 +51,8 @@ class DebugCmd(
 ) : ManagerCommandBase(commandEnvironment), RefreshableContent<CommandContext> {
 
 	/**
-	 * Executes the debug command, generating a response with detailed information about the bot, system, and Lavalink
-	 * client status. It also adds a refresh button for updating the information.
+	 * Executes the debug command, generating a response with detailed information about the bot, system, and audio client
+	 * status. It also adds a refresh button for updating the information.
 	 *
 	 * @param context The context in which the command is executed.
 	 * @param response The response object that will send the embed message.
@@ -97,8 +97,8 @@ class DebugCmd(
 	}
 
 	/**
-	 * Generates the debug message containing information about the bot's version, system memory usage, and Lavalink
-	 * client status. It also provides a list of available Lavalink nodes with memory and CPU usage details.
+	 * Generates the debug message containing information about the bot's version, system memory usage, and audio client
+	 * status. It also provides a list of available audio nodes with memory and CPU usage details.
 	 *
 	 * @param context The context in which the command is executed.
 	 * @return The generated embed message with debug information.

@@ -13,7 +13,7 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.util.logger
 
 /**
- * Adapter class that listens to Lavalink node events and delegates audio management tasks to the appropriate music
+ * Adapter class that listens to audio node events and delegates audio management tasks to the appropriate music
  * managers and schedulers. Handles events like track start, track end, and WebSocket disconnection to ensure smooth
  * audio playback.
  *
@@ -32,7 +32,7 @@ class AudioNodeListenerAdapter(
 	}
 
 	/**
-	 * Triggered when a track starts playing on a Lavalink node. It delegates the event to the audio scheduler to handle
+	 * Triggered when a track starts playing on an audio node. It delegates the event to the audio scheduler to handle
 	 * the start of the track.
 	 *
 	 * @param event The event containing track and node information.
@@ -43,7 +43,7 @@ class AudioNodeListenerAdapter(
 	}
 
 	/**
-	 * Triggered when a track ends playing on a Lavalink node. It delegates the event to the audio scheduler to handle
+	 * Triggered when a track ends playing on an audio node. It delegates the event to the audio scheduler to handle
 	 * post-track processing.
 	 *
 	 * @param event The event containing track, node, and end reason information.
@@ -54,7 +54,7 @@ class AudioNodeListenerAdapter(
 	}
 
 	/**
-	 * Triggered when a track gets stuck on a Lavalink node. It delegates the event to the audio scheduler to handle the
+	 * Triggered when a track gets stuck on an audio node. It delegates the event to the audio scheduler to handle the
 	 * stuck track scenario.
 	 *
 	 * @param event The event containing track and node information.
@@ -65,7 +65,7 @@ class AudioNodeListenerAdapter(
 	}
 
 	/**
-	 * Triggered when an exception occurs during track playback on a Lavalink node. It delegates the event to the audio
+	 * Triggered when an exception occurs during track playback on an audio node. It delegates the event to the audio
 	 * scheduler to handle the exception.
 	 *
 	 * @param event The event containing track, node, and exception information.

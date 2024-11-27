@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.interactions.components.LayoutComponent
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu
 import pl.jwizard.jwc.core.i18n.source.I18nVotingSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
-import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
+import pl.jwizard.jwc.core.jda.color.JdaColorsCacheBean
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
@@ -64,7 +64,7 @@ abstract class SelectSpinnerMenu<T : MenuOption>(
 	 * with the selection menu.
 	 *
 	 * @param i18nBean The internationalization bean for localized strings.
-	 * @param jdaColorStoreBean The bean for managing colors used in JDA.
+	 * @param jdaColorsCache The bean for managing colors used in JDA.
 	 * @param i18nSource The source for localized description text.
 	 * @param minValues The minimum number of values that can be selected.
 	 * @param maxValues The maximum number of values that can be selected.
@@ -72,7 +72,7 @@ abstract class SelectSpinnerMenu<T : MenuOption>(
 	 */
 	fun createMenuComponent(
 		i18nBean: I18nBean,
-		jdaColorStoreBean: JdaColorStoreBean,
+		jdaColorsCache: JdaColorsCacheBean,
 		i18nSource: I18nLocaleSource,
 		minValues: Int = 1,
 		maxValues: Int = 1,
@@ -86,7 +86,7 @@ abstract class SelectSpinnerMenu<T : MenuOption>(
 				context.guildLanguage
 			),
 		)
-		val message = MessageEmbedBuilder(i18nBean, jdaColorStoreBean, context)
+		val message = MessageEmbedBuilder(i18nBean, jdaColorsCache, context)
 			.setDescription(i18nSource, args)
 			.appendDescription(trimmedOptions.joinToString("") { mdList(it.formattedToEmbed, eol = true) })
 			.setColor(JdaColor.PRIMARY)

@@ -21,7 +21,7 @@ import pl.jwizard.jwl.util.logger
 
 /**
  * Command for resetting the audio player's volume to the default level. This command resets the current volume of the
- * Lavalink player to a predefined default value specified in the guild's properties.
+ * audio player to a predefined default value specified in the guild's properties.
  *
  * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
@@ -38,7 +38,7 @@ class ResetPlayerVolumeCmd(
 	/**
 	 * Executes the command to reset the volume of the music player.
 	 *
-	 * Retrieves the default volume level from the guild's properties and resets the Lavalink player volume to this value
+	 * Retrieves the default volume level from the guild's properties and resets the audio player volume to this value
 	 * asynchronously. Sends the result of the operation to the user through the response object.
 	 *
 	 * @param context The context of the command, including user interaction details.

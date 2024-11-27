@@ -76,10 +76,11 @@ link:
     shards: '%s/shards'
     error-code: '%s/error-codes/%d'
 
-lavalink:
-  timeout-ms: 5000
-  search:
-    content-prefix: 'ytmsearch: %s'
+audio:
+  server:
+    timeout-ms: 5000 # 5s
+    search:
+      default-content-prefix: 'ytmsearch: %s'
 
 radio:
   playback:

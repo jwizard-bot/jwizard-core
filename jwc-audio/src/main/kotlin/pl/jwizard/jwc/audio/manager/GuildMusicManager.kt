@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit
  * @property commandContext The context of the command being executed.
  * @property future The future response associated with the command for async handling.
  * @property bean A container for various utility beans required for the manager.
- * @property audioClient The client responsible for managing Lavalink nodes and audio connections.
+ * @property audioClient The client responsible for managing audio server nodes and audio connections.
  * @author Miłosz Gilga
  */
 class GuildMusicManager(

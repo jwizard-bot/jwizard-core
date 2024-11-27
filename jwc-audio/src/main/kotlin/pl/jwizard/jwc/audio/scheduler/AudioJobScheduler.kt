@@ -35,7 +35,7 @@ interface AudioJobScheduler {
 	 * such as updating the UI or tracking playback statistics.
 	 *
 	 * @param track The track that has started playing.
-	 * @param audioNode The Lavalink node responsible for handling the track.
+	 * @param audioNode The audio node responsible for handling the track.
 	 */
 	fun onAudioStart(track: Track, audioNode: AudioNode)
 
@@ -46,7 +46,7 @@ interface AudioJobScheduler {
 	 * transition to the next track in the queue. It also provides the reason for the end.
 	 *
 	 * @param lastTrack The track that has just finished playing.
-	 * @param audioNode The Lavalink node that handled the playback of the track.
+	 * @param audioNode The audio node that handled the playback of the track.
 	 * @param endReason The reason why the track ended, such as completion or being skipped.
 	 */
 	fun onAudioEnd(lastTrack: Track, audioNode: AudioNode, endReason: AudioTrackEndReason)
@@ -58,7 +58,7 @@ interface AudioJobScheduler {
 	 * the audio source or network.
 	 *
 	 * @param track The track that has become stuck.
-	 * @param audioNode The Lavalink node responsible for the stuck playback.
+	 * @param audioNode The audio node responsible for the stuck playback.
 	 */
 	fun onAudioStuck(track: Track, audioNode: AudioNode)
 
@@ -69,7 +69,7 @@ interface AudioJobScheduler {
 	 * take appropriate actions such as logging the error or notifying the user.
 	 *
 	 * @param track The track that caused the exception.
-	 * @param audioNode The Lavalink node that was handling the track.
+	 * @param audioNode The audio node that was handling the track.
 	 * @param exception The exception that was thrown during playback.
 	 */
 	fun onAudioException(track: Track, audioNode: AudioNode, exception: TrackException)

@@ -120,7 +120,7 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	}
 
 	/**
-	 * Creates an asynchronous handler for the Lavalink player updates.
+	 * Creates an asynchronous handler for the audio player updates.
 	 *
 	 * This method sets up an async handler using a hook to manage the update flow, which can then be processed for
 	 * either success or failure.

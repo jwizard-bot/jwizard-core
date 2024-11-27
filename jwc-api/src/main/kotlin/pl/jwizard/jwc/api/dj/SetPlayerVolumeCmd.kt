@@ -24,7 +24,7 @@ import pl.jwizard.jwl.util.logger
 /**
  * Command to set the volume of the music player.
  *
- * This command allows users to adjust the volume of the Lavalink player within a valid range. It checks if the volume
+ * This command allows users to adjust the volume of the audio player within a valid range. It checks if the volume
  * provided by the user is within the acceptable range and updates the player's volume if valid.
  *
  * @param commandEnvironment The environment context for the command execution.
@@ -40,7 +40,7 @@ class SetPlayerVolumeCmd(
 	}
 
 	/**
-	 * Executes the command to set a new volume for the Lavalink player.
+	 * Executes the command to set a new volume for the audio player.
 	 *
 	 * Retrieves the volume level from the command arguments, validates it against the maximum allowable volume (defined
 	 * in the bot properties), and sets the player's volume if the value is valid. If the provided volume is outside the
