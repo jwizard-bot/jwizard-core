@@ -11,9 +11,9 @@ import net.dv8tion.jda.api.interactions.components.ActionRow
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.ManagerCommandBase
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.interaction.component.RefreshableComponent
 import pl.jwizard.jwc.command.interaction.component.RefreshableContent
 import pl.jwizard.jwc.command.reflect.JdaCommand
+import pl.jwizard.jwc.core.config.DeploymentDetails
 import pl.jwizard.jwc.core.config.spi.VcsDeploymentSupplier
 import pl.jwizard.jwc.core.i18n.source.I18nActionSource
 import pl.jwizard.jwc.core.i18n.source.I18nSystemSource
@@ -104,9 +104,8 @@ class DebugCmd(
 	 * @return The generated embed message with debug information.
 	 */
 	private fun createDebugMessage(context: CommandContext): MessageEmbed {
-		val repository = VcsRepository.JWIZARD_CORE
-		val deploymentDetails = deploymentSupplier.getDeploymentDetails(vcsConfigBean.getRepositoryName(repository))
-		val (name, url) = vcsConfigBean.createSnapshotUrl(repository, deploymentDetails?.longSHA)
+		val (coreUrl, details) = getDeploymentAppData(VcsRepository.JWIZARD_CORE)
+		val (audioClientUrl) = getDeploymentAppData(VcsRepository.JWIZARD_AUDIO_CLIENT)
 
 		val runtime = Runtime.getRuntime()
 		val totalMemory = runtime.maxMemory()
@@ -115,18 +114,18 @@ class DebugCmd(
 
 		val messageBuilder = createEmbedMessage(context)
 			.setTitle(I18nSystemSource.DEBUG_INFO_HEADER)
-			.setKeyValueField(I18nSystemSource.COMPILATION_VERSION, if (url != null) mdLink(name, url) else name)
+			.setKeyValueField(I18nSystemSource.COMPILATION_VERSION, coreUrl)
 			.setSpace()
-			.setKeyValueField(I18nSystemSource.DEPLOYMENT_DATE, deploymentDetails?.lastUpdatedUtc.toString())
+			.setKeyValueField(I18nSystemSource.DEPLOYMENT_DATE, details?.lastUpdatedUtc.toString())
 
 		for ((index, entry) in SystemProperty.entries.withIndex()) {
-			messageBuilder.setKeyValueField(entry.i18nSystemSource, environmentBean.getProperty(entry.botProperty))
+			messageBuilder.setKeyValueField(entry.i18nSystemSource, environment.getProperty(entry.botProperty))
 			if (index % 2 == 0) {
 				messageBuilder.setSpace()
 			}
 		}
 		val availableNodes = commandEnvironment.audioClient.availableNodes
-		val lavaNodesInfo = availableNodes.joinToString("\n") {
+		val audioNodesInfo = availableNodes.joinToString("\n") {
 			val memory = it.stats?.memory
 			val usedMem = formatBytes(memory?.used)
 			val maxMem = formatBytes(memory?.reservable)
@@ -152,9 +151,27 @@ class DebugCmd(
 			)
 			.setKeyValueField(I18nSystemSource.JDA_VERSION, JDAInfo.VERSION.versionFormat)
 			.setSpace()
-			.setKeyValueField(I18nSystemSource.LAVALINK_CLIENT_VERSION, "?" /* TODO */)
-			.setKeyValueField(I18nSystemSource.AVAILABLE_LAVALINK_NODES, lavaNodesInfo, inline = false)
+			.setKeyValueField(I18nSystemSource.AUDIO_CLIENT_VERSION, audioClientUrl)
+			.setKeyValueField(I18nSystemSource.AVAILABLE_AUDIO_NODES, audioNodesInfo, inline = false)
 			.setColor(JdaColor.PRIMARY)
 			.build()
+	}
+
+	/**
+	 * Retrieves deployment application data based on the given VCS repository.
+	 *
+	 * This method fetches deployment details for the provided [VcsRepository] and generates a Markdown link pointing to
+	 * a snapshot URL, if available. The method returns a pair containing the Markdown link (or `null` if not applicable)
+	 * and the deployment details.
+	 *
+	 * @param vcsRepository The VCS (Version Control System) repository from which to retrieve deployment data.
+	 * @return A pair consisting of:
+	 *         - A Markdown-formatted link to the deployment snapshot (or `null` if no link can be created).
+	 *         - The associated `DeploymentDetails`, or `null` if no deployment details are available.
+	 */
+	private fun getDeploymentAppData(vcsRepository: VcsRepository): Pair<String?, DeploymentDetails?> {
+		val deploymentDetails = deploymentSupplier.getDeploymentDetails(vcsConfigBean.getRepositoryName(vcsRepository))
+		val (name, url) = vcsConfigBean.createSnapshotUrl(vcsRepository, deploymentDetails?.longSHA)
+		return Pair(if (name != null) mdLink(name, url) else null, deploymentDetails)
 	}
 }
