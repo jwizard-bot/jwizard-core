@@ -6,18 +6,18 @@ package pl.jwizard.jwc.persistence.sql
 
 import pl.jwizard.jwc.command.spi.CommandDataSupplier
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
-import pl.jwizard.jwl.persistence.sql.JdbcKtTemplateBean
+import pl.jwizard.jwl.persistence.sql.JdbiQueryBean
 import java.math.BigInteger
 
 /**
  * An IoC component that implements the [CommandDataSupplier] interface. This bean provides functionality to retrieve
- * command-related data from a SQL-based persistence layer using the [JdbcKtTemplateBean].
+ * command-related data from a SQL-based persistence layer using the [JdbiQueryBean].
  *
- * @property jdbcKtTemplateBean A custom template for executing SQL queries and retrieving results.
+ * @property jdbiQuery Bean for executing SQL queries.
  * @author Miłosz Gilga
  */
 @SingletonComponent
-class CommandDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean) : CommandDataSupplier {
+class CommandDataSupplierBean(private val jdbiQuery: JdbiQueryBean) : CommandDataSupplier {
 
 	/**
 	 * Retrieves a list of disabled command Ids for a specific guild, based on whether slash commands are enabled or not.
@@ -28,14 +28,14 @@ class CommandDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean
 	 * @return A list of command Ids that are disabled for the specified guild.
 	 */
 	override fun getDisabledGuildCommands(guildDbId: BigInteger, slashCommands: Boolean): List<Long> {
-		val sql = jdbcKtTemplateBean.parse(
+		val sql = jdbiQuery.parse(
 			input = """
 				SELECT command_id FROM guilds_disabled_commands
 				WHERE guild_id = ? AND {{disabledColName}} = TRUE
 			""",
 			replacements = mapOf("disabledColName" to if (slashCommands) "slash_disabled " else "prefix_disabled")
 		)
-		return jdbcKtTemplateBean.queryForList(sql, Long::class, guildDbId)
+		return jdbiQuery.queryForList(sql, Long::class, guildDbId)
 	}
 
 	/**
@@ -47,13 +47,13 @@ class CommandDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean
 	 * @return `true` if the command is disabled for the specified guild, `false` otherwise.
 	 */
 	override fun isCommandDisabled(guildDbId: BigInteger, commandId: Long, slashCommand: Boolean): Boolean {
-		val sql = jdbcKtTemplateBean.parse(
+		val sql = jdbiQuery.parse(
 			input = """
 				SELECT COUNT(*) > 0 FROM guilds_disabled_commands
 				WHERE command_id = ? AND guild_id = ? AND {{disabledColName}} = TRUE
 			""",
 			replacements = mapOf("disabledColName" to if (slashCommand) "slash_disabled" else "prefix_disabled"),
 		)
-		return jdbcKtTemplateBean.queryForBool(sql, commandId, guildDbId)
+		return jdbiQuery.queryForBool(sql, commandId, guildDbId)
 	}
 }

@@ -7,17 +7,17 @@ package pl.jwizard.jwc.persistence.sql
 import pl.jwizard.jwc.core.config.DeploymentDetails
 import pl.jwizard.jwc.core.config.spi.VcsDeploymentSupplier
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
-import pl.jwizard.jwl.persistence.sql.JdbcKtTemplateBean
+import pl.jwizard.jwl.persistence.sql.JdbiQueryBean
 
 /**
  * Implementation of [VcsDeploymentSupplier] that interacts with a relational database to retrieve deployment
  * information about specific repositories.
  *
- * @property jdbcKtTemplateBean A custom template for executing SQL queries and retrieving results.
+ * @property jdbiQuery Bean for executing SQL queries.
  * @author Miłosz Gilga
  */
 @SingletonComponent
-class VcsDeploymentSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean) : VcsDeploymentSupplier {
+class VcsDeploymentSupplierBean(private val jdbiQuery: JdbiQueryBean) : VcsDeploymentSupplier {
 
 	/**
 	 * Retrieves the latest deployment version for the specified repository from the database.
@@ -30,7 +30,7 @@ class VcsDeploymentSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBe
 	 */
 	override fun getDeploymentVersion(repositoryName: String): String? {
 		val sql = "SELECT latest_version_long FROM projects WHERE name = ?"
-		return jdbcKtTemplateBean.queryForNullableObject(sql, String::class, repositoryName)
+		return jdbiQuery.queryForNullableObject(sql, String::class, repositoryName)
 	}
 
 	/**
@@ -44,9 +44,9 @@ class VcsDeploymentSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBe
 	 */
 	override fun getDeploymentDetails(repositoryName: String): DeploymentDetails? {
 		val sql = """
-			SELECT latest_version_long longSHA, last_updated_utc
+			SELECT latest_version_long longSHA, last_updated_utc lastUpdatedUtc
 			FROM projects WHERE name = ?
 		"""
-		return jdbcKtTemplateBean.queryForDataClass(sql, DeploymentDetails::class, repositoryName)
+		return jdbiQuery.queryForObject(sql, DeploymentDetails::class, repositoryName)
 	}
 }

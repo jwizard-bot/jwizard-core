@@ -6,18 +6,18 @@ package pl.jwizard.jwc.persistence.sql
 
 import pl.jwizard.jwc.command.spi.ModuleDataSupplier
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
-import pl.jwizard.jwl.persistence.sql.JdbcKtTemplateBean
+import pl.jwizard.jwl.persistence.sql.JdbiQueryBean
 import java.math.BigInteger
 
 /**
  * An IoC component that implements the [ModuleDataSupplier] interface. This bean provides functionality for
- * retrieving module-related data from a SQL-based persistence layer using the [JdbcKtTemplateBean].
+ * retrieving module-related data from a SQL-based persistence layer using the [JdbiQueryBean].
  *
- * @property jdbcKtTemplateBean A custom template for executing SQL queries and retrieving results.
+ * @property jdbiQuery Bean for executing SQL queries.
  * @author Miłosz Gilga
  */
 @SingletonComponent
-class ModuleDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean) : ModuleDataSupplier {
+class ModuleDataSupplierBean(private val jdbiQuery: JdbiQueryBean) : ModuleDataSupplier {
 
 	/**
 	 * Retrieves a list of module IDs that are disabled for a specific guild.
@@ -30,7 +30,7 @@ class ModuleDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean)
 	 */
 	override fun getDisabledGuildModules(guildDbId: BigInteger): List<Long> {
 		val sql = "SELECT module_id FROM guilds_disabled_modules WHERE guild_id = ?"
-		return jdbcKtTemplateBean.queryForList(sql, Long::class, guildDbId)
+		return jdbiQuery.queryForList(sql, Long::class, guildDbId)
 	}
 
 	/**
@@ -45,6 +45,6 @@ class ModuleDataSupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean)
 	 */
 	override fun isDisabled(moduleId: Long, guildDbId: BigInteger): Boolean {
 		val sql = "SELECT COUNT(*) > 0 FROM guilds_disabled_modules WHERE module_id = ? AND guild_id = ?"
-		return jdbcKtTemplateBean.queryForBool(sql, moduleId, guildDbId)
+		return jdbiQuery.queryForBool(sql, moduleId, guildDbId)
 	}
 }

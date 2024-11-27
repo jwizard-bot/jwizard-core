@@ -6,7 +6,7 @@ package pl.jwizard.jwc.persistence.sql
 
 import pl.jwizard.jwc.core.property.spi.RemotePropertySupplier
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
-import pl.jwizard.jwl.persistence.sql.JdbcKtTemplateBean
+import pl.jwizard.jwl.persistence.sql.JdbiQueryBean
 import kotlin.reflect.KClass
 
 /**
@@ -15,11 +15,11 @@ import kotlin.reflect.KClass
  *
  * This class interacts with a database to fetch global properties and specific properties for a given guild.
  *
- * @property jdbcKtTemplateBean The bean responsible for JDBC operations.
+ * @property jdbiQuery Bean for executing SQL queries.
  * @author Miłosz Gilga
  */
 @SingletonComponent
-class RemotePropertySupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateBean) : RemotePropertySupplier {
+class RemotePropertySupplierBean(private val jdbiQuery: JdbiQueryBean) : RemotePropertySupplier {
 
 	/**
 	 * Retrieves a specific property for a given guild from the database.
@@ -34,11 +34,11 @@ class RemotePropertySupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateB
 	 * @return The property value cast to type [T], or null if no value is found.
 	 */
 	override fun <T : Any> getProperty(columnName: String, guildId: Long, type: KClass<T>): T? {
-		val sql = jdbcKtTemplateBean.parse(
+		val sql = jdbiQuery.parse(
 			"SELECT {{columnName}} FROM guilds WHERE discord_id = ?",
 			mapOf("columnName" to columnName)
 		)
-		return jdbcKtTemplateBean.queryForNullableObject(sql, type, guildId)
+		return jdbiQuery.queryForNullableObject(sql, type, guildId)
 	}
 
 	/**
@@ -53,10 +53,10 @@ class RemotePropertySupplierBean(private val jdbcKtTemplateBean: JdbcKtTemplateB
 	 * @return A map containing the column names as keys and their corresponding values as map values.
 	 */
 	override fun getCombinedProperties(columnNames: List<String>, guildId: Long): Map<String, Any?> {
-		val sql = jdbcKtTemplateBean.parse(
+		val sql = jdbiQuery.parse(
 			"SELECT {{columnNames}} FROM guilds WHERE discord_id = ?",
 			mapOf("columnNames" to columnNames.joinToString(","))
 		)
-		return jdbcKtTemplateBean.queryForMap(sql, guildId)
+		return jdbiQuery.queryForSingleMap(sql, guildId)
 	}
 }
