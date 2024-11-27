@@ -34,8 +34,6 @@ allprojects {
 		mavenCentral()
 		mavenLocal()
 		maven { url = uri('https://m2.dv8tion.net/releases') }
-		maven { url = uri('https://maven.lavalink.dev/snapshots') }
-		maven { url = uri('https://maven.lavalink.dev/releases') }
 		maven { url = uri('https://jitpack.io') }
 		maven {
 			url = uri('https://m2.miloszgilga.pl/private')
