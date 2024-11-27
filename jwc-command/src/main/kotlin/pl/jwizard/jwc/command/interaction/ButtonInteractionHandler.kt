@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
  * buttons and managing interaction events.
  *
  * @property i18nButton The internationalization bean used for translating button labels.
- * @property eventQueueBean The event queue manager used for handling events.
+ * @property eventQueue The event queue manager used for handling events.
  * @author Miłosz Gilga
  */
 abstract class ButtonInteractionHandler(
@@ -33,7 +33,7 @@ abstract class ButtonInteractionHandler(
 	 * process them accordingly.
 	 */
 	fun initEvent() {
-		eventQueueBean.waitForEvent(ButtonInteractionEvent::class, this)
+		eventQueue.waitForEvent(ButtonInteractionEvent::class, this)
 	}
 
 	/**
@@ -43,7 +43,7 @@ abstract class ButtonInteractionHandler(
 	 * @param timeoutSec The time in seconds to wait for an interaction before timing out.
 	 */
 	fun initTimeoutEvent(timeoutSec: Long) {
-		eventQueueBean.waitForScheduledEvent(ButtonInteractionEvent::class, this, timeoutSec, TimeUnit.SECONDS)
+		eventQueue.waitForScheduledEvent(ButtonInteractionEvent::class, this, timeoutSec, TimeUnit.SECONDS)
 	}
 
 	/**

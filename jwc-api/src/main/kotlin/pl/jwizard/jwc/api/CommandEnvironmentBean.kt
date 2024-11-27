@@ -6,7 +6,6 @@ package pl.jwizard.jwc.api
 
 import pl.jwizard.jwc.audio.client.DistributedAudioClientBean
 import pl.jwizard.jwc.audio.manager.MusicManagersBean
-import pl.jwizard.jwc.command.transport.LooselyTransportHandlerBean
 import pl.jwizard.jwc.core.jda.JdaShardManagerBean
 import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
@@ -35,7 +34,7 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 class CommandEnvironmentBean(
 	val environment: EnvironmentBean,
 	val i18n: I18nBean,
-	val jdaColorStore: JdaColorStoreBean,
+	val jdaColorStore: JdaColorsCacheBean,
 	val eventQueue: EventQueueBean,
 	val musicManagers: MusicManagersBean,
 	val audioClient: DistributedAudioClientBean,

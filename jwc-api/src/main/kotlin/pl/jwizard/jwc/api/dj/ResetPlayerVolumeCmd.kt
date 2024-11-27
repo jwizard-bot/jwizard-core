@@ -46,7 +46,7 @@ class ResetPlayerVolumeCmd(
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeDj(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
-		val defaultVolume = environmentBean.getGuildProperty<Int>(GuildProperty.PLAYER_VOLUME, context.guild.idLong)
+		val defaultVolume = environment.getGuildProperty<Int>(GuildProperty.PLAYER_VOLUME, context.guild.idLong)
 
 		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response, this)
 		asyncUpdatableHandler.performAsyncUpdate(

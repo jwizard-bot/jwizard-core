@@ -18,11 +18,11 @@ import java.net.http.HttpResponse
 /**
  * Bean for retrieving resources via HTTP. Uses [HttpClient] to fetch resources from an HTTP-based API.
  *
- * @property environmentBean Contains environment-specific properties such as API URLs.
+ * @property environment Contains environment-specific properties such as API URLs.
  * @author Miłosz Gilga
  */
 @SingletonComponent
-class HttpResourceRetrieverBean(private val environmentBean: EnvironmentBean) : ResourceRetriever(environmentBean) {
+class HttpResourceRetrieverBean(private val environment: EnvironmentBean) : ResourceRetriever(environment) {
 
 	companion object {
 		private val log = logger<HttpResourceRetrieverBean>()

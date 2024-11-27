@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.interactions.components.ActionRow
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.ManagerCommandBase
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.interaction.component.RefreshableComponent
 import pl.jwizard.jwc.command.interaction.component.RefreshableContent
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nActionSource
@@ -43,7 +42,7 @@ class ShardsCmd(
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeManager(context: CommandContext, response: TFutureResponse) {
-		val refreshableComponent = RefreshableComponent(i18nBean, eventQueueBean, this, context)
+		val refreshableComponent = createRefreshable(this, context)
 		refreshableComponent.initEvent()
 
 		val shardsLink = createLinkFromFragment(BotProperty.LINK_FRAGMENT_SHARDS)
@@ -91,9 +90,9 @@ class ShardsCmd(
 	 * @return A [MessageEmbed] containing shard details.
 	 */
 	private fun createShardsInfoMessage(context: CommandContext): MessageEmbed {
-		val clusterIdentifier = environmentBean.getProperty<String>(BotProperty.JDA_SHARDING_CLUSTER)
-		val shardsStartOffset = environmentBean.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_START)
-		val endStartOffset = environmentBean.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_END)
+		val clusterIdentifier = environment.getProperty<String>(BotProperty.JDA_SHARDING_CLUSTER)
+		val shardsStartOffset = environment.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_START)
+		val endStartOffset = environment.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_END)
 
 		val (runningShards, queuedShards, avgGatewayPing) = jdaShardManager.getShardDetails()
 		return createEmbedMessage(context)

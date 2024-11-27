@@ -110,7 +110,7 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 */
 	protected fun userIsWithBotOnAudioChannel(voiceState: GuildVoiceState, context: CommandContext) {
 		val botVoiceState = context.selfMember.voiceState
-		val superuserPermissions = environmentBean.getListProperty<String>(BotListProperty.JDA_SUPERUSER_PERMISSIONS)
+		val superuserPermissions = environment.getListProperty<String>(BotListProperty.JDA_SUPERUSER_PERMISSIONS)
 		val isRegularUser = superuserPermissions.none { context.author.hasPermission(Permission.valueOf(it)) }
 
 		// check, if regular user is on the same channel with bot (omit for admin and server moderator)
@@ -135,7 +135,7 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 		context: CommandContext,
 		response: TFutureResponse,
 		hook: AsyncUpdatableHook<P>,
-	) = AsyncUpdatableHandler(context, response, this::class, hook, exceptionTrackerStore)
+	) = AsyncUpdatableHandler(context, response, this::class, hook, exceptionTrackerHandler)
 
 	/**
 	 * Flag indicating whether the command requires the user to be in the same channel as the bot.

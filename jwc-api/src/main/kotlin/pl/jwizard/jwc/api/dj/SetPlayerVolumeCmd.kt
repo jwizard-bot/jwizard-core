@@ -52,7 +52,7 @@ class SetPlayerVolumeCmd(
 	 */
 	override fun executeDj(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val newVolume = context.getArg<Int>(Argument.VOLUME)
-		val maxVolume = environmentBean.getProperty<Int>(AppBaseProperty.PLAYER_MAX_VOLUME)
+		val maxVolume = environment.getProperty<Int>(AppBaseProperty.PLAYER_MAX_VOLUME)
 
 		val currentVolume = manager.cachedPlayer?.volume
 		if (newVolume < 0 || newVolume > maxVolume) {

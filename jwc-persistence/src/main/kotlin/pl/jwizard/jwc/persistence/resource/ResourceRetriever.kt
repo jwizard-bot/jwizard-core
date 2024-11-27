@@ -13,10 +13,10 @@ import java.io.InputStream
  * The class provides a method to retrieve resources as a pair containing the resource's filename and an [InputStream]
  * for accessing the resource's contents.
  *
- * @property environmentBean Provides access to application environment properties.
+ * @property environment Provides access to application environment properties.
  * @author Miłosz Gilga
  */
-abstract class ResourceRetriever(private val environmentBean: EnvironmentBean) {
+abstract class ResourceRetriever(private val environment: EnvironmentBean) {
 
 	/**
 	 * Retrieves a resource based on the specified [ResourceObject] and optional arguments.

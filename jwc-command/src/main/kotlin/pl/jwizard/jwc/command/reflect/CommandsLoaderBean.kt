@@ -18,13 +18,13 @@ import pl.jwizard.jwl.util.logger
  * It scans the classpath for these command classes and registers them into the command cache for later use.
  *
  * @property ioCKtContextFactory Provides access to the IoC context for retrieving beans.
- * @property commandsCacheBean The cache for commands.
+ * @property commandsCache The cache for commands.
  * @author Miłosz Gilga
  */
 @SingletonComponent
 class CommandsLoaderBean(
 	private val ioCKtContextFactory: IoCKtContextFactory,
-	private val commandsCacheBean: CommandsCacheBean,
+	private val commandsCache: CommandsCacheBean,
 ) : CommandsLoader {
 
 	companion object {
@@ -47,9 +47,9 @@ class CommandsLoaderBean(
 	 */
 	override fun loadClassesViaReflectionApi() {
 		scanner.findComponents().forEach { (command, clazz) ->
-			commandsCacheBean.addInstance(command.value, ioCKtContextFactory.getBean(clazz) as CommandHandler)
+			commandsCache.addInstance(command.value, ioCKtContextFactory.getBean(clazz) as CommandHandler)
 		}
-		val loadedCommands = commandsCacheBean.instancesContainer.keys.filterNotNull()
+		val loadedCommands = commandsCache.instancesContainer.keys.filterNotNull()
 		val allCommands = Command.entries.size
 		log.info("Load: {} commands ({} defined in library) classes.", loadedCommands.size, allCommands)
 		if (loadedCommands.size != allCommands) {

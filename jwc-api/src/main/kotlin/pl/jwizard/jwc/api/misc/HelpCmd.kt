@@ -90,9 +90,9 @@ class HelpCmd(
 	): List<MessageEmbed> {
 		val sortedCommands = commands.sorted()
 
-		val website = environmentBean.getProperty<String>(BotProperty.LINK_WEBSITE)
-		val statusPage = environmentBean.getProperty<String>(BotProperty.LINK_STATUS)
-		val repository = environmentBean.getProperty<String>(BotProperty.LINK_REPOSITORY)
+		val website = environment.getProperty<String>(BotProperty.LINK_WEBSITE)
+		val statusPage = environment.getProperty<String>(BotProperty.LINK_STATUS)
+		val repository = environment.getProperty<String>(BotProperty.LINK_REPOSITORY)
 		val docsLink = createLinkFromFragment(BotProperty.LINK_FRAGMENT_DOCS)
 
 		val parsedCommands = parseCommandsWithDescription(context, sortedCommands)
@@ -105,7 +105,7 @@ class HelpCmd(
 			mdLink(i18nBean.t(I18nResponseSource.BOT_SOURCE_CODE, lang), repository),
 			mdLink(i18nBean.t(I18nResponseSource.BOT_DOCUMENTATION, lang), docsLink),
 			"",
-			mdBold("${i18nBean.t(I18nResponseSource.COMMANDS, lang).uppercase(Locale.getDefault())} (${commands.size})"),
+			mdBold("${i18n.t(I18nResponseSource.COMMANDS, lang).uppercase(Locale.getDefault())} (${commands.size})"),
 		)
 		return createEmbedMessages(context, parsedCommands, descriptionElements)
 	}
@@ -130,10 +130,10 @@ class HelpCmd(
 			keyJoiner.add(details.textKey)
 			keyJoiner.add(" (${details.alias}) ")
 
-			details.argumentsDefinition?.let { keyJoiner.add(mdCode("<${i18nBean.t(it, lang)}>")) }
+			details.argumentsDefinition?.let { keyJoiner.add(mdCode("<${i18n.t(it, lang)}>")) }
 			descriptionJoiner.add(mdLink("[link]", commandLink))
 			descriptionJoiner.add(" ")
-			descriptionJoiner.add(i18nBean.t(details, lang))
+			descriptionJoiner.add(i18n.t(details, lang))
 
 			commands[keyJoiner.toString()] = descriptionJoiner.toString()
 		}
@@ -155,7 +155,7 @@ class HelpCmd(
 		descriptionElements: List<String>,
 	): List<MessageEmbed> {
 		val lang = context.guildLanguage
-		val paginatorChunkSize = environmentBean.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
+		val paginatorChunkSize = environment.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 		val listOfChunkedCommands = commands.entries.chunked(paginatorChunkSize).map { chunk ->
 			chunk.associate { it.toPair() }
 		}
@@ -163,7 +163,7 @@ class HelpCmd(
 
 		for (chunk in listOfChunkedCommands) {
 			val messageBuilder = createEmbedMessage(context)
-				.setTitle(i18nBean.t(I18nResponseSource.HELP, lang))
+				.setTitle(i18n.t(I18nResponseSource.HELP, lang))
 				.setDescription(descriptionElements.joinToString("\n"))
 
 			for ((commandKey, commandDescription) in chunk) {

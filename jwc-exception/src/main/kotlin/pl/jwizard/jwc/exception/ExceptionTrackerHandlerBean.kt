@@ -11,7 +11,7 @@ import pl.jwizard.jwc.core.config.spi.VcsDeploymentSupplier
 import pl.jwizard.jwc.core.i18n.source.I18nActionSource
 import pl.jwizard.jwc.core.i18n.source.I18nUtilSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
-import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
+import pl.jwizard.jwc.core.jda.color.JdaColorsCacheBean
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotProperty
@@ -32,20 +32,20 @@ import java.util.*
  * This class interacts with external sources to retrieve exception data, and formats messages for Discord embeds when
  * exceptions occur.
  *
- * @property environmentBean Provides access to application properties.
- * @property i18nBean Manages internationalization for exception messages.
- * @property jdaColorStoreBean Provides color settings for JDA embeds.
+ * @property environment Provides access to application properties.
+ * @property i18n Manages internationalization for exception messages.
+ * @property jdaColorsCache Provides color settings for JDA embeds.
  * @property vcsDeploymentSupplier Supplies version information from version control.
- * @property vcsConfigBean Creates URLs for specific snapshots in the version control system.
+ * @property vcsConfig Creates URLs for specific snapshots in the version control system.
  * @author Miłosz Gilga
  */
 @SingletonComponent
 class ExceptionTrackerHandlerBean(
-	private val environmentBean: EnvironmentBean,
-	private val i18nBean: I18nBean,
-	private val jdaColorStoreBean: JdaColorStoreBean,
+	private val environment: EnvironmentBean,
+	private val i18n: I18nBean,
+	private val jdaColorsCache: JdaColorsCacheBean,
 	private val vcsDeploymentSupplier: VcsDeploymentSupplier,
-	private val vcsConfigBean: VcsConfigBean,
+	private val vcsConfig: VcsConfigBean,
 ) {
 
 	/**
@@ -65,8 +65,8 @@ class ExceptionTrackerHandlerBean(
 		args: Map<String, Any?> = emptyMap(),
 	): MessageEmbed {
 		val repository = VcsRepository.JWIZARD_CORE
-		val deploymentVersion = vcsDeploymentSupplier.getDeploymentVersion(vcsConfigBean.getRepositoryName(repository))
-		val (name, url) = vcsConfigBean.createSnapshotUrl(repository, deploymentVersion)
+		val deploymentVersion = vcsDeploymentSupplier.getDeploymentVersion(vcsConfig.getRepositoryName(repository))
+		val (name, url) = vcsConfig.createSnapshotUrl(repository, deploymentVersion)
 
 		val tracker = i18nSource.tracker
 		val lang = context?.guildLanguage
@@ -76,7 +76,7 @@ class ExceptionTrackerHandlerBean(
 		stringJoiner.add("\n")
 		stringJoiner.addKeyValue(I18nUtilSource.COMPILATION_VERSION, if (url != null) mdLink(name, url) else name, lang)
 
-		return MessageEmbedBuilder(i18nBean, jdaColorStoreBean, context)
+		return MessageEmbedBuilder(i18n, jdaColorsCache, context)
 			.setDescription(i18nSource, args)
 			.appendDescription(stringJoiner.toString())
 			.setColor(JdaColor.ERROR)
@@ -102,7 +102,7 @@ class ExceptionTrackerHandlerBean(
 	 * @return An ActionRow containing a button that links to the exception details.
 	 */
 	fun createTrackerLink(i18nSource: I18nExceptionSource, context: CommandBaseContext? = null): ActionRow {
-		val detailsMessage = i18nBean.t(I18nActionSource.DETAILS, context?.guildLanguage)
+		val detailsMessage = i18n.t(I18nActionSource.DETAILS, context?.guildLanguage)
 		return ActionRow.of(Button.link(createTrackerUrl(i18nSource.tracker), detailsMessage))
 	}
 
@@ -123,8 +123,8 @@ class ExceptionTrackerHandlerBean(
 	 * @return A full URL string that links to the tracker details.
 	 */
 	private fun createTrackerUrl(tracker: Int): String {
-		val baseUrl = environmentBean.getProperty<String>(BotProperty.SERVICE_FRONT_URL)
-		val urlReferTemplate = environmentBean.getProperty<String>(BotProperty.LINK_FRAGMENT_ERROR_CODE)
+		val baseUrl = environment.getProperty<String>(BotProperty.SERVICE_FRONT_URL)
+		val urlReferTemplate = environment.getProperty<String>(BotProperty.LINK_FRAGMENT_ERROR_CODE)
 		return urlReferTemplate.format(baseUrl, tracker)
 	}
 
@@ -142,7 +142,7 @@ class ExceptionTrackerHandlerBean(
 		value: Any?,
 		lang: String?,
 	): StringJoiner {
-		add(i18nBean.t(key, lang))
+		add(i18n.t(key, lang))
 		add(": ")
 		add(value.toString())
 		return this

@@ -19,15 +19,15 @@ import pl.jwizard.jwc.core.property.guild.GuildProperty
 /**
  * Handles prefix commands received in messages.
  *
- * @property commandEventHandlerEnvironmentBean Stored all beans for command event handler.
+ * @property commandEventHandlerEnvironment Stored all beans for command event handler.
  * @author Miłosz Gilga
  * @see CommandEventHandler
  * @see MessageReceivedEvent
  */
 @JdaEventListenerBean
 class PrefixCommandEventHandlerBean(
-	private val commandEventHandlerEnvironmentBean: CommandEventHandlerEnvironmentBean,
-) : CommandEventHandler<MessageReceivedEvent>(commandEventHandlerEnvironmentBean) {
+	private val commandEventHandlerEnvironment: CommandEventHandlerEnvironmentBean,
+) : CommandEventHandler<MessageReceivedEvent>(commandEventHandlerEnvironment) {
 
 	companion object {
 		/**

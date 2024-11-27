@@ -58,7 +58,7 @@ class DebugCmd(
 	 * @param response The response object that will send the embed message.
 	 */
 	override fun executeManager(context: CommandContext, response: TFutureResponse) {
-		val refreshableComponent = RefreshableComponent(i18nBean, eventQueueBean, this, context)
+		val refreshableComponent = createRefreshable(this, context)
 		refreshableComponent.initEvent()
 
 		val actionRow = ActionRow.of(

@@ -20,22 +20,22 @@ import pl.jwizard.jwl.i18n.I18nBean
  *
  * This class processes autocomplete events and suggests possible options based on user input for command arguments.
  *
- * @property commandsCacheBean Provides access to stored command details for lookups.
- * @property i18nBean Handles internationalization to localize command argument options.
- * @property environmentBean Provides access to bot environment properties for configuration.
+ * @property commandsCache Provides access to stored command details for lookups.
+ * @property i18n Handles internationalization to localize command argument options.
+ * @property environment Provides access to bot environment properties for configuration.
  * @author Miłosz Gilga
  */
 @JdaEventListenerBean
 class SlashAutocompleteEventBean(
-	private val commandsCacheBean: CommandsCacheBean,
-	private val i18nBean: I18nBean,
-	private val environmentBean: EnvironmentBean,
+	private val commandsCache: CommandsCacheBean,
+	private val i18n: I18nBean,
+	private val environment: EnvironmentBean,
 ) : ListenerAdapter() {
 
 	/**
 	 * The maximum number of options to suggest in the autocomplete response.
 	 */
-	private val maxOptions = environmentBean.getProperty<Int>(BotProperty.JDA_INTERACTION_SLASH_AUTOCOMPLETE_MAX_OPTIONS)
+	private val maxOptions = environment.getProperty<Int>(BotProperty.JDA_INTERACTION_SLASH_AUTOCOMPLETE_MAX_OPTIONS)
 
 	/**
 	 * Handles the [CommandAutoCompleteInteractionEvent] triggered when a user types in an argument for a slash command.
@@ -57,7 +57,7 @@ class SlashAutocompleteEventBean(
 
 		val parsedChoices = commandArg.options
 			.filter { it.textKey.startsWith(event.focusedOption.value) }
-			.map { Choice(i18nBean.t(it, lang), it.textKey) }
+			.map { Choice(i18n.t(it, lang), it.textKey) }
 			.take(maxOptions)
 
 		event.replyChoices(parsedChoices).queue()
@@ -70,7 +70,7 @@ class SlashAutocompleteEventBean(
 	 * @param argument
 	 * @return A sequence of triples containing language tag, i18n key, and command argument.
 	 */
-	private fun Argument.composeCommandArgumentTags(argument: Argument) = i18nBean.t(argument)
+	private fun Argument.composeCommandArgumentTags(argument: Argument) = i18n.t(argument)
 		.map { (languageTag, i18nKey) -> Triple(languageTag, i18nKey, this) }
 
 	/**

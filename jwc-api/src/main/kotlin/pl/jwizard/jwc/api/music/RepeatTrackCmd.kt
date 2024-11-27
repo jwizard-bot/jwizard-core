@@ -56,7 +56,7 @@ class RepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandB
 	override fun executeMusic(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val repeatsCount = context.getArg<Int>(Argument.COUNT)
 
-		val multipleProperties = environmentBean.getGuildMultipleProperties(
+		val multipleProperties = environment.getGuildMultipleProperties(
 			guildProperties = listOf(GuildProperty.MIN_REPEATS_OF_TRACK, GuildProperty.MAX_REPEATS_OF_TRACK),
 			guildId = context.guild.idLong
 		)

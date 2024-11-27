@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.events.guild.GuildReadyEvent
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import pl.jwizard.jwc.core.jda.color.JdaColor
-import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
+import pl.jwizard.jwc.core.jda.color.JdaColorsCacheBean
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwc.core.property.guild.GuildProperty
@@ -27,7 +27,7 @@ import pl.jwizard.jwl.util.logger
 @JdaEventListenerBean
 class DjRoleGuildEventListenerBean(
 	private val environment: EnvironmentBean,
-	private val jdaColorStore: JdaColorStoreBean,
+	private val jdaColorStore: JdaColorsCacheBean,
 ) : ListenerAdapter() {
 
 	companion object {
@@ -72,7 +72,7 @@ class DjRoleGuildEventListenerBean(
 
 	/**
 	 * Generates the DJ role for the guild with the specified role name and applies the primary color from the
-	 * [JdaColorStoreBean].
+	 * [JdaColorsCacheBean].
 	 *
 	 * @param guild The guild for which the DJ role is being created.
 	 * @param roleName The name of the DJ role.

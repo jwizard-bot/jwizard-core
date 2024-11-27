@@ -54,7 +54,7 @@ class RemoveMemberTracksCmd(commandEnvironment: CommandEnvironmentBean) : DjComm
 	 */
 	override fun executeDj(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val userId = context.getArg<Long>(Argument.MEMBER)
-		val paginatorChunkSize = environmentBean.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
+		val paginatorChunkSize = environment.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 
 		val member = context.guild.members.find { it.idLong == userId }
 			?: throw UserNotFoundInGuildException(context, userId)

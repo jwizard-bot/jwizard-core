@@ -41,14 +41,14 @@ class ShowRadioStationsCmd(commandEnvironment: CommandEnvironmentBean) : Command
 		val radioStations = RadioStation.entries
 		val lang = context.guildLanguage
 
-		val paginatorChunkSize = environmentBean.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
+		val paginatorChunkSize = environment.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 		val responseBuilder = CommandResponse.Builder()
 
 		val message = if (radioStations.isNotEmpty()) {
 			val radioStationsPages = radioStations
 				.map {
-					val link = mdLink("[${i18nBean.t(I18nUtilSource.WEBSITE, lang)}]", it.website)
-					mdList("${i18nBean.t(it, lang)} $link")
+					val link = mdLink("[${i18n.t(I18nUtilSource.WEBSITE, lang)}]", it.website)
+					mdList("${i18n.t(it, lang)} $link")
 				}
 				.chunked(paginatorChunkSize)
 

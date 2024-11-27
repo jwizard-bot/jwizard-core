@@ -28,7 +28,7 @@ import kotlin.reflect.KClass
  * according to the maximum JDA interaction duration. If a time greater than the maximum interaction duration is
  * specified when creating the event, the duration will be automatically replaced with the maximum interaction time.
  *
- * @property environmentBean Provides access to environment properties such as interaction timeout.
+ * @property environment Provides access to environment properties such as interaction timeout.
  * @author Miłosz Gilga
  * @see JvmFixedPayloadThreadExecutor
  * @see EventListener
@@ -36,7 +36,7 @@ import kotlin.reflect.KClass
  */
 @JdaEventListenerBean
 class EventQueueBean(
-	private val environmentBean: EnvironmentBean
+	private val environment: EnvironmentBean
 ) : JvmFixedPayloadThreadExecutor<TEventPayload>(THREADS_COUNT), EventListener {
 
 	companion object {
@@ -66,7 +66,7 @@ class EventQueueBean(
 	 * Maximum time (in seconds) before an event listener is considered inactive. Retrieved from environment properties.
 	 */
 	private val timeToDelete =
-		environmentBean.getProperty<Long>(BotProperty.JDA_INTERACTION_MESSAGE_COMPONENT_DISABLE_DELAY_SEC)
+		environment.getProperty<Long>(BotProperty.JDA_INTERACTION_MESSAGE_COMPONENT_DISABLE_DELAY_SEC)
 
 	/**
 	 * Lookup for dynamically accessing methods related to event execution.

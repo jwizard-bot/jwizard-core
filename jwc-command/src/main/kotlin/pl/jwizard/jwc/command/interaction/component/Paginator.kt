@@ -22,17 +22,17 @@ import pl.jwizard.jwl.i18n.I18nBean
  * [MessageEmbed] objects.
  *
  * @property context The command context containing information about the command.
- * @property i18nBean The internationalization bean for translating button labels.
- * @property eventQueueBean The event queue manager for handling events.
- * @property jdaColorStoreBean The color store bean for managing colors in embeds.
+ * @property i18n The internationalization bean for translating button labels.
+ * @property eventQueue The event queue manager for handling events.
+ * @property jdaColorsCache The color store bean for managing colors in embeds.
  * @property pages The list of MessageEmbed objects representing the pages of content.
  * @author Miłosz Gilga
  */
 class Paginator(
 	private val context: CommandContext,
-	private val i18nBean: I18nBean,
-	private val eventQueueBean: EventQueueBean,
-	private val jdaColorStoreBean: JdaColorStoreBean,
+	private val i18n: I18nBean,
+	private val eventQueue: EventQueueBean,
+	private val jdaColorsCache: JdaColorsCacheBean,
 	private val pages: List<MessageEmbed>,
 ) : ButtonInteractionHandler(i18nBean, eventQueueBean) {
 

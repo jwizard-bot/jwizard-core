@@ -41,7 +41,7 @@ import pl.jwizard.jwl.util.logger
 @SingletonComponent
 final class JdaShardManagerBean(
 	private val environment: EnvironmentBean,
-	private val jdaColorStore: JdaColorStoreBean,
+	private val jdaColorStore: JdaColorsCacheBean,
 	private val ioCKtContextFactory: IoCKtContextFactory,
 ) : JvmDisposable {
 
@@ -111,8 +111,8 @@ final class JdaShardManagerBean(
 		jvmDisposableHook.initHook()
 
 		val clusterName = environment.getProperty<String>(BotProperty.JDA_SHARDING_CLUSTER)
-		log.info("******* Init: {} shards for cluster: {}.", shardsCount, clusterName)
-		log.info("******* Init shards manager from shard id: {} to: {}.", shardingMinId, shardingMaxId)
+		log.info("Init: {} shards for cluster: {}.", shardsCount, clusterName)
+		log.info("Init shards manager from shard id: {} to: {}.", shardingMinId, shardingMaxId)
 
 		log.info("Add bot into Discord server via link: {}", shardManager.getShardById(0)?.getInviteUrl(permissions))
 	}

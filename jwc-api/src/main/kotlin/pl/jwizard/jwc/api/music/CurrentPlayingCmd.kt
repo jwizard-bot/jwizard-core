@@ -10,7 +10,6 @@ import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.CommandContext
-import pl.jwizard.jwc.command.interaction.component.RefreshableComponent
 import pl.jwizard.jwc.command.interaction.component.RefreshableContent
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
@@ -50,7 +49,7 @@ class CurrentPlayingCmd(
 			i18nPosition = I18nAudioSource.CURRENT_PLAYING_TIMESTAMP,
 			track = playingTrack,
 		)
-		val refreshableComponent = RefreshableComponent(i18nBean, eventQueueBean, this, Pair(context, manager))
+		val refreshableComponent = createRefreshable(this, Pair(context, manager))
 		refreshableComponent.initEvent()
 
 		val commandResponse = CommandResponse.Builder()

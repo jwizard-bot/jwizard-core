@@ -26,16 +26,16 @@ import pl.jwizard.jwl.util.logger
  * [SlashCommandRegisterer] interface and interacts with the JDA API to create and update slash commands based on the
  * application's command configuration.
  *
- * @property i18nBean Provides internationalization functionality to localize command names and descriptions.
- * @property environmentBean Provides access to environment-specific properties for the guild.
- * @property commandsCacheBean Stores command instances and their details for reflection-based registration.
+ * @property i18n Provides internationalization functionality to localize command names and descriptions.
+ * @property environment Provides access to environment-specific properties for the guild.
+ * @property commandsCache Stores command instances and their details for reflection-based registration.
  * @author Miłosz Gilga
  */
 @SingletonComponent
 class SlashCommandRegistererBean(
-	private val i18nBean: I18nBean,
-	private val environmentBean: EnvironmentBean,
-	private val commandsCacheBean: CommandsCacheBean,
+	private val i18n: I18nBean,
+	private val environment: EnvironmentBean,
+	private val commandsCache: CommandsCacheBean,
 ) : SlashCommandRegisterer {
 
 	companion object {
@@ -50,7 +50,7 @@ class SlashCommandRegistererBean(
 	 * @param guild The Discord guild for which to register the slash commands.
 	 */
 	override fun registerGuildCommands(guild: Guild) {
-		val properties = environmentBean.getGuildMultipleProperties(
+		val properties = environment.getGuildMultipleProperties(
 			guildProperties = listOf(
 				GuildProperty.SLASH_ENABLED,
 				GuildProperty.LANGUAGE_TAG,
@@ -61,12 +61,12 @@ class SlashCommandRegistererBean(
 		if (!properties.getProperty<Boolean>(GuildProperty.SLASH_ENABLED)) {
 			return
 		}
-		val loadedCommands = commandsCacheBean.instancesContainer.map { it.key }
+		val loadedCommands = commandsCache.instancesContainer.map { it.key }
 		val commands = Command.entries
 		val parsedSlashCommands = commands
 			.filter { loadedCommands.contains(it) }
 			.map { details -> mapToCommandData(details, lang) }
-		log.info(
+		log.debug(
 			"Load: {} slash of: {} commands for guild: {} (disabled: {}).",
 			parsedSlashCommands.size,
 			commands.size,
@@ -88,18 +88,18 @@ class SlashCommandRegistererBean(
 	 * @return A [CommandData] object representing the command, ready to be registered with the guild.
 	 */
 	private fun mapToCommandData(command: Command, lang: String): CommandData {
-		val commandData = Commands.slash(command.textKey, i18nBean.t(command, lang))
+		val commandData = Commands.slash(command.textKey, i18n.t(command, lang))
 		commandData.addOptions(command.exactArguments.map {
 			val type = OptionType.valueOf(it.type.name)
 			val commandOption = OptionData(
 				type,
-				i18nBean.t(it, lang),
-				i18nBean.t(if (it.required) I18nUtilSource.REQUIRED else I18nUtilSource.OPTIONAL, lang),
+				i18n.t(it, lang),
+				i18n.t(if (it.required) I18nUtilSource.REQUIRED else I18nUtilSource.OPTIONAL, lang),
 				it.required,
 				type.canSupportChoices(),
 			)
 			if (!type.canSupportChoices() && it.options.isNotEmpty()) {
-				commandOption.addChoices(it.options.map { option -> Choice(i18nBean.t(option, lang), option.textKey) })
+				commandOption.addChoices(it.options.map { option -> Choice(i18n.t(option, lang), option.textKey) })
 			}
 			commandOption
 		})

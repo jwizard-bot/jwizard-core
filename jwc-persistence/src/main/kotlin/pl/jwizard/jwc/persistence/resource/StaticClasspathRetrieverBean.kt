@@ -17,11 +17,11 @@ import java.io.InputStream
  * Implementation of [ResourceRetriever] that retrieves resources specifically from the classpath. This class uses
  * Spring's [ClassPathResource] to access resources located in the classpath of the project.
  *
- * @param environmentBean Provides access to application environment properties.
+ * @param environment Provides access to application environment properties.
  * @author Miłosz Gilga
  */
 @SingletonComponent
-class StaticClasspathRetrieverBean(environmentBean: EnvironmentBean) : ResourceRetriever(environmentBean) {
+class StaticClasspathRetrieverBean(environment: EnvironmentBean) : ResourceRetriever(environment) {
 
 	companion object {
 		private val log = logger<HttpResourceRetrieverBean>()
@@ -30,7 +30,7 @@ class StaticClasspathRetrieverBean(environmentBean: EnvironmentBean) : ResourceR
 	/**
 	 * Prefix used for accessing static resources in the application.
 	 */
-	private val prefixes = environmentBean.getListProperty<String>(AppBaseListProperty.STATIC_RESOURCES_PREFIXES)
+	private val prefixes = environment.getListProperty<String>(AppBaseListProperty.STATIC_RESOURCES_PREFIXES)
 
 	/**
 	 * Retrieves an InputStream for a resource located in the classpath, specified by the [resourcePath]. Adds a leading

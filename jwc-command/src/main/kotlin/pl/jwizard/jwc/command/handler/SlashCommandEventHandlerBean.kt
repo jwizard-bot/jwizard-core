@@ -16,15 +16,15 @@ import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
 /**
  * Handles slash command interactions in a Discord server.
  *
- * @property commandEventHandlerEnvironmentBean Stored all beans for command event handler.
+ * @property commandEventHandlerEnvironment Stored all beans for command event handler.
  * @author Miłosz Gilga
  * @see CommandEventHandler
  * @see SlashCommandInteractionEvent
  */
 @JdaEventListenerBean
 class SlashCommandEventHandlerBean(
-	private val commandEventHandlerEnvironmentBean: CommandEventHandlerEnvironmentBean,
-) : CommandEventHandler<SlashCommandInteractionEvent>(commandEventHandlerEnvironmentBean) {
+	private val commandEventHandlerEnvironment: CommandEventHandlerEnvironmentBean,
+) : CommandEventHandler<SlashCommandInteractionEvent>(commandEventHandlerEnvironment) {
 
 	/**
 	 * Specifies the command type as SLASH for this handler.

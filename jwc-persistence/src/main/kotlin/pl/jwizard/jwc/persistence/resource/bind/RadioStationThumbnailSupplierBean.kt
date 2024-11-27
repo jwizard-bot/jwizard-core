@@ -15,12 +15,12 @@ import java.io.InputStream
  * Implementation of the [RadioStationThumbnailSupplier] interface for supplying thumbnail resources  of various radio
  * stations. This bean uses [StaticClasspathRetrieverBean] to retrieve the required resources from the classpath.
  *
- * @property staticClasspathRetrieverBean Injected bean to manage the retrieval of classpath resources.
+ * @property staticClasspathRetriever Injected bean to manage the retrieval of classpath resources.
  * @author Miłosz Gilga
  */
 @SingletonComponent
 class RadioStationThumbnailSupplierBean(
-	private val staticClasspathRetrieverBean: StaticClasspathRetrieverBean,
+	private val staticClasspathRetriever: StaticClasspathRetrieverBean,
 ) : RadioStationThumbnailSupplier {
 
 	/**
@@ -33,7 +33,7 @@ class RadioStationThumbnailSupplierBean(
 	 * @return A [Pair] containing the path of the resource and its [InputStream], or `null` if the resource is
 	 *         unavailable.
 	 */
-	override fun getThumbnailResource(radioStation: RadioStation) = staticClasspathRetrieverBean.getObject(
+	override fun getThumbnailResource(radioStation: RadioStation) = staticClasspathRetriever.getObject(
 		ResourceObject.RADIO_STATION,
 		radioStation.textKey,
 	)

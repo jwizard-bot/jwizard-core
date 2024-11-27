@@ -21,36 +21,36 @@ import java.util.concurrent.TimeUnit
  * the sending of messages to Discord channels and handles the removal of interaction components after a delay.
  *
  * @property jdaShardManager Manages multiple shards of the JDA bot, responsible for handling Discord API interactions.
- * @property environmentBean The environment configuration for the bot.
+ * @property environment The environment configuration for the bot.
  * @author Miłosz Gilga
  */
 @SingletonComponent
 class LooselyTransportHandlerBean(
 	private val jdaShardManager: JdaShardManagerBean,
-	private val environmentBean: EnvironmentBean,
+	private val environment: EnvironmentBean,
 ) : CleanupAfterIoCDestroy {
 
 	/**
 	 * The maximum number of embed messages that can be sent in a single interaction response.
 	 */
-	private val maxEmbedMessagesBuffer = environmentBean.getProperty<Int>(BotProperty.JDA_INTERACTION_MESSAGE_MAX_EMBEDS)
+	private val maxEmbedMessagesBuffer = environment.getProperty<Int>(BotProperty.JDA_INTERACTION_MESSAGE_MAX_EMBEDS)
 
 	/**
 	 * The maximum number of action rows allowed in an interaction response.
 	 */
-	private val maxActionRows = environmentBean.getProperty<Int>(BotProperty.JDA_INTERACTION_MESSAGE_ACTION_ROW_MAX_ROWS)
+	private val maxActionRows = environment.getProperty<Int>(BotProperty.JDA_INTERACTION_MESSAGE_ACTION_ROW_MAX_ROWS)
 
 	/**
 	 * The maximum number of components (like buttons) that can be included in a single action row.
 	 */
 	private val maxActionRowComponents =
-		environmentBean.getProperty<Int>(BotProperty.JDA_INTERACTION_MESSAGE_ACTION_ROW_MAX_COMPONENTS_IN_ROW)
+		environment.getProperty<Int>(BotProperty.JDA_INTERACTION_MESSAGE_ACTION_ROW_MAX_COMPONENTS_IN_ROW)
 
 	/**
 	 * The delay (in seconds) before remote interactions can be disabled after a command execution.
 	 */
 	private val remoteInteractionsDelay =
-		environmentBean.getProperty<Long>(BotProperty.JDA_INTERACTION_MESSAGE_COMPONENT_DISABLE_DELAY_SEC)
+		environment.getProperty<Long>(BotProperty.JDA_INTERACTION_MESSAGE_COMPONENT_DISABLE_DELAY_SEC)
 
 	/**
 	 * A thread responsible for removing interaction components from a message after a delay. It runs once per invocation

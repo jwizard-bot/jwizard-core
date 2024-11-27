@@ -38,8 +38,8 @@ abstract class RadioPlaybackMapperHandler(
 	private val environment: RadioPlaybackMapperEnvironment,
 ) : RadioPlaybackMessage {
 
-	private val i18nBean = environment.i18nBean
-	private val jdaColorStoreBean = environment.jdaColorStoreBean
+	private val i18n = environment.i18nBean
+	private val jdaColorStore = environment.jdaColorsCache
 	protected val objectMapper = environment.objectMapper
 
 	/**
@@ -76,10 +76,10 @@ abstract class RadioPlaybackMapperHandler(
 		val parsedResponse = parsePlaybackData(response.body(), radioStation)
 			?: throw RadioStationNotProvidedPlaybackDataException(context, radioStation)
 
-		val messageBuilder = MessageEmbedBuilder(i18nBean, jdaColorStoreBean, context)
+		val messageBuilder = MessageEmbedBuilder(i18n, jdaColorStore, context)
 			.setTitle(
 				i18nLocaleSource = I18nResponseSource.CURRENTLY_PLAYING_STREAM_CONTENT,
-				args = mapOf("radioStationName" to i18nBean.t(radioStation, context.guildLanguage)),
+				args = mapOf("radioStationName" to i18n.t(radioStation, context.guildLanguage)),
 			)
 			.setKeyValueField(I18nAudioSource.TRACK_NAME, parsedResponse.title)
 

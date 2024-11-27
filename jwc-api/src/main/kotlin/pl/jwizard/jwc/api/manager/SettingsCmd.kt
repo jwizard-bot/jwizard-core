@@ -36,8 +36,8 @@ class SettingsCmd(commandEnvironment: CommandEnvironmentBean) : ManagerCommandBa
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeManager(context: CommandContext, response: TFutureResponse) {
-		val paginatorChunkSize = environmentBean.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
-		val properties = environmentBean.getGuildMultipleProperties(
+		val paginatorChunkSize = environment.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
+		val properties = environment.getGuildMultipleProperties(
 			guildProperties = GuildProperty.entries.filter { it.placeholder.isNotEmpty() && it.converter != null },
 			guildId = context.guild.idLong,
 		)
@@ -53,10 +53,10 @@ class SettingsCmd(commandEnvironment: CommandEnvironmentBean) : ManagerCommandBa
 				if (column.placeholder.isEmpty() || converter == null) {
 					continue
 				}
-				val key = i18nBean.t(column, context.guildLanguage)
+				val key = i18n.t(column, context.guildLanguage)
 				val convertedValue = converter.mapper(value)
 				val parsedValue = if (converter.isI18nContent) {
-					i18nBean.t(convertedValue as I18nLocaleSource, context.guildLanguage)
+					i18n.t(convertedValue as I18nLocaleSource, context.guildLanguage)
 				} else {
 					convertedValue.toString()
 				}

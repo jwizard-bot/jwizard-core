@@ -7,7 +7,7 @@ package pl.jwizard.jwc.core.jda.embed
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.core.jda.color.JdaColor
-import pl.jwizard.jwc.core.jda.color.JdaColorStoreBean
+import pl.jwizard.jwc.core.jda.color.JdaColorsCacheBean
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.util.ext.avatarOrDefaultUrl
 import pl.jwizard.jwc.core.util.ext.name
@@ -20,12 +20,12 @@ import pl.jwizard.jwl.i18n.I18nLocaleSource
  *
  * @property context Optional context for the message, containing information like author details.
  * @property i18nBean Internationalization bean for translating messages.
- * @property jdaColorStoreBean Bean for accessing color configurations.
+ * @property jdaColorsCache Bean for accessing color configurations.
  * @author Miłosz Gilga
  */
 class MessageEmbedBuilder(
 	private val i18nBean: I18nBean,
-	private val jdaColorStoreBean: JdaColorStoreBean,
+	private val jdaColorsCache: JdaColorsCacheBean,
 	private val context: CommandBaseContext? = null,
 ) : EmbedBuilder() {
 
@@ -89,7 +89,7 @@ class MessageEmbedBuilder(
 	 * @param jdaColor The color to apply to the embed.
 	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
 	 */
-	fun setColor(jdaColor: JdaColor) = apply { super.setColor(jdaColorStoreBean.getHexColor(jdaColor)) }
+	fun setColor(jdaColor: JdaColor) = apply { super.setColor(jdaColorsCache.getHexColor(jdaColor)) }
 
 	/**
 	 * Sets the footer of the embed using internationalization.

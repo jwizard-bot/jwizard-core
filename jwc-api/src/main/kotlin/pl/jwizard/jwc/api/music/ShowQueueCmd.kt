@@ -47,7 +47,7 @@ class ShowQueueCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBas
 	 * @param response The future response object used to send the result of the command execution.
 	 */
 	override fun executeMusic(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
-		val paginatorChunkSize = environmentBean.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
+		val paginatorChunkSize = environment.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 
 		val scheduler = manager.state.queueTrackScheduler
 		val queue = scheduler.queue.iterable
@@ -85,7 +85,7 @@ class ShowQueueCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBas
 				valueJoiner.add(", ${mdCode(millisToDTF(track.duration))}")
 				sender?.let {
 					valueJoiner.add(", ")
-					valueJoiner.add(i18nBean.t(I18nAudioSource.TRACK_ADDED_BY, lang))
+					valueJoiner.add(i18n.t(I18nAudioSource.TRACK_ADDED_BY, lang))
 					valueJoiner.add(": ${mdBold(it.name)}")
 				}
 				messageBuilder.setKeyValueField(
@@ -101,7 +101,7 @@ class ShowQueueCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBas
 			}
 			messageBuilder
 				.setColor(JdaColor.PRIMARY)
-				.setFooter(I18nAudioSource.PLAYLIST_REPEATING_MODE, i18nBean.t(playlistRepeatDescription, lang))
+				.setFooter(I18nAudioSource.PLAYLIST_REPEATING_MODE, i18n.t(playlistRepeatDescription, lang))
 			embedMessages.add(messageBuilder.build())
 		}
 		val paginator = createPaginator(context, embedMessages)
