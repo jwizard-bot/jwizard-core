@@ -21,7 +21,6 @@ enum class BotEmoji(val displayName: String) {
 	REFRESH("refresh"),
 	CHECK_YES("check_yes"),
 	CHECK_NO("check_no"),
-	WEBSITE("website"),
 	;
 
 	/**
