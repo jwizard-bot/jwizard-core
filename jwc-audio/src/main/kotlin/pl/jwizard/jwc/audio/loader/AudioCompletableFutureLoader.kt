@@ -83,7 +83,7 @@ abstract class AudioCompletableFutureLoader(
 
 		val response = CommandResponse.Builder()
 			.addEmbedMessages(tracker.createTrackerMessage(details.i18nLocaleSource, context, details.i18nArguments))
-			.addActionRows(tracker.createTrackerLink(details.i18nLocaleSource))
+			.addActionRows(tracker.createTrackerLink(details.i18nLocaleSource, context))
 			.build()
 
 		log.jdaError(context, details.logMessage, *(details.logArguments.toTypedArray()))

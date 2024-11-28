@@ -4,6 +4,7 @@
  */
 package pl.jwizard.jwc.audio.manager
 
+import pl.jwizard.jwc.audio.client.DistributedAudioClientBean
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
@@ -18,10 +19,12 @@ import pl.jwizard.jwl.util.logger
  * inactivity in the music playback.
  *
  * @property guildMusicManager The guild music manager responsible for handling audio playback and state.
+ * @property audioClient The client responsible for managing audio server nodes and audio connections.
  * @author Miłosz Gilga
  */
 class LeaveAfterInactivityThread(
 	private val guildMusicManager: GuildMusicManager,
+	private val audioClient: DistributedAudioClientBean,
 ) : JvmFixedPayloadThreadExecutor<Pair<Long, CommandBaseContext>>() {
 
 	companion object {
@@ -48,7 +51,7 @@ class LeaveAfterInactivityThread(
 			.build()
 
 		guildMusicManager.state.audioScheduler.stopAndDestroy().subscribe()
-		guildMusicManager.audioController.disconnectWithAudioChannel(guild)
+		audioClient.disconnectWithAudioChannel(guild)
 
 		log.jdaInfo(
 			guildMusicManager.state.context,

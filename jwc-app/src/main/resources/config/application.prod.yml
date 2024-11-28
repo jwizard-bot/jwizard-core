@@ -1,8 +1,3 @@
-lavalink:
-  nodes:
-    - LAVA-NODE-1::EUROPE::${vault:V_LAVA_NODE_1}
-    - LAVA-NODE-2::EUROPE::${vault:V_LAVA_NODE_2}
-
 service:
   api-url: https://api.jwizard.pl
   front-url: https://jwizard.pl

@@ -18,10 +18,6 @@ import kotlin.reflect.KClass
  * - [JDA_CACHE_FLAGS_ENABLED]: A list of [CacheFlag] instances that are enabled for JDA caching.
  * - [JDA_CACHE_FLAGS_DISABLED]: A list of [CacheFlag] instances that are disabled for JDA caching.
  * - [JDA_SUPERUSER_PERMISSIONS]: List of JDA permissions for superuser (debug, change guild settings etc.).
- * - [AUDIO_CLIENT_QUEUED_NODES]: Audio server nodes definitions for queued audio client, where single node is:
- *   `<name>::<region group>::<node token>::<node host url>::<node port>::<is secured>`.
- * - [AUDIO_CLIENT_CONTINUOUS_NODES]: Audio server nodes definitions for continuous audio client, where single node is:
- *   `<name>::<region group>::<node token>::<node host url>::<node port>::<is secured>`.
  *
  * @property key The key used to retrieve the property value.
  * @property listElementsType The type of elements in the list represented by this property.
@@ -59,17 +55,5 @@ enum class BotListProperty(
 	 * List of JDA permissions for superuser (debug, change guild settings etc.).
 	 */
 	JDA_SUPERUSER_PERMISSIONS("jda.superuser-permissions"),
-
-	/**
-	 * Audio server nodes definitions for queued audio client, where single node is:
-	 * `<name>::<region group>::<node token>::<node host url>::<node port>::<is secured>`.
-	 */
-	AUDIO_CLIENT_QUEUED_NODES("audio.client.queued.nodes"),
-
-	/**
-	 * Audio server nodes definitions for continuous audio client, where single node is:
-	 * `<name>::<region group>::<node token>::<node host url>::<node port>::<is secured>`.
-	 */
-	AUDIO_CLIENT_CONTINUOUS_NODES("audio.client.continuous.nodes"),
 	;
 }

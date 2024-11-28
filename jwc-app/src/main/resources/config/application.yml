@@ -1,7 +1,6 @@
 vault:
   kv:
     application-names:
-      - core
       - ${cmd:jda.instance.name}
 
 server:

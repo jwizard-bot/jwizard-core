@@ -105,7 +105,7 @@ class AudioChannelsListenerGuardBean(
 			val musicManager = musicManagers.getCachedMusicManager(guildId)
 			if (musicManager != null) {
 				musicManager.state.audioScheduler.stopAndDestroy().subscribe()
-				audioClient.audioController.disconnectWithAudioChannel(guild)
+				audioClient.disconnectWithAudioChannel(guild)
 
 				val message = musicManager.createEmbedBuilder()
 					.setDescription(I18nResponseSource.LEAVE_EMPTY_CHANNEL)

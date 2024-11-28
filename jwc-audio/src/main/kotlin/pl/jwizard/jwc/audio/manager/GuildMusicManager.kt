@@ -26,9 +26,9 @@ import java.util.concurrent.TimeUnit
  * Manages audio playback in a guild, including queued tracks and radio streams. Responsible for initializing and
  * managing audio clients, loading tracks, and controlling the player's state.
  *
+ * @property bean A container for various utility beans required for the manager.
  * @property commandContext The context of the command being executed.
  * @property future The future response associated with the command for async handling.
- * @property bean A container for various utility beans required for the manager.
  * @property audioClient The client responsible for managing audio server nodes and audio connections.
  * @author Miłosz Gilga
  */
@@ -43,15 +43,19 @@ class GuildMusicManager(
 		private val log = logger<GuildMusicManager>()
 	}
 
-	val audioController = audioClient.audioController
+	val cachedPlayer get() = link?.cachedPlayer
+	val createdOrUpdatedPlayer get() = link!!.createOrUpdatePlayer()
 
-	val cachedPlayer get() = audioClient.getLink(state.context.guild.idLong)?.cachedPlayer
-	val createdOrUpdatedPlayer get() = audioClient.getLink(state.context.guild.idLong)!!.createOrUpdatePlayer()
+	/**
+	 * Retrieves the audio link for the guild based on its ID.
+	 */
+	private val link
+		get() = audioClient.getLink(state.context.guild.idLong)
 
 	/**
 	 * A thread that manages the process of leaving the voice channel after inactivity.
 	 */
-	private val leaveAfterInactivityThread = LeaveAfterInactivityThread(this)
+	private val leaveAfterInactivityThread = LeaveAfterInactivityThread(this, audioClient)
 
 	/**
 	 * Manages the state of audio playback, including switching between queued tracks and radio streams.
@@ -86,14 +90,13 @@ class GuildMusicManager(
 	 * @param context The context of the command that initiated the playback.
 	 */
 	fun loadAndPlay(trackName: String, context: CommandBaseContext) {
-		val searchPrefix = bean.environment.getProperty<String>(BotProperty.LAVALINK_SEARCH_CONTENT_PREFIX)
-
+		val searchPrefix = bean.environment.getProperty<String>(BotProperty.AUDIO_SERVER_SEARCH_DEFAULT_CONTENT_PREFIX)
 		val parsedTrackName = if (isValidUrl(trackName)) {
 			trackName.replace(" ", "")
 		} else {
 			searchPrefix.format(trackName)
 		}
-		audioController.loadAndTransferToNode(context.guild, AudioNodePool.QUEUED, context.author, context.selfMember) {
+		audioClient.loadAndTransferToNode(context, AudioNodePool.QUEUED) {
 			state.setToQueueTrack(context)
 			it.loadItem(parsedTrackName).subscribe(QueueTrackLoader(this))
 		}
@@ -106,7 +109,7 @@ class GuildMusicManager(
 	 * @param context The context of the command that initiated the stream.
 	 */
 	fun loadAndStream(radioStation: RadioStation, context: CommandBaseContext) {
-		audioController.loadAndTransferToNode(context.guild, AudioNodePool.CONTINUOUS, context.author, context.selfMember) {
+		audioClient.loadAndTransferToNode(context, AudioNodePool.CONTINUOUS) {
 			state.setToStream(context, radioStation)
 			it.loadItem(radioStation.streamUrl).subscribe(RadioStreamLoader(this, radioStation))
 		}
