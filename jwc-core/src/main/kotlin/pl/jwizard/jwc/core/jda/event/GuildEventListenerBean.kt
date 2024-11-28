@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.channel.ChannelType
 import net.dv8tion.jda.api.events.channel.ChannelDeleteEvent
 import net.dv8tion.jda.api.events.guild.GuildBanEvent
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
@@ -39,24 +40,20 @@ class GuildEventListenerBean(
 	}
 
 	/**
+	 * Triggered when the bot joins a new guild. This method initializes the settings for the guild and registers its
+	 * slash commands.
+	 *
+	 * @param event The event triggered when the bot joins a guild.
+	 */
+	override fun onGuildJoin(event: GuildJoinEvent) = persistGuildSettings(event.guild)
+
+	/**
 	 * Triggered when a guild is ready. This event is used to create guild settings and register slash commands for the
 	 * guild.
 	 *
 	 * @param event The event triggered when the guild becomes ready.
 	 */
-	override fun onGuildReady(event: GuildReadyEvent) {
-		val guild = event.guild
-		val (arePersisted, errorMessage) = guildSettingsEventAction.createGuildSettings(guild.idLong, guild.locale.locale)
-		if (errorMessage != null) {
-			log.error("Unexpected exception while persisting guild: {}. Cause: {}.", guild.qualifier, errorMessage)
-			guild.leave().queue { log.info("Leaved guild: {}.", guild.qualifier) }
-			return
-		}
-		if (arePersisted) {
-			log.info("Saved guild: {} settings into persisted storage.", guild.qualifier)
-		}
-		slashCommandRegisterer.registerGuildCommands(event.guild)
-	}
+	override fun onGuildReady(event: GuildReadyEvent) = persistGuildSettings(event.guild)
 
 	/**
 	 * Triggered when a guild is left. This method handles cleanup of guild settings upon the guild's exit.
@@ -88,6 +85,25 @@ class GuildEventListenerBean(
 		if (musicTextChannelId == channel.id) {
 			guildSettingsEventAction.deleteDefaultMusicTextChannel(guild.idLong)
 		}
+	}
+
+	/**
+	 * Saves the settings for a guild in persistent storage and registers the slash commands specific to the guild. If
+	 * saving the settings fails, the bot leaves the guild.
+	 *
+	 * @param guild The guild for which settings are being persisted.
+	 */
+	private fun persistGuildSettings(guild: Guild) {
+		val (arePersisted, errorMessage) = guildSettingsEventAction.createGuildSettings(guild.idLong, guild.locale.locale)
+		if (errorMessage != null) {
+			log.error("Unexpected exception while persisting guild: {}. Cause: {}.", guild.qualifier, errorMessage)
+			guild.leave().queue { log.info("Leaved guild: {}.", guild.qualifier) }
+			return
+		}
+		if (arePersisted) {
+			log.info("Saved guild: {} settings into persisted storage.", guild.qualifier)
+		}
+		slashCommandRegisterer.registerGuildCommands(guild)
 	}
 
 	/**
