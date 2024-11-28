@@ -41,15 +41,16 @@ interface.
 ## Clone and install
 
 1. Make sure you have at least JDK 17 and Kotlin 2.0.
-2. Clone **JWizard Lib** and **JWizard Audio Client** from organization repository via:
+2. Clone **JWizard Lib**, **JWizard Audio Client** and **JWizard Tools** from organization repository via:
 
 ```bash
 $ git clone https://github.com/jwizard-bot/jwizard-lib
 $ git clone https://github.com/jwizard-bot/jwizard-audio-client
+$ git clone https://github.com/jwizard-bot/jwizard-tools
 ```
 
-3. Configure and run all necessary containers defined in `README.md` file in this repository. You must have up these
-   containers:
+3. Configure and run all necessary containers defined in `README.md` file in `jwizard-lib` repository. You must have up
+   these containers:
 
 | Name                | Port(s) | Description                  |
 |---------------------|---------|------------------------------|
@@ -57,6 +58,8 @@ $ git clone https://github.com/jwizard-bot/jwizard-audio-client
 | jwizard-mysql-db    | 8762    | MySQL database.              |
 | jwizard-lava-node-1 | 8766    | Lavalink #1 node.            |
 | jwizard-lava-node-2 | 8767    | Lavalink #2 node.            |
+
+> NOTE: Don't forget to perform database migration after start DB (see `jwizard-lib` repository).
 
 > NOTE: Alternatively, you can run single Lavalink node, but in `application.dev.yml` you must remove second Lavalink
 > node declaration. Running 2 nodes are useful for checking load-balancer in performance tests.
