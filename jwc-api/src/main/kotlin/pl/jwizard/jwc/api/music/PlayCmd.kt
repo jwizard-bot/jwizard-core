@@ -26,6 +26,7 @@ import pl.jwizard.jwl.command.arg.Argument
 class PlayCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
 
 	override val shouldOnSameChannelWithBot = true
+	override val shouldEnabledOnFirstAction = true
 
 	/**
 	 * Executes the play command to load and play the specified track.

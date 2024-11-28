@@ -27,6 +27,7 @@ class PlayRadioStationCmd(commandEnvironment: CommandEnvironmentBean) : RadioCom
 
 	override val shouldOnSameChannelWithBot = true
 	override val shouldRadioIdle = true
+	override val shouldEnabledOnFirstAction = true
 
 	/**
 	 * Executes the logic to play a radio station in the guild's voice channel. It fetches the radio station based on the

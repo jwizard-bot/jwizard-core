@@ -34,8 +34,11 @@ abstract class RadioCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 	 */
 	final override fun executeAudio(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val voiceState = checkUserVoiceState(context)
-		userIsWithBotOnAudioChannel(voiceState, context)
-
+		if (!shouldEnabledOnFirstAction) {
+			if (manager.cachedPlayer?.track != null) {
+				userIsWithBotOnAudioChannel(voiceState, context)
+			}
+		}
 		val currentContent = manager.cachedPlayer?.track
 		val isStreamContent = manager.state.isDeclaredAudioContentTypeOrNotYetSet(AudioContentType.STREAM)
 		if (!isStreamContent && currentContent != null) {

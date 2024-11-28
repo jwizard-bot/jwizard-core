@@ -65,7 +65,11 @@ abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 				throw PlayerNotPausedException(context)
 			}
 			val userVoiceState = checkUserVoiceState(context)
-			userIsWithBotOnAudioChannel(userVoiceState, context)
+			if (!shouldEnabledOnFirstAction) {
+				if (manager.cachedPlayer?.track != null || manager.state.queueTrackScheduler.queue.isNotEmpty()) {
+					userIsWithBotOnAudioChannel(userVoiceState, context)
+				}
+			}
 		}
 		if (queueShouldNotBeEmpty && manager.state.queueTrackScheduler.queue.size == 0) {
 			throw TrackQueueIsEmptyException(context)

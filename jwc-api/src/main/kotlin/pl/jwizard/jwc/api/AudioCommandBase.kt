@@ -138,6 +138,11 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	) = AsyncUpdatableHandler(context, response, this::class, hook, exceptionTrackerHandler)
 
 	/**
+	 * Flag indication whether the command should be available for all at first action (ex. add track to empty queue).
+	 */
+	protected open val shouldEnabledOnFirstAction = false
+
+	/**
 	 * Flag indicating whether the command requires the user to be in the same channel as the bot.
 	 */
 	protected open val shouldOnSameChannelWithBot = false
