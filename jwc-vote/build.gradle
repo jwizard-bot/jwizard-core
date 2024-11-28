@@ -1,0 +1,11 @@
+/*
+ * Copyright (c) 2024 by JWizard
+ * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
+ */
+dependencies {
+	implementation libs.jda
+
+	implementation project(":jwc-command")
+	implementation project(":jwc-core")
+	implementation project(":jwc-exception")
+}

@@ -1,97 +1,201 @@
-name: Deploy CORE
+name: Build and deploy JWizard CORE
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - master
+    paths:
+      - ".github/workflows/**"
+      - "dokka/**"
+      - "gradle/libs.versions.toml"
+      - "jwc-*/**"
+      - "build.gradle"
+      - "gradle.properties"
+      - "settings.gradle"
+  workflow_dispatch:
 
-defaults:
-  run:
-    shell: bash
+env:
+  PM2_CORE_NAME_INSTANCE_1: JWizardCore1
+  PM2_CORE_NAME_INSTANCE_2: JWizardCore2
+  SSH_HOST: ${{ secrets.SSH_HOST }}
+  SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+  SSH_PORT: ${{ secrets.SSH_PORT }}
+  SSH_KEY: ${{ secrets.SSH_KEY }}
+  SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
 
 jobs:
   pre-build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: Stop existing process
-        run: |
-          pm2 stop /root/ecosystem.config.js --only ${{ vars.PM2_CORE_NAME }} --silent
-          pm2 save
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USERNAME }}
+          port: ${{ env.SSH_PORT }}
+          key: ${{ env.SSH_KEY }}
+          passphrase: ${{ env.SSH_PASSPHRASE }}
+          script: ~/exec/process stop ${{ env.PM2_CORE_NAME_INSTANCE_1 }} ${{ env.PM2_CORE_NAME_INSTANCE_2 }}
 
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: pre-build
-    env:
-      RUNNER_ROOT_DIR: ${{ secrets.GH_RUNNER_ROOT_DIR }}
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Change wrapper permissions
-        run: chmod +x ./gradlew
-
-      - name: Clean build dir
-        run: ./gradlew clean --no-daemon
-
       - name: Determinate build version
-        id: sha
+        id: version
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Clean build directory
+        run: ./gradlew clean --no-daemon
+
       - name: Package to JAR
-        run: ./gradlew bootJar --no-daemon
+        run: ./gradlew shadowJar --no-daemon
+        env:
+          JWIZARD_VERSION: ${{ steps.version.outputs.sha_short }}
+          JWIZARD_MAVEN_NAME: ${{ secrets.MVN_LIB_READER_NAME }}
+          JWIZARD_MAVEN_SECRET: ${{ secrets.MVN_LIB_READER_SECRET }}
 
-      - name: Revoke Vault key
-        run: |
-          export VAULT_ADDR=${{ secrets.GH_VAULT_ADDR }}
-          export VAULT_TOKEN=${{ secrets.GH_VAULT_TOKEN }}
-          VAULT_CORE_TOKEN=$(grep '^ENV_CORE_VAULT_TOKEN=' $RUNNER_ROOT_DIR/.env | cut -d '=' -f 2-) && \
-            [ -n "VAULT_CORE_TOKEN" ] && \
-            vault token revoke $VAULT_CORE_TOKEN || echo "Token not exist."
-          unset VAULT_ADDR
-          unset VAULT_TOKEN
+      - name: Upload generated JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: output-jar
+          path: .bin/jwizard-core.jar
 
-      - name: Generate and export Vault key
-        id: vault-keygen
-        run: |
-          export VAULT_ADDR=${{ secrets.GH_VAULT_ADDR }}
-          export VAULT_TOKEN=${{ secrets.GH_VAULT_TOKEN }}
-          JWIZARD_TOKEN=$(vault token create -policy=jwizard-readonly -ttl=30d -renewable=false --format=json | jq -r '.auth.client_token')
-          sed -i "s/^ENV_CORE_VAULT_TOKEN=.*$/ENV_CORE_VAULT_TOKEN=$JWIZARD_TOKEN/" $RUNNER_ROOT_DIR/.env
-          echo "::add-mask::$JWIZARD_TOKEN"
-          echo "vault_key=$JWIZARD_TOKEN" >> "$GITHUB_OUTPUT"
-          unset VAULT_ADDR
-          unset VAULT_TOKEN
-
-      - name: Determinate deployment version
-        id: vars
-        run: |
-          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-
-      - name: Generate env file
-        run: |
-          JWIZARD_CORE_VAULT_TOKEN=${{ steps.vault-keygen.outputs.vault_key }} \
-          JWIZARD_CORE_BUILD_VERSION=${{ steps.vars.outputs.sha_short }}_${{ github.run_number }} \
-          JWIZARD_CORE_VAULT_SERVER=${{ secrets.GH_VAULT_SERVER }} \
-          ./gradlew createEnv --no-daemon
-
-  deploy:
-    runs-on: self-hosted
+  run-tools:
+    runs-on: ubuntu-latest
     needs: build
 
     steps:
-      - name: Move compiled JAR file
-        run: |
-          rm -rf /var/www/jwizard-core/*
-          rm -rf /var/www/jwizard-core/{*,.[!.]*,..?*} 2> /dev/null
-          cp -rT .bin /var/www/jwizard-core
+      - name: Checkout tools repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/jwizard-tools
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install requirements
+        run: pip install -r requirements.txt
+
+      - name: Grand permissions to run packages grabber
+        run: chmod +x exec/run-with-config
+
+      - name: Run cache version
+        run: exec/run-with-config cache_version \
+          "${{ secrets.CONFIG_FILE_CONTENT }}" \
+          --repo ${{ github.repository }}
+
+      - name: Run packages grabber
+        run: exec/run-with-config packages_grabber \
+          "${{ secrets.CONFIG_FILE_CONTENT }}" \
+          --repo ${{ github.repository }}
+
+      - name: Run migrator
+        run: exec/run-with-config db_migrator \
+          "${{ secrets.CONFIG_FILE_CONTENT }}" \
+          --pipeline infra
+
+  generate-docs:
+    runs-on: ubuntu-latest
+    needs: build
+    env:
+      SERVER_OUTPUT: "/var/www/jwizard-docs/jwc"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
+      - name: Determinate build version
+        id: version
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Generate KDoc documentation
+        run: ./gradlew dokkaHtmlMultiModule --no-daemon
+        env:
+          JWIZARD_VERSION: ${{ steps.version.outputs.sha_short }}
+          JWIZARD_MAVEN_NAME: ${{ secrets.MVN_LIB_READER_NAME }}
+          JWIZARD_MAVEN_SECRET: ${{ secrets.MVN_LIB_READER_SECRET }}
+
+      - name: Copy generated content on server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          source: docs/*
+          target: ${{ env.SERVER_OUTPUT }}
+          rm: true
+          strip_components: 1
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: run-tools
+    env:
+      SERVER_OUTPUT: "/var/www/jwizard-core"
+
+    steps:
+      - name: Download generated JAR artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: output-jar
+
+      - name: Move files to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USERNAME }}
+          port: ${{ env.SSH_PORT }}
+          key: ${{ env.SSH_KEY }}
+          passphrase: ${{ env.SSH_PASSPHRASE }}
+          source: "jwizard-core.jar"
+          target: ${{ env.SERVER_OUTPUT }}
+          rm: true
+
+      - name: Re-create config file
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USERNAME }}
+          port: ${{ env.SSH_PORT }}
+          key: ${{ env.SSH_KEY }}
+          passphrase: ${{ env.SSH_PASSPHRASE }}
+          script: exec/make-conf ${{ env.SERVER_OUTPUT }} "${{ secrets.CONFIG_FILE_CONTENT }}"
 
       - name: Start process
-        run: |
-          pm2 start /root/ecosystem.config.js --only ${{ vars.PM2_CORE_NAME }} --silent
-          pm2 save
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USERNAME }}
+          port: ${{ env.SSH_PORT }}
+          key: ${{ env.SSH_KEY }}
+          passphrase: ${{ env.SSH_PASSPHRASE }}
+          script: ~/exec/process start ${{ env.PM2_CORE_NAME_INSTANCE_1 }} ${{ env.PM2_CORE_NAME_INSTANCE_2 }}

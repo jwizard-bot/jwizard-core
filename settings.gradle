@@ -1,0 +1,15 @@
+/*
+ * Copyright (c) 2024 by JWizard
+ * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
+ */
+rootProject.name = 'jwizard-core'
+
+include 'jwc-api'
+include 'jwc-app'
+include 'jwc-audio'
+include 'jwc-command'
+include 'jwc-core'
+include 'jwc-exception'
+include 'jwc-persistence'
+include 'jwc-radio'
+include 'jwc-vote'

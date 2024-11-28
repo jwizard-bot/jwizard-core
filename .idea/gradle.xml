@@ -4,11 +4,21 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <option name="delegatedBuild" value="false" />
+        <option name="testRunner" value="PLATFORM" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/jwc-api" />
+            <option value="$PROJECT_DIR$/jwc-app" />
+            <option value="$PROJECT_DIR$/jwc-audio" />
+            <option value="$PROJECT_DIR$/jwc-command" />
+            <option value="$PROJECT_DIR$/jwc-core" />
+            <option value="$PROJECT_DIR$/jwc-exception" />
+            <option value="$PROJECT_DIR$/jwc-persistence" />
+            <option value="$PROJECT_DIR$/jwc-radio" />
+            <option value="$PROJECT_DIR$/jwc-vote" />
           </set>
         </option>
       </GradleProjectSettings>

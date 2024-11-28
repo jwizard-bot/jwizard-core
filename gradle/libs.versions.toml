@@ -1,0 +1,28 @@
+[versions]
+dokkaVersion = "1.9.20"
+jdaVersion = "5.1.0"
+jwizardLibVersion = "latest"
+jwizardAudioClientVersion = "latest"
+kotlinVersion = "2.0.20"
+logbackVersion = "1.5.7"
+reactorVersion = "3.7.0"
+shadowJarVersion = "8.1.1"
+slf4jApiVersion = "2.0.16"
+
+[libraries]
+jda = { module = "net.dv8tion:JDA", version.ref = "jdaVersion" }
+jwizardLib = { module = "pl.jwizard:jwizard-lib", version.ref = "jwizardLibVersion" }
+jwizardAudioClient = { module = "pl.jwizard:jwizard-audio-client", version.ref = "jwizardAudioClientVersion" }
+kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinVersion" }
+kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlinVersion" }
+logbackCore = { module = "ch.qos.logback:logback-core", version.ref = "logbackVersion" }
+logbackClassic = { module = "ch.qos.logback:logback-classic", version.ref = "logbackVersion" }
+reactor = { module = "io.projectreactor:reactor-core", version.ref = "reactorVersion" }
+slf4jApi = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApiVersion" }
+
+[plugins]
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokkaVersion" }
+kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
+kotlinSpring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlinVersion" }
+shadowJar = { id = "com.github.johnrengelman.shadow", version.ref = "shadowJarVersion" }

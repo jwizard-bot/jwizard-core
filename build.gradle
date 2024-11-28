@@ -1,0 +1,191 @@
+/*
+ * Copyright (c) 2024 by JWizard
+ * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
+ */
+import org.codehaus.groovy.runtime.GStringImpl
+import org.jetbrains.dokka.DokkaConfiguration
+
+import java.time.Year
+
+plugins {
+	alias libs.plugins.kotlinJvm
+	alias libs.plugins.kotlinSerialization
+	alias libs.plugins.kotlinSpring apply false
+	alias libs.plugins.shadowJar apply false
+	alias libs.plugins.dokka
+}
+
+ext {
+	jvmSpecification = 17
+	initProjectName = 'jwc-app'
+	dokkaCommonAssets = [
+		'dokka/logo-icon.svg',
+		'dokka/logo-nav.svg',
+		'dokka/dokka-styles.css'
+	]
+	dokkaCopyright
+		= ("&copy; ${Year.now().value} by JWizard"
+		+ ". On AGPL-3.0 license"
+		+ ". Version: ${getEnv('VERSION', 'latest')}") as GStringImpl
+}
+
+allprojects {
+	repositories {
+		mavenCentral()
+		mavenLocal()
+		maven { url = uri('https://m2.dv8tion.net/releases') }
+		maven { url = uri('https://jitpack.io') }
+		maven {
+			url = uri('https://m2.miloszgilga.pl/private')
+			credentials {
+				username = getEnv('MAVEN_NAME')
+				password = getEnv('MAVEN_SECRET')
+			}
+		}
+	}
+	group = 'pl.jwizard'
+	version = getEnv('VERSION', 'latest')
+}
+
+subprojects {
+	apply plugin: getPluginId(libs.plugins.kotlinJvm)
+	apply plugin: getPluginId(libs.plugins.kotlinSpring)
+	apply plugin: getPluginId(libs.plugins.dokka)
+
+	if (project.name != rootProject.ext.initProjectName) {
+		apply plugin: 'java-library'
+	}
+
+	java {
+		sourceCompatibility = rootProject.ext.jvmSpecification
+		targetCompatibility = rootProject.ext.jvmSpecification
+	}
+
+	dependencies {
+		implementation libs.jwizardLib
+		implementation libs.kotlin
+		implementation libs.kotlinReflect
+		implementation libs.logbackCore
+		implementation libs.logbackClassic
+		implementation libs.slf4jApi
+	}
+
+	compileKotlin {
+		kotlinOptions {
+			jvmTarget = rootProject.ext.jvmSpecification.toString()
+			freeCompilerArgs = [
+				'-Xjsr305=strict',
+			]
+		}
+	}
+
+	dokkaHtmlPartial {
+		pluginsMapConfiguration.set([
+			'org.jetbrains.dokka.base.DokkaBase': generateDokkaBaseConfig()
+		])
+		dokkaSourceSets.configureEach {
+			documentedVisibilities.set([
+				DokkaConfiguration.Visibility.PUBLIC,
+				DokkaConfiguration.Visibility.PRIVATE,
+				DokkaConfiguration.Visibility.PROTECTED,
+				DokkaConfiguration.Visibility.INTERNAL,
+				DokkaConfiguration.Visibility.PACKAGE,
+			])
+		}
+		suppressInheritedMembers = true
+	}
+
+	configurations.configureEach {
+		exclude group: 'commons-logging', module: 'commons-logging'
+	}
+}
+
+project(":${rootProject.ext.initProjectName}") {
+	apply plugin: getPluginId(libs.plugins.shadowJar)
+
+	jar {
+		manifest {
+			attributes(
+				'Main-Class': 'pl.jwizard.jwc.app.JWizardCoreEntrypointKt'
+			)
+		}
+	}
+
+	shadowJar {
+		archiveBaseName = 'jwizard-core'
+		archiveClassifier = ''
+		archiveVersion = ''
+		destinationDirectory = file("$rootDir/.bin")
+	}
+}
+
+dokkaHtmlMultiModule {
+	outputDirectory = file("$projectDir/docs")
+	moduleName = "JWizard Core"
+	suppressInheritedMembers = true
+
+	def additionalAssets = [
+		'dokka/banner.png'
+	]
+	pluginsMapConfiguration.set([
+		'org.jetbrains.dokka.base.DokkaBase': generateDokkaBaseConfig(additionalAssets)
+	])
+	includes.from(file('dokka/README-DOCS.md'))
+}
+
+clean {
+	doLast {
+		def binDir = file("$projectDir/.bin")
+		if (binDir.exists()) {
+			binDir.deleteDir()
+		}
+	}
+}
+
+tasks.register('shadowJar') {
+	dependsOn ":${rootProject.ext.initProjectName}:shadowJar"
+}
+
+/**
+ * Retrieves the value of an environment variable, with a fallback to a default value.
+ *
+ * @param name The name of the environment variable (without the prefix "JWIZARD_").
+ * @param defValue The default value to return if the environment variable is not set.
+ * @return The value of the environment variable or the default value if not set.
+ */
+static def getEnv(String name, Object defValue = '') {
+	return System.getenv("JWIZARD_$name") ?: defValue.toString()
+}
+
+/**
+ * Gets the plugin ID from a given PluginDependency provider.
+ *
+ * @param accessor A provider for the PluginDependency.
+ * @return The ID of the plugin.
+ */
+static def getPluginId(Provider<PluginDependency> accessor) {
+	return accessor.get().pluginId
+}
+
+/**
+ * Generates a base configuration for Dokka documentation with custom assets.
+ *
+ * @param additionalAssets A list of additional asset paths to include in the configuration.
+ * @return A JSON string representing the Dokka configuration.
+ */
+def generateDokkaBaseConfig(List additionalAssets = []) {
+	def assets = ext.dokkaCommonAssets
+	assets.addAll(additionalAssets)
+
+	def definedDokkaAssets = assets
+		.collect { "\"${file(it).absolutePath.replace("\\", "\\\\")}\"" }
+		.join(',')
+
+	return """
+    {
+      "customAssets": [${definedDokkaAssets}],
+      "footerMessage": "${ext.dokkaCopyright}",
+      "separateInheritedMembers": false
+    }
+  """
+}

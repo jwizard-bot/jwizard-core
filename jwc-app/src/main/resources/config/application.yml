@@ -1,0 +1,89 @@
+vault:
+  kv:
+    application-names:
+      - ${cmd:jda.instance.name}
+
+server:
+  port: ${vault:V_SERVER_PORT}
+
+jda:
+  secret-token: ${vault:V_JDA_SECRET}
+  instance:
+    prefix: ${vault:V_JDA_INSTANCE_PREFIX}
+  default-activity: tracks
+  splashes:
+    enabled: true
+    interval-sec: 5
+    elements:
+      - Welcome!
+      - I am
+      - a magic
+      - Discord
+      - bot
+      - and I can
+      - play
+      - songs
+      - and
+      - much
+      - more...
+  gateway-intents:
+    - DIRECT_MESSAGES
+    - GUILD_MESSAGES
+    - GUILD_MESSAGE_REACTIONS
+    - GUILD_VOICE_STATES
+    - GUILD_MESSAGE_TYPING
+    - GUILD_MEMBERS
+    - MESSAGE_CONTENT
+  cache-flags:
+    enabled:
+      - MEMBER_OVERRIDES
+      - VOICE_STATE
+    disabled:
+      - ACTIVITY
+      - CLIENT_STATUS
+      - EMOJI
+      - ONLINE_STATUS
+      - SCHEDULED_EVENTS
+      - STICKER
+  color:
+    primary: ${vault:V_JDA_PRIMARY_COLOR}
+    danger: 0xEF4444
+  interaction:
+    message:
+      max-embeds: 10
+      action-row:
+        max-rows: 5
+        max-components-in-row: 5
+      component:
+        disable-delay-sec: 840 # 14 min
+    slash:
+      autocomplete:
+        max-options: 25
+  superuser-permissions:
+    - ADMINISTRATOR
+    - MANAGE_SERVER
+  pagination:
+    chunk-size: 8
+
+link:
+  website: https://jwizard.pl
+  repository: https://github.com/jwizard-bot
+  status: https://status.jwizard.pl
+  fragment:
+    docs: '%s/docs'
+    command: '%s/command/%s'
+    shards: '%s/shards'
+    error-code: '%s/error-codes/%d'
+
+audio:
+  server:
+    timeout-ms: 5000 # 5s
+    search:
+      default-content-prefix: 'ytmsearch: %s'
+
+radio:
+  playback:
+    extended-link: 'https://www.youtube.com/results?search_query=%s'
+
+service:
+  discord-api: https://discord.com/api/v10
