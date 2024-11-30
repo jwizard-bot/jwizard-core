@@ -33,7 +33,7 @@ import kotlin.math.abs
  * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(Command.MOVE)
+@JdaCommand(Command.QUEUE_MOVE)
 class MoveTrackCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBase(commandEnvironment) {
 
 	companion object {

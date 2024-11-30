@@ -35,7 +35,7 @@ import pl.jwizard.jwl.util.logger
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-@JdaCommand(Command.VSKIPTO)
+@JdaCommand(Command.VOTE_SKIPTO)
 class VoteSkipQueueToTrackCmd(
 	voterEnvironment: VoterEnvironmentBean,
 	commandEnvironment: CommandEnvironmentBean,

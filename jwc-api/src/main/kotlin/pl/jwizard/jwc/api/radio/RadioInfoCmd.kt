@@ -28,7 +28,7 @@ import pl.jwizard.jwl.command.Command
  * @param commandEnvironment The environment context containing necessary information for executing the command.
  * @author Miłosz Gilga
  */
-@JdaCommand(Command.RADIOINFO)
+@JdaCommand(Command.RADIO_INFO)
 class RadioInfoCmd(
 	private val radioPlaybackMappersCache: RadioPlaybackMappersCache,
 	commandEnvironment: CommandEnvironmentBean,

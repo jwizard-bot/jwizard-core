@@ -22,7 +22,7 @@ import pl.jwizard.jwl.radio.RadioStation
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-@JdaCommand(Command.PLAYRADIO)
+@JdaCommand(Command.RADIO_PLAY)
 class PlayRadioStationCmd(commandEnvironment: CommandEnvironmentBean) : RadioCommandBase(commandEnvironment) {
 
 	override val shouldOnSameChannelWithBot = true

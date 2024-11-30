@@ -31,7 +31,7 @@ import pl.jwizard.jwl.util.logger
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-@JdaCommand(Command.REPEAT)
+@JdaCommand(Command.REPEAT_SET)
 class RepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
 
 	companion object {
@@ -81,7 +81,7 @@ class RepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandB
 				args = mapOf(
 					"track" to currentPlayingTrack?.mdTitleLink,
 					"times" to repeatsCount,
-					"clearRepeatingCmd" to Command.REPEATCLS.parseWithPrefix(context.prefix),
+					"clearRepeatingCmd" to Command.REPEAT_CLEAR.parseWithPrefix(context.prefix),
 				),
 			)
 			.setArtwork(currentPlayingTrack?.thumbnailUrl)

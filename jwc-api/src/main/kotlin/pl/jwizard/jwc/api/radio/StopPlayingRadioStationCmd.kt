@@ -21,7 +21,7 @@ import pl.jwizard.jwl.command.Command
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-@JdaCommand(Command.STOPRADIO)
+@JdaCommand(Command.RADIO_STOP)
 class StopPlayingRadioStationCmd(commandEnvironment: CommandEnvironmentBean) : RadioCommandBase(commandEnvironment) {
 
 	override val shouldOnSameChannelWithBot = true

@@ -25,7 +25,7 @@ import pl.jwizard.jwl.radio.RadioStation
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-@JdaCommand(Command.RADIOS)
+@JdaCommand(Command.RADIO_ALL)
 class ShowRadioStationsCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
 
 	/**
@@ -39,7 +39,7 @@ class ShowRadioStationsCmd(commandEnvironment: CommandEnvironmentBean) : Command
 	 */
 	override fun execute(context: CommandContext, response: TFutureResponse) {
 		val radioStations = RadioStation.entries
-		val lang = context.guildLanguage
+		val lang = context.language
 
 		val paginatorChunkSize = environment.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 		val responseBuilder = CommandResponse.Builder()

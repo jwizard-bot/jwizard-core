@@ -28,7 +28,7 @@ import pl.jwizard.jwl.util.logger
  * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(Command.REPEATCLS)
+@JdaCommand(Command.REPEAT_CLEAR)
 class ClearRepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
 
 	companion object {
@@ -58,7 +58,7 @@ class ClearRepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCom
 				i18nLocaleSource = I18nResponseSource.REMOVE_MULTIPLE_REPEATING_TRACK,
 				args = mapOf(
 					"track" to currentPlayingTrack?.mdTitleLink,
-					"repeatingCmd" to Command.REPEAT.parseWithPrefix(context.prefix),
+					"repeatingCmd" to Command.REPEAT_SET.parseWithPrefix(context.prefix),
 				),
 			)
 			.setArtwork(currentPlayingTrack?.thumbnailUrl)

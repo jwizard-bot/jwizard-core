@@ -34,7 +34,7 @@ import pl.jwizard.jwl.util.logger
  * @param commandEnvironment The environment context for command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(Command.TRACKSRM)
+@JdaCommand(Command.QUEUE_REMOVE)
 class RemoveMemberTracksCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBase(commandEnvironment) {
 
 	companion object {

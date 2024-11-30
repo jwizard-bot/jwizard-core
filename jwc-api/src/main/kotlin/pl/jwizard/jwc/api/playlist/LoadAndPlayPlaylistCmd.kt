@@ -20,7 +20,7 @@ import pl.jwizard.jwl.command.Command
  * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(Command.PLAYPL)
+@JdaCommand(Command.PLAYLIST_PLAY)
 class LoadAndPlayPlaylistCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
 
 	override val shouldOnSameChannelWithBot = true

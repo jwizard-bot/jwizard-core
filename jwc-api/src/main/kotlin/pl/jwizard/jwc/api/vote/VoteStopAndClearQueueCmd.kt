@@ -34,7 +34,7 @@ import pl.jwizard.jwl.util.logger
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-@JdaCommand(Command.VSTOP)
+@JdaCommand(Command.VOTE_STOP)
 class VoteStopAndClearQueueCmd(
 	voterEnvironment: VoterEnvironmentBean,
 	commandEnvironment: CommandEnvironmentBean,

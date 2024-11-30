@@ -27,7 +27,7 @@ import pl.jwizard.jwl.util.logger
  * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(Command.SHUFFLE)
+@JdaCommand(Command.QUEUE_SHUFFLE)
 class ShuffleQueueCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBase(commandEnvironment) {
 
 	companion object {
@@ -57,7 +57,7 @@ class ShuffleQueueCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBas
 		val message = createEmbedMessage(context)
 			.setDescription(
 				i18nLocaleSource = I18nResponseSource.QUEUE_WAS_SHUFFLED,
-				args = mapOf("showQueueCmd" to Command.QUEUE.parseWithPrefix(context.prefix))
+				args = mapOf("showQueueCmd" to Command.QUEUE_SHOW.parseWithPrefix(context.prefix))
 			)
 			.setColor(JdaColor.PRIMARY)
 			.build()

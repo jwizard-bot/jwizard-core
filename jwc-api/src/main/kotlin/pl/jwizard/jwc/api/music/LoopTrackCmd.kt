@@ -29,7 +29,7 @@ import pl.jwizard.jwl.util.logger
  * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(Command.LOOP)
+@JdaCommand(Command.INFINITE)
 class LoopTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
 
 	companion object {
@@ -68,7 +68,7 @@ class LoopTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBas
 				},
 				args = mapOf(
 					"track" to currentPlayingTrack?.mdTitleLink,
-					"loopCmd" to Command.LOOP.parseWithPrefix(context.prefix),
+					"loopCmd" to Command.INFINITE.parseWithPrefix(context.prefix),
 				),
 			)
 			.setArtwork(currentPlayingTrack?.thumbnailUrl)

@@ -31,7 +31,7 @@ import java.util.*
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-@JdaCommand(Command.QUEUE)
+@JdaCommand(Command.QUEUE_SHOW)
 class ShowQueueCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
 
 	override val queueShouldNotBeEmpty = true
@@ -51,7 +51,7 @@ class ShowQueueCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBas
 
 		val scheduler = manager.state.queueTrackScheduler
 		val queue = scheduler.queue.iterable
-		val lang = context.guildLanguage
+		val lang = context.language
 		val embedMessages = mutableListOf<MessageEmbed>()
 
 		val elapsedTime = manager.cachedPlayer?.position ?: 0

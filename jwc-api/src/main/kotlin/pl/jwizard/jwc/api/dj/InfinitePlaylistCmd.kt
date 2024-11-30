@@ -27,7 +27,7 @@ import pl.jwizard.jwl.util.logger
  * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(Command.INFINITE)
+@JdaCommand(Command.QUEUE_INFINITE)
 class InfinitePlaylistCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBase(commandEnvironment) {
 
 	companion object {

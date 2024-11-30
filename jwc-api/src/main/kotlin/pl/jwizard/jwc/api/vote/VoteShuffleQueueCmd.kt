@@ -29,7 +29,7 @@ import pl.jwizard.jwl.util.logger
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-@JdaCommand(Command.VSHUFFLE)
+@JdaCommand(Command.VOTE_QUEUE_SHUFFLE)
 class VoteShuffleQueueCmd(
 	voterEnvironment: VoterEnvironmentBean,
 	commandEnvironment: CommandEnvironmentBean,
@@ -78,7 +78,7 @@ class VoteShuffleQueueCmd(
 		val message = createVoteSuccessMessage(context)
 			.setDescription(
 				i18nLocaleSource = I18nResponseSource.QUEUE_WAS_SHUFFLED,
-				args = mapOf("showQueueCmd" to Command.QUEUE.parseWithPrefix(context.prefix))
+				args = mapOf("showQueueCmd" to Command.QUEUE_SHOW.parseWithPrefix(context.prefix))
 			)
 			.setColor(JdaColor.PRIMARY)
 			.build()

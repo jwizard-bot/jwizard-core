@@ -24,7 +24,7 @@ import pl.jwizard.jwl.command.Command
  * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(Command.GETVOLUME)
+@JdaCommand(Command.VOLUME)
 class GetPlayerVolumeCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
 
 	override val shouldOnSameChannelWithBot = true

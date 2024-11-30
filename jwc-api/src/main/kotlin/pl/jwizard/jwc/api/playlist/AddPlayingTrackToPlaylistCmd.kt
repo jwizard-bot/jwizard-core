@@ -19,7 +19,7 @@ import pl.jwizard.jwl.command.Command
  * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(Command.ADDTRACKPL)
+@JdaCommand(Command.PLAYLIST_ADDTRACK)
 class AddPlayingTrackToPlaylistCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
 
 	/**

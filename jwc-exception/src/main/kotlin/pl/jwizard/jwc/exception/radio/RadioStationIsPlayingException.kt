@@ -18,6 +18,6 @@ import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 class RadioStationIsPlayingException(context: CommandBaseContext) : CommandPipelineException(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.RADIO_STATION_IS_PLAYING,
-	args = mapOf("stopRadioStationCmd" to Command.STOPRADIO.parseWithPrefix(context.prefix)),
+	args = mapOf("stopRadioStationCmd" to Command.RADIO_STOP.parseWithPrefix(context.prefix)),
 	logMessage = "Attempt to invoke command, while radio station is currently playing.",
 )

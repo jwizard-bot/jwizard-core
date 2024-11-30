@@ -26,7 +26,7 @@ import pl.jwizard.jwl.util.logger
  * @param commandEnvironment The environment context for the command execution.
  * @author Miłosz Gilga
  */
-@JdaCommand(Command.VOLUMECLS)
+@JdaCommand(Command.VOLUME_CLEAR)
 class ResetPlayerVolumeCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : DjCommandBase(commandEnvironment), AsyncUpdatableHook<Int> {
