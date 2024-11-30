@@ -151,7 +151,7 @@ abstract class VoterComponent<T : Any>(
 	 * @return An action row containing the YES and NO buttons.
 	 */
 	private fun createButtons(disabled: Boolean = false): ActionRow {
-		val lang = context.guildLanguage
+		val lang = context.language
 		val (forYes, forNo) = voteState.votes
 		val yesButton = createButton(InteractionButton.YES, lang, args = mapOf("forYes" to forYes), disabled)
 		val noButton = createButton(InteractionButton.NO, lang, args = mapOf("forNo" to forNo), disabled)

@@ -21,7 +21,9 @@ import pl.jwizard.jwl.command.Command
  * @author Miłosz Gilga
  */
 @JdaCommand(Command.PLAYLIST_ADDQUEUE)
-class AddQueueTracksToPlaylistCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
+class AddQueueTracksToPlaylistCmd(
+	commandEnvironment: CommandEnvironmentBean,
+) : CommandBase(commandEnvironment), GuildCommandHandler {
 
 	/**
 	 * TODO

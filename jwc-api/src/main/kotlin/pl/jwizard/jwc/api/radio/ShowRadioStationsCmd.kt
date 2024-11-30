@@ -27,7 +27,9 @@ import pl.jwizard.jwl.radio.RadioStation
  * @author Miłosz Gilga
  */
 @JdaCommand(Command.RADIO_ALL)
-class ShowRadioStationsCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
+class ShowRadioStationsCmd(
+	commandEnvironment: CommandEnvironmentBean,
+) : CommandBase(commandEnvironment), GuildCommandHandler {
 
 	/**
 	 * Executes the command to display radio stations.

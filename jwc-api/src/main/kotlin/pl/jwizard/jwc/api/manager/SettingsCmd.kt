@@ -53,10 +53,10 @@ class SettingsCmd(commandEnvironment: CommandEnvironmentBean) : ManagerCommandBa
 				if (column.placeholder.isEmpty() || converter == null) {
 					continue
 				}
-				val key = i18n.t(column, context.guildLanguage)
+				val key = i18n.t(column, context.language)
 				val convertedValue = converter.mapper(value)
 				val parsedValue = if (converter.isI18nContent) {
-					i18n.t(convertedValue as I18nLocaleSource, context.guildLanguage)
+					i18n.t(convertedValue as I18nLocaleSource, context.language)
 				} else {
 					convertedValue.toString()
 				}

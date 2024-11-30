@@ -6,12 +6,13 @@ package pl.jwizard.jwc.core.util
 
 import org.slf4j.Logger
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
+import pl.jwizard.jwc.core.jda.command.GuildCommandBaseContext
 import pl.jwizard.jwc.core.util.ext.qualifier
 
 /**
  * Extension function for logging info messages with context.
  *
- * @param context The context for the command, providing guild and author information.
+ * @param context The context for the command.
  * @param message The message to log.
  * @param args Additional arguments for message formatting.
  * @author Miłosz Gilga
@@ -23,7 +24,7 @@ fun Logger.jdaInfo(context: CommandBaseContext, message: String, vararg args: An
 /**
  * Extension function for logging debug messages with context.
  *
- * @param context The context for the command, providing guild and author information.
+ * @param context The context for the command.
  * @param message The message to log.
  * @param args Additional arguments for message formatting.
  * @author Miłosz Gilga
@@ -35,7 +36,7 @@ fun Logger.jdaDebug(context: CommandBaseContext, message: String, vararg args: A
 /**
  * Extension function for logging error messages with context.
  *
- * @param context The context for the command, providing guild and author information.
+ * @param context The context for the command.
  * @param message The message to log.
  * @param args Additional arguments for message formatting.
  * @author Miłosz Gilga
@@ -47,14 +48,18 @@ fun Logger.jdaError(context: CommandBaseContext, message: String, vararg args: A
 /**
  * Helper function to format log messages with context details.
  *
- * @param commandBaseContext The context for the command, providing guild and author information.
+ * @param context The context for the command.
  * @param message The message to format.
  * @param args Additional arguments for message formatting.
  * @return A formatted string containing guild, author, and the message.
  */
-private fun loggerMessageContent(commandBaseContext: CommandBaseContext, message: String, vararg args: Any?) =
-	"G: %s, A: %s -> %s".format(
-		commandBaseContext.guild.qualifier,
-		commandBaseContext.author.qualifier,
-		message.format(*args)
-	)
+private fun loggerMessageContent(context: CommandBaseContext, message: String, vararg args: Any?): String {
+	var template = "A: %s"
+	val messageArgs = mutableListOf(context.author.qualifier)
+	if (context is GuildCommandBaseContext) {
+		messageArgs += context.guild.qualifier
+		template += ", G: %s"
+	}
+	messageArgs += message.format(*args)
+	return "$template -> %s".format(*(messageArgs.toTypedArray()))
+}

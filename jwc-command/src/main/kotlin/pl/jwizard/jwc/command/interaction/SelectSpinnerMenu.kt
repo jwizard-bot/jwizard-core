@@ -83,7 +83,7 @@ abstract class SelectSpinnerMenu<T : MenuOption>(
 			"elapsedTime" to elapsedTimeSec,
 			"afterTimeResult" to i18nBean.t(
 				if (randomChoice) I18nVotingSource.RANDOM_RESULT else I18nVotingSource.FIRST_RESULT,
-				context.guildLanguage
+				context.language
 			),
 		)
 		val message = MessageEmbedBuilder(i18nBean, jdaColorsCache, context)
@@ -94,7 +94,7 @@ abstract class SelectSpinnerMenu<T : MenuOption>(
 
 		val menuBuilder = StringSelectMenu
 			.create(createComponentId(menuId))
-			.setPlaceholder(i18nBean.t(I18nVotingSource.PICK_AN_OPTION, context.guildLanguage))
+			.setPlaceholder(i18nBean.t(I18nVotingSource.PICK_AN_OPTION, context.language))
 			.setMaxValues(minValues)
 			.setMinValues(maxValues)
 

@@ -69,7 +69,7 @@ class ExceptionTrackerHandlerBean(
 		val (name, url) = vcsConfig.createSnapshotUrl(repository, deploymentVersion)
 
 		val tracker = i18nSource.tracker
-		val lang = context?.guildLanguage
+		val lang = context?.language
 
 		val stringJoiner = StringJoiner("")
 		stringJoiner.addKeyValue(I18nUtilSource.BUG_TRACKER, mdLink(tracker, createTrackerUrl(tracker)), lang)
@@ -102,7 +102,7 @@ class ExceptionTrackerHandlerBean(
 	 * @return An ActionRow containing a button that links to the exception details.
 	 */
 	fun createTrackerLink(i18nSource: I18nExceptionSource, context: CommandBaseContext? = null): ActionRow {
-		val detailsMessage = i18n.t(I18nActionSource.DETAILS, context?.guildLanguage)
+		val detailsMessage = i18n.t(I18nActionSource.DETAILS, context?.language)
 		return ActionRow.of(Button.link(createTrackerUrl(i18nSource.tracker), detailsMessage))
 	}
 

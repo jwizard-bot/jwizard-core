@@ -19,6 +19,7 @@ import pl.jwizard.jwc.core.config.spi.VcsDeploymentSupplier
 import pl.jwizard.jwc.core.i18n.source.I18nActionSource
 import pl.jwizard.jwc.core.i18n.source.I18nSystemSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
+import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.embed.PercentageIndicatorBar
@@ -93,7 +94,11 @@ class DebugCmd(
 	 * @param response The mutable list of embed messages that will be updated.
 	 * @param payload The original command context.
 	 */
-	override fun onRefresh(event: ButtonInteractionEvent, response: MutableList<MessageEmbed>, payload: CommandContext) {
+	override fun onRefresh(
+		event: ButtonInteractionEvent,
+		response: MutableList<MessageEmbed>,
+		payload: CommandBaseContext,
+	) {
 		response.add(createDebugMessage(payload))
 	}
 
@@ -104,7 +109,7 @@ class DebugCmd(
 	 * @param context The context in which the command is executed.
 	 * @return The generated embed message with debug information.
 	 */
-	private fun createDebugMessage(context: CommandContext): MessageEmbed {
+	private fun createDebugMessage(context: CommandBaseContext): MessageEmbed {
 		val (coreUrl, details) = getDeploymentAppData(VcsRepository.JWIZARD_CORE)
 		val (audioClientUrl) = getDeploymentAppData(VcsRepository.JWIZARD_AUDIO_CLIENT)
 

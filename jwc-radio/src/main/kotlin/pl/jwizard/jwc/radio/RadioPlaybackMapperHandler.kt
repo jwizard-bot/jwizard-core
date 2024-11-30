@@ -79,7 +79,7 @@ abstract class RadioPlaybackMapperHandler(
 		val messageBuilder = MessageEmbedBuilder(i18n, jdaColorStore, context)
 			.setTitle(
 				i18nLocaleSource = I18nResponseSource.CURRENTLY_PLAYING_STREAM_CONTENT,
-				args = mapOf("radioStationName" to i18n.t(radioStation, context.guildLanguage)),
+				args = mapOf("radioStationName" to i18n.t(radioStation, context.language)),
 			)
 			.setKeyValueField(I18nAudioSource.TRACK_NAME, parsedResponse.title)
 

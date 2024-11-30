@@ -6,12 +6,11 @@ package pl.jwizard.jwc.api
 
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.buttons.Button
-import pl.jwizard.jwc.command.CommandHandler
-import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.interaction.component.Paginator
 import pl.jwizard.jwc.command.interaction.component.RefreshableComponent
 import pl.jwizard.jwc.command.interaction.component.RefreshableContent
 import pl.jwizard.jwc.core.i18n.source.I18nActionSource
+import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
@@ -23,7 +22,7 @@ import pl.jwizard.jwl.property.AppProperty
  * @property commandEnvironment The environment dependencies required for command execution.
  * @author Miłosz Gilga
  */
-abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentBean) : CommandHandler {
+abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentBean) {
 
 	protected val environment = commandEnvironment.environment
 	protected val guildSettingsEventAction = commandEnvironment.guildSettingsEventAction
@@ -46,7 +45,7 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 	 * @param context The context of the command execution.
 	 * @return A configured MessageEmbedBuilder instance.
 	 */
-	protected fun createEmbedMessage(context: CommandContext) =
+	protected fun createEmbedMessage(context: CommandBaseContext) =
 		MessageEmbedBuilder(i18n, commandEnvironment.jdaColorStore, context)
 
 	/**
@@ -56,14 +55,8 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 	 * @param pages The list of pages to be included in the paginator.
 	 * @return A Paginator instance that handles pagination logic.
 	 */
-	protected fun createPaginator(context: CommandContext, pages: List<MessageEmbed>) = Paginator(
-		context,
-		i18n,
-		eventQueue = commandEnvironment.eventQueue,
-		jdaColorsCache = commandEnvironment.jdaColorStore,
-		pages,
-		botEmojisCache,
-	)
+	protected fun createPaginator(context: CommandBaseContext, pages: List<MessageEmbed>) =
+		Paginator(context, i18n, commandEnvironment.eventQueue, commandEnvironment.jdaColorStore, pages, botEmojisCache)
 
 	/**
 	 * Creates a refreshable component, which allows dynamic content to be refreshed during its lifecycle by pressing
@@ -97,10 +90,10 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 	 *
 	 * @param name The name of the button, used for localization.
 	 * @param link The link to associate with the button.
-	 * @param context The command context, used to retrieve the guild language for localization.
+	 * @param context The command context, used to retrieve the language for localization.
 	 * @return A [Button] that links to the specified URL with the appropriate localized text.
 	 */
-	protected fun createLinkButton(name: I18nActionSource, link: AppProperty, context: CommandContext) =
+	protected fun createLinkButton(name: I18nActionSource, link: AppProperty, context: CommandBaseContext) =
 		createLinkButton(name, environment.getProperty<String>(link), context)
 
 	/**
@@ -109,9 +102,9 @@ abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentB
 	 *
 	 * @param name The name of the button, used for localization.
 	 * @param link The URL to associate with the button.
-	 * @param context The command context, used to retrieve the guild language for localization.
+	 * @param context The command context, used to retrieve the language for localization.
 	 * @return A [Button] that links to the specified URL with the appropriate localized text.
 	 */
-	protected fun createLinkButton(name: I18nActionSource, link: String, context: CommandContext) =
-		Button.link(link, i18n.t(name, context.guildLanguage))
+	private fun createLinkButton(name: I18nActionSource, link: String, context: CommandBaseContext) =
+		Button.link(link, i18n.t(name, context.language))
 }

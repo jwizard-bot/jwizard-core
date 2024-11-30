@@ -19,7 +19,9 @@ import pl.jwizard.jwc.exception.command.UnauthorizedManagerException
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-abstract class ManagerCommandBase(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
+abstract class ManagerCommandBase(
+	commandEnvironment: CommandEnvironmentBean,
+) : CommandBase(commandEnvironment), GuildCommandHandler {
 
 	/**
 	 * Executes the command after checking for managerial permissions.

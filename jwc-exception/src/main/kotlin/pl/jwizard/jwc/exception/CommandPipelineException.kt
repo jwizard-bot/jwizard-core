@@ -15,8 +15,7 @@ import pl.jwizard.jwl.i18n.source.I18nExceptionSource
  * This abstract class provides a structure for exceptions that are related to command execution in the application,
  * encapsulating relevant context information such as the command context and internationalization resources.
  *
- * @property commandBaseContext The context of the command being executed, which may contain relevant information for
- *           logging.
+ * @property commandBaseContext The context of the command being executed.
  * @property i18nExceptionSource Source for internationalized exception messages.
  * @property args A map of additional variables to be used for message formatting.
  * @property logMessage A custom message to log when the exception occurs.
@@ -38,13 +37,14 @@ abstract class CommandPipelineException(
 	 * error message will be logged at a general level.
 	 */
 	fun printLogStatement() {
-		if (logMessage != null) {
-			val message = logMessage.lineSequence().map { it.trim() }.joinToString(" ")
-			if (commandBaseContext != null) {
-				log.jdaError(commandBaseContext, message)
-			} else {
-				log.error(message)
-			}
+		if (logMessage == null) {
+			return
+		}
+		val message = logMessage.lineSequence().map { it.trim() }.joinToString(" ")
+		if (commandBaseContext != null) {
+			log.jdaError(commandBaseContext, message)
+		} else {
+			log.error(message)
 		}
 	}
 }

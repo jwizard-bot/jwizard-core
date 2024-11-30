@@ -21,7 +21,9 @@ import pl.jwizard.jwl.command.Command
  * @author Miłosz Gilga
  */
 @JdaCommand(Command.PLAYLIST_MEMBER)
-class ShowMemberPlaylistsCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
+class ShowMemberPlaylistsCmd(
+	commandEnvironment: CommandEnvironmentBean,
+) : CommandBase(commandEnvironment), GuildCommandHandler {
 
 	/**
 	 * TODO

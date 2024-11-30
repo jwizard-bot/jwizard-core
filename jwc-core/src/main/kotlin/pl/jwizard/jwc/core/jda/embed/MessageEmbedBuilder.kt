@@ -45,7 +45,7 @@ class MessageEmbedBuilder(
 	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
 	 */
 	fun setTitle(i18nLocaleSource: I18nLocaleSource, args: Map<String, Any?> = emptyMap()) =
-		setTitle(i18nBean.t(i18nLocaleSource, context?.guildLanguage, args))
+		setTitle(i18nBean.t(i18nLocaleSource, context?.language, args))
 
 	/**
 	 * Sets the author of the embed if context is available.
@@ -64,7 +64,7 @@ class MessageEmbedBuilder(
 	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
 	 */
 	fun setDescription(i18nLocaleSource: I18nLocaleSource, args: Map<String, Any?> = emptyMap()) = apply {
-		super.setDescription(i18nBean.t(i18nLocaleSource, context?.guildLanguage, args))
+		super.setDescription(i18nBean.t(i18nLocaleSource, context?.language, args))
 	}
 
 	/**
@@ -100,7 +100,7 @@ class MessageEmbedBuilder(
 	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
 	 */
 	fun setFooter(i18nKey: I18nLocaleSource, value: Any, iconUrl: String? = null) = apply {
-		super.setFooter(keyValueFormat(i18nBean.t(i18nKey, context?.guildLanguage), value), iconUrl)
+		super.setFooter(keyValueFormat(i18nBean.t(i18nKey, context?.language), value), iconUrl)
 	}
 
 	/**
@@ -137,7 +137,7 @@ class MessageEmbedBuilder(
 	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
 	 */
 	fun setKeyValueField(key: I18nLocaleSource, value: Any?, inline: Boolean = true) =
-		setKeyValueField(i18nBean.t(key, context?.guildLanguage), value, inline)
+		setKeyValueField(i18nBean.t(key, context?.language), value, inline)
 
 	/**
 	 * Sets a key-value field in the embed.

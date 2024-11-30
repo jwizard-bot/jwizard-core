@@ -83,12 +83,12 @@ class HelpCmd(
 	 * Creates a list of embed messages containing available bot commands and their descriptions. The commands are split
 	 * into chunks, and each chunk is displayed in a separate embed.
 	 *
-	 * @param context The context of the command execution, containing guild and user data.
+	 * @param context The context of the command execution.
 	 * @param commands A list of command details to be included in the embed.
 	 * @return A list of MessageEmbed objects, each containing a chunk of commands with descriptions.
 	 */
 	private fun createHelpComponents(
-		context: CommandContext,
+		context: CommandBaseContext,
 		commands: List<Command>,
 	): List<MessageEmbed> {
 		val sortedCommands = commands.sorted()
@@ -99,7 +99,7 @@ class HelpCmd(
 		val docsLink = createLinkFromFragment(BotProperty.LINK_FRAGMENT_DOCS)
 
 		val parsedCommands = parseCommandsWithDescription(context, sortedCommands)
-		val lang = context.guildLanguage
+		val lang = context.language
 
 		val descriptionElements = listOf(
 			mdBold(i18n.t(I18nResponseSource.HELPFUL_LINKS, lang).uppercase(Locale.getDefault())),
@@ -117,21 +117,27 @@ class HelpCmd(
 	 * Parses the given commands and generates a map where keys represent the formatted command names, and values contain
 	 * their descriptions.
 	 *
-	 * @param context The context of the command execution, containing guild and user data.
+	 * @param context The context of the command execution.
 	 * @param guildCommands A sorted list of command details to be included in the embed.
 	 * @return A map with command names as keys and descriptions as values.
 	 */
-	private fun parseCommandsWithDescription(context: CommandContext, guildCommands: List<Command>): Map<String, String> {
+	private fun parseCommandsWithDescription(
+		context: CommandBaseContext,
+		guildCommands: List<Command>
+	): Map<String, String> {
 		val commands = mutableMapOf<String, String>()
-		val lang = context.guildLanguage
+		val lang = context.language
 		for (details in guildCommands) {
-			val commandLink = createLinkFromFragment(BotProperty.LINK_FRAGMENT_COMMAND, details.textKey)
+			var commandName = details.textKey
+			if (context.isSlashEvent) {
+				commandName = commandName.replace(".", " ")
+			}
+			val commandLink = createLinkFromFragment(BotProperty.LINK_FRAGMENT_COMMAND, details.textKey.replace(".", "-"))
 			val keyJoiner = StringJoiner("")
 			val descriptionJoiner = StringJoiner("")
 
 			keyJoiner.add(context.prefix)
-			keyJoiner.add(details.textKey)
-			keyJoiner.add(" (${details.alias}) ")
+			keyJoiner.add("$commandName ")
 
 			details.argumentsDefinition?.let { keyJoiner.add(mdCode("<${i18n.t(it, lang)}>")) }
 			descriptionJoiner.add(mdLink("[link]", commandLink))
@@ -147,17 +153,17 @@ class HelpCmd(
 	 * Creates a list of embed messages that display a chunk of commands and their descriptions. The descriptionElements
 	 * parameter allows additional text or links to be included in the first embed.
 	 *
-	 * @param context The context of the command execution, containing guild and user data.
+	 * @param context The context of the command execution.
 	 * @param commands A map of command names and descriptions to be included in the embed.
 	 * @param descriptionElements A list of additional elements (ex. links) to be displayed in the first embed.
 	 * @return A list of MessageEmbed objects, each containing a chunk of commands with descriptions.
 	 */
 	private fun createEmbedMessages(
-		context: CommandContext,
+		context: CommandBaseContext,
 		commands: Map<String, String>,
 		descriptionElements: List<String>,
 	): List<MessageEmbed> {
-		val lang = context.guildLanguage
+		val lang = context.language
 		val paginatorChunkSize = environment.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 		val listOfChunkedCommands = commands.entries.chunked(paginatorChunkSize).map { chunk ->
 			chunk.associate { it.toPair() }
