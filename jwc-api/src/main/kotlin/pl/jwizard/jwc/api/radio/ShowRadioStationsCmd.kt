@@ -6,7 +6,8 @@ package pl.jwizard.jwc.api.radio
 
 import pl.jwizard.jwc.api.CommandBase
 import pl.jwizard.jwc.api.CommandEnvironmentBean
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.GuildCommandHandler
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.i18n.source.I18nUtilSource
@@ -37,7 +38,7 @@ class ShowRadioStationsCmd(commandEnvironment: CommandEnvironmentBean) : Command
 	 * @param context The context of the command execution, containing user interaction details.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun execute(context: CommandContext, response: TFutureResponse) {
+	override fun execute(context: GuildCommandContext, response: TFutureResponse) {
 		val radioStations = RadioStation.entries
 		val lang = context.language
 

@@ -10,7 +10,7 @@ import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.DjCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -52,7 +52,7 @@ class StopClearQueueCmd(
 	 * @param manager The guild music manager responsible for handling the audio queue.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun executeDj(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeDj(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val currentTrack = manager.cachedPlayer?.track
 		val queueTrackScheduler = manager.state.queueTrackScheduler
 		if (currentTrack == null && queueTrackScheduler.queue.isEmpty()) {
@@ -75,7 +75,7 @@ class StopClearQueueCmd(
 	 * @param payload A pair containing the previous volume level and the guild music manager.
 	 * @return A MessageEmbed containing a confirmation of the volume change and the new volume level.
 	 */
-	override fun onAsyncSuccess(context: CommandContext, payload: Pair<Track?, Int>): MessageEmbed {
+	override fun onAsyncSuccess(context: GuildCommandContext, payload: Pair<Track?, Int>): MessageEmbed {
 		val (playingTrack, queueSize) = payload
 		log.jdaInfo(
 			context,

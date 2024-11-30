@@ -10,7 +10,7 @@ import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -54,7 +54,7 @@ class SkipTrackCmd(
 	 * @param manager The guild music manager responsible for handling the audio queue and playback.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun executeMusic(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeMusic(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val skippingTrack = manager.cachedPlayer?.track ?: throw UnexpectedException(context, "Skipping track is NULL.")
 
 		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response, this)
@@ -74,7 +74,7 @@ class SkipTrackCmd(
 	 * @param payload The track that was skipped.
 	 * @return A MessageEmbed containing information about the skipped track and a confirmation of the skip action.
 	 */
-	override fun onAsyncSuccess(context: CommandContext, payload: Track): MessageEmbed {
+	override fun onAsyncSuccess(context: GuildCommandContext, payload: Track): MessageEmbed {
 		log.jdaInfo(context, "Current playing track: %s was skipped.", payload.qualifier)
 		return createEmbedMessage(context)
 			.setDescription(

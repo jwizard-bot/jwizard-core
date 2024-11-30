@@ -6,7 +6,8 @@ package pl.jwizard.jwc.api.playlist
 
 import pl.jwizard.jwc.api.CommandBase
 import pl.jwizard.jwc.api.CommandEnvironmentBean
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.GuildCommandHandler
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
@@ -28,7 +29,7 @@ class AddQueueTracksToPlaylistCmd(commandEnvironment: CommandEnvironmentBean) : 
 	 * @param context The context of the command, including user interaction details.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun execute(context: CommandContext, response: TFutureResponse) {
+	override fun execute(context: GuildCommandContext, response: TFutureResponse) {
 
 		val message = createEmbedMessage(context)
 			.setDescription("Not implemented yet")

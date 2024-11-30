@@ -7,7 +7,7 @@ package pl.jwizard.jwc.api.manager
 import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.ManagerCommandBase
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nSystemSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -35,7 +35,7 @@ class SettingsCmd(commandEnvironment: CommandEnvironmentBean) : ManagerCommandBa
 	 * @param context The context of the command, which contains details of the user interaction.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun executeManager(context: CommandContext, response: TFutureResponse) {
+	override fun executeManager(context: GuildCommandContext, response: TFutureResponse) {
 		val paginatorChunkSize = environment.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 		val properties = environment.getGuildMultipleProperties(
 			guildProperties = GuildProperty.entries.filter { it.placeholder.isNotEmpty() && it.converter != null },
@@ -86,7 +86,7 @@ class SettingsCmd(commandEnvironment: CommandEnvironmentBean) : ManagerCommandBa
 	 * @param context The context of the command execution.
 	 * @return The author's ID if the command is private, or null if it is not private.
 	 */
-	override fun isPrivate(context: CommandContext): Long? {
+	override fun isPrivate(context: GuildCommandContext): Long? {
 		val isPrivate = context.getNullableArg<Boolean>(Argument.PRIVATE)
 		return if (isPrivate == true) context.author.idLong else null
 	}

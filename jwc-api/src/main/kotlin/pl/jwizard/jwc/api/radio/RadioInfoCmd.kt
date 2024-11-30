@@ -9,9 +9,10 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.RadioCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.interaction.component.RefreshableContent
 import pl.jwizard.jwc.command.reflect.JdaCommand
+import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.radio.spi.RadioPlaybackMappersCache
@@ -32,7 +33,7 @@ import pl.jwizard.jwl.command.Command
 class RadioInfoCmd(
 	private val radioPlaybackMappersCache: RadioPlaybackMappersCache,
 	commandEnvironment: CommandEnvironmentBean,
-) : RadioCommandBase(commandEnvironment), RefreshableContent<Pair<CommandContext, GuildMusicManager>> {
+) : RadioCommandBase(commandEnvironment), RefreshableContent<Pair<CommandBaseContext, GuildMusicManager>> {
 
 	override val shouldOnSameChannelWithBot = true
 	override val shouldRadioPlaying = true
@@ -47,7 +48,7 @@ class RadioInfoCmd(
 	 * @param manager The guild music manager responsible for handling the audio playback and stream management.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun executeRadio(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeRadio(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val radioStation = manager.state.radioStreamScheduler.radioStation
 		val mapper = radioPlaybackMappersCache.getCachedByProvider(radioStation.streamProvider.playbackProvider)
 			?: throw RadioStationNotProvidedPlaybackDataException(context, radioStation)
@@ -77,7 +78,7 @@ class RadioInfoCmd(
 	override fun onRefresh(
 		event: ButtonInteractionEvent,
 		response: MutableList<MessageEmbed>,
-		payload: Pair<CommandContext, GuildMusicManager>,
+		payload: Pair<CommandBaseContext, GuildMusicManager>,
 	) {
 		val (context, manager) = payload
 		val radioStation = manager.state.radioStreamScheduler.radioStation

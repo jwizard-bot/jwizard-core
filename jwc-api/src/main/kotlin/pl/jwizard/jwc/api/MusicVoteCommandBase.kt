@@ -5,7 +5,7 @@
 package pl.jwizard.jwc.api
 
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.i18n.source.I18nVotingSource
 import pl.jwizard.jwc.core.jda.command.CommandResponse
@@ -45,7 +45,7 @@ abstract class MusicVoteCommandBase<T : Any>(
 	 * @param manager The guild music manager responsible for handling music-related operations.
 	 * @param response A future response object to be completed with the command response.
 	 */
-	final override fun executeMusic(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	final override fun executeMusic(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val voterResponse = executeMusicVote(context, manager)
 		val i18nResponse = I18nVoterResponse.Builder<T>()
 			.setInitMessage(initMessage, voterResponse.args)
@@ -69,7 +69,7 @@ abstract class MusicVoteCommandBase<T : Any>(
 	 * @param context The command context for creating the message.
 	 * @return An embed message indicating successful voting.
 	 */
-	protected fun createVoteSuccessMessage(context: CommandContext) = createEmbedMessage(context)
+	protected fun createVoteSuccessMessage(context: GuildCommandContext) = createEmbedMessage(context)
 		.setTitle(I18nVotingSource.ON_SUCCESS_VOTING)
 
 	/**
@@ -97,5 +97,8 @@ abstract class MusicVoteCommandBase<T : Any>(
 	 * @param manager The guild music manager responsible for managing music-related operations.
 	 * @return A response containing the result of the music voting process.
 	 */
-	protected abstract fun executeMusicVote(context: CommandContext, manager: GuildMusicManager): MusicVoterResponse<T>
+	protected abstract fun executeMusicVote(
+		context: GuildCommandContext,
+		manager: GuildMusicManager,
+	): MusicVoterResponse<T>
 }

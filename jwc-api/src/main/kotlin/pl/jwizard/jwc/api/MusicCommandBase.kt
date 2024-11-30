@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.channel.ChannelType
 import pl.jwizard.jwac.player.track.Track
 import pl.jwizard.jwc.audio.AudioContentType
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
@@ -49,7 +49,7 @@ abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 	 * @throws PlayerNotPausedException If the command requires the player to be paused, but it is not.
 	 * @throws TrackQueueIsEmptyException If the command requires tracks in the queue but none are present.
 	 */
-	final override fun executeAudio(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	final override fun executeAudio(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		if (!manager.state.isDeclaredAudioContentTypeOrNotYetSet(AudioContentType.QUEUE_TRACK)) {
 			throw CommandAvailableOnlyForDiscreteTrackException(context)
 		}
@@ -94,7 +94,7 @@ abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 	 * @return A MessageEmbed containing the detailed track information to be sent as a response.
 	 */
 	protected fun createDetailedTrackMessage(
-		context: CommandContext,
+		context: GuildCommandContext,
 		manager: GuildMusicManager,
 		i18nTitle: I18nLocaleSource,
 		i18nPosition: I18nLocaleSource,
@@ -152,5 +152,9 @@ abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 	 * @param manager The guild music manager handling the audio playback.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	protected abstract fun executeMusic(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse)
+	protected abstract fun executeMusic(
+		context: GuildCommandContext,
+		manager: GuildMusicManager,
+		response: TFutureResponse
+	)
 }

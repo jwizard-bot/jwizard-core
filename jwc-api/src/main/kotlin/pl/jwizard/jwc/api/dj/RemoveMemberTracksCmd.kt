@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.DjCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
@@ -52,7 +52,7 @@ class RemoveMemberTracksCmd(commandEnvironment: CommandEnvironmentBean) : DjComm
 	 * @throws UserNotFoundInGuildException If the specified user is not found in the guild.
 	 * @throws UserNotAddedTracksToQueueException If the specified user has not added any tracks to the queue.
 	 */
-	override fun executeDj(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeDj(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val userId = context.getArg<Long>(Argument.MEMBER)
 		val paginatorChunkSize = environment.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 

@@ -9,7 +9,7 @@ import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.DjCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -50,7 +50,7 @@ class SetPlayerVolumeCmd(
 	 * @param manager The guild music manager responsible for handling the audio queue and playback.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun executeDj(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeDj(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val newVolume = context.getArg<Int>(Argument.VOLUME)
 		val maxVolume = environment.getProperty<Int>(AppBaseProperty.PLAYER_MAX_VOLUME)
 
@@ -75,7 +75,7 @@ class SetPlayerVolumeCmd(
 	 * @param payload A pair containing the previous volume level and the guild music manager.
 	 * @return A MessageEmbed containing a confirmation of the volume change and the new volume level.
 	 */
-	override fun onAsyncSuccess(context: CommandContext, payload: Pair<Int, GuildMusicManager>): MessageEmbed {
+	override fun onAsyncSuccess(context: GuildCommandContext, payload: Pair<Int, GuildMusicManager>): MessageEmbed {
 		val (previousVolume, manager) = payload
 		val currentVolume = manager.cachedPlayer?.volume
 		log.jdaInfo(context, "Changed volume from: %d%% to: %d%%.", previousVolume, currentVolume)

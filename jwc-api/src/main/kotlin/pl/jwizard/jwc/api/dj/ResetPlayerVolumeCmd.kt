@@ -9,7 +9,7 @@ import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.DjCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -45,7 +45,7 @@ class ResetPlayerVolumeCmd(
 	 * @param manager The guild music manager responsible for handling the audio queue and playback.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun executeDj(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeDj(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val defaultVolume = environment.getGuildProperty<Int>(GuildProperty.PLAYER_VOLUME, context.guild.idLong)
 
 		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response, this)
@@ -63,7 +63,7 @@ class ResetPlayerVolumeCmd(
 	 * @param payload The default volume level that was applied.
 	 * @return A MessageEmbed containing a confirmation of the volume reset and the new volume level.
 	 */
-	override fun onAsyncSuccess(context: CommandContext, payload: Int): MessageEmbed {
+	override fun onAsyncSuccess(context: GuildCommandContext, payload: Int): MessageEmbed {
 		log.jdaInfo(context, "Reset volume to default value: %d%%.", payload)
 		return createEmbedMessage(context)
 			.setDescription(

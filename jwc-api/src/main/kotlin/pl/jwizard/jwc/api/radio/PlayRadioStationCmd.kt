@@ -7,7 +7,7 @@ package pl.jwizard.jwc.api.radio
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.RadioCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.exception.radio.RadioStationNotExistsOrTurnedOffException
@@ -38,7 +38,7 @@ class PlayRadioStationCmd(commandEnvironment: CommandEnvironmentBean) : RadioCom
 	 * @param response A future response handler to manage command feedback asynchronously.
 	 * @throws RadioStationNotExistsOrTurnedOffException If the requested radio station does not exist or is inactive.
 	 */
-	override fun executeRadio(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeRadio(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val radioStationSlug = context.getArg<String>(Argument.RADIO_STATION)
 
 		val radioStation = RadioStation.entries.find { it.textKey == radioStationSlug }

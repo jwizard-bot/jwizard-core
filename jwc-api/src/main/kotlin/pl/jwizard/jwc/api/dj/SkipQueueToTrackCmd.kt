@@ -10,7 +10,7 @@ import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.DjCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -56,7 +56,7 @@ class SkipQueueToTrackCmd(
 	 * @param manager The guild music manager responsible for handling the audio queue.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun executeDj(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeDj(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val position = context.getArg<Int>(Argument.POS)
 
 		val queue = manager.state.queueTrackScheduler.queue
@@ -82,7 +82,7 @@ class SkipQueueToTrackCmd(
 	 * @param payload A pair containing the selected track and its position in the queue.
 	 * @return A [MessageEmbed] object with a confirmation message indicating the skipped tracks and the new track playing.
 	 */
-	override fun onAsyncSuccess(context: CommandContext, payload: Pair<Track, Int>): MessageEmbed {
+	override fun onAsyncSuccess(context: GuildCommandContext, payload: Pair<Track, Int>): MessageEmbed {
 		val (currentTrack, position) = payload
 		log.jdaInfo(context, "Skipped: %d tracks in queue and started playing: %s.", position, currentTrack.qualifier)
 		return createEmbedMessage(context)

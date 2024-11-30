@@ -4,7 +4,8 @@
  */
 package pl.jwizard.jwc.api
 
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.GuildCommandHandler
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.exception.command.UnauthorizedManagerException
 
@@ -30,7 +31,7 @@ abstract class ManagerCommandBase(commandEnvironment: CommandEnvironmentBean) : 
 	 * @param response The future response object used to send the result of the command execution.
 	 * @throws UnauthorizedManagerException If the user does not have managerial permissions.
 	 */
-	final override fun execute(context: CommandContext, response: TFutureResponse) {
+	final override fun execute(context: GuildCommandContext, response: TFutureResponse) {
 		if (!context.checkIfAuthorHasPermissions(*(superuserPermissions.toTypedArray()))) {
 			throw UnauthorizedManagerException(context)
 		}
@@ -46,5 +47,5 @@ abstract class ManagerCommandBase(commandEnvironment: CommandEnvironmentBean) : 
 	 * @param context The context of the command, containing user interaction details.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	protected abstract fun executeManager(context: CommandContext, response: TFutureResponse)
+	protected abstract fun executeManager(context: GuildCommandContext, response: TFutureResponse)
 }

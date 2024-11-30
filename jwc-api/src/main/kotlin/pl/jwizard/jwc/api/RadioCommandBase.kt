@@ -6,7 +6,7 @@ package pl.jwizard.jwc.api
 
 import pl.jwizard.jwc.audio.AudioContentType
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.exception.radio.DiscreteAudioStreamIsPlayingException
 import pl.jwizard.jwc.exception.radio.RadioStationIsNotPlayingException
@@ -32,7 +32,7 @@ abstract class RadioCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 	 * @throws RadioStationIsNotPlayingException If a command requires the radio to be playing, but it is not.
 	 * @throws RadioStationIsPlayingException If a command requires the radio to be idle, but it is playing.
 	 */
-	final override fun executeAudio(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	final override fun executeAudio(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val voiceState = checkUserVoiceState(context)
 		if (!shouldEnabledOnFirstAction) {
 			if (manager.cachedPlayer?.track != null) {
@@ -69,5 +69,9 @@ abstract class RadioCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 	 * @param manager The guild music manager handling audio playback.
 	 * @param response The future response object for deferred handling.
 	 */
-	protected abstract fun executeRadio(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse)
+	protected abstract fun executeRadio(
+		context: GuildCommandContext,
+		manager: GuildMusicManager,
+		response: TFutureResponse,
+	)
 }

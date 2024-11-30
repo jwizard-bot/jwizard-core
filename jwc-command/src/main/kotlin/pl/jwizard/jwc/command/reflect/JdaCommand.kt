@@ -4,8 +4,7 @@
  */
 package pl.jwizard.jwc.command.reflect
 
-import pl.jwizard.jwc.command.CommandHandler
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.GuildCommandHandler
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 
@@ -30,8 +29,7 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
  * @property value The command identifier that this listener will handle.
  * @author Miłosz Gilga
  * @see Command
- * @see CommandHandler
- * @see CommandContext
+ * @see GuildCommandHandler
  */
 @SingletonComponent
 @Target(AnnotationTarget.CLASS)

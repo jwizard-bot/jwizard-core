@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.buttons.Button
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.interaction.ButtonInteractionHandler
 import pl.jwizard.jwc.command.interaction.InteractionButton
 import pl.jwizard.jwc.command.interaction.InteractionResponse
@@ -41,7 +41,7 @@ import java.util.concurrent.CompletableFuture
  * @author Miłosz Gilga
  */
 abstract class VoterComponent<T : Any>(
-	private val context: CommandContext,
+	private val context: GuildCommandContext,
 	private val response: I18nVoterResponse<T>,
 	private val voterContent: VoterContent<T>,
 	private val voterEnvironment: VoterEnvironmentBean,

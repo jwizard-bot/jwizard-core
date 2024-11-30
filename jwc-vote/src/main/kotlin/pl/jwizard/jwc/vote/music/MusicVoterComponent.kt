@@ -5,7 +5,7 @@
 package pl.jwizard.jwc.vote.music
 
 import net.dv8tion.jda.api.entities.Member
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.jda.emoji.BotEmojisCacheBean
 import pl.jwizard.jwc.vote.I18nVoterResponse
 import pl.jwizard.jwc.vote.VoterComponent
@@ -27,7 +27,7 @@ import pl.jwizard.jwc.vote.VoterEnvironmentBean
  * @author Miłosz Gilga
  */
 class MusicVoterComponent<T : Any>(
-	private val context: CommandContext,
+	private val context: GuildCommandContext,
 	private val i18nResponse: I18nVoterResponse<T>,
 	private val voterContent: VoterContent<T>,
 	private val voterEnvironment: VoterEnvironmentBean,

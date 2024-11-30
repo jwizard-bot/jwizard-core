@@ -7,7 +7,7 @@ package pl.jwizard.jwc.api.vote
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicVoteCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -54,7 +54,7 @@ class VoteClearQueueCmd(
 	 * @param manager The guild music manager responsible for handling music-related operations.
 	 * @return A response containing the result of the music voting process.
 	 */
-	override fun executeMusicVote(context: CommandContext, manager: GuildMusicManager) = MusicVoterResponse(
+	override fun executeMusicVote(context: GuildCommandContext, manager: GuildMusicManager) = MusicVoterResponse(
 		payload = manager,
 		args = mapOf("countOfTracks" to manager.state.queueTrackScheduler.queue.size),
 	)
@@ -69,7 +69,7 @@ class VoteClearQueueCmd(
 	 * @param response The future response object to complete.
 	 * @param payload The guild music manager that contains the current state of the queue.
 	 */
-	override fun afterSuccess(context: CommandContext, response: TFutureResponse, payload: GuildMusicManager) {
+	override fun afterSuccess(context: GuildCommandContext, response: TFutureResponse, payload: GuildMusicManager) {
 		val queueTrackScheduler = payload.state.queueTrackScheduler
 
 		val queueSize = queueTrackScheduler.queue.clearAndGetSize()

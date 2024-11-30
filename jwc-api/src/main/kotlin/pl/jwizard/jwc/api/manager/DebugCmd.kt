@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.interactions.components.ActionRow
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.ManagerCommandBase
 import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.interaction.component.RefreshableContent
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.config.DeploymentDetails
@@ -57,7 +58,7 @@ class DebugCmd(
 	 * @param context The context in which the command is executed.
 	 * @param response The response object that will send the embed message.
 	 */
-	override fun executeManager(context: CommandContext, response: TFutureResponse) {
+	override fun executeManager(context: GuildCommandContext, response: TFutureResponse) {
 		val refreshableComponent = createRefreshable(this, context)
 		refreshableComponent.initEvent()
 
@@ -79,7 +80,7 @@ class DebugCmd(
 	 * @param context The context in which the command is executed.
 	 * @return The user ID if the message should be sent privately, or null otherwise.
 	 */
-	override fun isPrivate(context: CommandContext): Long? {
+	override fun isPrivate(context: GuildCommandContext): Long? {
 		val isPrivate = context.getNullableArg<Boolean>(Argument.PRIVATE)
 		return if (isPrivate == true) context.author.idLong else null
 	}

@@ -9,7 +9,7 @@ import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -54,7 +54,7 @@ class ResumeTrackCmd(
 	 * @param manager The guild music manager responsible for handling the audio queue and playback.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun executeMusic(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeMusic(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response, this)
 		asyncUpdatableHandler.performAsyncUpdate(
 			asyncAction = manager.createdOrUpdatedPlayer.setPaused(false),
@@ -73,7 +73,7 @@ class ResumeTrackCmd(
 	 * @return A MessageEmbed containing detailed information about the resumed track.
 	 * @throws UnexpectedException If the resumed track is not found.
 	 */
-	override fun onAsyncSuccess(context: CommandContext, payload: GuildMusicManager): MessageEmbed {
+	override fun onAsyncSuccess(context: GuildCommandContext, payload: GuildMusicManager): MessageEmbed {
 		val resumedTrack = payload.cachedPlayer?.track ?: throw UnexpectedException(context, "Resumed track is NULL.")
 		log.jdaInfo(context, "Current paused track: %s was resumed.", resumedTrack.qualifier)
 

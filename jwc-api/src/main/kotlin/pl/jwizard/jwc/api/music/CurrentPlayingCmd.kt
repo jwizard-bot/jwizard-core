@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.interaction.component.RefreshableContent
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
@@ -27,7 +27,7 @@ import pl.jwizard.jwl.command.Command
 @JdaCommand(Command.PLAYING)
 class CurrentPlayingCmd(
 	commandEnvironment: CommandEnvironmentBean,
-) : MusicCommandBase(commandEnvironment), RefreshableContent<Pair<CommandContext, GuildMusicManager>> {
+) : MusicCommandBase(commandEnvironment), RefreshableContent<Pair<GuildCommandContext, GuildMusicManager>> {
 
 	override val shouldPlayingMode = true
 
@@ -39,7 +39,7 @@ class CurrentPlayingCmd(
 	 * @param response The future response object used to send the result of the command execution.
 	 * @throws ActiveAudioPlayingNotFoundException If no track is currently playing.
 	 */
-	override fun executeMusic(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeMusic(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val playingTrack = manager.cachedPlayer?.track ?: throw ActiveAudioPlayingNotFoundException(context)
 
 		val message = createDetailedTrackMessage(
@@ -71,7 +71,7 @@ class CurrentPlayingCmd(
 	override fun onRefresh(
 		event: ButtonInteractionEvent,
 		response: MutableList<MessageEmbed>,
-		payload: Pair<CommandContext, GuildMusicManager>,
+		payload: Pair<GuildCommandContext, GuildMusicManager>,
 	) {
 		val (context, manager) = payload
 		val playingTrack = manager.cachedPlayer?.track ?: return

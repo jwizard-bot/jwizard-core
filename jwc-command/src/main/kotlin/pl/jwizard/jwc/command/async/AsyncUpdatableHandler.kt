@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.command.async
 
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.util.jdaError
@@ -20,6 +20,7 @@ import kotlin.reflect.KClass
  * and failure scenarios after an async action completes. The handler provides a structured response using the provided
  * context, response, and exception handling mechanisms.
  *
+ * @param U The type of the command context extending [CommandBaseContext] interface.
  * @param T The type of the payload passed to the async operation.
  * @property context The context in which the command is executed.
  * @property response The future response that will be completed once the async update is done.
@@ -28,16 +29,16 @@ import kotlin.reflect.KClass
  * @property exceptionTrackerHandler The store used to track and log exceptions.
  * @author Miłosz Gilga
  */
-class AsyncUpdatableHandler<T>(
-	private val context: CommandContext,
+class AsyncUpdatableHandler<U : CommandBaseContext, T>(
+	private val context: U,
 	private val response: TFutureResponse,
 	private val invokerClazz: KClass<*>,
-	private val asyncUpdatableHook: AsyncUpdatableHook<T>,
+	private val asyncUpdatableHook: AsyncUpdatableHook<U, T>,
 	private val exceptionTrackerHandler: ExceptionTrackerHandlerBean,
 ) {
 
 	companion object {
-		private val log = logger<AsyncUpdatableHandler<*>>()
+		private val log = logger<AsyncUpdatableHandler<*, *>>()
 	}
 
 	/**

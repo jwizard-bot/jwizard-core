@@ -7,12 +7,15 @@ package pl.jwizard.jwc.api.misc
 import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.api.CommandBase
 import pl.jwizard.jwc.api.CommandEnvironmentBean
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.GlobalCommandHandler
+import pl.jwizard.jwc.command.GuildCommandHandler
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.command.spi.CommandDataSupplier
 import pl.jwizard.jwc.command.spi.ModuleDataSupplier
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
+import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotProperty
@@ -45,7 +48,7 @@ class HelpCmd(
 	 * @param context The context of the command execution, containing guild, user, and event information.
 	 * @param response The future response object used to send back the command output to Discord.
 	 */
-	override fun execute(context: CommandContext, response: TFutureResponse) {
+	override fun execute(context: GuildCommandContext, response: TFutureResponse) {
 		val disabledCommands = commandDataSupplier.getDisabledGuildCommands(context.guildDbId, context.isSlashEvent)
 		val disabledModules = moduleDataSupplier.getDisabledGuildModules(context.guildDbId)
 
@@ -71,7 +74,7 @@ class HelpCmd(
 	 * @param context The context of the command execution.
 	 * @return The author's ID if the command is private, or null if it is not private.
 	 */
-	override fun isPrivate(context: CommandContext): Long? {
+	override fun isPrivate(context: GuildCommandContext): Long? {
 		val isPrivate = context.getNullableArg<Boolean>(Argument.PRIVATE)
 		return if (isPrivate == true) context.author.idLong else null
 	}

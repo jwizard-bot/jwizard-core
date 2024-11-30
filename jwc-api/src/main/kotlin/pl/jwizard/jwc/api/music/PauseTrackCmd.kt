@@ -9,7 +9,7 @@ import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
@@ -56,7 +56,7 @@ class PauseTrackCmd(
 	 * @param manager The guild music manager responsible for handling the audio queue and playback.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	override fun executeMusic(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeMusic(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response, this)
 		asyncUpdatableHandler.performAsyncUpdate(
 			asyncAction = manager.createdOrUpdatedPlayer.setPaused(true),
@@ -76,7 +76,7 @@ class PauseTrackCmd(
 	 * @return A MessageEmbed containing detailed information about the paused track.
 	 * @throws UnexpectedException If the paused track is not found.
 	 */
-	override fun onAsyncSuccess(context: CommandContext, payload: GuildMusicManager): MessageEmbed {
+	override fun onAsyncSuccess(context: GuildCommandContext, payload: GuildMusicManager): MessageEmbed {
 		val pausedTrack = payload.cachedPlayer?.track ?: throw UnexpectedException(context, "Paused track is NULL.")
 		val elapsedTime = payload.cachedPlayer?.position ?: 0
 

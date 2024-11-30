@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.vote
 
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 
 /**
@@ -23,5 +23,5 @@ interface VoterContent<T> {
 	 * @param response The response that was generated after the vote was successfully processed.
 	 * @param payload The payload that contains the relevant data for the successful operation.
 	 */
-	fun afterSuccess(context: CommandContext, response: TFutureResponse, payload: T)
+	fun afterSuccess(context: GuildCommandContext, response: TFutureResponse, payload: T)
 }

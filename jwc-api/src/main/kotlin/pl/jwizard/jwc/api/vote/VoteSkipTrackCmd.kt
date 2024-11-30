@@ -10,7 +10,7 @@ import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicVoteCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -63,7 +63,7 @@ class VoteSkipTrackCmd(
 	 * @throws UnexpectedException if the currently playing track is null.
 	 */
 	override fun executeMusicVote(
-		context: CommandContext,
+		context: GuildCommandContext,
 		manager: GuildMusicManager,
 	): MusicVoterResponse<GuildMusicManager> {
 		val track = manager.cachedPlayer?.track ?: throw UnexpectedException(context, "Playing track is NULL.")
@@ -82,7 +82,7 @@ class VoteSkipTrackCmd(
 	 * @param response The future response object to complete.
 	 * @param payload The guild music manager containing the current player state.
 	 */
-	override fun afterSuccess(context: CommandContext, response: TFutureResponse, payload: GuildMusicManager) {
+	override fun afterSuccess(context: GuildCommandContext, response: TFutureResponse, payload: GuildMusicManager) {
 		val track = payload.cachedPlayer?.track ?: return
 		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response, this)
 		asyncUpdatableHandler.performAsyncUpdate(
@@ -101,7 +101,7 @@ class VoteSkipTrackCmd(
 	 * @param payload The track that was skipped.
 	 * @return A message embed detailing the outcome of the skip operation.
 	 */
-	override fun onAsyncSuccess(context: CommandContext, payload: Track): MessageEmbed {
+	override fun onAsyncSuccess(context: GuildCommandContext, payload: Track): MessageEmbed {
 		log.jdaInfo(context, "Current playing track: %s was skipped by voting.", payload.qualifier)
 		return createVoteSuccessMessage(context)
 			.setDescription(

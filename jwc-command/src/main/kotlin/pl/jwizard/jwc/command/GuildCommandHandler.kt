@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.command
 
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 
 /**
@@ -15,7 +15,7 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
  *
  * @author Miłosz Gilga
  */
-interface CommandHandler {
+interface GuildCommandHandler {
 
 	/**
 	 * Executes the command logic and returns the command response.
@@ -23,7 +23,7 @@ interface CommandHandler {
 	 * @param context The context of the command execution.
 	 * @param response
 	 */
-	fun execute(context: CommandContext, response: TFutureResponse)
+	fun execute(context: GuildCommandContext, response: TFutureResponse)
 
 	/**
 	 * Determines if the command should be executed in a private context. This method can be overridden by subclasses to
@@ -32,5 +32,5 @@ interface CommandHandler {
 	 * @param context The context of the command execution.
 	 * @return An optional value indicating the user ID (message receiver) if the command is private, or null if it is not.
 	 */
-	fun isPrivate(context: CommandContext): Long? = null
+	fun isPrivate(context: GuildCommandContext): Long? = null
 }

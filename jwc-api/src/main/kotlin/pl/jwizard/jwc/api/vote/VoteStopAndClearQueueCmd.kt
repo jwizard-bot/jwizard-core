@@ -10,7 +10,7 @@ import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicVoteCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -60,7 +60,7 @@ class VoteStopAndClearQueueCmd(
 	 * @param manager The guild music manager responsible for handling music-related operations.
 	 * @return A response containing the result of the music voting process.
 	 */
-	override fun executeMusicVote(context: CommandContext, manager: GuildMusicManager) =
+	override fun executeMusicVote(context: GuildCommandContext, manager: GuildMusicManager) =
 		MusicVoterResponse(payload = manager)
 
 	/**
@@ -72,7 +72,7 @@ class VoteStopAndClearQueueCmd(
 	 * @param response The future response object to complete.
 	 * @param payload The guild music manager containing the current player state.
 	 */
-	override fun afterSuccess(context: CommandContext, response: TFutureResponse, payload: GuildMusicManager) {
+	override fun afterSuccess(context: GuildCommandContext, response: TFutureResponse, payload: GuildMusicManager) {
 		val playingTrack = payload.cachedPlayer?.track
 		val queueTrackScheduler = payload.state.queueTrackScheduler
 		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response, this)
@@ -92,7 +92,7 @@ class VoteStopAndClearQueueCmd(
 	 * @param payload A pair containing the currently playing track and the size of the queue.
 	 * @return A message embed detailing the outcome of the stop and clear operation.
 	 */
-	override fun onAsyncSuccess(context: CommandContext, payload: Pair<Track?, Int>): MessageEmbed {
+	override fun onAsyncSuccess(context: GuildCommandContext, payload: Pair<Track?, Int>): MessageEmbed {
 		val (playingTrack, queueSize) = payload
 		log.jdaInfo(
 			context,

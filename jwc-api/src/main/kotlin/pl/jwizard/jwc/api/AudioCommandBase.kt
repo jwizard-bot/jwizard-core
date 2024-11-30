@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.entities.channel.ChannelType
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHandler
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.exception.audio.TemporaryHaltedBotException
@@ -39,7 +39,7 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 * @param context The context of the command, containing user interaction details.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	final override fun execute(context: CommandContext, response: TFutureResponse) {
+	final override fun execute(context: GuildCommandContext, response: TFutureResponse) {
 		val musicManager = commandEnvironment.musicManagers
 			.getOrCreateMusicManager(context, response, commandEnvironment.audioClient)
 
@@ -72,7 +72,7 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 * @return A Triple indicating whether the user is the sender, a DJ, or a superuser.
 	 */
 	protected fun checkPermissions(
-		context: CommandContext,
+		context: GuildCommandContext,
 		manager: GuildMusicManager,
 	): Triple<Boolean, Boolean, Boolean> {
 		val isSender = manager.cachedPlayer?.track?.audioSender?.authorId == context.author.idLong
@@ -89,7 +89,7 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 * @throws UserOnVoiceChannelNotFoundException If the user is not in a voice channel.
 	 * @throws ForbiddenChannelException If the user is in the AFK channel.
 	 */
-	protected fun checkUserVoiceState(context: CommandContext): GuildVoiceState {
+	protected fun checkUserVoiceState(context: GuildCommandContext): GuildVoiceState {
 		val userVoiceState = context.author.voiceState
 		if (userVoiceState?.channel?.type != ChannelType.VOICE) {
 			throw UserOnVoiceChannelNotFoundException(context)
@@ -108,7 +108,7 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 * @param context The context of the command, containing user interaction details.
 	 * @throws UserOnVoiceChannelWithBotNotFoundException If the user is not in the same channel as the bot.
 	 */
-	protected fun userIsWithBotOnAudioChannel(voiceState: GuildVoiceState, context: CommandContext) {
+	protected fun userIsWithBotOnAudioChannel(voiceState: GuildVoiceState, context: GuildCommandContext) {
 		val botVoiceState = context.selfMember.voiceState
 		val superuserPermissions = environment.getListProperty<String>(BotListProperty.JDA_SUPERUSER_PERMISSIONS)
 		val isRegularUser = superuserPermissions.none { context.author.hasPermission(Permission.valueOf(it)) }
@@ -132,9 +132,9 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 * @return An instance of AsyncUpdatableHandler for processing the async updates.
 	 */
 	protected fun <P> createAsyncUpdatablePlayerHandler(
-		context: CommandContext,
+		context: GuildCommandContext,
 		response: TFutureResponse,
-		hook: AsyncUpdatableHook<P>,
+		hook: AsyncUpdatableHook<GuildCommandContext, P>,
 	) = AsyncUpdatableHandler(context, response, this::class, hook, exceptionTrackerHandler)
 
 	/**
@@ -161,5 +161,9 @@ abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : Co
 	 * @param manager The guild music manager responsible for handling the audio queue and playback.
 	 * @param response The future response object used to send the result of the command execution.
 	 */
-	protected abstract fun executeAudio(context: CommandContext, manager: GuildMusicManager, response: TFutureResponse)
+	protected abstract fun executeAudio(
+		context: GuildCommandContext,
+		manager: GuildMusicManager,
+		response: TFutureResponse,
+	)
 }

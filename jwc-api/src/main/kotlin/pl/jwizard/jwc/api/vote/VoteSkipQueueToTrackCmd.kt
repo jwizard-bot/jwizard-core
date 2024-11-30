@@ -10,7 +10,7 @@ import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicVoteCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -64,7 +64,7 @@ class VoteSkipQueueToTrackCmd(
 	 * @throws TrackOffsetOutOfBoundsException If the specified position is out of bounds of the queue.
 	 */
 	override fun executeMusicVote(
-		context: CommandContext,
+		context: GuildCommandContext,
 		manager: GuildMusicManager,
 	): MusicVoterResponse<Pair<GuildMusicManager, Int>> {
 		val position = context.getArg<Int>(Argument.POS)
@@ -92,7 +92,11 @@ class VoteSkipQueueToTrackCmd(
 	 * @param response The future response object to complete.
 	 * @param payload The pair containing the guild music manager and the track position to skip to.
 	 */
-	override fun afterSuccess(context: CommandContext, response: TFutureResponse, payload: Pair<GuildMusicManager, Int>) {
+	override fun afterSuccess(
+		context: GuildCommandContext,
+		response: TFutureResponse,
+		payload: Pair<GuildMusicManager, Int>
+	) {
 		val (manager, position) = payload
 		val currentTrack = manager.state.queueTrackScheduler.queue.skipToPosition(position)!!
 
@@ -113,7 +117,7 @@ class VoteSkipQueueToTrackCmd(
 	 * @param payload The pair containing the track that was selected and its position.
 	 * @return A message embed detailing the outcome of the skip operation.
 	 */
-	override fun onAsyncSuccess(context: CommandContext, payload: Pair<Track, Int>): MessageEmbed {
+	override fun onAsyncSuccess(context: GuildCommandContext, payload: Pair<Track, Int>): MessageEmbed {
 		val (currentTrack, position) = payload
 		log.jdaInfo(
 			context,
