@@ -179,7 +179,6 @@ jobs:
           "${{ secrets.CONFIG_FILE_CONTENT }}" \
           --pipeline infra
 
-
   deploy:
     runs-on: ubuntu-latest
     needs: db-migrate
