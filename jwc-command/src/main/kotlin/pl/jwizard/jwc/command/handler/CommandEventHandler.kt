@@ -4,18 +4,20 @@
  */
 package pl.jwizard.jwc.command.handler
 
-import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.events.Event
-import net.dv8tion.jda.api.hooks.ListenerAdapter
-import net.dv8tion.jda.api.requests.RestAction
 import pl.jwizard.jwc.command.CommandType
-import pl.jwizard.jwc.command.context.CommandContext
+import pl.jwizard.jwc.command.GlobalCommandHandler
+import pl.jwizard.jwc.command.GuildCommandHandler
+import pl.jwizard.jwc.command.context.ArgumentContext
+import pl.jwizard.jwc.command.context.GlobalCommandContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.exception.CommandInvocationException
 import pl.jwizard.jwc.command.exception.CommandParserException
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
+import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
@@ -31,6 +33,7 @@ import pl.jwizard.jwl.command.ArgumentOption
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
+import pl.jwizard.jwl.property.AppBaseProperty
 import java.math.BigInteger
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -46,10 +49,11 @@ import java.util.concurrent.CompletableFuture
  */
 abstract class CommandEventHandler<E : Event>(
 	private val commandEventHandlerEnvironment: CommandEventHandlerEnvironmentBean,
-) : ListenerAdapter() {
+) : UnifiedCommandHandler<E>() {
 
-	private val i18nBean = commandEventHandlerEnvironment.i18n
-	protected val environmentBean = commandEventHandlerEnvironment.environment
+	private val i18n = commandEventHandlerEnvironment.i18n
+	private val commandsCache = commandEventHandlerEnvironment.commandsCache
+	protected val environment = commandEventHandlerEnvironment.environment
 
 	/**
 	 * Properties retrieved in single query at startup command pipeline.
@@ -69,55 +73,72 @@ abstract class CommandEventHandler<E : Event>(
 	 * of checking command conditions, parsing arguments, and executing the command.
 	 *
 	 * @param event The event that triggered this handler.
+	 * @param fromGuild `true`, if event comes from guild, otherwise `false` (ex. private channel).
 	 */
-	protected fun initPipelineAndPerformCommand(event: E) {
+	protected fun initPipelineAndPerformCommand(event: E, fromGuild: Boolean) {
 		var commandResponse: TFutureResponse
-		var context: CommandContext? = null
+		var context: ArgumentContext? = null
 		var privateMessageUserId: Long? = null
 		try {
 			try {
 				val commandDataSupplier = commandEventHandlerEnvironment.commandDataSupplier
-				val commandsCacheBean = commandEventHandlerEnvironment.commandsCache
-				if (forbiddenInvocationCondition(event)) {
-					throw CommandInvocationException("forbidden invocation condition")
+				var properties: GuildMultipleProperties? = null
+				val prefix = if (fromGuild) {
+					val guild = eventGuild(event) ?: throw CommandInvocationException("guild is null")
+					properties = commandEventHandlerEnvironment.environment.getGuildMultipleProperties(
+						guildProperties = propertiesList,
+						guildId = guild.idLong,
+					)
+					if (forbiddenInvocationDetails(event, properties)) {
+						throw CommandInvocationException("forbidden invocation details")
+					}
+					properties.getProperty<String>(GuildProperty.LEGACY_PREFIX)
+				} else {
+					environment.getProperty<String>(AppBaseProperty.GUILD_LEGACY_PREFIX)
 				}
-				val guild = eventGuild(event) ?: throw CommandInvocationException("guild is null")
-				val properties = commandEventHandlerEnvironment.environment.getGuildMultipleProperties(
-					guildProperties = propertiesList,
-					guildId = guild.idLong,
-				)
-				val dbId = properties.getProperty<BigInteger>(GuildProperty.DB_ID)
-				if (forbiddenInvocationDetails(event, properties)) {
-					throw CommandInvocationException("forbidden invocation details")
-				}
-				val (commandNameOrAlias, commandArguments) = commandNameAndArguments(event, properties)
-
+				val (commandNameOrAlias, commandArguments) = commandNameAndArguments(event, prefix)
+				val mergedCommand = commandNameOrAlias.replace(" ", ".")
 				val commandDetails = Command.entries
-					.find { cmd -> cmd.textKey == commandNameOrAlias || cmd.alias == commandNameOrAlias }
-					?: throw CommandInvocationException("command by command name could not be found")
+					.find { it.textKey == mergedCommand }
+					?: throw CommandInvocationException("command by command name: \"$mergedCommand\" could not be found")
 
-				context = createCommandContext(event, commandDetails.textKey, properties)
-
-				val module = commandDetails.module
-				if (commandEventHandlerEnvironment.moduleDataSupplier.isDisabled(module.dbId, dbId)) {
-					val moduleName = i18nBean.t(module, context.guildLanguage)
-					throw ModuleIsTurnedOffException(context, module.name, moduleName, commandDetails.name)
-				}
-				if (commandDataSupplier.isCommandDisabled(dbId, commandDetails.dbId, commandType == CommandType.SLASH)) {
-					throw CommandIsTurnedOffException(context)
+				context = if (properties != null) {
+					val guildContext = createGuildCommandContext(event, commandDetails.textKey, properties)
+					val dbId = properties.getProperty<BigInteger>(GuildProperty.DB_ID)
+					val module = commandDetails.module
+					if (commandEventHandlerEnvironment.moduleDataSupplier.isDisabled(module.dbId, dbId)) {
+						val moduleName = i18n.t(module, guildContext.language)
+						throw ModuleIsTurnedOffException(guildContext, module.name, moduleName, commandDetails.name)
+					}
+					if (commandDataSupplier.isCommandDisabled(dbId, commandDetails.dbId, commandType == CommandType.SLASH)) {
+						throw CommandIsTurnedOffException(guildContext)
+					}
+					guildContext
+				} else {
+					createGlobalCommandContext(event, commandDetails.textKey)!!
 				}
 				val parsedArguments = parseCommandArguments(context, commandDetails, commandArguments)
 				parsedArguments.forEach { (key, value) -> context.commandArguments[key] = value }
 
 				val commandSyntax = createCommandSyntax(context, commandDetails)
-				val command = commandsCacheBean.instancesContainer[commandDetails]
-					?: throw CommandIsTurnedOffException(context)
+				val cache = if (fromGuild) {
+					commandsCache.guildCommandInstances
+				} else {
+					commandsCache.globalCommandInstances
+				}
+				val command = cache[commandDetails] ?: throw CommandIsTurnedOffException(context)
 
 				commandResponse = CompletableFuture<CommandResponse>()
 				try {
-					privateMessageUserId = command.isPrivate(context)
-					deferAction(event, privateMessageUserId != null)
-					command.execute(context, commandResponse)
+					when (command) {
+						is GuildCommandHandler -> {
+							context as GuildCommandContext
+							privateMessageUserId = command.isPrivate(context)
+							deferAction(event, privateMessageUserId != null)
+							command.execute(context, commandResponse)
+						}
+						is GlobalCommandHandler -> command.executeGlobal(context as GlobalCommandContext, commandResponse)
+					}
 				} catch (ex: CommandParserException) {
 					throw MismatchCommandArgumentsException(context, commandSyntax)
 				}
@@ -147,7 +168,7 @@ abstract class CommandEventHandler<E : Event>(
 	 * @param context Optional context for the command, containing additional execution details.
 	 * @param privateUserId User id used to send private message. If it is `null`, message is public.
 	 */
-	private fun sendResponse(event: E, response: CommandResponse, context: CommandContext?, privateUserId: Long?) {
+	private fun sendResponse(event: E, response: CommandResponse, context: CommandBaseContext?, privateUserId: Long?) {
 		val looselyTransportHandlerBean = commandEventHandlerEnvironment.looselyTransportHandler
 		var directEphemeralUser: User? = null
 		val truncatedResponse = try {
@@ -206,22 +227,22 @@ abstract class CommandEventHandler<E : Event>(
 	 *
 	 * @param event The event that triggered this handler, containing the context for the command execution.
 	 * @param user The user to whom the private message will be sent.
-	 * @param context The command context, providing information such as the guild language for localization.
+	 * @param context The command context, providing command invocation information.
 	 * @param response The response generated from executing the command, which may include embedded messages and
 	 *        interactive components.
 	 */
-	private fun sendPrivateMessage(event: E, user: User, context: CommandContext?, response: CommandResponse) {
+	private fun sendPrivateMessage(event: E, user: User, context: CommandBaseContext?, response: CommandResponse) {
 		val looselyTransportHandlerBean = commandEventHandlerEnvironment.looselyTransportHandler
 		val exceptionTrackerStore = commandEventHandlerEnvironment.exceptionTrackerHandler
-		val successMessage = MessageEmbedBuilder(i18nBean, commandEventHandlerEnvironment.jdaColorStore, context)
+		val successMessage = MessageEmbedBuilder(i18n, commandEventHandlerEnvironment.jdaColorStore, context)
 			.setTitle(I18nResponseSource.PRIVATE_MESSAGE_SEND)
 			.setDescription(I18nResponseSource.CHECK_INBOX)
 			.setColor(JdaColor.PRIMARY)
 			.build()
 
 		val i18nSource = I18nExceptionSource.EPHEMERAL_UNEXPECTED_EXCEPTION
-		val trackerMessage = exceptionTrackerStore.createTrackerMessage(i18nSource)
-		val trackerLink = exceptionTrackerStore.createTrackerLink(i18nSource)
+		val trackerMessage = exceptionTrackerStore.createTrackerMessage(i18nSource, context)
+		val trackerLink = exceptionTrackerStore.createTrackerLink(i18nSource, context)
 
 		val errorMessage = CommandResponse.Builder()
 			.addEmbedMessages(trackerMessage)
@@ -249,13 +270,13 @@ abstract class CommandEventHandler<E : Event>(
 	 * This method ensures that the arguments passed match the required command arguments and their respective types,
 	 * handling optional and required arguments as defined in the command details.
 	 *
-	 * @param context The command context, including execution details like language and guild ID.
+	 * @param context The command context, including execution details.
 	 * @param details The command details, including its argument structure.
 	 * @param arguments The list of arguments passed in the command.
 	 * @return A map of parsed command arguments and their associated value.
 	 */
 	private fun parseCommandArguments(
-		context: CommandContext,
+		context: CommandBaseContext,
 		details: Command,
 		arguments: List<String>,
 	): Map<Argument, String?> {
@@ -269,8 +290,8 @@ abstract class CommandEventHandler<E : Event>(
 			val argOptions = it.options.map(ArgumentOption::textKey)
 			val optionMapping: String? = options.poll()
 			if (argOptions.isNotEmpty() && !argOptions.contains(optionMapping)) {
-				val syntax = createArgumentsOptionsSyntax(it.options, context.guildLanguage)
-				val argsDescription = i18nBean.t(it, context.guildLanguage)
+				val syntax = createArgumentsOptionsSyntax(it.options, context.language)
+				val argsDescription = i18n.t(it, context.language)
 				throw ViolatedCommandArgumentOptionsException(context, argsDescription, optionMapping, argOptions, syntax)
 			}
 			if (optionMapping == null && it.required) {
@@ -283,23 +304,20 @@ abstract class CommandEventHandler<E : Event>(
 	/**
 	 * Creates a string representation of the command syntax for the help message.
 	 *
-	 * @param commandContext The command context.
+	 * @param context The command context.
 	 * @param command The command details.
 	 * @return A string representing the command syntax.
 	 */
-	private fun createCommandSyntax(commandContext: CommandContext, command: Command): String {
+	private fun createCommandSyntax(context: CommandBaseContext, command: Command): String {
 		val stringJoiner = StringJoiner("")
 		stringJoiner.add("\n")
-		val commandInvokers = arrayOf(command.textKey, command.alias)
-		commandInvokers.forEach {
-			stringJoiner.add("\n`${commandContext.prefix}$it")
-			if (command.argumentsDefinition != null) {
-				val lang = commandContext.guildLanguage
-				val argSyntax = i18nBean.t(command.argumentsDefinition!!, lang)
-				stringJoiner.add(" <$argSyntax>")
-			}
-			stringJoiner.add("`")
+		stringJoiner.add("\n`${context.prefix}${context.commandName}")
+		if (command.argumentsDefinition != null) {
+			val lang = context.language
+			val argSyntax = i18n.t(command.argumentsDefinition!!, lang)
+			stringJoiner.add(" <$argSyntax>")
 		}
+		stringJoiner.add("`")
 		return stringJoiner.toString()
 	}
 
@@ -313,90 +331,7 @@ abstract class CommandEventHandler<E : Event>(
 	private fun createArgumentsOptionsSyntax(options: List<ArgumentOption>, lang: String): String {
 		val stringJoiner = StringJoiner("")
 		stringJoiner.add("\n")
-		options.forEach { stringJoiner.add("\n* `${it.textKey}` - ${i18nBean.t(it, lang)}") }
+		options.forEach { stringJoiner.add("\n* `${it.textKey}` - ${i18n.t(it, lang)}") }
 		return stringJoiner.toString()
 	}
-
-	/**
-	 * The type of command this handler processes.
-	 */
-	protected abstract val commandType: CommandType
-
-	/**
-	 * Determines if the event invocation is forbidden based on certain conditions.
-	 *
-	 * @param event The event being processed.
-	 * @return True if the invocation is forbidden; otherwise, false.
-	 */
-	protected abstract fun forbiddenInvocationCondition(event: E): Boolean
-
-	/**
-	 * Retrieves the guild associated with the event.
-	 *
-	 * @param event The event being processed.
-	 * @return The associated guild, or null if not applicable.
-	 */
-	protected abstract fun eventGuild(event: E): Guild?
-
-	/**
-	 * Checks if the event invocation details are forbidden based on guild properties.
-	 *
-	 * @param event The event being processed.
-	 * @param properties The command properties for the guild.
-	 * @return True if forbidden; otherwise, false.
-	 */
-	protected open fun forbiddenInvocationDetails(event: E, properties: GuildMultipleProperties) = false
-
-	/**
-	 * Extracts the command name and its arguments from the event.
-	 *
-	 * @param event The event being processed.
-	 * @param properties The command properties for the guild.
-	 * @return A pair containing the command name and a list of arguments.
-	 */
-	protected abstract fun commandNameAndArguments(
-		event: E,
-		properties: GuildMultipleProperties,
-	): Pair<String, List<String>>
-
-	/**
-	 * Creates the command context from the event and the guild properties.
-	 *
-	 * @param event The event being processed.
-	 * @param command Definition of the command on which the event was invoked.
-	 * @param properties The command properties for the guild.
-	 * @return The command context created from the event.
-	 */
-	protected abstract fun createCommandContext(
-		event: E,
-		command: String,
-		properties: GuildMultipleProperties,
-	): CommandContext
-
-	/**
-	 * Defers a message based on the event and the command response.
-	 *
-	 * @param event The event being processed.
-	 * @param response The response generated from executing the command.
-	 * @param privateMessage The value defined, if sending message should be private or public.
-	 * @param suppressNotifications Determines if notifications from bot responses should be suppressed.
-	 * @return A RestAction that sends the deferred message.
-	 */
-	protected abstract fun deferMessage(
-		event: E,
-		response: CommandResponse,
-		privateMessage: Boolean,
-		suppressNotifications: Boolean?,
-	): RestAction<Message>
-
-	/**
-	 * Defers an action for the given event, which can be configured to be either public or private (ephemeral).
-	 * This method can be overridden to customize the behavior based on the event type and context.
-	 *
-	 * @param event The event that triggered the action, typically containing the necessary context such as user, guild,
-	 *        or message details.
-	 * @param privateMessage A boolean indicating whether the response should be ephemeral (private) or public. If true,
-	 *        the response will be sent as a private message (ephemeral); if false, it will be visible to everyone.
-	 */
-	protected open fun deferAction(event: E, privateMessage: Boolean) {}
 }

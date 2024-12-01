@@ -8,7 +8,8 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.requests.RestAction
 import pl.jwizard.jwc.command.CommandType
-import pl.jwizard.jwc.command.context.SlashCommandContext
+import pl.jwizard.jwc.command.context.GlobalCommandContext
+import pl.jwizard.jwc.command.context.SlashGuildCommandContext
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
 import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
@@ -31,17 +32,8 @@ class SlashCommandEventHandlerBean(
 	 *
 	 * @param event The slash command interaction event.
 	 */
-	override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
-		initPipelineAndPerformCommand(event)
-	}
-
-	/**
-	 * Checks if the command invocation is forbidden based on the event context.
-	 *
-	 * @param event The slash command interaction event.
-	 * @return True if the invocation is forbidden; otherwise false.
-	 */
-	override fun forbiddenInvocationCondition(event: SlashCommandInteractionEvent) = !event.isFromGuild
+	override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) =
+		initPipelineAndPerformCommand(event, event.isFromGuild)
 
 	/**
 	 * Retrieves the guild associated with the event.
@@ -55,10 +47,10 @@ class SlashCommandEventHandlerBean(
 	 * Extracts the command name and its arguments from the event.
 	 *
 	 * @param event The slash command interaction event.
-	 * @param properties The command properties for the guild.
+	 * @param prefix Command prefix. Can always be "/" for slash command invocations.
 	 * @return A pair containing the command name and its arguments.
 	 */
-	override fun commandNameAndArguments(event: SlashCommandInteractionEvent, properties: GuildMultipleProperties) =
+	override fun commandNameAndArguments(event: SlashCommandInteractionEvent, prefix: String) =
 		Pair(event.fullCommandName, event.options.map { it.asString })
 
 	/**
@@ -69,11 +61,21 @@ class SlashCommandEventHandlerBean(
 	 * @param properties The command properties for the guild.
 	 * @return The command context.
 	 */
-	override fun createCommandContext(
+	override fun createGuildCommandContext(
 		event: SlashCommandInteractionEvent,
 		command: String,
 		properties: GuildMultipleProperties,
-	) = SlashCommandContext(event, command, properties)
+	) = SlashGuildCommandContext(event, command, properties)
+
+	/**
+	 * Creates a new instance of [GlobalCommandContext] based on the provided event and command.
+	 *
+	 * @param event The [SlashCommandInteractionEvent] that triggered the slash command.
+	 * @param command The string representing the name of the command that was invoked.
+	 * @return A new [GlobalCommandContext] instance that contains all the necessary information for processing the command.
+	 */
+	override fun createGlobalCommandContext(event: SlashCommandInteractionEvent, command: String) =
+		GlobalCommandContext(event, command)
 
 	/**
 	 * Sends a response message based on the command execution result.

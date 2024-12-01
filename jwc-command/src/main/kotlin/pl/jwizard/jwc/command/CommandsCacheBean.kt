@@ -4,38 +4,31 @@
  */
 package pl.jwizard.jwc.command
 
-import pl.jwizard.jwl.command.Command
+import pl.jwizard.jwc.command.reflect.CommandsStore
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
-import pl.jwizard.jwl.util.logger
-import java.util.concurrent.ConcurrentHashMap
 
 /**
- * An IoC component that manages a cache of command instances. This class provides functionality to store and
- * retrieve command instances in a thread-safe manner.
+ * A singleton component that acts as a centralized cache for command instances. It maintains separate stores for
+ * guild-specific commands and global commands.
  *
  * @author Miłosz Gilga
  */
 @SingletonComponent
 class CommandsCacheBean {
 
-	companion object {
-		private val log = logger<CommandsCacheBean>()
-	}
-
 	/**
-	 * A concurrent map that stores command instances, indexed by their name. The key is the command name, and the value
-	 * is the [CommandHandler] instance.
-	 */
-	val instancesContainer = ConcurrentHashMap<Command, CommandHandler>()
-
-	/**
-	 * Adds a command instance to the [instancesContainer] map.
+	 * A concurrent store that holds guild-specific command handlers, indexed by their command name. The key represents
+	 * the name of the command, and the value is the corresponding [GuildCommandHandler] instance.
 	 *
-	 * @param name The name of the command to be added.
-	 * @param command The [CommandHandler] instance of the command to be stored.
+	 * This store is used to manage commands that are tied to a specific guild (server) context.
 	 */
-	fun addInstance(name: Command, command: CommandHandler) {
-		instancesContainer[name] = command
-		log.info("Command: \"{}\" ({}) appended via reflection.", name, command.javaClass.name)
-	}
+	val guildCommandInstances = CommandsStore<GuildCommandHandler>("guild")
+
+	/**
+	 * A concurrent store that holds global command handlers, indexed by their command name. The key represents the name
+	 * of the command, and the value is the corresponding [GlobalCommandHandler] instance.
+	 *
+	 * This store is used to manage commands that can operate outside the guild context, such as global or DM commands.
+	 */
+	val globalCommandInstances = CommandsStore<GlobalCommandHandler>("global")
 }

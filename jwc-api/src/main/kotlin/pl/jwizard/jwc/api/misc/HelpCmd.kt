@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.api.CommandBase
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.command.GlobalCommandHandler
-import pl.jwizard.jwc.command.GuildCommandHandler
+import pl.jwizard.jwc.command.context.GlobalCommandContext
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.command.spi.CommandDataSupplier
@@ -40,32 +40,31 @@ class HelpCmd(
 	private val commandDataSupplier: CommandDataSupplier,
 	private val moduleDataSupplier: ModuleDataSupplier,
 	commandEnvironment: CommandEnvironmentBean,
-) : CommandBase(commandEnvironment) {
+) : CommandBase(commandEnvironment), GlobalCommandHandler {
 
 	/**
-	 * Retrieves and returns a map of commands that are enabled for the current guild.
+	 * Executes the `Help` command in a guild-specific context. Filters out disabled commands and modules for the guild
+	 * and displays the remaining ones in a paginated embed format.
 	 *
-	 * @param context The context of the command execution, containing guild, user, and event information.
-	 * @param response The future response object used to send back the command output to Discord.
+	 * @param context The guild command context, including guild and user details.
+	 * @param response The future response object used to send the result asynchronously.
 	 */
 	override fun execute(context: GuildCommandContext, response: TFutureResponse) {
 		val disabledCommands = commandDataSupplier.getDisabledGuildCommands(context.guildDbId, context.isSlashEvent)
 		val disabledModules = moduleDataSupplier.getDisabledGuildModules(context.guildDbId)
 
-		val guildCommands = Command.entries.filter {
-			it.dbId !in disabledCommands && it.module.dbId !in disabledModules
-		}
-		val paginator = createPaginator(context, createHelpComponents(context, guildCommands))
-		val row = paginator.createPaginatorButtonsRow()
-		val initMessage = paginator.initPaginator()
-
-		val commandResponse = CommandResponse.Builder()
-			.addEmbedMessages(initMessage)
-			.addActionRows(row)
-			.build()
-
-		response.complete(commandResponse)
+		val guildCommands = Command.entries.filter { it.dbId !in disabledCommands && it.module.dbId !in disabledModules }
+		executeCommand(guildCommands, context, response)
 	}
+
+	/**
+	 * Executes the `Help` command in a global context. Displays all available commands without guild-specific filtering.
+	 *
+	 * @param context The global command context, including user and interaction details.
+	 * @param response The future response object used to send the result asynchronously.
+	 */
+	override fun executeGlobal(context: GlobalCommandContext, response: TFutureResponse) =
+		executeCommand(Command.entries, context, response)
 
 	/**
 	 * Checks whether the command should be executed in private mode. If the command is executed with a "private"
@@ -77,6 +76,27 @@ class HelpCmd(
 	override fun isPrivate(context: GuildCommandContext): Long? {
 		val isPrivate = context.getNullableArg<Boolean>(Argument.PRIVATE)
 		return if (isPrivate == true) context.author.idLong else null
+	}
+
+	/**
+	 * Handles the actual execution of the `Help` command. Creates paginated embeds with available commands and sends
+	 * them as a response.
+	 *
+	 * @param commands A list of commands to include in the response.
+	 * @param context The command execution context.
+	 * @param response The future response object used to send the result asynchronously.
+	 */
+	private fun executeCommand(commands: List<Command>, context: CommandBaseContext, response: TFutureResponse) {
+		val paginator = createPaginator(context, createHelpComponents(context, commands))
+		val row = paginator.createPaginatorButtonsRow()
+		val initMessage = paginator.initPaginator()
+
+		val commandResponse = CommandResponse.Builder()
+			.addEmbedMessages(initMessage)
+			.addActionRows(row)
+			.build()
+
+		response.complete(commandResponse)
 	}
 
 	/**

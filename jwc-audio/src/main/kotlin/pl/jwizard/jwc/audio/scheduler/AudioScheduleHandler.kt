@@ -11,7 +11,10 @@ import reactor.core.Disposable
 import reactor.core.publisher.Mono
 
 /**
- * TODO
+ * Abstract class responsible for handling the audio scheduling process in a guild's music system.
+ *
+ * It interacts with the [GuildMusicManager] to control the playback of music tracks. This class provides methods to
+ * stop the current track and start a new one, as well as manage the audio player's state.
  *
  * @property guildMusicManager The [GuildMusicManager] instance used for managing music playback.
  * @author Miłosz Gilga
