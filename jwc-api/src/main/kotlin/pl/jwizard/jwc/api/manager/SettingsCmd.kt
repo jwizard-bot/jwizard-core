@@ -48,7 +48,8 @@ class SettingsCmd(commandEnvironment: CommandEnvironmentBean) : ManagerCommandBa
 			val messageBuilder = createEmbedMessage(context)
 				.setTitle(I18nSystemSource.GUILD_SETTINGS_HEADER)
 
-			for ((column, value) in chunk) {
+			for ((index, pair) in chunk.withIndex()) {
+				val (column, value) = pair
 				val converter = column.converter
 				if (column.placeholder.isEmpty() || converter == null) {
 					continue
@@ -60,7 +61,10 @@ class SettingsCmd(commandEnvironment: CommandEnvironmentBean) : ManagerCommandBa
 				} else {
 					convertedValue.toString()
 				}
-				messageBuilder.setKeyValueField(key, parsedValue, inline = false)
+				messageBuilder.setKeyValueField(key, parsedValue)
+				if (index % 2 == 0) {
+					messageBuilder.setSpace()
+				}
 			}
 			val message = messageBuilder
 				.setColor(JdaColor.PRIMARY)

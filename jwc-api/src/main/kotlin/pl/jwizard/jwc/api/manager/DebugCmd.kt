@@ -4,13 +4,11 @@
  */
 package pl.jwizard.jwc.api.manager
 
-import net.dv8tion.jda.api.JDAInfo
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.ManagerCommandBase
-import pl.jwizard.jwc.command.context.CommandContext
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.interaction.component.RefreshableContent
 import pl.jwizard.jwc.command.reflect.JdaCommand
@@ -23,9 +21,7 @@ import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.embed.PercentageIndicatorBar
-import pl.jwizard.jwc.core.jvm.SystemProperty
 import pl.jwizard.jwc.core.property.BotProperty
-import pl.jwizard.jwc.core.util.ext.versionFormat
 import pl.jwizard.jwc.core.util.mdBold
 import pl.jwizard.jwc.core.util.mdLink
 import pl.jwizard.jwc.core.util.mdList
@@ -50,7 +46,7 @@ class DebugCmd(
 	private val deploymentSupplier: VcsDeploymentSupplier,
 	private val vcsConfigBean: VcsConfigBean,
 	commandEnvironment: CommandEnvironmentBean,
-) : ManagerCommandBase(commandEnvironment), RefreshableContent<CommandContext> {
+) : ManagerCommandBase(commandEnvironment), RefreshableContent<CommandBaseContext> {
 
 	/**
 	 * Executes the debug command, generating a response with detailed information about the bot, system, and audio client
@@ -111,7 +107,6 @@ class DebugCmd(
 	 */
 	private fun createDebugMessage(context: CommandBaseContext): MessageEmbed {
 		val (coreUrl, details) = getDeploymentAppData(VcsRepository.JWIZARD_CORE)
-		val (audioClientUrl) = getDeploymentAppData(VcsRepository.JWIZARD_AUDIO_CLIENT)
 
 		val runtime = Runtime.getRuntime()
 		val totalMemory = runtime.maxMemory()
@@ -124,12 +119,6 @@ class DebugCmd(
 			.setSpace()
 			.setKeyValueField(I18nSystemSource.DEPLOYMENT_DATE, details?.lastUpdatedUtc.toString())
 
-		for ((index, entry) in SystemProperty.entries.withIndex()) {
-			messageBuilder.setKeyValueField(entry.i18nSystemSource, environment.getProperty(entry.botProperty))
-			if (index % 2 == 0) {
-				messageBuilder.setSpace()
-			}
-		}
 		val availableNodes = commandEnvironment.audioClient.availableNodes
 		val audioNodesInfo = availableNodes.joinToString("\n") {
 			val memory = it.stats?.memory
@@ -138,12 +127,10 @@ class DebugCmd(
 			val memoryBar = PercentageIndicatorBar(memory?.used ?: 0, memory?.reservable ?: 0)
 			val cpuStats = "%.2f%%".format(it.stats?.cpu?.lavalinkLoad)
 
-			val info = it.getNodeInfo().toFuture().get()
 			val joiner = StringJoiner("")
-
-			joiner.add(mdList("${mdBold(it.name)} (CPU: $cpuStats) (MEM: $usedMem/$maxMem)", eol = true))
+			joiner.add(mdList(mdBold(it.name), eol = true))
 			joiner.add("  ${memoryBar.generateBar(showPercentageNumber = true)}\n")
-			joiner.add("  Lavalink: ${info.version.semver.versionFormat}, Lavaplayer: ${info.lavaplayer.versionFormat}")
+			joiner.add("  CPU: $cpuStats, MEM: $usedMem/$maxMem")
 			joiner.toString()
 		}
 		return messageBuilder
@@ -155,9 +142,6 @@ class DebugCmd(
 				percentageIndicatorBar.generateBar(showPercentageNumber = true),
 				inline = false
 			)
-			.setKeyValueField(I18nSystemSource.JDA_VERSION, JDAInfo.VERSION.versionFormat)
-			.setSpace()
-			.setKeyValueField(I18nSystemSource.AUDIO_CLIENT_VERSION, audioClientUrl)
 			.setKeyValueField(I18nSystemSource.AVAILABLE_AUDIO_NODES, audioNodesInfo, inline = false)
 			.setColor(JdaColor.PRIMARY)
 			.build()
