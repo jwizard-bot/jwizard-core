@@ -54,11 +54,12 @@ fun Logger.jdaError(context: CommandBaseContext, message: String, vararg args: A
  * @return A formatted string containing guild, author, and the message.
  */
 private fun loggerMessageContent(context: CommandBaseContext, message: String, vararg args: Any?): String {
-	var template = "A: %s"
-	val messageArgs = mutableListOf(context.author.qualifier)
+	var template = ""
+	val messageArgs = mutableListOf<String>()
 	if (context is GuildCommandBaseContext) {
+		messageArgs += context.author.qualifier
 		messageArgs += context.guild.qualifier
-		template += ", G: %s"
+		template += "A: %s, G: %s"
 	}
 	messageArgs += message.format(*args)
 	return "$template -> %s".format(*(messageArgs.toTypedArray()))

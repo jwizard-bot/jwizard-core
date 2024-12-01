@@ -82,5 +82,5 @@ class RefreshableComponent<T>(
 	 * @param content The command base context to determine language for the button label.
 	 * @return A [Button] that, when pressed, triggers the content refresh.
 	 */
-	fun createRefreshButton(content: CommandBaseContext) = createButton(InteractionButton.REFRESH, content.guildLanguage)
+	fun createRefreshButton(content: CommandBaseContext) = createButton(InteractionButton.REFRESH, content.language)
 }

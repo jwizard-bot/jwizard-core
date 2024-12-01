@@ -10,7 +10,7 @@ import pl.jwizard.jwc.audio.client.AudioNodePool
 import pl.jwizard.jwc.audio.client.DistributedAudioClientBean
 import pl.jwizard.jwc.audio.loader.QueueTrackLoader
 import pl.jwizard.jwc.audio.loader.RadioStreamLoader
-import pl.jwizard.jwc.core.jda.command.CommandBaseContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit
  */
 class GuildMusicManager(
 	val bean: MusicManagersBean,
-	private val commandContext: CommandBaseContext,
+	private val commandContext: GuildCommandContext,
 	private val future: TFutureResponse,
 	private val audioClient: DistributedAudioClientBean,
 ) {
@@ -89,7 +89,7 @@ class GuildMusicManager(
 	 * @param trackName The name or URL of the track to load.
 	 * @param context The context of the command that initiated the playback.
 	 */
-	fun loadAndPlay(trackName: String, context: CommandBaseContext) {
+	fun loadAndPlay(trackName: String, context: GuildCommandContext) {
 		val searchPrefix = bean.environment.getProperty<String>(BotProperty.AUDIO_SERVER_SEARCH_DEFAULT_CONTENT_PREFIX)
 		val parsedTrackName = if (isValidUrl(trackName)) {
 			trackName.replace(" ", "")
@@ -108,7 +108,7 @@ class GuildMusicManager(
 	 * @param radioStation Current selected [RadioStation] property.
 	 * @param context The context of the command that initiated the stream.
 	 */
-	fun loadAndStream(radioStation: RadioStation, context: CommandBaseContext) {
+	fun loadAndStream(radioStation: RadioStation, context: GuildCommandContext) {
 		audioClient.loadAndTransferToNode(context, AudioNodePool.CONTINUOUS) {
 			state.setToStream(context, radioStation)
 			it.loadItem(radioStation.streamUrl).subscribe(RadioStreamLoader(this, radioStation))

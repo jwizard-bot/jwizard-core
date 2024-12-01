@@ -94,14 +94,17 @@ class GuildEventListenerBean(
 	 * @param guild The guild for which settings are being persisted.
 	 */
 	private fun persistGuildSettings(guild: Guild) {
-		val (arePersisted, errorMessage) = guildSettingsEventAction.createGuildSettings(guild.idLong, guild.locale.locale)
+		val (areNewlyPersisted, errorMessage) = guildSettingsEventAction.createGuildSettings(
+			guild.idLong,
+			guild.locale.locale,
+		)
 		if (errorMessage != null) {
 			log.error("Unexpected exception while persisting guild: {}. Cause: {}.", guild.qualifier, errorMessage)
 			guild.leave().queue { log.info("Leaved guild: {}.", guild.qualifier) }
 			return
 		}
-		if (arePersisted) {
-			log.info("Saved guild: {} settings into persisted storage.", guild.qualifier)
+		if (areNewlyPersisted) {
+			log.debug("Saved guild: {} settings into persisted storage.", guild.qualifier)
 		}
 		slashCommandRegisterer.registerGuildCommands(guild)
 	}

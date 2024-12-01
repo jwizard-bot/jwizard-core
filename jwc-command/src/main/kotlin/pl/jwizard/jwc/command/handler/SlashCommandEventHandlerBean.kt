@@ -18,19 +18,13 @@ import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
  *
  * @property commandEventHandlerEnvironment Stored all beans for command event handler.
  * @author Miłosz Gilga
- * @see CommandEventHandler
- * @see SlashCommandInteractionEvent
  */
 @JdaEventListenerBean
 class SlashCommandEventHandlerBean(
 	private val commandEventHandlerEnvironment: CommandEventHandlerEnvironmentBean,
 ) : CommandEventHandler<SlashCommandInteractionEvent>(commandEventHandlerEnvironment) {
 
-	/**
-	 * Specifies the command type as SLASH for this handler.
-	 */
-	override val commandType
-		get() = CommandType.SLASH
+	override val commandType = CommandType.SLASH
 
 	/**
 	 * Handles a slash command interaction event by deferring the reply and initiating the command processing pipeline.

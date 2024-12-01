@@ -17,15 +17,9 @@ enum class I18nSystemSource(override val placeholder: String) : I18nLocaleSource
 	GUILD_SETTINGS_HEADER("jw.system.header.guildSettings"),
 	DEPLOYMENT_DATE("jw.system.deploymentDate"),
 	COMPILATION_VERSION("jw.system.compilationVersion"),
-	JVM_NAME("jw.system.java.jvmName"),
-	JRE_VERSION("jw.system.java.jreVersion"),
 	JVM_MEMORY_USAGE("jw.system.java.jvmMemoryUsage"),
 	JVM_XMX_MEMORY("jw.system.java.jvmXmxMemory"),
 	JVM_USED_MEMORY("jw.system.java.jvmUsedMemory"),
-	OS_NAME("jw.system.java.osName"),
-	OS_ARCHITECTURE("jw.system.java.osArchitecture"),
-	JDA_VERSION("jw.system.jdaVersion"),
-	AUDIO_CLIENT_VERSION("jw.system.audioClientVersion"),
 	AVAILABLE_AUDIO_NODES("jw.system.availableAudioNodes"),
 	;
 }

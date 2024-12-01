@@ -6,9 +6,9 @@ package pl.jwizard.jwc.audio.manager
 
 import pl.jwizard.jwc.audio.client.DistributedAudioClientBean
 import pl.jwizard.jwc.audio.spi.RadioStationThumbnailSupplier
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.transport.LooselyTransportHandlerBean
 import pl.jwizard.jwc.core.jda.color.JdaColorsCacheBean
-import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
 import pl.jwizard.jwc.core.property.EnvironmentBean
@@ -55,7 +55,7 @@ class MusicManagersBean(
 	 * @return A music manager associated with the guild.
 	 */
 	fun getOrCreateMusicManager(
-		context: CommandBaseContext,
+		context: GuildCommandContext,
 		future: TFutureResponse,
 		audioClient: DistributedAudioClientBean,
 	) = synchronized(this) {

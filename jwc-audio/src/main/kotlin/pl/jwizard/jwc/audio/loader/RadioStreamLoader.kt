@@ -84,5 +84,5 @@ class RadioStreamLoader(
 	 * Retrieves the name of the radio station for localization purposes.
 	 */
 	private val radioStationName
-		get() = guildMusicManager.bean.i18n.t(radioStation, guildMusicManager.state.context.guildLanguage)
+		get() = guildMusicManager.bean.i18n.t(radioStation, guildMusicManager.state.context.language)
 }

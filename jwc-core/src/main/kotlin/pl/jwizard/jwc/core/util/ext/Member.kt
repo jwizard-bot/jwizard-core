@@ -23,12 +23,3 @@ val Member.name get() = user.name
  * @author Miłosz Gilga
  */
 val Member.qualifier get() = formatQualifier(name, idLong)
-
-/**
- * Extension property to retrieve the member's avatar URL if available, or the default avatar URL if the user does not
- * have a custom avatar.
- *
- * @return A string representing the URL of the avatar or the default avatar.
- * @author Miłosz Gilga
- */
-val Member.avatarOrDefaultUrl get() = avatarUrl ?: defaultAvatarUrl

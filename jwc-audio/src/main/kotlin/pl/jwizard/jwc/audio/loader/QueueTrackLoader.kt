@@ -180,7 +180,7 @@ class QueueTrackLoader(
 		val context = guildMusicManager.state.context
 		val queueSize = guildMusicManager.state.queueTrackScheduler.queue.size
 		val trackPosition = if (queueSize == 1) {
-			guildMusicManager.bean.i18n.t(I18nAudioSource.NEXT_TRACK_INDEX_MESS, context.guildLanguage)
+			guildMusicManager.bean.i18n.t(I18nAudioSource.NEXT_TRACK_INDEX_MESS, context.language)
 		} else {
 			queueSize.toString()
 		}

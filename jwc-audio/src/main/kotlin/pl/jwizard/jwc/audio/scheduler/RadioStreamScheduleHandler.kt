@@ -63,14 +63,14 @@ class RadioStreamScheduleHandler(
 		val i18nBean = guildMusicManager.bean.i18n
 
 		val listElements = mapOf(
-			I18nResponseSource.START_PLAYING_RADIO_STATION_FIRST_OPTION to mapOf("stopRadioStationCmd" to Command.STOPRADIO),
-			I18nResponseSource.START_PLAYING_RADIO_STATION_SECOND_OPTION to mapOf("radioStationInfoCmd" to Command.RADIOINFO),
+			I18nResponseSource.START_PLAYING_RADIO_STATION_FIRST_OPTION to mapOf("stopRadioStationCmd" to Command.RADIO_STOP),
+			I18nResponseSource.START_PLAYING_RADIO_STATION_SECOND_OPTION to mapOf("radioStationInfoCmd" to Command.RADIO_INFO),
 		)
 		val parsedListElements = listElements.entries.joinToString("\n") { (i18nKey, i18nArgs) ->
 			mdList(
 				i18nBean.t(
 					i18nKey,
-					context.guildLanguage,
+					context.language,
 					i18nArgs.mapValues { it.value.parseWithPrefix(context.prefix) })
 			)
 		}
@@ -78,7 +78,7 @@ class RadioStreamScheduleHandler(
 		val message = guildMusicManager.createEmbedBuilder()
 			.setTitle(
 				i18nLocaleSource = I18nResponseSource.START_PLAYING_RADIO_STATION,
-				args = mapOf("radioStationName" to i18nBean.t(radioStation, context.guildLanguage)),
+				args = mapOf("radioStationName" to i18nBean.t(radioStation, context.language)),
 			)
 			.setDescription(parsedListElements)
 			.setLocalArtwork(name)
@@ -118,8 +118,8 @@ class RadioStreamScheduleHandler(
 			.setDescription(
 				i18nLocaleSource = I18nResponseSource.STOP_PLAYING_RADIO_STATION,
 				args = mapOf(
-					"radioStationName" to guildMusicManager.bean.i18n.t(radioStation, context.guildLanguage),
-					"startRadioStationCmd" to Command.PLAYRADIO.parseWithPrefix(context.prefix),
+					"radioStationName" to guildMusicManager.bean.i18n.t(radioStation, context.language),
+					"startRadioStationCmd" to Command.RADIO_PLAY.parseWithPrefix(context.prefix),
 				),
 			)
 			.setColor(JdaColor.PRIMARY)
@@ -174,7 +174,7 @@ class RadioStreamScheduleHandler(
 		val i18nLocaleSource = I18nExceptionSource.UNEXPECTED_ERROR_WHILE_STREAMING_RADIO
 		val message = tracker.createTrackerMessage(
 			i18nLocaleSource, context,
-			args = mapOf("radioStation" to i18nBean.t(radioStation, context.guildLanguage))
+			args = mapOf("radioStation" to i18nBean.t(radioStation, context.language))
 		)
 		val link = tracker.createTrackerLink(i18nLocaleSource, context)
 		log.jdaInfo(

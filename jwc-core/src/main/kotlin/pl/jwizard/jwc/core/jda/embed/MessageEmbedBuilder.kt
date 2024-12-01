@@ -9,8 +9,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.color.JdaColorsCacheBean
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
-import pl.jwizard.jwc.core.util.ext.avatarOrDefaultUrl
-import pl.jwizard.jwc.core.util.ext.name
 import pl.jwizard.jwc.core.util.keyValueFormat
 import pl.jwizard.jwl.i18n.I18nBean
 import pl.jwizard.jwl.i18n.I18nLocaleSource
@@ -46,15 +44,6 @@ class MessageEmbedBuilder(
 	 */
 	fun setTitle(i18nLocaleSource: I18nLocaleSource, args: Map<String, Any?> = emptyMap()) =
 		setTitle(i18nBean.t(i18nLocaleSource, context?.language, args))
-
-	/**
-	 * Sets the author of the embed if context is available.
-	 *
-	 * @return The current instance of [MessageEmbedBuilder] for method chaining.
-	 */
-	fun setAuthor() = apply {
-		context?.let { super.setAuthor(it.author.name, null, it.author.avatarOrDefaultUrl) }
-	}
 
 	/**
 	 * Sets the description of the embed using internationalization.

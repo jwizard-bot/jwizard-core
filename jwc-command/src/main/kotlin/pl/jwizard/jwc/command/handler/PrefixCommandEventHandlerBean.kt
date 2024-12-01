@@ -21,8 +21,6 @@ import pl.jwizard.jwc.core.property.guild.GuildProperty
  *
  * @property commandEventHandlerEnvironment Stored all beans for command event handler.
  * @author Miłosz Gilga
- * @see CommandEventHandler
- * @see MessageReceivedEvent
  */
 @JdaEventListenerBean
 class PrefixCommandEventHandlerBean(
@@ -36,11 +34,7 @@ class PrefixCommandEventHandlerBean(
 		private const val COMMAND_ARGS_DELIMITER = "\\|"
 	}
 
-	/**
-	 * Defines the command type as legacy for this handler.
-	 */
-	override val commandType
-		get() = CommandType.PREFIX
+	override val commandType = CommandType.PREFIX
 
 	/**
 	 * Handles the message received event by initializing the command processing pipeline.

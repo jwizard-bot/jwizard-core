@@ -13,8 +13,8 @@ import pl.jwizard.jwac.gateway.JDAVoiceUpdateListener
 import pl.jwizard.jwac.node.AudioNode
 import pl.jwizard.jwac.node.NodeConfig
 import pl.jwizard.jwac.node.NodePool
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.audio.spi.DistributedAudioClient
-import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwl.ioc.CleanupAfterIoCDestroy
@@ -120,7 +120,7 @@ class DistributedAudioClientBean(
 	 * @param pool The target node pool to transfer to.
 	 * @param onTransfer A callback executed after transferring to the target node.
 	 */
-	fun loadAndTransferToNode(context: CommandBaseContext, pool: NodePool, onTransfer: (AudioNode) -> Unit) =
+	fun loadAndTransferToNode(context: GuildCommandContext, pool: NodePool, onTransfer: (AudioNode) -> Unit) =
 		audioController.loadAndTransferToNode(context.guild, pool, context.author, context.selfMember, onTransfer)
 
 	/**

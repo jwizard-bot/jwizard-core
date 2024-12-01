@@ -8,7 +8,7 @@ import pl.jwizard.jwc.audio.AudioContentType
 import pl.jwizard.jwc.audio.scheduler.AudioScheduleHandler
 import pl.jwizard.jwc.audio.scheduler.QueueTrackScheduleHandler
 import pl.jwizard.jwc.audio.scheduler.RadioStreamScheduleHandler
-import pl.jwizard.jwc.core.jda.command.CommandBaseContext
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwl.radio.RadioStation
 
@@ -23,7 +23,7 @@ import pl.jwizard.jwl.radio.RadioStation
  */
 class AudioStateManagerProvider(
 	private val guildMusicManager: GuildMusicManager,
-	private val derivedContext: CommandBaseContext,
+	private val derivedContext: GuildCommandContext,
 	private val derivedFuture: TFutureResponse,
 ) {
 
@@ -58,7 +58,7 @@ class AudioStateManagerProvider(
 	 *
 	 * @param context The context of the command requesting the switch.
 	 */
-	fun setToQueueTrack(context: CommandBaseContext) {
+	fun setToQueueTrack(context: GuildCommandContext) {
 		updateState(AudioContentType.QUEUE_TRACK, context)
 		if (audioScheduleHandler !is QueueTrackScheduleHandler) {
 			audioScheduleHandler = QueueTrackScheduleHandler(guildMusicManager)
@@ -71,7 +71,7 @@ class AudioStateManagerProvider(
 	 * @param context The context of the command requesting the switch.
 	 * @param radioStation Current selected [RadioStation] property.
 	 */
-	fun setToStream(context: CommandBaseContext, radioStation: RadioStation) {
+	fun setToStream(context: GuildCommandContext, radioStation: RadioStation) {
 		updateState(AudioContentType.STREAM, context)
 		audioScheduleHandler = RadioStreamScheduleHandler(guildMusicManager, radioStation)
 	}
@@ -82,7 +82,7 @@ class AudioStateManagerProvider(
 	 * @param future The new future response object.
 	 * @param context The context of the command.
 	 */
-	fun updateStateHandlers(future: TFutureResponse, context: CommandBaseContext) {
+	fun updateStateHandlers(future: TFutureResponse, context: GuildCommandContext) {
 		this.future = future
 		this.context = context
 	}
@@ -109,7 +109,7 @@ class AudioStateManagerProvider(
 	 * @param audioType The new audio content type to switch to.
 	 * @param context The command context to be associated with the new state.
 	 */
-	private fun updateState(audioType: AudioContentType, context: CommandBaseContext) {
+	private fun updateState(audioType: AudioContentType, context: GuildCommandContext) {
 		this.audioType = audioType
 		this.context = context
 	}

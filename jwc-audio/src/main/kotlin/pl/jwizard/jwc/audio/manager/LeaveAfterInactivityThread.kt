@@ -5,6 +5,7 @@
 package pl.jwizard.jwc.audio.manager
 
 import pl.jwizard.jwc.audio.client.DistributedAudioClientBean
+import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
@@ -25,7 +26,7 @@ import pl.jwizard.jwl.util.logger
 class LeaveAfterInactivityThread(
 	private val guildMusicManager: GuildMusicManager,
 	private val audioClient: DistributedAudioClientBean,
-) : JvmFixedPayloadThreadExecutor<Pair<Long, CommandBaseContext>>() {
+) : JvmFixedPayloadThreadExecutor<Pair<Long, GuildCommandContext>>() {
 
 	companion object {
 		private val log = logger<LeaveAfterInactivityThread>()
@@ -36,7 +37,7 @@ class LeaveAfterInactivityThread(
 	 *
 	 * @param payload A pair consisting of the elapsed time in seconds and the [CommandBaseContext].
 	 */
-	override fun executeJvmThreadWithPayload(payload: Pair<Long, CommandBaseContext>) {
+	override fun executeJvmThreadWithPayload(payload: Pair<Long, GuildCommandContext>) {
 		val (timeSec, context) = payload
 		if (context.selfMember.voiceState?.inAudioChannel() == false) {
 			return // skip, when bot already leaved channel
