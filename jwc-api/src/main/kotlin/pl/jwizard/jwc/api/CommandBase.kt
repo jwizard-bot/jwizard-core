@@ -6,6 +6,7 @@ package pl.jwizard.jwc.api
 
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.buttons.Button
+import pl.jwizard.jwc.command.GuildCommandHandler
 import pl.jwizard.jwc.command.interaction.component.Paginator
 import pl.jwizard.jwc.command.interaction.component.RefreshableComponent
 import pl.jwizard.jwc.command.interaction.component.RefreshableContent
@@ -22,7 +23,7 @@ import pl.jwizard.jwl.property.AppProperty
  * @property commandEnvironment The environment dependencies required for command execution.
  * @author Miłosz Gilga
  */
-abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentBean) {
+abstract class CommandBase(protected val commandEnvironment: CommandEnvironmentBean) : GuildCommandHandler {
 
 	protected val environment = commandEnvironment.environment
 	protected val guildSettingsEventAction = commandEnvironment.guildSettingsEventAction

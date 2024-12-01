@@ -6,7 +6,6 @@ package pl.jwizard.jwc.api.playlist
 
 import pl.jwizard.jwc.api.CommandBase
 import pl.jwizard.jwc.api.CommandEnvironmentBean
-import pl.jwizard.jwc.command.GuildCommandHandler
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -21,9 +20,7 @@ import pl.jwizard.jwl.command.Command
  * @author Miłosz Gilga
  */
 @JdaCommand(Command.PLAYLIST_ADDTRACK)
-class AddPlayingTrackToPlaylistCmd(
-	commandEnvironment: CommandEnvironmentBean,
-) : CommandBase(commandEnvironment), GuildCommandHandler {
+class AddPlayingTrackToPlaylistCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
 
 	/**
 	 * TODO

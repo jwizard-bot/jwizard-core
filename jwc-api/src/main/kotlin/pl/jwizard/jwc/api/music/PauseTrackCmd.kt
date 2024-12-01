@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
-import pl.jwizard.jwc.command.async.AsyncUpdatableHook
+import pl.jwizard.jwc.command.async.TUpdatableCommandHook
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
@@ -36,7 +36,7 @@ import pl.jwizard.jwl.util.logger
 @JdaCommand(Command.PAUSE)
 class PauseTrackCmd(
 	commandEnvironment: CommandEnvironmentBean,
-) : MusicCommandBase(commandEnvironment), AsyncUpdatableHook<GuildMusicManager> {
+) : MusicCommandBase(commandEnvironment), TUpdatableCommandHook<GuildMusicManager> {
 
 	companion object {
 		private val log = logger<PauseTrackCmd>()

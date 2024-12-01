@@ -9,7 +9,7 @@ import pl.jwizard.jwac.player.track.Track
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicVoteCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
-import pl.jwizard.jwc.command.async.AsyncUpdatableHook
+import pl.jwizard.jwc.command.async.TUpdatableCommandHook
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
@@ -39,7 +39,7 @@ import pl.jwizard.jwl.util.logger
 class VoteSkipTrackCmd(
 	voterEnvironment: VoterEnvironmentBean,
 	commandEnvironment: CommandEnvironmentBean,
-) : MusicVoteCommandBase<GuildMusicManager>(voterEnvironment, commandEnvironment), AsyncUpdatableHook<Track> {
+) : MusicVoteCommandBase<GuildMusicManager>(voterEnvironment, commandEnvironment), TUpdatableCommandHook<Track> {
 
 	companion object {
 		private val log = logger<VoteSkipTrackCmd>()

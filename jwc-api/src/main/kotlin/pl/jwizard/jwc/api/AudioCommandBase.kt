@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.GuildVoiceState
 import net.dv8tion.jda.api.entities.channel.ChannelType
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
-import pl.jwizard.jwc.command.GuildCommandHandler
 import pl.jwizard.jwc.command.async.AsyncUpdatableHandler
 import pl.jwizard.jwc.command.async.AsyncUpdatableHook
 import pl.jwizard.jwc.command.context.GuildCommandContext
@@ -29,9 +28,7 @@ import pl.jwizard.jwc.exception.user.UserOnVoiceChannelWithBotNotFoundException
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-abstract class AudioCommandBase(
-	commandEnvironment: CommandEnvironmentBean,
-) : CommandBase(commandEnvironment), GuildCommandHandler {
+abstract class AudioCommandBase(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
 
 	/**
 	 * Executes the audio command.

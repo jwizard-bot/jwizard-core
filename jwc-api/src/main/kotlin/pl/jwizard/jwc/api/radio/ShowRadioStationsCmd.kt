@@ -6,7 +6,6 @@ package pl.jwizard.jwc.api.radio
 
 import pl.jwizard.jwc.api.CommandBase
 import pl.jwizard.jwc.api.CommandEnvironmentBean
-import pl.jwizard.jwc.command.GuildCommandHandler
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
@@ -27,9 +26,7 @@ import pl.jwizard.jwl.radio.RadioStation
  * @author Miłosz Gilga
  */
 @JdaCommand(Command.RADIO_ALL)
-class ShowRadioStationsCmd(
-	commandEnvironment: CommandEnvironmentBean,
-) : CommandBase(commandEnvironment), GuildCommandHandler {
+class ShowRadioStationsCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
 
 	/**
 	 * Executes the command to display radio stations.

@@ -4,7 +4,6 @@
  */
 package pl.jwizard.jwc.api
 
-import pl.jwizard.jwc.command.GuildCommandHandler
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.exception.command.UnauthorizedManagerException
@@ -19,9 +18,7 @@ import pl.jwizard.jwc.exception.command.UnauthorizedManagerException
  * @param commandEnvironment The environment context for executing the command.
  * @author Miłosz Gilga
  */
-abstract class ManagerCommandBase(
-	commandEnvironment: CommandEnvironmentBean,
-) : CommandBase(commandEnvironment), GuildCommandHandler {
+abstract class ManagerCommandBase(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
 
 	/**
 	 * Executes the command after checking for managerial permissions.
