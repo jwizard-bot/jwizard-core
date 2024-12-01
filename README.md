@@ -61,8 +61,9 @@ $ git clone https://github.com/jwizard-bot/jwizard-tools
 
 > NOTE: Don't forget to perform database migration after start DB (see `jwizard-lib` repository).
 
-> NOTE: Alternatively, you can run single Lavalink node, but in `application.dev.yml` you must remove second Lavalink
-> node declaration. Running 2 nodes are useful for checking load-balancer in performance tests.
+> NOTE: Alternatively, you can run single Lavalink node, but in `docker-compose.yml` in `jwizard-lib` repository you
+> must remove second Lavalink node declaration. Running 2 nodes are useful for checking load-balancer in performance
+> tests.
 
 4. Build library and package to Maven Local artifacts' storage (for **JWizard Lib** and **JWizard Audio Client**):
 
