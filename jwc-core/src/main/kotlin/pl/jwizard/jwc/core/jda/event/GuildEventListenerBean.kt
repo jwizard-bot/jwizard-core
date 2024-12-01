@@ -48,7 +48,8 @@ class GuildEventListenerBean(
 	override fun onGuildJoin(event: GuildJoinEvent) = persistGuildSettings(event.guild)
 
 	/**
-	 * TODO
+	 * Handles the event triggered when a guild becomes ready. This method is called when the bot successfully connects
+	 * to a guild and receives all relevant guild data.
 	 *
 	 * @param event The event triggered when the guild becomes ready.
 	 */
