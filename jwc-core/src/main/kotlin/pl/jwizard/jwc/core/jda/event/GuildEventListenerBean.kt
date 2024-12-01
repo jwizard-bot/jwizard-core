@@ -48,8 +48,7 @@ class GuildEventListenerBean(
 	override fun onGuildJoin(event: GuildJoinEvent) = persistGuildSettings(event.guild)
 
 	/**
-	 * Triggered when a guild is ready. This event is used to create guild settings and register slash commands for the
-	 * guild.
+	 * TODO
 	 *
 	 * @param event The event triggered when the guild becomes ready.
 	 */

@@ -70,11 +70,11 @@ abstract class UnifiedCommandHandler<E : Event> : ListenerAdapter() {
 	): GuildCommandContext
 
 	/**
-	 * TODO
+	 * Creates the global command context from the event.
 	 *
-	 * @param event
-	 * @param command
-	 * @return
+	 * @param event The event being processed.
+	 * @param command The name of the command invoked in the event.
+	 * @return A [GlobalCommandContext], or `null` if global commands are not supported.
 	 */
 	protected open fun createGlobalCommandContext(event: E, command: String): GlobalCommandContext? = null
 

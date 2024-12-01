@@ -192,16 +192,4 @@ final class JdaShardManagerBean(
 	 */
 	fun getDirectAudioController(guild: Guild) =
 		shardManager.getShardById(guild.jda.shardInfo.shardId)?.directAudioController
-
-	/**
-	 * Retrieves detailed statistics about the bot's Discord shards, including the number of running and queued shards,
-	 * and the average gateway ping.
-	 *
-	 * @return A [ShardStatsDetails] instance containing shard statistics.
-	 */
-	fun getShardDetails() = ShardStatsDetails(
-		shardManager.shardsRunning,
-		shardManager.shardsQueued,
-		shardManager.averageGatewayPing,
-	)
 }
