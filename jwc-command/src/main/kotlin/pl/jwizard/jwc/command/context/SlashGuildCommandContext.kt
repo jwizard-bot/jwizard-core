@@ -15,20 +15,21 @@ import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
  * properties, to facilitate command processing.
  *
  * @property event The [SlashCommandInteractionEvent] that triggered the command.
- * @property commandName Definition of the command on which the event was invoked.
+ * @property incomingCommand Definition of the command on which the event was invoked.
  * @property guildCommandProperties The properties specific to the guild where the command is executed.
  * @author Miłosz Gilga
  */
-class SlashCommandContext(
+class SlashGuildCommandContext(
 	private val event: SlashCommandInteractionEvent,
-	override val commandName: String,
+	private val incomingCommand: String,
 	private val guildCommandProperties: GuildMultipleProperties,
-) : CommandContext(guildCommandProperties) {
+) : GuildCommandContext(guildCommandProperties) {
 
+	override val commandName = incomingCommand.replace(".", " ")
 	override val prefix = "/"
-	override val guild = event.guild ?: throw CommandInvocationException("Guild is NULL.", this)
-	override val author = event.member ?: throw CommandInvocationException("Author is NULL.", this)
+	override val guild = event.guild ?: throw CommandInvocationException("guild is NULL", this)
+	override val author = event.member ?: throw CommandInvocationException("author is NULL", this)
 	override val textChannel = event.channel.asTextChannel()
-	override val selfMember = event.guild?.selfMember ?: throw CommandInvocationException("Bot is NULL.", this)
+	override val selfMember = event.guild?.selfMember ?: throw CommandInvocationException("bot is NULL", this)
 	override val isSlashEvent = true
 }

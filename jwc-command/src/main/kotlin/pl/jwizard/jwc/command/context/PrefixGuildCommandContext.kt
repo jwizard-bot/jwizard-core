@@ -17,20 +17,21 @@ import pl.jwizard.jwc.core.property.guild.GuildProperty
  *
  * @property event The [MessageReceivedEvent] that triggered the command.
  * @property instancePrefix Instance legacy prefix specified for running multiple instances.
- * @property commandName Definition of the command on which the event was invoked.
+ * @property incomingCommand Definition of the command on which the event was invoked.
  * @property guildCommandProperties The properties specific to the guild where the command is executed.
  * @author Miłosz Gilga
  */
-class PrefixCommandContext(
+class PrefixGuildCommandContext(
 	private val event: MessageReceivedEvent,
 	private val instancePrefix: String,
-	override val commandName: String,
+	private val incomingCommand: String,
 	private val guildCommandProperties: GuildMultipleProperties,
-) : CommandContext(guildCommandProperties) {
+) : GuildCommandContext(guildCommandProperties) {
 
+	override val commandName = incomingCommand.replace(" ", ".")
 	override val prefix = "${guildCommandProperties.getProperty<String>(GuildProperty.LEGACY_PREFIX)}$instancePrefix "
 	override val guild = event.guild
-	override val author = event.member ?: throw CommandInvocationException("Command is NULL.", this)
+	override val author = event.member ?: throw CommandInvocationException("author is NULL", this)
 	override val textChannel = event.channel.asTextChannel()
 	override val selfMember = event.guild.selfMember
 	override val isSlashEvent = false
