@@ -93,7 +93,7 @@ ENV_VAULT_TOKEN=<vault token>
 
 where `<value token>` property is the Vault token stored in configured `.env` file in `jwizard-infa` repository.
 
-5. That's it. Now you can run via Intellij IDEA. Make sure, you have set JVM parameters:
+7. That's it. Now you can run via Intellij IDEA. Make sure, you have set JVM parameters:
 
 ```bash
 -Druntime.profiles=dev
@@ -134,7 +134,7 @@ Documentation for latest version (with SHA) you will find [here](https://docs.jw
 
 ## Contributing
 
-We welcome contributions from the community! Please read our [CONTRIBUTE](./CONTRIBUTE.md) file for guidelines on how
+We welcome contributions from the community! Please read our [CONTRIBUTING](./CONTRIBUTING) file for guidelines on how
 to get involved.
 
 ## License
