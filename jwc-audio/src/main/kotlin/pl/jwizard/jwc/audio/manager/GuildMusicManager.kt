@@ -18,6 +18,7 @@ import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.core.util.isValidUrl
 import pl.jwizard.jwc.core.util.jdaDebug
+import pl.jwizard.jwc.exception.audio.AnyNodeInPoolIsNotAvailableException
 import pl.jwizard.jwl.radio.RadioStation
 import pl.jwizard.jwl.util.logger
 import java.util.concurrent.TimeUnit
@@ -96,9 +97,13 @@ class GuildMusicManager(
 		} else {
 			searchPrefix.format(trackName)
 		}
-		audioClient.loadAndTransferToNode(context, AudioNodePool.QUEUED) {
+		val nodePool = AudioNodePool.QUEUED
+		val anyNodeInPoolExist = audioClient.loadAndTransferToNode(context, nodePool) {
 			state.setToQueueTrack(context)
 			it.loadItem(parsedTrackName).subscribe(QueueTrackLoader(this))
+		}
+		if (!anyNodeInPoolExist) {
+			throw AnyNodeInPoolIsNotAvailableException(context, nodePool.poolName)
 		}
 	}
 
@@ -109,9 +114,13 @@ class GuildMusicManager(
 	 * @param context The context of the command that initiated the stream.
 	 */
 	fun loadAndStream(radioStation: RadioStation, context: GuildCommandContext) {
-		audioClient.loadAndTransferToNode(context, AudioNodePool.CONTINUOUS) {
+		val nodePool = AudioNodePool.CONTINUOUS
+		val anyNodeInPoolExist = audioClient.loadAndTransferToNode(context, nodePool) {
 			state.setToStream(context, radioStation)
 			it.loadItem(radioStation.streamUrl).subscribe(RadioStreamLoader(this, radioStation))
+		}
+		if (!anyNodeInPoolExist) {
+			throw AnyNodeInPoolIsNotAvailableException(context, nodePool.poolName)
 		}
 	}
 

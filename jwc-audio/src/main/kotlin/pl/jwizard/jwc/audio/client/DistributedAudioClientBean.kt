@@ -119,8 +119,9 @@ class DistributedAudioClientBean(
 	 * @param context The command context containing guild and author information.
 	 * @param pool The target node pool to transfer to.
 	 * @param onTransfer A callback executed after transferring to the target node.
+	 * @return `true`, if any active node in selected [pool] exist, otherwise `false`.
 	 */
-	fun loadAndTransferToNode(context: GuildCommandContext, pool: NodePool, onTransfer: (AudioNode) -> Unit) =
+	fun loadAndTransferToNode(context: GuildCommandContext, pool: NodePool, onTransfer: (AudioNode) -> Unit): Boolean =
 		audioController.loadAndTransferToNode(context.guild, pool, context.author, context.selfMember, onTransfer)
 
 	/**
