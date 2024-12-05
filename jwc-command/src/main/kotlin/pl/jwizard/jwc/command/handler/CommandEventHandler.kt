@@ -34,6 +34,7 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 import pl.jwizard.jwl.property.AppBaseProperty
+import pl.jwizard.jwl.util.rawCommandToDotFormat
 import java.math.BigInteger
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -97,7 +98,7 @@ abstract class CommandEventHandler<E : Event>(
 					environment.getProperty<String>(AppBaseProperty.GUILD_LEGACY_PREFIX)
 				}
 				val (commandNameOrAlias, commandArguments) = commandNameAndArguments(event, prefix)
-				val mergedCommand = commandNameOrAlias.replace(" ", ".")
+				val mergedCommand = commandNameOrAlias.rawCommandToDotFormat()
 				val commandDetails = Command.entries
 					.find { it.textKey == mergedCommand }
 					?: throw CommandInvocationException("command by command name: \"$mergedCommand\" could not be found")
@@ -311,7 +312,7 @@ abstract class CommandEventHandler<E : Event>(
 	private fun createCommandSyntax(context: CommandBaseContext, command: Command): String {
 		val stringJoiner = StringJoiner("")
 		stringJoiner.add("\n")
-		stringJoiner.add("\n`${context.prefix}${context.commandName}")
+		stringJoiner.add("\n`${command.parseWithPrefix(context)}")
 		if (command.argumentsDefinition != null) {
 			val lang = context.language
 			val argSyntax = i18n.t(command.argumentsDefinition!!, lang)

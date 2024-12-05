@@ -57,7 +57,7 @@ class ShuffleQueueCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBas
 		val message = createEmbedMessage(context)
 			.setDescription(
 				i18nLocaleSource = I18nResponseSource.QUEUE_WAS_SHUFFLED,
-				args = mapOf("showQueueCmd" to Command.QUEUE_SHOW.parseWithPrefix(context.prefix))
+				args = mapOf("showQueueCmd" to Command.QUEUE_SHOW.parseWithPrefix(context))
 			)
 			.setColor(JdaColor.PRIMARY)
 			.build()

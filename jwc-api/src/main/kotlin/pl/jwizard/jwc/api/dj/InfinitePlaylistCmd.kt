@@ -58,7 +58,7 @@ class InfinitePlaylistCmd(commandEnvironment: CommandEnvironmentBean) : DjComman
 				} else {
 					I18nResponseSource.REMOVED_PLAYLIST_FROM_INFINITE_LOOP
 				},
-				args = mapOf("playlistLoopCmd" to Command.INFINITE.parseWithPrefix(context.prefix)),
+				args = mapOf("playlistLoopCmd" to Command.INFINITE.parseWithPrefix(context)),
 			)
 			.setColor(JdaColor.PRIMARY)
 			.build()

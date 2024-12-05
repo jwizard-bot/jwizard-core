@@ -148,18 +148,13 @@ class HelpCmd(
 		val commands = mutableMapOf<String, String>()
 		val lang = context.language
 		for (details in guildCommands) {
-			var commandName = details.textKey
-			if (context.isSlashEvent) {
-				commandName = commandName.replace(".", " ")
-			}
-			val commandLink = createLinkFromFragment(BotProperty.LINK_FRAGMENT_COMMAND, details.textKey.replace(".", "-"))
+			val commandLink = createLinkFromFragment(BotProperty.LINK_FRAGMENT_COMMAND, details.toUrl)
 			val keyJoiner = StringJoiner("")
 			val descriptionJoiner = StringJoiner("")
 
-			keyJoiner.add(context.prefix)
-			keyJoiner.add("$commandName ")
-
+			keyJoiner.add(details.parseWithPrefix(context))
 			details.argumentsDefinition?.let { keyJoiner.add(mdCode("<${i18n.t(it, lang)}>")) }
+
 			descriptionJoiner.add(mdLink("[link]", commandLink))
 			descriptionJoiner.add(" ")
 			descriptionJoiner.add(i18n.t(details, lang))

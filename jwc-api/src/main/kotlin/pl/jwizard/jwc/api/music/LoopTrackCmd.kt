@@ -68,7 +68,7 @@ class LoopTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBas
 				},
 				args = mapOf(
 					"track" to currentPlayingTrack?.mdTitleLink,
-					"loopCmd" to Command.INFINITE.parseWithPrefix(context.prefix),
+					"loopCmd" to Command.INFINITE.parseWithPrefix(context),
 				),
 			)
 			.setArtwork(currentPlayingTrack?.thumbnailUrl)

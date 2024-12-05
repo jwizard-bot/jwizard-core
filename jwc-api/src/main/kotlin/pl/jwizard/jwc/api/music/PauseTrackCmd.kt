@@ -91,7 +91,7 @@ class PauseTrackCmd(
 				i18nLocaleSource = I18nResponseSource.PAUSED_TRACK,
 				args = mapOf(
 					"track" to pausedTrack.mdTitleLink,
-					"resumeCmd" to Command.RESUME.parseWithPrefix(context.prefix),
+					"resumeCmd" to Command.RESUME.parseWithPrefix(context),
 				),
 			)
 			.setValueField(percentageIndicatorBar.generateBar(), inline = false)

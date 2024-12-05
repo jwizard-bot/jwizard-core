@@ -83,7 +83,7 @@ class ResumeTrackCmd(
 				args = mapOf(
 					"track" to resumedTrack.mdTitleLink,
 					"invoker" to context.author.name,
-					"pauseCmd" to Command.PAUSE.parseWithPrefix(context.prefix),
+					"pauseCmd" to Command.PAUSE.parseWithPrefix(context),
 				),
 			)
 			.setArtwork(resumedTrack.thumbnailUrl)

@@ -125,7 +125,7 @@ class QueueTrackScheduleHandler(
 		if (guildMusicManager.cachedPlayer?.paused == true) {
 			val message = createTrackStartMessage(
 				track, I18nResponseSource.ON_TRACK_START_ON_PAUSED,
-				"resumeCmd" to Command.RESUME.parseWithPrefix(context.prefix)
+				"resumeCmd" to Command.RESUME.parseWithPrefix(context)
 			)
 			log.jdaInfo(
 				context,

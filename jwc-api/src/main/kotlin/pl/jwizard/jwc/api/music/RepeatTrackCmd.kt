@@ -81,7 +81,7 @@ class RepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandB
 				args = mapOf(
 					"track" to currentPlayingTrack?.mdTitleLink,
 					"times" to repeatsCount,
-					"clearRepeatingCmd" to Command.REPEAT_CLEAR.parseWithPrefix(context.prefix),
+					"clearRepeatingCmd" to Command.REPEAT_CLEAR.parseWithPrefix(context),
 				),
 			)
 			.setArtwork(currentPlayingTrack?.thumbnailUrl)

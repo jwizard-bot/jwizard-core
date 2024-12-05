@@ -67,12 +67,7 @@ class RadioStreamScheduleHandler(
 			I18nResponseSource.START_PLAYING_RADIO_STATION_SECOND_OPTION to mapOf("radioStationInfoCmd" to Command.RADIO_INFO),
 		)
 		val parsedListElements = listElements.entries.joinToString("\n") { (i18nKey, i18nArgs) ->
-			mdList(
-				i18nBean.t(
-					i18nKey,
-					context.language,
-					i18nArgs.mapValues { it.value.parseWithPrefix(context.prefix) })
-			)
+			mdList(i18nBean.t(i18nKey, context.language, i18nArgs.mapValues { it.value.parseWithPrefix(context) }))
 		}
 		val (name, inputStream) = guildMusicManager.bean.radioStationThumbnailSupplier.getThumbnailResource(radioStation)
 		val message = guildMusicManager.createEmbedBuilder()
@@ -119,7 +114,7 @@ class RadioStreamScheduleHandler(
 				i18nLocaleSource = I18nResponseSource.STOP_PLAYING_RADIO_STATION,
 				args = mapOf(
 					"radioStationName" to guildMusicManager.bean.i18n.t(radioStation, context.language),
-					"startRadioStationCmd" to Command.RADIO_PLAY.parseWithPrefix(context.prefix),
+					"startRadioStationCmd" to Command.RADIO_PLAY.parseWithPrefix(context),
 				),
 			)
 			.setColor(JdaColor.PRIMARY)

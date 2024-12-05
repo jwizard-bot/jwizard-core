@@ -14,6 +14,7 @@ import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.i18n.I18nBean
+import pl.jwizard.jwl.util.rawCommandToDotFormat
 
 /**
  * A listener for handling slash command autocomplete interactions in Discord.
@@ -44,7 +45,7 @@ class SlashAutocompleteEventBean(
 	 * @param event The autocomplete interaction event containing user input and context.
 	 */
 	override fun onCommandAutoCompleteInteraction(event: CommandAutoCompleteInteractionEvent) {
-		val commandName = event.interaction.fullCommandName.replace(" ", ".")
+		val commandName = event.interaction.fullCommandName.rawCommandToDotFormat()
 		val command = Command.entries.find { it.textKey == commandName } ?: return event.composeEmptyList()
 		val argName = event.interaction.focusedOption.name
 
