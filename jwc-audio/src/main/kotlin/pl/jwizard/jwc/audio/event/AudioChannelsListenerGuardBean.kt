@@ -4,7 +4,7 @@
  */
 package pl.jwizard.jwc.audio.event
 
-import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
 import pl.jwizard.jwc.audio.client.DistributedAudioClientBean
 import pl.jwizard.jwc.audio.manager.MusicManagersBean
@@ -71,8 +71,10 @@ class AudioChannelsListenerGuardBean(
 	 */
 	fun onEveryVoiceUpdate(event: GuildVoiceUpdateEvent) {
 		val guild = event.guild
-		guild.audioManager.sendingHandler?.let {
-			val isAlone = isAloneOnChannel(guild)
+		val botVoiceState = guild.selfMember.voiceState
+		if (botVoiceState?.inAudioChannel() == true) {
+			val channel = botVoiceState.channel?.asVoiceChannel()
+			val isAlone = isAloneOnChannel(channel)
 			val isAlonePrevious = aloneFromTime.containsKey(guild.idLong)
 			if (!isAlone && isAlonePrevious) {
 				aloneFromTime.remove(guild.idLong)
@@ -129,11 +131,9 @@ class AudioChannelsListenerGuardBean(
 	/**
 	 * Checks if the bot is the only member in the voice channel of the specified guild.
 	 *
-	 * @param guild The [Guild] whose voice channel is being checked.
+	 * @param voiceChannel A [VoiceChannel] where bot is connected with other channel members.
 	 * @return True if the bot is the only member in the voice channel; false otherwise.
 	 */
-	private fun isAloneOnChannel(guild: Guild): Boolean {
-		val connectedChannel = guild.audioManager.connectedChannel ?: return false
-		return connectedChannel.members.none { it.voiceState?.isDeafened == false && !it.user.isBot }
-	}
+	private fun isAloneOnChannel(voiceChannel: VoiceChannel?) =
+		voiceChannel?.members?.none { it.voiceState?.isDeafened == false && !it.user.isBot } == true
 }
