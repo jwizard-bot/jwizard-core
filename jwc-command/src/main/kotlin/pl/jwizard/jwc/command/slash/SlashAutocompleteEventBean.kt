@@ -44,7 +44,8 @@ class SlashAutocompleteEventBean(
 	 * @param event The autocomplete interaction event containing user input and context.
 	 */
 	override fun onCommandAutoCompleteInteraction(event: CommandAutoCompleteInteractionEvent) {
-		val command = Command.entries.find { it.textKey == event.name } ?: return event.composeEmptyList()
+		val commandName = event.interaction.fullCommandName.replace(" ", ".")
+		val command = Command.entries.find { it.textKey == commandName } ?: return event.composeEmptyList()
 		val argName = event.interaction.focusedOption.name
 
 		val result = command.exactArguments.asSequence()
