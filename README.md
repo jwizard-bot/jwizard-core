@@ -1,9 +1,8 @@
 ![](.github/banner.png)
 
 JWizard is an open-source Discord music bot handling audio content from various multimedia sources with innovative web
-player. This documentation contains the core of the application, which supports the Discord API event handlers, custom
-JWizard Lavalink client loader for sending commands to Lavalink nodes and message broker handling events from web
-interface.
+player. This repository contains the core of the application, which supports the Discord API event handlers and message
+broker handling events from web interface. Ready for clustering based on shard-offset system.
 
 ## Table of content
 
@@ -49,8 +48,8 @@ $ git clone https://github.com/jwizard-bot/jwizard-audio-client
 $ git clone https://github.com/jwizard-bot/jwizard-tools
 ```
 
-3. Configure and run all necessary containers defined in `README.md` file in `jwizard-lib` repository. You must have up
-   these containers:
+3. Configure and run all necessary containers defined in `README.md` file
+   in [jwizard-lib](https://github.com/jwizard-bot/jwizard-lib) repository. You must have up these containers:
 
 | Name                | Port(s) | Description                  |
 |---------------------|---------|------------------------------|
@@ -59,11 +58,12 @@ $ git clone https://github.com/jwizard-bot/jwizard-tools
 | jwizard-lava-node-1 | 8766    | Lavalink #1 node.            |
 | jwizard-lava-node-2 | 8767    | Lavalink #2 node.            |
 
-> NOTE: Don't forget to perform database migration after start DB (see `jwizard-lib` repository).
+> NOTE: Don't forget to perform database migration after start DB (see
+> [jwizard-lib](https://github.com/jwizard-bot/jwizard-lib) repository).
 
-> NOTE: Alternatively, you can run single Lavalink node, but in `docker-compose.yml` in `jwizard-lib` repository you
-> must remove second Lavalink node declaration. Running 2 nodes are useful for checking load-balancer in performance
-> tests.
+> NOTE: Alternatively, you can run single Lavalink node, but in `docker-compose.yml` file in
+> [jwizard-lib](https://github.com/jwizard-bot/jwizard-lib) repository you must remove second Lavalink node declaration.
+> Running 2 nodes are useful for checking load-balancer in performance tests.
 
 4. Build library and package to Maven Local artifacts' storage (for **JWizard Lib** and **JWizard Audio Client**):
 
@@ -91,7 +91,8 @@ $ git clone https://github.com/jwizard-bot/jwizard-core
 ENV_VAULT_TOKEN=<vault token>
 ```
 
-where `<value token>` property is the Vault token stored in configured `.env` file in `jwizard-infa` repository.
+where `<value token>` property is the Vault token stored in configured `.env` file
+in [jwizard-lib](https://github.com/jwizard-bot/jwizard-lib) repository.
 
 7. That's it. Now you can run via Intellij IDEA. Make sure, you have set JVM parameters:
 
