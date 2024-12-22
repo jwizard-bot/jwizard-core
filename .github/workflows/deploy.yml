@@ -59,6 +59,7 @@ jobs:
         with:
           name: output-jar
           path: .bin/jwizard-core.jar
+          retention-days: 1
 
   run-tools:
     runs-on: ubuntu-latest
