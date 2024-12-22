@@ -224,7 +224,8 @@ class QueueTrackScheduleHandler(
 	 * @param track The [Track] that is stuck.
 	 * @param audioNode The [AudioNode] on which the track was playing.
 	 */
-	override fun onAudioStuck(track: Track, audioNode: AudioNode) = onError(track, audioNode, "Track stuck.")
+	override fun onAudioStuck(track: Track, audioNode: AudioNode) =
+		onError(track, audioNode, I18nExceptionSource.ISSUE_WHILE_PLAYING_TRACK, "Track stuck.")
 
 	/**
 	 * Handles the event when an error occurs while playing an audio track. Logs the error and sends an appropriate
@@ -234,21 +235,29 @@ class QueueTrackScheduleHandler(
 	 * @param audioNode The [AudioNode] on which the error occurred.
 	 * @param exception The [TrackException] that contains the error details.
 	 */
-	override fun onAudioException(track: Track, audioNode: AudioNode, exception: TrackException) =
-		onError(track, audioNode, exception.message)
+	override fun onAudioException(track: Track, audioNode: AudioNode, exception: TrackException) {
+		val parsedMessage = exception.message?.replace("\n", "")
+
+		val specifiedException = PlayerFriendlyExceptionMapper.entries
+			.filter { it.stringPattern != null }
+			.find { parsedMessage?.contains(it.stringPattern!!) == true }
+			?: PlayerFriendlyExceptionMapper.GENERAL
+
+		return onError(track, audioNode, specifiedException.i18nLocaleSource, parsedMessage)
+	}
 
 	/**
 	 * Handles errors that occur during track playback. Logs the error and sends a message with details about the issue.
 	 *
 	 * @param track The [Track] that caused the error.
 	 * @param audioNode The [AudioNode] on which the error occurred.
+	 * @param i18nSource The [I18nExceptionSource] enum entry.
 	 * @param causeMessage A message explaining the cause of the error.
 	 */
-	private fun onError(track: Track, audioNode: AudioNode, causeMessage: String?) {
+	private fun onError(track: Track, audioNode: AudioNode, i18nSource: I18nExceptionSource, causeMessage: String?) {
 		val context = guildMusicManager.state.context
 		val tracker = guildMusicManager.bean.exceptionTrackerHandler
 
-		val i18nSource = I18nExceptionSource.ISSUE_WHILE_PLAYING_TRACK
 		val message = tracker.createTrackerMessage(i18nSource, context, args = mapOf("audioTrack" to track.mdTitleLink))
 		val trackerLink = tracker.createTrackerLink(i18nSource, context)
 
