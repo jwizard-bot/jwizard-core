@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 by JWizard
+ * Copyright (c) 2025 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 import org.codehaus.groovy.runtime.GStringImpl
@@ -15,6 +15,8 @@ plugins {
 	alias libs.plugins.dokka
 }
 
+def projectVersion = getEnv('VERSION', 'latest')
+
 ext {
 	jvmSpecification = 17
 	initProjectName = 'jwc-app'
@@ -26,7 +28,7 @@ ext {
 	dokkaCopyright
 		= ("&copy; ${Year.now().value} by JWizard"
 		+ ". On AGPL-3.0 license"
-		+ ". Version: ${getEnv('VERSION', 'latest')}") as GStringImpl
+		+ ". Version: $projectVersion") as GStringImpl
 }
 
 allprojects {
@@ -44,7 +46,7 @@ allprojects {
 		}
 	}
 	group = 'pl.jwizard'
-	version = getEnv('VERSION', 'latest')
+	version = projectVersion
 }
 
 subprojects {
@@ -119,18 +121,28 @@ project(":${rootProject.ext.initProjectName}") {
 	}
 }
 
-dokkaHtmlMultiModule {
-	outputDirectory = file("$projectDir/docs")
-	moduleName = "JWizard Core"
-	suppressInheritedMembers = true
+def docModuleName = "JWizard Core"
+def docRootDir = "$projectDir/docs"
 
-	def additionalAssets = [
-		'dokka/banner.png'
-	]
+dokkaHtmlCollector {
+	moduleName = "$docModuleName ($projectVersion)"
+	outputDirectory = file("$docRootDir/kdoc")
+	suppressInheritedMembers = true
 	pluginsMapConfiguration.set([
-		'org.jetbrains.dokka.base.DokkaBase': generateDokkaBaseConfig(additionalAssets)
+		'org.jetbrains.dokka.base.DokkaBase': generateDokkaBaseConfig()
 	])
-	includes.from(file('dokka/README-DOCS.md'))
+}
+
+dokkaJavadocCollector {
+	moduleName = "$docModuleName - $projectVersion API"
+	outputDirectory = file("$docRootDir/javadoc")
+	suppressInheritedMembers = true
+}
+
+tasks.register('dokkaAll') {
+	group = 'documentation'
+	dependsOn dokkaHtmlCollector
+	dependsOn dokkaJavadocCollector
 }
 
 clean {
