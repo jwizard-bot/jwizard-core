@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 by JWizard
+ * Copyright (c) 2025 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 package pl.jwizard.jwc.core.jda
@@ -28,8 +28,8 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.jvm.JvmDisposable
 import pl.jwizard.jwl.jvm.JvmDisposableHook
 import pl.jwizard.jwl.property.AppBaseListProperty
+import pl.jwizard.jwl.util.getUserIdFromTokenWithException
 import pl.jwizard.jwl.util.logger
-import java.util.*
 
 /**
  * Manages the initialization, lifecycle, and interaction with the JDA (Java Discord API) instance for a bot.
@@ -169,18 +169,10 @@ final class JdaShardManagerBean(
 	 *
 	 * The first part of the token, when decoded using Base64, represents the bot's user ID.
 	 *
-	 * @return The bot's user ID as a `Long`.
+	 * @return The bot's user ID as a [Long].
 	 * @throws IllegalArgumentException If the token is invalid or the decoding process fails.
 	 */
-	fun getSelfUserId() = try {
-		val parts = jdaToken.split(".")
-		if (parts.size != 3) {
-			throw IllegalArgumentException("Token is not a valid bot token.")
-		}
-		String(Base64.getDecoder().decode(parts[0])).toLong()
-	} catch (e: Exception) {
-		throw IllegalArgumentException("Decoding failed: ${e.message}", e)
-	}
+	fun getSelfUserId() = getUserIdFromTokenWithException(jdaToken)
 
 	/**
 	 * Retrieves the [DirectAudioController] for the specified guild.
