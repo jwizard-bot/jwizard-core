@@ -85,7 +85,7 @@ services:
     container_name: jwizard-core-instance-0
     image: milosz08/jwizard-core:latest
     ports:
-      - '8080:8080'
+      - '6071:6071'
     environment:
       JWIZARD_VAULT_SERVER: <vault server url>
       JWIZARD_VAULT_USERNAME: <vault username>
@@ -103,7 +103,7 @@ services:
     container_name: jwizard-core-instance-1
     image: milosz08/jwizard-core:latest
     ports:
-      - '8081:8080'
+      - '6072:6072'
     environment:
       JWIZARD_VAULT_SERVER: <vault server url>
       JWIZARD_VAULT_USERNAME: <vault username>
