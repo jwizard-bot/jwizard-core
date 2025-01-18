@@ -1,0 +1,25 @@
+name: Update docker description file
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "docker/README.md"
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: milosz08/jwizard-api
+          readme-filepath: ./docker/README.md
+          short-description: "Command interactions handler and API events receiver. Shard-offset system clustering."
