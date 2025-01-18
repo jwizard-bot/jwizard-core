@@ -2,7 +2,9 @@
 
 JWizard is an open-source Discord music bot handling audio content from various multimedia sources with innovative web
 player. This repository contains the core of the application, which supports the Discord API event handlers and message
-broker handling events from web interface. Ready for clustering based on shard-offset system.
+broker handling events from web interface.
+Use [JWizard Audio Client](https://github.com/jwizard-bot/jwizard-audio-client) for make interactions with Lavalink
+nodes. Ready for clustering based on shard-offset system.
 
 ## Table of content
 
@@ -20,7 +22,9 @@ broker handling events from web interface. Ready for clustering based on shard-o
 * Bean interfaces ensure loose coupling between the project's modules.
 * All code was written in Kotlin.
 * The Discord API was handled using the JDA (Java Discord API) library.
-* OPUS audio support and streaming are provided by the Lavalink client and a modified Lavalink server cluster.
+* OPUS audio support and streaming are provided by the
+  custom [JWizard Audio Client](https://github.com/jwizard-bot/jwizard-audio-client) and a modified Lavalink server
+  cluster.
 * Communication and event handling between the application and the back-end layer is done using Websockets and RabbitMQ.
 
 ## Project modules
@@ -29,7 +33,7 @@ broker handling events from web interface. Ready for clustering based on shard-o
 |-----------------|--------------------------------------------------------------------------------------------------------------------------------|
 | jwc-api         | JDA command handlers using for grabbing interaction invoking by Discord guild member.                                          |
 | jwc-app         | Application entrypoint, configuration files and i18n local content.                                                            |
-| jwc-audio       | Lavalink client, audio nodes manager, audio content loaders and schedulers.                                                    |
+| jwc-audio       | JWizard audio client bridge, nodes manager, audio content loaders and schedulers.                                              |
 | jwc-command     | Legacy (prefix) and slash command interactions framework, interaction component handlers and command reflect loader framework. |
 | jwc-core        | JDA loader, configuration loader framework, SPI interfaces for jwc-audio, JVM thread helpers, util formatters.                 |
 | jwc-exception   | Set of exceptions which may be thrown in interaction pipeline and grab by command interactions framework.                      |
@@ -120,6 +124,18 @@ where:
 
 > NOTE: You can run concurrently 2 instances, but you must set valid offsets in `-Djda.sharding.offset.start` and
 > `-Djda.sharding.offset.end`. Concurrent instances can share same Lavalink node/nodes.
+
+### Clustering example with multiple concurrent instance
+
+```
+instance 0              instance 1       ...     instance N
+├─ cluster 0            ├─ cluster 0
+│  ├─ shards 0-9        │  ├─ shards 0-9
+├─ cluster 1            ├─ cluster 1
+│  ├─ shards 10-19      │  ├─ shards 10-19
+│  ...                  │  ...
+├─ cluster N            ├─ cluster N
+```
 
 More about sharding, clustering multiple concurrent instances and shards fragmentation (different shard ranges for
 distributed JVM architecture) you will find here:
