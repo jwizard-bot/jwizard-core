@@ -135,4 +135,4 @@ Documentation for latest version (with SHA) you will find:
 
 ## License
 
-This project is licensed under the AGPL-3.0 License - see the LICENSE file for details.
+This project is licensed under the AGPL-3.0 License.
