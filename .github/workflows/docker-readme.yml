@@ -21,6 +21,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: milosz08/jwizard-api
+          repository: milosz08/jwizard-core
           readme-filepath: ./docker/README.md
           short-description: "Command interactions handler and API events receiver. Shard-offset system clustering."
