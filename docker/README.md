@@ -1,7 +1,7 @@
 # JWizard Core
 
 JWizard is an open-source Discord music bot handling audio content from various multimedia sources with innovative web
-player. This repository contains the core of the application, which supports the Discord API event handlers and message
+player. This image contains the core of the application, which supports the Discord API event handlers and message
 broker handling events from web interface. Use JWizard Audio Client for make interactions with Lavalink nodes. Ready
 for clustering based on shard-offset system.
 
