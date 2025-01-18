@@ -1,0 +1,15 @@
+.bin
+.github
+.gradle
+.idea
+.kotlin
+docs
+**/build
+
+.dockerignore
+.editorconfig
+*.env
+.gitignore
+*.md
+Dockerfile
+LICENSE

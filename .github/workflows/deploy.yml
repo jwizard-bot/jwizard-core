@@ -9,6 +9,8 @@ on:
       - "dokka/**"
       - "gradle/libs.versions.toml"
       - "jwc-*/**"
+      - ".dockerignore"
+      - "Dockerfile.pipeline"
       - "build.gradle"
       - "gradle.properties"
       - "settings.gradle"
@@ -60,6 +62,40 @@ jobs:
           name: output-jar
           path: .bin/jwizard-core.jar
           retention-days: 1
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download generated JAR artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: output-jar
+          path: ${{ github.workspace }}/docker
+
+      - name: Set up builder
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build the Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile.pipeline
+          push: true
+          tags: milosz08/jwizard-core:latest
+
+      - name: Logout from Docker Hub
+        run: docker logout
 
   run-tools:
     runs-on: ubuntu-latest

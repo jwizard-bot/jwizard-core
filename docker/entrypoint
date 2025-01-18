@@ -1,0 +1,17 @@
+#!/bin/sh
+
+#
+# Copyright (c) 2025 by JWizard
+# Originally developed by Miłosz Gilga <https://miloszgilga.pl>
+#
+
+java \
+	-Xms$JWIZARD_XMS \
+	-Xmx$JWIZARD_XMX \
+	-Druntime.profiles=prod \
+	-Denv.enabled=false \
+	-Djda.instance.name=$JWIZARD_JDA_INSTANCE_NAME \
+	-Djda.sharding.cluster=$JWIZARD_JDA_SHARDING_CLUSTER \
+	-Djda.sharding.offset.start=$JWIZARD_JDA_SHARDING_OFFSET_START \
+	-Djda.sharding.offset.end=$JWIZARD_JDA_SHARDING_OFFSET_END \
+	-jar $JAR_NAME
