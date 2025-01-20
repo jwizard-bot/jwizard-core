@@ -225,3 +225,30 @@ jobs:
           key: ${{ env.SSH_KEY }}
           passphrase: ${{ env.SSH_PASSPHRASE }}
           script: ~/exec/process start ${{ env.PM2_CORE_NAME_INSTANCE_1 }} ${{ env.PM2_CORE_NAME_INSTANCE_2 }}
+
+  post-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout tools repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/jwizard-tools
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install requirements
+        run: pip install -r requirements.txt
+
+      - name: Grand permissions
+        run: chmod +x exec/run-with-config
+
+      - name: Cache version
+        run: exec/run-with-config cache_version \
+          "${{ secrets.CONFIG_FILE_CONTENT }}" \
+          --repo ${{ github.repository }}
