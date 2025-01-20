@@ -7,7 +7,6 @@ on:
     paths:
       - ".github/workflows/deploy.yml"
       - "dokka/**"
-      - "gradle/libs.versions.toml"
       - "jwc-*/**"
       - ".dockerignore"
       - "Dockerfile.pipeline"
