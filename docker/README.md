@@ -44,7 +44,6 @@ docker build \
 * Using command:
 
 ```bash
-
 # for 2 concurrent instances, one cluster per instance with 10 shards per cluster
 docker run -d \
   --name jwizard-core \
