@@ -37,7 +37,7 @@ COPY . $BUILD_DIR
 RUN ./gradlew clean --no-daemon
 
 RUN JWIZARD_VERSION=${JWIZARD_VERSION} \
-    ./gradlew shadowJar --no-daemon
+  ./gradlew shadowJar --no-daemon
 
 FROM eclipse-temurin:17-jre-alpine
 
@@ -51,8 +51,8 @@ COPY --from=build $BUILD_DIR/.bin/$JAR_NAME $ENTRY_DIR/$JAR_NAME
 COPY --from=build $BUILD_DIR/docker/entrypoint $ENTRY_DIR/entrypoint
 
 RUN sed -i \
-    -e "s/\$JAR_NAME/$JAR_NAME/g" \
-    entrypoint
+  -e "s/\$JAR_NAME/$JAR_NAME/g" \
+  entrypoint
 
 RUN chmod +x entrypoint
 
