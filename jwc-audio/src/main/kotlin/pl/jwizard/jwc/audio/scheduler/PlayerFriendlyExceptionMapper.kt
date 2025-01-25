@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 by JWizard
+ * Copyright (c) 2025 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 package pl.jwizard.jwc.audio.scheduler
@@ -21,6 +21,7 @@ enum class PlayerFriendlyExceptionMapper(
 	val i18nLocaleSource: I18nExceptionSource,
 ) {
 	BLOCKED_IN_COUNTRY("who has blocked it in your country", I18nExceptionSource.TRACK_IS_BLOCKED_IN_COUNTRY),
+	AGE_RESTRICTED("this content is age-restricted", I18nExceptionSource.TRACK_IS_AGE_RESTRICTED),
 	GENERAL(null, I18nExceptionSource.ISSUE_WHILE_LOADING_TRACK),
 	;
 }
