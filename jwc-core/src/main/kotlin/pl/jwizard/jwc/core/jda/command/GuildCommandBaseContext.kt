@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 by JWizard
+ * Copyright (c) 2025 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 package pl.jwizard.jwc.core.jda.command
@@ -33,8 +33,7 @@ interface GuildCommandBaseContext : CommandBaseContext {
 	val author: Member
 
 	/**
-	 * The member object representing the command author within the guild. This is used to determine the context of the
-	 * command's execution.
+	 * The member object representing the bot within the guild.
 	 */
 	val selfMember: Member
 
