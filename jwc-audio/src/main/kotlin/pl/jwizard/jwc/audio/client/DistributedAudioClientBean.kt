@@ -5,6 +5,7 @@
 package pl.jwizard.jwc.audio.client
 
 import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.Member
 import pl.jwizard.jwac.AudioClient
 import pl.jwizard.jwac.AudioNodeListener
 import pl.jwizard.jwac.AudioSessionController
@@ -130,6 +131,14 @@ class DistributedAudioClientBean(
 	 * @param guild The guild from which the bot should disconnect.
 	 */
 	fun disconnectWithAudioChannel(guild: Guild) = audioController.disconnectWithAudioChannel(guild)
+
+	/**
+	 * Checks whether a given member is currently connected to an audio channel.
+	 *
+	 * @param member The member whose audio channel connection status is to be verified.
+	 * @return `true` if the member is in an audio channel, otherwise `false`.
+	 */
+	fun inAudioChannel(member: Member) = gatewayVoiceStateInterceptor.inAudioChannel(member) == true
 
 	/**
 	 * Cleans up resources by disposing of all event handlers and closing the Lavalink client.

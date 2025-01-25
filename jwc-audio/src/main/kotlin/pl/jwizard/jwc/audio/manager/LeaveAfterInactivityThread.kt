@@ -39,7 +39,7 @@ class LeaveAfterInactivityThread(
 	 */
 	override fun executeJvmThreadWithPayload(payload: Pair<Long, GuildCommandContext>) {
 		val (timeSec, context) = payload
-		if (context.selfMember.voiceState?.inAudioChannel() == false) {
+		if (!audioClient.inAudioChannel(context.selfMember)) {
 			return // skip, when bot already leaved channel
 		}
 		val guild = context.guild
