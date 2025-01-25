@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 by JWizard
+ * Copyright (c) 2025 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 package pl.jwizard.jwc.audio.event
@@ -106,22 +106,23 @@ class AudioChannelsListenerGuardBean(
 			}
 			val musicManager = musicManagers.getCachedMusicManager(guildId)
 			if (musicManager != null) {
-				musicManager.state.audioScheduler.stopAndDestroy().subscribe()
-				audioClient.disconnectWithAudioChannel(guild)
-
 				val message = musicManager.createEmbedBuilder()
 					.setDescription(I18nResponseSource.LEAVE_EMPTY_CHANNEL)
 					.setColor(JdaColor.PRIMARY)
 					.build()
 
-				musicManagers.removeMusicManager(guildId)
-				musicManager.sendMessage(message)
-
-				log.jdaInfo(
-					musicManager.state.context,
-					"Leave voice channel in guild: {}. Cause: not found any active user.",
-					guild.qualifier
-				)
+				// leave the channel only if the bot is still on it (did not leave after 2 minutes of inactivity)
+				if (audioClient.inAudioChannel(musicManager.state.context.selfMember)) {
+					musicManager.state.audioScheduler.stopAndDestroy().subscribe()
+					audioClient.disconnectWithAudioChannel(guild)
+					log.jdaInfo(
+						musicManager.state.context,
+						"Leave voice channel in guild: {}. Cause: not found any active user.",
+						guild.qualifier
+					)
+					musicManager.sendMessage(message)
+				}
+				musicManagers.removeMusicManager(guildId) // remove music manager regardless of the circumstances
 			}
 			removeFromGuild.add(guildId)
 		}
