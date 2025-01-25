@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 by JWizard
+ * Copyright (c) 2025 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 package pl.jwizard.jwc.exception.track
@@ -23,7 +23,10 @@ class TrackRepeatsOutOfBoundException(
 ) : CommandPipelineException(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.TRACK_REPEATS_OUT_OF_BOUNDS,
-	args = mapOf("maxRepeats" to maxRepeats),
+	args = mapOf(
+		"minRepeats" to minRepeats,
+		"maxRepeats" to maxRepeats,
+	),
 	logMessage = """
 		Attempt to set out of bounds current audio track repeats number: "$minRepeats" (min) and "$maxRepeats" (max).
 	""",
