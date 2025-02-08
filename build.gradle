@@ -81,7 +81,7 @@ subprojects {
 		}
 	}
 
-	dokkaHtmlPartial {
+	dokkaHtml {
 		pluginsMapConfiguration.set([
 			'org.jetbrains.dokka.base.DokkaBase': generateDokkaBaseConfig()
 		])
