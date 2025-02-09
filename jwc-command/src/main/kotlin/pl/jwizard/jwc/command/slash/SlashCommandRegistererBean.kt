@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 by JWizard
+ * Copyright (c) 2025 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 package pl.jwizard.jwc.command.slash
@@ -56,8 +56,11 @@ class SlashCommandRegistererBean(
 	 * @param jda The [JDA] instance used to update global commands.
 	 */
 	override fun registerGlobalCommands(jda: JDA) {
-		val loadedCommands = commandsCache.globalCommandInstances.map { it.key }
-		val rootCommands = parseCommands(loadedCommands, global = true) { message, args -> log.info(message, *args) }
+		val rootCommands = parseCommands(
+			loadedCommands = commandsCache.globalCommandInstances.loadedSlashCommands,
+			global = true,
+			logCallback = { message, args -> log.info(message, *args) },
+		)
 		jda.updateCommands()
 			.addCommands(rootCommands)
 			.queue()
@@ -69,8 +72,11 @@ class SlashCommandRegistererBean(
 	 * @param guild The [Guild] instance where the commands should be registered.
 	 */
 	override fun registerGuildCommands(guild: Guild) {
-		val loadedCommands = commandsCache.guildCommandInstances.map { it.key }
-		val rootCommands = parseCommands(loadedCommands, global = false) { message, args -> log.debug(message, *args) }
+		val rootCommands = parseCommands(
+			loadedCommands = commandsCache.guildCommandInstances.loadedSlashCommands,
+			global = false,
+			logCallback = { message, args -> log.debug(message, *args) },
+		)
 		guild.updateCommands()
 			.addCommands(rootCommands)
 			.queue()

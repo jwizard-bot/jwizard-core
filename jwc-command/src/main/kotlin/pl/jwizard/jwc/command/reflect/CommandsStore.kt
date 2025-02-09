@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 by JWizard
+ * Copyright (c) 2025 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 package pl.jwizard.jwc.command.reflect
@@ -29,6 +29,13 @@ class CommandsStore<T : Any>(private val commandsEnvironment: String) : Concurre
 	 */
 	val loadedCommands
 		get() = keys.filterNotNull()
+
+	/**
+	 * A filtered collection of loaded commands that are available as slash commands. This includes only commands that
+	 * support the slash command functionality.
+	 */
+	val loadedSlashCommands
+		get() = loadedCommands.filter { it.slashAvailable }
 
 	/**
 	 * Adds a new command to the store, associating it with a specific object of type [T]. This method uses reflection to
