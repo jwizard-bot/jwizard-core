@@ -71,8 +71,7 @@ link:
   status: https://status.jwizard.pl
   fragment:
     docs: '%s/docs'
-    command: '%s/command/%s'
-    shards: '%s/shards'
+    command: '%s/commands/%s'
     error-code: '%s/error-codes/%d'
 
 audio:

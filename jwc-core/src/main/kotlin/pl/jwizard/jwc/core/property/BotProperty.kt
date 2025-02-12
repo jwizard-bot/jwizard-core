@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 by JWizard
+ * Copyright (c) 2025 by JWizard
  * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
  */
 package pl.jwizard.jwc.core.property
@@ -39,7 +39,6 @@ import kotlin.reflect.KClass
  * - [LINK_REPOSITORY]: The repository URL where the bot's source code is hosted.
  * - [LINK_FRAGMENT_DOCS]: Fragment link to the official website with documentation.
  * - [LINK_FRAGMENT_COMMAND]: Fragment link to the bot command reference, detailing all available commands and their usage.
- * - [LINK_FRAGMENT_SHARDS]: Fragment link to the bot shards details.
  * - [LINK_FRAGMENT_ERROR_CODE]: Fragment link to the error code details.
  * - [AUDIO_SERVER_TIMEOUT_MS]: Represents the timeout duration (in milliseconds) for audio server connections.
  * - [AUDIO_SERVER_SEARCH_DEFAULT_CONTENT_PREFIX]: Represents the prefix used to search for content in audio server.
@@ -175,11 +174,6 @@ enum class BotProperty(
 	LINK_FRAGMENT_COMMAND("link.fragment.command"),
 
 	/**
-	 * Fragment link to the bot shards details.
-	 */
-	LINK_FRAGMENT_SHARDS("link.fragment.shards"),
-
-	/**
 	 * Fragment link to the error code details.
 	 */
 	LINK_FRAGMENT_ERROR_CODE("link.fragment.error-code"),
@@ -213,25 +207,5 @@ enum class BotProperty(
 	 * Discord api base path.
 	 */
 	SERVICE_DISCORD_API("service.discord-api"),
-
-	/**
-	 * JVM name property, indicating the name of the Java Virtual Machine.
-	 */
-	JVM_NAME("java.vm.name"),
-
-	/**
-	 * JRE version property, representing the version of the Java Runtime Environment.
-	 */
-	JRE_VERSION("java.runtime.version"),
-
-	/**
-	 * OS name property, defining the name of the operating system.
-	 */
-	OS_NAME("os.name"),
-
-	/**
-	 * OS architecture property, specifying the architecture of the operating system.
-	 */
-	OS_ARCHITECTURE("os.arch"),
 	;
 }
