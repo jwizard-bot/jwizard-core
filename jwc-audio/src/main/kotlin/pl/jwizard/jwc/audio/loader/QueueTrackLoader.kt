@@ -67,11 +67,17 @@ class QueueTrackLoader(
 			)
 			return
 		}
-		result.tracks.forEach { it.setSenderData(AudioSender(guildMusicManager.state.context.author.idLong)) }
-		val options = result.tracks.map { TrackMenuOption(it) }
-
-		val trackSelectSpinnerMenu = TrackSelectSpinnerMenu(guildMusicManager, options, guildProperties, this)
-
+		for (track in result.tracks) {
+			// IMPORTANT! add sender data to every track
+			track.setSenderData(AudioSender(guildMusicManager.state.context.author.idLong))
+		}
+		val trackSelectSpinnerMenu = TrackSelectSpinnerMenu(
+			guildMusicManager,
+			onEnqueueTrack = ::onEnqueueTrack, // on select track callback
+			createTrackResponseMessage = ::createTrackResponseMessage,
+			options = result.tracks.map { TrackMenuOption(it) },
+			guildProperties,
+		)
 		val (message, components) = trackSelectSpinnerMenu.createMenuComponent(
 			i18nBean = guildMusicManager.bean.i18n,
 			jdaColorsCache = guildMusicManager.bean.jdaColorStore,
@@ -155,7 +161,7 @@ class QueueTrackLoader(
 	 *
 	 * @param track The track to be added to the queue.
 	 */
-	override fun onEnqueueTrack(track: Track) {
+	private fun onEnqueueTrack(track: Track) {
 		guildMusicManager.state.audioScheduler.loadContent(listOf(track))
 	}
 
@@ -165,7 +171,7 @@ class QueueTrackLoader(
 	 * @param track The track for which the embed message is created.
 	 * @return The created embed message.
 	 */
-	override fun createTrackResponseMessage(track: Track): MessageEmbed {
+	private fun createTrackResponseMessage(track: Track): MessageEmbed {
 		val context = guildMusicManager.state.context
 		val queueSize = guildMusicManager.state.queueTrackScheduler.queue.size
 		val trackPosition = if (queueSize == 1) {
