@@ -12,7 +12,7 @@ import pl.jwizard.jwl.server.route.RestControllerBase
 import pl.jwizard.jwl.server.route.RouteDefinitionBuilder
 
 @SingletonController
-class StatsRestController(
+internal class StatsRestController(
 	private val jdaShardManager: JdaShardManagerBean,
 	private val distributedAudioClient: DistributedAudioClient,
 	environment: EnvironmentBean,

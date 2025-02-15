@@ -25,8 +25,8 @@ import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.QUEUE_REMOVE)
-class RemoveMemberTracksCmd(
-	commandEnvironment: CommandEnvironmentBean
+internal class RemoveMemberTracksCmd(
+	commandEnvironment: CommandEnvironmentBean,
 ) : DjCommandBase(commandEnvironment) {
 	companion object {
 		private val log = logger<RemoveMemberTracksCmd>()

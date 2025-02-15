@@ -7,7 +7,7 @@ import pl.jwizard.jwl.i18n.I18nBean
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 
 @SingletonComponent
-class RadioPlaybackMapperEnvironment(
+internal class RadioPlaybackMapperEnvironment(
 	val i18nBean: I18nBean,
 	val jdaColorsCache: JdaColorsCacheBean,
 	val objectMapper: ObjectMapper,

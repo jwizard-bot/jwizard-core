@@ -10,7 +10,9 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
 
 @JdaCommand(Command.PLAY)
-class PlayCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
+internal class PlayCmd(
+	commandEnvironment: CommandEnvironmentBean,
+) : MusicCommandBase(commandEnvironment) {
 	override val shouldOnSameChannelWithBot = true
 	override val shouldEnabledOnFirstAction = true
 

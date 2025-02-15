@@ -17,7 +17,7 @@ import pl.jwizard.jwc.exception.command.CommandAvailableOnlyForDiscreteTrackExce
 import pl.jwizard.jwc.exception.track.TrackQueueIsEmptyException
 import pl.jwizard.jwl.i18n.I18nLocaleSource
 
-abstract class MusicCommandBase(
+internal abstract class MusicCommandBase(
 	commandEnvironment: CommandEnvironmentBean,
 ) : AudioCommandBase(commandEnvironment) {
 	final override fun executeAudio(

@@ -23,7 +23,7 @@ import pl.jwizard.jwl.command.arg.Argument
 import java.util.*
 
 @JdaCommand(Command.HELP)
-class HelpCmd(
+internal class HelpCmd(
 	private val commandDataSupplier: CommandDataSupplier,
 	private val moduleDataSupplier: ModuleDataSupplier,
 	commandEnvironment: CommandEnvironmentBean,

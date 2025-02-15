@@ -14,7 +14,7 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.REPEAT_CLEAR)
-class ClearRepeatTrackCmd(
+internal class ClearRepeatTrackCmd(
 	commandEnvironment: CommandEnvironmentBean
 ) : MusicCommandBase(commandEnvironment) {
 	companion object {

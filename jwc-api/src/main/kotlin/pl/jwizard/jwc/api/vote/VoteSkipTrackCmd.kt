@@ -15,7 +15,7 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.VOTE_SKIP)
-class VoteSkipTrackCmd(
+internal class VoteSkipTrackCmd(
 	voterEnvironment: VoterEnvironmentBean,
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicVoteCommandBase(voterEnvironment, commandEnvironment) {

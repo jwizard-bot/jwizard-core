@@ -11,7 +11,7 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
 @SingletonComponent
-class HttpResourceRetrieverBean : ResourceRetriever() {
+internal class HttpResourceRetrieverBean : ResourceRetriever() {
 	companion object {
 		private val log = logger<HttpResourceRetrieverBean>()
 	}

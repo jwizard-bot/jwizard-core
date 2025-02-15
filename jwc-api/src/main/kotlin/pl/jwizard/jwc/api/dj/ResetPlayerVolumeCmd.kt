@@ -14,7 +14,7 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.VOLUME_CLEAR)
-class ResetPlayerVolumeCmd(
+internal class ResetPlayerVolumeCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : DjCommandBase(commandEnvironment) {
 	companion object {

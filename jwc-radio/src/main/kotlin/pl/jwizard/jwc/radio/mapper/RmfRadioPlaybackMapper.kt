@@ -15,7 +15,7 @@ import pl.jwizard.jwl.util.ext.getAsNullableText
 import java.time.Duration
 
 @RadioPlaybackMapper(PlaybackProvider.RMF_GROUP)
-class RmfRadioPlaybackMapper(
+internal class RmfRadioPlaybackMapper(
 	environment: RadioPlaybackMapperEnvironment,
 ) : RadioPlaybackMapperHandler(environment) {
 	override fun parsePlaybackData(

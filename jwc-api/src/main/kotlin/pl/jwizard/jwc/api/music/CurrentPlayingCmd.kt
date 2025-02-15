@@ -13,7 +13,7 @@ import pl.jwizard.jwc.exception.audio.ActiveAudioPlayingNotFoundException
 import pl.jwizard.jwl.command.Command
 
 @JdaCommand(Command.PLAYING)
-class CurrentPlayingCmd(
+internal class CurrentPlayingCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment) {
 	override val shouldPlayingMode = true

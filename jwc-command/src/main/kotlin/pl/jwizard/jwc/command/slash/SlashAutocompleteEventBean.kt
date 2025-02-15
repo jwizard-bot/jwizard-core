@@ -12,7 +12,7 @@ import pl.jwizard.jwl.i18n.I18nBean
 import pl.jwizard.jwl.util.rawCommandToDotFormat
 
 @JdaEventListenerBean
-class SlashAutocompleteEventBean(
+internal class SlashAutocompleteEventBean(
 	private val i18n: I18nBean,
 	environment: EnvironmentBean,
 ) : ListenerAdapter() {

@@ -22,7 +22,7 @@ import pl.jwizard.jwl.command.Command
 import java.util.*
 
 @JdaCommand(Command.QUEUE_SHOW)
-class ShowQueueCmd(
+internal class ShowQueueCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment) {
 	override val queueShouldNotBeEmpty = true

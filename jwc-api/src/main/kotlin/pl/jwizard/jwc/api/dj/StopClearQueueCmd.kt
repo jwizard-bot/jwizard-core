@@ -14,8 +14,8 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.STOP)
-class StopClearQueueCmd(
-	commandEnvironment: CommandEnvironmentBean
+internal class StopClearQueueCmd(
+	commandEnvironment: CommandEnvironmentBean,
 ) : DjCommandBase(commandEnvironment) {
 	companion object {
 		private val log = logger<StopClearQueueCmd>()

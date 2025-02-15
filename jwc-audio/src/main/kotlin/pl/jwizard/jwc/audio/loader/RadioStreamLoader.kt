@@ -7,7 +7,7 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 import pl.jwizard.jwl.radio.RadioStation
 
-class RadioStreamLoader(
+internal class RadioStreamLoader(
 	private val guildMusicManager: GuildMusicManager,
 	private val radioStation: RadioStation,
 ) : AudioCompletableFutureLoader(guildMusicManager) {

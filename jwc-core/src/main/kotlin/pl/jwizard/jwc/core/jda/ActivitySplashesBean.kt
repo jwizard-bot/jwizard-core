@@ -8,7 +8,7 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.util.logger
 
 @SingletonComponent
-class ActivitySplashesBean(
+internal class ActivitySplashesBean(
 	private val environment: EnvironmentBean,
 	private val jdaShardManager: JdaShardManagerBean,
 ) : JvmFixedThreadExecutor() {

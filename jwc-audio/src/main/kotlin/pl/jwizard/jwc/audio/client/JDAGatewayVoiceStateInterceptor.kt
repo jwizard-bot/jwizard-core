@@ -8,7 +8,7 @@ import pl.jwizard.jwc.core.jda.JdaShardManagerBean
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 
 @SingletonComponent
-class JDAGatewayVoiceStateInterceptor(
+internal class JDAGatewayVoiceStateInterceptor(
 	private val jdaShardManager: JdaShardManagerBean,
 ) : GatewayVoiceStateInterceptor {
 	override fun disconnect(guild: Guild) {

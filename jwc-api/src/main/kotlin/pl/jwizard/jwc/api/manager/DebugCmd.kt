@@ -26,7 +26,7 @@ import pl.jwizard.jwl.vcs.VcsRepository
 import java.util.*
 
 @JdaCommand(Command.DEBUG)
-class DebugCmd(
+internal class DebugCmd(
 	private val deploymentSupplier: VcsDeploymentSupplier,
 	private val vcsConfigBean: VcsConfigBean,
 	commandEnvironment: CommandEnvironmentBean,

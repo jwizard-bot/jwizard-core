@@ -12,7 +12,7 @@ import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
 import pl.jwizard.jwc.core.property.guild.GuildProperty
 
 @JdaEventListenerBean
-class PrefixCommandEventHandlerBean(
+internal class PrefixCommandEventHandlerBean(
 	commandEventHandlerEnvironment: CommandEventHandlerEnvironmentBean,
 ) : CommandEventHandler<MessageReceivedEvent>(commandEventHandlerEnvironment) {
 	companion object {

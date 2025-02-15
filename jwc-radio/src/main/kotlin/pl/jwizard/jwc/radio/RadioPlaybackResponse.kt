@@ -2,7 +2,7 @@ package pl.jwizard.jwc.radio
 
 import java.time.Duration
 
-data class RadioPlaybackResponse(
+internal data class RadioPlaybackResponse(
 	val title: String,
 	val trackDuration: Duration? = null,
 	val nextPlay: String? = null,

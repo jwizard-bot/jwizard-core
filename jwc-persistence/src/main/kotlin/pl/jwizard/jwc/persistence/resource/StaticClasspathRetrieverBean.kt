@@ -9,7 +9,7 @@ import java.io.IOException
 import java.io.InputStream
 
 @SingletonComponent
-class StaticClasspathRetrieverBean(environment: EnvironmentBean) : ResourceRetriever() {
+internal class StaticClasspathRetrieverBean(environment: EnvironmentBean) : ResourceRetriever() {
 	companion object {
 		private val log = logger<HttpResourceRetrieverBean>()
 	}

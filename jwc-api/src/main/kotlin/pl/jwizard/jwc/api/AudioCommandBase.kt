@@ -14,7 +14,7 @@ import pl.jwizard.jwc.exception.command.InvokerIsNotSenderOrSuperuserException
 import pl.jwizard.jwc.exception.user.UserOnVoiceChannelNotFoundException
 import pl.jwizard.jwc.exception.user.UserOnVoiceChannelWithBotNotFoundException
 
-abstract class AudioCommandBase(
+internal abstract class AudioCommandBase(
 	commandEnvironment: CommandEnvironmentBean,
 ) : CommandBase(commandEnvironment) {
 	final override fun execute(context: GuildCommandContext, response: TFutureResponse) {

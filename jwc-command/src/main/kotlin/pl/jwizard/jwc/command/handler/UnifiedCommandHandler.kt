@@ -11,7 +11,7 @@ import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
 
-abstract class UnifiedCommandHandler<E : Event> : ListenerAdapter() {
+internal abstract class UnifiedCommandHandler<E : Event> : ListenerAdapter() {
 	protected abstract val commandType: CommandType
 
 	protected abstract fun eventGuild(event: E): Guild?

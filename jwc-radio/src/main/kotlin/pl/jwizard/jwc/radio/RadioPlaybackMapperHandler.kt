@@ -23,7 +23,7 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.nio.charset.StandardCharsets
 
-abstract class RadioPlaybackMapperHandler(
+internal abstract class RadioPlaybackMapperHandler(
 	environment: RadioPlaybackMapperEnvironment,
 ) : RadioPlaybackMessage {
 	private val i18n = environment.i18nBean

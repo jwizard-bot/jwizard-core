@@ -4,7 +4,7 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 import java.util.concurrent.ConcurrentHashMap
 
-class CommandsStore<T : Any>(
+internal class CommandsStore<T : Any>(
 	private val commandsEnvironment: String,
 ) : ConcurrentHashMap<Command, T>() {
 	companion object {
@@ -23,7 +23,7 @@ class CommandsStore<T : Any>(
 			"({}) Command: \"{}\" ({}) appended via reflection.",
 			commandsEnvironment,
 			command,
-			command.javaClass.name
+			clazz.javaClass.name,
 		)
 	}
 }

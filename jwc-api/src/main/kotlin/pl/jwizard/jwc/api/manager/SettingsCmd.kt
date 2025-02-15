@@ -16,7 +16,7 @@ import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.i18n.I18nLocaleSource
 
 @JdaCommand(Command.SETTINGS)
-class SettingsCmd(
+internal class SettingsCmd(
 	commandEnvironment: CommandEnvironmentBean
 ) : ManagerCommandBase(commandEnvironment) {
 	override fun executeManager(context: GuildCommandContext, response: TFutureResponse) {

@@ -17,7 +17,7 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.PAUSE)
-class PauseTrackCmd(
+internal class PauseTrackCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment) {
 	companion object {

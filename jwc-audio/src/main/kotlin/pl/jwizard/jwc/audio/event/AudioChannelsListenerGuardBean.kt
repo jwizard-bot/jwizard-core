@@ -17,7 +17,7 @@ import pl.jwizard.jwl.util.logger
 import java.time.Instant
 
 @SingletonComponent
-class AudioChannelsListenerGuardBean(
+internal class AudioChannelsListenerGuardBean(
 	private val jdaShardManager: JdaShardManagerBean,
 	private val environment: EnvironmentBean,
 	private val musicManagers: MusicManagersBean,

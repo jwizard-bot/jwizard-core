@@ -22,7 +22,7 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.JOIN)
-class JoinToChannelCmd(
+internal class JoinToChannelCmd(
 	commandEnvironment: CommandEnvironmentBean
 ) : DjCommandBase(commandEnvironment) {
 	companion object {

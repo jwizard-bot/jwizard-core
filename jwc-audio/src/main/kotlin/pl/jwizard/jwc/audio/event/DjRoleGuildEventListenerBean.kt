@@ -13,7 +13,7 @@ import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwl.util.logger
 
 @JdaEventListenerBean
-class DjRoleGuildEventListenerBean(
+internal class DjRoleGuildEventListenerBean(
 	private val environment: EnvironmentBean,
 	private val jdaColorStore: JdaColorsCacheBean,
 ) : ListenerAdapter() {

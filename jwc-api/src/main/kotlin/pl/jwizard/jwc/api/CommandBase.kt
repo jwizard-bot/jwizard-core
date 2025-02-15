@@ -12,8 +12,8 @@ import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwl.property.AppProperty
 
-abstract class CommandBase(
-	protected val commandEnvironment: CommandEnvironmentBean
+internal abstract class CommandBase(
+	protected val commandEnvironment: CommandEnvironmentBean,
 ) : GuildCommandHandler {
 	protected val environment = commandEnvironment.environment
 	protected val guildSettingsEventAction = commandEnvironment.guildSettingsEventAction

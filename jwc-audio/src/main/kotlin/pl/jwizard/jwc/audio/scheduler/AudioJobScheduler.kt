@@ -5,7 +5,7 @@ import pl.jwizard.jwc.audio.gateway.player.track.Track
 import pl.jwizard.jwc.audio.gateway.player.track.TrackEndReason
 import pl.jwizard.jwc.audio.gateway.player.track.TrackException
 
-interface AudioJobScheduler {
+internal interface AudioJobScheduler {
 	fun loadContent(tracks: List<Track>)
 
 	fun onAudioStart(track: Track, audioNode: AudioNode)

@@ -6,7 +6,9 @@ import pl.jwizard.jwl.persistence.sql.JdbiQueryBean
 import java.math.BigInteger
 
 @SingletonComponent
-class CommandDataSupplierBean(private val jdbiQuery: JdbiQueryBean) : CommandDataSupplier {
+internal class CommandDataSupplierBean(
+	private val jdbiQuery: JdbiQueryBean,
+) : CommandDataSupplier {
 	override fun getDisabledGuildCommands(
 		guildDbId: BigInteger,
 		slashCommands: Boolean,

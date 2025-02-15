@@ -15,7 +15,7 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.RESUME)
-class ResumeTrackCmd(
+internal class ResumeTrackCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment) {
 	companion object {

@@ -6,7 +6,9 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.persistence.sql.JdbiQueryBean
 
 @SingletonComponent
-class VcsDeploymentSupplierBean(private val jdbiQuery: JdbiQueryBean) : VcsDeploymentSupplier {
+internal class VcsDeploymentSupplierBean(
+	private val jdbiQuery: JdbiQueryBean,
+) : VcsDeploymentSupplier {
 	override fun getDeploymentVersion(repositoryName: String): String? {
 		val sql = "SELECT latest_version_long FROM projects WHERE name = ?"
 		return jdbiQuery.queryForNullableObject(sql, String::class, repositoryName)

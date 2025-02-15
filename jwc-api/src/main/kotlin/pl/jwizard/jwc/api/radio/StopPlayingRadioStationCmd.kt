@@ -9,7 +9,7 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwl.command.Command
 
 @JdaCommand(Command.RADIO_STOP)
-class StopPlayingRadioStationCmd(
+internal class StopPlayingRadioStationCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : RadioCommandBase(commandEnvironment) {
 	override val shouldOnSameChannelWithBot = true

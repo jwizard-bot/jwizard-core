@@ -13,7 +13,7 @@ import pl.jwizard.jwl.i18n.I18nBean
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 
 @SingletonComponent
-class CommandEnvironmentBean(
+internal class CommandEnvironmentBean(
 	val environment: EnvironmentBean,
 	val i18n: I18nBean,
 	val jdaColorStore: JdaColorsCacheBean,

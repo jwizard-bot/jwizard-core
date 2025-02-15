@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import pl.jwizard.jwc.command.exception.CommandInvocationException
 import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
 
-class SlashGuildCommandContext(
+internal class SlashGuildCommandContext(
 	override val commandName: String,
 	event: SlashCommandInteractionEvent,
 	guildCommandProperties: GuildMultipleProperties,

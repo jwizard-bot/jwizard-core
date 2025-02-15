@@ -16,7 +16,7 @@ import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.VOTE_SKIPTO)
-class VoteSkipQueueToTrackCmd(
+internal class VoteSkipQueueToTrackCmd(
 	voterEnvironment: VoterEnvironmentBean,
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicVoteCommandBase(voterEnvironment, commandEnvironment) {

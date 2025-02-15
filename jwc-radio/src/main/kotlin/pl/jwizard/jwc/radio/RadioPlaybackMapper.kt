@@ -6,6 +6,6 @@ import pl.jwizard.jwl.radio.PlaybackProvider
 @SingletonComponent
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class RadioPlaybackMapper(
+internal annotation class RadioPlaybackMapper(
 	val value: PlaybackProvider,
 )

@@ -8,7 +8,7 @@ import pl.jwizard.jwc.exception.radio.DiscreteAudioStreamIsPlayingException
 import pl.jwizard.jwc.exception.radio.RadioStationIsNotPlayingException
 import pl.jwizard.jwc.exception.radio.RadioStationIsPlayingException
 
-abstract class RadioCommandBase(
+internal abstract class RadioCommandBase(
 	commandEnvironment: CommandEnvironmentBean,
 ) : AudioCommandBase(commandEnvironment) {
 	final override fun executeAudio(

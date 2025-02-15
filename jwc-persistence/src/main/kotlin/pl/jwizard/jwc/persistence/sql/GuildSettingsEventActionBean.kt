@@ -10,7 +10,7 @@ import pl.jwizard.jwl.property.AppBaseProperty
 import java.sql.JDBCType
 
 @SingletonComponent
-class GuildSettingsEventActionBean(
+internal class GuildSettingsEventActionBean(
 	private val jdbiQuery: JdbiQueryBean,
 	private val environment: EnvironmentBean,
 ) : GuildSettingsEventAction {

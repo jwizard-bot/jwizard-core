@@ -12,7 +12,7 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwl.command.Command
 
 @JdaCommand(Command.VOLUME)
-class GetPlayerVolumeCmd(
+internal class GetPlayerVolumeCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment) {
 	override val shouldOnSameChannelWithBot = true

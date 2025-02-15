@@ -17,7 +17,7 @@ import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.REPEAT_SET)
-class RepeatTrackCmd(
+internal class RepeatTrackCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment) {
 	companion object {

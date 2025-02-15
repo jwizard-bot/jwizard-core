@@ -10,7 +10,7 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwl.command.Command
 
 @JdaCommand(Command.PLAYLIST_MEMBER)
-class ShowMemberPlaylistsCmd(
+internal class ShowMemberPlaylistsCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : CommandBase(commandEnvironment) {
 	override fun execute(context: GuildCommandContext, response: TFutureResponse) {

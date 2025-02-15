@@ -7,7 +7,9 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
 import pl.jwizard.jwc.core.jvm.thread.JvmFixedPayloadThreadExecutor
 
-class InteractionRemovalThread : JvmFixedPayloadThreadExecutor<Message>(countOfThreads = 1) {
+internal class InteractionRemovalThread : JvmFixedPayloadThreadExecutor<Message>(
+	countOfThreads = 1,
+) {
 	override fun executeJvmThreadWithPayload(payload: Message) {
 		val disabledComponents = payload.actionRows.map {
 			ActionRow.of(

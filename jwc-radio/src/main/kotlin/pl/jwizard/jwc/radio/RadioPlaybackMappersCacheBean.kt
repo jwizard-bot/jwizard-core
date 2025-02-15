@@ -9,7 +9,7 @@ import pl.jwizard.jwl.util.logger
 import java.util.concurrent.ConcurrentHashMap
 
 @SingletonComponent
-class RadioPlaybackMappersCacheBean(
+internal class RadioPlaybackMappersCacheBean(
 	private val ioCKtContextFactory: IoCKtContextFactory,
 ) : RadioPlaybackMappersCache {
 	companion object {

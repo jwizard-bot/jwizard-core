@@ -7,7 +7,7 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.radio.RadioStation
 
 @SingletonComponent
-class RadioStationThumbnailSupplierBean(
+internal class RadioStationThumbnailSupplierBean(
 	private val staticClasspathRetriever: StaticClasspathRetrieverBean,
 ) : RadioStationThumbnailSupplier {
 	override fun getThumbnailResource(

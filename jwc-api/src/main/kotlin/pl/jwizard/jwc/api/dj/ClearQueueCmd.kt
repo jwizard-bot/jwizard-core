@@ -14,7 +14,7 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.QUEUE_CLEAR)
-class ClearQueueCmd(
+internal class ClearQueueCmd(
 	commandEnvironment: CommandEnvironmentBean
 ) : DjCommandBase(commandEnvironment) {
 	companion object {

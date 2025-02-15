@@ -15,7 +15,7 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.VOTE_QUEUE_CLEAR)
-class VoteClearQueueCmd(
+internal class VoteClearQueueCmd(
 	voterEnvironment: VoterEnvironmentBean,
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicVoteCommandBase(voterEnvironment, commandEnvironment) {

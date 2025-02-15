@@ -6,8 +6,8 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.exception.dj.UnauthorizedDjException
 import pl.jwizard.jwc.exception.dj.UnauthorizedDjOrSenderException
 
-abstract class DjCommandBase(
-	commandEnvironment: CommandEnvironmentBean
+internal abstract class DjCommandBase(
+	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment) {
 	final override fun executeMusic(
 		context: GuildCommandContext,

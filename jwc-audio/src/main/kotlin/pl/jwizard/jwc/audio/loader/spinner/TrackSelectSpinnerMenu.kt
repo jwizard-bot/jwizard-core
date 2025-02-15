@@ -12,7 +12,7 @@ import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwl.util.logger
 import kotlin.math.min
 
-class TrackSelectSpinnerMenu(
+internal class TrackSelectSpinnerMenu(
 	private val guildMusicManager: GuildMusicManager,
 	private val onEnqueueTrack: (track: Track) -> Unit,
 	private val createTrackResponseMessage: (track: Track) -> MessageEmbed,

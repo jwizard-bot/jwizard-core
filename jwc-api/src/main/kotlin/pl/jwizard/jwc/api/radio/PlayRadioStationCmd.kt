@@ -12,7 +12,7 @@ import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.radio.RadioStation
 
 @JdaCommand(Command.RADIO_PLAY)
-class PlayRadioStationCmd(
+internal class PlayRadioStationCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : RadioCommandBase(commandEnvironment) {
 	override val shouldOnSameChannelWithBot = true

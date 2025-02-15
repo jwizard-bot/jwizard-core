@@ -1,6 +1,6 @@
 package pl.jwizard.jwc.audio.scheduler.repeat
 
-class CountOfRepeats {
+internal class CountOfRepeats {
 	var current = 0
 		private set
 

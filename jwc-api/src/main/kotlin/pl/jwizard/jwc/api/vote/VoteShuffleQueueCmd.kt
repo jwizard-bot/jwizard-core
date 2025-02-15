@@ -15,7 +15,7 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.VOTE_QUEUE_SHUFFLE)
-class VoteShuffleQueueCmd(
+internal class VoteShuffleQueueCmd(
 	voterEnvironment: VoterEnvironmentBean,
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicVoteCommandBase(voterEnvironment, commandEnvironment) {

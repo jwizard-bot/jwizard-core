@@ -2,7 +2,7 @@ package pl.jwizard.jwc.audio.scheduler
 
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 
-enum class PlayerFriendlyExceptionMapper(
+internal enum class PlayerFriendlyExceptionMapper(
 	val stringPattern: String?,
 	val i18nLocaleSource: I18nExceptionSource,
 ) {

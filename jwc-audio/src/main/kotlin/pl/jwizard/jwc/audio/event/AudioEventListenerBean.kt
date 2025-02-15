@@ -9,7 +9,7 @@ import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
 
 @JdaEventListenerBean
-class AudioEventListenerBean(
+internal class AudioEventListenerBean(
 	private val audioChannelsListenerGuard: AudioChannelsListenerGuardBean,
 	private val musicManagers: MusicManagersBean,
 ) : ListenerAdapter() {

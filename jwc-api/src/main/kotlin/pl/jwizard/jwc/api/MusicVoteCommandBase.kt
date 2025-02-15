@@ -11,7 +11,7 @@ import pl.jwizard.jwc.vote.VoterEnvironmentBean
 import pl.jwizard.jwc.vote.music.MusicVoterComponent
 import pl.jwizard.jwc.vote.music.MusicVoterResponse
 
-abstract class MusicVoteCommandBase(
+internal abstract class MusicVoteCommandBase(
 	private val voterEnvironment: VoterEnvironmentBean,
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment) {

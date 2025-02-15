@@ -11,7 +11,7 @@ import pl.jwizard.jwl.i18n.I18nBean
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 
 @SingletonComponent
-class CommandEventHandlerEnvironmentBean(
+internal class CommandEventHandlerEnvironmentBean(
 	val commandDataSupplier: CommandDataSupplier,
 	val moduleDataSupplier: ModuleDataSupplier,
 	val commandsCache: CommandsCacheBean,

@@ -16,7 +16,7 @@ import pl.jwizard.jwl.property.AppBaseProperty
 import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.VOLUME_SET)
-class SetPlayerVolumeCmd(
+internal class SetPlayerVolumeCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : DjCommandBase(commandEnvironment) {
 	companion object {

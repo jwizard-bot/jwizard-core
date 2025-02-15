@@ -6,7 +6,7 @@ import pl.jwizard.jwl.persistence.sql.JdbiQueryBean
 import java.math.BigInteger
 
 @SingletonComponent
-class ModuleDataSupplierBean(private val jdbiQuery: JdbiQueryBean) : ModuleDataSupplier {
+internal class ModuleDataSupplierBean(private val jdbiQuery: JdbiQueryBean) : ModuleDataSupplier {
 	override fun getDisabledGuildModules(guildDbId: BigInteger): List<Long> {
 		val sql = "SELECT module_id FROM guilds_disabled_modules WHERE guild_id = ?"
 		return jdbiQuery.queryForList(sql, Long::class, guildDbId)

@@ -11,7 +11,7 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwl.command.Command
 
 @JdaCommand(Command.PLAYLIST_PLAY)
-class LoadAndPlayPlaylistCmd(
+internal class LoadAndPlayPlaylistCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment) {
 	override val shouldOnSameChannelWithBot = true

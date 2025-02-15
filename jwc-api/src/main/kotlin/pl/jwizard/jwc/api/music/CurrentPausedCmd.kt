@@ -13,7 +13,7 @@ import pl.jwizard.jwc.exception.UnexpectedException
 import pl.jwizard.jwl.command.Command
 
 @JdaCommand(Command.PAUSED)
-class CurrentPausedCmd(
+internal class CurrentPausedCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment) {
 	override val shouldPaused = true

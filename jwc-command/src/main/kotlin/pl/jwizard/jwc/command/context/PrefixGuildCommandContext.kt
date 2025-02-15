@@ -5,7 +5,7 @@ import pl.jwizard.jwc.command.exception.CommandInvocationException
 import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
 import pl.jwizard.jwc.core.property.guild.GuildProperty
 
-class PrefixGuildCommandContext(
+internal class PrefixGuildCommandContext(
 	override val commandName: String,
 	event: MessageReceivedEvent,
 	instancePrefix: String,

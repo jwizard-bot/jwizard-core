@@ -2,7 +2,7 @@ package pl.jwizard.jwc.audio.loader
 
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 
-class AudioLoadFailedDetails private constructor(
+internal class AudioLoadFailedDetails private constructor(
 	val logMessage: String,
 	val i18nLocaleSource: I18nExceptionSource,
 	val logArguments: List<Any?>,

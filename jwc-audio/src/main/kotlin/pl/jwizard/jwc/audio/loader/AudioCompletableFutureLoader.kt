@@ -8,7 +8,7 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.util.jdaError
 import pl.jwizard.jwl.util.logger
 
-abstract class AudioCompletableFutureLoader(
+internal abstract class AudioCompletableFutureLoader(
 	private val guildMusicManager: GuildMusicManager,
 ) : AudioLoadResultHandler() {
 	companion object {

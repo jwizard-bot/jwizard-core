@@ -13,7 +13,7 @@ import pl.jwizard.jwc.exception.radio.RadioStationNotProvidedPlaybackDataExcepti
 import pl.jwizard.jwl.command.Command
 
 @JdaCommand(Command.RADIO_INFO)
-class RadioInfoCmd(
+internal class RadioInfoCmd(
 	private val radioPlaybackMappersCache: RadioPlaybackMappersCache,
 	commandEnvironment: CommandEnvironmentBean,
 ) : RadioCommandBase(commandEnvironment) {

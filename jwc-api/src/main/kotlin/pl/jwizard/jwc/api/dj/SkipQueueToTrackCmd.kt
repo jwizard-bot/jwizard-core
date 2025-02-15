@@ -15,7 +15,7 @@ import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.SKIPTO)
-class SkipQueueToTrackCmd(
+internal class SkipQueueToTrackCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : DjCommandBase(commandEnvironment) {
 	companion object {

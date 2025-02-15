@@ -20,7 +20,7 @@ import pl.jwizard.jwl.util.logger
 import java.util.*
 
 @SingletonComponent
-class SlashCommandRegistererBean(
+internal class SlashCommandRegistererBean(
 	private val i18n: I18nBean,
 	private val environment: EnvironmentBean,
 	private val commandsCache: CommandsCacheBean,

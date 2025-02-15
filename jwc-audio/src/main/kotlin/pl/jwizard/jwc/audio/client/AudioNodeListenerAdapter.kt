@@ -8,7 +8,9 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.util.logger
 
 @SingletonComponent
-class AudioNodeListenerAdapter(private val musicManagers: MusicManagersBean) : AudioNodeListener {
+internal class AudioNodeListenerAdapter(
+	private val musicManagers: MusicManagersBean,
+) : AudioNodeListener {
 	companion object {
 		private val log = logger<AudioNodeListenerAdapter>()
 	}

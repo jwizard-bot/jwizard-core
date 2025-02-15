@@ -6,7 +6,9 @@ import pl.jwizard.jwl.persistence.sql.JdbiQueryBean
 import kotlin.reflect.KClass
 
 @SingletonComponent
-class RemotePropertySupplierBean(private val jdbiQuery: JdbiQueryBean) : RemotePropertySupplier {
+internal class RemotePropertySupplierBean(
+	private val jdbiQuery: JdbiQueryBean,
+) : RemotePropertySupplier {
 	override fun <T : Any> getProperty(columnName: String, guildId: Long, type: KClass<T>): T? {
 		val sql = jdbiQuery.parse(
 			"SELECT {{columnName}} FROM guilds WHERE discord_id = ?",

@@ -18,7 +18,9 @@ import pl.jwizard.jwl.util.logger
 import kotlin.math.abs
 
 @JdaCommand(Command.QUEUE_MOVE)
-class MoveTrackCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBase(commandEnvironment) {
+internal class MoveTrackCmd(
+	commandEnvironment: CommandEnvironmentBean,
+) : DjCommandBase(commandEnvironment) {
 	companion object {
 		private val log = logger<MoveTrackCmd>()
 	}

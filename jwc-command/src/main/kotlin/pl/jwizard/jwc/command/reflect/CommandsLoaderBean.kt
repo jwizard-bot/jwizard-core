@@ -12,7 +12,7 @@ import pl.jwizard.jwl.util.logger
 import kotlin.reflect.full.allSuperclasses
 
 @SingletonComponent
-class CommandsLoaderBean(
+internal class CommandsLoaderBean(
 	private val ioCKtContextFactory: IoCKtContextFactory,
 	private val commandsCache: CommandsCacheBean,
 ) : CommandsLoader {

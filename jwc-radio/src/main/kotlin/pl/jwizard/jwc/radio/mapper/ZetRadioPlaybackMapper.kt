@@ -10,7 +10,7 @@ import pl.jwizard.jwl.util.ext.getAsNullableText
 import java.time.Duration
 
 @RadioPlaybackMapper(PlaybackProvider.ZET_GROUP)
-class ZetRadioPlaybackMapper(
+internal class ZetRadioPlaybackMapper(
 	environment: RadioPlaybackMapperEnvironment,
 ) : RadioPlaybackMapperHandler(environment) {
 	override fun parsePlaybackData(

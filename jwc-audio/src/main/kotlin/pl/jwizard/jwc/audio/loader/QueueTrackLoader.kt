@@ -19,7 +19,7 @@ import pl.jwizard.jwc.core.util.millisToDTF
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 import pl.jwizard.jwl.util.logger
 
-class QueueTrackLoader(
+internal class QueueTrackLoader(
 	private val guildMusicManager: GuildMusicManager,
 ) : AudioCompletableFutureLoader(guildMusicManager) {
 	companion object {
