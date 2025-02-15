@@ -2,14 +2,14 @@ package pl.jwizard.jwc.audio.client
 
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Member
-import pl.jwizard.jwac.AudioClient
-import pl.jwizard.jwac.AudioNodeListener
-import pl.jwizard.jwac.AudioSessionController
-import pl.jwizard.jwac.gateway.GatewayVoiceStateInterceptor
-import pl.jwizard.jwac.gateway.JDAVoiceUpdateListener
-import pl.jwizard.jwac.node.AudioNode
-import pl.jwizard.jwac.node.NodeConfig
-import pl.jwizard.jwac.node.NodePool
+import pl.jwizard.jwc.audio.gateway.AudioClient
+import pl.jwizard.jwc.audio.gateway.AudioNodeListener
+import pl.jwizard.jwc.audio.gateway.AudioSessionController
+import pl.jwizard.jwc.audio.gateway.discord.GatewayVoiceStateInterceptor
+import pl.jwizard.jwc.audio.gateway.discord.JDAVoiceUpdateListener
+import pl.jwizard.jwc.audio.gateway.node.AudioNode
+import pl.jwizard.jwc.audio.gateway.node.NodeConfig
+import pl.jwizard.jwc.audio.gateway.node.NodePool
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.audio.spi.DistributedAudioClient
 import pl.jwizard.jwc.core.property.BotProperty

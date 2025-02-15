@@ -1,7 +1,7 @@
 package pl.jwizard.jwc.audio.client
 
-import pl.jwizard.jwac.AudioNodeListener
-import pl.jwizard.jwac.event.player.*
+import pl.jwizard.jwc.audio.gateway.AudioNodeListener
+import pl.jwizard.jwc.audio.gateway.event.player.*
 import pl.jwizard.jwc.audio.manager.MusicManagersBean
 import pl.jwizard.jwc.audio.scheduler.AudioScheduleHandler
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent

@@ -1,6 +1,6 @@
 package pl.jwizard.jwc.audio.client
 
-import pl.jwizard.jwac.node.NodePool
+import pl.jwizard.jwc.audio.gateway.node.NodePool
 
 enum class AudioNodeType : NodePool {
 	QUEUED,

@@ -9,8 +9,6 @@ import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
-import pl.jwizard.jwc.core.util.ext.mdTitleLink
-import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.exception.track.TrackOffsetOutOfBoundsException
 import pl.jwizard.jwc.exception.track.TrackPositionsIsTheSameException

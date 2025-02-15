@@ -1,9 +1,9 @@
 package pl.jwizard.jwc.audio.loader
 
 import net.dv8tion.jda.api.entities.MessageEmbed
-import pl.jwizard.jwac.event.onload.*
-import pl.jwizard.jwac.player.track.AudioSender
-import pl.jwizard.jwac.player.track.Track
+import pl.jwizard.jwc.audio.gateway.event.onload.*
+import pl.jwizard.jwc.audio.gateway.player.track.AudioSender
+import pl.jwizard.jwc.audio.gateway.player.track.Track
 import pl.jwizard.jwc.audio.loader.spinner.TrackMenuOption
 import pl.jwizard.jwc.audio.loader.spinner.TrackSelectSpinnerMenu
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
@@ -13,7 +13,6 @@ import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.guild.GuildProperty
-import pl.jwizard.jwc.core.util.ext.mdTitleLink
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.core.util.millisToDTF

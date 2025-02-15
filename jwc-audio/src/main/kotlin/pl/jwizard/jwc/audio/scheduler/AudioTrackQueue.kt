@@ -1,6 +1,6 @@
 package pl.jwizard.jwc.audio.scheduler
 
-import pl.jwizard.jwac.player.track.Track
+import pl.jwizard.jwc.audio.gateway.player.track.Track
 import java.util.*
 
 class AudioTrackQueue : LinkedList<Track>() {

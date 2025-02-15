@@ -1,9 +1,9 @@
 package pl.jwizard.jwc.audio.scheduler
 
-import dev.arbjerg.lavalink.protocol.v4.Message.EmittedEvent.TrackEndEvent.AudioTrackEndReason
-import pl.jwizard.jwac.node.AudioNode
-import pl.jwizard.jwac.player.track.Track
-import pl.jwizard.jwac.player.track.TrackException
+import pl.jwizard.jwc.audio.gateway.node.AudioNode
+import pl.jwizard.jwc.audio.gateway.player.track.Track
+import pl.jwizard.jwc.audio.gateway.player.track.TrackEndReason
+import pl.jwizard.jwc.audio.gateway.player.track.TrackException
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -76,7 +76,7 @@ class RadioStreamScheduleHandler(
 		state.future.complete(response)
 	}
 
-	override fun onAudioEnd(lastTrack: Track, audioNode: AudioNode, endReason: AudioTrackEndReason) {
+	override fun onAudioEnd(lastTrack: Track, audioNode: AudioNode, endReason: TrackEndReason) {
 		val state = guildMusicManager.state
 		val context = state.context
 		val (name, inputStream) = guildMusicManager.bean.radioStationThumbnailSupplier

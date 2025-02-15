@@ -1,17 +1,15 @@
 package pl.jwizard.jwc.audio.scheduler
 
-import dev.arbjerg.lavalink.protocol.v4.Message.EmittedEvent.TrackEndEvent.AudioTrackEndReason
 import net.dv8tion.jda.api.entities.MessageEmbed
-import pl.jwizard.jwac.node.AudioNode
-import pl.jwizard.jwac.player.track.Track
-import pl.jwizard.jwac.player.track.TrackException
+import pl.jwizard.jwc.audio.gateway.node.AudioNode
+import pl.jwizard.jwc.audio.gateway.player.track.Track
+import pl.jwizard.jwc.audio.gateway.player.track.TrackEndReason
+import pl.jwizard.jwc.audio.gateway.player.track.TrackException
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.audio.scheduler.repeat.AudioTrackRepeat
 import pl.jwizard.jwc.audio.scheduler.repeat.CountOfRepeats
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
-import pl.jwizard.jwc.core.util.ext.mdTitleLink
-import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.jdaError
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwl.command.Command
@@ -97,7 +95,7 @@ class QueueTrackScheduleHandler(
 		}
 	}
 
-	override fun onAudioEnd(lastTrack: Track, audioNode: AudioNode, endReason: AudioTrackEndReason) {
+	override fun onAudioEnd(lastTrack: Track, audioNode: AudioNode, endReason: TrackEndReason) {
 		val context = guildMusicManager.state.context
 		if (audioRepeat.trackRepeat) {
 			nextTrackInfoMessage.set(false) // disable for prevent spamming
@@ -136,7 +134,7 @@ class QueueTrackScheduleHandler(
 			guildMusicManager.sendMessage(trackRepeatMessage)
 			return
 		}
-		if (queue.isEmpty() && endReason != AudioTrackEndReason.REPLACED) {
+		if (queue.isEmpty() && endReason != TrackEndReason.REPLACED) {
 			val connectionInterrupted = guildMusicManager.cachedPlayer?.state == null
 			nextTrackInfoMessage.set(true)
 
@@ -155,7 +153,7 @@ class QueueTrackScheduleHandler(
 			guildMusicManager.sendMessage(endQueueMessage)
 			return
 		}
-		if (endReason.mayStartNext || (endReason == AudioTrackEndReason.STOPPED && queue.isNotEmpty())) {
+		if (endReason.mayStartNext || (endReason == TrackEndReason.STOPPED && queue.isNotEmpty())) {
 			nextTrackInfoMessage.set(true)
 			nextTrack()
 		}

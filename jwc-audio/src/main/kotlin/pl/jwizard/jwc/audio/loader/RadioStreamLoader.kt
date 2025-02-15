@@ -1,7 +1,7 @@
 package pl.jwizard.jwc.audio.loader
 
-import pl.jwizard.jwac.event.onload.*
-import pl.jwizard.jwac.player.track.Track
+import pl.jwizard.jwc.audio.gateway.event.onload.*
+import pl.jwizard.jwc.audio.gateway.player.track.Track
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource

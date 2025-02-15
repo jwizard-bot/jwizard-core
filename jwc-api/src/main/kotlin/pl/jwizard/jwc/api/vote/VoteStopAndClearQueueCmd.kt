@@ -7,8 +7,6 @@ import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
-import pl.jwizard.jwc.core.util.ext.mdTitleLink
-import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.vote.VoterEnvironmentBean
 import pl.jwizard.jwc.vote.music.MusicVoterResponse
@@ -57,7 +55,7 @@ class VoteStopAndClearQueueCmd(
 				}
 				createVoteSuccessMessage(context)
 					.setDescription(i18nSourceKey, args)
-					.apply { playingTrack?.let { setArtwork(it.thumbnailUrl) } }
+					.apply { playingTrack?.let { track -> setArtwork(track.thumbnailUrl) } }
 					.setColor(JdaColor.PRIMARY)
 					.build()
 			},

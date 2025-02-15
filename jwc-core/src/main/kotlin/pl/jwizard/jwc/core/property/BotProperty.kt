@@ -98,9 +98,6 @@ enum class BotProperty(
 	// extended link for radio playback content
 	RADIO_PLAYBACK_EXTENDED_LINK("radio.playback.extended-link"),
 
-	// JWizard API service host url.
-	SERVICE_API_URL("service.api-url"),
-
 	// JWizard front-end service host url
 	SERVICE_FRONT_URL("service.front-url"),
 

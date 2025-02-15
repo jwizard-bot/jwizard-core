@@ -1,9 +1,9 @@
 package pl.jwizard.jwc.api.music
 
 import net.dv8tion.jda.api.entities.MessageEmbed
-import pl.jwizard.jwac.player.track.Track
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.MusicCommandBase
+import pl.jwizard.jwc.audio.gateway.player.track.Track
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand

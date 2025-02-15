@@ -10,5 +10,7 @@ class AnyNodeInPoolIsNotAvailableException(
 ) : CommandPipelineException(
 	commandBaseContext = context,
 	i18nExceptionSource = I18nExceptionSource.ANY_NODE_IN_POOL_IS_NOT_AVAILABLE,
-	logMessage = "Attempt to invoke audio command when selected node pool: \"$nodePoolName\" is empty.",
+	logMessage = """
+		Attempt to invoke audio command when selected node pool: "$nodePoolName" is empty.
+	""",
 )
