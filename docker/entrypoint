@@ -1,10 +1,5 @@
 #!/bin/sh
 
-#
-# Copyright (c) 2025 by JWizard
-# Originally developed by Miłosz Gilga <https://miloszgilga.pl>
-#
-
 java \
 	-Xms$JWIZARD_XMS \
 	-Xmx$JWIZARD_XMX \

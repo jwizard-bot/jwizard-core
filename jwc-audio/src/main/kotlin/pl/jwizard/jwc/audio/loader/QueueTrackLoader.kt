@@ -92,12 +92,6 @@ class QueueTrackLoader(
 		future.complete(response)
 	}
 
-	/**
-	 * Handles the loading of a playlist.
-	 *
-	 * @param result The result of the loaded playlist.
-	 * @param future The future response to complete once the playlist is loaded.
-	 */
 	override fun onCompletablePlaylistLoaded(result: KPlaylistLoadedEvent, future: TFutureResponse) {
 		val context = guildMusicManager.state.context
 		result.tracks.forEach { it.setSenderData(AudioSender(context.author.idLong)) }
@@ -131,12 +125,6 @@ class QueueTrackLoader(
 		future.complete(response)
 	}
 
-	/**
-	 * Handles a failed loading attempt for a track or playlist.
-	 *
-	 * @param result The result containing the details of the load failure.
-	 * @return The details of the load failure.
-	 */
 	override fun onCompletableLoadFailed(result: KLoadFailedEvent) = AudioLoadFailedDetails.Builder()
 		.setLogMessage(
 			"Unexpected exception during load audio track/playlist. Cause: %s.",
@@ -145,32 +133,15 @@ class QueueTrackLoader(
 		.setI18nLocaleSource(I18nExceptionSource.ISSUE_WHILE_LOADING_TRACK)
 		.build()
 
-	/**
-	 * Handles cases where no tracks or playlists match the search.
-	 *
-	 * @param result The no matches result.
-	 * @return The details indicating no matches were found.
-	 */
 	override fun onCompletableNoMatches(result: KNoMatchesEvent) = AudioLoadFailedDetails.Builder()
 		.setLogMessage("Unable to find any audio track/playlist.")
 		.setI18nLocaleSource(I18nExceptionSource.NOT_FOUND_TRACK)
 		.build()
 
-	/**
-	 * Enqueues the specified track to the music manager's audio scheduler.
-	 *
-	 * @param track The track to be added to the queue.
-	 */
 	private fun onEnqueueTrack(track: Track) {
 		guildMusicManager.state.audioScheduler.loadContent(listOf(track))
 	}
 
-	/**
-	 * Creates a message embed for the specified track that indicates it has been added to the queue.
-	 *
-	 * @param track The track for which the embed message is created.
-	 * @return The created embed message.
-	 */
 	private fun createTrackResponseMessage(track: Track): MessageEmbed {
 		val context = guildMusicManager.state.context
 		val queueSize = guildMusicManager.state.queueTrackScheduler.queue.size
@@ -196,11 +167,6 @@ class QueueTrackLoader(
 			.build()
 	}
 
-	/**
-	 * Handles the error that occurs during the audio loading process.
-	 *
-	 * @param details The details of the error that occurred.
-	 */
 	override fun onError(details: AudioLoadFailedDetails) {
 		val state = guildMusicManager.state
 		// If there are no tracks in the queue and no current track playing, start the leave waiter.
