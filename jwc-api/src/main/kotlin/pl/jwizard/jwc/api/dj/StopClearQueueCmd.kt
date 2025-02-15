@@ -1,15 +1,8 @@
-/*
- * Copyright (c) 2024 by JWizard
- * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
- */
 package pl.jwizard.jwc.api.dj
 
-import net.dv8tion.jda.api.entities.MessageEmbed
-import pl.jwizard.jwac.player.track.Track
 import pl.jwizard.jwc.api.CommandEnvironmentBean
 import pl.jwizard.jwc.api.DjCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
-import pl.jwizard.jwc.command.async.TUpdatableCommandHook
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
@@ -22,19 +15,10 @@ import pl.jwizard.jwc.exception.track.TrackQueueIsEmptyException
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
-/**
- * Command to stop the current track and clear the queue.
- *
- * This command stops the currently playing track, if any, and clears the entire music queue. It ensures that the bot
- * is in the same voice channel as the user before execution.
- *
- * @param commandEnvironment The environment context for the command execution.
- * @author Miłosz Gilga
- */
 @JdaCommand(Command.STOP)
 class StopClearQueueCmd(
-	commandEnvironment: CommandEnvironmentBean,
-) : DjCommandBase(commandEnvironment), TUpdatableCommandHook<Pair<Track?, Int>> {
+	commandEnvironment: CommandEnvironmentBean
+) : DjCommandBase(commandEnvironment) {
 
 	companion object {
 		private val log = logger<StopClearQueueCmd>()
@@ -42,55 +26,45 @@ class StopClearQueueCmd(
 
 	override val shouldOnSameChannelWithBot = true
 
-	/**
-	 * Stops the current track and clears the music queue.
-	 *
-	 * This method stops the currently playing track, if any, and clears the music queue managed by the bot. It checks
-	 * if there is a track playing and if the queue has any remaining tracks, then asynchronously stops and clears them.
-	 *
-	 * @param context The context of the command, including user interaction details.
-	 * @param manager The guild music manager responsible for handling the audio queue.
-	 * @param response The future response object used to send the result of the command execution.
-	 */
-	override fun executeDj(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeDj(
+		context: GuildCommandContext,
+		manager: GuildMusicManager,
+		response: TFutureResponse,
+	) {
 		val currentTrack = manager.cachedPlayer?.track
 		val queueTrackScheduler = manager.state.queueTrackScheduler
+
+		// check if currently audio player not play any content and queue track is empty
+		// if queue is empty, but currentTrack is not null, remove current track otherwise remove all
+		// queue and current track
 		if (currentTrack == null && queueTrackScheduler.queue.isEmpty()) {
 			throw TrackQueueIsEmptyException(context)
 		}
-		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response, this)
+		val queueSize = queueTrackScheduler.queue.size
+		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response)
 		asyncUpdatableHandler.performAsyncUpdate(
 			asyncAction = queueTrackScheduler.stopAndDestroy(),
-			payload = Pair(currentTrack, queueTrackScheduler.queue.size),
+			onSuccess = {
+				log.jdaInfo(
+					context,
+					"Stop current track: %s and clear queue. Removed: %d results.",
+					currentTrack?.qualifier,
+					queueSize,
+				)
+				val (i18nSourceKey, args) = if (currentTrack == null) {
+					// only, if currently not playing any track
+					Pair(I18nResponseSource.CLEAR_QUEUE, mapOf("countOfTracks" to queueSize))
+				} else {
+					Pair(
+						I18nResponseSource.SKIPPED_CURRENT_TRACK_AND_CLEAR_QUEUE,
+						mapOf("currentTrack" to currentTrack.mdTitleLink)
+					)
+				}
+				createEmbedMessage(context)
+					.setDescription(i18nSourceKey, args)
+					.setColor(JdaColor.PRIMARY)
+					.build()
+			},
 		)
-	}
-
-	/**
-	 * Handles the asynchronous success response after stopping the track and clearing the queue.
-	 *
-	 * This method processes the result of the async operation, logs the stop event, and returns an embedded message
-	 * to the user indicating whether a track was skipped and how many tracks were cleared from the queue.
-	 *
-	 * @param context The context of the command, including user interaction details.
-	 * @param payload A pair containing the previous volume level and the guild music manager.
-	 * @return A MessageEmbed containing a confirmation of the volume change and the new volume level.
-	 */
-	override fun onAsyncSuccess(context: GuildCommandContext, payload: Pair<Track?, Int>): MessageEmbed {
-		val (playingTrack, queueSize) = payload
-		log.jdaInfo(
-			context,
-			"Stop current track: %s and clear queue. Removed: %d results.",
-			playingTrack?.qualifier,
-			queueSize,
-		)
-		val (i18nSourceKey, args) = if (playingTrack == null) {
-			Pair(I18nResponseSource.CLEAR_QUEUE, mapOf("countOfTracks" to queueSize))
-		} else {
-			Pair(I18nResponseSource.SKIPPED_CURRENT_TRACK_AND_CLEAR_QUEUE, mapOf("currentTrack" to playingTrack.mdTitleLink))
-		}
-		return createEmbedMessage(context)
-			.setDescription(i18nSourceKey, args)
-			.setColor(JdaColor.PRIMARY)
-			.build()
 	}
 }
