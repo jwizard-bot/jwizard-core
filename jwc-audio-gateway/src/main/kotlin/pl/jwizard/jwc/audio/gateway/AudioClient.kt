@@ -48,7 +48,7 @@ class AudioClient(
 	private var isOpen = true
 
 	private val reconnectService = Executors.newSingleThreadScheduledExecutor {
-		Thread(it, "audio-client-reconnect-thread").apply { isDaemon = true }
+		Thread(it, "audio-gateway-reconnect-thread").apply { isDaemon = true }
 	}
 
 	init {

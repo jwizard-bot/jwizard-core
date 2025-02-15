@@ -4,60 +4,80 @@
 | [[Docker image](https://hub.docker.com/r/milosz08/jwizard-core)]
 | [[Docker installation](./docker/README.md)]
 
-JWizard is an open-source Discord music bot handling audio content from various multimedia sources with innovative web
-player. This repository contains the core of the application, which supports the Discord API event handlers and message
-broker handling events from web interface.
-Use [JWizard Audio Client](https://github.com/jwizard-bot/jwizard-audio-client) for make interactions with Lavalink
-nodes. Ready for clustering based on shard-offset system.
+JWizard is an open-source Discord music bot that manages audio content from various multimedia
+sources and features an innovative web player. This repository contains the core of the application,
+which supports Discord API event handlers and a message broker for handling events from the web
+interface. It is also designed for clustering, utilizing a shard-offset system.
 
 ## Table of content
 
 * [Architecture concepts](#architecture-concepts)
 * [Project modules](#project-modules)
+* [Audio gateway client](#audio-gateway-client)
 * [Clone and install](#clone-and-install)
-* [Documentation](#documentation)
 * [Contributing](#contributing)
 * [License](#license)
 
 ## Architecture concepts
 
-* This project was developed using the Spring IoC architecture (without using Spring Boot), employing loose coupling
-  through the SPI architecture and bean interfaces.
-* Bean interfaces ensure loose coupling between the project's modules.
-* All code was written in Kotlin.
-* The Discord API was handled using the JDA (Java Discord API) library.
-* OPUS audio support and streaming are provided by the
-  custom [JWizard Audio Client](https://github.com/jwizard-bot/jwizard-audio-client) and a modified Lavalink server
-  cluster.
-* Communication and event handling between the application and the back-end layer is done using Websockets and RabbitMQ.
+* This project was built using the Spring IoC architecture (without Spring Boot), ensuring loose
+  coupling through the SPI architecture and bean interfaces.
+* Bean interfaces help maintain loose coupling between the project's modules.
+* The entire codebase is written in Kotlin.
+* The Discord API is integrated using the JDA (Java Discord API) library.
+* OPUS audio support and streaming are handled by the custom audio gateway client and a modified
+  Lavalink server cluster.
+* Communication and event handling between the application and the back-end are managed via
+  WebSockets and RabbitMQ.
 
 ## Project modules
 
-| Name            | Description                                                                                                                    |
-|-----------------|--------------------------------------------------------------------------------------------------------------------------------|
-| jwc-api         | JDA command handlers using for grabbing interaction invoking by Discord guild member.                                          |
-| jwc-app         | Application entrypoint, configuration files and i18n local content.                                                            |
-| jwc-audio       | JWizard audio client bridge, nodes manager, audio content loaders and schedulers.                                              |
-| jwc-command     | Legacy (prefix) and slash command interactions framework, interaction component handlers and command reflect loader framework. |
-| jwc-core        | JDA loader, configuration loader framework, SPI interfaces for jwc-audio, JVM thread helpers, util formatters.                 |
-| jwc-exception   | Set of exceptions which may be thrown in interaction pipeline and grab by command interactions framework.                      |
-| jwc-persistence | Provide communication via S3 storage and RDBMS (SQL) with loosely coupled binding beans (provided by SPI).                     |
-| jwc-radio       | Radio playback data information's parsing framework.                                                                           |
-| jwc-vote        | JDA voting framework which handles voting via interaction components.                                                          |
+| Name              | Description                                                                                                               |
+|-------------------|---------------------------------------------------------------------------------------------------------------------------|
+| jwc-api           | JDA command handlers for capturing interactions triggered by Discord guild members.                                       |
+| jwc-app           | The application entry point, including configuration files and internationalization (i18n) content.                       |
+| jwc-audio         | JWizard audio client bridge, node manager, audio content loaders, and schedulers.                                         |
+| jwc-audio-gateway | Audio gateway facilitating communication between audio servers and the jwc-audio module.                                  |
+| jwc-command       | Framework for legacy (prefix) and slash command interactions, including component handlers and command reflection loader. |
+| jwc-core          | JDA loader, configuration loader framework, SPI interfaces for jwc-audio, JVM thread helpers, and utility formatters.     |
+| jwc-exception     | Set of exceptions that may be thrown during the interaction pipeline, caught by the command interaction framework.        |
+| jwc-persistence   | Provides communication via S3 storage and RDBMS (SQL), with loosely coupled binding beans (provided through SPI).         |
+| jwc-radio         | Framework for parsing radio playback data and associated information.                                                     |
+| jwc-vote          | JDA voting framework that manages voting interactions via interaction components.                                         |
+
+## Audio gateway client
+
+This project contains custom client for Lavalink nodes (`jwc-audio-gateway` module). It enables the
+creation of separate node pools and implements load balancing based on the Discord gateway audio
+region. This client is fully compatible with the Lavalink v4 protocol.
+
+Key concepts:
+
+* A modified version of the original Lavalink client for Java/Kotlin, supporting Lavalink v4.
+* Enables node pool fragmentation, allowing nodes to be categorized, restricted, or prioritized
+  for handling playback requests - useful for distributing traffic across nodes running different
+  audio plugins.
+* Each node is represented by an independent Lavalink server instance.
+* Load balancing within a selected node pool ensures that playback requests are handled by a node
+  located in the same region as the Discord voice server.
+* Additionally, the system selects the least loaded node from the pool based on a penalty system.
+* Each link (guild representation) dynamically assigns a node, automatically switching to another
+  node in case of failure, based on the load balancing algorithm.
+* Connections to Lavalink servers are established via HTTP (REST) and WebSocket protocols.
 
 ## Clone and install
 
 1. Make sure you have at least JDK 17 and Kotlin 2.0.
-2. Clone **JWizard Lib**, **JWizard Audio Client** and **JWizard Tools** from organization repository via:
+2. Clone **JWizard Lib** and **JWizard Tools** from organization repository via:
 
 ```bash
 $ git clone https://github.com/jwizard-bot/jwizard-lib
-$ git clone https://github.com/jwizard-bot/jwizard-audio-client
 $ git clone https://github.com/jwizard-bot/jwizard-tools
 ```
 
 3. Configure and run all necessary containers defined in `README.md` file
-   in [jwizard-lib](https://github.com/jwizard-bot/jwizard-lib) repository. You must have up these containers:
+   in [jwizard-lib](https://github.com/jwizard-bot/jwizard-lib) repository. You must have up these
+   containers:
 
 | Name                | Port(s) | Description                  |
 |---------------------|---------|------------------------------|
@@ -70,10 +90,11 @@ $ git clone https://github.com/jwizard-bot/jwizard-tools
 > [jwizard-lib](https://github.com/jwizard-bot/jwizard-lib) repository).
 
 > NOTE: Alternatively, you can run single Lavalink node, but in `docker-compose.yml` file in
-> [jwizard-lib](https://github.com/jwizard-bot/jwizard-lib) repository you must remove second Lavalink node declaration.
+> [jwizard-lib](https://github.com/jwizard-bot/jwizard-lib) repository you must remove second
+> Lavalink node declaration.
 > Running 2 nodes are useful for checking load-balancer in performance tests.
 
-4. Build library and package to Maven Local artifacts' storage (for **JWizard Lib** and **JWizard Audio Client**):
+4. Build library and package to Maven Local artifacts' storage (for **JWizard Lib**):
 
 * for UNIX based systems:
 
@@ -122,12 +143,13 @@ where:
 * `N` is instance number (`0` or `1`),
 * `Xmx` and `Xms` parameters are optional and can be modified.
 
-> NOTE: For servers running on HotSpot JVM, Oracle recommended same Xms and Xmx parameter, ex. `-Xms1G` and `-Xmx1G`.
-> More information you will
-> find [here](https://docs.oracle.com/cd/E74363_01/ohi_vbp_-_installation_guide--20160224-094432-html-chunked/s66.html).
+> NOTE: For servers running on HotSpot JVM, Oracle recommended same Xms and Xmx parameter, ex.
+`-Xms1G` and `-Xmx1G`. More information you will find
+> [here](https://docs.oracle.com/cd/E74363_01/ohi_vbp_-_installation_guide--20160224-094432-html-chunked/s66.html).
 
-> NOTE: You can run concurrently 2 instances, but you must set valid offsets in `-Djda.sharding.offset.start` and
-> `-Djda.sharding.offset.end`. Concurrent instances can share same Lavalink node/nodes.
+> NOTE: You can run concurrently 2 instances, but you must set valid offsets in
+`-Djda.sharding.offset.start` and `-Djda.sharding.offset.end`. Concurrent instances can share same
+> Lavalink node/nodes.
 
 ### Clustering example with multiple concurrent instance
 
@@ -141,24 +163,16 @@ instance 0              instance 1       ...     instance N
 ├─ cluster N            ├─ cluster N
 ```
 
-More about sharding, clustering multiple concurrent instances and shards fragmentation (different shard ranges for
-distributed JVM architecture) you will find here:
+More about sharding, clustering multiple concurrent instances and shards fragmentation (different
+shard ranges for distributed JVM architecture) you will find here:
 
 * [https://discord.com/developers/docs/events/gateway#sharding](https://discord.com/developers/docs/events/gateway#sharding)
 * [https://skelmis.co.nz/posts/discord-bot-sharding-and-clustering](https://skelmis.co.nz/posts/discord-bot-sharding-and-clustering)
 
-## Documentation
-
-For detailed documentation, please visit [JWizard documentation](https://jwizard.pl/docs).
-<br>
-Documentation for latest version (with SHA) you will find:
-
-* [here](https://docs.jwizard.pl/jwc/kdoc) - in **KDoc** format,
-* [here](https://docs.jwizard.pl/jwc/javadoc) - in **Javadoc** format.
-
 ## Contributing
 
-We welcome contributions from the community! Please read our [CONTRIBUTING](./CONTRIBUTING) file for guidelines on how
+We welcome contributions from the community! Please read our [CONTRIBUTING](./CONTRIBUTING) file for
+guidelines on how
 to get involved.
 
 ## License
