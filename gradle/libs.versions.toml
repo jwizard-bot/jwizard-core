@@ -1,5 +1,4 @@
 [versions]
-dokkaVersion = "1.9.20"
 jdaVersion = "5.1.0"
 jwizardLibVersion = "latest"
 jwizardAudioClientVersion = "latest"
@@ -21,7 +20,6 @@ reactor = { module = "io.projectreactor:reactor-core", version.ref = "reactorVer
 slf4jApi = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApiVersion" }
 
 [plugins]
-dokka = { id = "org.jetbrains.dokka", version.ref = "dokkaVersion" }
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
 kotlinSpring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlinVersion" }
