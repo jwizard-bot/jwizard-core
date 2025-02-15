@@ -25,7 +25,6 @@ class GuildMusicManager(
 	commandContext: GuildCommandContext,
 	future: TFutureResponse,
 ) {
-
 	companion object {
 		private val log = logger<GuildMusicManager>()
 	}

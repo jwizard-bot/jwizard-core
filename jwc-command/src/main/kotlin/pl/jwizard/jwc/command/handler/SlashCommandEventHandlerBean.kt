@@ -14,7 +14,6 @@ import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
 class SlashCommandEventHandlerBean(
 	commandEventHandlerEnvironment: CommandEventHandlerEnvironmentBean,
 ) : CommandEventHandler<SlashCommandInteractionEvent>(commandEventHandlerEnvironment) {
-
 	override val commandType = CommandType.SLASH
 
 	override fun onSlashCommandInteraction(

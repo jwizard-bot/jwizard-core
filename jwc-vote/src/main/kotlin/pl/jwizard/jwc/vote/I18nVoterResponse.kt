@@ -6,7 +6,6 @@ class I18nVoterResponse private constructor(
 	val initMessage: I18nMessageWithArgs<I18nResponseSource>,
 	val failedMessage: I18nMessageWithArgs<I18nResponseSource>,
 ) {
-
 	class Builder {
 		private lateinit var initMessage: I18nMessageWithArgs<I18nResponseSource>
 		private lateinit var failedMessage: I18nMessageWithArgs<I18nResponseSource>

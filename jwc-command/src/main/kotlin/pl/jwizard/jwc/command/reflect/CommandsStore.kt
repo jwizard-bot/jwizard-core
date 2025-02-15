@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentHashMap
 class CommandsStore<T : Any>(
 	private val commandsEnvironment: String,
 ) : ConcurrentHashMap<Command, T>() {
-
 	companion object {
 		private val log = logger<CommandsStore<*>>()
 	}

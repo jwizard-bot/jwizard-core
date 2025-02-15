@@ -9,7 +9,6 @@ class SlashGuildCommandContext(
 	event: SlashCommandInteractionEvent,
 	guildCommandProperties: GuildMultipleProperties,
 ) : GuildCommandContext(guildCommandProperties) {
-
 	override val prefix = "/"
 
 	override val guild = event.guild ?: throw CommandInvocationException("guild is NULL", this)

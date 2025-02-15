@@ -20,7 +20,6 @@ class TrackSelectSpinnerMenu(
 	options: List<TrackMenuOption>,
 	guildMultipleProperties: GuildMultipleProperties,
 ) : SelectSpinnerMenu<TrackMenuOption>(guildMusicManager.state.context, options) {
-
 	companion object {
 		private val log = logger<TrackSelectSpinnerMenu>()
 	}

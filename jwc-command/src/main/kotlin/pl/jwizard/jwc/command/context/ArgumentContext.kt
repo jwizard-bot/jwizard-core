@@ -5,7 +5,6 @@ import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwl.command.arg.Argument
 
 abstract class ArgumentContext : CommandBaseContext {
-
 	// command arguments, where key is argument enum and second is argument value
 	val commandArguments: MutableMap<Argument, String?> = mutableMapOf()
 

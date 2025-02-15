@@ -17,7 +17,6 @@ import pl.jwizard.jwc.exception.user.UserOnVoiceChannelWithBotNotFoundException
 abstract class AudioCommandBase(
 	commandEnvironment: CommandEnvironmentBean,
 ) : CommandBase(commandEnvironment) {
-
 	final override fun execute(context: GuildCommandContext, response: TFutureResponse) {
 		val musicManager = commandEnvironment.musicManagers
 			.getOrCreateMusicManager(context, response, commandEnvironment.audioClient)

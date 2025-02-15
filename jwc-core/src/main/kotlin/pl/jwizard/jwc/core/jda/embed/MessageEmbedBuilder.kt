@@ -14,7 +14,6 @@ class MessageEmbedBuilder(
 	private val jdaColorsCache: JdaColorsCacheBean,
 	private val context: CommandBaseContext? = null,
 ) : EmbedBuilder() {
-
 	fun setTitle(title: String) = apply {
 		super.setTitle(title)
 	}

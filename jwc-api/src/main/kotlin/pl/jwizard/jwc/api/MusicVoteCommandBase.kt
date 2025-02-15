@@ -15,7 +15,6 @@ abstract class MusicVoteCommandBase(
 	private val voterEnvironment: VoterEnvironmentBean,
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment) {
-
 	final override fun executeMusic(
 		context: GuildCommandContext,
 		manager: GuildMusicManager,

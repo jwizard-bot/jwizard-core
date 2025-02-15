@@ -22,7 +22,6 @@ import pl.jwizard.jwl.util.logger
 class PauseTrackCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment) {
-
 	companion object {
 		private val log = logger<PauseTrackCmd>()
 	}
@@ -34,7 +33,7 @@ class PauseTrackCmd(
 	override fun executeMusic(
 		context: GuildCommandContext,
 		manager: GuildMusicManager,
-		response: TFutureResponse
+		response: TFutureResponse,
 	) {
 		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response)
 		asyncUpdatableHandler.performAsyncUpdate(

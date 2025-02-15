@@ -16,7 +16,6 @@ class BotEmojisCacheBean(
 	private val environment: EnvironmentBean,
 	private val httpClientFacade: HttpClientFacadeBean,
 ) {
-
 	companion object {
 		private val log = logger<BotEmojisCacheBean>()
 	}

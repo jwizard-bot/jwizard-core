@@ -17,7 +17,6 @@ class MusicVoterComponent(
 	voterEnvironment: VoterEnvironmentBean,
 	botEmojisCache: BotEmojisCacheBean,
 ) : VoterComponent(context, i18nResponse, onSuccess, clazz, voterEnvironment, botEmojisCache) {
-
 	override fun filterVotes(
 		interactionAuthor: Member,
 	) = voiceChannelWithBot?.members?.contains(interactionAuthor) ?: false

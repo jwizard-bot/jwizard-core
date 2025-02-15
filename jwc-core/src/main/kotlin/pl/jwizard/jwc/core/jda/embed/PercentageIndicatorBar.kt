@@ -5,7 +5,6 @@ class PercentageIndicatorBar(
 	private val total: Long,
 	private val length: Int = MAX_INDICATOR_LENGTH,
 ) {
-
 	companion object {
 		private const val INDICATOR_FULL = '█'
 		private const val INDICATOR_EMPTY = '▒'

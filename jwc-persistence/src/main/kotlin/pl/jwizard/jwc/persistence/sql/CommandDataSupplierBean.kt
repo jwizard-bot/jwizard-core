@@ -7,7 +7,6 @@ import java.math.BigInteger
 
 @SingletonComponent
 class CommandDataSupplierBean(private val jdbiQuery: JdbiQueryBean) : CommandDataSupplier {
-
 	override fun getDisabledGuildCommands(
 		guildDbId: BigInteger,
 		slashCommands: Boolean,

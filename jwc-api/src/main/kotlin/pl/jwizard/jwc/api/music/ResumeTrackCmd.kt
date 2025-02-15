@@ -20,7 +20,6 @@ import pl.jwizard.jwl.util.logger
 class ResumeTrackCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment) {
-
 	companion object {
 		private val log = logger<ResumeTrackCmd>()
 	}

@@ -16,7 +16,6 @@ import pl.jwizard.jwl.command.Command
 class CurrentPausedCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment) {
-
 	override val shouldPaused = true
 
 	override fun executeMusic(

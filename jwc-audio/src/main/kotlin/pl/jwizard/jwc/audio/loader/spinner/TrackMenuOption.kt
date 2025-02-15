@@ -6,7 +6,6 @@ import pl.jwizard.jwc.core.util.ext.mdTitleLinkWithDuration
 import pl.jwizard.jwc.core.util.ext.titleWithDuration
 
 class TrackMenuOption(val track: Track) : MenuOption {
-
 	override val key
 		get() = track.titleWithDuration
 

@@ -6,7 +6,6 @@ class GlobalCommandContext(
 	override val commandName: String,
 	event: SlashCommandInteractionEvent,
 ) : ArgumentContext() {
-
 	override val language = event.userLocale.locale
 
 	override val prefix = "/"

@@ -12,7 +12,6 @@ class ActivitySplashesBean(
 	private val environment: EnvironmentBean,
 	private val jdaShardManager: JdaShardManagerBean,
 ) : JvmFixedThreadExecutor() {
-
 	companion object {
 		private val log = logger<ActivitySplashesBean>()
 	}

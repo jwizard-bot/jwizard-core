@@ -25,7 +25,6 @@ import pl.jwizard.jwl.util.logger
 class JoinToChannelCmd(
 	commandEnvironment: CommandEnvironmentBean
 ) : DjCommandBase(commandEnvironment) {
-
 	companion object {
 		private val log = logger<JoinToChannelCmd>()
 	}

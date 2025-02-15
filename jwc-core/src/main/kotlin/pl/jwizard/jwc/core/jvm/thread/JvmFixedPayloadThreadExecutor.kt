@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 abstract class JvmFixedPayloadThreadExecutor<T>(
 	countOfThreads: Int = 1,
 ) : JvmThreadExecutor(countOfThreads) {
-
+	// scheduled events (grab for removal process)
 	private val futures = mutableListOf<ScheduledFuture<*>>()
 
 	fun startOnce(delay: Long, unit: TimeUnit, payload: T) {

@@ -10,7 +10,6 @@ import java.io.InputStream
 
 @SingletonComponent
 class StaticClasspathRetrieverBean(environment: EnvironmentBean) : ResourceRetriever() {
-
 	companion object {
 		private val log = logger<HttpResourceRetrieverBean>()
 	}

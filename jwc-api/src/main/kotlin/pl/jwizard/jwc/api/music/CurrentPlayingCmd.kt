@@ -16,7 +16,6 @@ import pl.jwizard.jwl.command.Command
 class CurrentPlayingCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment) {
-
 	override val shouldPlayingMode = true
 
 	override fun executeMusic(

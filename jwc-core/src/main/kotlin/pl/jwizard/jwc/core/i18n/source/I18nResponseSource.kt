@@ -3,7 +3,6 @@ package pl.jwizard.jwc.core.i18n.source
 import pl.jwizard.jwl.i18n.I18nLocaleSource
 
 enum class I18nResponseSource(override val placeholder: String) : I18nLocaleSource {
-
 	// audio player
 	LEAVE_EMPTY_CHANNEL("jw.response.leaveEmptyChannel"),
 	LEAVE_END_PLAYBACK_QUEUE("jw.response.leaveEndPlaybackQueue"),

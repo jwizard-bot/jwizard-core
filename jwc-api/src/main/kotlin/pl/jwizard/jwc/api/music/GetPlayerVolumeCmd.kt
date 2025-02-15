@@ -12,12 +12,17 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwl.command.Command
 
 @JdaCommand(Command.VOLUME)
-class GetPlayerVolumeCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
-
+class GetPlayerVolumeCmd(
+	commandEnvironment: CommandEnvironmentBean,
+) : MusicCommandBase(commandEnvironment) {
 	override val shouldOnSameChannelWithBot = true
 	override val shouldPlayingMode = true
 
-	override fun executeMusic(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeMusic(
+		context: GuildCommandContext,
+		manager: GuildMusicManager,
+		response: TFutureResponse,
+	) {
 		val message = createEmbedMessage(context)
 			.setDescription(
 				i18nLocaleSource = I18nResponseSource.GET_CURRENT_AUDIO_PLAYER_VOLUME,

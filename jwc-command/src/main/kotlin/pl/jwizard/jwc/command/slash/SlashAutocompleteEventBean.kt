@@ -16,7 +16,6 @@ class SlashAutocompleteEventBean(
 	private val i18n: I18nBean,
 	environment: EnvironmentBean,
 ) : ListenerAdapter() {
-
 	private val maxOptions = environment
 		.getProperty<Int>(BotProperty.JDA_INTERACTION_SLASH_AUTOCOMPLETE_MAX_OPTIONS)
 

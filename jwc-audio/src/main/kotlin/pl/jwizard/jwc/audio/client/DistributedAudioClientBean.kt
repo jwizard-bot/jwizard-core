@@ -26,7 +26,6 @@ class DistributedAudioClientBean(
 	private val audioNodeListener: AudioNodeListener,
 	private val gatewayVoiceStateInterceptor: GatewayVoiceStateInterceptor,
 ) : DistributedAudioClient, CleanupAfterIoCDestroy {
-
 	companion object {
 		private val log = logger<DistributedAudioClientBean>()
 	}

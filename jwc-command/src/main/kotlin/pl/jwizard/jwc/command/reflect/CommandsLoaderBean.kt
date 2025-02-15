@@ -16,7 +16,6 @@ class CommandsLoaderBean(
 	private val ioCKtContextFactory: IoCKtContextFactory,
 	private val commandsCache: CommandsCacheBean,
 ) : CommandsLoader {
-
 	companion object {
 		private val log = logger<CommandsLoaderBean>()
 

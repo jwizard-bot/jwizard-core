@@ -15,7 +15,6 @@ import pl.jwizard.jwc.core.property.guild.GuildProperty
 class PrefixCommandEventHandlerBean(
 	commandEventHandlerEnvironment: CommandEventHandlerEnvironmentBean,
 ) : CommandEventHandler<MessageReceivedEvent>(commandEventHandlerEnvironment) {
-
 	companion object {
 		// Regular expression to delimit command arguments
 		private const val COMMAND_ARGS_DELIMITER = "\\|"

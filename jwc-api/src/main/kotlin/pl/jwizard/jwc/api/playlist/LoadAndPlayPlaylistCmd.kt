@@ -11,12 +11,16 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwl.command.Command
 
 @JdaCommand(Command.PLAYLIST_PLAY)
-class LoadAndPlayPlaylistCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
-
+class LoadAndPlayPlaylistCmd(
+	commandEnvironment: CommandEnvironmentBean,
+) : MusicCommandBase(commandEnvironment) {
 	override val shouldOnSameChannelWithBot = true
 
-	override fun executeMusic(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
-
+	override fun executeMusic(
+		context: GuildCommandContext,
+		manager: GuildMusicManager,
+		response: TFutureResponse,
+	) {
 		// TODO
 		val message = createEmbedMessage(context)
 			.setDescription("Not implemented yet")

@@ -31,7 +31,6 @@ class DebugCmd(
 	private val vcsConfigBean: VcsConfigBean,
 	commandEnvironment: CommandEnvironmentBean,
 ) : ManagerCommandBase(commandEnvironment) {
-
 	override fun executeManager(context: GuildCommandContext, response: TFutureResponse) {
 		val refreshableComponent = createRefreshable {
 			it.add(createDebugMessage(context))

@@ -15,7 +15,6 @@ class CommandResponse private constructor(
 	val disposeComponents: Boolean,
 	val afterSendAction: (Message) -> Unit,
 ) {
-
 	fun copy(
 		embedMessages: List<MessageEmbed>,
 		actionRows: List<ActionRow>,

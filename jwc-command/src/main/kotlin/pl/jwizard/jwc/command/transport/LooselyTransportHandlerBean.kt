@@ -16,7 +16,6 @@ class LooselyTransportHandlerBean(
 	private val jdaShardManager: JdaShardManagerBean,
 	environment: EnvironmentBean,
 ) : CleanupAfterIoCDestroy {
-
 	private val maxEmbedMessagesBuffer = environment
 		.getProperty<Int>(BotProperty.JDA_INTERACTION_MESSAGE_MAX_EMBEDS)
 

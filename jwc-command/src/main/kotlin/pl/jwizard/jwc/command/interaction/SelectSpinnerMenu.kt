@@ -24,7 +24,6 @@ abstract class SelectSpinnerMenu<T : MenuOption>(
 	private val context: CommandBaseContext,
 	private val options: List<T>,
 ) : EventQueueListener<StringSelectInteractionEvent>, Component() {
-
 	private lateinit var trimmedOptions: List<T>
 	private lateinit var message: Message
 

@@ -9,7 +9,6 @@ import java.math.BigInteger
 abstract class GuildCommandContext(
 	guildCommandProperties: GuildMultipleProperties,
 ) : ArgumentContext(), GuildCommandBaseContext {
-
 	val djRoleName = guildCommandProperties.getProperty<String>(GuildProperty.DJ_ROLE_NAME)
 
 	val musicTextChannelId = guildCommandProperties

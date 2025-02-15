@@ -17,7 +17,6 @@ class RefreshableComponent(
 	botEmojisCache: BotEmojisCacheBean,
 	private val onRefresh: (response: MutableList<MessageEmbed>) -> Unit,
 ) : ButtonInteractionHandler(i18nBean, eventQueueBean, botEmojisCache) {
-
 	override val runForButtons = arrayOf(InteractionButton.REFRESH)
 
 	override fun executeEvent(event: ButtonInteractionEvent): InteractionResponse {

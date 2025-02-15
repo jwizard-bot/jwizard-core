@@ -19,7 +19,6 @@ import pl.jwizard.jwl.util.logger
 class SkipTrackCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicCommandBase(commandEnvironment) {
-
 	companion object {
 		private val log = logger<SkipTrackCmd>()
 	}

@@ -1,7 +1,6 @@
 package pl.jwizard.jwc.command.interaction
 
 interface MenuOption {
-
 	// unique key representing the menu option
 	val key: String
 

@@ -5,7 +5,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 class VoteState(private val percentageRatio: Int) {
-
 	private val forYes = AtomicInteger(0)
 	private val forNo = AtomicInteger(0)
 	private val passed = AtomicBoolean(false)

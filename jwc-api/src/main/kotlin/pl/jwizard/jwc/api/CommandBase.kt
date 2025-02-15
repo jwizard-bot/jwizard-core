@@ -15,7 +15,6 @@ import pl.jwizard.jwl.property.AppProperty
 abstract class CommandBase(
 	protected val commandEnvironment: CommandEnvironmentBean
 ) : GuildCommandHandler {
-
 	protected val environment = commandEnvironment.environment
 	protected val guildSettingsEventAction = commandEnvironment.guildSettingsEventAction
 	protected val i18n = commandEnvironment.i18n

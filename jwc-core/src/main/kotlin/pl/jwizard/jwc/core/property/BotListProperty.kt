@@ -8,7 +8,6 @@ enum class BotListProperty(
 	override val separator: String? = null,
 	override val listElementsType: KClass<*> = String::class
 ) : AppListProperty {
-
 	// JDA splashes elements show in sequentially order
 	JDA_SPLASHES_ELEMENTS("jda.splashes.elements"),
 

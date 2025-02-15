@@ -12,13 +12,18 @@ import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.radio.RadioStation
 
 @JdaCommand(Command.RADIO_PLAY)
-class PlayRadioStationCmd(commandEnvironment: CommandEnvironmentBean) : RadioCommandBase(commandEnvironment) {
-
+class PlayRadioStationCmd(
+	commandEnvironment: CommandEnvironmentBean,
+) : RadioCommandBase(commandEnvironment) {
 	override val shouldOnSameChannelWithBot = true
 	override val shouldRadioIdle = true
 	override val shouldEnabledOnFirstAction = true
 
-	override fun executeRadio(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeRadio(
+		context: GuildCommandContext,
+		manager: GuildMusicManager,
+		response: TFutureResponse,
+	) {
 		val radioStationSlug = context.getArg<String>(Argument.RADIO_STATION)
 
 		// check, if passed radio station id exists in declared radio stations

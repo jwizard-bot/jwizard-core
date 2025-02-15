@@ -23,7 +23,6 @@ import pl.jwizard.jwl.util.logger
 class QueueTrackLoader(
 	private val guildMusicManager: GuildMusicManager,
 ) : AudioCompletableFutureLoader(guildMusicManager) {
-
 	companion object {
 		private val log = logger<QueueTrackLoader>()
 	}

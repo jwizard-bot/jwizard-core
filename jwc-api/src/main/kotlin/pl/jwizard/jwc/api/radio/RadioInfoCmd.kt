@@ -17,7 +17,6 @@ class RadioInfoCmd(
 	private val radioPlaybackMappersCache: RadioPlaybackMappersCache,
 	commandEnvironment: CommandEnvironmentBean,
 ) : RadioCommandBase(commandEnvironment) {
-
 	override val shouldOnSameChannelWithBot = true
 	override val shouldRadioPlaying = true
 

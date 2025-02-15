@@ -19,7 +19,6 @@ import pl.jwizard.jwl.util.logger
 class ClearRepeatTrackCmd(
 	commandEnvironment: CommandEnvironmentBean
 ) : MusicCommandBase(commandEnvironment) {
-
 	companion object {
 		private val log = logger<ClearRepeatTrackCmd>()
 	}

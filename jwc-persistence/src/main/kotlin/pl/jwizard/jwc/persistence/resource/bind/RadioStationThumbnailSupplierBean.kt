@@ -10,7 +10,6 @@ import pl.jwizard.jwl.radio.RadioStation
 class RadioStationThumbnailSupplierBean(
 	private val staticClasspathRetriever: StaticClasspathRetrieverBean,
 ) : RadioStationThumbnailSupplier {
-
 	override fun getThumbnailResource(
 		radioStation: RadioStation,
 	) = staticClasspathRetriever.getObject(

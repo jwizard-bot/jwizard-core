@@ -3,7 +3,6 @@ package pl.jwizard.jwc.command.interaction
 import java.util.*
 
 abstract class Component {
-
 	companion object {
 		// Separator used to create dynamic component identifier.
 		private const val SEPARATOR = "+"

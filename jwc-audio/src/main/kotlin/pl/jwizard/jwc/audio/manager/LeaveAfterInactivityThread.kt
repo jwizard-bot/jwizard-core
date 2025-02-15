@@ -14,7 +14,6 @@ class LeaveAfterInactivityThread(
 	private val guildMusicManager: GuildMusicManager,
 	private val audioClient: DistributedAudioClientBean,
 ) : JvmFixedPayloadThreadExecutor<Pair<Long, GuildCommandContext>>() {
-
 	companion object {
 		private val log = logger<LeaveAfterInactivityThread>()
 	}

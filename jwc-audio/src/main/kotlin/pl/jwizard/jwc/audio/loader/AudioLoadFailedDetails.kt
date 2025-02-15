@@ -8,7 +8,6 @@ class AudioLoadFailedDetails private constructor(
 	val logArguments: List<Any?>,
 	val i18nArguments: Map<String, Any?>,
 ) {
-
 	class Builder {
 		private lateinit var logMessage: String
 		private lateinit var i18nLocaleSource: I18nExceptionSource

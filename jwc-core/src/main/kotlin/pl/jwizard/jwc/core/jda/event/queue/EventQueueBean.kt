@@ -17,7 +17,6 @@ import kotlin.reflect.KClass
 class EventQueueBean(
 	environment: EnvironmentBean,
 ) : JvmFixedPayloadThreadExecutor<TEventPayload>(countOfThreads = 5), EventListener {
-
 	companion object {
 		// name of the method that checks if the event should be executed
 		private const val PREDICATE_METHOD_NAME = "PredicateExecuteEvent"

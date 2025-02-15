@@ -18,7 +18,6 @@ class Paginator(
 	eventQueue: EventQueueBean,
 	botEmojisCache: BotEmojisCacheBean,
 ) : ButtonInteractionHandler(i18n, eventQueue, botEmojisCache) {
-
 	companion object {
 		private const val CURRENT_BUTTON_ID = "current"
 		private const val PAGE_SEPARATOR = "/"

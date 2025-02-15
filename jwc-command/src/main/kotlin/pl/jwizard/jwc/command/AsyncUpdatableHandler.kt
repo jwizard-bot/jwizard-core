@@ -18,7 +18,6 @@ class AsyncUpdatableHandler(
 	private val invokerClazz: KClass<*>,
 	exceptionTrackerHandler: ExceptionTrackerHandlerBean,
 ) {
-
 	companion object {
 		private val log = logger<AsyncUpdatableHandler>()
 	}

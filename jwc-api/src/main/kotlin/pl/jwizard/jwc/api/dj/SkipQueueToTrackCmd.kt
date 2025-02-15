@@ -20,7 +20,6 @@ import pl.jwizard.jwl.util.logger
 class SkipQueueToTrackCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : DjCommandBase(commandEnvironment) {
-
 	companion object {
 		private val log = logger<SkipQueueToTrackCmd>()
 	}

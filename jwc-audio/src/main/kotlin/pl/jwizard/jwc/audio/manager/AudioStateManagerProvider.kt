@@ -14,7 +14,6 @@ class AudioStateManagerProvider(
 	derivedContext: GuildCommandContext,
 	derivedFuture: TFutureResponse,
 ) {
-
 	val audioScheduler get() = audioScheduleHandler
 	val queueTrackScheduler get() = audioScheduler as QueueTrackScheduleHandler
 	val radioStreamScheduler get() = audioScheduler as RadioStreamScheduleHandler

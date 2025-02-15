@@ -21,7 +21,6 @@ class GuildEventListenerBean(
 	private val slashCommandRegisterer: SlashCommandRegisterer,
 	private val environmentBean: EnvironmentBean,
 ) : ListenerAdapter() {
-
 	companion object {
 		private val log = logger<GuildEventListenerBean>()
 	}

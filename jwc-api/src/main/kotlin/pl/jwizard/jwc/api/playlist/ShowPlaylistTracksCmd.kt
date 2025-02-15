@@ -10,10 +10,10 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwl.command.Command
 
 @JdaCommand(Command.PLAYLIST_TRACKS)
-class ShowPlaylistTracksCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
-
+class ShowPlaylistTracksCmd(
+	commandEnvironment: CommandEnvironmentBean,
+) : CommandBase(commandEnvironment) {
 	override fun execute(context: GuildCommandContext, response: TFutureResponse) {
-
 		// TODO
 		val message = createEmbedMessage(context)
 			.setDescription("Not implemented yet")

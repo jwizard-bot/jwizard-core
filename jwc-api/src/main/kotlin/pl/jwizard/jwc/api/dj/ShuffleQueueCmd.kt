@@ -17,7 +17,6 @@ import pl.jwizard.jwl.util.logger
 class ShuffleQueueCmd(
 	commandEnvironment: CommandEnvironmentBean
 ) : DjCommandBase(commandEnvironment) {
-
 	companion object {
 		private val log = logger<ShuffleQueueCmd>()
 	}

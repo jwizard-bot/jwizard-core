@@ -7,7 +7,6 @@ import java.awt.Color
 
 @SingletonComponent
 class JdaColorsCacheBean(private val environment: EnvironmentBean) {
-
 	companion object {
 		private val log = logger<JdaColorsCacheBean>()
 

@@ -16,9 +16,9 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.radio.RadioStation
 
 @JdaCommand(Command.RADIO_ALL)
-class ShowRadioStationsCmd(commandEnvironment: CommandEnvironmentBean) :
-	CommandBase(commandEnvironment) {
-
+class ShowRadioStationsCmd(
+	commandEnvironment: CommandEnvironmentBean,
+) : CommandBase(commandEnvironment) {
 	override fun execute(context: GuildCommandContext, response: TFutureResponse) {
 		val radioStations = RadioStation.entries
 		val lang = context.language

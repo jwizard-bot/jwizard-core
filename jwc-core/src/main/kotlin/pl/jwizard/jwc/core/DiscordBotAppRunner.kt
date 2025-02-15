@@ -12,7 +12,6 @@ import pl.jwizard.jwl.server.HttpServer
 import pl.jwizard.jwl.server.HttpServerHook
 
 object DiscordBotAppRunner : AppRunner(), HttpServerHook {
-
 	override fun runWithContext(context: IoCKtContextFactory) {
 		val httpServer = context.getBean(HttpServer::class)
 		httpServer.init(this)

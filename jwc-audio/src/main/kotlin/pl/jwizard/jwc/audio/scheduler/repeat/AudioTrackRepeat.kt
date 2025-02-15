@@ -1,7 +1,6 @@
 package pl.jwizard.jwc.audio.scheduler.repeat
 
 class AudioTrackRepeat {
-
 	var trackRepeat = false
 		private set
 

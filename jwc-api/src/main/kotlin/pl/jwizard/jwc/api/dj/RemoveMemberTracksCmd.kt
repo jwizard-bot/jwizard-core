@@ -28,7 +28,6 @@ import pl.jwizard.jwl.util.logger
 class RemoveMemberTracksCmd(
 	commandEnvironment: CommandEnvironmentBean
 ) : DjCommandBase(commandEnvironment) {
-
 	companion object {
 		private val log = logger<RemoveMemberTracksCmd>()
 	}

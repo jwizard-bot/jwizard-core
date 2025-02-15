@@ -20,7 +20,6 @@ class VoteStopAndClearQueueCmd(
 	voterEnvironment: VoterEnvironmentBean,
 	commandEnvironment: CommandEnvironmentBean,
 ) : MusicVoteCommandBase(voterEnvironment, commandEnvironment) {
-
 	companion object {
 		private val log = logger<VoteSkipTrackCmd>()
 	}

@@ -13,7 +13,6 @@ import java.time.Duration
 class ZetRadioPlaybackMapper(
 	environment: RadioPlaybackMapperEnvironment,
 ) : RadioPlaybackMapperHandler(environment) {
-
 	override fun parsePlaybackData(
 		responseRaw: String,
 		radioStation: RadioStation,

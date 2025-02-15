@@ -19,8 +19,9 @@ import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.REPEAT_SET)
-class RepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
-
+class RepeatTrackCmd(
+	commandEnvironment: CommandEnvironmentBean,
+) : MusicCommandBase(commandEnvironment) {
 	companion object {
 		private val log = logger<RepeatTrackCmd>()
 	}
@@ -29,18 +30,26 @@ class RepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandB
 	override val shouldOnSameChannelWithBot = true
 	override val shouldBeContentSenderOrSuperuser = true
 
-	override fun executeMusic(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeMusic(
+		context: GuildCommandContext,
+		manager: GuildMusicManager,
+		response: TFutureResponse,
+	) {
 		val repeatsCount = context.getArg<Int>(Argument.COUNT)
 
 		// fetch guild-based properties from DB in single SQL query
 		val multipleProperties = environment.getGuildMultipleProperties(
-			guildProperties = listOf(GuildProperty.MIN_REPEATS_OF_TRACK, GuildProperty.MAX_REPEATS_OF_TRACK),
+			guildProperties = listOf(
+				GuildProperty.MIN_REPEATS_OF_TRACK,
+				GuildProperty.MAX_REPEATS_OF_TRACK
+			),
 			guildId = context.guild.idLong
 		)
 		val minRepeats = multipleProperties.getProperty<Int>(GuildProperty.MIN_REPEATS_OF_TRACK)
 		val maxRepeats = multipleProperties.getProperty<Int>(GuildProperty.MAX_REPEATS_OF_TRACK)
 
-		// check, if repeats count incoming from user has exceeded declared min and max repeats in guild settings
+		// check, if repeats count incoming from user has exceeded declared min and max repeats in
+		// guild settings
 		if (repeatsCount < minRepeats || repeatsCount > maxRepeats) {
 			throw TrackRepeatsOutOfBoundException(context, minRepeats, maxRepeats)
 		}

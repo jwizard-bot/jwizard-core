@@ -16,8 +16,9 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.INFINITE)
-class LoopTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
-
+class LoopTrackCmd(
+	commandEnvironment: CommandEnvironmentBean,
+) : MusicCommandBase(commandEnvironment) {
 	companion object {
 		private val log = logger<LoopTrackCmd>()
 	}
@@ -26,7 +27,11 @@ class LoopTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBas
 	override val shouldOnSameChannelWithBot = true
 	override val shouldBeContentSenderOrSuperuser = true
 
-	override fun executeMusic(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeMusic(
+		context: GuildCommandContext,
+		manager: GuildMusicManager,
+		response: TFutureResponse,
+	) {
 		val isInLoop = manager.state.queueTrackScheduler.audioRepeat.toggleTrackLoop()
 		val currentPlayingTrack = manager.cachedPlayer?.track
 		log.jdaInfo(

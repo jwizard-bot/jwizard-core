@@ -21,7 +21,6 @@ import pl.jwizard.jwl.i18n.I18nLocaleSource
 abstract class MusicCommandBase(
 	commandEnvironment: CommandEnvironmentBean,
 ) : AudioCommandBase(commandEnvironment) {
-
 	final override fun executeAudio(
 		context: GuildCommandContext,
 		manager: GuildMusicManager,
@@ -51,8 +50,8 @@ abstract class MusicCommandBase(
 			val userVoiceState = checkUserVoiceState(context)
 			if (!shouldEnabledOnFirstAction && (manager.cachedPlayer?.track != null || queue.isNotEmpty())
 			) {
-				// check, if user is together with bot on voice channel only for second-action commands (command invoked, when
-				// audio content currently playing
+				// check, if user is together with bot on voice channel only for second-action commands
+				// (command invoked, when audio content currently playing
 				userIsWithBotOnAudioChannel(userVoiceState, context)
 			}
 		}

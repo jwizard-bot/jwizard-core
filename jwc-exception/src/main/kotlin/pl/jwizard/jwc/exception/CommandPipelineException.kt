@@ -11,7 +11,6 @@ abstract class CommandPipelineException(
 	val args: Map<String, Any?> = emptyMap(),
 	val logMessage: String? = null,
 ) : RuntimeException() {
-
 	private val log = LoggerFactory.getLogger(this::class.java)
 
 	fun printLogStatement() {

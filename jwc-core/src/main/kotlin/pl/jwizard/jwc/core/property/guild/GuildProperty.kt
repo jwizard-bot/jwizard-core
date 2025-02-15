@@ -12,7 +12,6 @@ enum class GuildProperty(
 	val converter: GuildPropertyConverter? = null,
 	val nonDefaultType: KClass<*>? = null,
 ) : Property, I18nLocaleSource {
-
 	// represents a unique identifier for a database guild entry
 	DB_ID("id", "", null, BigInteger::class),
 

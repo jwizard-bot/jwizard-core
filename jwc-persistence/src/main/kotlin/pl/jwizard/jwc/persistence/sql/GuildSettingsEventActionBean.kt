@@ -14,7 +14,6 @@ class GuildSettingsEventActionBean(
 	private val jdbiQuery: JdbiQueryBean,
 	private val environment: EnvironmentBean,
 ) : GuildSettingsEventAction {
-
 	override fun createGuildSettings(guildId: Long, guildLocale: String): Pair<Boolean, String?> {
 		val guildSettingsAlreadyExist = jdbiQuery.queryForBool(
 			sql = "SELECT COUNT(*) > 0 FROM guilds WHERE discord_id = ?",

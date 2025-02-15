@@ -11,7 +11,6 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 class JDAGatewayVoiceStateInterceptor(
 	private val jdaShardManager: JdaShardManagerBean,
 ) : GatewayVoiceStateInterceptor {
-
 	override fun disconnect(guild: Guild) {
 		jdaShardManager.getDirectAudioController(guild)?.disconnect(guild)
 	}

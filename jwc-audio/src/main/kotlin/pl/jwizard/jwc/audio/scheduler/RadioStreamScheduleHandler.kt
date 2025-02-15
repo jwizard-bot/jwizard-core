@@ -19,7 +19,6 @@ class RadioStreamScheduleHandler(
 	private val guildMusicManager: GuildMusicManager,
 	val radioStation: RadioStation,
 ) : AudioScheduleHandler(guildMusicManager) {
-
 	companion object {
 		private val log = logger<RadioStreamScheduleHandler>()
 	}

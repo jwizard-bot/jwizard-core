@@ -7,7 +7,6 @@ enum class BotProperty(
 	override val key: String,
 	override val type: KClass<*> = String::class,
 ) : AppProperty {
-
 	// JDA secret token
 	JDA_SECRET_TOKEN("jda.secret-token"),
 

@@ -9,7 +9,6 @@ import reactor.core.publisher.Mono
 abstract class AudioScheduleHandler(
 	private val guildMusicManager: GuildMusicManager,
 ) : AudioJobScheduler {
-
 	open fun stopAndDestroy(): Mono<*> {
 		guildMusicManager.state.clearAudioType()
 		return guildMusicManager.createdOrUpdatedPlayer

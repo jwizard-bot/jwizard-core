@@ -34,7 +34,6 @@ abstract class VoterComponent(
 	voterEnvironment: VoterEnvironmentBean,
 	botEmojisCache: BotEmojisCacheBean,
 ) : ButtonInteractionHandler(voterEnvironment.i18n, voterEnvironment.eventQueue, botEmojisCache) {
-
 	companion object {
 		private val log = logger<VoterComponent>()
 	}

@@ -29,7 +29,6 @@ class ExceptionTrackerHandlerBean(
 	private val vcsDeploymentSupplier: VcsDeploymentSupplier,
 	private val vcsConfig: VcsConfigBean,
 ) {
-
 	fun createTrackerMessage(
 		i18nSource: I18nExceptionSource,
 		context: CommandBaseContext? = null,

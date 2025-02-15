@@ -14,7 +14,6 @@ abstract class ButtonInteractionHandler(
 	private val eventQueue: EventQueueBean,
 	private val botEmojisCache: BotEmojisCacheBean,
 ) : EventQueueListener<ButtonInteractionEvent>, Component() {
-
 	fun initEvent() {
 		eventQueue.waitForEvent(ButtonInteractionEvent::class, this)
 	}

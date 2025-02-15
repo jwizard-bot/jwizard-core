@@ -32,7 +32,6 @@ final class JdaShardManagerBean(
 	private val ioCKtContextFactory: IoCKtContextFactory,
 	private val botEmojisCache: BotEmojisCacheBean,
 ) : JvmDisposable {
-
 	companion object {
 		private val log = logger<JdaShardManagerBean>()
 	}

@@ -11,11 +11,14 @@ import pl.jwizard.jwl.command.arg.Argument
 
 @JdaCommand(Command.PLAY)
 class PlayCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
-
 	override val shouldOnSameChannelWithBot = true
 	override val shouldEnabledOnFirstAction = true
 
-	override fun executeMusic(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeMusic(
+		context: GuildCommandContext,
+		manager: GuildMusicManager,
+		response: TFutureResponse,
+	) {
 		val track = context.getArg<String>(Argument.TRACK)
 		manager.loadAndPlay(track, context)
 	}

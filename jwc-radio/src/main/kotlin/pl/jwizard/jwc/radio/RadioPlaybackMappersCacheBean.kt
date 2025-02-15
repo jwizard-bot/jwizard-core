@@ -12,7 +12,6 @@ import java.util.concurrent.ConcurrentHashMap
 class RadioPlaybackMappersCacheBean(
 	private val ioCKtContextFactory: IoCKtContextFactory,
 ) : RadioPlaybackMappersCache {
-
 	companion object {
 		private val log = logger<RadioPlaybackMappersCacheBean>()
 

@@ -11,7 +11,6 @@ import pl.jwizard.jwl.util.logger
 abstract class AudioCompletableFutureLoader(
 	private val guildMusicManager: GuildMusicManager,
 ) : AudioLoadResultHandler() {
-
 	companion object {
 		private val log = logger<AudioCompletableFutureLoader>()
 	}

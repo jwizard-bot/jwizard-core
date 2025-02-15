@@ -17,7 +17,6 @@ import pl.jwizard.jwl.util.logger
 class InfinitePlaylistCmd(
 	commandEnvironment: CommandEnvironmentBean
 ) : DjCommandBase(commandEnvironment) {
-
 	companion object {
 		private val log = logger<InfinitePlaylistCmd>()
 	}

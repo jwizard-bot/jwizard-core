@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 class QueueTrackScheduleHandler(
 	private val guildMusicManager: GuildMusicManager,
 ) : AudioScheduleHandler(guildMusicManager) {
-
 	companion object {
 		private val log = logger<QueueTrackScheduleHandler>()
 	}

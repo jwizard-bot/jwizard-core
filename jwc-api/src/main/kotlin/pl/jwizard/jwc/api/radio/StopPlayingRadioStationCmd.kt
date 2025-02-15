@@ -9,12 +9,17 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwl.command.Command
 
 @JdaCommand(Command.RADIO_STOP)
-class StopPlayingRadioStationCmd(commandEnvironment: CommandEnvironmentBean) : RadioCommandBase(commandEnvironment) {
-
+class StopPlayingRadioStationCmd(
+	commandEnvironment: CommandEnvironmentBean,
+) : RadioCommandBase(commandEnvironment) {
 	override val shouldOnSameChannelWithBot = true
 	override val shouldRadioPlaying = true
 
-	override fun executeRadio(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeRadio(
+		context: GuildCommandContext,
+		manager: GuildMusicManager,
+		response: TFutureResponse,
+	) {
 		val radioStreamScheduler = manager.state.radioStreamScheduler
 		radioStreamScheduler.stopAndDestroy().subscribe()
 	}

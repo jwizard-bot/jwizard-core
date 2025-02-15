@@ -22,7 +22,6 @@ class MusicManagersBean(
 	val looselyTransportHandler: LooselyTransportHandlerBean,
 	val radioStationThumbnailSupplier: RadioStationThumbnailSupplier,
 ) {
-
 	// key as guild id and value as music manager related with guild
 	private val musicManagers = mutableMapOf<Long, GuildMusicManager>()
 

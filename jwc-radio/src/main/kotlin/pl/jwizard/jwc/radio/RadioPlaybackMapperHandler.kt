@@ -26,7 +26,6 @@ import java.nio.charset.StandardCharsets
 abstract class RadioPlaybackMapperHandler(
 	environment: RadioPlaybackMapperEnvironment,
 ) : RadioPlaybackMessage {
-
 	private val i18n = environment.i18nBean
 	private val jdaColorStore = environment.jdaColorsCache
 	protected val objectMapper = environment.objectMapper
@@ -103,6 +102,6 @@ abstract class RadioPlaybackMapperHandler(
 
 	protected abstract fun parsePlaybackData(
 		responseRaw: String,
-		radioStation: RadioStation
+		radioStation: RadioStation,
 	): RadioPlaybackResponse?
 }

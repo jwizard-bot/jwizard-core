@@ -19,7 +19,6 @@ import pl.jwizard.jwl.i18n.I18nLocaleSource
 class SettingsCmd(
 	commandEnvironment: CommandEnvironmentBean
 ) : ManagerCommandBase(commandEnvironment) {
-
 	override fun executeManager(context: GuildCommandContext, response: TFutureResponse) {
 		val paginatorChunkSize = environment.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 

@@ -28,7 +28,6 @@ class HelpCmd(
 	private val moduleDataSupplier: ModuleDataSupplier,
 	commandEnvironment: CommandEnvironmentBean,
 ) : CommandBase(commandEnvironment), GlobalCommandHandler {
-
 	override fun execute(context: GuildCommandContext, response: TFutureResponse) {
 		val disabledCommands = commandDataSupplier
 			.getDisabledGuildCommands(context.guildDbId, context.isSlashEvent)

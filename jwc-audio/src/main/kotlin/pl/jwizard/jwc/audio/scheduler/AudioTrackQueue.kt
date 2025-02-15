@@ -4,7 +4,6 @@ import pl.jwizard.jwac.player.track.Track
 import java.util.*
 
 class AudioTrackQueue : LinkedList<Track>() {
-
 	val iterable
 		get() = toList()
 

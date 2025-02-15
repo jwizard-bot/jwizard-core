@@ -25,7 +25,6 @@ class SlashCommandRegistererBean(
 	private val environment: EnvironmentBean,
 	private val commandsCache: CommandsCacheBean,
 ) : SlashCommandRegisterer {
-
 	companion object {
 		private val log = logger<SlashCommandRegistererBean>()
 

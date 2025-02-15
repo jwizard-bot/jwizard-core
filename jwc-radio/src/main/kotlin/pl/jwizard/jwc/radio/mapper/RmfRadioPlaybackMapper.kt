@@ -18,7 +18,6 @@ import java.time.Duration
 class RmfRadioPlaybackMapper(
 	environment: RadioPlaybackMapperEnvironment,
 ) : RadioPlaybackMapperHandler(environment) {
-
 	override fun parsePlaybackData(
 		responseRaw: String,
 		radioStation: RadioStation,

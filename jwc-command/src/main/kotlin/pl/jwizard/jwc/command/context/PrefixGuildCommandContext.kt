@@ -11,7 +11,6 @@ class PrefixGuildCommandContext(
 	instancePrefix: String,
 	guildCommandProperties: GuildMultipleProperties,
 ) : GuildCommandContext(guildCommandProperties) {
-
 	override val prefix =
 		"${guildCommandProperties.getProperty<String>(GuildProperty.LEGACY_PREFIX)}$instancePrefix "
 
