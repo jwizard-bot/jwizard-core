@@ -3,7 +3,7 @@ package pl.jwizard.jwc.api
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.channel.ChannelType
 import pl.jwizard.jwac.player.track.Track
-import pl.jwizard.jwc.audio.AudioContentType
+import pl.jwizard.jwc.audio.client.AudioNodeType
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
@@ -18,16 +18,23 @@ import pl.jwizard.jwc.exception.command.CommandAvailableOnlyForDiscreteTrackExce
 import pl.jwizard.jwc.exception.track.TrackQueueIsEmptyException
 import pl.jwizard.jwl.i18n.I18nLocaleSource
 
-abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : AudioCommandBase(commandEnvironment) {
+abstract class MusicCommandBase(
+	commandEnvironment: CommandEnvironmentBean,
+) : AudioCommandBase(commandEnvironment) {
 
-	final override fun executeAudio(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
-		// check, if user cannot try use this command for continuous audio source (ex. radio)
-		if (!manager.state.isDeclaredAudioContentTypeOrNotYetSet(AudioContentType.QUEUE_TRACK)) {
+	final override fun executeAudio(
+		context: GuildCommandContext,
+		manager: GuildMusicManager,
+		response: TFutureResponse,
+	) {
+		// check, if user cannot try to use this command for continuous audio source (ex. radio)
+		if (!manager.state.isDeclaredAudioContentTypeOrNotYetSet(AudioNodeType.QUEUED)) {
 			throw CommandAvailableOnlyForDiscreteTrackException(context)
 		}
 		val player = manager.cachedPlayer
 		val isActive = context.selfMember.voiceState?.channel?.type == ChannelType.VOICE
-		val inPlayingMode = isActive && player?.track != null // check if bot is on voice channel and play audio content
+		// check if bot is on voice channel and play audio content
+		val inPlayingMode = isActive && player?.track != null
 
 		if (shouldPlayingMode && (!inPlayingMode || player?.paused == true) && !shouldPaused) {
 			// throw when bot is not playing audio content (no tracks, currently paused etc.)
@@ -77,9 +84,15 @@ abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 			messageBuilder.setKeyValueField(I18nAudioSource.TRACK_ADDED_BY, it.user.name)
 		}
 		return messageBuilder.setValueField(percentageIndicatorBar.generateBar(), inline = false)
-			.setKeyValueField(i18nPosition, "${millisToDTF(elapsedTime)} / ${millisToDTF(track.duration)}")
+			.setKeyValueField(
+				i18nPosition,
+				"${millisToDTF(elapsedTime)} / ${millisToDTF(track.duration)}"
+			)
 			.setSpace()
-			.setKeyValueField(I18nAudioSource.CURRENT_TRACK_LEFT_TO_NEXT, millisToDTF(track.duration - elapsedTime))
+			.setKeyValueField(
+				I18nAudioSource.CURRENT_TRACK_LEFT_TO_NEXT,
+				millisToDTF(track.duration - elapsedTime)
+			)
 			.setArtwork(track.thumbnailUrl)
 			.setColor(JdaColor.PRIMARY)
 			.build()

@@ -1,10 +1,5 @@
-/*
- * Copyright (c) 2025 by JWizard
- * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
- */
 package pl.jwizard.jwc.audio.event
 
-import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
 import pl.jwizard.jwc.audio.client.DistributedAudioClientBean
 import pl.jwizard.jwc.audio.manager.MusicManagersBean
@@ -21,17 +16,6 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.util.logger
 import java.time.Instant
 
-/**
- * Monitors voice channels in guilds to detect when they become empty and performs actions accordingly. This component
- * extends [JvmFixedThreadExecutor] to periodically check voice channels and uses [ChannelListenerGuard] to handle voice
- * channel events.
- *
- * @property jdaShardManager Manages multiple shards of the JDA bot, responsible for handling Discord API interactions.
- * @property environment Provides access to application properties.
- * @property musicManagers Provides access to the cached music manager for controlling audio playback.
- * @property audioClient Supplies distributed audio client instance for audio streaming.
- * @author Miłosz Gilga
- */
 @SingletonComponent
 class AudioChannelsListenerGuardBean(
 	private val jdaShardManager: JdaShardManagerBean,
@@ -43,76 +27,67 @@ class AudioChannelsListenerGuardBean(
 	companion object {
 		private val log = logger<AudioChannelsListenerGuardBean>()
 
-		/**
-		 * The interval in seconds at which the executor service runs to check voice channels.
-		 */
+		// interval in seconds at which the executor service runs to check voice channels
 		private const val INTERVAL_TICK_SEC = 5L
 	}
 
-	/**
-	 * Maps guild IDs to the time when the guild's voice channel was last detected as empty.
-	 * This is used to track the inactivity of voice channels.
-	 */
+	// guild Ids to time when the guild's voice channel was last detected as empty
 	private final val aloneFromTime = mutableMapOf<Long, Instant>()
 
-	/**
-	 * Initializes the thread pool and starts the executor service with the configured interval.
-	 */
 	override fun initThreadPool() {
 		start(intervalSec = INTERVAL_TICK_SEC)
 		log.info("Start listening users voice channels with interval: {}s.", INTERVAL_TICK_SEC)
 	}
 
-	/**
-	 * Handles voice update events to detect changes in the state of voice channels.
-	 * Updates the [aloneFromTime] map based on whether the voice channel is empty or not.
-	 *
-	 * @param event The [GuildVoiceUpdateEvent] containing information about the voice state update.
-	 */
 	fun onEveryVoiceUpdate(event: GuildVoiceUpdateEvent) {
 		val guild = event.guild
 		val botVoiceState = guild.selfMember.voiceState
 		if (botVoiceState?.inAudioChannel() == true) {
 			val channel = botVoiceState.channel?.asVoiceChannel()
-			val isAlone = isAloneOnChannel(channel)
+			val isAloneOnVoiceChannel = channel?.members?.none {
+				it.voiceState?.isDeafened == false && !it.user.isBot
+			} == true
 			val isAlonePrevious = aloneFromTime.containsKey(guild.idLong)
-			if (!isAlone && isAlonePrevious) {
+			if (!isAloneOnVoiceChannel && isAlonePrevious) {
 				aloneFromTime.remove(guild.idLong)
 			}
-			if (isAlone && !isAlonePrevious) {
+			if (isAloneOnVoiceChannel && !isAlonePrevious) {
 				aloneFromTime[guild.idLong] = Instant.now()
 			}
 		}
 	}
 
-	/**
-	 * Periodically checks the [aloneFromTime] map to determine if any guilds have been empty for too long.
-	 * If a guild's voice channel has been empty beyond the allowed inactivity period, it disconnects the audio player
-	 * and logs the action.
-	 *
-	 * Removes guilds that were found to be empty from the [aloneFromTime] map.
-	 */
 	override fun executeJvmThread() {
+		// set to store guilds that should be removed from tracking
 		val removeFromGuild = mutableSetOf<Long>()
+
+		// loop through all tracked guilds with their last activity timestamp
 		for ((guildId, time) in aloneFromTime) {
 			val guild = jdaShardManager.getGuildById(guildId)
+
+			// if the guild is null, meaning the bot was removed from the server, mark it for removal
 			if (guild == null) {
 				removeFromGuild.add(guildId)
 				continue
 			}
-			val maxInactivity = environment.getGuildProperty<Long>(GuildProperty.LEAVE_EMPTY_CHANNEL_SEC, guildId)
+			val maxInactivity = environment
+				.getGuildProperty<Long>(GuildProperty.LEAVE_EMPTY_CHANNEL_SEC, guildId)
+
+			// if the bot is still within the allowed inactivity time, skip processing
 			if (time.epochSecond > (Instant.now().epochSecond - maxInactivity)) {
 				continue
 			}
+			// otherwise, remove bot from channel and clean audio queue
 			val musicManager = musicManagers.getCachedMusicManager(guildId)
-			if (musicManager != null) {
-				val message = musicManager.createEmbedBuilder()
-					.setDescription(I18nResponseSource.LEAVE_EMPTY_CHANNEL)
-					.setColor(JdaColor.PRIMARY)
-					.build()
 
-				// leave the channel only if the bot is still on it (did not leave after 2 minutes of inactivity)
+			if (musicManager != null) {
+				// leave the channel only if the bot is still on it (did not leave after 2 minutes of
+				// inactivity)
 				if (audioClient.inAudioChannel(musicManager.state.context.selfMember)) {
+					val message = musicManager.createEmbedBuilder()
+						.setDescription(I18nResponseSource.LEAVE_EMPTY_CHANNEL)
+						.setColor(JdaColor.PRIMARY)
+						.build()
 					musicManager.state.audioScheduler.stopAndDestroy().subscribe()
 					audioClient.disconnectWithAudioChannel(guild)
 					log.jdaInfo(
@@ -122,19 +97,13 @@ class AudioChannelsListenerGuardBean(
 					)
 					musicManager.sendMessage(message)
 				}
-				musicManagers.removeMusicManager(guildId) // remove music manager regardless of the circumstances
+				// remove music manager regardless of the circumstances
+				musicManagers.removeMusicManager(guildId)
 			}
 			removeFromGuild.add(guildId)
 		}
-		removeFromGuild.forEach { aloneFromTime.remove(it) }
+		for (guild in removeFromGuild) {
+			aloneFromTime.remove(guild)
+		}
 	}
-
-	/**
-	 * Checks if the bot is the only member in the voice channel of the specified guild.
-	 *
-	 * @param voiceChannel A [VoiceChannel] where bot is connected with other channel members.
-	 * @return True if the bot is the only member in the voice channel; false otherwise.
-	 */
-	private fun isAloneOnChannel(voiceChannel: VoiceChannel?) =
-		voiceChannel?.members?.none { it.voiceState?.isDeafened == false && !it.user.isBot } == true
 }

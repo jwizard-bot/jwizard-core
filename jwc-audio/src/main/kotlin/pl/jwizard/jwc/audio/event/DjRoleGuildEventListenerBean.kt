@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2024 by JWizard
- * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
- */
 package pl.jwizard.jwc.audio.event
 
 import net.dv8tion.jda.api.entities.Guild
@@ -16,14 +12,6 @@ import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwl.util.logger
 
-/**
- * Listener for handling events related to the DJ role in a guild. Automatically creates a DJ role if it doesn't exist
- * when the guild becomes ready, or if the role is deleted.
- *
- * @property environment Provides access to environment-specific configurations and properties.
- * @property jdaColorStore Stores color information for customizing the DJ role color.
- * @author Miłosz Gilga
- */
 @JdaEventListenerBean
 class DjRoleGuildEventListenerBean(
 	private val environment: EnvironmentBean,
@@ -34,12 +22,6 @@ class DjRoleGuildEventListenerBean(
 		private val log = logger<DjRoleGuildEventListenerBean>()
 	}
 
-	/**
-	 * Handles the event when a guild becomes ready. This method checks if a DJ role already exists. If it doesn't, it
-	 * creates one and sets its position at the top of the roles list.
-	 *
-	 * @param event The event triggered when a guild becomes ready.
-	 */
 	override fun onGuildReady(event: GuildReadyEvent) {
 		val guild = event.guild
 		val guildDjRoleName = getDjRoleName(guild)
@@ -52,12 +34,6 @@ class DjRoleGuildEventListenerBean(
 		}
 	}
 
-	/**
-	 * Handles the event when a role is deleted in the guild. If the deleted role is the DJ role, it recreates the DJ
-	 * role with the same name and logs the action.
-	 *
-	 * @param event The event triggered when a role is deleted in the guild.
-	 */
 	override fun onRoleDelete(event: RoleDeleteEvent) {
 		val deletedRole = event.role
 		val guild = event.guild
@@ -70,24 +46,11 @@ class DjRoleGuildEventListenerBean(
 		}
 	}
 
-	/**
-	 * Generates the DJ role for the guild with the specified role name and applies the primary color from the
-	 * [JdaColorsCacheBean].
-	 *
-	 * @param guild The guild for which the DJ role is being created.
-	 * @param roleName The name of the DJ role.
-	 * @return The role creation action.
-	 */
 	private fun generateDjRole(guild: Guild, roleName: String) = guild.createRole()
 		.setName(roleName)
 		.setColor(jdaColorStore.getHexColor(JdaColor.PRIMARY))
 
-	/**
-	 * Retrieves the name of the DJ role from the guild's configuration properties.
-	 *
-	 * @param guild The guild from which the DJ role name is fetched.
-	 * @return The name of the DJ role as a string.
-	 */
-	private fun getDjRoleName(guild: Guild) = environment
-		.getGuildProperty<String>(GuildProperty.DJ_ROLE_NAME, guild.idLong)
+	private fun getDjRoleName(
+		guild: Guild,
+	) = environment.getGuildProperty<String>(GuildProperty.DJ_ROLE_NAME, guild.idLong)
 }

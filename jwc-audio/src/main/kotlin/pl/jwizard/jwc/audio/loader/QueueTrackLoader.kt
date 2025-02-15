@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2024 by JWizard
- * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
- */
 package pl.jwizard.jwc.audio.loader
 
 import net.dv8tion.jda.api.entities.MessageEmbed
@@ -9,7 +5,6 @@ import pl.jwizard.jwac.event.onload.*
 import pl.jwizard.jwac.player.track.AudioSender
 import pl.jwizard.jwac.player.track.Track
 import pl.jwizard.jwc.audio.loader.spinner.TrackMenuOption
-import pl.jwizard.jwc.audio.loader.spinner.TrackSelectSpinnerAction
 import pl.jwizard.jwc.audio.loader.spinner.TrackSelectSpinnerMenu
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.core.i18n.source.I18nAudioSource
@@ -25,23 +20,14 @@ import pl.jwizard.jwc.core.util.millisToDTF
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 import pl.jwizard.jwl.util.logger
 
-/**
- * Handles the loading of tracks into the queue for the music manager.
- *
- * @property guildMusicManager The music manager responsible for managing the guild's audio playback.
- * @author Miłosz Gilga
- */
 class QueueTrackLoader(
 	private val guildMusicManager: GuildMusicManager,
-) : AudioCompletableFutureLoader(guildMusicManager), TrackSelectSpinnerAction {
+) : AudioCompletableFutureLoader(guildMusicManager) {
 
 	companion object {
 		private val log = logger<QueueTrackLoader>()
 	}
 
-	/**
-	 * Properties of the guild that may affect track selection behavior.
-	 */
 	private val guildProperties = guildMusicManager.bean.environment.getGuildMultipleProperties(
 		guildProperties = listOf(
 			GuildProperty.RANDOM_AUTO_CHOOSE_TRACK,
@@ -51,32 +37,27 @@ class QueueTrackLoader(
 		guildId = guildMusicManager.state.context.guild.idLong,
 	)
 
-	/**
-	 * Handles the loading of a single track.
-	 *
-	 * @param result The result of the loaded track.
-	 * @param future The future response to complete once the track is loaded.
-	 */
 	override fun onCompletableTrackLoaded(result: KTrackLoadedEvent, future: TFutureResponse) {
 		val context = guildMusicManager.state.context
 		result.track.setSenderData(AudioSender(context.author.idLong))
 
 		onEnqueueTrack(result.track)
-		log.jdaInfo(context, "Added to queue: %s track by: %s.", result.track.qualifier, context.author.qualifier)
-
+		log.jdaInfo(
+			context,
+			"Added to queue: %s track by: %s.",
+			result.track.qualifier,
+			context.author.qualifier,
+		)
 		val response = CommandResponse.Builder()
 			.addEmbedMessages(createTrackResponseMessage(result.track))
 			.build()
 		future.complete(response)
 	}
 
-	/**
-	 * Handles the loading of search results.
-	 *
-	 * @param result The search result containing tracks.
-	 * @param future The future response to complete with the search results.
-	 */
-	override fun onCompletableSearchResultLoaded(result: KSearchResultEvent, future: TFutureResponse) {
+	override fun onCompletableSearchResultLoaded(
+		result: KSearchResultEvent,
+		future: TFutureResponse
+	) {
 		if (result.tracks.isEmpty()) {
 			onError(
 				AudioLoadFailedDetails.Builder()
@@ -132,7 +113,12 @@ class QueueTrackLoader(
 			.setColor(JdaColor.PRIMARY)
 			.build()
 
-		log.jdaInfo(context, "Added to queue: %s tracks by: %s.", result.tracks.size, context.author.qualifier)
+		log.jdaInfo(
+			context,
+			"Added to queue: %s tracks by: %s.",
+			result.tracks.size,
+			context.author.qualifier
+		)
 		val response = CommandResponse.Builder()
 			.addEmbedMessages(message)
 			.build()
@@ -146,7 +132,10 @@ class QueueTrackLoader(
 	 * @return The details of the load failure.
 	 */
 	override fun onCompletableLoadFailed(result: KLoadFailedEvent) = AudioLoadFailedDetails.Builder()
-		.setLogMessage("Unexpected exception during load audio track/playlist. Cause: %s.", result.exception.message)
+		.setLogMessage(
+			"Unexpected exception during load audio track/playlist. Cause: %s.",
+			result.exception.message
+		)
 		.setI18nLocaleSource(I18nExceptionSource.ISSUE_WHILE_LOADING_TRACK)
 		.build()
 

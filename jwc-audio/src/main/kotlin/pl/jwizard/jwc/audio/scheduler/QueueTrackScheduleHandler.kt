@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2024 by JWizard
- * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
- */
 package pl.jwizard.jwc.audio.scheduler
 
 import dev.arbjerg.lavalink.protocol.v4.Message.EmittedEvent.TrackEndEvent.AudioTrackEndReason
@@ -22,19 +18,9 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.i18n.I18nLocaleSource
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 import pl.jwizard.jwl.util.logger
-import reactor.core.Disposable
 import reactor.core.publisher.Mono
 import java.util.concurrent.atomic.AtomicBoolean
 
-/**
- * Handles the scheduling and management of audio tracks in a queue.
- *
- * This class extends [AudioScheduleHandler], providing functionality for loading tracks, managing playback, and
- * handling events related to audio track playback.
- *
- * @property guildMusicManager The [GuildMusicManager] instance used for managing audio tracks and interactions.
- * @author Miłosz Gilga
- */
 class QueueTrackScheduleHandler(
 	private val guildMusicManager: GuildMusicManager,
 ) : AudioScheduleHandler(guildMusicManager) {
@@ -43,27 +29,12 @@ class QueueTrackScheduleHandler(
 		private val log = logger<QueueTrackScheduleHandler>()
 	}
 
-	val queue = AudioTrackQueue(guildMusicManager)
+	val queue = AudioTrackQueue()
 	val audioRepeat = AudioTrackRepeat()
 
-	/**
-	 * The current count of repeats for the selected track.
-	 */
 	private val countOfRepeats = CountOfRepeats()
-
-	/**
-	 * Flag indicating whether to send the next track info message.
-	 */
 	private val nextTrackInfoMessage = AtomicBoolean(true)
 
-	/**
-	 * Loads the specified list of tracks into the queue.
-	 *
-	 * If the list is empty, the method does nothing. If a single track is provided and no track is currently playing,
-	 * that track will be started immediately. If multiple tracks are provided, they are added to the queue.
-	 *
-	 * @param tracks The list of [Track]s to be loaded into the queue.
-	 */
 	override fun loadContent(tracks: List<Track>) {
 		if (tracks.isEmpty()) {
 			return
@@ -84,12 +55,6 @@ class QueueTrackScheduleHandler(
 		}
 	}
 
-	/**
-	 * Stops the current playback, clears the queue, and resets all repeat settings. This method also resets the flag for
-	 * the next track info message.
-	 *
-	 * @return The [Mono] as an asynchronous response.
-	 */
 	override fun stopAndDestroy(): Mono<*> {
 		queue.clear()
 		audioRepeat.clear()
@@ -98,12 +63,6 @@ class QueueTrackScheduleHandler(
 		return super.stopAndDestroy()
 	}
 
-	/**
-	 * Updates the count of repeats for the currently playing track. If the count is greater than zero, the flag for
-	 * sending the next track info message is set to false.
-	 *
-	 * @param count The number of repeats to be set.
-	 */
 	fun updateCountOfRepeats(count: Int) {
 		countOfRepeats.set(count)
 		if (count > 0) {
@@ -111,21 +70,12 @@ class QueueTrackScheduleHandler(
 		}
 	}
 
-	/**
-	 * Handles the event when an audio track starts playing.
-	 *
-	 * Sends a message to the context indicating that the track has started. If the player was paused, it provides
-	 * a command to resume playback.
-	 *
-	 * @param track The [Track] that started playing.
-	 * @param audioNode The [AudioNode] on which the track is playing.
-	 */
 	override fun onAudioStart(track: Track, audioNode: AudioNode) {
 		val context = guildMusicManager.state.context
 		if (guildMusicManager.cachedPlayer?.paused == true) {
 			val message = createTrackStartMessage(
 				track, I18nResponseSource.ON_TRACK_START_ON_PAUSED,
-				"resumeCmd" to Command.RESUME.parseWithPrefix(context)
+				"resumeCmd" to Command.RESUME.parseWithPrefix(context),
 			)
 			log.jdaInfo(
 				context,
@@ -137,22 +87,17 @@ class QueueTrackScheduleHandler(
 		} else {
 			val message = createTrackStartMessage(track, I18nResponseSource.ON_TRACK_START)
 			if (nextTrackInfoMessage.get()) {
-				log.jdaInfo(context, "Node: %s. Start playing audio track: %s.", audioNode.name, track.qualifier)
+				log.jdaInfo(
+					context,
+					"Node: %s. Start playing audio track: %s.",
+					audioNode.name,
+					track.qualifier,
+				)
 				guildMusicManager.sendMessage(message)
 			}
 		}
 	}
 
-	/**
-	 * Handles the event when an audio track ends.
-	 *
-	 * Depending on the repeat settings and the state of the queue, it may restart the track, add it back to the queue,
-	 * or move to the next track. It also handles the situation where the queue is empty.
-	 *
-	 * @param lastTrack The [Track] that just finished playing.
-	 * @param audioNode The [AudioNode] on which the track was playing.
-	 * @param endReason The reason for the track ending.
-	 */
 	override fun onAudioEnd(lastTrack: Track, audioNode: AudioNode, endReason: AudioTrackEndReason) {
 		val context = guildMusicManager.state.context
 		if (audioRepeat.trackRepeat) {
@@ -217,24 +162,11 @@ class QueueTrackScheduleHandler(
 		}
 	}
 
-	/**
-	 * Handles the event when an audio track gets stuck during playback. Calls the [onError] method to manage the error
-	 * handling process.
-	 *
-	 * @param track The [Track] that is stuck.
-	 * @param audioNode The [AudioNode] on which the track was playing.
-	 */
-	override fun onAudioStuck(track: Track, audioNode: AudioNode) =
-		onError(track, audioNode, I18nExceptionSource.ISSUE_WHILE_PLAYING_TRACK, "Track stuck.")
+	override fun onAudioStuck(
+		track: Track,
+		audioNode: AudioNode,
+	) = onError(track, audioNode, I18nExceptionSource.ISSUE_WHILE_PLAYING_TRACK, "Track stuck.")
 
-	/**
-	 * Handles the event when an error occurs while playing an audio track. Logs the error and sends an appropriate
-	 * message to the context.
-	 *
-	 * @param track The [Track] that encountered an error.
-	 * @param audioNode The [AudioNode] on which the error occurred.
-	 * @param exception The [TrackException] that contains the error details.
-	 */
 	override fun onAudioException(track: Track, audioNode: AudioNode, exception: TrackException) {
 		val parsedMessage = exception.message?.replace("\n", "")
 
@@ -246,19 +178,20 @@ class QueueTrackScheduleHandler(
 		return onError(track, audioNode, specifiedException.i18nLocaleSource, parsedMessage)
 	}
 
-	/**
-	 * Handles errors that occur during track playback. Logs the error and sends a message with details about the issue.
-	 *
-	 * @param track The [Track] that caused the error.
-	 * @param audioNode The [AudioNode] on which the error occurred.
-	 * @param i18nSource The [I18nExceptionSource] enum entry.
-	 * @param causeMessage A message explaining the cause of the error.
-	 */
-	private fun onError(track: Track, audioNode: AudioNode, i18nSource: I18nExceptionSource, causeMessage: String?) {
+	private fun onError(
+		track: Track,
+		audioNode: AudioNode,
+		i18nSource: I18nExceptionSource,
+		causeMessage: String?,
+	) {
 		val context = guildMusicManager.state.context
 		val tracker = guildMusicManager.bean.exceptionTrackerHandler
 
-		val message = tracker.createTrackerMessage(i18nSource, context, args = mapOf("audioTrack" to track.mdTitleLink))
+		val message = tracker.createTrackerMessage(
+			i18nSource,
+			context,
+			args = mapOf("audioTrack" to track.mdTitleLink)
+		)
 		val trackerLink = tracker.createTrackerLink(i18nSource, context)
 
 		if (queue.isEmpty() && guildMusicManager.cachedPlayer?.track == null) {
@@ -274,14 +207,6 @@ class QueueTrackScheduleHandler(
 		guildMusicManager.sendMessage(message, trackerLink)
 	}
 
-	/**
-	 * Creates a message to indicate that a track has started playing.
-	 *
-	 * @param track The [Track] that has started.
-	 * @param i18nSource The source for internationalization of the message.
-	 * @param args Additional arguments to be included in the message.
-	 * @return A [MessageEmbed] containing the track start message.
-	 */
 	private fun createTrackStartMessage(
 		track: Track,
 		i18nSource: I18nLocaleSource,
@@ -297,10 +222,5 @@ class QueueTrackScheduleHandler(
 			.build()
 	}
 
-	/**
-	 * Starts the next track in the queue, if available.
-	 *
-	 * @return A [Disposable] that can be used to manage the subscription to this operation.
-	 */
 	private fun nextTrack() = queue.poll()?.let { startTrack(it) }
 }
