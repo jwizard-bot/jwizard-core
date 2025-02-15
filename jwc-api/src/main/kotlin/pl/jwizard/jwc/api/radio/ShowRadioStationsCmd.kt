@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2024 by JWizard
- * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
- */
 package pl.jwizard.jwc.api.radio
 
 import pl.jwizard.jwc.api.CommandBase
@@ -19,24 +15,10 @@ import pl.jwizard.jwc.core.util.mdList
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.radio.RadioStation
 
-/**
- * Command that displays available radio stations for the guild.
- *
- * @param commandEnvironment The environment context for executing the command.
- * @author Miłosz Gilga
- */
 @JdaCommand(Command.RADIO_ALL)
-class ShowRadioStationsCmd(commandEnvironment: CommandEnvironmentBean) : CommandBase(commandEnvironment) {
+class ShowRadioStationsCmd(commandEnvironment: CommandEnvironmentBean) :
+	CommandBase(commandEnvironment) {
 
-	/**
-	 * Executes the command to display radio stations.
-	 *
-	 * This method retrieves radio stations for the specified guild, constructs embed messages for each page of radio
-	 * stations, and handles pagination. If there are no radio stations available, a message indicating this is returned.
-	 *
-	 * @param context The context of the command execution, containing user interaction details.
-	 * @param response The future response object used to send the result of the command execution.
-	 */
 	override fun execute(context: GuildCommandContext, response: TFutureResponse) {
 		val radioStations = RadioStation.entries
 		val lang = context.language
@@ -44,6 +26,7 @@ class ShowRadioStationsCmd(commandEnvironment: CommandEnvironmentBean) : Command
 		val paginatorChunkSize = environment.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 		val responseBuilder = CommandResponse.Builder()
 
+		// if is any declared radio station
 		val message = if (radioStations.isNotEmpty()) {
 			val radioStationsPages = radioStations
 				.map {
@@ -62,9 +45,10 @@ class ShowRadioStationsCmd(commandEnvironment: CommandEnvironmentBean) : Command
 			val paginator = createPaginator(context, pages)
 			val firstMessage = paginator.initPaginator()
 
-			responseBuilder.addActionRows(paginator.createPaginatorButtonsRow())
+			responseBuilder.addActionRows(paginator.paginatorButtonsRow)
 			firstMessage
 		} else {
+			// otherwise return single embed message with message info
 			createEmbedMessage(context)
 				.setDescription(I18nResponseSource.NO_RADIO_STATION_INFO)
 				.setColor(JdaColor.PRIMARY)
