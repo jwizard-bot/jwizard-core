@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2024 by JWizard
- * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
- */
 package pl.jwizard.jwc.command.reflect
 
 import pl.jwizard.jwc.command.CommandsCacheBean
@@ -15,14 +11,6 @@ import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.util.logger
 import kotlin.reflect.full.allSuperclasses
 
-/**
- * The CommandsLoaderBean class is responsible for loading command classes annotated with [JdaCommand] using reflection.
- * It scans the classpath for these command classes and registers them into the command cache for later use.
- *
- * @property ioCKtContextFactory Provides access to the IoC context for retrieving beans.
- * @property commandsCache The cache for commands.
- * @author Miłosz Gilga
- */
 @SingletonComponent
 class CommandsLoaderBean(
 	private val ioCKtContextFactory: IoCKtContextFactory,
@@ -32,21 +20,11 @@ class CommandsLoaderBean(
 	companion object {
 		private val log = logger<CommandsLoaderBean>()
 
-		/**
-		 * Subpackage used for scanning command classes.
-		 */
 		private const val SCANNING_SUBPACKAGE = "jwc.api"
 	}
 
-	/**
-	 * Scanner used for detecting classes annotated with [JdaCommand].
-	 */
 	private val scanner = ClasspathScanner(JdaCommand::class, SCANNING_SUBPACKAGE)
 
-	/**
-	 * Loads command classes using reflection. This method scans the classpath for classes annotated with [JdaCommand]
-	 * and registers them in the command proxy store.
-	 */
 	override fun loadClassesViaReflectionApi() {
 		val global = commandsCache.globalCommandInstances
 		val guild = commandsCache.guildCommandInstances

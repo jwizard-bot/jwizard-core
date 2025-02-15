@@ -1,8 +1,5 @@
 <component name="CopyrightManager">
   <settings>
-    <module2copyright>
-      <element module="All" copyright="jwizard" />
-    </module2copyright>
     <LanguageOptions name="__TEMPLATE__">
       <option name="addBlankAfter" value="false" />
     </LanguageOptions>

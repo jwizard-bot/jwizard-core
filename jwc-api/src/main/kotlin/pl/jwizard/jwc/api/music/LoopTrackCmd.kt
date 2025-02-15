@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2024 by JWizard
- * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
- */
 package pl.jwizard.jwc.api.music
 
 import pl.jwizard.jwc.api.CommandEnvironmentBean
@@ -19,16 +15,6 @@ import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
-/**
- * Command to toggle infinite loop on the currently playing track.
- *
- * This command enables or disables the infinite loop mode for the track that is currently playing. It requires the user
- * to be in the same voice channel as the bot and to either be the track's original requester or have superuser
- * permissions.
- *
- * @param commandEnvironment The environment context for the command execution.
- * @author Miłosz Gilga
- */
 @JdaCommand(Command.INFINITE)
 class LoopTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
 
@@ -40,16 +26,6 @@ class LoopTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBas
 	override val shouldOnSameChannelWithBot = true
 	override val shouldBeContentSenderOrSuperuser = true
 
-	/**
-	 * Toggles the infinite loop for the currently playing track.
-	 *
-	 * This method either enables or disables the infinite loop mode for the currently playing track. It responds with a
-	 * confirmation message in the form of an embed, indicating the current loop status.
-	 *
-	 * @param context The context of the command, including user interaction details.
-	 * @param manager The guild music manager responsible for handling the audio queue and playback.
-	 * @param response The future response object used to send the result of the command execution.
-	 */
 	override fun executeMusic(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val isInLoop = manager.state.queueTrackScheduler.audioRepeat.toggleTrackLoop()
 		val currentPlayingTrack = manager.cachedPlayer?.track

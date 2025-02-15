@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2024 by JWizard
- * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
- */
 package pl.jwizard.jwc.api.manager
 
 import net.dv8tion.jda.api.entities.MessageEmbed
@@ -19,29 +15,24 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.i18n.I18nLocaleSource
 
-/**
- * Command that displays the current guild settings in a paginated view.
- *
- * @param commandEnvironment The environment context for command execution.
- * @author Miłosz Gilga
- */
 @JdaCommand(Command.SETTINGS)
-class SettingsCmd(commandEnvironment: CommandEnvironmentBean) : ManagerCommandBase(commandEnvironment) {
+class SettingsCmd(
+	commandEnvironment: CommandEnvironmentBean
+) : ManagerCommandBase(commandEnvironment) {
 
-	/**
-	 * Executes the command to display guild settings to the user. The settings are fetched from the guild and displayed
-	 * in a paginated format.
-	 *
-	 * @param context The context of the command, which contains details of the user interaction.
-	 * @param response The future response object used to send the result of the command execution.
-	 */
 	override fun executeManager(context: GuildCommandContext, response: TFutureResponse) {
 		val paginatorChunkSize = environment.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
+
 		val properties = environment.getGuildMultipleProperties(
-			guildProperties = GuildProperty.entries.filter { it.placeholder.isNotEmpty() && it.converter != null },
+			// get guild properties only with i18n key and value converter
+			guildProperties = GuildProperty.entries.filter {
+				it.placeholder.isNotEmpty() && it.converter != null
+			},
 			guildId = context.guild.idLong,
 		)
 		val embedMessages = mutableListOf<MessageEmbed>()
+
+		// sort by guild properties enum order
 		val sortedProps = properties.toList().sortedBy { it.first.ordinal }
 
 		for (chunk in sortedProps.chunked(paginatorChunkSize)) {
@@ -51,6 +42,7 @@ class SettingsCmd(commandEnvironment: CommandEnvironmentBean) : ManagerCommandBa
 			for ((index, pair) in chunk.withIndex()) {
 				val (column, value) = pair
 				val converter = column.converter
+				// skip values, where not have i18n key or value converter
 				if (column.placeholder.isEmpty() || converter == null) {
 					continue
 				}
@@ -62,6 +54,7 @@ class SettingsCmd(commandEnvironment: CommandEnvironmentBean) : ManagerCommandBa
 					convertedValue.toString()
 				}
 				messageBuilder.setKeyValueField(key, parsedValue)
+				// add blank space after every odd element
 				if (index % 2 == 0) {
 					messageBuilder.setSpace()
 				}
@@ -72,24 +65,16 @@ class SettingsCmd(commandEnvironment: CommandEnvironmentBean) : ManagerCommandBa
 			embedMessages.add(message)
 		}
 		val paginator = createPaginator(context, embedMessages)
-		val row = paginator.createPaginatorButtonsRow()
 		val initMessage = paginator.initPaginator()
 
 		val commandResponse = CommandResponse.Builder()
 			.addEmbedMessages(initMessage)
-			.addActionRows(row)
+			.addActionRows(paginator.paginatorButtonsRow)
 			.build()
 
 		response.complete(commandResponse)
 	}
 
-	/**
-	 * Checks whether the command should be executed in private mode. If the command is executed with a "private"
-	 * argument set to true, it returns the author's ID to restrict visibility.
-	 *
-	 * @param context The context of the command execution.
-	 * @return The author's ID if the command is private, or null if it is not private.
-	 */
 	override fun isPrivate(context: GuildCommandContext): Long? {
 		val isPrivate = context.getNullableArg<Boolean>(Argument.PRIVATE)
 		return if (isPrivate == true) context.author.idLong else null

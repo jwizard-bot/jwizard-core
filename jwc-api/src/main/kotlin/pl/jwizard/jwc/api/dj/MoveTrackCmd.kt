@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2024 by JWizard
- * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
- */
 package pl.jwizard.jwc.api.dj
 
 import pl.jwizard.jwc.api.CommandEnvironmentBean
@@ -23,16 +19,6 @@ import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.util.logger
 import kotlin.math.abs
 
-/**
- * Command to move an audio track from one position to another in the queue.
- *
- * This command allows the user to change the position of a track in the music queue by specifying the current position
- * and the target position. If the positions are the same or out of bounds, appropriate exceptions are thrown. Once the
- * track is moved, a confirmation message is sent to the user.
- *
- * @param commandEnvironment The environment context for the command execution.
- * @author Miłosz Gilga
- */
 @JdaCommand(Command.QUEUE_MOVE)
 class MoveTrackCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBase(commandEnvironment) {
 
@@ -43,14 +29,11 @@ class MoveTrackCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBase(c
 	override val shouldOnSameChannelWithBot = true
 	override val queueShouldNotBeEmpty = true
 
-	/**
-	 * Executes the command to move a track in the queue.
-	 *
-	 * @param context The context of the command, including user interaction details.
-	 * @param manager The guild music manager responsible for handling the audio queue.
-	 * @param response The future response object used to send the result of the command execution.
-	 */
-	override fun executeDj(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeDj(
+		context: GuildCommandContext,
+		manager: GuildMusicManager,
+		response: TFutureResponse,
+	) {
 		val fromPos = context.getArg<Int>(Argument.FROM_POS)
 		val toPos = context.getArg<Int>(Argument.TO_POS)
 
@@ -58,6 +41,7 @@ class MoveTrackCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBase(c
 			throw TrackPositionsIsTheSameException(context)
 		}
 		val queue = manager.state.queueTrackScheduler.queue
+		// check, if fromPos or toPos exceed queue size
 		if (queue.positionIsOutOfBounds(fromPos) || queue.positionIsOutOfBounds(toPos)) {
 			throw TrackOffsetOutOfBoundsException(context, abs(fromPos - toPos), queue.size)
 		}

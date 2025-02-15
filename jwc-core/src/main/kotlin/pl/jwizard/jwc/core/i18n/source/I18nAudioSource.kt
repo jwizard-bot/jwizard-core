@@ -1,17 +1,7 @@
-/*
- * Copyright (c) 2024 by JWizard
- * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
- */
 package pl.jwizard.jwc.core.i18n.source
 
 import pl.jwizard.jwl.i18n.I18nLocaleSource
 
-/**
- * Provides internationalization (i18n) placeholders for various audio-related messages.
- *
- * @author Miłosz Gilga
- * @see I18nLocaleSource
- */
 enum class I18nAudioSource(override val placeholder: String) : I18nLocaleSource {
 	COUNT_OF_TRACKS("jw.audio.countOfTracks"),
 	TRACKS_TOTAL_DURATION_TIME("jw.audio.totalDurationTime"),

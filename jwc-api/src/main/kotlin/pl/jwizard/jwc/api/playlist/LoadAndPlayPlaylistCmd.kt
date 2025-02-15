@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2024 by JWizard
- * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
- */
 package pl.jwizard.jwc.api.playlist
 
 import pl.jwizard.jwc.api.CommandEnvironmentBean
@@ -14,25 +10,14 @@ import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwl.command.Command
 
-/**
- * TODO
- *
- * @param commandEnvironment The environment context for the command execution.
- * @author Miłosz Gilga
- */
 @JdaCommand(Command.PLAYLIST_PLAY)
 class LoadAndPlayPlaylistCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
 
 	override val shouldOnSameChannelWithBot = true
 
-	/**
-	 * TODO
-	 *
-	 * @param context The context of the command, including user interaction details.
-	 * @param manager The guild music manager responsible for handling the audio queue and playback.
-	 * @param response The future response object used to send the result of the command execution.
-	 */
 	override fun executeMusic(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+
+		// TODO
 		val message = createEmbedMessage(context)
 			.setDescription("Not implemented yet")
 			.setColor(JdaColor.PRIMARY)

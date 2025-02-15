@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2024 by JWizard
- * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
- */
 package pl.jwizard.jwc.api.dj
 
 import net.dv8tion.jda.api.entities.MessageEmbed
@@ -28,14 +24,10 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.util.logger
 
-/**
- * A command that removes all tracks added by a specific user from the queue.
- *
- * @param commandEnvironment The environment context for command execution.
- * @author Miłosz Gilga
- */
 @JdaCommand(Command.QUEUE_REMOVE)
-class RemoveMemberTracksCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBase(commandEnvironment) {
+class RemoveMemberTracksCmd(
+	commandEnvironment: CommandEnvironmentBean
+) : DjCommandBase(commandEnvironment) {
 
 	companion object {
 		private val log = logger<RemoveMemberTracksCmd>()
@@ -43,23 +35,21 @@ class RemoveMemberTracksCmd(commandEnvironment: CommandEnvironmentBean) : DjComm
 
 	override val shouldOnSameChannelWithBot = true
 
-	/**
-	 * Executes the command to remove tracks added by a specific member from the queue.
-	 *
-	 * @param context The context of the command, which contains details of the user interaction.
-	 * @param manager The guild music manager responsible for handling the audio queue and playback.
-	 * @param response The future response object used to send the result of the command execution.
-	 * @throws UserNotFoundInGuildException If the specified user is not found in the guild.
-	 * @throws UserNotAddedTracksToQueueException If the specified user has not added any tracks to the queue.
-	 */
-	override fun executeDj(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeDj(
+		context: GuildCommandContext,
+		manager: GuildMusicManager,
+		response: TFutureResponse,
+	) {
 		val userId = context.getArg<Long>(Argument.MEMBER)
+		// max elements per one page
 		val paginatorChunkSize = environment.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 
 		val member = context.guild.members.find { it.idLong == userId }
 			?: throw UserNotFoundInGuildException(context, userId)
 
 		val queue = manager.state.queueTrackScheduler.queue
+
+		// check, if selected member added any track to current audio queue, if not throw exception
 		val userAddAnyTrackToQueue = queue.iterable.any {
 			manager.cachedPlayer?.track?.audioSender?.authorId == member.idLong
 		}
@@ -67,7 +57,12 @@ class RemoveMemberTracksCmd(commandEnvironment: CommandEnvironmentBean) : DjComm
 			throw UserNotAddedTracksToQueueException(context, userId)
 		}
 		val removedTracks = queue.removePositionsFromUser(userId)
-		log.jdaInfo(context, "Remove: %d tracks added by user: %s.", removedTracks.size, member.qualifier)
+		log.jdaInfo(
+			context,
+			"Remove: %d tracks added by user: %s.",
+			removedTracks.size,
+			member.qualifier
+		)
 
 		val embedMessages = mutableListOf<MessageEmbed>()
 		for ((index, chunk) in removedTracks.chunked(paginatorChunkSize).withIndex()) {
@@ -91,12 +86,11 @@ class RemoveMemberTracksCmd(commandEnvironment: CommandEnvironmentBean) : DjComm
 			embedMessages.add(messageBuilder.build())
 		}
 		val paginator = createPaginator(context, embedMessages)
-		val row = paginator.createPaginatorButtonsRow()
 		val initMessage = paginator.initPaginator()
 
 		val commandResponse = CommandResponse.Builder()
 			.addEmbedMessages(initMessage)
-			.addActionRows(row)
+			.addActionRows(paginator.paginatorButtonsRow)
 			.build()
 
 		response.complete(commandResponse)

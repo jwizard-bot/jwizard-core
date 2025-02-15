@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2024 by JWizard
- * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
- */
 package pl.jwizard.jwc.api
 
 import net.dv8tion.jda.api.entities.MessageEmbed
@@ -22,77 +18,44 @@ import pl.jwizard.jwc.exception.command.CommandAvailableOnlyForDiscreteTrackExce
 import pl.jwizard.jwc.exception.track.TrackQueueIsEmptyException
 import pl.jwizard.jwl.i18n.I18nLocaleSource
 
-/**
- * Base class for commands related to music playback.
- *
- * This class extends the [AudioCommandBase] and provides a foundation for commands that involve music playback
- * functionalities. It includes checks for the audio player state and user permissions related to music commands.
- *
- * @param commandEnvironment The environment context for executing the command.
- * @author Miłosz Gilga
- */
 abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : AudioCommandBase(commandEnvironment) {
 
-	/**
-	 * Executes the music command after verifying the audio player state and user permissions.
-	 *
-	 * This method checks whether the audio player is in an appropriate state for the command to be executed. It handles
-	 * scenarios such as:
-	 * - Ensuring the bot is in a voice channel.
-	 * - Checking if the player is actively playing or paused, based on the command's requirements.
-	 * - Validating that the track queue is not empty if required.
-	 *
-	 * @param context The context of the command, containing user interaction details.
-	 * @param manager The guild music manager handling the audio playback.
-	 * @param response The future response object used to send the result of the command execution.
-	 * @throws ActiveAudioPlayingNotFoundException If the player is not playing any audio.
-	 * @throws PlayerNotPausedException If the command requires the player to be paused, but it is not.
-	 * @throws TrackQueueIsEmptyException If the command requires tracks in the queue but none are present.
-	 */
 	final override fun executeAudio(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+		// check, if user cannot try use this command for continuous audio source (ex. radio)
 		if (!manager.state.isDeclaredAudioContentTypeOrNotYetSet(AudioContentType.QUEUE_TRACK)) {
 			throw CommandAvailableOnlyForDiscreteTrackException(context)
 		}
 		val player = manager.cachedPlayer
 		val isActive = context.selfMember.voiceState?.channel?.type == ChannelType.VOICE
-		val inPlayingMode = isActive && player?.track != null
+		val inPlayingMode = isActive && player?.track != null // check if bot is on voice channel and play audio content
 
 		if (shouldPlayingMode && (!inPlayingMode || player?.paused == true) && !shouldPaused) {
+			// throw when bot is not playing audio content (no tracks, currently paused etc.)
 			throw ActiveAudioPlayingNotFoundException(context)
 		}
+		val queue = manager.state.queueTrackScheduler.queue
+
+		// only for playing mode
 		if (!shouldIdleMode) {
 			if (shouldPaused && player?.paused == false) {
+				// throw when user try to use command, when player is not paused
 				throw PlayerNotPausedException(context)
 			}
 			val userVoiceState = checkUserVoiceState(context)
-			if (!shouldEnabledOnFirstAction) {
-				if (manager.cachedPlayer?.track != null || manager.state.queueTrackScheduler.queue.isNotEmpty()) {
-					userIsWithBotOnAudioChannel(userVoiceState, context)
-				}
+			if (!shouldEnabledOnFirstAction && (manager.cachedPlayer?.track != null || queue.isNotEmpty())
+			) {
+				// check, if user is together with bot on voice channel only for second-action commands (command invoked, when
+				// audio content currently playing
+				userIsWithBotOnAudioChannel(userVoiceState, context)
 			}
 		}
-		if (queueShouldNotBeEmpty && manager.state.queueTrackScheduler.queue.size == 0) {
+		if (queueShouldNotBeEmpty && queue.isEmpty()) {
+			// throw when user try to use command when queue is empty
 			throw TrackQueueIsEmptyException(context)
 		}
 		executeMusic(context, manager, response)
 	}
 
-	/**
-	 * Creates a detailed message about the currently playing track.
-	 *
-	 * This method generates an embedded message that includes details such as:
-	 * - The track name and artist.
-	 * - The elapsed time and total duration of the track.
-	 * - The user who added the track to the queue (if available).
-	 * - A visual progress bar indicating the percentage of the track that has been played.
-	 *
-	 * @param context The context of the command, containing user interaction details.
-	 * @param manager The guild music manager responsible for handling the audio queue and playback.
-	 * @param i18nTitle The localized title text for the track (ex. "Now Playing").
-	 * @param i18nPosition The localized text indicating the current position in the track.
-	 * @param track The track that is currently being played.
-	 * @return A MessageEmbed containing the detailed track information to be sent as a response.
-	 */
 	protected fun createDetailedTrackMessage(
 		context: GuildCommandContext,
 		manager: GuildMusicManager,
@@ -122,36 +85,18 @@ abstract class MusicCommandBase(commandEnvironment: CommandEnvironmentBean) : Au
 			.build()
 	}
 
-	/**
-	 * Indicates if the command should only be invoked when the bot is actively playing audio.
-	 */
+	// available only when player is currently playing any audio content
 	protected open val shouldPlayingMode = false
 
-	/**
-	 * Indicates if the command can be invoked even when the bot is idle (not playing audio).
-	 */
+	// available only when player is currently not playing any audio content
 	protected open val shouldIdleMode = false
 
-	/**
-	 * Indicates if the command should only be invoked when the currently playing audio is paused.
-	 */
+	// available only when player is currently paused
 	protected open val shouldPaused = false
 
-	/**
-	 * Indicates if the command requires the track queue to not be empty.
-	 */
+	// available only when audio queue has any tracks
 	protected open val queueShouldNotBeEmpty = false
 
-	/**
-	 * Executes the specific music command functionality.
-	 *
-	 * This method must be implemented by subclasses to define the specific behavior of the music command. It is called
-	 * only after the necessary checks for the player state and user permissions have passed.
-	 *
-	 * @param context The context of the command, containing user interaction details.
-	 * @param manager The guild music manager handling the audio playback.
-	 * @param response The future response object used to send the result of the command execution.
-	 */
 	protected abstract fun executeMusic(
 		context: GuildCommandContext,
 		manager: GuildMusicManager,

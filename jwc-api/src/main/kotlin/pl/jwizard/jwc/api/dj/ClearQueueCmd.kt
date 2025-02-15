@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2024 by JWizard
- * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
- */
 package pl.jwizard.jwc.api.dj
 
 import pl.jwizard.jwc.api.CommandEnvironmentBean
@@ -17,17 +13,10 @@ import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.util.logger
 
-/**
- * Command to clear the current music queue in the bot's music manager.
- *
- * This command removes all tracks currently in the queue and notifies the user about the number of removed tracks. It
- * ensures that the bot and the user are in the same voice channel and that the queue is not empty before execution.
- *
- * @param commandEnvironment The environment context for the command execution.
- * @author Miłosz Gilga
- */
 @JdaCommand(Command.QUEUE_CLEAR)
-class ClearQueueCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBase(commandEnvironment) {
+class ClearQueueCmd(
+	commandEnvironment: CommandEnvironmentBean
+) : DjCommandBase(commandEnvironment) {
 
 	companion object {
 		private val log = logger<ClearQueueCmd>()
@@ -36,14 +25,11 @@ class ClearQueueCmd(commandEnvironment: CommandEnvironmentBean) : DjCommandBase(
 	override val shouldOnSameChannelWithBot = true
 	override val queueShouldNotBeEmpty = true
 
-	/**
-	 * Executes the command to clear the music queue.
-	 *
-	 * @param context The context of the command, including user interaction details.
-	 * @param manager The guild music manager responsible for handling the audio queue.
-	 * @param response The future response object used to send the result of the command execution.
-	 */
-	override fun executeDj(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
+	override fun executeDj(
+		context: GuildCommandContext,
+		manager: GuildMusicManager,
+		response: TFutureResponse,
+	) {
 		val queueTrackScheduler = manager.state.queueTrackScheduler
 
 		val queueSize = queueTrackScheduler.queue.clearAndGetSize()

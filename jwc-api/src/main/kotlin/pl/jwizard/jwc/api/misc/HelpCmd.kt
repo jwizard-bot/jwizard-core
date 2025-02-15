@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2024 by JWizard
- * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
- */
 package pl.jwizard.jwc.api.misc
 
 import net.dv8tion.jda.api.entities.MessageEmbed
@@ -26,15 +22,6 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
 import java.util.*
 
-/**
- * Command class responsible for handling the `Help` command. This command provides a list of available commands in
- * the bot and helps the user navigate through them.
- *
- * @property commandDataSupplier Supplies metadata and definitions for bot commands.
- * @property moduleDataSupplier Supplies metadata and definitions for command modules.
- * @param commandEnvironment The environment context for the command execution.
- * @author Miłosz Gilga
- */
 @JdaCommand(Command.HELP)
 class HelpCmd(
 	private val commandDataSupplier: CommandDataSupplier,
@@ -42,112 +29,58 @@ class HelpCmd(
 	commandEnvironment: CommandEnvironmentBean,
 ) : CommandBase(commandEnvironment), GlobalCommandHandler {
 
-	/**
-	 * Executes the `Help` command in a guild-specific context. Filters out disabled commands and modules for the guild
-	 * and displays the remaining ones in a paginated embed format.
-	 *
-	 * @param context The guild command context, including guild and user details.
-	 * @param response The future response object used to send the result asynchronously.
-	 */
 	override fun execute(context: GuildCommandContext, response: TFutureResponse) {
-		val disabledCommands = commandDataSupplier.getDisabledGuildCommands(context.guildDbId, context.isSlashEvent)
+		val disabledCommands = commandDataSupplier
+			.getDisabledGuildCommands(context.guildDbId, context.isSlashEvent)
 		val disabledModules = moduleDataSupplier.getDisabledGuildModules(context.guildDbId)
 
-		val guildCommands = Command.entries.filter { it.dbId !in disabledCommands && it.module.dbId !in disabledModules }
+		// get only enabled guild commands based disabled commands and modules
+		val guildCommands = Command.entries.filter {
+			it.dbId !in disabledCommands && it.module.dbId !in disabledModules
+		}
 		executeCommand(guildCommands, context, response)
 	}
 
-	/**
-	 * Executes the `Help` command in a global context. Displays all available commands without guild-specific filtering.
-	 *
-	 * @param context The global command context, including user and interaction details.
-	 * @param response The future response object used to send the result asynchronously.
-	 */
+	// run event, when user executed this command as global Discord interaction
 	override fun executeGlobal(context: GlobalCommandContext, response: TFutureResponse) =
 		executeCommand(Command.entries, context, response)
 
-	/**
-	 * Checks whether the command should be executed in private mode. If the command is executed with a "private"
-	 * argument set to true, it returns the author's ID to restrict visibility.
-	 *
-	 * @param context The context of the command execution.
-	 * @return The author's ID if the command is private, or null if it is not private.
-	 */
 	override fun isPrivate(context: GuildCommandContext): Long? {
 		val isPrivate = context.getNullableArg<Boolean>(Argument.PRIVATE)
 		return if (isPrivate == true) context.author.idLong else null
 	}
 
-	/**
-	 * Handles the actual execution of the `Help` command. Creates paginated embeds with available commands and sends
-	 * them as a response.
-	 *
-	 * @param commands A list of commands to include in the response.
-	 * @param context The command execution context.
-	 * @param response The future response object used to send the result asynchronously.
-	 */
-	private fun executeCommand(commands: List<Command>, context: CommandBaseContext, response: TFutureResponse) {
+	private fun executeCommand(
+		commands: List<Command>,
+		context: CommandBaseContext,
+		response: TFutureResponse
+	) {
 		val paginator = createPaginator(context, createHelpComponents(context, commands))
-		val row = paginator.createPaginatorButtonsRow()
 		val initMessage = paginator.initPaginator()
 
 		val commandResponse = CommandResponse.Builder()
 			.addEmbedMessages(initMessage)
-			.addActionRows(row)
+			.addActionRows(paginator.paginatorButtonsRow)
 			.build()
 
 		response.complete(commandResponse)
 	}
 
-	/**
-	 * Creates a list of embed messages containing available bot commands and their descriptions. The commands are split
-	 * into chunks, and each chunk is displayed in a separate embed.
-	 *
-	 * @param context The context of the command execution.
-	 * @param commands A list of command details to be included in the embed.
-	 * @return A list of MessageEmbed objects, each containing a chunk of commands with descriptions.
-	 */
 	private fun createHelpComponents(
 		context: CommandBaseContext,
 		commands: List<Command>,
 	): List<MessageEmbed> {
-		val sortedCommands = commands.sorted()
+		val lang = context.language
+		val paginatorChunkSize = environment.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 
 		val website = environment.getProperty<String>(BotProperty.LINK_WEBSITE)
 		val statusPage = environment.getProperty<String>(BotProperty.LINK_STATUS)
 		val repository = environment.getProperty<String>(BotProperty.LINK_REPOSITORY)
 		val docsLink = createLinkFromFragment(BotProperty.LINK_FRAGMENT_DOCS)
 
-		val parsedCommands = parseCommandsWithDescription(context, sortedCommands)
-		val lang = context.language
-
-		val descriptionElements = listOf(
-			mdBold(i18n.t(I18nResponseSource.HELPFUL_LINKS, lang).uppercase(Locale.getDefault())),
-			mdLink(i18n.t(I18nResponseSource.BOT_WEBSITE, lang), website),
-			mdLink(i18n.t(I18nResponseSource.INFRA_CURRENT_STATUS, lang), statusPage),
-			mdLink(i18n.t(I18nResponseSource.BOT_SOURCE_CODE, lang), repository),
-			mdLink(i18n.t(I18nResponseSource.BOT_DOCUMENTATION, lang), docsLink),
-			"",
-			mdBold("${i18n.t(I18nResponseSource.COMMANDS, lang).uppercase(Locale.getDefault())} (${commands.size})"),
-		)
-		return createEmbedMessages(context, parsedCommands, descriptionElements)
-	}
-
-	/**
-	 * Parses the given commands and generates a map where keys represent the formatted command names, and values contain
-	 * their descriptions.
-	 *
-	 * @param context The context of the command execution.
-	 * @param guildCommands A sorted list of command details to be included in the embed.
-	 * @return A map with command names as keys and descriptions as values.
-	 */
-	private fun parseCommandsWithDescription(
-		context: CommandBaseContext,
-		guildCommands: List<Command>
-	): Map<String, String> {
-		val commands = mutableMapOf<String, String>()
-		val lang = context.language
-		for (details in guildCommands) {
+		val parsedCommands = mutableMapOf<String, String>()
+		// sort commands alphabetically
+		for (details in commands.sorted()) {
 			val commandLink = createLinkFromFragment(BotProperty.LINK_FRAGMENT_COMMAND, details.toUrl)
 			val keyJoiner = StringJoiner("")
 			val descriptionJoiner = StringJoiner("")
@@ -159,28 +92,24 @@ class HelpCmd(
 			descriptionJoiner.add(" ")
 			descriptionJoiner.add(i18n.t(details, lang))
 
-			commands[keyJoiner.toString()] = descriptionJoiner.toString()
+			parsedCommands[keyJoiner.toString()] = descriptionJoiner.toString()
 		}
-		return commands
-	}
 
-	/**
-	 * Creates a list of embed messages that display a chunk of commands and their descriptions. The descriptionElements
-	 * parameter allows additional text or links to be included in the first embed.
-	 *
-	 * @param context The context of the command execution.
-	 * @param commands A map of command names and descriptions to be included in the embed.
-	 * @param descriptionElements A list of additional elements (ex. links) to be displayed in the first embed.
-	 * @return A list of MessageEmbed objects, each containing a chunk of commands with descriptions.
-	 */
-	private fun createEmbedMessages(
-		context: CommandBaseContext,
-		commands: Map<String, String>,
-		descriptionElements: List<String>,
-	): List<MessageEmbed> {
-		val lang = context.language
-		val paginatorChunkSize = environment.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
-		val listOfChunkedCommands = commands.entries.chunked(paginatorChunkSize).map { chunk ->
+		val descriptionElements = listOf(
+			mdBold(i18n.t(I18nResponseSource.HELPFUL_LINKS, lang).uppercase(Locale.getDefault())),
+			mdLink(i18n.t(I18nResponseSource.BOT_WEBSITE, lang), website),
+			mdLink(i18n.t(I18nResponseSource.INFRA_CURRENT_STATUS, lang), statusPage),
+			mdLink(i18n.t(I18nResponseSource.BOT_SOURCE_CODE, lang), repository),
+			mdLink(i18n.t(I18nResponseSource.BOT_DOCUMENTATION, lang), docsLink),
+			"",
+			mdBold(
+				"${
+					i18n.t(I18nResponseSource.COMMANDS, lang).uppercase(Locale.getDefault())
+				} (${commands.size})"
+			),
+		)
+
+		val listOfChunkedCommands = parsedCommands.entries.chunked(paginatorChunkSize).map { chunk ->
 			chunk.associate { it.toPair() }
 		}
 		val messages = mutableListOf<MessageEmbed>()

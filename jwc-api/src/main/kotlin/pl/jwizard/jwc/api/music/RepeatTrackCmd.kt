@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2024 by JWizard
- * Originally developed by Miłosz Gilga <https://miloszgilga.pl>
- */
 package pl.jwizard.jwc.api.music
 
 import pl.jwizard.jwc.api.CommandEnvironmentBean
@@ -22,15 +18,6 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.util.logger
 
-/**
- * Command to set the number of times the currently playing track should repeat.
- *
- * This command allows the user to specify how many times the currently playing track will repeat. It checks that the
- * requested repeat count is within valid bounds and updates the music manager accordingly.
- *
- * @param commandEnvironment The environment context for executing the command.
- * @author Miłosz Gilga
- */
 @JdaCommand(Command.REPEAT_SET)
 class RepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandBase(commandEnvironment) {
 
@@ -42,20 +29,10 @@ class RepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandB
 	override val shouldOnSameChannelWithBot = true
 	override val shouldBeContentSenderOrSuperuser = true
 
-	/**
-	 * Executes the repeat command to set the number of times the current track will repeat.
-	 *
-	 * This method retrieves the repeat count from the command context, checks if it is within the valid bounds, and
-	 * updates the track scheduler with the specified repeat count. If the count is out of bounds, it throws a
-	 * [TrackRepeatsOutOfBoundException].
-	 *
-	 * @param context The context of the command, containing user interaction details.
-	 * @param manager The guild music manager responsible for handling the audio queue and playback.
-	 * @param response The future response object used to send the result of the command execution.
-	 */
 	override fun executeMusic(context: GuildCommandContext, manager: GuildMusicManager, response: TFutureResponse) {
 		val repeatsCount = context.getArg<Int>(Argument.COUNT)
 
+		// fetch guild-based properties from DB in single SQL query
 		val multipleProperties = environment.getGuildMultipleProperties(
 			guildProperties = listOf(GuildProperty.MIN_REPEATS_OF_TRACK, GuildProperty.MAX_REPEATS_OF_TRACK),
 			guildId = context.guild.idLong
@@ -63,6 +40,7 @@ class RepeatTrackCmd(commandEnvironment: CommandEnvironmentBean) : MusicCommandB
 		val minRepeats = multipleProperties.getProperty<Int>(GuildProperty.MIN_REPEATS_OF_TRACK)
 		val maxRepeats = multipleProperties.getProperty<Int>(GuildProperty.MAX_REPEATS_OF_TRACK)
 
+		// check, if repeats count incoming from user has exceeded declared min and max repeats in guild settings
 		if (repeatsCount < minRepeats || repeatsCount > maxRepeats) {
 			throw TrackRepeatsOutOfBoundException(context, minRepeats, maxRepeats)
 		}
