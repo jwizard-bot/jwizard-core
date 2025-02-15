@@ -1,7 +1,6 @@
 package pl.jwizard.jwc.core.jda.emoji
 
 import net.dv8tion.jda.api.JDAInfo
-import pl.jwizard.jwac.util.logger
 import pl.jwizard.jwc.core.jda.JdaShardManagerBean
 import pl.jwizard.jwc.core.jda.emoji.BotEmoji.entries
 import pl.jwizard.jwc.core.property.BotProperty
@@ -10,6 +9,7 @@ import pl.jwizard.jwl.http.HttpClientFacadeBean
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.util.ext.getAsLong
 import pl.jwizard.jwl.util.ext.getAsText
+import pl.jwizard.jwl.util.logger
 
 @SingletonComponent
 class BotEmojisCacheBean(
