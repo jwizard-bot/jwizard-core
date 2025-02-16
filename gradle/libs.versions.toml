@@ -1,5 +1,6 @@
 [versions]
 jdaVersion = "5.1.0"
+junitJupiterVersion = "5.11.4"
 jwizardLibVersion = "latest"
 kotlinVersion = "2.0.20"
 lavalinkProtocolVersion = "4.0.8"
@@ -12,6 +13,8 @@ slf4jApiVersion = "2.0.16"
 
 [libraries]
 jda = { module = "net.dv8tion:JDA", version.ref = "jdaVersion" }
+junitJupiter = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiterVersion" }
+junitJupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiterVersion" }
 jwizardLib = { module = "pl.jwizard:jwizard-lib", version.ref = "jwizardLibVersion" }
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinVersion" }
 kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlinVersion" }

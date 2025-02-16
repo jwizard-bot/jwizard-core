@@ -44,11 +44,15 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Clean build directory
-        run: ./gradlew clean --no-daemon
+      - name: Run tests
+        run: ./gradlew clean test --no-daemon
+        env:
+          JWIZARD_VERSION: ${{ steps.version.outputs.sha_short }}
+          JWIZARD_MAVEN_NAME: ${{ secrets.MVN_LIB_READER_NAME }}
+          JWIZARD_MAVEN_SECRET: ${{ secrets.MVN_LIB_READER_SECRET }}
 
       - name: Package to JAR
-        run: ./gradlew shadowJar --no-daemon
+        run: ./gradlew clean shadowJar --no-daemon
         env:
           JWIZARD_VERSION: ${{ steps.version.outputs.sha_short }}
           JWIZARD_MAVEN_NAME: ${{ secrets.MVN_LIB_READER_NAME }}

@@ -50,6 +50,16 @@ subprojects {
 		implementation libs.logbackCore
 		implementation libs.logbackClassic
 		implementation libs.slf4jApi
+
+		testImplementation libs.junitJupiter
+		testImplementation libs.junitJupiterEngine
+	}
+
+	test {
+		useJUnitPlatform()
+		testLogging {
+			events "passed", "skipped", "failed"
+		}
 	}
 
 	compileKotlin {
