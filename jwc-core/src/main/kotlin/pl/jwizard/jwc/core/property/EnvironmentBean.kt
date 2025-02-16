@@ -13,7 +13,7 @@ import kotlin.reflect.KClass
 @SingletonComponent
 class EnvironmentBean(
 	private val ioCKtContextFactory: IoCKtContextFactory,
-) : BaseEnvironment(ioCKtContextFactory) {
+) : BaseEnvironment() {
 	final inline fun <reified T : Any> getGuildNullableProperty(
 		guildProperty: GuildProperty,
 		guildId: Long,
