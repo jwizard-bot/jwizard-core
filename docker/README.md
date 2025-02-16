@@ -1,9 +1,9 @@
 # JWizard Core
 
-JWizard is an open-source Discord music bot handling audio content from various multimedia sources with innovative web
-player. This image contains the core of the application, which supports the Discord API event handlers and message
-broker handling events from web interface. Use JWizard Audio Client for make interactions with Lavalink nodes. Ready
-for clustering based on shard-offset system.
+JWizard is an open-source Discord music bot that manages audio content from various multimedia
+sources and features an innovative web player. This repository contains the core of the application,
+which supports Discord API event handlers and a message broker for handling events from the web
+interface. It is also designed for clustering, utilizing a shard-offset system.
 
 [Webpage](https://jwizard.pl)
 | [GitHub repository](https://github.com/jwizard-bot/jwizard-core)
@@ -13,18 +13,18 @@ for clustering based on shard-offset system.
 
 ```
 instance 0              instance 1       ...     instance N
-├─ cluster 0            ├─ cluster 0
+├─ process 0            ├─ process 0
 │  ├─ shards 0-9        │  ├─ shards 0-9
-├─ cluster 1            ├─ cluster 1
+├─ process 1            ├─ process 1
 │  ├─ shards 10-19      │  ├─ shards 10-19
 │  ...                  │  ...
-├─ cluster N            ├─ cluster N
+├─ process N            ├─ process N
 ```
 
 > NOTE: Min and max shard defining shard offset are inclusive.
 
-More about sharding, clustering multiple concurrent instances and shards fragmentation (different shard ranges for
-distributed JVM architecture) you will find here:
+More about sharding, clustering multiple concurrent instances and shards fragmentation (different
+shard ranges for distributed JVM architecture) you will find here:
 
 * [https://discord.com/developers/docs/events/gateway#sharding](https://discord.com/developers/docs/events/gateway#sharding)
 * [https://skelmis.co.nz/posts/discord-bot-sharding-and-clustering](https://skelmis.co.nz/posts/discord-bot-sharding-and-clustering)
@@ -44,7 +44,7 @@ docker build \
 * Using command:
 
 ```bash
-# for 2 concurrent instances, one cluster per instance with 10 shards per cluster
+# for 2 concurrent instances, one process per instance with 10 shards per process
 docker run -d \
   --name jwizard-core \
   -p 6071:6071 \
@@ -54,7 +54,6 @@ docker run -d \
   -e JWIZARD_XMS=1024m \
   -e JWIZARD_XMX=1024m \
   -e JWIZARD_JDA_INSTANCE_NAME=core-instance-0 \
-  -e JWIZARD_JDA_SHARDING_CLUSTER=0 \
   -e JWIZARD_JDA_SHARDING_OFFSET_START=0 \
   -e JWIZARD_JDA_SHARDING_OFFSET_END=9 \
   milosz08/jwizard-core:latest
@@ -68,7 +67,6 @@ docker run -d \
   -e JWIZARD_XMS=1024m \
   -e JWIZARD_XMX=1024m \
   -e JWIZARD_JDA_INSTANCE_NAME=core-instance-1 \
-  -e JWIZARD_JDA_SHARDING_CLUSTER=0 \
   -e JWIZARD_JDA_SHARDING_OFFSET_START=0 \
   -e JWIZARD_JDA_SHARDING_OFFSET_END=9 \
   milosz08/jwizard-core:latest
@@ -77,7 +75,7 @@ docker run -d \
 * Using `docker-compose.yml` file:
 
 ```yaml
-# for 2 concurrent instances, one cluster per instance with 10 shards per cluster
+# for 2 concurrent instances, one process per instance with 10 shards per process
 
 services:
   jwizard-core-instance-0:
@@ -92,7 +90,6 @@ services:
       JWIZARD_XMS: 1024m
       JWIZARD_XMX: 1024m
       JWIZARD_JDA_INSTANCE_NAME: core-instance-0
-      JWIZARD_JDA_SHARDING_CLUSTER: 0
       JWIZARD_JDA_SHARDING_OFFSET_START: 0
       JWIZARD_JDA_SHARDING_OFFSET_END: 9
     networks:
@@ -110,7 +107,6 @@ services:
       JWIZARD_XMS: 1024m
       JWIZARD_XMX: 1024m
       JWIZARD_JDA_INSTANCE_NAME: core-instance-1
-      JWIZARD_JDA_SHARDING_CLUSTER: 0
       JWIZARD_JDA_SHARDING_OFFSET_START: 0
       JWIZARD_JDA_SHARDING_OFFSET_END: 9
     networks:

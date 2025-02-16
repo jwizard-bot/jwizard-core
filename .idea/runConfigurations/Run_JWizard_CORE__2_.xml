@@ -3,7 +3,7 @@
     <option name="MAIN_CLASS_NAME" value="pl.jwizard.jwc.app.JWizardCoreEntrypointKt" />
     <module name="jwizard-core.jwc-app.main" />
     <shortenClasspath name="NONE" />
-    <option name="VM_PARAMETERS" value="-Druntime.profiles=dev -Denv.enabled=true -Djda.instance.name=core-instance-1 -Djda.sharding.cluster=0 -Djda.sharding.offset.start=0 -Djda.sharding.offset.end=1 -Xmx1G" />
+    <option name="VM_PARAMETERS" value="-Druntime.profiles=dev -Denv.enabled=true -Djda.instance.name=core-instance-1 -Djda.sharding.offset.start=0 -Djda.sharding.offset.end=1 -Xmx1G" />
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
       <option name="IS_SUBST" value="false" />

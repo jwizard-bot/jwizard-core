@@ -129,10 +129,9 @@ in [jwizard-lib](https://github.com/jwizard-bot/jwizard-lib) repository.
 -Druntime.profiles=dev
 -Denv.enabled=true # optional, if false JWizard will prevent read .env file
 
--Djda.instance.name=core-instance-N # bot instance (WARN, this refer to Vault backend prefix, not for clustering key)
--Djda.sharding.cluster=<cluster name (key)> # name of the cluster (also cluster key)
--Djda.sharding.offset.start=<number> # shard ID which starts (inclusive) shards pool in this cluster
--Djda.sharding.offset.end=<number> # shard ID which end (inclusive) shards pool in this cluster
+-Djda.instance.name=core-instance-N # bot instance refer to Vault backend prefix
+-Djda.sharding.offset.start=<number> # shard ID which starts (inclusive) shards pool in process
+-Djda.sharding.offset.end=<number> # shard ID which end (inclusive) shards pool in process
 
 -Xms1G -Xmx1G # optional, see NOTE
 # ... rest parameters, ex. JVM GC configuration
@@ -155,12 +154,12 @@ where:
 
 ```
 instance 0              instance 1       ...     instance N
-├─ cluster 0            ├─ cluster 0
+├─ process 0            ├─ process 0
 │  ├─ shards 0-9        │  ├─ shards 0-9
-├─ cluster 1            ├─ cluster 1
+├─ process 1            ├─ process 1
 │  ├─ shards 10-19      │  ├─ shards 10-19
 │  ...                  │  ...
-├─ cluster N            ├─ cluster N
+├─ process N            ├─ process N
 ```
 
 More about sharding, clustering multiple concurrent instances and shards fragmentation (different
