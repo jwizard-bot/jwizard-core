@@ -11,18 +11,18 @@ class JdaColorsCacheBean(private val environment: EnvironmentBean) {
 		private val log = logger<JdaColorsCacheBean>()
 
 		// selected if color not found
-		private const val DEFAULT_COLOR = 0x000000
+		private const val DEFAULT_COLOR = "#000000"
 	}
 
-	private val colors = mutableMapOf<JdaColor, Int>()
+	private val colors = mutableMapOf<JdaColor, String>()
 
 	fun loadColors() {
 		colors.putAll(JdaColor.entries.associateWith {
-			Integer.decode(environment.getProperty(it.botProperty))
+			environment.getProperty(it.botProperty)
 		})
 		val loadedColors = colors.map { (key, value) -> "$key: ${"#%06X".format(value)}" }
 		log.info("Load: {} colors: {}.", loadedColors.size, loadedColors)
 	}
 
-	fun getHexColor(jdaColor: JdaColor) = Color(colors[jdaColor] ?: DEFAULT_COLOR)
+	fun getHexColor(jdaColor: JdaColor): Color = Color.decode(colors[jdaColor] ?: DEFAULT_COLOR)
 }
