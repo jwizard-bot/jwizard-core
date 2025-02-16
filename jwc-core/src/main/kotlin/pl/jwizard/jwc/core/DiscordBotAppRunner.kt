@@ -9,31 +9,28 @@ import pl.jwizard.jwc.core.radio.spi.RadioPlaybackMappersCache
 import pl.jwizard.jwl.AppRunner
 import pl.jwizard.jwl.ioc.IoCKtContextFactory
 import pl.jwizard.jwl.server.HttpServer
-import pl.jwizard.jwl.server.HttpServerHook
 
-object DiscordBotAppRunner : AppRunner(), HttpServerHook {
+object DiscordBotAppRunner : AppRunner() {
 	override fun runWithContext(context: IoCKtContextFactory) {
 		val httpServer = context.getBean(HttpServer::class)
-		httpServer.init(this)
-	}
+		httpServer.init(onServerStart = {
+			val shardsManagerInstance = context.getBean(JdaShardManagerBean::class)
+			val activitySplashes = context.getBean(ActivitySplashesBean::class)
 
-	override fun afterStartServer(context: IoCKtContextFactory) {
-		val shardsManagerInstance = context.getBean(JdaShardManagerBean::class)
-		val activitySplashes = context.getBean(ActivitySplashesBean::class)
+			val radioPlaybackMappersCache = context.getBean(RadioPlaybackMappersCache::class)
+			val commandLoader = context.getBean(CommandsLoader::class)
+			val distributedAudioClientSupplier = context.getBean(DistributedAudioClient::class)
+			val channelListenerGuard = context.getBean(ChannelListenerGuard::class)
 
-		val radioPlaybackMappersCache = context.getBean(RadioPlaybackMappersCache::class)
-		val commandLoader = context.getBean(CommandsLoader::class)
-		val distributedAudioClientSupplier = context.getBean(DistributedAudioClient::class)
-		val channelListenerGuard = context.getBean(ChannelListenerGuard::class)
+			radioPlaybackMappersCache.loadRadioPlaybackClasses()
+			commandLoader.loadClassesViaReflectionApi()
 
-		radioPlaybackMappersCache.loadRadioPlaybackClasses()
-		commandLoader.loadClassesViaReflectionApi()
+			distributedAudioClientSupplier.initClient()
 
-		distributedAudioClientSupplier.initClient()
+			shardsManagerInstance.createShardsManager(distributedAudioClientSupplier)
 
-		shardsManagerInstance.createShardsManager(distributedAudioClientSupplier)
-
-		activitySplashes.initSplashesSequence()
-		channelListenerGuard.initThreadPool()
+			activitySplashes.initSplashesSequence()
+			channelListenerGuard.initThreadPool()
+		})
 	}
 }
