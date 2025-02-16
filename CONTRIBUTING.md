@@ -33,8 +33,7 @@ Please follow these coding standards:
    `SCREAMING_SNAKE_CASE` for constants.
 3. Each Kotlin class should reside in a separate file to avoid clutter in the project.
 4. Avoid mutable variables (`var`); whenever possible, use immutable collections or thread-safe
-   mutable collections
-   (ex. `ConcurrentHashMap` instead of `HashMap`).
+   mutable collections (ex. `ConcurrentHashMap` instead of `HashMap`).
 5. Always use `const` for primitive constants.
 6. Avoid explicitly specifying types when unnecessary (ex. in `get()` constructs).
 7. Use braces on the same line.
