@@ -89,8 +89,7 @@ final class JdaShardManagerBean(
 
 		jvmDisposableHook.initHook()
 
-		val clusterName = environment.getProperty<String>(BotProperty.JDA_SHARDING_CLUSTER)
-		log.info("Init: {} shards for cluster: {}.", shardsCount, clusterName)
+		log.info("Init: {} shards for this process.", shardsCount)
 		log.info("Init shards manager from shard id: {} to: {}.", shardingMinId, shardingMaxId)
 	}
 
