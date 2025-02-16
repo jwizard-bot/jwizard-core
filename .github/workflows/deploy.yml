@@ -6,7 +6,6 @@ on:
       - master
     paths:
       - ".github/workflows/deploy.yml"
-      - "dokka/**"
       - "jwc-*/**"
       - ".dockerignore"
       - "Dockerfile.pipeline"
