@@ -70,7 +70,6 @@ link:
   repository: https://github.com/jwizard-bot
   status: https://status.jwizard.pl
   fragment:
-    docs: '%s/docs'
     command: '%s/commands/%s'
     error-code: '%s/error-codes/%d'
 

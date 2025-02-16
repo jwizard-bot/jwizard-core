@@ -75,7 +75,6 @@ internal class HelpCmd(
 		val website = environment.getProperty<String>(BotProperty.LINK_WEBSITE)
 		val statusPage = environment.getProperty<String>(BotProperty.LINK_STATUS)
 		val repository = environment.getProperty<String>(BotProperty.LINK_REPOSITORY)
-		val docsLink = createLinkFromFragment(BotProperty.LINK_FRAGMENT_DOCS)
 
 		val parsedCommands = mutableMapOf<String, String>()
 		// sort commands alphabetically
@@ -99,7 +98,6 @@ internal class HelpCmd(
 			mdLink(i18n.t(I18nResponseSource.BOT_WEBSITE, lang), website),
 			mdLink(i18n.t(I18nResponseSource.INFRA_CURRENT_STATUS, lang), statusPage),
 			mdLink(i18n.t(I18nResponseSource.BOT_SOURCE_CODE, lang), repository),
-			mdLink(i18n.t(I18nResponseSource.BOT_DOCUMENTATION, lang), docsLink),
 			"",
 			mdBold(
 				"${

@@ -80,9 +80,6 @@ enum class BotProperty(
 	// the repository URL where the bot's source code is hosted
 	LINK_REPOSITORY("link.repository"),
 
-	// fragment link to the official website with documentation
-	LINK_FRAGMENT_DOCS("link.fragment.docs"),
-
 	// fragment link to the bot command reference, detailing all available commands and their usage
 	LINK_FRAGMENT_COMMAND("link.fragment.command"),
 
