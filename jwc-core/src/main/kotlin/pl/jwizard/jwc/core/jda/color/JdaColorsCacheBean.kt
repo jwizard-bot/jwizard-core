@@ -20,8 +20,7 @@ class JdaColorsCacheBean(private val environment: EnvironmentBean) {
 		colors.putAll(JdaColor.entries.associateWith {
 			environment.getProperty(it.botProperty)
 		})
-		val loadedColors = colors.map { (key, value) -> "$key: ${"#%06X".format(value)}" }
-		log.info("Load: {} colors: {}.", loadedColors.size, loadedColors)
+		log.info("Load: {} colors: {}.", colors.size, colors)
 	}
 
 	fun getHexColor(jdaColor: JdaColor): Color = Color.decode(colors[jdaColor] ?: DEFAULT_COLOR)
