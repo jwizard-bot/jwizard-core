@@ -1,7 +1,7 @@
 package pl.jwizard.jwc.api.dj
 
 import net.dv8tion.jda.api.entities.MessageEmbed
-import pl.jwizard.jwc.api.CommandEnvironmentBean
+import pl.jwizard.jwc.api.CommandEnvironment
 import pl.jwizard.jwc.api.DjCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.GuildCommandContext
@@ -26,7 +26,7 @@ import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.QUEUE_REMOVE)
 internal class RemoveMemberTracksCmd(
-	commandEnvironment: CommandEnvironmentBean,
+	commandEnvironment: CommandEnvironment,
 ) : DjCommandBase(commandEnvironment) {
 	companion object {
 		private val log = logger<RemoveMemberTracksCmd>()

@@ -1,7 +1,7 @@
 package pl.jwizard.jwc.api.music
 
 import net.dv8tion.jda.api.entities.MessageEmbed
-import pl.jwizard.jwc.api.CommandEnvironmentBean
+import pl.jwizard.jwc.api.CommandEnvironment
 import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.audio.gateway.player.track.Track
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
@@ -23,7 +23,7 @@ import java.util.*
 
 @JdaCommand(Command.QUEUE_SHOW)
 internal class ShowQueueCmd(
-	commandEnvironment: CommandEnvironmentBean,
+	commandEnvironment: CommandEnvironment,
 ) : MusicCommandBase(commandEnvironment) {
 	override val queueShouldNotBeEmpty = true
 

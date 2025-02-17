@@ -3,10 +3,10 @@ package pl.jwizard.jwc.vote.music
 import net.dv8tion.jda.api.entities.Member
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
-import pl.jwizard.jwc.core.jda.emoji.BotEmojisCacheBean
+import pl.jwizard.jwc.core.jda.emoji.BotEmojisCache
 import pl.jwizard.jwc.vote.I18nVoterResponse
 import pl.jwizard.jwc.vote.VoterComponent
-import pl.jwizard.jwc.vote.VoterEnvironmentBean
+import pl.jwizard.jwc.vote.VoterEnvironment
 import kotlin.reflect.KClass
 
 class MusicVoterComponent(
@@ -14,8 +14,8 @@ class MusicVoterComponent(
 	i18nResponse: I18nVoterResponse,
 	clazz: KClass<*>,
 	onSuccess: (response: TFutureResponse) -> Unit,
-	voterEnvironment: VoterEnvironmentBean,
-	botEmojisCache: BotEmojisCacheBean,
+	voterEnvironment: VoterEnvironment,
+	botEmojisCache: BotEmojisCache,
 ) : VoterComponent(context, i18nResponse, onSuccess, clazz, voterEnvironment, botEmojisCache) {
 	override fun filterVotes(
 		interactionAuthor: Member,

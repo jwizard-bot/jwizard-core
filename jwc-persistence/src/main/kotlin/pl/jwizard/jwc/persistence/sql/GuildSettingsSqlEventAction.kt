@@ -1,18 +1,18 @@
 package pl.jwizard.jwc.persistence.sql
 
+import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.jda.spi.GuildSettingsEventAction
-import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
-import pl.jwizard.jwl.persistence.sql.JdbiQueryBean
+import pl.jwizard.jwl.persistence.sql.JdbiQuery
 import pl.jwizard.jwl.persistence.sql.SqlColumn
 import pl.jwizard.jwl.property.AppBaseListProperty
 import pl.jwizard.jwl.property.AppBaseProperty
+import pl.jwizard.jwl.property.BaseEnvironment
 import java.sql.JDBCType
 
-@SingletonComponent
-internal class GuildSettingsEventActionBean(
-	private val jdbiQuery: JdbiQueryBean,
-	private val environment: EnvironmentBean,
+@Component
+internal class GuildSettingsSqlEventAction(
+	private val jdbiQuery: JdbiQuery,
+	private val environment: BaseEnvironment,
 ) : GuildSettingsEventAction {
 	override fun createGuildSettings(guildId: Long, guildLocale: String): Pair<Boolean, String?> {
 		val guildSettingsAlreadyExist = jdbiQuery.queryForBool(

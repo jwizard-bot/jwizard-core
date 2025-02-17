@@ -2,7 +2,7 @@ package pl.jwizard.jwc.api.misc
 
 import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.api.CommandBase
-import pl.jwizard.jwc.api.CommandEnvironmentBean
+import pl.jwizard.jwc.api.CommandEnvironment
 import pl.jwizard.jwc.command.GlobalCommandHandler
 import pl.jwizard.jwc.command.context.GlobalCommandContext
 import pl.jwizard.jwc.command.context.GuildCommandContext
@@ -26,7 +26,7 @@ import java.util.*
 internal class HelpCmd(
 	private val commandDataSupplier: CommandDataSupplier,
 	private val moduleDataSupplier: ModuleDataSupplier,
-	commandEnvironment: CommandEnvironmentBean,
+	commandEnvironment: CommandEnvironment,
 ) : CommandBase(commandEnvironment), GlobalCommandHandler {
 	override fun execute(context: GuildCommandContext, response: TFutureResponse) {
 		val disabledCommands = commandDataSupplier

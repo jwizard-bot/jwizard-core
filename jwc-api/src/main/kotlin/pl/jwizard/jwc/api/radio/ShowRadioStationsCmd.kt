@@ -1,7 +1,7 @@
 package pl.jwizard.jwc.api.radio
 
 import pl.jwizard.jwc.api.CommandBase
-import pl.jwizard.jwc.api.CommandEnvironmentBean
+import pl.jwizard.jwc.api.CommandEnvironment
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
@@ -17,7 +17,7 @@ import pl.jwizard.jwl.radio.RadioStation
 
 @JdaCommand(Command.RADIO_ALL)
 internal class ShowRadioStationsCmd(
-	commandEnvironment: CommandEnvironmentBean,
+	commandEnvironment: CommandEnvironment,
 ) : CommandBase(commandEnvironment) {
 	override fun execute(context: GuildCommandContext, response: TFutureResponse) {
 		val radioStations = RadioStation.entries

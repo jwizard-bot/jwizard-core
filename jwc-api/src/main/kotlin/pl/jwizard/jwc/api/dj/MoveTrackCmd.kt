@@ -1,6 +1,6 @@
 package pl.jwizard.jwc.api.dj
 
-import pl.jwizard.jwc.api.CommandEnvironmentBean
+import pl.jwizard.jwc.api.CommandEnvironment
 import pl.jwizard.jwc.api.DjCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.GuildCommandContext
@@ -19,7 +19,7 @@ import kotlin.math.abs
 
 @JdaCommand(Command.QUEUE_MOVE)
 internal class MoveTrackCmd(
-	commandEnvironment: CommandEnvironmentBean,
+	commandEnvironment: CommandEnvironment,
 ) : DjCommandBase(commandEnvironment) {
 	companion object {
 		private val log = logger<MoveTrackCmd>()

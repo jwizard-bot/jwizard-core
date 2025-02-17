@@ -1,15 +1,15 @@
 package pl.jwizard.jwc.radio
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import pl.jwizard.jwc.core.jda.color.JdaColorsCacheBean
-import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwl.i18n.I18nBean
-import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
+import org.springframework.stereotype.Component
+import pl.jwizard.jwc.core.jda.color.JdaColorsCache
+import pl.jwizard.jwl.i18n.I18n
+import pl.jwizard.jwl.property.BaseEnvironment
 
-@SingletonComponent
+@Component
 internal class RadioPlaybackMapperEnvironment(
-	val i18nBean: I18nBean,
-	val jdaColorsCache: JdaColorsCacheBean,
+	val i18n: I18n,
+	val jdaColorsCache: JdaColorsCache,
 	val objectMapper: ObjectMapper,
-	val environmentBean: EnvironmentBean,
+	val environment: BaseEnvironment,
 )

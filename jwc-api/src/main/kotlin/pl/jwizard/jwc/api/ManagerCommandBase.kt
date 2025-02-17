@@ -5,7 +5,7 @@ import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.exception.command.UnauthorizedManagerException
 
 internal abstract class ManagerCommandBase(
-	commandEnvironment: CommandEnvironmentBean,
+	commandEnvironment: CommandEnvironment,
 ) : CommandBase(commandEnvironment) {
 	final override fun execute(context: GuildCommandContext, response: TFutureResponse) {
 		if (!context.checkIfAuthorHasPermissions(*(superuserPermissions.toTypedArray()))) {

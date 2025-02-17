@@ -7,12 +7,12 @@ import pl.jwizard.jwc.command.CommandType
 import pl.jwizard.jwc.command.context.GlobalCommandContext
 import pl.jwizard.jwc.command.context.SlashGuildCommandContext
 import pl.jwizard.jwc.core.jda.command.CommandResponse
-import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
+import pl.jwizard.jwc.core.jda.event.JdaEventListener
 import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
 
-@JdaEventListenerBean
-internal class SlashCommandEventHandlerBean(
-	commandEventHandlerEnvironment: CommandEventHandlerEnvironmentBean,
+@JdaEventListener
+internal class SlashCommandEventHandler(
+	commandEventHandlerEnvironment: CommandEventHandlerEnvironment,
 ) : CommandEventHandler<SlashCommandInteractionEvent>(commandEventHandlerEnvironment) {
 	override val commandType = CommandType.SLASH
 

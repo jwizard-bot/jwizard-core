@@ -16,7 +16,7 @@ import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
-import pl.jwizard.jwc.core.jda.emoji.BotEmojisCacheBean
+import pl.jwizard.jwc.core.jda.emoji.BotEmojisCache
 import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.floatingSecToMin
@@ -31,24 +31,21 @@ abstract class VoterComponent(
 	private val response: I18nVoterResponse,
 	private val onSuccess: (response: TFutureResponse) -> Unit,
 	private val clazz: KClass<*>,
-	voterEnvironment: VoterEnvironmentBean,
-	botEmojisCache: BotEmojisCacheBean,
+	private val voterEnvironment: VoterEnvironment,
+	botEmojisCache: BotEmojisCache,
 ) : ButtonInteractionHandler(voterEnvironment.i18n, voterEnvironment.eventQueue, botEmojisCache) {
 	companion object {
 		private val log = logger<VoterComponent>()
 	}
 
 	private val i18n = voterEnvironment.i18n
-	private val environment = voterEnvironment.environment
-	private val jdaColorStore = voterEnvironment.jdaColorStore
-	private val looselyTransportHandler = voterEnvironment.looselyTransportHandler
 
-	private val maxVotingTime = environment.getGuildProperty<Long>(
+	private val maxVotingTime = voterEnvironment.guildEnvironment.getGuildProperty<Long>(
 		guildProperty = GuildProperty.MAX_VOTING_TIME_SEC,
 		guildId = context.guild.idLong
 	)
 
-	private val percentageRatio = environment.getGuildProperty<Int>(
+	private val percentageRatio = voterEnvironment.guildEnvironment.getGuildProperty<Int>(
 		guildProperty = GuildProperty.VOTING_PERCENTAGE_RATIO,
 		guildId = context.guild.idLong,
 	)
@@ -65,7 +62,7 @@ abstract class VoterComponent(
 	fun createInitVoterMessage(): Pair<MessageEmbed, ActionRow> {
 		val initMessage = response.initMessage
 
-		val message = MessageEmbedBuilder(i18n, jdaColorStore, context)
+		val message = MessageEmbedBuilder(i18n, voterEnvironment.jdaColorStore, context)
 			.setTitle(I18nResponseSource.VOTE_POLL)
 			.setDescription(initMessage.message, initMessage.args)
 			.setFooter(I18nVotingSource.MAX_TIME_VOTING, floatingSecToMin(maxVotingTime))
@@ -128,12 +125,16 @@ abstract class VoterComponent(
 		i18nTitle: I18nLocaleSource,
 		messageWithArgs: I18nMessageWithArgs<*>
 	) {
-		val message = MessageEmbedBuilder(i18n, jdaColorStore, context)
+		val message = MessageEmbedBuilder(
+			voterEnvironment.i18n,
+			voterEnvironment.jdaColorStore,
+			context,
+		)
 			.setTitle(i18nTitle)
 			.setDescription(messageWithArgs.message, messageWithArgs.args)
 			.setColor(JdaColor.PRIMARY)
 			.build()
-		looselyTransportHandler.sendViaChannelTransport(
+		voterEnvironment.looselyTransportHandler.sendViaChannelTransport(
 			textChannel = context.textChannel,
 			response = CommandResponse.Builder().addEmbedMessages(message).build(),
 			notificationsSuppressed = context.suppressResponseNotifications,
@@ -148,7 +149,7 @@ abstract class VoterComponent(
 			val endedResult = if (voteState.isPassed) {
 				val futureResponse = CompletableFuture<CommandResponse>()
 				futureResponse.thenAccept {
-					looselyTransportHandler.sendViaChannelTransport(
+					voterEnvironment.looselyTransportHandler.sendViaChannelTransport(
 						context.textChannel,
 						it,
 						context.suppressResponseNotifications,

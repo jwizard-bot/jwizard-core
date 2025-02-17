@@ -5,7 +5,7 @@ import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.util.jdaError
-import pl.jwizard.jwc.exception.ExceptionTrackerHandlerBean
+import pl.jwizard.jwc.exception.ExceptionTrackerHandler
 import pl.jwizard.jwc.exception.UnexpectedException
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 import pl.jwizard.jwl.util.logger
@@ -16,7 +16,7 @@ class AsyncUpdatableHandler(
 	private val context: CommandBaseContext,
 	private val response: TFutureResponse,
 	private val invokerClazz: KClass<*>,
-	exceptionTrackerHandler: ExceptionTrackerHandlerBean,
+	exceptionTrackerHandler: ExceptionTrackerHandler,
 ) {
 	companion object {
 		private val log = logger<AsyncUpdatableHandler>()

@@ -4,8 +4,8 @@ import net.dv8tion.jda.api.events.session.ReadyEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import pl.jwizard.jwc.core.jda.spi.SlashCommandRegisterer
 
-@JdaEventListenerBean
-class ShardEventListenerBean(
+@JdaEventListener
+class ShardEventListener(
 	private val slashCommandRegisterer: SlashCommandRegisterer
 ) : ListenerAdapter() {
 	private var globalSlashCommandsAreSet = false

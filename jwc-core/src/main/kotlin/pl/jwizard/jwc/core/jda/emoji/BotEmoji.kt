@@ -13,10 +13,10 @@ enum class BotEmoji(val displayName: String) {
 	;
 
 	fun toEmoji(
-		botEmojisCache: BotEmojisCacheBean,
+		botEmojisCache: BotEmojisCache,
 	) = toFormatted(botEmojisCache)?.let { Emoji.fromFormatted(it) }
 
-	private fun toFormatted(botEmojisCache: BotEmojisCacheBean): String? {
+	private fun toFormatted(botEmojisCache: BotEmojisCache): String? {
 		val emojis = botEmojisCache.emojis
 		if (!emojis.containsKey(displayName)) {
 			return null

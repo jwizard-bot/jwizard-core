@@ -1,6 +1,6 @@
 package pl.jwizard.jwc.api.vote
 
-import pl.jwizard.jwc.api.CommandEnvironmentBean
+import pl.jwizard.jwc.api.CommandEnvironment
 import pl.jwizard.jwc.api.MusicVoteCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.GuildCommandContext
@@ -9,7 +9,7 @@ import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.exception.track.TrackOffsetOutOfBoundsException
-import pl.jwizard.jwc.vote.VoterEnvironmentBean
+import pl.jwizard.jwc.vote.VoterEnvironment
 import pl.jwizard.jwc.vote.music.MusicVoterResponse
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
@@ -17,8 +17,8 @@ import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.VOTE_SKIPTO)
 internal class VoteSkipQueueToTrackCmd(
-	voterEnvironment: VoterEnvironmentBean,
-	commandEnvironment: CommandEnvironmentBean,
+	voterEnvironment: VoterEnvironment,
+	commandEnvironment: CommandEnvironment,
 ) : MusicVoteCommandBase(voterEnvironment, commandEnvironment) {
 	companion object {
 		private val log = logger<VoteSkipTrackCmd>()

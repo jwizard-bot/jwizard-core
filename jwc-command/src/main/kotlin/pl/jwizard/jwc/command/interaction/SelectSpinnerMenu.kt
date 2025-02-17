@@ -8,14 +8,14 @@ import net.dv8tion.jda.api.interactions.components.LayoutComponent
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu
 import pl.jwizard.jwc.core.i18n.source.I18nVotingSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
-import pl.jwizard.jwc.core.jda.color.JdaColorsCacheBean
+import pl.jwizard.jwc.core.jda.color.JdaColorsCache
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
-import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
+import pl.jwizard.jwc.core.jda.event.queue.EventQueue
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueListener
 import pl.jwizard.jwc.core.util.mdList
 import pl.jwizard.jwc.core.util.toMD5
-import pl.jwizard.jwl.i18n.I18nBean
+import pl.jwizard.jwl.i18n.I18n
 import pl.jwizard.jwl.i18n.I18nLocaleSource
 import java.util.concurrent.TimeUnit
 import kotlin.random.Random
@@ -27,9 +27,9 @@ abstract class SelectSpinnerMenu<T : MenuOption>(
 	private lateinit var trimmedOptions: List<T>
 	private lateinit var message: Message
 
-	fun initEvent(eventQueueBean: EventQueueBean, message: Message) {
+	fun initEvent(eventQueue: EventQueue, message: Message) {
 		this.message = message
-		eventQueueBean.waitForScheduledEvent(
+		eventQueue.waitForScheduledEvent(
 			StringSelectInteractionEvent::class,
 			this,
 			elapsedTimeSec,
@@ -38,8 +38,8 @@ abstract class SelectSpinnerMenu<T : MenuOption>(
 	}
 
 	fun createMenuComponent(
-		i18nBean: I18nBean,
-		jdaColorsCache: JdaColorsCacheBean,
+		i18n: I18n,
+		jdaColorsCache: JdaColorsCache,
 		i18nSource: I18nLocaleSource,
 		minValues: Int = 1,
 		maxValues: Int = 1,
@@ -48,12 +48,12 @@ abstract class SelectSpinnerMenu<T : MenuOption>(
 		val args = mapOf(
 			"resultsFound" to trimmedOptions.size,
 			"elapsedTime" to elapsedTimeSec,
-			"afterTimeResult" to i18nBean.t(
+			"afterTimeResult" to i18n.t(
 				if (randomChoice) I18nVotingSource.RANDOM_RESULT else I18nVotingSource.FIRST_RESULT,
 				context.language
 			),
 		)
-		val message = MessageEmbedBuilder(i18nBean, jdaColorsCache, context)
+		val message = MessageEmbedBuilder(i18n, jdaColorsCache, context)
 			.setDescription(i18nSource, args)
 			.appendDescription(trimmedOptions.joinToString("") {
 				mdList(
@@ -66,7 +66,7 @@ abstract class SelectSpinnerMenu<T : MenuOption>(
 
 		val menuBuilder = StringSelectMenu
 			.create(createComponentId(menuId))
-			.setPlaceholder(i18nBean.t(I18nVotingSource.PICK_AN_OPTION, context.language))
+			.setPlaceholder(i18n.t(I18nVotingSource.PICK_AN_OPTION, context.language))
 			.setMaxValues(minValues)
 			.setMinValues(maxValues)
 

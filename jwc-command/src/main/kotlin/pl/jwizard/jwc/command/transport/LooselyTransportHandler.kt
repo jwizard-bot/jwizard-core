@@ -3,19 +3,19 @@ package pl.jwizard.jwc.command.transport
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import net.dv8tion.jda.api.interactions.components.ActionRow
-import pl.jwizard.jwc.core.jda.JdaShardManagerBean
+import org.springframework.beans.factory.DisposableBean
+import org.springframework.stereotype.Component
+import pl.jwizard.jwc.core.jda.JdaShardManager
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.property.BotProperty
-import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwl.ioc.CleanupAfterIoCDestroy
-import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
+import pl.jwizard.jwl.property.BaseEnvironment
 import java.util.concurrent.TimeUnit
 
-@SingletonComponent
-class LooselyTransportHandlerBean(
-	private val jdaShardManager: JdaShardManagerBean,
-	environment: EnvironmentBean,
-) : CleanupAfterIoCDestroy {
+@Component
+class LooselyTransportHandler(
+	private val jdaShardManager: JdaShardManager,
+	environment: BaseEnvironment,
+) : DisposableBean {
 	private val maxEmbedMessagesBuffer = environment
 		.getProperty<Int>(BotProperty.JDA_INTERACTION_MESSAGE_MAX_EMBEDS)
 

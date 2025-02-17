@@ -3,15 +3,15 @@ package pl.jwizard.jwc.core.jda.embed
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 import pl.jwizard.jwc.core.jda.color.JdaColor
-import pl.jwizard.jwc.core.jda.color.JdaColorsCacheBean
+import pl.jwizard.jwc.core.jda.color.JdaColorsCache
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.util.keyValueFormat
-import pl.jwizard.jwl.i18n.I18nBean
+import pl.jwizard.jwl.i18n.I18n
 import pl.jwizard.jwl.i18n.I18nLocaleSource
 
 class MessageEmbedBuilder(
-	private val i18nBean: I18nBean,
-	private val jdaColorsCache: JdaColorsCacheBean,
+	private val i18n: I18n,
+	private val jdaColorsCache: JdaColorsCache,
 	private val context: CommandBaseContext? = null,
 ) : EmbedBuilder() {
 	fun setTitle(title: String) = apply {
@@ -21,13 +21,13 @@ class MessageEmbedBuilder(
 	fun setTitle(
 		i18nLocaleSource: I18nLocaleSource,
 		args: Map<String, Any?> = emptyMap()
-	) = setTitle(i18nBean.t(i18nLocaleSource, context?.language, args))
+	) = setTitle(i18n.t(i18nLocaleSource, context?.language, args))
 
 	fun setDescription(
 		i18nLocaleSource: I18nLocaleSource,
 		args: Map<String, Any?> = emptyMap()
 	) = apply {
-		super.setDescription(i18nBean.t(i18nLocaleSource, context?.language, args))
+		super.setDescription(i18n.t(i18nLocaleSource, context?.language, args))
 	}
 
 	fun setDescription(description: String) = apply {
@@ -43,7 +43,7 @@ class MessageEmbedBuilder(
 	}
 
 	fun setFooter(i18nKey: I18nLocaleSource, value: Any, iconUrl: String? = null) = apply {
-		super.setFooter(keyValueFormat(i18nBean.t(i18nKey, context?.language), value), iconUrl)
+		super.setFooter(keyValueFormat(i18n.t(i18nKey, context?.language), value), iconUrl)
 	}
 
 	fun setArtwork(url: String?) = apply {
@@ -62,7 +62,7 @@ class MessageEmbedBuilder(
 		key: I18nLocaleSource,
 		value: Any?,
 		inline: Boolean = true
-	) = setKeyValueField(i18nBean.t(key, context?.language), value, inline)
+	) = setKeyValueField(i18n.t(key, context?.language), value, inline)
 
 	fun setKeyValueField(key: String, value: Any?, inline: Boolean = true) = apply {
 		addField(MessageEmbed.Field("$key:", value.toString(), inline))

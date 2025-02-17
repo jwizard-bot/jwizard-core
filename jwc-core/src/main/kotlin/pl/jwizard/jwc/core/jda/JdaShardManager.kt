@@ -10,30 +10,30 @@ import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.api.sharding.ShardManager
 import net.dv8tion.jda.api.utils.cache.CacheFlag
-import pl.jwizard.jwc.core.audio.spi.DistributedAudioClient
-import pl.jwizard.jwc.core.jda.color.JdaColorsCacheBean
-import pl.jwizard.jwc.core.jda.emoji.BotEmojisCacheBean
-import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
+import org.springframework.stereotype.Component
+import pl.jwizard.jwc.core.audio.DistributedAudioClient
+import pl.jwizard.jwc.core.jda.color.JdaColorsCache
+import pl.jwizard.jwc.core.jda.emoji.BotEmojisCache
+import pl.jwizard.jwc.core.jda.event.JdaEventListener
 import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
-import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwl.ioc.IoCKtContextFactory
-import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.jvm.JvmDisposable
 import pl.jwizard.jwl.jvm.JvmDisposableHook
 import pl.jwizard.jwl.property.AppBaseListProperty
+import pl.jwizard.jwl.property.BaseEnvironment
 import pl.jwizard.jwl.util.getUserIdFromTokenWithException
 import pl.jwizard.jwl.util.logger
 
-@SingletonComponent
-final class JdaShardManagerBean(
-	private val environment: EnvironmentBean,
-	private val jdaColorStore: JdaColorsCacheBean,
+@Component
+final class JdaShardManager(
+	private val environment: BaseEnvironment,
+	private val jdaColorStore: JdaColorsCache,
 	private val ioCKtContextFactory: IoCKtContextFactory,
-	private val botEmojisCache: BotEmojisCacheBean,
+	private val botEmojisCache: BotEmojisCache,
 ) : JvmDisposable {
 	companion object {
-		private val log = logger<JdaShardManagerBean>()
+		private val log = logger<JdaShardManager>()
 	}
 
 	private final lateinit var shardManager: ShardManager
@@ -55,13 +55,14 @@ final class JdaShardManagerBean(
 		val permissions = permissionFlags.map { Permission.valueOf(it) }
 		log.info("Load: {} JDA permissions.", permissions.size)
 
-		val eventListeners =
-			ioCKtContextFactory.getBeansAnnotatedWith<EventListener, JdaEventListenerBean>()
+		val eventListeners = ioCKtContextFactory
+			.getBeansAnnotatedWith<EventListener, JdaEventListener>()
+
 		log.info(
 			"Load: {} JDA event listeners: {}.",
 			eventListeners.size,
-			eventListeners.map { it.javaClass.simpleName })
-
+			eventListeners.map { it.javaClass.simpleName },
+		)
 		jdaToken = environment.getProperty<String>(BotProperty.JDA_SECRET_TOKEN)
 		botEmojisCache.loadCustomEmojis(this)
 

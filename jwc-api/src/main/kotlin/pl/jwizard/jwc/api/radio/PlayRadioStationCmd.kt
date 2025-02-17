@@ -1,6 +1,6 @@
 package pl.jwizard.jwc.api.radio
 
-import pl.jwizard.jwc.api.CommandEnvironmentBean
+import pl.jwizard.jwc.api.CommandEnvironment
 import pl.jwizard.jwc.api.RadioCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.GuildCommandContext
@@ -13,7 +13,7 @@ import pl.jwizard.jwl.radio.RadioStation
 
 @JdaCommand(Command.RADIO_PLAY)
 internal class PlayRadioStationCmd(
-	commandEnvironment: CommandEnvironmentBean,
+	commandEnvironment: CommandEnvironment,
 ) : RadioCommandBase(commandEnvironment) {
 	override val shouldOnSameChannelWithBot = true
 	override val shouldRadioIdle = true

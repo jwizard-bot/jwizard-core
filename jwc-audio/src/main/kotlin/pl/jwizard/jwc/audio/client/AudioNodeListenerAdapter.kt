@@ -2,14 +2,14 @@ package pl.jwizard.jwc.audio.client
 
 import pl.jwizard.jwc.audio.gateway.AudioNodeListener
 import pl.jwizard.jwc.audio.gateway.event.player.*
-import pl.jwizard.jwc.audio.manager.MusicManagersBean
+import pl.jwizard.jwc.audio.manager.MusicManagersCache
 import pl.jwizard.jwc.audio.scheduler.AudioScheduleHandler
 import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.util.logger
 
 @SingletonComponent
 internal class AudioNodeListenerAdapter(
-	private val musicManagers: MusicManagersBean,
+	private val musicManagers: MusicManagersCache,
 ) : AudioNodeListener {
 	companion object {
 		private val log = logger<AudioNodeListenerAdapter>()

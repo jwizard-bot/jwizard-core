@@ -7,16 +7,16 @@ import pl.jwizard.jwc.command.interaction.ButtonInteractionHandler
 import pl.jwizard.jwc.command.interaction.InteractionButton
 import pl.jwizard.jwc.command.interaction.InteractionResponse
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
-import pl.jwizard.jwc.core.jda.emoji.BotEmojisCacheBean
-import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
-import pl.jwizard.jwl.i18n.I18nBean
+import pl.jwizard.jwc.core.jda.emoji.BotEmojisCache
+import pl.jwizard.jwc.core.jda.event.queue.EventQueue
+import pl.jwizard.jwl.i18n.I18n
 
 class Paginator(
 	private val context: CommandBaseContext,
 	private val pages: List<MessageEmbed>,
-	i18n: I18nBean,
-	eventQueue: EventQueueBean,
-	botEmojisCache: BotEmojisCacheBean,
+	i18n: I18n,
+	eventQueue: EventQueue,
+	botEmojisCache: BotEmojisCache,
 ) : ButtonInteractionHandler(i18n, eventQueue, botEmojisCache) {
 	companion object {
 		private const val CURRENT_BUTTON_ID = "current"

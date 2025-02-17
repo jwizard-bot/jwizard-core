@@ -1,13 +1,13 @@
 package pl.jwizard.jwc.persistence.sql
 
+import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.property.spi.RemotePropertySupplier
-import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
-import pl.jwizard.jwl.persistence.sql.JdbiQueryBean
+import pl.jwizard.jwl.persistence.sql.JdbiQuery
 import kotlin.reflect.KClass
 
-@SingletonComponent
-internal class RemotePropertySupplierBean(
-	private val jdbiQuery: JdbiQueryBean,
+@Component
+internal class RemotePropertySqlSupplier(
+	private val jdbiQuery: JdbiQuery,
 ) : RemotePropertySupplier {
 	override fun <T : Any> getProperty(columnName: String, guildId: Long, type: KClass<T>): T? {
 		val sql = jdbiQuery.parse(

@@ -3,7 +3,7 @@ package pl.jwizard.jwc.api.dj
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel
 import net.dv8tion.jda.api.exceptions.PermissionException
-import pl.jwizard.jwc.api.CommandEnvironmentBean
+import pl.jwizard.jwc.api.CommandEnvironment
 import pl.jwizard.jwc.api.DjCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.GuildCommandContext
@@ -23,7 +23,7 @@ import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.JOIN)
 internal class JoinToChannelCmd(
-	commandEnvironment: CommandEnvironmentBean
+	commandEnvironment: CommandEnvironment,
 ) : DjCommandBase(commandEnvironment) {
 	companion object {
 		private val log = logger<JoinToChannelCmd>()

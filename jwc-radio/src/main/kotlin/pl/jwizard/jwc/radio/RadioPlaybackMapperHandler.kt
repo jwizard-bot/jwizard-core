@@ -26,11 +26,11 @@ import java.nio.charset.StandardCharsets
 internal abstract class RadioPlaybackMapperHandler(
 	environment: RadioPlaybackMapperEnvironment,
 ) : RadioPlaybackMessage {
-	private val i18n = environment.i18nBean
+	private val i18n = environment.i18n
 	private val jdaColorStore = environment.jdaColorsCache
 	protected val objectMapper = environment.objectMapper
 
-	private val redirectQuery = environment.environmentBean
+	private val redirectQuery = environment.environment
 		.getProperty<String>(BotProperty.RADIO_PLAYBACK_EXTENDED_LINK)
 
 	private val httpClient = HttpClient.newHttpClient()

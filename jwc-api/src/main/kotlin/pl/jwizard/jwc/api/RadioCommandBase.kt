@@ -9,7 +9,7 @@ import pl.jwizard.jwc.exception.radio.RadioStationIsNotPlayingException
 import pl.jwizard.jwc.exception.radio.RadioStationIsPlayingException
 
 internal abstract class RadioCommandBase(
-	commandEnvironment: CommandEnvironmentBean,
+	commandEnvironment: CommandEnvironment,
 ) : AudioCommandBase(commandEnvironment) {
 	final override fun executeAudio(
 		context: GuildCommandContext,

@@ -1,6 +1,6 @@
 package pl.jwizard.jwc.api.playlist
 
-import pl.jwizard.jwc.api.CommandEnvironmentBean
+import pl.jwizard.jwc.api.CommandEnvironment
 import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.GuildCommandContext
@@ -12,7 +12,7 @@ import pl.jwizard.jwl.command.Command
 
 @JdaCommand(Command.PLAYLIST_PLAY)
 internal class LoadAndPlayPlaylistCmd(
-	commandEnvironment: CommandEnvironmentBean,
+	commandEnvironment: CommandEnvironment,
 ) : MusicCommandBase(commandEnvironment) {
 	override val shouldOnSameChannelWithBot = true
 

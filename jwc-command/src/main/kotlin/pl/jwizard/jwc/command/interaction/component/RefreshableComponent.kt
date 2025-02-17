@@ -7,16 +7,16 @@ import pl.jwizard.jwc.command.interaction.ButtonInteractionHandler
 import pl.jwizard.jwc.command.interaction.InteractionButton
 import pl.jwizard.jwc.command.interaction.InteractionResponse
 import pl.jwizard.jwc.core.jda.command.CommandBaseContext
-import pl.jwizard.jwc.core.jda.emoji.BotEmojisCacheBean
-import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
-import pl.jwizard.jwl.i18n.I18nBean
+import pl.jwizard.jwc.core.jda.emoji.BotEmojisCache
+import pl.jwizard.jwc.core.jda.event.queue.EventQueue
+import pl.jwizard.jwl.i18n.I18n
 
 class RefreshableComponent(
-	i18nBean: I18nBean,
-	eventQueueBean: EventQueueBean,
-	botEmojisCache: BotEmojisCacheBean,
+	i18n: I18n,
+	eventQueue: EventQueue,
+	botEmojisCache: BotEmojisCache,
 	private val onRefresh: (response: MutableList<MessageEmbed>) -> Unit,
-) : ButtonInteractionHandler(i18nBean, eventQueueBean, botEmojisCache) {
+) : ButtonInteractionHandler(i18n, eventQueue, botEmojisCache) {
 	override val runForButtons = arrayOf(InteractionButton.REFRESH)
 
 	override fun executeEvent(event: ButtonInteractionEvent): InteractionResponse {

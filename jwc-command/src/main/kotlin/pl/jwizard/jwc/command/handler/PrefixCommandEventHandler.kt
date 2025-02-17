@@ -6,14 +6,14 @@ import net.dv8tion.jda.api.requests.RestAction
 import pl.jwizard.jwc.command.CommandType
 import pl.jwizard.jwc.command.context.PrefixGuildCommandContext
 import pl.jwizard.jwc.core.jda.command.CommandResponse
-import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
+import pl.jwizard.jwc.core.jda.event.JdaEventListener
 import pl.jwizard.jwc.core.property.BotProperty
 import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
 import pl.jwizard.jwc.core.property.guild.GuildProperty
 
-@JdaEventListenerBean
-internal class PrefixCommandEventHandlerBean(
-	commandEventHandlerEnvironment: CommandEventHandlerEnvironmentBean,
+@JdaEventListener
+internal class PrefixCommandEventHandler(
+	commandEventHandlerEnvironment: CommandEventHandlerEnvironment,
 ) : CommandEventHandler<MessageReceivedEvent>(commandEventHandlerEnvironment) {
 	companion object {
 		// Regular expression to delimit command arguments

@@ -1,7 +1,7 @@
 package pl.jwizard.jwc.api.manager
 
 import net.dv8tion.jda.api.entities.MessageEmbed
-import pl.jwizard.jwc.api.CommandEnvironmentBean
+import pl.jwizard.jwc.api.CommandEnvironment
 import pl.jwizard.jwc.api.ManagerCommandBase
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
@@ -17,7 +17,7 @@ import pl.jwizard.jwl.i18n.I18nLocaleSource
 
 @JdaCommand(Command.SETTINGS)
 internal class SettingsCmd(
-	commandEnvironment: CommandEnvironmentBean
+	commandEnvironment: CommandEnvironment,
 ) : ManagerCommandBase(commandEnvironment) {
 	override fun executeManager(context: GuildCommandContext, response: TFutureResponse) {
 		val paginatorChunkSize = environment.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)

@@ -7,13 +7,13 @@ import pl.jwizard.jwc.core.i18n.source.I18nVotingSource
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.vote.I18nVoterResponse
-import pl.jwizard.jwc.vote.VoterEnvironmentBean
+import pl.jwizard.jwc.vote.VoterEnvironment
 import pl.jwizard.jwc.vote.music.MusicVoterComponent
 import pl.jwizard.jwc.vote.music.MusicVoterResponse
 
 internal abstract class MusicVoteCommandBase(
-	private val voterEnvironment: VoterEnvironmentBean,
-	commandEnvironment: CommandEnvironmentBean,
+	private val voterEnvironment: VoterEnvironment,
+	commandEnvironment: CommandEnvironment,
 ) : MusicCommandBase(commandEnvironment) {
 	final override fun executeMusic(
 		context: GuildCommandContext,

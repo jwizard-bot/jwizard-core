@@ -1,13 +1,13 @@
 package pl.jwizard.jwc.persistence.sql
 
+import org.springframework.stereotype.Component
 import pl.jwizard.jwc.command.spi.CommandDataSupplier
-import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
-import pl.jwizard.jwl.persistence.sql.JdbiQueryBean
+import pl.jwizard.jwl.persistence.sql.JdbiQuery
 import java.math.BigInteger
 
-@SingletonComponent
-internal class CommandDataSupplierBean(
-	private val jdbiQuery: JdbiQueryBean,
+@Component
+internal class CommandDataSqlSupplier(
+	private val jdbiQuery: JdbiQuery,
 ) : CommandDataSupplier {
 	override fun getDisabledGuildCommands(
 		guildDbId: BigInteger,

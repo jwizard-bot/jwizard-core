@@ -7,7 +7,7 @@ import pl.jwizard.jwc.exception.dj.UnauthorizedDjException
 import pl.jwizard.jwc.exception.dj.UnauthorizedDjOrSenderException
 
 internal abstract class DjCommandBase(
-	commandEnvironment: CommandEnvironmentBean,
+	commandEnvironment: CommandEnvironment,
 ) : MusicCommandBase(commandEnvironment) {
 	final override fun executeMusic(
 		context: GuildCommandContext,

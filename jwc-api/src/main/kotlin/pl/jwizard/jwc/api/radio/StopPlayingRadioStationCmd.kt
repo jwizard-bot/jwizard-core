@@ -1,6 +1,6 @@
 package pl.jwizard.jwc.api.radio
 
-import pl.jwizard.jwc.api.CommandEnvironmentBean
+import pl.jwizard.jwc.api.CommandEnvironment
 import pl.jwizard.jwc.api.RadioCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.GuildCommandContext
@@ -10,7 +10,7 @@ import pl.jwizard.jwl.command.Command
 
 @JdaCommand(Command.RADIO_STOP)
 internal class StopPlayingRadioStationCmd(
-	commandEnvironment: CommandEnvironmentBean,
+	commandEnvironment: CommandEnvironment,
 ) : RadioCommandBase(commandEnvironment) {
 	override val shouldOnSameChannelWithBot = true
 	override val shouldRadioPlaying = true

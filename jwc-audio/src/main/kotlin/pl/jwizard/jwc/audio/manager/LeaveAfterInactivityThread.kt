@@ -1,6 +1,6 @@
 package pl.jwizard.jwc.audio.manager
 
-import pl.jwizard.jwc.audio.client.DistributedAudioClientBean
+import pl.jwizard.jwc.audio.client.DistributedAudioClientImpl
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -12,7 +12,7 @@ import pl.jwizard.jwl.util.logger
 
 class LeaveAfterInactivityThread(
 	private val guildMusicManager: GuildMusicManager,
-	private val audioClient: DistributedAudioClientBean,
+	private val audioClient: DistributedAudioClientImpl,
 ) : JvmFixedPayloadThreadExecutor<Pair<Long, GuildCommandContext>>() {
 	companion object {
 		private val log = logger<LeaveAfterInactivityThread>()

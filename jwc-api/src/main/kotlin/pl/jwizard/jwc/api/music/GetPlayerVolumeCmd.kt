@@ -1,6 +1,6 @@
 package pl.jwizard.jwc.api.music
 
-import pl.jwizard.jwc.api.CommandEnvironmentBean
+import pl.jwizard.jwc.api.CommandEnvironment
 import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.GuildCommandContext
@@ -13,7 +13,7 @@ import pl.jwizard.jwl.command.Command
 
 @JdaCommand(Command.VOLUME)
 internal class GetPlayerVolumeCmd(
-	commandEnvironment: CommandEnvironmentBean,
+	commandEnvironment: CommandEnvironment,
 ) : MusicCommandBase(commandEnvironment) {
 	override val shouldOnSameChannelWithBot = true
 	override val shouldPlayingMode = true

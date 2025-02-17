@@ -18,7 +18,7 @@ import pl.jwizard.jwc.exception.track.TrackQueueIsEmptyException
 import pl.jwizard.jwl.i18n.I18nLocaleSource
 
 internal abstract class MusicCommandBase(
-	commandEnvironment: CommandEnvironmentBean,
+	commandEnvironment: CommandEnvironment,
 ) : AudioCommandBase(commandEnvironment) {
 	final override fun executeAudio(
 		context: GuildCommandContext,

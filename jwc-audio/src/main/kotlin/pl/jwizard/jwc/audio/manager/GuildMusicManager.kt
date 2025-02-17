@@ -3,7 +3,7 @@ package pl.jwizard.jwc.audio.manager
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import pl.jwizard.jwc.audio.client.AudioNodeType
-import pl.jwizard.jwc.audio.client.DistributedAudioClientBean
+import pl.jwizard.jwc.audio.client.DistributedAudioClientImpl
 import pl.jwizard.jwc.audio.loader.QueueTrackLoader
 import pl.jwizard.jwc.audio.loader.RadioStreamLoader
 import pl.jwizard.jwc.command.context.GuildCommandContext
@@ -20,8 +20,8 @@ import pl.jwizard.jwl.util.logger
 import java.util.concurrent.TimeUnit
 
 class GuildMusicManager(
-	val bean: MusicManagersBean,
-	private val audioClient: DistributedAudioClientBean,
+	val bean: MusicManagersCache,
+	private val audioClient: DistributedAudioClientImpl,
 	commandContext: GuildCommandContext,
 	future: TFutureResponse,
 ) {

@@ -3,16 +3,16 @@ package pl.jwizard.jwc.command.interaction
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
 import net.dv8tion.jda.internal.interactions.component.ButtonImpl
-import pl.jwizard.jwc.core.jda.emoji.BotEmojisCacheBean
-import pl.jwizard.jwc.core.jda.event.queue.EventQueueBean
+import pl.jwizard.jwc.core.jda.emoji.BotEmojisCache
+import pl.jwizard.jwc.core.jda.event.queue.EventQueue
 import pl.jwizard.jwc.core.jda.event.queue.EventQueueListener
-import pl.jwizard.jwl.i18n.I18nBean
+import pl.jwizard.jwl.i18n.I18n
 import java.util.concurrent.TimeUnit
 
 abstract class ButtonInteractionHandler(
-	private val i18nButton: I18nBean,
-	private val eventQueue: EventQueueBean,
-	private val botEmojisCache: BotEmojisCacheBean,
+	private val i18n: I18n,
+	private val eventQueue: EventQueue,
+	private val botEmojisCache: BotEmojisCache,
 ) : EventQueueListener<ButtonInteractionEvent>, Component() {
 	fun initEvent() {
 		eventQueue.waitForEvent(ButtonInteractionEvent::class, this)
@@ -35,7 +35,7 @@ abstract class ButtonInteractionHandler(
 		style: ButtonStyle = ButtonStyle.SECONDARY,
 	) = ButtonImpl(
 		createComponentId(interactionButton.id),
-		i18nButton.t(interactionButton.i18nSource, lang, args),
+		i18n.t(interactionButton.i18nSource, lang, args),
 		style,
 		disabled,
 		interactionButton.emoji?.toEmoji(botEmojisCache)

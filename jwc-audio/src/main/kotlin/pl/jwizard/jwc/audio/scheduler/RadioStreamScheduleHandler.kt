@@ -32,7 +32,7 @@ class RadioStreamScheduleHandler(
 	override fun onAudioStart(track: Track, audioNode: AudioNode) {
 		val state = guildMusicManager.state
 		val context = state.context
-		val i18nBean = guildMusicManager.bean.i18n
+		val i18n = guildMusicManager.bean.i18n
 
 		val listElements = mapOf(
 			I18nResponseSource.START_PLAYING_RADIO_STATION_FIRST_OPTION to mapOf(
@@ -44,7 +44,7 @@ class RadioStreamScheduleHandler(
 		)
 		val parsedListElements = listElements.entries.joinToString("\n") { (i18nKey, i18nArgs) ->
 			mdList(
-				i18nBean.t(
+				i18n.t(
 					i18nKey,
 					context.language,
 					i18nArgs.mapValues { it.value.parseWithPrefix(context) }),
@@ -55,7 +55,7 @@ class RadioStreamScheduleHandler(
 		val message = guildMusicManager.createEmbedBuilder()
 			.setTitle(
 				i18nLocaleSource = I18nResponseSource.START_PLAYING_RADIO_STATION,
-				args = mapOf("radioStationName" to i18nBean.t(radioStation, context.language)),
+				args = mapOf("radioStationName" to i18n.t(radioStation, context.language)),
 			)
 			.setDescription(parsedListElements)
 			.setLocalArtwork(name)
@@ -122,7 +122,7 @@ class RadioStreamScheduleHandler(
 
 	private fun onError(audioNode: AudioNode, logMessage: String?) {
 		val context = guildMusicManager.state.context
-		val i18nBean = guildMusicManager.bean.i18n
+		val i18n = guildMusicManager.bean.i18n
 		val tracker = guildMusicManager.bean.exceptionTrackerHandler
 
 		guildMusicManager.state.audioScheduler.stopAndDestroy().subscribe()
@@ -131,7 +131,7 @@ class RadioStreamScheduleHandler(
 		val i18nLocaleSource = I18nExceptionSource.UNEXPECTED_ERROR_WHILE_STREAMING_RADIO
 		val message = tracker.createTrackerMessage(
 			i18nLocaleSource, context,
-			args = mapOf("radioStation" to i18nBean.t(radioStation, context.language))
+			args = mapOf("radioStation" to i18n.t(radioStation, context.language))
 		)
 		val link = tracker.createTrackerLink(i18nLocaleSource, context)
 		log.jdaInfo(

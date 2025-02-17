@@ -1,6 +1,6 @@
 package pl.jwizard.jwc.api.music
 
-import pl.jwizard.jwc.api.CommandEnvironmentBean
+import pl.jwizard.jwc.api.CommandEnvironment
 import pl.jwizard.jwc.api.MusicCommandBase
 import pl.jwizard.jwc.audio.manager.GuildMusicManager
 import pl.jwizard.jwc.command.context.GuildCommandContext
@@ -18,7 +18,7 @@ import pl.jwizard.jwl.util.logger
 
 @JdaCommand(Command.PAUSE)
 internal class PauseTrackCmd(
-	commandEnvironment: CommandEnvironmentBean,
+	commandEnvironment: CommandEnvironment,
 ) : MusicCommandBase(commandEnvironment) {
 	companion object {
 		private val log = logger<PauseTrackCmd>()

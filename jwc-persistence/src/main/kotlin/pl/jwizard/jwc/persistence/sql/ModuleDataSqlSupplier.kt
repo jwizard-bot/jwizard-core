@@ -1,12 +1,12 @@
 package pl.jwizard.jwc.persistence.sql
 
+import org.springframework.stereotype.Component
 import pl.jwizard.jwc.command.spi.ModuleDataSupplier
-import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
-import pl.jwizard.jwl.persistence.sql.JdbiQueryBean
+import pl.jwizard.jwl.persistence.sql.JdbiQuery
 import java.math.BigInteger
 
-@SingletonComponent
-internal class ModuleDataSupplierBean(private val jdbiQuery: JdbiQueryBean) : ModuleDataSupplier {
+@Component
+internal class ModuleDataSqlSupplier(private val jdbiQuery: JdbiQuery) : ModuleDataSupplier {
 	override fun getDisabledGuildModules(guildDbId: BigInteger): List<Long> {
 		val sql = "SELECT module_id FROM guilds_disabled_modules WHERE guild_id = ?"
 		return jdbiQuery.queryForList(sql, Long::class, guildDbId)

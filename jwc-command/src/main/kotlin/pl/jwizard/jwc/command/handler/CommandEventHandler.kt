@@ -36,7 +36,7 @@ import java.util.*
 import java.util.concurrent.CompletableFuture
 
 internal abstract class CommandEventHandler<E : Event>(
-	private val commandEventHandlerEnvironment: CommandEventHandlerEnvironmentBean,
+	private val commandEventHandlerEnvironment: CommandEventHandlerEnvironment,
 ) : UnifiedCommandHandler<E>() {
 	private val i18n = commandEventHandlerEnvironment.i18n
 	private val commandsCache = commandEventHandlerEnvironment.commandsCache

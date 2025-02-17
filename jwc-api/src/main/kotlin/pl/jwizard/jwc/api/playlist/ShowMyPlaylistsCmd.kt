@@ -1,7 +1,7 @@
 package pl.jwizard.jwc.api.playlist
 
 import pl.jwizard.jwc.api.CommandBase
-import pl.jwizard.jwc.api.CommandEnvironmentBean
+import pl.jwizard.jwc.api.CommandEnvironment
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -11,7 +11,7 @@ import pl.jwizard.jwl.command.Command
 
 @JdaCommand(Command.PLAYLIST_ME)
 internal class ShowMyPlaylistsCmd(
-	commandEnvironment: CommandEnvironmentBean,
+	commandEnvironment: CommandEnvironment,
 ) : CommandBase(commandEnvironment) {
 	override fun execute(context: GuildCommandContext, response: TFutureResponse) {
 		// TODO

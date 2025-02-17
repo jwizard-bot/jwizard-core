@@ -28,7 +28,7 @@ class MusicManagersBean(
 	fun getOrCreateMusicManager(
 		context: GuildCommandContext,
 		future: TFutureResponse,
-		audioClient: DistributedAudioClientBean,
+		audioClient: DistributedAudioClientImpl,
 	) = synchronized(this) {
 		val manager = musicManagers.getOrPut(context.guild.idLong) {
 			GuildMusicManager(this, audioClient, context, future)

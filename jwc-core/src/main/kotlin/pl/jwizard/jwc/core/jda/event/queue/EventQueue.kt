@@ -3,19 +3,19 @@ package pl.jwizard.jwc.core.jda.event.queue
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.session.ShutdownEvent
 import net.dv8tion.jda.api.hooks.EventListener
-import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
-import pl.jwizard.jwc.core.jvm.thread.JvmFixedPayloadThreadExecutor
+import pl.jwizard.jwc.core.jda.event.JdaEventListener
 import pl.jwizard.jwc.core.property.BotProperty
-import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwc.core.thread.JvmFixedPayloadThreadExecutor
+import pl.jwizard.jwl.property.BaseEnvironment
 import java.lang.invoke.MethodHandles
 import java.lang.invoke.MethodType
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
-@JdaEventListenerBean
-class EventQueueBean(
-	environment: EnvironmentBean,
+@JdaEventListener
+class EventQueue(
+	environment: BaseEnvironment,
 ) : JvmFixedPayloadThreadExecutor<TEventPayload>(countOfThreads = 5), EventListener {
 	companion object {
 		// name of the method that checks if the event should be executed
