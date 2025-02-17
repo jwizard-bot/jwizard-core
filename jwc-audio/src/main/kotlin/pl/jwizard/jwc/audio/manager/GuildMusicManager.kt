@@ -63,8 +63,8 @@ class GuildMusicManager(
 
 	// load QUEUED audio content
 	fun loadAndPlay(trackName: String, context: GuildCommandContext) {
-		val searchPrefix =
-			bean.environment.getProperty<String>(BotProperty.AUDIO_SERVER_SEARCH_DEFAULT_CONTENT_PREFIX)
+		val searchPrefix = bean.environment
+			.getProperty<String>(BotProperty.AUDIO_SERVER_SEARCH_DEFAULT_CONTENT_PREFIX)
 		val parsedTrackName = if (isValidUrl(trackName)) {
 			trackName.replace(" ", "")
 		} else {

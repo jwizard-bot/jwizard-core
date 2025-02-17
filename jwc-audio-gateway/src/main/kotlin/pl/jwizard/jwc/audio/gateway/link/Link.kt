@@ -29,8 +29,6 @@ class Link(
 
 	fun createOrUpdatePlayer() = selectedNode.createOrUpdatePlayer(guildId)
 
-	fun loadItem(identifier: String) = selectedNode.loadItem(identifier)
-
 	internal fun updateState(state: LinkState) {
 		this.state = state
 	}

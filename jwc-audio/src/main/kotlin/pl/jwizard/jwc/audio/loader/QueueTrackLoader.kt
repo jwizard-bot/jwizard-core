@@ -77,7 +77,7 @@ internal class QueueTrackLoader(
 			guildProperties,
 		)
 		val (message, components) = trackSelectSpinnerMenu.createMenuComponent(
-			i18nBean = guildMusicManager.bean.i18n,
+			i18n = guildMusicManager.bean.i18n,
 			jdaColorsCache = guildMusicManager.bean.jdaColorStore,
 			i18nSource = I18nResponseSource.SELECT_SONG_SEQUENCER
 		)
