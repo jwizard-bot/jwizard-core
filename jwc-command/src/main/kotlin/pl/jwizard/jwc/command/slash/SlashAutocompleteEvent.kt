@@ -3,18 +3,17 @@ package pl.jwizard.jwc.command.slash
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.commands.Command.Choice
-import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
+import pl.jwizard.jwc.core.jda.event.JdaEventListener
 import pl.jwizard.jwc.core.property.BotProperty
-import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
-import pl.jwizard.jwl.i18n.I18nBean
-import pl.jwizard.jwl.util.rawCommandToDotFormat
+import pl.jwizard.jwl.i18n.I18n
+import pl.jwizard.jwl.property.BaseEnvironment
 
-@JdaEventListenerBean
-internal class SlashAutocompleteEventBean(
-	private val i18n: I18nBean,
-	environment: EnvironmentBean,
+@JdaEventListener
+internal class SlashAutocompleteEvent(
+	private val i18n: I18n,
+	environment: BaseEnvironment,
 ) : ListenerAdapter() {
 	private val maxOptions = environment
 		.getProperty<Int>(BotProperty.JDA_INTERACTION_SLASH_AUTOCOMPLETE_MAX_OPTIONS)
@@ -26,7 +25,7 @@ internal class SlashAutocompleteEventBean(
 	private fun findCommandInteraction(
 		event: CommandAutoCompleteInteractionEvent,
 	): List<Choice> {
-		val commandName = event.interaction.fullCommandName.rawCommandToDotFormat()
+		val commandName = Command.rawCommandToDotFormat(event.interaction.fullCommandName)
 		val argName = event.interaction.focusedOption.name
 
 		val command = Command.entries

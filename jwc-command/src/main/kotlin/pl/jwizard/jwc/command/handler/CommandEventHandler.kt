@@ -30,7 +30,6 @@ import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
 import pl.jwizard.jwl.i18n.source.I18nExceptionSource
 import pl.jwizard.jwl.property.AppBaseProperty
-import pl.jwizard.jwl.util.rawCommandToDotFormat
 import java.math.BigInteger
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -74,7 +73,7 @@ internal abstract class CommandEventHandler<E : Event>(
 					environment.getProperty<String>(AppBaseProperty.GUILD_LEGACY_PREFIX)
 				}
 				val (commandNameOrAlias, commandArguments) = commandNameAndArguments(event, prefix)
-				val mergedCommand = commandNameOrAlias.rawCommandToDotFormat()
+				val mergedCommand = Command.rawCommandToDotFormat(commandNameOrAlias)
 				val commandDetails = Command.entries
 					.find { it.textKey == mergedCommand }
 					?: throw CommandInvocationException("command: \"$mergedCommand\" could not be found")
@@ -151,7 +150,7 @@ internal abstract class CommandEventHandler<E : Event>(
 		context: CommandBaseContext?,
 		privateUserId: Long?,
 	) {
-		val looselyTransportHandlerBean = commandEventHandlerEnvironment.looselyTransportHandler
+		val looselyTransportHandler = commandEventHandlerEnvironment.looselyTransportHandler
 		var directEphemeralUser: User? = null
 		val truncatedResponse = try {
 			if (response.embedMessages.isEmpty() && commandType == CommandType.SLASH) {
@@ -161,7 +160,7 @@ internal abstract class CommandEventHandler<E : Event>(
 				directEphemeralUser = event.jda.getUserById(privateUserId)
 					?: throw UnexpectedException(context, "ephemeral user cannot be null")
 			}
-			looselyTransportHandlerBean.truncateComponents(response)
+			looselyTransportHandler.truncateComponents(response)
 		} catch (ex: CommandPipelineException) {
 			createExceptionMessage(ex)
 		}
@@ -171,7 +170,7 @@ internal abstract class CommandEventHandler<E : Event>(
 		}
 		val onMessageSend: (Message) -> Unit = {
 			if (truncatedResponse.disposeComponents) {
-				looselyTransportHandlerBean.startRemovalInteractionThread(it)
+				looselyTransportHandler.startRemovalInteractionThread(it)
 			}
 			truncatedResponse.afterSendAction(it)
 		}
@@ -200,7 +199,7 @@ internal abstract class CommandEventHandler<E : Event>(
 		context: CommandBaseContext?,
 		response: CommandResponse,
 	) {
-		val looselyTransportHandlerBean = commandEventHandlerEnvironment.looselyTransportHandler
+		val looselyTransportHandler = commandEventHandlerEnvironment.looselyTransportHandler
 		val exceptionTrackerStore = commandEventHandlerEnvironment.exceptionTrackerHandler
 		val successMessage =
 			MessageEmbedBuilder(i18n, commandEventHandlerEnvironment.jdaColorStore, context)
@@ -236,7 +235,7 @@ internal abstract class CommandEventHandler<E : Event>(
 							message,
 							privateMessage = true,
 							context?.suppressResponseNotifications
-						).queue { looselyTransportHandlerBean.startRemovalInteractionThread(privateMessage) }
+						).queue { looselyTransportHandler.startRemovalInteractionThread(privateMessage) }
 					}
 				}, onError)
 		}, onError)
