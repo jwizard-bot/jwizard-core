@@ -22,7 +22,7 @@ internal class SettingsCmd(
 	override fun executeManager(context: GuildCommandContext, response: TFutureResponse) {
 		val paginatorChunkSize = environment.getProperty<Int>(BotProperty.JDA_PAGINATION_CHUNK_SIZE)
 
-		val properties = environment.getGuildMultipleProperties(
+		val properties = guildEnvironment.getGuildMultipleProperties(
 			// get guild properties only with i18n key and value converter
 			guildProperties = GuildProperty.entries.filter {
 				it.placeholder.isNotEmpty() && it.converter != null

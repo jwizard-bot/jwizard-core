@@ -26,7 +26,7 @@ internal class ResetPlayerVolumeCmd(
 		manager: GuildMusicManager,
 		response: TFutureResponse,
 	) {
-		val defaultVolume = environment
+		val defaultVolume = guildEnvironment
 			.getGuildProperty<Int>(GuildProperty.PLAYER_VOLUME, context.guild.idLong)
 
 		val asyncUpdatableHandler = createAsyncUpdatablePlayerHandler(context, response)

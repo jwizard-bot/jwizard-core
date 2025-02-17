@@ -26,7 +26,7 @@ internal class QueueTrackLoader(
 		private val log = logger<QueueTrackLoader>()
 	}
 
-	private val guildProperties = guildMusicManager.bean.environment.getGuildMultipleProperties(
+	private val guildProperties = guildMusicManager.bean.guildEnvironment.getGuildMultipleProperties(
 		guildProperties = listOf(
 			GuildProperty.RANDOM_AUTO_CHOOSE_TRACK,
 			GuildProperty.TIME_AFTER_AUTO_CHOOSE_SEC,

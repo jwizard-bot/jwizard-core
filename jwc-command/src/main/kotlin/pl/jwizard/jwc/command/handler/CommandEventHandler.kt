@@ -62,7 +62,7 @@ internal abstract class CommandEventHandler<E : Event>(
 				var properties: GuildMultipleProperties? = null
 				val prefix = if (fromGuild) {
 					val guild = eventGuild(event) ?: throw CommandInvocationException("guild is null")
-					properties = commandEventHandlerEnvironment.environment.getGuildMultipleProperties(
+					properties = commandEventHandlerEnvironment.guildEnvironment.getGuildMultipleProperties(
 						guildProperties = propertiesList,
 						guildId = guild.idLong,
 					)

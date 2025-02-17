@@ -45,7 +45,7 @@ class GuildMusicManager(
 	// init thread for leaving channel after T time of inactivity
 	fun startLeavingWaiter() {
 		val context = state.context
-		val time = bean.environment.getGuildProperty<Long>(
+		val time = bean.guildEnvironment.getGuildProperty<Long>(
 			GuildProperty.LEAVE_NO_TRACKS_SEC,
 			context.guild.idLong,
 		)

@@ -16,6 +16,7 @@ internal abstract class CommandBase(
 	protected val commandEnvironment: CommandEnvironment,
 ) : GuildCommandHandler {
 	protected val environment = commandEnvironment.environment
+	protected val guildEnvironment = commandEnvironment.guildEnvironment
 	protected val guildSettingsEventAction = commandEnvironment.guildSettingsEventAction
 	protected val i18n = commandEnvironment.i18n
 	protected val jdaShardManager = commandEnvironment.jdaShardManager

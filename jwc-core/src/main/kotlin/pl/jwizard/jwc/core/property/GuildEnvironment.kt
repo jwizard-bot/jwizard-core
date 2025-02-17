@@ -1,19 +1,24 @@
 package pl.jwizard.jwc.core.property
 
+import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.property.guild.GuildMultipleProperties
 import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.core.property.spi.RemotePropertySupplier
-import pl.jwizard.jwl.ioc.IoCKtContextFactory
-import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.property.AppBaseProperty
 import pl.jwizard.jwl.property.BaseEnvironment
 import pl.jwizard.jwl.property.PropertyNotFoundException
 import kotlin.reflect.KClass
 
-@SingletonComponent
-class EnvironmentBean(
-	private val ioCKtContextFactory: IoCKtContextFactory,
-) : BaseEnvironment() {
+@Component
+class GuildEnvironment(
+	val environment: BaseEnvironment,
+	val remotePropertySupplier: RemotePropertySupplier,
+) {
+	final inline fun <reified T : Any> getGuildProperty(
+		guildProperty: GuildProperty,
+		guildId: Long,
+	): T = getGuildNullableProperty<T>(guildProperty, guildId, allowNullable = false) as T
+
 	final inline fun <reified T : Any> getGuildNullableProperty(
 		guildProperty: GuildProperty,
 		guildId: Long,
@@ -27,7 +32,7 @@ class EnvironmentBean(
 		val type = defaultProperty?.type ?: guildProperty.nonDefaultType as KClass<*>
 		val nullableValue = remotePropertySupplier.getProperty(guildProperty.key, guildId, type) as T?
 		val value = if (nullableValue == null && defaultProperty != null) {
-			getProperty(defaultProperty)
+			environment.getProperty(defaultProperty)
 		} else {
 			nullableValue
 		}
@@ -53,7 +58,7 @@ class EnvironmentBean(
 				} catch (_: IllegalArgumentException) {
 					continue
 				}
-				getProperty<Any>(defaultProperty)
+				environment.getProperty<Any>(defaultProperty)
 			} else {
 				nullableValue
 			}
@@ -61,15 +66,4 @@ class EnvironmentBean(
 		}
 		return multipleProperties
 	}
-
-	final inline fun <reified T : Any> getGuildProperty(
-		guildProperty: GuildProperty,
-		guildId: Long,
-	): T =
-		getGuildNullableProperty<T>(guildProperty, guildId, allowNullable = false) as T
-
-	// retrieve this bean as getter (DON'T PUT IN CONSTRUCTOR VIA DI)
-	// must be declared as getter because it is loaded lazily
-	val remotePropertySupplier: RemotePropertySupplier
-		get() = ioCKtContextFactory.getBean(RemotePropertySupplier::class)
 }

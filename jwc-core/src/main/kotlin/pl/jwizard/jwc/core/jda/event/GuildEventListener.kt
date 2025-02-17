@@ -10,19 +10,19 @@ import net.dv8tion.jda.api.events.guild.GuildReadyEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import pl.jwizard.jwc.core.jda.spi.GuildSettingsEventAction
 import pl.jwizard.jwc.core.jda.spi.SlashCommandRegisterer
-import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwc.core.property.GuildEnvironment
 import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwl.util.logger
 
-@JdaEventListenerBean
-class GuildEventListenerBean(
+@JdaEventListener
+class GuildEventListener(
 	private val guildSettingsEventAction: GuildSettingsEventAction,
 	private val slashCommandRegisterer: SlashCommandRegisterer,
-	private val environmentBean: EnvironmentBean,
+	private val environment: GuildEnvironment,
 ) : ListenerAdapter() {
 	companion object {
-		private val log = logger<GuildEventListenerBean>()
+		private val log = logger<GuildEventListener>()
 	}
 
 	override fun onGuildJoin(event: GuildJoinEvent) = persistGuildSettings(event.guild)
@@ -39,7 +39,7 @@ class GuildEventListenerBean(
 			return
 		}
 		val guild = event.guild
-		val musicTextChannelId = environmentBean
+		val musicTextChannelId = environment
 			.getGuildProperty<String>(GuildProperty.MUSIC_TEXT_CHANNEL_ID, guild.idLong)
 		if (musicTextChannelId == channel.id) {
 			guildSettingsEventAction.deleteDefaultMusicTextChannel(guild.idLong)
@@ -55,7 +55,7 @@ class GuildEventListenerBean(
 			log.error(
 				"Unexpected exception while persisting guild: {}. Cause: {}.",
 				guild.qualifier,
-				errorMessage
+				errorMessage,
 			)
 			guild.leave().queue { log.info("Leaved guild: {}.", guild.qualifier) }
 			return

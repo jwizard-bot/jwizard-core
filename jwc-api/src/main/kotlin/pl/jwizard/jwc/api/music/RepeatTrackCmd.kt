@@ -36,7 +36,7 @@ internal class RepeatTrackCmd(
 		val repeatsCount = context.getArg<Int>(Argument.COUNT)
 
 		// fetch guild-based properties from DB in single SQL query
-		val multipleProperties = environment.getGuildMultipleProperties(
+		val multipleProperties = guildEnvironment.getGuildMultipleProperties(
 			guildProperties = listOf(
 				GuildProperty.MIN_REPEATS_OF_TRACK,
 				GuildProperty.MAX_REPEATS_OF_TRACK
