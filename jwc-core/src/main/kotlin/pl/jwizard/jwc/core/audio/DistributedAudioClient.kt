@@ -1,4 +1,4 @@
-package pl.jwizard.jwc.core.audio.spi
+package pl.jwizard.jwc.core.audio
 
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.hooks.VoiceDispatchInterceptor
