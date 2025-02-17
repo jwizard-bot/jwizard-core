@@ -15,6 +15,7 @@ import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.property.BotProperty
+import pl.jwizard.jwc.core.property.LinkFragmentProperty
 import pl.jwizard.jwc.core.util.mdBold
 import pl.jwizard.jwc.core.util.mdCode
 import pl.jwizard.jwc.core.util.mdLink
@@ -79,7 +80,10 @@ internal class HelpCmd(
 		val parsedCommands = mutableMapOf<String, String>()
 		// sort commands alphabetically
 		for (details in commands.sorted()) {
-			val commandLink = createLinkFromFragment(BotProperty.LINK_FRAGMENT_COMMAND, details.toUrl)
+			val commandLink = createLinkFromFragment(
+				LinkFragmentProperty.LINK_FRAGMENT_COMMAND,
+				details.asSlug,
+			)
 			val keyJoiner = StringJoiner("")
 			val descriptionJoiner = StringJoiner("")
 

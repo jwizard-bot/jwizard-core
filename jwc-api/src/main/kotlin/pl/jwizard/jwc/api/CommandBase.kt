@@ -10,6 +10,7 @@ import pl.jwizard.jwc.core.jda.command.CommandBaseContext
 import pl.jwizard.jwc.core.jda.embed.MessageEmbedBuilder
 import pl.jwizard.jwc.core.property.BotListProperty
 import pl.jwizard.jwc.core.property.BotProperty
+import pl.jwizard.jwc.core.property.LinkFragmentProperty
 import pl.jwizard.jwl.property.AppProperty
 
 internal abstract class CommandBase(
@@ -45,9 +46,12 @@ internal abstract class CommandBase(
 		onRefresh: (response: MutableList<MessageEmbed>) -> Unit,
 	) = RefreshableComponent(i18n, commandEnvironment.eventQueue, botEmojisCache, onRefresh)
 
-	protected fun createLinkFromFragment(fragment: AppProperty, vararg args: Any?): String {
+	protected fun createLinkFromFragment(
+		linkFragmentProperty: LinkFragmentProperty,
+		vararg args: Any?,
+	): String {
 		val baseUrl = environment.getProperty<String>(BotProperty.LINK_WEBSITE)
-		val fragmentUrl = environment.getProperty<String>(fragment)
+		val fragmentUrl = environment.getProperty<String>(linkFragmentProperty)
 		return fragmentUrl.format(baseUrl, *args)
 	}
 

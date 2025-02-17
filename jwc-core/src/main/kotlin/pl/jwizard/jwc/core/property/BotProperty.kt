@@ -56,8 +56,6 @@ enum class BotProperty(
 	LINK_WEBSITE("link.website"),
 	LINK_STATUS("link.status"),
 	LINK_REPOSITORY("link.repository"),
-	LINK_FRAGMENT_COMMAND("link.fragment.command"),
-	LINK_FRAGMENT_ERROR_CODE("link.fragment.error-code"),
 
 	// represents the timeout duration (in milliseconds) for audio server connections
 	AUDIO_SERVER_TIMEOUT_MS("audio.server.timeout-ms", Long::class),
