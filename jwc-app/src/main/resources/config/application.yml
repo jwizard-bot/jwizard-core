@@ -3,9 +3,6 @@ vault:
     application-names:
       - ${cmd:jda.instance.name}
 
-server:
-  port: ${vault:V_SERVER_PORT}
-
 jda:
   secret-token: ${vault:V_JDA_SECRET}
   instance:
@@ -47,7 +44,7 @@ jda:
       - STICKER
   color:
     primary: ${vault:V_JDA_PRIMARY_COLOR}
-    danger: 0xEF4444
+    danger: '#EF4444'
   interaction:
     message:
       max-embeds: 10

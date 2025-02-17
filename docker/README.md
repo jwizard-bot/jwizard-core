@@ -53,9 +53,11 @@ docker run -d \
   -e JWIZARD_VAULT_PASSWORD=<vault password> \
   -e JWIZARD_XMS=1024m \
   -e JWIZARD_XMX=1024m \
+  -e JWIZARD_SERVER_PORT=6071 \
   -e JWIZARD_JDA_INSTANCE_NAME=core-instance-0 \
   -e JWIZARD_JDA_SHARDING_OFFSET_START=0 \
   -e JWIZARD_JDA_SHARDING_OFFSET_END=9 \
+  -e JWIZARD_JDA_SHARDING_TOTAL_SHARDS=10 \
   milosz08/jwizard-core:latest
 
 docker run -d \
@@ -66,9 +68,11 @@ docker run -d \
   -e JWIZARD_VAULT_PASSWORD=<vault password> \
   -e JWIZARD_XMS=1024m \
   -e JWIZARD_XMX=1024m \
+  -e JWIZARD_SERVER_PORT=6072 \
   -e JWIZARD_JDA_INSTANCE_NAME=core-instance-1 \
   -e JWIZARD_JDA_SHARDING_OFFSET_START=0 \
   -e JWIZARD_JDA_SHARDING_OFFSET_END=9 \
+  -e JWIZARD_JDA_SHARDING_TOTAL_SHARDS=10 \
   milosz08/jwizard-core:latest
 ```
 
@@ -89,9 +93,11 @@ services:
       JWIZARD_VAULT_PASSWORD: <vault password>
       JWIZARD_XMS: 1024m
       JWIZARD_XMX: 1024m
+      JWIZARD_SERVER_PORT: 6071
       JWIZARD_JDA_INSTANCE_NAME: core-instance-0
       JWIZARD_JDA_SHARDING_OFFSET_START: 0
       JWIZARD_JDA_SHARDING_OFFSET_END: 9
+      JWIZARD_JDA_SHARDING_TOTAL_SHARDS: 10
     networks:
       - jwizard-network
 
@@ -106,9 +112,11 @@ services:
       JWIZARD_VAULT_PASSWORD: <vault password>
       JWIZARD_XMS: 1024m
       JWIZARD_XMX: 1024m
+      JWIZARD_SERVER_PORT: 6072
       JWIZARD_JDA_INSTANCE_NAME: core-instance-1
       JWIZARD_JDA_SHARDING_OFFSET_START: 0
       JWIZARD_JDA_SHARDING_OFFSET_END: 9
+      JWIZARD_JDA_SHARDING_TOTAL_SHARDS: 10
     networks:
       - jwizard-network
 

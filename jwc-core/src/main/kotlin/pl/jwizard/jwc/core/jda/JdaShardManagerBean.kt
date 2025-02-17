@@ -71,12 +71,14 @@ final class JdaShardManagerBean(
 
 		val shardingMinId = environment.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_START)
 		val shardingMaxId = environment.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_END)
+
+		val totalShards = environment.getProperty<Int>(BotProperty.JDA_SHARDING_TOTAL_SHARDS)
 		val shardsCount = (shardingMaxId - shardingMinId) + 1
 
 		shardManager = DefaultShardManagerBuilder
 			.create(jdaToken, gatewayIntents.map { GatewayIntent.valueOf(it) })
 			.setUseShutdownNow(true)
-			.setShardsTotal(shardsCount)
+			.setShardsTotal(totalShards)
 			.setShards(shardingMinId, shardingMaxId)
 			.setVoiceDispatchInterceptor(distributedAudioClientSupplier.voiceDispatchInterceptor)
 			.enableCache(enabledCacheFlags.map { CacheFlag.valueOf(it) })

@@ -4,9 +4,10 @@ java \
 	-Xms$JWIZARD_XMS \
 	-Xmx$JWIZARD_XMX \
 	-Druntime.profiles=prod \
+	-Dserver.port=$JWIZARD_SERVER_PORT \
 	-Denv.enabled=false \
 	-Djda.instance.name=$JWIZARD_JDA_INSTANCE_NAME \
-	-Djda.sharding.cluster=$JWIZARD_JDA_SHARDING_CLUSTER \
 	-Djda.sharding.offset.start=$JWIZARD_JDA_SHARDING_OFFSET_START \
 	-Djda.sharding.offset.end=$JWIZARD_JDA_SHARDING_OFFSET_END \
+	-Djda.sharding.total-shards=$JWIZARD_JDA_SHARDING_TOTAL_SHARDS \
 	-jar $JAR_NAME

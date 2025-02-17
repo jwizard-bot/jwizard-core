@@ -1,2 +1,5 @@
+server:
+  port: ${cmd:server.port}
+
 service:
   front-url: https://jwizard.pl

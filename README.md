@@ -128,10 +128,12 @@ in [jwizard-lib](https://github.com/jwizard-bot/jwizard-lib) repository.
 ```bash
 -Druntime.profiles=dev
 -Denv.enabled=true # optional, if false JWizard will prevent read .env file
+-Dserver.port=<port number> # only for production, for dev port is already pre-defined in vault
 
 -Djda.instance.name=core-instance-N # bot instance refer to Vault backend prefix
 -Djda.sharding.offset.start=<number> # shard ID which starts (inclusive) shards pool in process
 -Djda.sharding.offset.end=<number> # shard ID which end (inclusive) shards pool in process
+-Djda.sharding.total-shards=<number> # total shards for all processes in one instance
 
 -Xms1G -Xmx1G # optional, see NOTE
 # ... rest parameters, ex. JVM GC configuration

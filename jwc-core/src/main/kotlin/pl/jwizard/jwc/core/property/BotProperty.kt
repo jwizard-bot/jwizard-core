@@ -21,6 +21,7 @@ enum class BotProperty(
 	// sharding
 	JDA_SHARDING_OFFSET_START("jda.sharding.offset.start", Int::class),
 	JDA_SHARDING_OFFSET_END("jda.sharding.offset.end", Int::class),
+	JDA_SHARDING_TOTAL_SHARDS("jda.sharding.total-shards", Int::class),
 
 	// JDA default activity (enabled when [JDA_SPLASHES_ENABLED] property is set to false)
 	JDA_DEFAULT_ACTIVITY("jda.default-activity"),
