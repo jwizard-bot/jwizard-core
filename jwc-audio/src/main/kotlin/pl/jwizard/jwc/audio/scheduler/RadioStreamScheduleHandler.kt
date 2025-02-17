@@ -50,15 +50,12 @@ class RadioStreamScheduleHandler(
 					i18nArgs.mapValues { it.value.parseWithPrefix(context) }),
 			)
 		}
-		val (name, inputStream) = guildMusicManager.bean.radioStationThumbnailSupplier
-			.getThumbnailResource(radioStation)
 		val message = guildMusicManager.createEmbedBuilder()
 			.setTitle(
 				i18nLocaleSource = I18nResponseSource.START_PLAYING_RADIO_STATION,
 				args = mapOf("radioStationName" to i18n.t(radioStation, context.language)),
 			)
 			.setDescription(parsedListElements)
-			.setLocalArtwork(name)
 			.setColor(JdaColor.PRIMARY)
 			.build()
 
@@ -71,7 +68,6 @@ class RadioStreamScheduleHandler(
 		)
 		val response = CommandResponse.Builder()
 			.addEmbedMessages(message)
-			.addFiles(mapOf(name to inputStream))
 			.build()
 		state.future.complete(response)
 	}
@@ -79,8 +75,6 @@ class RadioStreamScheduleHandler(
 	override fun onAudioEnd(lastTrack: Track, audioNode: AudioNode, endReason: TrackEndReason) {
 		val state = guildMusicManager.state
 		val context = state.context
-		val (name, inputStream) = guildMusicManager.bean.radioStationThumbnailSupplier
-			.getThumbnailResource(radioStation)
 
 		val message = guildMusicManager.createEmbedBuilder()
 			.setDescription(
@@ -91,7 +85,6 @@ class RadioStreamScheduleHandler(
 				),
 			)
 			.setColor(JdaColor.PRIMARY)
-			.setLocalArtwork(name)
 			.build()
 
 		guildMusicManager.startLeavingWaiter()
@@ -104,7 +97,6 @@ class RadioStreamScheduleHandler(
 		)
 		val response = CommandResponse.Builder()
 			.addEmbedMessages(message)
-			.addFiles(mapOf(name to inputStream))
 			.build()
 		state.future.complete(response)
 	}
