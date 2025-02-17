@@ -1,9 +1,9 @@
 package pl.jwizard.jwc.radio
 
-import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
+import org.springframework.stereotype.Component
 import pl.jwizard.jwl.radio.PlaybackProvider
 
-@SingletonComponent
+@Component
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 internal annotation class RadioPlaybackMapper(

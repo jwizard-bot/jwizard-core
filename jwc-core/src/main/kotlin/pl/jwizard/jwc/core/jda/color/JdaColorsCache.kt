@@ -1,14 +1,14 @@
 package pl.jwizard.jwc.core.jda.color
 
-import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
+import org.springframework.stereotype.Component
+import pl.jwizard.jwl.property.BaseEnvironment
 import pl.jwizard.jwl.util.logger
 import java.awt.Color
 
-@SingletonComponent
-class JdaColorsCacheBean(private val environment: EnvironmentBean) {
+@Component
+class JdaColorsCache(private val environment: BaseEnvironment) {
 	companion object {
-		private val log = logger<JdaColorsCacheBean>()
+		private val log = logger<JdaColorsCache>()
 
 		// selected if color not found
 		private const val DEFAULT_COLOR = "#000000"

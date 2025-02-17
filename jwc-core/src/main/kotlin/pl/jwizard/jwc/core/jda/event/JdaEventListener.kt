@@ -1,9 +1,9 @@
 package pl.jwizard.jwc.core.jda.event
 
-import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
+import org.springframework.stereotype.Component
 
 // put on IoC components extending ListenerAdapter class
-@SingletonComponent
+@Component
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class JdaEventListenerBean
+annotation class JdaEventListener

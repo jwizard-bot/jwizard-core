@@ -6,27 +6,27 @@ import net.dv8tion.jda.api.interactions.DiscordLocale
 import net.dv8tion.jda.api.interactions.commands.Command.Choice
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.*
-import pl.jwizard.jwc.command.CommandsCacheBean
+import org.springframework.stereotype.Component
+import pl.jwizard.jwc.command.CommandsCache
 import pl.jwizard.jwc.core.i18n.source.I18nUtilSource
 import pl.jwizard.jwc.core.jda.spi.SlashCommandRegisterer
-import pl.jwizard.jwc.core.property.EnvironmentBean
 import pl.jwizard.jwl.command.Command
-import pl.jwizard.jwl.i18n.I18nBean
+import pl.jwizard.jwl.i18n.I18n
 import pl.jwizard.jwl.i18n.I18nLocaleSource
-import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.property.AppBaseListProperty
 import pl.jwizard.jwl.property.AppBaseProperty
+import pl.jwizard.jwl.property.BaseEnvironment
 import pl.jwizard.jwl.util.logger
 import java.util.*
 
-@SingletonComponent
-internal class SlashCommandRegistererBean(
-	private val i18n: I18nBean,
-	private val environment: EnvironmentBean,
-	private val commandsCache: CommandsCacheBean,
+@Component
+internal class SlashCommandRegistererImpl(
+	private val i18n: I18n,
+	private val environment: BaseEnvironment,
+	private val commandsCache: CommandsCache,
 ) : SlashCommandRegisterer {
 	companion object {
-		private val log = logger<SlashCommandRegistererBean>()
+		private val log = logger<SlashCommandRegistererImpl>()
 
 		// use for hierarchical command levels
 		private const val LEVEL_SEPARATOR = "."

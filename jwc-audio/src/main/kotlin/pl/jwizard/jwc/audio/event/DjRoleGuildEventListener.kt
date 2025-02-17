@@ -5,21 +5,21 @@ import net.dv8tion.jda.api.events.guild.GuildReadyEvent
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import pl.jwizard.jwc.core.jda.color.JdaColor
-import pl.jwizard.jwc.core.jda.color.JdaColorsCacheBean
-import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
-import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwc.core.jda.color.JdaColorsCache
+import pl.jwizard.jwc.core.jda.event.JdaEventListener
+import pl.jwizard.jwc.core.property.GuildEnvironment
 import pl.jwizard.jwc.core.property.guild.GuildProperty
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwl.util.logger
 
-@JdaEventListenerBean
-internal class DjRoleGuildEventListenerBean(
-	private val environment: EnvironmentBean,
-	private val jdaColorStore: JdaColorsCacheBean,
+@JdaEventListener
+internal class DjRoleGuildEventListener(
+	private val environment: GuildEnvironment,
+	private val jdaColorStore: JdaColorsCache,
 ) : ListenerAdapter() {
 
 	companion object {
-		private val log = logger<DjRoleGuildEventListenerBean>()
+		private val log = logger<DjRoleGuildEventListener>()
 	}
 
 	override fun onGuildReady(event: GuildReadyEvent) {
@@ -46,9 +46,10 @@ internal class DjRoleGuildEventListenerBean(
 		}
 	}
 
-	private fun generateDjRole(guild: Guild, roleName: String) = guild.createRole()
-		.setName(roleName)
-		.setColor(jdaColorStore.getHexColor(JdaColor.PRIMARY))
+	private fun generateDjRole(
+		guild: Guild,
+		roleName: String,
+	) = guild.createRole().setName(roleName).setColor(jdaColorStore.getHexColor(JdaColor.PRIMARY))
 
 	private fun getDjRoleName(
 		guild: Guild,

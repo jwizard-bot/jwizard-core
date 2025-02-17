@@ -3,15 +3,15 @@ package pl.jwizard.jwc.audio.event
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMuteEvent
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import pl.jwizard.jwc.audio.manager.MusicManagersBean
+import pl.jwizard.jwc.audio.manager.MusicManagersCache
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
-import pl.jwizard.jwc.core.jda.event.JdaEventListenerBean
+import pl.jwizard.jwc.core.jda.event.JdaEventListener
 
-@JdaEventListenerBean
-internal class AudioEventListenerBean(
-	private val audioChannelsListenerGuard: AudioChannelsListenerGuardBean,
-	private val musicManagers: MusicManagersBean,
+@JdaEventListener
+internal class AudioEventListener(
+	private val audioChannelsListenerGuard: AudioChannelsListenerGuard,
+	private val musicManagers: MusicManagersCache,
 ) : ListenerAdapter() {
 
 	override fun onGuildVoiceUpdate(event: GuildVoiceUpdateEvent) {

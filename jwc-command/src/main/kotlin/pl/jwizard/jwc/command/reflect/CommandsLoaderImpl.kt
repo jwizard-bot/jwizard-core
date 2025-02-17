@@ -1,28 +1,27 @@
 package pl.jwizard.jwc.command.reflect
 
-import pl.jwizard.jwc.command.CommandsCacheBean
+import org.springframework.stereotype.Component
+import pl.jwizard.jwc.command.CommandsCache
 import pl.jwizard.jwc.command.GlobalCommandHandler
 import pl.jwizard.jwc.command.GuildCommandHandler
 import pl.jwizard.jwc.core.jda.spi.CommandsLoader
+import pl.jwizard.jwc.core.reflect.ClasspathScanner
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.ioc.IoCKtContextFactory
-import pl.jwizard.jwl.ioc.reflect.ClasspathScanner
-import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.util.logger
 import kotlin.reflect.full.allSuperclasses
 
-@SingletonComponent
-internal class CommandsLoaderBean(
+@Component
+internal class CommandsLoaderImpl(
 	private val ioCKtContextFactory: IoCKtContextFactory,
-	private val commandsCache: CommandsCacheBean,
+	private val commandsCache: CommandsCache,
 ) : CommandsLoader {
 	companion object {
-		private val log = logger<CommandsLoaderBean>()
-
-		private const val SCANNING_SUBPACKAGE = "jwc.api"
+		private val log = logger<CommandsLoaderImpl>()
 	}
 
-	private val scanner = ClasspathScanner(JdaCommand::class, SCANNING_SUBPACKAGE)
+	// scanner for reflect scanning commands in {basePackage}.jwc.api subpackage
+	private val scanner = ClasspathScanner(JdaCommand::class, subpackage = "jwc.api")
 
 	override fun loadClassesViaReflectionApi() {
 		val global = commandsCache.globalCommandInstances

@@ -1,13 +1,13 @@
 package pl.jwizard.jwc.audio.client
 
+import org.springframework.stereotype.Component
 import pl.jwizard.jwc.audio.gateway.AudioNodeListener
 import pl.jwizard.jwc.audio.gateway.event.player.*
 import pl.jwizard.jwc.audio.manager.MusicManagersCache
 import pl.jwizard.jwc.audio.scheduler.AudioScheduleHandler
-import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.util.logger
 
-@SingletonComponent
+@Component
 internal class AudioNodeListenerAdapter(
 	private val musicManagers: MusicManagersCache,
 ) : AudioNodeListener {

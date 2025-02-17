@@ -2,6 +2,8 @@ package pl.jwizard.jwc.audio.client
 
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Member
+import org.springframework.beans.factory.DisposableBean
+import org.springframework.stereotype.Component
 import pl.jwizard.jwc.audio.gateway.AudioClient
 import pl.jwizard.jwc.audio.gateway.AudioNodeListener
 import pl.jwizard.jwc.audio.gateway.AudioSessionController
@@ -11,23 +13,21 @@ import pl.jwizard.jwc.audio.gateway.node.AudioNode
 import pl.jwizard.jwc.audio.gateway.node.NodeConfig
 import pl.jwizard.jwc.audio.gateway.node.NodePool
 import pl.jwizard.jwc.command.context.GuildCommandContext
-import pl.jwizard.jwc.core.audio.spi.DistributedAudioClient
+import pl.jwizard.jwc.core.audio.DistributedAudioClient
 import pl.jwizard.jwc.core.property.BotProperty
-import pl.jwizard.jwc.core.property.EnvironmentBean
-import pl.jwizard.jwl.ioc.CleanupAfterIoCDestroy
-import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.node.AudioNodeDefinition
 import pl.jwizard.jwl.node.AudioNodesCache
+import pl.jwizard.jwl.property.BaseEnvironment
 import pl.jwizard.jwl.util.logger
 
-@SingletonComponent
-class DistributedAudioClientBean(
-	private val environment: EnvironmentBean,
+@Component
+class DistributedAudioClientImpl(
+	private val environment: BaseEnvironment,
 	private val audioNodeListener: AudioNodeListener,
 	private val gatewayVoiceStateInterceptor: GatewayVoiceStateInterceptor,
-) : DistributedAudioClient, CleanupAfterIoCDestroy {
+) : DistributedAudioClient, DisposableBean {
 	companion object {
-		private val log = logger<DistributedAudioClientBean>()
+		private val log = logger<DistributedAudioClientImpl>()
 	}
 
 	private val audioServerTimeout = environment

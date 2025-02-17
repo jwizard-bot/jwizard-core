@@ -1,31 +1,31 @@
 package pl.jwizard.jwc.audio.event
 
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
-import pl.jwizard.jwc.audio.client.DistributedAudioClientBean
-import pl.jwizard.jwc.audio.manager.MusicManagersBean
+import org.springframework.stereotype.Component
+import pl.jwizard.jwc.audio.client.DistributedAudioClientImpl
+import pl.jwizard.jwc.audio.manager.MusicManagersCache
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
-import pl.jwizard.jwc.core.jda.JdaShardManagerBean
+import pl.jwizard.jwc.core.jda.JdaShardManager
 import pl.jwizard.jwc.core.jda.color.JdaColor
 import pl.jwizard.jwc.core.jda.spi.ChannelListenerGuard
-import pl.jwizard.jwc.core.jvm.thread.JvmFixedThreadExecutor
-import pl.jwizard.jwc.core.property.EnvironmentBean
+import pl.jwizard.jwc.core.property.GuildEnvironment
 import pl.jwizard.jwc.core.property.guild.GuildProperty
+import pl.jwizard.jwc.core.thread.JvmFixedThreadExecutor
 import pl.jwizard.jwc.core.util.ext.qualifier
 import pl.jwizard.jwc.core.util.jdaInfo
-import pl.jwizard.jwl.ioc.stereotype.SingletonComponent
 import pl.jwizard.jwl.util.logger
 import java.time.Instant
 
-@SingletonComponent
-internal class AudioChannelsListenerGuardBean(
-	private val jdaShardManager: JdaShardManagerBean,
-	private val environment: EnvironmentBean,
-	private val musicManagers: MusicManagersBean,
-	private val audioClient: DistributedAudioClientBean,
+@Component
+internal class AudioChannelsListenerGuard(
+	private val jdaShardManager: JdaShardManager,
+	private val environment: GuildEnvironment,
+	private val musicManagers: MusicManagersCache,
+	private val audioClient: DistributedAudioClientImpl,
 ) : ChannelListenerGuard, JvmFixedThreadExecutor() {
 
 	companion object {
-		private val log = logger<AudioChannelsListenerGuardBean>()
+		private val log = logger<AudioChannelsListenerGuard>()
 
 		// interval in seconds at which the executor service runs to check voice channels
 		private const val INTERVAL_TICK_SEC = 5L
@@ -70,8 +70,8 @@ internal class AudioChannelsListenerGuardBean(
 				removeFromGuild.add(guildId)
 				continue
 			}
-			val maxInactivity = environment
-				.getGuildProperty<Long>(GuildProperty.LEAVE_EMPTY_CHANNEL_SEC, guildId)
+			val maxInactivity =
+				environment.getGuildProperty<Long>(GuildProperty.LEAVE_EMPTY_CHANNEL_SEC, guildId)
 
 			// if the bot is still within the allowed inactivity time, skip processing
 			if (time.epochSecond > (Instant.now().epochSecond - maxInactivity)) {
@@ -84,10 +84,9 @@ internal class AudioChannelsListenerGuardBean(
 				// leave the channel only if the bot is still on it (did not leave after 2 minutes of
 				// inactivity)
 				if (audioClient.inAudioChannel(musicManager.state.context.selfMember)) {
-					val message = musicManager.createEmbedBuilder()
-						.setDescription(I18nResponseSource.LEAVE_EMPTY_CHANNEL)
-						.setColor(JdaColor.PRIMARY)
-						.build()
+					val message =
+						musicManager.createEmbedBuilder().setDescription(I18nResponseSource.LEAVE_EMPTY_CHANNEL)
+							.setColor(JdaColor.PRIMARY).build()
 					musicManager.state.audioScheduler.stopAndDestroy().subscribe()
 					audioClient.disconnectWithAudioChannel(guild)
 					log.jdaInfo(
