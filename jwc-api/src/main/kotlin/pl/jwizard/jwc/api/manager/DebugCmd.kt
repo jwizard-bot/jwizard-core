@@ -2,11 +2,11 @@ package pl.jwizard.jwc.api.manager
 
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.ActionRow
-import pl.jwizard.jwc.api.CommandEnvironmentBean
+import pl.jwizard.jwc.api.CommandEnvironment
 import pl.jwizard.jwc.api.ManagerCommandBase
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.command.reflect.JdaCommand
-import pl.jwizard.jwc.core.config.spi.VcsDeploymentSupplier
+import pl.jwizard.jwc.core.deployment.DeploymentInfo
 import pl.jwizard.jwc.core.i18n.source.I18nActionSource
 import pl.jwizard.jwc.core.i18n.source.I18nSystemSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
@@ -15,21 +15,18 @@ import pl.jwizard.jwc.core.jda.command.CommandResponse
 import pl.jwizard.jwc.core.jda.command.TFutureResponse
 import pl.jwizard.jwc.core.jda.embed.PercentageIndicatorBar
 import pl.jwizard.jwc.core.property.BotProperty
+import pl.jwizard.jwc.core.util.formatBytes
 import pl.jwizard.jwc.core.util.mdBold
 import pl.jwizard.jwc.core.util.mdLink
 import pl.jwizard.jwc.core.util.mdList
 import pl.jwizard.jwl.command.Command
 import pl.jwizard.jwl.command.arg.Argument
-import pl.jwizard.jwl.util.formatBytes
-import pl.jwizard.jwl.vcs.VcsConfigBean
-import pl.jwizard.jwl.vcs.VcsRepository
 import java.util.*
 
 @JdaCommand(Command.DEBUG)
 internal class DebugCmd(
-	private val deploymentSupplier: VcsDeploymentSupplier,
-	private val vcsConfigBean: VcsConfigBean,
-	commandEnvironment: CommandEnvironmentBean,
+	private val deploymentInfo: DeploymentInfo,
+	commandEnvironment: CommandEnvironment,
 ) : ManagerCommandBase(commandEnvironment) {
 	override fun executeManager(context: GuildCommandContext, response: TFutureResponse) {
 		val refreshableComponent = createRefreshable {
@@ -54,11 +51,8 @@ internal class DebugCmd(
 	}
 
 	private fun createDebugMessage(context: CommandBaseContext): MessageEmbed {
-		val repository = VcsRepository.JWIZARD_CORE
-		val details = deploymentSupplier
-			.getDeploymentDetails(vcsConfigBean.getRepositoryName(repository))
-
-		val (name, url) = vcsConfigBean.createSnapshotUrl(repository, details?.longSHA)
+		val details = deploymentInfo.getCoreDeploymentDetails()
+		val (name, url) = deploymentInfo.createCoreDeploymentGitHubNameAndUrl()
 
 		val runtime = Runtime.getRuntime()
 		val totalMemory = runtime.maxMemory()

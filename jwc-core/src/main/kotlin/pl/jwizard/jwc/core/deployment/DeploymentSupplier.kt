@@ -1,8 +1,6 @@
-package pl.jwizard.jwc.core.config.spi
+package pl.jwizard.jwc.core.deployment
 
-import pl.jwizard.jwc.core.config.DeploymentDetails
-
-interface VcsDeploymentSupplier {
+interface DeploymentSupplier {
 	fun getDeploymentVersion(repositoryName: String): String?
 
 	fun getDeploymentDetails(repositoryName: String): DeploymentDetails?
