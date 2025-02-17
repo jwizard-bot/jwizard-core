@@ -1,10 +1,10 @@
-package pl.jwizard.jwc.core.jvm.thread
+package pl.jwizard.jwc.core.thread
 
-import pl.jwizard.jwl.ioc.CleanupAfterIoCDestroy
+import org.springframework.beans.factory.DisposableBean
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 
-abstract class JvmThreadExecutor(countOfThreads: Int = 1) : CleanupAfterIoCDestroy {
+abstract class JvmThreadExecutor(countOfThreads: Int = 1) : DisposableBean {
 	protected val executor: ScheduledExecutorService = Executors
 		.newScheduledThreadPool(countOfThreads)
 

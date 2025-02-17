@@ -4,7 +4,7 @@ import pl.jwizard.jwc.audio.client.DistributedAudioClientImpl
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.i18n.source.I18nResponseSource
 import pl.jwizard.jwc.core.jda.color.JdaColor
-import pl.jwizard.jwc.core.jvm.thread.JvmFixedPayloadThreadExecutor
+import pl.jwizard.jwc.core.thread.JvmFixedPayloadThreadExecutor
 import pl.jwizard.jwc.core.util.floatingSecToMin
 import pl.jwizard.jwc.core.util.jdaInfo
 import pl.jwizard.jwc.core.util.secToDTF

@@ -1,4 +1,4 @@
-package pl.jwizard.jwc.core.jvm.thread
+package pl.jwizard.jwc.core.thread
 
 import java.util.concurrent.TimeUnit
 

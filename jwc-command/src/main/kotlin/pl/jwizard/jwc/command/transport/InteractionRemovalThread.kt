@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.interactions.components.ActionComponent
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
-import pl.jwizard.jwc.core.jvm.thread.JvmFixedPayloadThreadExecutor
+import pl.jwizard.jwc.core.thread.JvmFixedPayloadThreadExecutor
 
 internal class InteractionRemovalThread : JvmFixedPayloadThreadExecutor<Message>(
 	countOfThreads = 1,
