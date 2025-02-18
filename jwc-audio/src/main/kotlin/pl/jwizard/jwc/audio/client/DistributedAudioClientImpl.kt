@@ -43,9 +43,15 @@ class DistributedAudioClientImpl(
 	override fun initClient() {
 		val jdaSecretToken = environment.getProperty<String>(BotProperty.JDA_SECRET_TOKEN)
 		val instanceName = environment.getProperty<String>(BotProperty.JDA_INSTANCE_NAME)
+		val shardStart = environment.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_START)
+		val shardEnd = environment.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_END)
 
 		audioNodesCache = AudioNodesCache(environment)
-		client = AudioClient(jdaSecretToken, instanceName, audioNodeListener)
+		client = AudioClient(
+			jdaSecretToken,
+			instanceName = "$instanceName-f${shardStart}t$shardEnd",
+			audioNodeListener,
+		)
 		audioController = AudioSessionController(client, gatewayVoiceStateInterceptor)
 
 		reloadOrInitNodes()
