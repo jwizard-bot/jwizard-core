@@ -29,10 +29,11 @@ class AudioClient(
 
 	private val botId = getUserIdFromToken(secretToken)
 
-	private val internalNodes = CopyOnWriteArrayList<AudioNode>()
+	// map guild id to link
 	private val internalLinks = ConcurrentHashMap<Long, Link>()
+	private val internalNodes = CopyOnWriteArrayList<AudioNode>()
 
-	// map current selected node pool to guild id
+	// map current selected node pool in guild to guild id
 	private val guildCurrentNodePool = ConcurrentHashMap<Long, NodePool>()
 
 	private val disposables = mutableListOf<Disposable>()
@@ -41,7 +42,8 @@ class AudioClient(
 	private val publisher = ReactiveEventPublisher<ClientEvent>()
 	private val loadBalancer: LoadBalancer = DefaultLoadBalancer()
 
-	// trigger updated discord voice gateway endpoint, when bot connecting to voice channel
+	// trigger updated discord voice gateway endpoint asynchronously when bot connecting to
+	// voice channel
 	internal var voiceGatewayUpdateTrigger: CompletableFuture<Void>? = null
 
 	// true, if client is accepted client requests
@@ -140,17 +142,16 @@ class AudioClient(
 				.forEach { (_, link) -> link.updateState(LinkState.DISCONNECTED) }
 			return
 		}
-		for (link in internalLinks.values) {
-			if (link.selectedNode == audioNode) {
-				link.transferNode(
+		internalLinks.values
+			.filter { it.selectedNode == audioNode }
+			.forEach {
+				it.transferNode(
 					loadBalancer.selectNode(
-						nodesFromPool,
-						link.cachedPlayer?.voiceRegion,
-						link.guildId
+						nodesFromPool, it.cachedPlayer?.voiceRegion,
+						it.guildId
 					)
 				)
 			}
-		}
 	}
 
 	internal fun removeDestroyedLink(guildId: Long) = internalLinks.remove(guildId)
