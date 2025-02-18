@@ -15,10 +15,9 @@ import pl.jwizard.jwc.audio.gateway.node.NodePool
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.audio.DistributedAudioClient
 import pl.jwizard.jwc.core.property.BotProperty
-import pl.jwizard.jwl.node.AudioNodeDefinition
-import pl.jwizard.jwl.node.AudioNodesCache
 import pl.jwizard.jwl.property.BaseEnvironment
 import pl.jwizard.jwl.util.logger
+import pl.jwizard.jwl.vault.VaultClient
 
 @Component
 class DistributedAudioClientImpl(
@@ -30,11 +29,11 @@ class DistributedAudioClientImpl(
 		private val log = logger<DistributedAudioClientImpl>()
 	}
 
+	private val vaultClient = VaultClient(environment)
 	private val audioServerTimeout = environment
 		.getProperty<Long>(BotProperty.AUDIO_SERVER_TIMEOUT_MS)
 
 	private lateinit var client: AudioClient
-	private lateinit var audioNodesCache: AudioNodesCache
 	private lateinit var audioController: AudioSessionController
 
 	val availableNodes
@@ -46,16 +45,45 @@ class DistributedAudioClientImpl(
 		val shardStart = environment.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_START)
 		val shardEnd = environment.getProperty<Int>(BotProperty.JDA_SHARDING_OFFSET_END)
 
-		audioNodesCache = AudioNodesCache(environment)
 		client = AudioClient(
 			jdaSecretToken,
 			instanceName = "$instanceName-f${shardStart}t$shardEnd",
 			audioNodeListener,
 		)
+		initOrReloadNodes()
 		audioController = AudioSessionController(client, gatewayVoiceStateInterceptor)
-
-		reloadOrInitNodes()
 		client.initAudioEventListeners()
+	}
+
+	fun initOrReloadNodes() {
+		vaultClient.initOnce()
+		// fetch available audio nodes from vault client as audio-nodes/N where N is the node id
+		val audioNodes = vaultClient.readKvGroupPropertySource<Int, AudioNodeProperty>(
+			kvPath = "audio-node",
+			patternFilter = Regex("^\\d+$"),
+			keyExtractor = { it.toInt() }
+		)
+		val activeAudioNodes = audioNodes.values
+			.filter { it.get(AudioNodeProperty.ACTIVE) } // take only active nodes
+			.map {
+				NodeConfig.Builder()
+					.setHostDescriptor(
+						name = it.get(AudioNodeProperty.NAME),
+						password = it.get(AudioNodeProperty.PASSWORD),
+					)
+					.setAddress(
+						hostWithPort = it.get(AudioNodeProperty.GATEWAY_HOST),
+						secure = it.get(AudioNodeProperty.SECURE),
+					)
+					.setBalancerSetup(
+						pool = AudioNodeType.valueOf(it.get(AudioNodeProperty.NODE_POOL)),
+						regionGroup = it.get(AudioNodeProperty.REGION_GROUP)
+					)
+					.setHttpTimeout(audioServerTimeout)
+					.build()
+			}
+		client.removeAllNodes()
+		client.addNodes(activeAudioNodes)
 	}
 
 	override fun getPlayersCountInSelectedGuilds(
@@ -70,25 +98,6 @@ class DistributedAudioClientImpl(
 
 	override val voiceDispatchInterceptor
 		get() = JDAVoiceUpdateListener(client)
-
-	fun reloadOrInitNodes(): Pair<Int, Int> {
-		val prevNodes = audioNodesCache.nodes.map { it.name }
-		client.removeNodes(prevNodes)
-		audioNodesCache.fetchAndReloadNodes()
-
-		val nodeConfigs = audioNodesCache.nodes
-			.filter(AudioNodeDefinition::active)
-			.map {
-				NodeConfig.Builder()
-					.setHostDescriptor(it.name, it.password)
-					.setAddress(it.host, it.port, it.secure)
-					.setBalancerSetup(AudioNodeType.valueOf(it.nodePool), it.regionGroup)
-					.setHttpTimeout(audioServerTimeout)
-					.build()
-			}
-		client.addNodes(nodeConfigs)
-		return Pair(prevNodes.size, nodeConfigs.size)
-	}
 
 	fun getLink(guildId: Long) = client.getLinkIfCached(guildId)
 

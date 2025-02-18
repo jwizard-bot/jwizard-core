@@ -3,8 +3,7 @@ package pl.jwizard.jwc.audio.gateway.node
 import pl.jwizard.jwc.audio.gateway.balancer.region.RegionGroup
 
 class NodeConfig private constructor(
-	private val hostName: String,
-	private val port: Int,
+	private val hostWithPort: String,
 	private val secure: Boolean,
 	val name: String,
 	val password: String,
@@ -17,11 +16,10 @@ class NodeConfig private constructor(
 
 	private fun getUrlWithProtocol(
 		protocol: String,
-	) = "$protocol${if (secure) "s" else ""}://${hostName}:${port}"
+	) = "$protocol${if (secure) "s" else ""}://${hostWithPort}"
 
 	class Builder {
-		private var hostName: String? = null
-		private var port: Int? = null
+		private var hostWithPort: String? = null
 		private var secure: Boolean? = null
 		private var name: String? = null
 		private var password: String? = null
@@ -29,9 +27,8 @@ class NodeConfig private constructor(
 		private var regionGroup: RegionGroup = RegionGroup.UNKNOWN
 		private var httpTimeout: Long? = null
 
-		fun setAddress(hostName: String, port: Int, secure: Boolean) = apply {
-			this.hostName = hostName
-			this.port = port
+		fun setAddress(hostWithPort: String, secure: Boolean) = apply {
+			this.hostWithPort = hostWithPort
 			this.secure = secure
 		}
 
@@ -50,15 +47,13 @@ class NodeConfig private constructor(
 		}
 
 		fun build(): NodeConfig {
-			requireNotNull(hostName) { "Hostname must be set" }
-			requireNotNull(port) { "Port must be set" }
+			requireNotNull(hostWithPort) { "Host with port must be set" }
 			requireNotNull(name) { "Name must be set" }
 			requireNotNull(password) { "Password must be set" }
 			requireNotNull(pool) { "Pool must be set" }
 			requireNotNull(httpTimeout) { "Http timeout must be set" }
 			return NodeConfig(
-				hostName!!,
-				port!!,
+				hostWithPort!!,
 				secure!!,
 				name!!,
 				password!!,

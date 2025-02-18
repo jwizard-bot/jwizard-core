@@ -98,9 +98,7 @@ class AudioClient(
 		return false
 	}
 
-	fun removeNodes(names: List<String>) {
-		names.forEach { removeNode(it) }
-	}
+	fun removeAllNodes() = internalNodes.forEach { removeNode(it.name) }
 
 	fun getLinkIfCached(guildId: Long) = internalLinks[guildId]
 
