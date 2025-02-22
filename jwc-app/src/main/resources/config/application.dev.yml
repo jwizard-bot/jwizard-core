@@ -2,4 +2,4 @@ server:
   port: ${vault:V_SERVER_PORT}
 
 service:
-  front-url: http://localhost:8764
+  front-url: http://localhost:8763
