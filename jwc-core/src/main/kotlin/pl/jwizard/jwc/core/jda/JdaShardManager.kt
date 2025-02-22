@@ -115,5 +115,6 @@ final class JdaShardManager(
 	fun getDirectAudioController(guild: Guild) =
 		shardManager.getShardById(guild.jda.shardInfo.shardId)?.directAudioController
 
-	fun getShards(): List<JDA> = shardManager.shards
+	val runningShards: List<JDA>
+		get() = shardManager.shards
 }
