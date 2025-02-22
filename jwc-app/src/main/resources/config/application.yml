@@ -82,3 +82,5 @@ radio:
 
 service:
   discord-api: https://discord.com/api/v10
+  rest-api:
+    token: ${vault:V_REST_API_TOKEN}

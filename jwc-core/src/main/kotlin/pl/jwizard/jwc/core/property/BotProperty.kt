@@ -71,6 +71,9 @@ enum class BotProperty(
 
 	// discord api base path
 	SERVICE_DISCORD_API("service.discord-api"),
+
+	// token used for authenticate JWizard rest api endpoints
+	SERVICE_REST_API_TOKEN("service.rest-api.token"),
 	;
 
 	// @formatter:on
