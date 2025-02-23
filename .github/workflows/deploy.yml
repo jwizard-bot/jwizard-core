@@ -179,7 +179,7 @@ jobs:
           port: ${{ env.SSH_PORT }}
           key: ${{ env.SSH_KEY }}
           passphrase: ${{ env.SSH_PASSPHRASE }}
-          script: exec/make-conf ${{ env.SERVER_OUTPUT }} "${{ secrets.CONFIG_FILE_CONTENT }}"
+          script: exec/make-conf ${{ env.SERVER_OUTPUT }} "${{ secrets.APP_CONFIG_FILE_CONTENT }}"
 
       - name: Start process
         uses: appleboy/ssh-action@v1.1.0
