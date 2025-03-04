@@ -9,7 +9,7 @@ import pl.jwizard.jwc.core.server.route.status.dto.ReducedShardStatusResDto
 import pl.jwizard.jwc.core.server.route.status.dto.ShardStatusInfoResDto
 import pl.jwizard.jwc.core.server.route.status.dto.ShardUpInGuildCheckResDto
 import pl.jwizard.jwc.core.server.route.status.dto.ShardsCountResDto
-import pl.jwizard.jwl.server.route.RestControllerBase
+import pl.jwizard.jwl.server.route.HttpControllerBase
 import pl.jwizard.jwl.server.route.RouteDefinitionBuilder
 import kotlin.math.ceil
 
@@ -17,7 +17,7 @@ import kotlin.math.ceil
 internal class StatusController(
 	private val jdaShardManager: JdaShardManager,
 	private val distributedAudioClient: DistributedAudioClient,
-) : RestControllerBase {
+) : HttpControllerBase {
 	override val basePath = "/api/v1/status"
 
 	private fun getReducedShardsStatistics(ctx: Context) {
