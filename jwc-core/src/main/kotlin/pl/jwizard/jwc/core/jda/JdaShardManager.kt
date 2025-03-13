@@ -41,7 +41,7 @@ final class JdaShardManager(
 
 	private val jvmDisposableHook = JvmDisposableHook(this)
 
-	fun createShardsManager(distributedAudioClientSupplier: DistributedAudioClient) {
+	fun createShardsManager(distributedAudioClient: DistributedAudioClient) {
 		log.info("JDA instance is warming up...")
 		jdaColorStore.loadColors()
 
@@ -81,7 +81,7 @@ final class JdaShardManager(
 			.setUseShutdownNow(true)
 			.setShardsTotal(totalShards)
 			.setShards(shardingMinId, shardingMaxId)
-			.setVoiceDispatchInterceptor(distributedAudioClientSupplier.voiceDispatchInterceptor)
+			.setVoiceDispatchInterceptor(distributedAudioClient.voiceDispatchInterceptor)
 			.enableCache(enabledCacheFlags.map { CacheFlag.valueOf(it) })
 			.disableCache(disabledCacheFlags.map { CacheFlag.valueOf(it) })
 			.setActivity(Activity.listening("Loading..."))

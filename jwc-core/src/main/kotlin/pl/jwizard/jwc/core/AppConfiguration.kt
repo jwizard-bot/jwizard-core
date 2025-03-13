@@ -13,7 +13,6 @@ import pl.jwizard.jwl.ioc.IoCKtContextFactory
 import pl.jwizard.jwl.property.BaseEnvironment
 import pl.jwizard.jwl.server.HttpServer
 import pl.jwizard.jwl.server.exception.UnspecifiedExceptionAdvisor
-import pl.jwizard.jwl.server.filter.LanguageHeaderExtractorFilter
 import java.net.http.HttpClient
 
 @Component
@@ -49,17 +48,11 @@ internal class AppConfiguration {
 
 	@Bean
 	fun httpServer(
-		environment: BaseEnvironment,
 		ioCKtContextFactory: IoCKtContextFactory,
-		i18n: I18n,
 		objectMapper: ObjectMapper,
-	) = HttpServer(environment, ioCKtContextFactory, i18n, objectMapper)
-
-	@Bean
-	fun unspecifiedExceptionAdvisor(i18n: I18n) = UnspecifiedExceptionAdvisor(i18n)
-
-	@Bean
-	fun languageHeaderExtractorFilter(
 		environment: BaseEnvironment,
-	) = LanguageHeaderExtractorFilter(environment)
+	) = HttpServer(ioCKtContextFactory, objectMapper, environment)
+
+	@Bean
+	fun unspecifiedExceptionAdvisor() = UnspecifiedExceptionAdvisor()
 }
