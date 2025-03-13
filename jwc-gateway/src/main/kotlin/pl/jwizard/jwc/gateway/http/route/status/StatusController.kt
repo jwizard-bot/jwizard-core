@@ -1,6 +1,5 @@
-package pl.jwizard.jwc.core.server.route.status
+package pl.jwizard.jwc.gateway.http.route.status
 
-import io.javalin.http.Context
 import net.dv8tion.jda.api.JDA
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.audio.DistributedAudioClient
@@ -70,25 +69,27 @@ internal class StatusController(
 		ctx.json(resDto)
 	}
 
-	private fun getParsedShardStats(shards: List<JDA>) = shards.map {
-		val totalShardListeners = it.guilds.fold(0) { acc, guild ->
-			// check only if bot is in audio channel
-			if (guild.selfMember.voiceState?.inAudioChannel() == true) {
-				val countOfMembers = (guild.selfMember.voiceState?.channel?.members?.size ?: 0)
-				acc + (countOfMembers - 1) // remove self user (total - 1)
-			} else {
-				acc // otherwise return accumulated value
+	private fun getParsedShardStats(shards: List<JDA>) = shards
+		.map {
+			val totalShardListeners = it.guilds.fold(0) { acc, guild ->
+				// check only if bot is in audio channel
+				if (guild.selfMember.voiceState?.inAudioChannel() == true) {
+					val countOfMembers = (guild.selfMember.voiceState?.channel?.members?.size ?: 0)
+					acc + (countOfMembers - 1) // remove self user (total - 1)
+				} else {
+					acc // otherwise return accumulated value
+				}
 			}
+			ShardStatusInfoResDto(
+				id = it.shardInfo.shardId,
+				ping = it.gatewayPing,
+				servers = it.guilds.size,
+				users = it.users.size - 1, // remove self user (total - 1)
+				activeAudioPlayers = distributedAudioClient.getPlayersCountInSelectedGuilds(it.guilds),
+				audioListeners = totalShardListeners,
+			)
 		}
-		ShardStatusInfoResDto(
-			id = it.shardInfo.shardId,
-			ping = it.gatewayPing,
-			servers = it.guilds.size,
-			users = it.users.size - 1, // remove self user (total - 1)
-			activeAudioPlayers = distributedAudioClient.getPlayersCountInSelectedGuilds(it.guilds),
-			audioListeners = totalShardListeners,
-		)
-	}
+		.sortedBy(ShardStatusInfoResDto::id)
 
 	override val routes = RouteDefinitionBuilder()
 		.get("/shard/all", getShardsStatistics)
