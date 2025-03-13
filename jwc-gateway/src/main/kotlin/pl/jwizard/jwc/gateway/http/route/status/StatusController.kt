@@ -5,10 +5,11 @@ import net.dv8tion.jda.api.JDA
 import org.springframework.stereotype.Component
 import pl.jwizard.jwc.core.audio.DistributedAudioClient
 import pl.jwizard.jwc.core.jda.JdaShardManager
-import pl.jwizard.jwc.core.server.route.status.dto.ReducedShardStatusResDto
-import pl.jwizard.jwc.core.server.route.status.dto.ShardStatusInfoResDto
-import pl.jwizard.jwc.core.server.route.status.dto.ShardUpInGuildCheckResDto
-import pl.jwizard.jwc.core.server.route.status.dto.ShardsCountResDto
+import pl.jwizard.jwc.gateway.http.BasicAuthRouteHandler
+import pl.jwizard.jwc.gateway.http.route.status.dto.ReducedShardStatusResDto
+import pl.jwizard.jwc.gateway.http.route.status.dto.ShardStatusInfoResDto
+import pl.jwizard.jwc.gateway.http.route.status.dto.ShardUpInGuildCheckResDto
+import pl.jwizard.jwc.gateway.http.route.status.dto.ShardsCountResDto
 import pl.jwizard.jwl.server.route.HttpControllerBase
 import pl.jwizard.jwl.server.route.RouteDefinitionBuilder
 import kotlin.math.ceil
@@ -20,7 +21,7 @@ internal class StatusController(
 ) : HttpControllerBase {
 	override val basePath = "/api/v1/status"
 
-	private fun getReducedShardsStatistics(ctx: Context) {
+	private val getReducedShardsStatistics = BasicAuthRouteHandler { ctx ->
 		val shards = jdaShardManager.runningShards
 		val separatedShardsInfo = getParsedShardStats(shards)
 
@@ -45,17 +46,17 @@ internal class StatusController(
 		ctx.json(resDto)
 	}
 
-	private fun getShardsStatistics(ctx: Context) {
+	private val getShardsStatistics = BasicAuthRouteHandler { ctx ->
 		val resDto = getParsedShardStats(jdaShardManager.runningShards)
 		ctx.json(resDto)
 	}
 
-	private fun getShardsCount(ctx: Context) {
+	private val getShardsCount = BasicAuthRouteHandler { ctx ->
 		val resDto = ShardsCountResDto(up = jdaShardManager.runningShards.size)
 		ctx.json(resDto)
 	}
 
-	private fun checkIfShardIsUpInGuild(ctx: Context) {
+	private val checkIfShardIsUpInGuild = BasicAuthRouteHandler { ctx ->
 		val guildNameOrId = ctx.queryParam("guild")
 		var result = false
 		if (guildNameOrId != null) {
@@ -90,9 +91,9 @@ internal class StatusController(
 	}
 
 	override val routes = RouteDefinitionBuilder()
-		.get("/shard/all", ::getShardsStatistics)
-		.get("/shard/reduced", ::getReducedShardsStatistics)
-		.get("/shard/count", ::getShardsCount)
-		.get("/shard/check", ::checkIfShardIsUpInGuild)
+		.get("/shard/all", getShardsStatistics)
+		.get("/shard/reduced", getReducedShardsStatistics)
+		.get("/shard/count", getShardsCount)
+		.get("/shard/check", checkIfShardIsUpInGuild)
 		.compositeRoutes()
 }
