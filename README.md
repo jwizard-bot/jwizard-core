@@ -32,18 +32,19 @@ interface. It is also designed for clustering, utilizing a shard-offset system.
 
 ## Project modules
 
-| Name              | Description                                                                                                               |
-|-------------------|---------------------------------------------------------------------------------------------------------------------------|
-| jwc-api           | JDA command handlers for capturing interactions triggered by Discord guild members.                                       |
-| jwc-app           | The application entry point, including configuration files and internationalization (i18n) content.                       |
-| jwc-audio         | JWizard audio client bridge, node manager, audio content loaders, and schedulers.                                         |
-| jwc-audio-gateway | Audio gateway facilitating communication between audio servers and the jwc-audio module.                                  |
-| jwc-command       | Framework for legacy (prefix) and slash command interactions, including component handlers and command reflection loader. |
-| jwc-core          | JDA loader, configuration loader framework, SPI interfaces for jwc-audio, JVM thread helpers, and utility formatters.     |
-| jwc-exception     | Set of exceptions that may be thrown during the interaction pipeline, caught by the command interaction framework.        |
-| jwc-persistence   | Provides communication via S3 storage and RDBMS (SQL), with loosely coupled binding beans (provided through SPI).         |
-| jwc-radio         | Framework for parsing radio playback data and associated information.                                                     |
-| jwc-vote          | JDA voting framework that manages voting interactions via interaction components.                                         |
+| Name              | Description                                                                                                                     |
+|-------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| jwc-api           | JDA command handlers for capturing interactions triggered by Discord guild members.                                             |
+| jwc-app           | The application entry point, including configuration files and internationalization (i18n) content.                             |
+| jwc-audio         | JWizard audio client bridge, node manager, audio content loaders, and schedulers.                                               |
+| jwc-audio-gateway | Audio gateway facilitating communication between audio servers and the jwc-audio module.                                        |
+| jwc-command       | Framework for legacy (prefix) and slash command interactions, including component handlers and command reflection loader.       |
+| jwc-core          | JDA loader, configuration loader framework, SPI interfaces for jwc-audio, JVM thread helpers, and utility formatters.           |
+| jwc-exception     | Set of exceptions that may be thrown during the interaction pipeline, caught by the command interaction framework.              |
+| jwc-gateway       | Handle communication between Core and other JWizard projects (exclude communication with audio server) via HTTP, REST and AMQP. |
+| jwc-persistence   | Provides communication via S3 storage and RDBMS (SQL), with loosely coupled binding beans (provided through SPI).               |
+| jwc-radio         | Framework for parsing radio playback data and associated information.                                                           |
+| jwc-vote          | JDA voting framework that manages voting interactions via interaction components.                                               |
 
 ## Audio gateway client
 
