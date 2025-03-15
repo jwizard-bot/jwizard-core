@@ -174,8 +174,7 @@ shard ranges for distributed JVM architecture) you will find here:
 ## Contributing
 
 We welcome contributions from the community! Please read our [CONTRIBUTING](./CONTRIBUTING) file for
-guidelines on how
-to get involved.
+guidelines on how to get involved.
 
 ## License
 
