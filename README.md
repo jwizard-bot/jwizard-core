@@ -87,10 +87,12 @@ $ git clone https://github.com/jwizard-bot/jwizard-tools
 | jwizard-lava-node-1 | 8766    | Lavalink #1 node.            |
 | jwizard-lava-node-2 | 8767    | Lavalink #2 node.            |
 
-> NOTE: Don't forget to perform database migration after start DB (see
+> [!IMPORTANT]
+> Don't forget to perform database migration after start DB (see
 > [jwizard-lib](https://github.com/jwizard-bot/jwizard-lib) repository).
 
-> NOTE: Alternatively, you can run single Lavalink node, but in `docker-compose.yml` file in
+> [!TIP]
+> Alternatively, you can run single Lavalink node, but in `docker-compose.yml` file in
 > [jwizard-lib](https://github.com/jwizard-bot/jwizard-lib) repository you must remove second
 > Lavalink node declaration.
 > Running 2 nodes are useful for checking load-balancer in performance tests.
@@ -145,11 +147,13 @@ where:
 * `N` is instance number (`0` or `1`),
 * `Xmx` and `Xms` parameters are optional and can be modified.
 
-> NOTE: For servers running on HotSpot JVM, Oracle recommended same Xms and Xmx parameter, ex.
-`-Xms1G` and `-Xmx1G`. More information you will find
+> [!NOTE]
+> For servers running on HotSpot JVM, Oracle recommended same Xms and Xmx parameter, ex. `-Xms1G`
+> and `-Xmx1G`. More information you will find
 > [here](https://docs.oracle.com/cd/E74363_01/ohi_vbp_-_installation_guide--20160224-094432-html-chunked/s66.html).
 
-> NOTE: You can run concurrently 2 instances, but you must set valid offsets in
+> [!IMPORTANT]
+> You can run concurrently 2 instances, but you must set valid offsets in
 `-Djda.sharding.offset.start` and `-Djda.sharding.offset.end`. Concurrent instances can share same
 > Lavalink node/nodes.
 
