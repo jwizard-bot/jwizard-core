@@ -14,5 +14,6 @@ enum class AudioNodeProperty(
 	SECURE("V_SECURE", Boolean::class),
 	NODE_POOL("V_NODE_POOL"),
 	REGION_GROUP("V_REGION_GROUP"),
+	PROXY_PROTECT("V_PROXY_PROTECT", Boolean::class),
 	;
 }

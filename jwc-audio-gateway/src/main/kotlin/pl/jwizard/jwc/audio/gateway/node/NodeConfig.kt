@@ -10,6 +10,8 @@ class NodeConfig private constructor(
 	val pool: NodePool,
 	val regionGroup: RegionGroup = RegionGroup.UNKNOWN,
 	val httpTimeout: Long,
+	val proxyVerificationHeaderName: String,
+	val proxyVerificationToken: String?,
 ) {
 	val wsUrl = getUrlWithProtocol("ws")
 	val httpUrl = getUrlWithProtocol("http")
@@ -26,6 +28,8 @@ class NodeConfig private constructor(
 		private var pool: NodePool? = null
 		private var regionGroup: RegionGroup = RegionGroup.UNKNOWN
 		private var httpTimeout: Long? = null
+		private var proxyVerificationHeaderName: String = ""
+		private var proxyVerificationToken: String? = null
 
 		fun setAddress(hostWithPort: String, secure: Boolean) = apply {
 			this.hostWithPort = hostWithPort
@@ -46,6 +50,13 @@ class NodeConfig private constructor(
 			this.regionGroup = RegionGroup.fromRawValue(regionGroup)
 		}
 
+		fun setProxyVerificationToken(protected: Boolean, headerName: String, token: String?) = apply {
+			if (protected) {
+				proxyVerificationHeaderName = headerName
+				proxyVerificationToken = token
+			}
+		}
+
 		fun build(): NodeConfig {
 			requireNotNull(hostWithPort) { "Host with port must be set" }
 			requireNotNull(name) { "Name must be set" }
@@ -60,6 +71,8 @@ class NodeConfig private constructor(
 				pool!!,
 				regionGroup,
 				httpTimeout!!,
+				proxyVerificationHeaderName,
+				proxyVerificationToken,
 			)
 		}
 	}

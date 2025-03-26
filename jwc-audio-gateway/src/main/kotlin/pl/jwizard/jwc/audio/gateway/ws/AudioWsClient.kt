@@ -57,7 +57,12 @@ class AudioWsClient(
 			.addHeader("Authorization", nodeConfig.password)
 			.addHeader("Client-Name", "jwc/$instanceName")
 			.addHeader("User-Id", botId.toString())
-			.apply { sessionId?.let { addHeader("Session-Id", it) } }
+			.apply {
+				sessionId?.let { addHeader("Session-Id", it) }
+				nodeConfig.proxyVerificationToken?.let {
+					addHeader(nodeConfig.proxyVerificationHeaderName, it)
+				}
+			}
 			.build()
 
 		webSocket = httpClient.newWebSocket(request, this)

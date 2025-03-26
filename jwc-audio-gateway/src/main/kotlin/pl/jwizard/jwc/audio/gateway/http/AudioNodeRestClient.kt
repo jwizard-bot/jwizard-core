@@ -65,6 +65,11 @@ internal class AudioNodeRestClient(
 		val request = Request.Builder()
 			.url(URL(nodeConfig.httpUrl + url))
 			.addHeader("Authorization", nodeConfig.password)
+			.apply {
+				nodeConfig.proxyVerificationToken?.let {
+					addHeader(nodeConfig.proxyVerificationHeaderName, it)
+				}
+			}
 			.method(httpMethod.name, body)
 			.build()
 		return httpClient.newCall(request)

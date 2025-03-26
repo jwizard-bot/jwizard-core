@@ -15,6 +15,7 @@ import pl.jwizard.jwc.audio.gateway.node.NodePool
 import pl.jwizard.jwc.command.context.GuildCommandContext
 import pl.jwizard.jwc.core.audio.DistributedAudioClient
 import pl.jwizard.jwc.core.property.BotProperty
+import pl.jwizard.jwl.property.AppBaseProperty
 import pl.jwizard.jwl.property.BaseEnvironment
 import pl.jwizard.jwl.util.logger
 import pl.jwizard.jwl.vault.VaultClient
@@ -30,8 +31,13 @@ class DistributedAudioClientImpl(
 	}
 
 	private val vaultClient = VaultClient(environment)
-	private val audioServerTimeout = environment
-		.getProperty<Long>(BotProperty.AUDIO_SERVER_TIMEOUT_MS)
+	private val audioServerTimeout =
+		environment.getProperty<Long>(BotProperty.AUDIO_SERVER_TIMEOUT_MS)
+
+	private val proxyVerificationHeaderName = environment
+		.getProperty<String>(AppBaseProperty.PROXY_VERIFICATION_HEADER_NAME)
+	private val proxyVerificationToken = environment
+		.getProperty<String>(AppBaseProperty.PROXY_VERIFICATION_TOKEN)
 
 	private lateinit var client: AudioClient
 	private lateinit var audioController: AudioSessionController
@@ -80,6 +86,11 @@ class DistributedAudioClientImpl(
 						regionGroup = it.get(AudioNodeProperty.REGION_GROUP)
 					)
 					.setHttpTimeout(audioServerTimeout)
+					.setProxyVerificationToken(
+						protected = it.get(AudioNodeProperty.PROXY_PROTECT),
+						headerName = proxyVerificationHeaderName,
+						token = proxyVerificationToken,
+					)
 					.build()
 			}
 		client.removeAllNodes()
