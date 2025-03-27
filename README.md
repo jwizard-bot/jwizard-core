@@ -120,7 +120,7 @@ $ git clone https://github.com/jwizard-bot/jwizard-core
 6. Create `.env` file in root of the project path (based on `example.env`) and insert Vault token:
 
 ```properties
-ENV_VAULT_TOKEN=<vault token>
+JWIZARD_VAULT_TOKEN=<vault token>
 ```
 
 where `<value token>` property is the Vault token stored in configured `.env` file
