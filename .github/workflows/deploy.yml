@@ -99,24 +99,9 @@ jobs:
       - name: Logout from Docker Hub
         run: docker logout
 
-  clear-context:
+  migrate-and-deploy:
     runs-on: ubuntu-latest
     needs: build
-
-    steps:
-      - name: Stop existing process
-        uses: appleboy/ssh-action@v1.1.0
-        with:
-          host: ${{ env.SSH_HOST }}
-          username: ${{ env.SSH_USERNAME }}
-          port: ${{ env.SSH_PORT }}
-          key: ${{ env.SSH_KEY }}
-          passphrase: ${{ env.SSH_PASSPHRASE }}
-          script: ~/exec/process stop ${{ env.PM2_CORE_NAME_INSTANCE_1 }} ${{ env.PM2_CORE_NAME_INSTANCE_2 }}
-
-  pre-deploy:
-    runs-on: ubuntu-latest
-    needs: clear-context
 
     steps:
       - name: Checkout tools repository
@@ -124,6 +109,12 @@ jobs:
         with:
           repository: ${{ github.repository_owner }}/jwizard-tools
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download generated JAR artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: output-jar
+          path: bin
 
       - name: Setup Python environment
         uses: actions/setup-python@v5
@@ -134,7 +125,7 @@ jobs:
       - name: Install requirements
         run: pip install -r requirements.txt
 
-      - name: Grand permissions to run packages grabber
+      - name: Grand permissions
         run: chmod +x exec/run-with-config
 
       - name: Run migrator
@@ -147,46 +138,16 @@ jobs:
           "${{ secrets.CONFIG_FILE_CONTENT }}" \
           --repo ${{ github.repository }}
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: pre-deploy
-    env:
-      SERVER_OUTPUT: "/opt/public/jwizard-core"
-
-    steps:
-      - name: Download generated JAR artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: output-jar
-
-      - name: Move files to server
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ env.SSH_HOST }}
-          username: ${{ env.SSH_USERNAME }}
-          port: ${{ env.SSH_PORT }}
-          key: ${{ env.SSH_KEY }}
-          passphrase: ${{ env.SSH_PASSPHRASE }}
-          source: "jwizard-core.jar"
-          target: ${{ env.SERVER_OUTPUT }}
-          rm: true
-
-      - name: Re-create config file
-        uses: appleboy/ssh-action@v1.1.0
-        with:
-          host: ${{ env.SSH_HOST }}
-          username: ${{ env.SSH_USERNAME }}
-          port: ${{ env.SSH_PORT }}
-          key: ${{ env.SSH_KEY }}
-          passphrase: ${{ env.SSH_PASSPHRASE }}
-          script: exec/make-conf ${{ env.SERVER_OUTPUT }} "${{ secrets.APP_CONFIG_FILE_CONTENT }}"
-
-      - name: Start process
-        uses: appleboy/ssh-action@v1.1.0
-        with:
-          host: ${{ env.SSH_HOST }}
-          username: ${{ env.SSH_USERNAME }}
-          port: ${{ env.SSH_PORT }}
-          key: ${{ env.SSH_KEY }}
-          passphrase: ${{ env.SSH_PASSPHRASE }}
-          script: ~/exec/process start ${{ env.PM2_CORE_NAME_INSTANCE_1 }} ${{ env.PM2_CORE_NAME_INSTANCE_2 }}
+      - name: Run remote invoker
+        run: exec/run-with-config remote_invoker \
+          "${{ secrets.CONFIG_FILE_CONTENT }}" \
+          --name core  \
+          --inputDir ${{ github.workspace }}/bin
+        env:
+          JWIZARD_SSH_HOST: ${{ secrets.SSH_HOST }}
+          JWIZARD_SSH_PORT: ${{ secrets.SSH_PORT }}
+          JWIZARD_SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+          JWIZARD_SSH_KEY: ${{ secrets.SSH_KEY }}
+          JWIZARD_SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
+          JWIZARD_SSH_OUTPUT_PATH_PREFIX: ${{ secrets.SSH_OUTPUT_PATH_PREFIX }}
+          JWIZARD_APP_CONFIG_FILE_CONTENT: ${{ secrets.APP_CONFIG_FILE_CONTENT }}
