@@ -47,9 +47,7 @@ subprojects {
 		implementation libs.jwizardLib
 		implementation libs.kotlin
 		implementation libs.kotlinReflect
-		implementation libs.logbackCore
 		implementation libs.logbackClassic
-		implementation libs.slf4jApi
 
 		testImplementation libs.junitJupiter
 		testImplementation libs.junitJupiterEngine
