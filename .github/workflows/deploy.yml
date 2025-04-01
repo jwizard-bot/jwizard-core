@@ -14,15 +14,6 @@ on:
       - "settings.gradle"
   workflow_dispatch:
 
-env:
-  PM2_CORE_NAME_INSTANCE_1: JWizardCore1
-  PM2_CORE_NAME_INSTANCE_2: JWizardCore2
-  SSH_HOST: ${{ secrets.SSH_HOST }}
-  SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-  SSH_PORT: ${{ secrets.SSH_PORT }}
-  SSH_KEY: ${{ secrets.SSH_KEY }}
-  SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
