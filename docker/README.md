@@ -47,13 +47,12 @@ docker build \
 # for 2 concurrent instances, one process per instance with 10 shards per process
 docker run -d \
   --name jwizard-core \
-  -p 6071:6071 \
+  -p 8080:8080 \
   -e JWIZARD_VAULT_SERVER=<vault server url> \
   -e JWIZARD_VAULT_USERNAME=<vault username> \
   -e JWIZARD_VAULT_PASSWORD=<vault password> \
   -e JWIZARD_XMS=1024m \
   -e JWIZARD_XMX=1024m \
-  -e JWIZARD_SERVER_PORT=6071 \
   -e JWIZARD_JDA_INSTANCE_NAME=core-instance-0 \
   -e JWIZARD_JDA_SHARDING_OFFSET_START=0 \
   -e JWIZARD_JDA_SHARDING_OFFSET_END=9 \
@@ -62,13 +61,12 @@ docker run -d \
 
 docker run -d \
   --name jwizard-core \
-  -p 6072:6072 \
+  -p 8081:8080 \
   -e JWIZARD_VAULT_SERVER=<vault server url> \
   -e JWIZARD_VAULT_USERNAME=<vault username> \
   -e JWIZARD_VAULT_PASSWORD=<vault password> \
   -e JWIZARD_XMS=1024m \
   -e JWIZARD_XMX=1024m \
-  -e JWIZARD_SERVER_PORT=6072 \
   -e JWIZARD_JDA_INSTANCE_NAME=core-instance-1 \
   -e JWIZARD_JDA_SHARDING_OFFSET_START=0 \
   -e JWIZARD_JDA_SHARDING_OFFSET_END=9 \
@@ -86,14 +84,13 @@ services:
     container_name: jwizard-core-instance-0
     image: milosz08/jwizard-core:latest
     ports:
-      - '6071:6071'
+      - '8080:8080'
     environment:
       JWIZARD_VAULT_SERVER: <vault server url>
       JWIZARD_VAULT_USERNAME: <vault username>
       JWIZARD_VAULT_PASSWORD: <vault password>
       JWIZARD_XMS: 1024m
       JWIZARD_XMX: 1024m
-      JWIZARD_SERVER_PORT: 6071
       JWIZARD_JDA_INSTANCE_NAME: core-instance-0
       JWIZARD_JDA_SHARDING_OFFSET_START: 0
       JWIZARD_JDA_SHARDING_OFFSET_END: 9
@@ -105,14 +102,13 @@ services:
     container_name: jwizard-core-instance-1
     image: milosz08/jwizard-core:latest
     ports:
-      - '6072:6072'
+      - '8081:8080'
     environment:
       JWIZARD_VAULT_SERVER: <vault server url>
       JWIZARD_VAULT_USERNAME: <vault username>
       JWIZARD_VAULT_PASSWORD: <vault password>
       JWIZARD_XMS: 1024m
       JWIZARD_XMX: 1024m
-      JWIZARD_SERVER_PORT: 6072
       JWIZARD_JDA_INSTANCE_NAME: core-instance-1
       JWIZARD_JDA_SHARDING_OFFSET_START: 0
       JWIZARD_JDA_SHARDING_OFFSET_END: 9
