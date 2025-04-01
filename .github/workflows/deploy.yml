@@ -36,14 +36,18 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run tests
-        run: ./gradlew clean test --no-daemon
+        run: |
+          ./gradlew clean --no-daemon
+          ./gradlew test --no-daemon
         env:
           JWIZARD_VERSION: ${{ steps.version.outputs.sha_short }}
           JWIZARD_MAVEN_NAME: ${{ secrets.MVN_LIB_READER_NAME }}
           JWIZARD_MAVEN_SECRET: ${{ secrets.MVN_LIB_READER_SECRET }}
 
       - name: Package to JAR
-        run: ./gradlew clean shadowJar --no-daemon
+        run: |
+          ./gradlew clean --no-daemon
+          ./gradlew shadowJar --no-daemon
         env:
           JWIZARD_VERSION: ${{ steps.version.outputs.sha_short }}
           JWIZARD_MAVEN_NAME: ${{ secrets.MVN_LIB_READER_NAME }}
