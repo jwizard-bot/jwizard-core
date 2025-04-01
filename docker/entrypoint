@@ -4,7 +4,6 @@ java \
 	-Xms$JWIZARD_XMS \
 	-Xmx$JWIZARD_XMX \
 	-Druntime.profiles=prod \
-	-Dserver.port=$JWIZARD_SERVER_PORT \
 	-Denv.enabled=false \
 	-Djda.instance.name=$JWIZARD_JDA_INSTANCE_NAME \
 	-Djda.sharding.offset.start=$JWIZARD_JDA_SHARDING_OFFSET_START \

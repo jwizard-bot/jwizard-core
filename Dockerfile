@@ -58,4 +58,5 @@ RUN chmod +x entrypoint
 
 LABEL maintainer="JWizard <info@jwizard.pl>"
 
+EXPOSE 8080
 ENTRYPOINT [ "./entrypoint" ]
