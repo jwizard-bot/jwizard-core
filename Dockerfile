@@ -23,8 +23,8 @@ WORKDIR $BUILD_DIR
 # copy only gradle-based resources for optimized caching
 COPY gradle $BUILD_DIR/gradle
 COPY gradlew $BUILD_DIR/gradlew
-COPY build.gradle $BUILD_DIR/build.gradle
-COPY settings.gradle $BUILD_DIR/settings.gradle
+COPY build.gradle.kts $BUILD_DIR/build.gradle.kts
+COPY settings.gradle.kts $BUILD_DIR/settings.gradle.kts
 
 RUN chmod +x $BUILD_DIR/gradlew
 RUN cd $BUILD_DIR
