@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.util.StdDateFormat
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.springframework.context.MessageSource
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
@@ -23,6 +24,7 @@ internal class AppConfiguration {
 		objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
 		// mappers
 		objectMapper.registerModule(JavaTimeModule())
+		objectMapper.registerKotlinModule()
 		// formatters
 		objectMapper.dateFormat = StdDateFormat()
 		return objectMapper

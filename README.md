@@ -80,12 +80,13 @@ $ git clone https://github.com/jwizard-bot/jwizard-tools
    in [jwizard-lib](https://github.com/jwizard-bot/jwizard-lib) repository. You must have up these
    containers:
 
-| Name                | Port(s) | Description                  |
-|---------------------|---------|------------------------------|
-| jwizard-vault       | 8761    | Secret keys storage service. |
-| jwizard-mysql-db    | 8762    | MySQL database.              |
-| jwizard-lava-node-1 | 8766    | Lavalink #1 node.            |
-| jwizard-lava-node-2 | 8767    | Lavalink #2 node.            |
+| Name                | Port(s)    | Description                           |
+|---------------------|------------|---------------------------------------|
+| jwizard-vault       | 8761       | Secret keys storage service.          |
+| jwizard-mysql-db    | 8762       | MySQL database.                       |
+| jwizard-lava-node-1 | 8767       | Lavalink #1 node.                     |
+| jwizard-lava-node-2 | 8768       | Lavalink #2 node.                     |
+| jwizard-rabbitmq    | 8771, 8772 | RabbitMQ server and management panel. |
 
 > [!IMPORTANT]
 > Don't forget to perform database migration after start DB (see
