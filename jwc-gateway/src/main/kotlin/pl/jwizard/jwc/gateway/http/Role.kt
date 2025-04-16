@@ -1,8 +1,11 @@
 package pl.jwizard.jwc.gateway.http
 
-import io.javalin.security.RouteRole
+import pl.jwizard.jwl.server.filter.FilterRole
 
-enum class Role : RouteRole {
+enum class Role : FilterRole {
 	AUTHENTICATED,
 	;
+
+	override val id
+		get() = name
 }
