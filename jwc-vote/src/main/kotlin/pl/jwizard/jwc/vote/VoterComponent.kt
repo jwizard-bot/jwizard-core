@@ -42,7 +42,7 @@ abstract class VoterComponent(
 
 	private val maxVotingTime = voterEnvironment.guildEnvironment.getGuildProperty<Long>(
 		guildProperty = GuildProperty.MAX_VOTING_TIME_SEC,
-		guildId = context.guild.idLong
+		guildId = context.guild.idLong,
 	)
 
 	private val percentageRatio = voterEnvironment.guildEnvironment.getGuildProperty<Int>(
