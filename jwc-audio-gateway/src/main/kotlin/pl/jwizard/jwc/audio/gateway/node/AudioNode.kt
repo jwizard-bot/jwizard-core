@@ -43,6 +43,7 @@ class AudioNode(
 
 	private val httpClient = OkHttpClient.Builder()
 		.callTimeout(nodeConfig.httpTimeout, TimeUnit.MILLISECONDS)
+		.pingInterval(5, TimeUnit.MINUTES)
 		.build()
 
 	private val rest = AudioNodeRestClient(nodeConfig, httpClient)
