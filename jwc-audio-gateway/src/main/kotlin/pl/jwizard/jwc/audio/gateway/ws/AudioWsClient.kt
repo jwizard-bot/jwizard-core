@@ -104,7 +104,6 @@ class AudioWsClient(
 				}
 				audioNode.penalties.handleTrackEvent(event)
 			}
-			else -> log.error("Unknown event: {} on node: {}.", nodeConfig, text)
 		}
 		val clientEvent = when (event) {
 			is ReadyEvent -> KReadyEvent.fromProtocol(audioNode, event)
