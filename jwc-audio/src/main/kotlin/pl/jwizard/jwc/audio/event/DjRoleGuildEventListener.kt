@@ -30,7 +30,20 @@ internal class DjRoleGuildEventListener(
 			return
 		}
 		generateDjRole(guild, guildDjRoleName).queue {
-			guild.modifyRolePositions().selectPosition(it).moveTo(0).queue()
+			val botRoles = guild.selfMember.roles
+			if (botRoles.isEmpty()) {
+				log.warn("Bot has no roles in {}, cannot move new DJ role.", guild.qualifier)
+				return@queue
+			}
+			val botHighestRole = botRoles.first()
+			guild.modifyRolePositions().selectPosition(it).moveTo(botHighestRole.position)
+				.queue(null) { error ->
+					log.warn(
+						"Failed to move DJ role in {}, even after checking hierarchy. Cause: {}",
+						guild.qualifier,
+						error.message
+					)
+				}
 		}
 	}
 
