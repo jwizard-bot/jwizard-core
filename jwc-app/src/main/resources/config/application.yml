@@ -3,6 +3,9 @@ vault:
     application-names:
       - ${cmd:jda.instance.name}
 
+server:
+  port: ${vault:V_SERVER_PORT:8080}
+
 jda:
   secret-token: ${vault:V_JDA_SECRET}
   instance:
