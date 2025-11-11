@@ -10,7 +10,7 @@ on:
 
 jobs:
   update-packages:
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, network-access ]
 
     steps:
       - name: Checkout tools repository
@@ -19,17 +19,13 @@ jobs:
           repository: ${{ github.repository_owner }}/jwizard-tools
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Python environment
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-          cache: 'pip'
+      - name: Grand permissions to executable scripts
+        run: |
+          chmod +x exec/prepare
+          chmod +x exec/run-with-config
 
-      - name: Install requirements
-        run: pip install -r requirements.txt
-
-      - name: Grand permissions
-        run: chmod +x exec/run-with-config
+      - name: Setup Python
+        run: exec/prepare
 
       - name: Run packages grabber
         run: exec/run-with-config packages_grabber \
