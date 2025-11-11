@@ -25,6 +25,5 @@ reactorKotlin = { module = "io.projectreactor.kotlin:reactor-kotlin-extensions",
 
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
-kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
 kotlinSpring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlinVersion" }
 shadowJar = { id = "com.github.johnrengelman.shadow", version.ref = "shadowJarVersion" }
