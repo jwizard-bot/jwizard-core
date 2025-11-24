@@ -1,19 +1,20 @@
 [versions]
 jdaVersion = "5.1.0"
-junitJupiterVersion = "5.11.4"
+junitJupiterVersion = "6.0.1"
 jwizardLibVersion = "latest"
-kotlinVersion = "2.0.20"
+kotlinVersion = "2.2.0"
 lavalinkProtocolVersion = "4.0.8"
 logbackVersion = "1.5.20"
 okHttpVersion = "4.12.0"
 reactorVersion = "3.7.0"
 reactorKotlinVersion = "1.2.3"
-shadowJarVersion = "8.1.1"
+shadowJarVersion = "8.1.8"
 
 [libraries]
 jda = { module = "net.dv8tion:JDA", version.ref = "jdaVersion" }
 junitJupiter = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiterVersion" }
 junitJupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiterVersion" }
+junitPlatformLauncher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junitJupiterVersion" }
 jwizardLib = { module = "pl.jwizard:jwizard-lib", version.ref = "jwizardLibVersion" }
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinVersion" }
 kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlinVersion" }
@@ -26,4 +27,4 @@ reactorKotlin = { module = "io.projectreactor.kotlin:reactor-kotlin-extensions",
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVersion" }
 kotlinSpring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlinVersion" }
-shadowJar = { id = "com.github.johnrengelman.shadow", version.ref = "shadowJarVersion" }
+shadowJar = { id = "io.github.goooler.shadow", version.ref = "shadowJarVersion" }

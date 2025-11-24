@@ -60,6 +60,7 @@ subprojects {
 
 		testImplementation(libs.junitJupiter)
 		testImplementation(libs.junitJupiterEngine)
+		testImplementation(libs.junitPlatformLauncher)
 	}
 
 	tasks {
