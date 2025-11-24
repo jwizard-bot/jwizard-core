@@ -13,7 +13,6 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import pl.jwizard.jwc.audio.gateway.node.NodeConfig
 import reactor.core.publisher.Mono
-import java.net.URL
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -63,7 +62,7 @@ internal class AudioNodeRestClient(
 		body: RequestBody? = null,
 	): Call {
 		val request = Request.Builder()
-			.url(URL(nodeConfig.httpUrl + url))
+			.url(nodeConfig.httpUrl + url)
 			.addHeader("Authorization", nodeConfig.password)
 			.apply {
 				nodeConfig.proxyVerificationToken?.let {
