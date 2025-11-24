@@ -5,4 +5,4 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 // json dto with audio sender details
 // serialized and deserialized by Lavalink protocol
-data class AudioSender @JsonCreator constructor(@JsonProperty("authorId") val authorId: Long)
+data class AudioSender @JsonCreator constructor(@param:JsonProperty("authorId") val authorId: Long)
