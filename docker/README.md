@@ -1,34 +1,3 @@
-# JWizard Core
-
-JWizard is an open-source Discord music bot that manages audio content from various multimedia
-sources and features an innovative web player. This repository contains the core of the application,
-which supports Discord API event handlers and a message broker for handling events from the web
-interface. It is also designed for clustering, utilizing a shard-offset system.
-
-[Webpage](https://jwizard.pl)
-| [GitHub repository](https://github.com/jwizard-bot/jwizard-core)
-| [Support](https://github.com/sponsors/jwizard-bot)
-
-### Clustering system example with multiple concurrent instance
-
-```
-instance 0              instance 1       ...     instance N
-├─ process 0            ├─ process 0
-│  ├─ shards 0-9        │  ├─ shards 0-9
-├─ process 1            ├─ process 1
-│  ├─ shards 10-19      │  ├─ shards 10-19
-│  ...                  │  ...
-├─ process N            ├─ process N
-```
-
-> NOTE: Min and max shard defining shard offset are inclusive.
-
-More about sharding, clustering multiple concurrent instances and shards fragmentation (different
-shard ranges for distributed JVM architecture) you will find here:
-
-* [https://discord.com/developers/docs/events/gateway#sharding](https://discord.com/developers/docs/events/gateway#sharding)
-* [https://skelmis.co.nz/posts/discord-bot-sharding-and-clustering](https://skelmis.co.nz/posts/discord-bot-sharding-and-clustering)
-
 ## Build image
 
 ```bash
