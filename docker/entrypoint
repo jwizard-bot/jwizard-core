@@ -1,6 +1,6 @@
 #!/bin/sh
 
-java \
+exec java \
 	-Xms$JWIZARD_XMS \
 	-Xmx$JWIZARD_XMX \
 	-Druntime.profiles=prod \
