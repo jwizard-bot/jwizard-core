@@ -47,16 +47,23 @@ ENV JAR_NAME=jwizard-core.jar
 
 WORKDIR $ENTRY_DIR
 
-COPY --from=build $BUILD_DIR/.bin/$JAR_NAME $ENTRY_DIR/$JAR_NAME
+RUN addgroup -S jwgroup && \
+    adduser -S jwuser -G jwgroup
+
+COPY --chown=jwuser:jwgroup --from=build $BUILD_DIR/.bin/$JAR_NAME $ENTRY_DIR/$JAR_NAME
 COPY --from=build $BUILD_DIR/docker/entrypoint $ENTRY_DIR/entrypoint
 
 RUN sed -i \
   -e "s/\$JAR_NAME/$JAR_NAME/g" \
   entrypoint
 
-RUN chmod +x entrypoint
+RUN chmod +x entrypoint && \
+    chown jwuser:jwgroup entrypoint
 
 LABEL maintainer="JWizard <info@jwizard.pl>"
 
 EXPOSE 8080
+
+USER jwuser
+
 ENTRYPOINT [ "./entrypoint" ]
