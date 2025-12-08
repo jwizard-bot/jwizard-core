@@ -100,16 +100,8 @@ $ git clone https://github.com/jwizard-bot/jwizard-tools
 
 4. Build library and package to Maven Local artifacts' storage (for **JWizard Lib**):
 
-* for UNIX based systems:
-
 ```bash
 $ ./gradlew clean publishToMavenLocal
-```
-
-* for Windows systems:
-
-```bash
-.\gradlew clean publishToMavenLocal
 ```
 
 5. Clone this repository via:
